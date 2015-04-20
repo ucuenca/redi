@@ -6,7 +6,7 @@ Ecuadorian Semantic Repository of Ecuadorian Academics for the discovery of comm
 
 **Quick summary**
 
-Watiqai Khuska in a quechua phrase that means "Research together". 
+Watiqai Khuska is a quechua phrase that means "Research together". 
 
 **Version**
 
