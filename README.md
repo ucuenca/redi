@@ -1,5 +1,7 @@
 # Watiqai Khuska - Ecuadorian Semantic Repository  #
 
+[ ![Codeship Status for ecsemanticrep/Watiqay Khuska - Ecuadorian Semantic Repository for Researchers](https://codeship.com/projects/0d959b00-d4a7-0132-6a34-36f9dbaf1c0b/status?branch=master)](https://codeship.com/projects/77850)
+
 Ecuadorian Semantic Repository of Ecuadorian Academics for the discovery of common research areas. The platform is based on the Apache Marmotta Linked Data Platform.
 
 ### What is this repository for? ###
