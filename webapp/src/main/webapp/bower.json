@@ -1,0 +1,34 @@
+{
+  "name": "wkhome",
+  "description": "Watiqai Khuska Frontend",
+  "version": "0.0.1",
+  "homepage": "https://santteegt@bitbucket.org/ecsemanticrep/watiqay-khuska-ecuadorian-semantic-repository-for-researchers.git",
+  "license": "Apache License 2.0",
+  "private": true,
+  "authors": [
+    "University of Cuenca <hernan.gonzalezt@ucuenca.edu.ec>"
+  ],
+  "main": "index.html",
+  "keywords": [
+    "semantic",
+    "repository",
+    "ecuador",
+    "homepage"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "1.3.x",
+    "angular-mocks": "1.3.x",
+    "jquery": "~2.1.3",
+    "bootstrap": "~3.3.x",
+    "angular-route": "1.3.x",
+    "angular-resource": "1.3.x",
+    "angular-animate": "1.3.x"
+  }
+}
