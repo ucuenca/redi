@@ -1,4 +1,4 @@
-# Watiqai Khuska - Ecuadorian Semantic Repository  #
+# Watiqay Khuska - Ecuadorian Semantic Repository  #
 
 [ ![Codeship Status for ecsemanticrep/Watiqay Khuska - Ecuadorian Semantic Repository for Researchers](https://codeship.com/projects/0d959b00-d4a7-0132-6a34-36f9dbaf1c0b/status?branch=master)](https://codeship.com/projects/77850)
 
@@ -8,7 +8,7 @@ Ecuadorian Semantic Repository of Ecuadorian Academics that allows the discovery
 
 **Quick summary**
 
-Watiqai Khuska is a quechua phrase that means "Research together". 
+Watiqay Khuska is a quechua phrase that means "Research together". 
 
 **Version**
 
