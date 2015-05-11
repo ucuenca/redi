@@ -29,7 +29,7 @@
 
     <name>Marmotta Module: Base Module</name>
     <description>The Base Module Module</description>
-
+ 
     <build>
         <plugins>
             <plugin>
@@ -51,6 +51,25 @@
                     <forkMode>always</forkMode>
                 </configuration>
             </plugin>
+            
+            <plugin>
+	        <groupId>org.apache.maven.plugins</groupId>
+	        <artifactId>maven-pmd-plugin</artifactId>
+	        <version>3.4</version>
+	        <executions>
+	          <execution>
+	          	<phase>verify</phase>
+	            <goals>
+	              <goal>check</goal>
+	            </goals>
+	          </execution>
+	        </executions>
+	        <configuration>
+	          <rulesets>
+	            <ruleset>..${file.separator}PMDRules.xml</ruleset>
+	          </rulesets>
+	        </configuration>
+	      </plugin>
         </plugins>
     </build>
 

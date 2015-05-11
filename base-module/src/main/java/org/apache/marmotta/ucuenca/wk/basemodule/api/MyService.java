@@ -27,12 +27,12 @@ public interface MyService {
      * 
      * @see #doThat()
      */
-    public void doThis(int i);
+    void doThis(int i);
 
     /**
      * Does that.
      */
-    public void doThat();
+    void doThat();
 
     /**
      * Echoes <code>"Hello &lt;name&gt;"</code>.
@@ -41,6 +41,6 @@ public interface MyService {
      *            the name to echo
      * @return <code>"Hello &lt;name&gt;"</code>
      */
-    public String helloWorld(String name);
+    String helloWorld(String name);
 
 }

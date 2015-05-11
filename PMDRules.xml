@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<ruleset name="ecsemanticrep"
+    xmlns="http://pmd.sf.net/ruleset/1.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd"
+    xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd">
+  <description>Ignored rules</description>
+  <rule ref="rulesets/java/basic.xml">
+    <exclude name="BigIntegerInstantiation"/>
+    <exclude name="EmptyCatchBlock"/>
+  </rule>
+  <rule ref="rulesets/java/codesize.xml">
+    <exclude name="TooManyFields"/>
+    <exclude name="TooManyMethods"/>
+    <exclude name="ExcessiveParameterList"/>
+    <exclude name="CyclomaticComplexity"/>
+    <exclude name="ExcessiveClassLength"/>
+    <exclude name="ExcessivePublicCount"/>
+  </rule>
+  <rule ref="rulesets/java/naming.xml">
+    <exclude name="ShortVariable"/>
+    <exclude name="LongVariable"/>
+    <exclude name="AbstractNaming"/>
+    <exclude name="ShortMethodName"/>
+    <!--exclude name="MethodNamingConventions"/-->
+  </rule>
+  <rule ref="rulesets/java/logging-java.xml">
+    <exclude name="LoggerIsNotStaticFinal" />
+  </rule>
+  <rule ref="rulesets/java/braces.xml">
+  </rule>
+  <rule ref="rulesets/java/design.xml">
+    <exclude name="ConfusingTernary"/>
+    <exclude name="ImmutableField"/>
+    <exclude name="SimpleDateFormatNeedsLocale"/>
+    <exclude name="ConstructorCallsOverridableMethod"/>
+    <exclude name="UncommentedEmptyConstructor"/>
+    <!-- <exclude name="NullAssignmentRule”/> -->
+    <exclude name="AvoidSynchronizedAtMethodLevel"/>
+    <exclude name="AvoidReassigningParameters"/>
+    <exclude name="UseLocaleWithCaseConversions"/>
+    <exclude name="AvoidDeeplyNestedIfStmts"/>
+    <exclude name="AssignmentToNonFinalStatic"/>
+  </rule>
+  <rule ref="rulesets/java/migrating.xml">
+  </rule>
+  <rule ref="rulesets/java/strings.xml">
+    <exclude name="StringInstantiation"/>
+  </rule>
+  <rule ref="rulesets/java/typeresolution.xml">
+    <exclude name="SignatureDeclareThrowsException"/>
+  </rule>
+  <rule ref="rulesets/java/controversial.xml">
+    <exclude name="DataflowAnomalyAnalysis"/>
+    <exclude name="OnlyOneReturn"/>
+    <exclude name="CallSuperInConstructor"/>
+    <!-- <exclude name="NullAssignmentRule"/> -->
+    <exclude name="NullAssignment"/>
+    <exclude name="UnnecessaryParentheses"/>
+    <exclude name="AtLeastOneConstructor"/>
+  </rule>
+  <rule ref="rulesets/java/unusedcode.xml">
+  </rule>
+  <rule ref="rulesets/java/design.xml/AvoidDeeplyNestedIfStmts">
+    <properties>
+        <property name="problemDepth" value="4"/>
+    </properties>
+  </rule>
+  <rule ref="rulesets/java/codesize.xml/CyclomaticComplexity">
+    <properties>
+        <property name="reportLevel" value="10"/>
+    </properties>
+  </rule>
+
+</ruleset> 

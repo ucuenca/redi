@@ -22,7 +22,13 @@ import org.slf4j.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -38,6 +44,9 @@ public class MyWebService {
 
     @Inject
     private MyService myService;
+    
+    private static final int MAX_TURNS = 100;
+    private static final int MIN_TURNS = 0;
 
     @GET
     @Produces("text/plain; charset=utf8")
@@ -56,8 +65,8 @@ public class MyWebService {
     @POST
     public Response doThis(@FormParam("turns") @DefaultValue("2") int turns) throws DoThisException {
         log.debug("Request to doThis {} times", turns);
-        if (turns > 100) throw new DoThisException("At max, 100 turns are allowed");
-        if (turns < 0) throw new DoThisException("Can't undo 'This'");
+        if (turns > MAX_TURNS) { throw new DoThisException("At max, 100 turns are allowed"); }
+        if (turns < MIN_TURNS) { throw new DoThisException("Can't undo 'This'"); }
 
         myService.doThis(turns);
         return Response.noContent().build();
