@@ -481,16 +481,21 @@
 
     <dependencies>
     	<!-- custom modules for Watiqai Khuska LODP -->
-    	<dependency>
+	<dependency>
             <groupId>org.apache.marmotta.ucuenca.wk</groupId>
             <artifactId>base-module</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <!-- Modules, include the ones needed by the application -->
         <dependency>
             <groupId>org.apache.marmotta</groupId>
             <artifactId>marmotta-core</artifactId>
+            <version>${marmotta.version}</version>
+        </dependency>
+	<dependency>
+            <groupId>org.apache.marmotta</groupId>
+            <artifactId>marmotta-ldp</artifactId>
             <version>${marmotta.version}</version>
         </dependency>
         <dependency>
