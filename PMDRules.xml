@@ -26,6 +26,7 @@
   </rule>
   <rule ref="rulesets/java/logging-java.xml">
     <exclude name="LoggerIsNotStaticFinal" />
+    <exclude name="GuardLogStatementJavaUtil" />
   </rule>
   <rule ref="rulesets/java/braces.xml">
   </rule>
@@ -41,9 +42,10 @@
     <exclude name="UseLocaleWithCaseConversions"/>
     <exclude name="AvoidDeeplyNestedIfStmts"/>
     <exclude name="AssignmentToNonFinalStatic"/>
+    <exclude name="CloseResource"/>
   </rule>
-  <rule ref="rulesets/java/migrating.xml">
-  </rule>
+  <!-- <rule ref="rulesets/java/migrating.xml">
+  </rule> -->
   <rule ref="rulesets/java/strings.xml">
     <exclude name="StringInstantiation"/>
   </rule>
