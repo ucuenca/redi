@@ -1,0 +1,75 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements. See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership. The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<html>
+<head>
+      <!--###BEGIN_HEAD###-->
+    <title>Authors Module</title>
+    <script type="text/javascript" src="../../webjars/jquery/1.8.2/jquery.min.js"></script>
+    <script type="text/javascript" src="authorUpdate.js"></script>
+    <!--###END_HEAD###-->
+</head>
+<body>
+
+<!--<h1><a id="Introduction"></a>Introduction on Base Module<a class="section_anchor" href="#Introduction"></a></h1>
+-->
+
+<!--###BEGIN_CONTENT###-->
+<h1>UPDATE AUTHORS DATA </h1>
+<h2>CEDIA:  REPOSITORIO SEMÁNTICO DE INVESTIGADORES DEL ECUADOR </h2>
+<p>
+    This module allows automatic extraction information regarding authors, and update this data to marmotta platform.
+</p>
+
+
+<h2> DEFAULT SOURCE  </h2>
+<ul>
+    <li> NAME: "CEDIA" </li>
+    <li> PROVIDER: "SPARQL" </li>
+    <li> SPARQL Endpoint:  "http://190.15.141.102:8890/sparql" </li>
+    <li> PREFIX:  "http://190.15.141.102:8080/dspace/" </li>
+
+</ul>
+
+
+
+<h2> ACTUALIZAR REPOSITORIO DE AUTORES  </h2>
+
+     
+    <!-- <p><a href="#" onClick="runUpdateAuthor();">UPDATE</a></p>    --> 
+    <p>
+        Se cargara la informacion de los autores provenientes desde las Diferentes Fuentes (Endpoints) que esten activas.
+        Las uris de los recursos (Autores) que hayan sido cargadas exitosamente a la plataforma (LOD Marmotta) seran registrados
+        en un archivo en la siguiente ruta: {marmotta-home}/listAuthorsUpdate_{NombreEndpoint}.aut.
+    </p>
+    <p>"Authors-Module" depende de  "Linked Data Caching-Module" que es el modulo que provee la funcionalidad de administracion de los
+    Endpoints.</p>
+    <form> 
+        
+        <p><input style="display:none" id="txtendpoint" width="200" size="50" type="text" value="http://190.15.141.102:8890/sparql"/></p>
+    <br/>
+        <p><input style="display:none" id="txtgraphuri"  width="200" size="50" type="text" value="http://190.15.141.102:8080/dspace/"/></p>    
+    <br/>
+    <button type="button"  onclick="runUpdateAuthor()"  value="Activar Función">RUN UPDATE</button>
+    </form>
+
+<!--###END_CONTENT###-->
+</body>
+</html>
+
