@@ -33,6 +33,7 @@
     <titan.version>0.4.2</titan.version>
   </properties>
   <modules>
+    <module>tools</module>
     <module>base-module</module>
     <module>webapp</module>
   </modules>
