@@ -18,58 +18,63 @@
 
 -->
 <html>
-<head>
-      <!--###BEGIN_HEAD###-->
-    <title>Authors Module</title>
-    <script type="text/javascript" src="../../webjars/jquery/1.8.2/jquery.min.js"></script>
-    <script type="text/javascript" src="authorUpdate.js"></script>
-    <!--###END_HEAD###-->
-</head>
-<body>
+    <head>
+        <!--###BEGIN_HEAD###-->
+        <title>Authors Module</title>
+        <script type="text/javascript" src="../../webjars/jquery/1.8.2/jquery.min.js"></script>
+        <script type="text/javascript" src="authorUpdate.js"></script>
+        <script type="text/javascript" src="../../core/public/js/widgets/configurator/configurator.js"></script>
+        <script type="text/javascript">
+            var host =  _SERVER_URL;
+            function run()
+            {
+                runUpdateAuthor(host);
+            }
+        </script>
+        <!--###END_HEAD###-->
+    </head>
+    <body>
 
-<!--<h1><a id="Introduction"></a>Introduction on Base Module<a class="section_anchor" href="#Introduction"></a></h1>
--->
+        <!--<h1><a id="Introduction"></a>Introduction on Base Module<a class="section_anchor" href="#Introduction"></a></h1>
+        -->
 
-<!--###BEGIN_CONTENT###-->
-<h1>UPDATE AUTHORS DATA </h1>
-<h2>CEDIA:  REPOSITORIO SEMÁNTICO DE INVESTIGADORES DEL ECUADOR </h2>
-<p>
-    This module allows automatic extraction information regarding authors, and update this data to marmotta platform.
-</p>
-
-
-<h2> DEFAULT SOURCE  </h2>
-<ul>
-    <li> NAME: "CEDIA" </li>
-    <li> PROVIDER: "SPARQL" </li>
-    <li> SPARQL Endpoint:  "http://190.15.141.102:8890/sparql" </li>
-    <li> PREFIX:  "http://190.15.141.102:8080/dspace/" </li>
-
-</ul>
+        <!--###BEGIN_CONTENT###-->
+        <h1>UPDATE AUTHORS DATA </h1>
+        <h2>CEDIA:  REPOSITORIO SEMÁNTICO DE INVESTIGADORES DEL ECUADOR </h2>
+        <p>
+            This module allows automatic extraction information regarding authors, and update this data to marmotta platform.
+        </p>
 
 
+        <h2> DEFAULT SOURCE  </h2>
+        <ul>
+            <li> NAME: "UCUENCA" </li>
+            <li> SPARQL Endpoint:  "http://190.15.141.102:8890/sparql" </li>
+            <li> GRAPH URI:  "http://190.15.141.102:8080/dspace/" </li>
 
-<h2> ACTUALIZAR REPOSITORIO DE AUTORES  </h2>
+        </ul>
 
-     
-    <!-- <p><a href="#" onClick="runUpdateAuthor();">UPDATE</a></p>    --> 
-    <p>
-        Se cargara la informacion de los autores provenientes desde las Diferentes Fuentes (Endpoints) que esten activas.
-        Las uris de los recursos (Autores) que hayan sido cargadas exitosamente a la plataforma (LOD Marmotta) seran registrados
-        en un archivo en la siguiente ruta: {marmotta-home}/listAuthorsUpdate_{NombreEndpoint}.aut.
-    </p>
-    <p>"Authors-Module" depende de  "Linked Data Caching-Module" que es el modulo que provee la funcionalidad de administracion de los
-    Endpoints.</p>
-    <form> 
-        
-        <p><input style="display:none" id="txtendpoint" width="200" size="50" type="text" value="http://190.15.141.102:8890/sparql"/></p>
-    <br/>
-        <p><input style="display:none" id="txtgraphuri"  width="200" size="50" type="text" value="http://190.15.141.102:8080/dspace/"/></p>    
-    <br/>
-    <button type="button"  onclick="runUpdateAuthor()"  value="Activar Función">RUN UPDATE</button>
-    </form>
+        <h2> ACTUALIZAR REPOSITORIO DE AUTORES  </h2>
 
-<!--###END_CONTENT###-->
-</body>
+        <!-- <p><a href="#" onClick="runUpdateAuthor();">UPDATE</a></p>    --> 
+        <p>
+            Se cargara la informacion de los autores provenientes desde las Diferentes Fuentes (Endpoints) que esten activas.
+            Las uris de los recursos (Autores) seran analizadas previamente con la sentencia  <a href="http://www.w3.org/TR/rdf-sparql-query/#ask">ASK</a> para verificar
+            si los datos aun no se encuentran en la plataforma.
+        </p>
+        <p>"Authors-Module" maneja su propio Endpoint Manager.   Endpoint Manager permite agregar y eliminar los endpoints de los cuales 
+        se  extraera la informacion de los autores</p>
+        <p>Los Datos de cada Endpoint, son registrados en la misma plataforma Marmotta, pero en un grafo especifico solo para endpoints</p>
+        <p>Click sobre el botton "RUN UPDATE" para iniciar la carga de autores</p>
+        <form> 
+            <button type="button"  onclick="run()"  value="Activar Función">RUN UPDATE</button>
+            <div id="imgloading" style="visibility: hidden">
+                <img src="img/ajax-loader-big.gif" alt="Loading Authors" height="120" width="120">
+                <p> Please wait until the reply message</p>
+            </div>
+        </form>
+
+        <!--###END_CONTENT###-->
+    </body>
 </html>
 

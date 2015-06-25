@@ -15,43 +15,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* CORE MANAGEMENT */
-    function runUpdateAuthor() {
-        var endpoint = document.getElementById('txtendpoint').value;      
-        var graphuri = document.getElementById("txtgraphuri").value;
-        
-        alert("Calling to:     {base}/authors-module/update");
-           var dataT = {
-        "Endpoint" : endpoint,
-        "GraphUri" : graphuri
+/* CORE MANAGEMENT 
+ * Author Fernando Baculima
+ * CEDIA 
+ * 
+ * */
+function runUpdateAuthor(options) {
+
+    document.getElementById("imgloading").style.visibility = "visible";
+
+    var endpoint = "http://example";
+    var graphuri = "http://example/data";
+    var settings = {
+        host: options
+    }
+    var dataT = {
+        "Endpoint": endpoint,
+        "GraphUri": graphuri
     };
 
     $.ajax({
-        type : "POST",
-        data : JSON.stringify(dataT),
-        dataType : "text",   //result data type
-        contentType : "application/json",    // send data type
-        url : "http://localhost:8079/marmotta/authors-module/update",
-        
-        success : function(Result) {
+        type: "POST",
+        data: JSON.stringify(dataT),
+        dataType: "text", //result data type
+        contentType: "application/json", // send data type
+        url: settings.host + "authors-module/update",
+        //    url:  "http://localhost:8079/marmotta/authors-module/update",
+        success: function (Result) {
+            document.getElementById("imgloading").style.visibility = "hidden";
             alert("Correcto: " + Result);
         },
-        error : function(data) {
+        error: function (data) {
             alert("Error" + data.responseText);
         }
     });
-    
-    
-    }
-
- $("button#runUpdateAuthor").click(runUpdateAuthor);
-
-//	loadTemplateNames();
 
 
-
-function miFuncion()
-{
-alert("Activaste la funcion miFuncion()");
 }
-

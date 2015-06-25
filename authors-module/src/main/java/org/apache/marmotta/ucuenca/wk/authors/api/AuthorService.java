@@ -23,30 +23,7 @@ import org.openrdf.query.QueryEvaluationException;
 
 public interface AuthorService {
 
-    /**
-     * Does that for a given number of times
-     * 
-     * @param i
-     *            number of iterations to {@link #doThat()}
-     * 
-     * @see #doThat()
-     */
-    void doThis(int i);
-
-    /**
-     * Does that.
-     */
-    void doThat();
-
-    /**
-     * Echoes <code>"Hello &lt;name&gt;"</code>.
-     * 
-     * @param name
-     *            the name to echo
-     * @return <code>"Hello &lt;name&gt;"</code>
-     */
-    String helloWorld(String name);
-
+   
     /**
      * Run update with all Active EndPoints  MultipleEP
      * @param sparqlEndpoint
