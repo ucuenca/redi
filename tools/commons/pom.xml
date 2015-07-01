@@ -63,38 +63,27 @@
   </build>
 
   <dependencies>
-   
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.12</version>
+      <version>${junit.version}</version>
       <scope>test</scope>
       <type>jar</type>
     </dependency>
         <!-- Test dependencies -->
  
-         
-    <dependency>
-      <groupId>javax.inject</groupId>
-      <artifactId>javax.inject</artifactId>
-      <version>1</version>
-      <scope>test</scope>
-      <type>jar</type>
-    </dependency>
-    
     <dependency>
       <groupId>org.apache.marmotta</groupId>
       <artifactId>marmotta-core</artifactId>
-      <version>3.3.0</version>
+      <version>${marmotta.version}</version>
     </dependency>
         <!-- Test dependencies -->
     <dependency>
       <groupId>org.apache.marmotta</groupId>
       <artifactId>marmotta-core</artifactId>
-      <version>3.3.0</version>
+      <version>${marmotta.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
-      
     </dependency>
   </dependencies>
 </project>
