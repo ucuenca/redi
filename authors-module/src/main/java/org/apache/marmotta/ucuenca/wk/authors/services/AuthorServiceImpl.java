@@ -96,8 +96,10 @@ public class AuthorServiceImpl implements AuthorService {
                 response.append(":  ");
                 try {
                     response.append(getAuthorsMultipleEP(endpoint));
-                } catch (AskException | QueryEvaluationException ex) {
-                    java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (QueryEvaluationException ex) {
+                    log.error("Fallo conexion con " + endpoint.getName() + " endpoint. ");
+                    String strFalloEndpoint = "Fallo conexion. No se cargaron Datos. Revise Sparql Endpoint";
+                    response.append(strFalloEndpoint);
                 }
                 someUpdate = true;
                 //     }
@@ -123,7 +125,7 @@ public class AuthorServiceImpl implements AuthorService {
         return null;
     }
 
-    public String getAuthorsMultipleEP(SparqlEndpoint endpoint) throws DaoException, QueryEvaluationException, AskException, UpdateException {
+    public String getAuthorsMultipleEP(SparqlEndpoint endpoint) throws DaoException, QueryEvaluationException, UpdateException {
         try {
             int tripletasCargadas = 0; //cantidad de tripletas actualizadaas
             int contAutoresNuevosCargados = 0; //cantidad de actores nuevos cargados
@@ -148,37 +150,41 @@ public class AuthorServiceImpl implements AuthorService {
                 while (authorsResult.hasNext()) {
                     BindingSet binding = authorsResult.next();
                     resource = String.valueOf(binding.getValue("o"));
-                    if (!authorUpdateService.askAuthor(queriesService.getAskQuery(resource))) {
-                        contAutoresNuevosEncontrados++;
-                        //consultando propiedades y sus valores del author con LDClient Library de Marmotta
-                        ClientResponse respUri = ldclient.retrieveResource(utf8DecodeQuery(resource));
-                        RepositoryConnection conUri = ModelCommons.asRepository(respUri.getData()).getConnection();
-                        conUri.begin();
-                        
-                        // SPARQL to get all data of a Resource
-                        String getResourcePropertyQuery = queriesService.getRetrieveResourceQuery();
-                        TupleQuery resourcequery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getResourcePropertyQuery); //
-                        TupleQueryResult tripletasResult = resourcequery.evaluate();
-                        if (tripletasResult.hasNext())
-                        {
-                            contAutoresNuevosCargados++;
+                    try {
+                        if (!authorUpdateService.askAuthor(queriesService.getAskQuery(resource))) {
+                            contAutoresNuevosEncontrados++;
+                            //consultando propiedades y sus valores del author con LDClient Library de Marmotta
+                            ClientResponse respUri = ldclient.retrieveResource(utf8DecodeQuery(resource));
+                            RepositoryConnection conUri = ModelCommons.asRepository(respUri.getData()).getConnection();
+                            conUri.begin();
+                            
+                            // SPARQL to get all data of a Resource
+                            String getResourcePropertyQuery = queriesService.getRetrieveResourceQuery();
+                            TupleQuery resourcequery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getResourcePropertyQuery); //
+                            TupleQueryResult tripletasResult = resourcequery.evaluate();
+                            if (tripletasResult.hasNext())
+                            {
+                                contAutoresNuevosCargados++;
+                            }
+                            while (tripletasResult.hasNext()) {
+                                //obtengo name, lastname, firstname, type, etc.,   para formar tripletas INSERT
+                                BindingSet tripletsResource = tripletasResult.next();
+                                String sujeto = tripletsResource.getValue("x").toString();
+                                String predicado = tripletsResource.getValue("y").toString();
+                                String objeto = tripletsResource.getValue("z").toString();
+                                ///insert sparql query,
+                                String queryAuthorInsert = buildInsertQuery(sujeto, predicado, objeto);
+                                //Aqui se carga la informacion del actor nuevo en marmotta..
+                                
+                                updateAuthor(queryAuthorInsert);
+                                tripletasCargadas++;
+                                
+                            }
+                            conUri.commit();
+                            conUri.close();
                         }
-                        while (tripletasResult.hasNext()) {
-                            //obtengo name, lastname, firstname, type, etc.,   para formar tripletas INSERT
-                            BindingSet tripletsResource = tripletasResult.next();
-                            String sujeto = tripletsResource.getValue("x").toString();
-                            String predicado = tripletsResource.getValue("y").toString();
-                            String objeto = tripletsResource.getValue("z").toString();
-                            ///insert sparql query, 
-                            String queryAuthorInsert = buildInsertQuery(sujeto, predicado, objeto);
-                            //Aqui se carga la informacion del actor nuevo en marmotta..
-                          
-                            updateAuthor(queryAuthorInsert);
-                            tripletasCargadas++;
-                          
-                        }
-                        conUri.commit();
-                        conUri.close();
+                    } catch (AskException ex) {
+                       log.error("Fallo consulta ASK en: " + resource);
                     }
                 }
                 /*    
@@ -191,16 +197,13 @@ public class AuthorServiceImpl implements AuthorService {
                  *    @param lastUpdateUrisFile path of temporal file to save last uris update   */
                 authorUpdateService.updateLastAuthorsFile(conn, getAuthorsQuery, lastUpdateUrisFile);
                 ldclient.shutdown();
-                log.info("Se detectaron" + contAutoresNuevosEncontrados + " autores nuevos ");
-                log.info("Se cargaron " + contAutoresNuevosCargados + " autores nuevos exitosamente" );
-                log.info("Se cargaron " + tripletasCargadas + " tripletas ");
-                log.info("No se pudieron cargar " + (contAutoresNuevosEncontrados - contAutoresNuevosCargados) + " autores");
-                return " Carga Finalizada. Revise Archivo Log Para mas detalles acerca de los Autores";
-            } catch (InvalidArgumentException ex) {
-                java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-                return "faile 1" + ex;
+                log.info(endpoint.getName() +" endpoint. Se detectaron" + contAutoresNuevosEncontrados + " autores nuevos ");
+                log.info(endpoint.getName() +" endpoint. Se cargaron " + contAutoresNuevosCargados + " autores nuevos exitosamente" );
+                log.info(endpoint.getName() +" endpoint. Se cargaron " + tripletasCargadas + " tripletas ");
+                log.info(endpoint.getName() +" endpoint. No se pudieron cargar " + (contAutoresNuevosEncontrados - contAutoresNuevosCargados) + " autores");
+                return "Carga Finalizada. Revise Archivo Log Para mas detalles";
             } catch (DataRetrievalException ex) {
-                java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                log.error("Fallo la conexion con Sparql Endpoint");
                 return "faile 2" + ex;
             } finally {
                 conn.close();
