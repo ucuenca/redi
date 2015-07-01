@@ -43,6 +43,9 @@ import org.openrdf.query.resultio.text.csv.SPARQLResultsCSVWriter;
 public class SparqlFunctionsServiceImpl implements SparqlFunctionsService {
 
     @Inject
+    private org.slf4j.Logger log;
+        
+    @Inject
     private SparqlService sparqlService;
 
     @Inject
@@ -56,30 +59,20 @@ public class SparqlFunctionsServiceImpl implements SparqlFunctionsService {
         try {
 
             /**
-             * El siguiente codigo documentado puede ser habilitado para cargar
-             * datos en cualquier sparql endpoint
+             * El siguiente codigo documentado puede ser habilitado para CARGAR
+             * datos en otro sparql endpoint
              *
              * this.connection = endpointUpdate.getConnection();
-             * this.connection.begin(); Update update =
-             * this.connection.prepareUpdate(QueryLanguage.SPARQL,
-             * querytoUpdate); update.execute(); this.connection.commit();   
+             * this.connection.begin(); 
+             * Update update = this.connection.prepareUpdate(QueryLanguage.SPARQL,querytoUpdate); 
+             * update.execute(); this.connection.commit();   
              */
             sparqlService.update(QueryLanguage.SPARQL, querytoUpdate);
             return true;
-        } catch (InvalidArgumentException ex) {
-            Logger.getLogger(SparqlFunctionsServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
-        } catch (MarmottaException ex) {
-            Logger.getLogger(SparqlFunctionsServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
-        } catch (MalformedQueryException ex) {
-            Logger.getLogger(querytoUpdate + SparqlFunctionsServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
-        } catch (UpdateExecutionException ex) {
-            Logger.getLogger(SparqlFunctionsServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvalidArgumentException | MarmottaException | UpdateExecutionException | MalformedQueryException ex) {
+             log.error("Fail to Insert Triplet: " + querytoUpdate);
             return false;
         }
-
     }
     
     @Override

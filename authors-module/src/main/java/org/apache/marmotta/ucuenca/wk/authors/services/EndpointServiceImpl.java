@@ -30,20 +30,20 @@ import org.openrdf.query.UpdateExecutionException;
  * @author Satellite
  */
 public class EndpointServiceImpl implements EndpointService {
-    
+
     @Inject
     private SparqlService sparqlService;
-    
+
     @Inject
     private QueriesService queriesService;
-    
+
     private String endpointsGraph = "http://localhost:8080/endpoints";
-    
+
     @Override
     public String addEndpoint(String name, String endpointUrl, String graphUri) {
-        
+
         try {
-           
+
             //          String queryEndpointToAdd = queriesService.getEndpointToAddQuery(endpointGraph, name, endpointUrl, graphUri);
             //sparqlService.update(QueryLanguage.SPARQL, queryEndpointToAdd);
             String resourceHash = getHashCode(name, endpointUrl, graphUri);
@@ -57,7 +57,7 @@ public class EndpointServiceImpl implements EndpointService {
         }
         return "AddEndpoint Error";
     }
-    
+
     public void addEndpointName(String endpointsGraph, String name, String resourceHash) {
         try {
             String queryEndpointName = queriesService.getEndpointNameQuery(endpointsGraph, name, resourceHash);
@@ -66,17 +66,17 @@ public class EndpointServiceImpl implements EndpointService {
             Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void addEndpointUrl(String endpointsGraph, String endpointUrl, String resourceHash) {
         try {
             String queryEndpointUrl = queriesService.getEndpointUrlQuery(endpointsGraph, endpointUrl, resourceHash);
-            
+
             sparqlService.update(QueryLanguage.SPARQL, queryEndpointUrl);
         } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
             Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void addEndpointGraph(String endpointsGraph, String graphUri, String resourceHash) {
         try {
             String queryEndpointGraph = queriesService.getEndpointGraphQuery(endpointsGraph, graphUri, resourceHash);
@@ -106,14 +106,12 @@ public class EndpointServiceImpl implements EndpointService {
         BigInteger bigInt = new BigInteger(1, digest);
         return bigInt.toString(16);
     }
-    
+
     @Override
     public List<SparqlEndpoint> listEndpoints() {
-//        String endpointsGraph = "http://localhost:8080/endpoints";
-        try {
+       try {
             List<SparqlEndpoint> result = new ArrayList<SparqlEndpoint>();
             List<Map<String, Value>> endpointsresult = sparqlService.query(QueryLanguage.SPARQL, queriesService.getlisEndpointsQuery(endpointsGraph));
-            
             for (Map<String, Value> singleendpoint : endpointsresult) {
                 SparqlEndpoint endpoint = new SparqlEndpoint();
                 endpoint.setResourceId(singleendpoint.get("id").stringValue());
@@ -122,7 +120,7 @@ public class EndpointServiceImpl implements EndpointService {
                 endpoint.setGraph(singleendpoint.get("graph").stringValue());
                 result.add(endpoint);
             }
-           return result;
+            return result;
         } catch (MarmottaException ex) {
             Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -132,37 +130,30 @@ public class EndpointServiceImpl implements EndpointService {
     @Override
     public SparqlEndpoint getEndpoint(String resourceId) {
         try {
- //           String endpointsGraph = "http://localhost:8080/endpoints";
-            List<Map<String, Value>> endpointresult = sparqlService.query(QueryLanguage.SPARQL, queriesService.getEndpointByIdQuery(endpointsGraph,resourceId));
-             SparqlEndpoint endpoint = new SparqlEndpoint();
-                endpoint.setResourceId(endpointresult.get(0).get("id").stringValue());
-                endpoint.setName(endpointresult.get(0).get("name").stringValue());
-                endpoint.setEndpointUrl(endpointresult.get(0).get("url").stringValue());
-                endpoint.setGraph(endpointresult.get(0).get("graph").stringValue());
-        return endpoint;   
-           
-        
+            List<Map<String, Value>> endpointresult = sparqlService.query(QueryLanguage.SPARQL, queriesService.getEndpointByIdQuery(endpointsGraph, resourceId));
+            SparqlEndpoint endpoint = new SparqlEndpoint();
+            endpoint.setResourceId(endpointresult.get(0).get("id").stringValue());
+            endpoint.setName(endpointresult.get(0).get("name").stringValue());
+            endpoint.setEndpointUrl(endpointresult.get(0).get("url").stringValue());
+            endpoint.setGraph(endpointresult.get(0).get("graph").stringValue());
+            return endpoint;
         } catch (MarmottaException ex) {
             Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-    
-    return null;
-    
+
+        return null;
+
     }
 
     @Override
     public String removeEndpoint(String resourceid) {
-      try {
- //           String endpointsGraph = "http://localhost:8080/endpoints";
-            sparqlService.update(QueryLanguage.SPARQL, queriesService.getEndpointDeleteQuery(endpointsGraph,resourceid));
-            return "Endpoint was DELETE";   
-           
-        
+        try {
+            sparqlService.update(QueryLanguage.SPARQL, queriesService.getEndpointDeleteQuery(endpointsGraph, resourceid));
+            return "Endpoint was DELETE";
         } catch (MarmottaException | InvalidArgumentException | MalformedQueryException | UpdateExecutionException ex) {
             Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-    
-    return null;
+        return null;
     }
-    
+
 }

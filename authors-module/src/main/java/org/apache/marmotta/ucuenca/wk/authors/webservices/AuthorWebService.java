@@ -33,24 +33,19 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
-
 import javax.ws.rs.core.Response;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
 
-
 import org.apache.marmotta.ucuenca.wk.authors.api.AuthorService;
 import org.apache.marmotta.ucuenca.wk.authors.api.EndpointService;
 import org.apache.marmotta.ucuenca.wk.authors.api.SparqlEndpoint;
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.DaoException;
-//import org.apache.marmotta.ucuenca.wk.basemodule.exceptions.DaoException;
-
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.UpdateException;
+
 import org.openrdf.query.QueryEvaluationException;
-//import org.openrdf.query.QueryEvaluationException;
-//import org.apache.marmotta.ucuenca.wk.basemodule.exceptions.UpdateException;
 
 @ApplicationScoped
 @Path("/authors-module")

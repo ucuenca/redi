@@ -123,11 +123,11 @@ public class AuthorServiceImpl implements AuthorService {
         return null;
     }
 
-    public String getAuthorsMultipleEP(SparqlEndpoint endpoint) throws DaoException, UpdateException, QueryEvaluationException, AskException {
+    public String getAuthorsMultipleEP(SparqlEndpoint endpoint) throws DaoException, QueryEvaluationException, AskException, UpdateException {
         try {
             int tripletasCargadas = 0; //cantidad de tripletas actualizadaas
-            int contActoresNuevosCargados = 0; //cantidad de actores nuevos cargados
-            int contActoresNuevosEncontrados = 0; //hace referencia a la cantidad de actores existentes en el archivo temporal antes de la actualizacion
+            int contAutoresNuevosCargados = 0; //cantidad de actores nuevos cargados
+            int contAutoresNuevosEncontrados = 0; //hace referencia a la cantidad de actores existentes en el archivo temporal antes de la actualizacion
             configurationService.getHome();
             String lastUpdateUrisFile = configurationService.getHome() + "\\listAuthorsUpdate_" + endpoint.getName() + ".aut";
             /* Conecting to repository using LDC ( Linked Data Client ) Library */
@@ -141,16 +141,6 @@ public class AuthorServiceImpl implements AuthorService {
             //After that you can use the endpoint like any other Sesame Repository, by creating a connection and doing queries on that:
             RepositoryConnection conn = endpointTemp.getConnection();
             try {
-//                List listURIS = null;
-                //load last uris saved and insert in marmotta in temporal file
-//                listURIS = getLastUpdateUris(lastUpdateUrisFile);
-                /**
-                 * Consultando las uris de los recursos (Autores) a la fuente (
-                 * dspace endpoint ) para comparar con LAST uris (Archivo donde
-                 * se almacena todas las uris cargadas a marmotta
-                 * anteriormente), es decir comparar con la ultima
-                 * actualizacioin previa
-                 */
                 //Query that let me obtain all resource related with author from source sparqlendpoint 
                 String getAuthorsQuery = queriesService.getAuthorsQuery();
                 String resource = "";
@@ -159,21 +149,22 @@ public class AuthorServiceImpl implements AuthorService {
                     BindingSet binding = authorsResult.next();
                     resource = String.valueOf(binding.getValue("o"));
                     if (!authorUpdateService.askAuthor(queriesService.getAskQuery(resource))) {
-                        contActoresNuevosEncontrados++;
-                        // *****consult a Resource 
-                        //consultando informacion del author nuevo con LDClient Library de Marmotta
-                        //obtiene informacion relacionada de ese author con la URI pasada como parametro
+                        contAutoresNuevosEncontrados++;
+                        //consultando propiedades y sus valores del author con LDClient Library de Marmotta
                         ClientResponse respUri = ldclient.retrieveResource(utf8DecodeQuery(resource));
                         RepositoryConnection conUri = ModelCommons.asRepository(respUri.getData()).getConnection();
                         conUri.begin();
-                        //En este momento ya se obtiene toda la informacion de ese Author
-                        // SPARQL to obtain all data of a Resource
+                        
+                        // SPARQL to get all data of a Resource
                         String getResourcePropertyQuery = queriesService.getRetrieveResourceQuery();
                         TupleQuery resourcequery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getResourcePropertyQuery); //
                         TupleQueryResult tripletasResult = resourcequery.evaluate();
+                        if (tripletasResult.hasNext())
+                        {
+                            contAutoresNuevosCargados++;
+                        }
                         while (tripletasResult.hasNext()) {
-                            //La consulta realizada permite obtener todas las tripletas relacionadas con esa URI ( URI DE UN AUTOR )
-                            //obtengo name, lastname, firstname, type    de el recurso, para formar tripletas
+                            //obtengo name, lastname, firstname, type, etc.,   para formar tripletas INSERT
                             BindingSet tripletsResource = tripletasResult.next();
                             String sujeto = tripletsResource.getValue("x").toString();
                             String predicado = tripletsResource.getValue("y").toString();
@@ -181,17 +172,18 @@ public class AuthorServiceImpl implements AuthorService {
                             ///insert sparql query, 
                             String queryAuthorInsert = buildInsertQuery(sujeto, predicado, objeto);
                             //Aqui se carga la informacion del actor nuevo en marmotta..
-                            // se considera a un autor como nuevo, si su respectiva uri no se encuentra en el archivo LastUpdateFile
+                          
                             updateAuthor(queryAuthorInsert);
-
                             tripletasCargadas++;
-
+                          
                         }
                         conUri.commit();
                         conUri.close();
                     }
                 }
-                /*    ESCRIBIENDO EN ARCHIVO TEMPORAL
+                /*    
+                 *    @deprecated
+                 *    ESCRIBIENDO EN ARCHIVO TEMPORAL
                  *    NUEVAMENTE TODOS LOS DATOS SON CONSULTADOS A LA FUENTE ( dspace endpoint )
                  *    y almacenados en archivo temporal
                  *    @param conn, conection endpoint and configuration
@@ -199,9 +191,11 @@ public class AuthorServiceImpl implements AuthorService {
                  *    @param lastUpdateUrisFile path of temporal file to save last uris update   */
                 authorUpdateService.updateLastAuthorsFile(conn, getAuthorsQuery, lastUpdateUrisFile);
                 ldclient.shutdown();
-                return " Se detectaron " + contActoresNuevosEncontrados + " actores nuevos "
-                        + " -  Se cargaron " + contActoresNuevosCargados + " actores nuevos exitosamente "
-                        + " -  Se cargaron " + tripletasCargadas + " tripletas ";
+                log.info("Se detectaron" + contAutoresNuevosEncontrados + " autores nuevos ");
+                log.info("Se cargaron " + contAutoresNuevosCargados + " autores nuevos exitosamente" );
+                log.info("Se cargaron " + tripletasCargadas + " tripletas ");
+                log.info("No se pudieron cargar " + (contAutoresNuevosEncontrados - contAutoresNuevosCargados) + " autores");
+                return " Carga Finalizada. Revise Archivo Log Para mas detalles acerca de los Autores";
             } catch (InvalidArgumentException ex) {
                 java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
                 return "faile 1" + ex;
@@ -220,6 +214,7 @@ public class AuthorServiceImpl implements AuthorService {
         }
     }
 
+    @Deprecated
     public String getAuthorsSingleEP(String endpointURL, String graphUri) throws DaoException, UpdateException, AskException {
         try {
 
@@ -285,7 +280,6 @@ public class AuthorServiceImpl implements AuthorService {
                         conUri.close();
                     }
                 }
-
                 /*    
                  *    ESCRIBIENDO EN ARCHIVO TEMPORAL
                  *    NUEVAMENTE TODOS LOS DATOS SON CONSULTADOS A LA FUENTE ( dspace endpoint )
@@ -324,28 +318,20 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     /*
-     *   ASK - with VERSIONING MODULE, to check if the resource already exists in kiwi triple store
-     *   
-     */
-    /*
-     public Boolean askAuthorVersioning(String uritoAsk) {
-     return authorUpdateService.askAuthorVersioning(uritoAsk);
-     }
-     */
-    /*
      *   UPDATE - with SPARQL MODULE, to check if the resource already exists in kiwi triple store
      *   
      */
-    public String updateAuthor(String querytoUpdate) throws UpdateException {
-        
-        if(authorUpdateService.updateAuthor(querytoUpdate))
-        {
-            return "Autor Cargado Correctamente";
+    public String updateAuthor(String querytoUpdate) {
+
+        try {
+            authorUpdateService.updateAuthor(querytoUpdate);
+            return "Correcto";
+        } catch (UpdateException ex) {
+               log.error("Error al intentar cargar al Autor" + querytoUpdate);
+               java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+             
         }
-        else
-        {
-            return "Error al intentar cargar al Autor";
-        }
+          return "Error" + querytoUpdate;
     }
 
     /*
@@ -378,9 +364,18 @@ public class AuthorServiceImpl implements AuthorService {
         }
     }
 
-//Funcion para leer las uris que se han actualizado por ultima vez previo a la presente actualizacion.
-    //con el fin de determinar cuales uris de autores son nuevas.
-    //las uris de autores nuevas sirven para obtener toda la informacion relacionada con los autores y cargarlos a la plataforma
+    /**
+     *
+     * Funcion para leer las uris que se han actualizado por ultima vez previo a
+     * la presente actualizacion. con el fin de determinar cuales uris de
+     * autores son nuevas. las uris de autores nuevas sirven para obtener toda
+     * la informacion relacionada con los autores y cargarlos a la plataforma
+     *
+     * @param csvFile
+     * @return
+     * @deprecated
+     */
+//  @Deprecated
     public List getLastUpdateUris(String csvFile) {
         BufferedReader br = null;
         String line = "";
@@ -418,7 +413,12 @@ public class AuthorServiceImpl implements AuthorService {
         return null;
     }
 
-    //permite decodificar la uri formato UTF-8
+    /**
+     * permite decodificar la uri formato UTF-8
+     *
+     * @param query
+     * @return
+     */
     private String utf8DecodeQuery(String query) {
         try {
             byte[] bytes = query.getBytes("UTF-8"); // Charset to encode into

@@ -49,7 +49,7 @@ public class MyServiceLoggingModule extends BaseLoggingModule {
      */
     @Override
     public String getId() {
-        return "base-module";
+        return "authors-module";
     }
 
     /**
@@ -60,7 +60,7 @@ public class MyServiceLoggingModule extends BaseLoggingModule {
      */
     @Override
     public String getName() {
-        return "Base Module";
+        return "Authors Module";
     }
 
     /**
@@ -71,6 +71,6 @@ public class MyServiceLoggingModule extends BaseLoggingModule {
      */
     @Override
     public Collection<String> getPackages() {
-        return Collections.singleton("org.apache.marmotta.ucwk.extension.basemodule");
+        return Collections.singleton("org.apache.marmotta.ucwk.extension.authorsmodule");
     }
 }

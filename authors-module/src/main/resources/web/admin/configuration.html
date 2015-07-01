@@ -31,11 +31,11 @@
                 var options = {
                     url: _SERVER_URL,
                     container: "configurator",
-                    prefix: 'base-module',
+                    prefix: 'authors-module',
                     blacklist: []
                 }
                 var configurator = new Configurator(options);
-                $('#lmf_ldcache').lmf_ldcache({host: _SERVER_URL});
+                $('#endpointsManager').endpointsManager({host: _SERVER_URL});
             });
         </script>
 
@@ -85,7 +85,7 @@
 
                 </div>
 
-                <div id="lmf_ldcache">
+                <div id="endpointsManager">
                 </div>
                 <!--###END_CONTENT###-->
             </div>

@@ -41,7 +41,7 @@
 
     var loader;
 
-    $.fn.lmf_ldcache = function (options) {
+    $.fn.endpointsManager = function (options) {
         var settings = {
             host: 'http://localhost:8080/LMF/'
         }
