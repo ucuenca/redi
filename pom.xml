@@ -35,6 +35,7 @@
   <modules>
     <module>tools</module>
     <module>base-module</module>
+    <module>authors-module</module>
     <module>webapp</module>
   </modules>
 </project>

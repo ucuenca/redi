@@ -1,0 +1,94 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements. See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership. The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<html>
+    <head>
+        <!--###BEGIN_HEAD###-->
+        <title>AUTHORS Module Configuration</title>
+        <script type="text/javascript" src="../../webjars/jquery/1.8.2/jquery.min.js"></script>
+        <script type="text/javascript" src="../../core/public/js/widgets/configurator/configurator.js"></script>
+        <script type="text/javascript" src="endpointManager.js"></script>
+
+        <link type="text/css" rel="stylesheet" href="../../core/public/js/widgets/configurator/style.css">
+        <script type="text/javascript">
+            jQuery(document).ready(function () {
+                var options = {
+                    url: _SERVER_URL,
+                    container: "configurator",
+                    prefix: 'authors-module',
+                    blacklist: []
+                }
+                var configurator = new Configurator(options);
+                $('#endpointsManager').endpointsManager({host: _SERVER_URL});
+            });
+        </script>
+
+        <!--###END_HEAD###-->
+    </head>
+    <body>
+        <div id="main">
+            <div id="contents">
+                <!--###BEGIN_CONTENT###-->
+                <h1>Authors Module Configuration</h1>
+                <p>
+                    Here you can configure the SPARQL ENDPOINTS.<br/>
+                    The configuration contains:
+                </p>
+                <ul>
+                    <li><a href="#configurator">Generic Parameter Configuration</a></li>
+                    <li><a href="#endpoints">Endpoints Configuration</a></li>
+                </ul>
+                <div id="configurator">
+                    <h4>Loading configurator</h4>
+                </div>
+
+
+
+                <div id="endpoints">
+                    <h2>Add Sparql Endpoints</h2>
+                    <form> 
+                        <table>
+                            <tr>
+                                <td>NAME</td>
+                                <td><input  id="txtname" width="200" size="50" type="text" value="UCUENCA"/></td>
+                            </tr>
+                            <tr>
+                                <td>ENDPOINT URL:</td>
+                                <td><input  id="txtendpoint" width="200" size="50" type="text" value="http://190.15.141.102:8890/sparql"/></td>
+                            </tr>
+                            <tr>
+                                <td>GRAPH URI:</td>
+                                <td><input  id="txtgraphuri"  width="200" size="50" type="text" value="http://190.15.141.102:8080/dspace/"/></td>
+                        </table>
+
+                        <!--        <button type="button"  onclick="addEndpoint()"  value="Activar Función">ADD ENDPOINT</button>
+                                <br/>
+                                <button type="button"  onclick="testEndpoints()"  value="Activar Función">TEST LIST ENDPOINT</button>
+                        -->
+                    </form>
+
+                </div>
+
+                <div id="endpointsManager">
+                </div>
+                <!--###END_CONTENT###-->
+            </div>
+        </div>
+    </body>
+</html>
