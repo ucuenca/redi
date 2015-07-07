@@ -43,6 +43,7 @@
     <exclude name="AvoidDeeplyNestedIfStmts"/>
     <exclude name="AssignmentToNonFinalStatic"/>
     <exclude name="CloseResource"/>
+    <exclude name="FieldDeclarationsShouldBeAtStartOfClass"/>
   </rule>
   <!-- <rule ref="rulesets/java/migrating.xml">
   </rule> -->
