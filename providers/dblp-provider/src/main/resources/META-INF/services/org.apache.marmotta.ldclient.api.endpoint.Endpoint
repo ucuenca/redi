@@ -1,0 +1,7 @@
+org.apache.marmotta.ucuenca.wk.endpoint.dblp.DBLPServiceEndpoint
+org.apache.marmotta.ucuenca.wk.endpoint.dblp.DBLPEndpoint
+org.apache.marmotta.ucuenca.wk.endpoint.dblp.DBLPCandidatesEndpoint
+org.apache.marmotta.ucuenca.wk.endpoint.dblp.DBLPAuthorEndpoint
+org.apache.marmotta.ucuenca.wk.endpoint.dblp.DBLPLegacyAuthorEndpoint
+org.apache.marmotta.ucuenca.wk.endpoint.dblp.DBLPResourceEndpoint
+org.apache.marmotta.ucuenca.wk.endpoint.dblp.DBLPLegacyResourceEndpoint
