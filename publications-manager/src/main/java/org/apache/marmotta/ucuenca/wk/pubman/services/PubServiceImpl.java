@@ -36,7 +36,7 @@ import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 
-import org.apache.marmotta.ucuenca.wk.pubman.api.MyService;
+import org.apache.marmotta.ucuenca.wk.pubman.api.PubService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
 import org.apache.marmotta.ucuenca.wk.pubman.exceptions.PubException;
 import org.openrdf.model.Model;
@@ -55,10 +55,10 @@ import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
 
 /**
- * Default Implementation of {@link MyService}
+ * Default Implementation of {@link PubService}
  */
 @ApplicationScoped
-public class MyServiceImpl implements MyService {
+public class PubServiceImpl implements PubService {
 
     @Inject
     private Logger log;
@@ -101,23 +101,8 @@ public class MyServiceImpl implements MyService {
 
             //ClientResponse response = ldClient.retrieveResource("http://rdf.dblp.com/ns/m.0wqhskn");
             int cont_aut = 0;
-            String getAuthors = ""
-                    + " PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
-                    + " SELECT * "
-                    + " WHERE { "
-                    + " ?subject a foaf:Person. "
-                    + " ?subject foaf:name ?name."
-                    + " ?subject foaf:firstName ?fname."
-                    + " ?subject foaf:lastName ?lname."
-                    + " {"
-                    + " FILTER (regex(?name,\"Espinosa Mejia\"))"
-                    + " }"
-                    + " UNION"
-                    + " {"
-                    + " FILTER (regex(?name,\"Saquicela Galarza\"))"
-                    + " }"
-                    + " }";
-
+            String getAuthors = queriesService.getPublicationsQuery();
+           
             // TupleQueryResult result = sparqlService.query(QueryLanguage.SPARQL, getAuthors);
             String nameToFind = "";
             String authorUri = "";
@@ -127,17 +112,13 @@ public class MyServiceImpl implements MyService {
                 authorUri = map.get("subject").stringValue();
                 String firstName = map.get("fname").stringValue();
                 String lastName = map.get("lname").stringValue();
-
                 String firstNameA = firstName.split(" ")[0];
                 String lastNameA = lastName.split(" ")[0];
-
                 nameToFind = firstNameA + "_" + lastNameA;
 
-                //String name1 = "Victor_Saquicela";
-                String name1 = nameToFind;
                 String NS_DBLP = "http://rdf.dblp.com/ns/search/";
-                ClientResponse response = ldClient.retrieveResource(NS_DBLP + name1);
-                String namePubEndpoint = ldClient.getEndpoint(NS_DBLP + name1).getName();
+                ClientResponse response = ldClient.retrieveResource(NS_DBLP + nameToFind);
+                String nameEndpointofPublications = ldClient.getEndpoint(NS_DBLP + nameToFind).getName();
                 /*ClientResponse response = ldClient.retrieveResource(
                  "http://dblp.uni-trier.de/search/author?xauthor=Saquicela+Victor");*/
                 Model model = response.getData();
@@ -168,7 +149,7 @@ public class MyServiceImpl implements MyService {
                     //load pulications resource to autor resource
                     updatePub(querytoUpdate);
                     //insert provenance triplet query
-                    String provenanceQueryInsert = buildInsertQuery(sujeto, queriesService.getProvenanceProperty(), namePubEndpoint);
+                    String provenanceQueryInsert = buildInsertQuery(sujeto, queriesService.getProvenanceProperty(), nameEndpointofPublications);
                     updatePub(provenanceQueryInsert);
 
                 }
@@ -188,42 +169,39 @@ public class MyServiceImpl implements MyService {
                     //load values publications to publications resource
                     updatePub(querytoUpdate);
                 }
-
                 //** end View Data
-                FileOutputStream out = new FileOutputStream("C:\\Users\\Satellite\\Desktop\\" + nameToFind + "_" + cont_aut + "_test.ttl");
-                RDFWriter writer = Rio.createWriter(RDFFormat.TURTLE, out);
-                try {
-                    writer.startRDF();
-                    for (Statement st : model) {
-                        writer.handleStatement(st);
-                    }
-                    writer.endRDF();
-                } catch (RDFHandlerException e) {
-                    // oh no, do something!
-                }
+                
+                
+//                FileOutputStream out = new FileOutputStream("C:\\Users\\Satellite\\Desktop\\" + nameToFind + "_" + cont_aut + "_test.ttl");
+//                RDFWriter writer = Rio.createWriter(RDFFormat.TURTLE, out);
+//                try {
+//                    writer.startRDF();
+//                    for (Statement st : model) {
+//                        writer.handleStatement(st);
+//                    }
+//                    writer.endRDF();
+//                } catch (RDFHandlerException e) {
+//                    // oh no, do something!
+//                }
             }
 
             return "True for publications";
-
             // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         } catch (MarmottaException ex) {
             log.error("Marmotta Exception " + ex);
-            //java.util.logging.Logger.getLogger(MyServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            //java.util.logging.Logger.getLogger(PubServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         } catch (DataRetrievalException ex) {
             log.error("DataRetrievalException " + ex);
-            //java.util.logging.Logger.getLogger(MyServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            //java.util.logging.Logger.getLogger(PubServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RepositoryException ex) {
             log.error("RepositoryException " + ex);
-            //java.util.logging.Logger.getLogger(MyServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            //java.util.logging.Logger.getLogger(PubServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         } catch (MalformedQueryException ex) {
             log.error("MalformedExceprtion " + ex);
-            //java.util.logging.Logger.getLogger(MyServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            //java.util.logging.Logger.getLogger(PubServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         } catch (QueryEvaluationException ex) {
             log.error("QueryEvaluationExcception " + ex);
-            //java.util.logging.Logger.getLogger(MyServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (FileNotFoundException ex) {
-            log.error("FailNotFoundException: " + ex);
-            //java.util.logging.Logger.getLogger(MyServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            //java.util.logging.Logger.getLogger(PubServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return "fail";
@@ -239,7 +217,7 @@ public class MyServiceImpl implements MyService {
             sparqlFunctionsService.updatePub(querytoUpdate);
         } catch (PubException ex) {
             log.error("No se pudo insertar: " + querytoUpdate);
-            //         java.util.logging.Logger.getLogger(MyServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            //         java.util.logging.Logger.getLogger(PubServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return "Correcto";
 

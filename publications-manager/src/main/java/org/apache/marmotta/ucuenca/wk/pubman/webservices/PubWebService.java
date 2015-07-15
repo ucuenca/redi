@@ -49,19 +49,19 @@ import org.apache.marmotta.ldclient.model.ClientConfiguration;
 import org.apache.marmotta.ldclient.model.ClientResponse;
 import org.apache.marmotta.ldclient.services.ldclient.LDClient;
 import org.apache.marmotta.ucuenca.wk.endpoint.dblp.DBLPEndpoint;
-import org.apache.marmotta.ucuenca.wk.pubman.api.MyService;
+import org.apache.marmotta.ucuenca.wk.pubman.api.PubService;
 import org.apache.marmotta.ucuenca.wk.pubman.exceptions.DoThisException;
 import org.apache.marmotta.ucuenca.wk.pubman.job.AuthorVersioningJob;
 
 @Path("/pubman")
 @ApplicationScoped
-public class MyWebService {
+public class PubWebService {
 
     @Inject
     private Logger log;
 
     @Inject
-    private MyService publicationsService;
+    private PubService publicationsService;
     
     private static final int MAX_TURNS = 100;
     private static final int MIN_TURNS = 0;

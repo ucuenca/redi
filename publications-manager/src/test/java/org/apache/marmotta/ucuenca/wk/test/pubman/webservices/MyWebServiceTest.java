@@ -32,7 +32,7 @@ import org.junit.BeforeClass;
 //import org.junit.Ignore;
 import org.junit.Test;
 import org.apache.marmotta.platform.core.test.base.JettyMarmotta;
-import org.apache.marmotta.ucuenca.wk.pubman.webservices.MyWebService;
+import org.apache.marmotta.ucuenca.wk.pubman.webservices.PubWebService;
 
 public class MyWebServiceTest {
 
@@ -42,7 +42,7 @@ public class MyWebServiceTest {
 
     @BeforeClass
     public static void beforeClass() {
-        marmotta = new JettyMarmotta("/base-module-test", 9090, MyWebService.class);
+        marmotta = new JettyMarmotta("/base-module-test", 9090, PubWebService.class);
 
         RestAssured.baseURI = "http://localhost";
         RestAssured.port = 9090;

@@ -17,7 +17,7 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.api;
 
-public interface MyService {
+public interface PubService {
 
     /**
      * Does that for a given number of times

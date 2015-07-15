@@ -22,17 +22,17 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.apache.marmotta.ucuenca.wk.pubman.api.MyService;
+import org.apache.marmotta.ucuenca.wk.pubman.api.PubService;
 
-public class MyServiceTest {
+public class PubServiceTest {
 
     private static EmbeddedMarmotta marmotta;
-    private static MyService myService;
+    private static PubService myService;
 
     @BeforeClass
     public static void setUp() {
         marmotta = new EmbeddedMarmotta();
-        myService = marmotta.getService(MyService.class);
+        myService = marmotta.getService(PubService.class);
     }
     /*
     @Test
