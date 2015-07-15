@@ -168,7 +168,7 @@ public class Queries implements QueriesService {
                 + " ?subject foaf:firstName ?fname."
                 + " ?subject foaf:lastName ?lname."
                 + " {"
-                + " FILTER (regex(?name,\"Espinosa Mejia\"))"
+                + " FILTER (regex(?name,\"Espinoza Mejia\"))"
                 + " }"
                 + " UNION"
                 + " {"
