@@ -15,8 +15,8 @@ import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 public class Queries implements QueriesService {
 
     @Override
-    public String getAuthorsQuery() {
-        return "SELECT DISTINCT ?o WHERE {  ?s <http://id.loc.gov/vocabulary/relators/aut> ?o } ORDER BY ?o";
+    public String getAuthorsQuery(String datagraph) {
+        return "SELECT DISTINCT ?s WHERE { GRAPH <" + datagraph + "> { ?s rdf:type foaf:Person }}";
     }
 
     @Override
@@ -27,27 +27,33 @@ public class Queries implements QueriesService {
     /**
      * Return a INSERT QUERY when object is a LITERAL
      *
-     * @param subject
-     * @param predicate
-     * @param object
+     * @param varargs
      * @return
      */
     @Override
-    public String getInsertDataLiteralQuery(String subject, String predicate, String object) {
-        return "INSERT DATA { <" + subject + "> <" + predicate + "> " + object + " }";
+    public String getInsertDataLiteralQuery(String... varargs) {
+        String wkhuskaGraph = varargs[0];
+        String subject = varargs[1];
+        String predicate = varargs[2];
+        String object = varargs[3];
+        String graphSentence = "GRAPH <" + wkhuskaGraph + ">";
+        return "INSERT DATA { " + graphSentence + " {<" + subject + "> <" + predicate + "> " + object + " }}";
     }
 
     /**
      * Return a INSERT QUERY when object is a URI
      *
-     * @param subject
-     * @param predicate
-     * @param object
+     * @param varargs
      * @return
      */
     @Override
-    public String getInsertDataUriQuery(String subject, String predicate, String object) {
-        return "INSERT DATA { <" + subject + "> <" + predicate + "> <" + object + "> }";
+    public String getInsertDataUriQuery(String... varargs) {
+        String wkhuskaGraph = varargs[0];
+        String subject = varargs[1];
+        String predicate = varargs[2];
+        String object = varargs[3];
+        String graphSentence = "GRAPH <" + wkhuskaGraph + ">";
+        return "INSERT DATA { " + graphSentence + " {<" + subject + "> <" + predicate + "> <" + object + "> }}";
 
     }
 
@@ -75,17 +81,17 @@ public class Queries implements QueriesService {
 
     @Override
     public String getEndpointNameQuery(String endpointsGraph, String name, String resourceHash) {
-        return "INSERT DATA { GRAPH <" + endpointsGraph + "> { <http://localhost:8080/endpoint/" + resourceHash + ">  <http://localhost:8080/endpoint/name>  \"" + name + "\" }}";
+        return "INSERT DATA { GRAPH <" + endpointsGraph + "> { <http://ucuenca.edu.ec/wkhuska/endpoint/" + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/name>  \"" + name + "\" }}";
     }
 
     @Override
     public String getEndpointUrlQuery(String endpointsGraph, String url, String resourceHash) {
-        return "INSERT DATA { GRAPH <" + endpointsGraph + "> { <http://localhost:8080/endpoint/" + resourceHash + ">  <http://localhost:8080/endpoint/url>  <" + url + "> }}";
+        return "INSERT DATA { GRAPH <" + endpointsGraph + "> { <http://ucuenca.edu.ec/wkhuska/endpoint/" + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/url>  <" + url + "> }}";
     }
 
     @Override
     public String getEndpointGraphQuery(String endpointsGraph, String graphUri, String resourceHash) {
-        return "INSERT DATA { GRAPH <" + endpointsGraph + "> { <http://localhost:8080/endpoint/" + resourceHash + ">  <http://localhost:8080/endpoint/graph>  <" + graphUri + "> }}";
+        return "INSERT DATA { GRAPH <" + endpointsGraph + "> { <http://ucuenca.edu.ec/wkhuska/endpoint/" + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/graph>  <" + graphUri + "> }}";
     }
 
     @Override
@@ -119,11 +125,56 @@ public class Queries implements QueriesService {
         return "DELETE { ?id ?p ?o } "
                 + "WHERE"
                 + " { "
-                + " GRAPH <"+endpointsGraph+">"
+                + " GRAPH <" + endpointsGraph + ">"
                 + " { "
                 + " ?id ?p ?o . "
-                + " FILTER(?id = <"+id+">) "
+                + " FILTER(?id = <" + id + ">) "
                 + " } "
                 + " }";
     }
+
+    @Override
+    public String getWkhuskaGraph() {
+        return "http://ucuenca.edu.ec/wkhuska";
+    }
+
+    @Override
+    public String getCountPersonQuery(String datagraph) {
+        return "  SELECT (COUNT(?s) as ?count) WHERE { GRAPH <" + datagraph + "> { ?s rdf:type foaf:Person. }}";
+    }
+
+    @Override
+    public String getLimit(String limit) {
+        return " Limit " + limit;
+    }
+
+    @Override
+    public String getOffset(String offset) {
+        return " offset " + offset;
+    }
+
+    @Override
+    public String getProvenanceProperty() {
+        return "http://purl.org/dc/terms/provenance";
+    }
+
+    @Override
+    public String getPublicationsQuery() {
+        return " PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
+                + " SELECT * "
+                + " WHERE { "
+                + " ?subject a foaf:Person. "
+                + " ?subject foaf:name ?name."
+                + " ?subject foaf:firstName ?fname."
+                + " ?subject foaf:lastName ?lname."
+                + " {"
+                + " FILTER (regex(?name,\"Espinosa Mejia\"))"
+                + " }"
+                + " UNION"
+                + " {"
+                + " FILTER (regex(?name,\"Saquicela Galarza\"))"
+                + " }"
+                + " }";
+    }
+
 }

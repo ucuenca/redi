@@ -51,8 +51,9 @@ public class QueriesServiceTest {
     public void testGetAuthorsQuery() {
         System.out.println("getAuthorsQuery");
         QueriesService instance = new Queries();
-        String expResult = "SELECT DISTINCT ?o WHERE {  ?s <http://id.loc.gov/vocabulary/relators/aut> ?o } ORDER BY ?o";
-        String result = instance.getAuthorsQuery();
+        String wkhuskagraph = "http://ucuenca.edu.ec/wkhuska";
+        String expResult = "SELECT DISTINCT ?s WHERE { GRAPH <"+wkhuskagraph+"> { ?s rdf:type foaf:Person }}";
+        String result = instance.getAuthorsQuery(wkhuskagraph);
         Assert.assertEquals(expResult, result);
     }
 
@@ -78,9 +79,17 @@ public class QueriesServiceTest {
         String s = "";
         String p = "";
         String o = "";
+        String wkhuskaGraph = "http://ucuenca.edu.ec/wkhuska";
+        
+        String [] args = new String[4];
+        args[0]=wkhuskaGraph;
+        args[1]=s;
+        args[2]=p;
+        args[3]=o;
+        
         QueriesService instance = new Queries();
         String expResult = "";
-        String result = instance.getInsertDataLiteralQuery(s, p, o);
+        String result = instance.getInsertDataLiteralQuery(args);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -95,9 +104,10 @@ public class QueriesServiceTest {
         String subject = "http://example1.ec/resource/Juan_Perez";
         String predicate = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
         String object = "http://xmlns.com/foaf/0.1/Person";
+        String wkhuskaGraph = "http://ucuenca.edu.ec/wkhuska";
         QueriesService instance = new Queries();
-        String expResult = "INSERT DATA { <" + subject + "> <" + predicate + "> <" + object + "> }";
-        String result = instance.getInsertDataUriQuery(subject, predicate, object);
+        String expResult = "INSERT DATA { GRAPH <http://ucuenca.edu.ec/wkhuska> {<" + subject + "> <" + predicate + "> <" + object + "> }}";
+        String result = instance.getInsertDataUriQuery(wkhuskaGraph, subject, predicate, object);
         Assert.assertEquals(expResult, result);
     }
 
