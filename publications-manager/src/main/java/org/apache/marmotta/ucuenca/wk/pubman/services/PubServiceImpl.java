@@ -149,9 +149,8 @@ public class PubServiceImpl implements PubService {
                     //load pulications resource to autor resource
                     updatePub(querytoUpdate);
                     //insert provenance triplet query
-                    String provenanceQueryInsert = buildInsertQuery(sujeto, queriesService.getProvenanceProperty(), nameEndpointofPublications);
+                    String provenanceQueryInsert = buildInsertQuery(sujeto, queriesService.getProvenanceProperty(), "\"" + nameEndpointofPublications +  "\"");
                     updatePub(provenanceQueryInsert);
-
                 }
 
                 // SPARQL to obtain all data of a publication
