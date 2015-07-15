@@ -46,6 +46,7 @@ function runUpdateAuthor(options) {
             alert("Correcto: " + Result);
         },
         error: function (data) {
+            document.getElementById("imgloading").style.visibility = "hidden";
             alert("Error" + data.responseText);
         }
     });

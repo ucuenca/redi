@@ -11,11 +11,11 @@ import org.openrdf.repository.RepositoryConnection;
 
 /**
  *
- * @author Satellite
+ * @author Fernando B.
+ * CEDIA
  */
 public interface SparqlFunctionsService {
-    
-
+  
     /**
      * EXECUTE UPDATE QUERY   ( INSERT DATA ... )   to insert the author data in marmotta )
      * @param querytoUpdate

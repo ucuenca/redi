@@ -41,7 +41,7 @@ import org.apache.marmotta.ldclient.model.ClientResponse;
 import org.apache.marmotta.ldclient.provider.rdf.SPARQLProvider;
 import org.apache.marmotta.ldclient.services.ldclient.LDClient;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
-import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
+//import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 
 import org.apache.marmotta.ucuenca.wk.authors.api.AuthorService;
 import org.apache.marmotta.ucuenca.wk.authors.api.SparqlFunctionsService;
@@ -64,7 +64,7 @@ import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.sparql.SPARQLRepository;
 
 /**
- * Default Implementation of {@link AuthorService}
+ * Default Implementation of {@link AuthorService} Fernando B. CEDIA
  */
 @ApplicationScoped
 public class AuthorServiceImpl implements AuthorService {
@@ -73,7 +73,7 @@ public class AuthorServiceImpl implements AuthorService {
     private Logger log;
 
     @Inject
-    private SparqlFunctionsService authorUpdateService;
+    private SparqlFunctionsService sparqlFunctionsService;
 
     @Inject
     private ConfigurationService configurationService;
@@ -83,6 +83,10 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Inject
     private EndpointService authorsendpointService;
+
+    private String wkhuskaGraph = "http://ucuenca.edu.ec/wkhuska";
+
+    private int limit = 5000;
 
     @Override
     public String runAuthorsUpdateMultipleEP(String endpp, String graph) throws DaoException, UpdateException {
@@ -96,10 +100,17 @@ public class AuthorServiceImpl implements AuthorService {
                 response.append(":  ");
                 try {
                     response.append(getAuthorsMultipleEP(endpoint));
+                } catch (AskException ex) {
+                    java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (RepositoryException ex) {
+                    log.error("Excepcion de repositorio. Problemas en conectarse a " + endpoint.getName());
+                    java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (MalformedQueryException ex) {
+                    log.error("Excepcion de forma de consulta. Revise consultas SPARQL y sintaxis. Revise estandar SPARQL");
+                    java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (QueryEvaluationException ex) {
-                    log.error("Fallo conexion con " + endpoint.getName() + " endpoint. ");
-                    String strFalloEndpoint = "Fallo conexion. No se cargaron Datos. Revise Sparql Endpoint";
-                    response.append(strFalloEndpoint);
+                    log.error("Excepcion de ejecucion de consulta. No se ha ejecutado la consulta general para la obtencion de los Authores.");
+                    java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 someUpdate = true;
                 //     }
@@ -125,47 +136,49 @@ public class AuthorServiceImpl implements AuthorService {
         return null;
     }
 
-    public String getAuthorsMultipleEP(SparqlEndpoint endpoint) throws DaoException, QueryEvaluationException, UpdateException {
+    public String getAuthorsMultipleEP(SparqlEndpoint endpoint) throws DaoException, UpdateException, AskException, RepositoryException, MalformedQueryException, QueryEvaluationException {
+
+        int tripletasCargadas = 0; //cantidad de tripletas actualizadaas
+        int contAutoresNuevosNoCargados = 0; //cantidad de actores nuevos no cargados
+        int contAutoresNuevosEncontrados = 0; //hace referencia a la cantidad de actores existentes en el archivo temporal antes de la actualizacion
+        configurationService.getHome();
+        String lastUpdateUrisFile = configurationService.getHome() + "\\listAuthorsUpdate_" + endpoint.getName() + ".aut";
+        /* Conecting to repository using LDC ( Linked Data Client ) Library */
+        DataProvider spqprov = new SPARQLProvider();
+        ClientConfiguration config = new ClientConfiguration();
+        config.addEndpoint(new SPARQLEndpoint(endpoint.getName(), endpoint.getEndpointUrl(), "^http://190.15.141.102:8080/dspace/contribuidor/autor/.*"));
+        config.addProvider(spqprov);
+        LDClientService ldclient = new LDClient(config);
+        Repository endpointTemp = new SPARQLRepository(endpoint.getEndpointUrl());
+        endpointTemp.initialize();
+        //After that you can use the endpoint like any other Sesame Repository, by creating a connection and doing queries on that:
+        RepositoryConnection conn = endpointTemp.getConnection();
+        String querytoCount = "";
         try {
-            int tripletasCargadas = 0; //cantidad de tripletas actualizadaas
-            int contAutoresNuevosCargados = 0; //cantidad de actores nuevos cargados
-            int contAutoresNuevosEncontrados = 0; //hace referencia a la cantidad de actores existentes en el archivo temporal antes de la actualizacion
-            configurationService.getHome();
-            String lastUpdateUrisFile = configurationService.getHome() + "\\listAuthorsUpdate_" + endpoint.getName() + ".aut";
-            /* Conecting to repository using LDC ( Linked Data Client ) Library */
-            DataProvider spqprov = new SPARQLProvider();
-            ClientConfiguration config = new ClientConfiguration();
-            config.addEndpoint(new SPARQLEndpoint(endpoint.getName(), endpoint.getEndpointUrl(), "^http://190.15.141.102:8080/dspace/contribuidor/autor/.*"));
-            config.addProvider(spqprov);
-            LDClientService ldclient = new LDClient(config);
-            Repository endpointTemp = new SPARQLRepository(endpoint.getEndpointUrl());
-            endpointTemp.initialize();
-            //After that you can use the endpoint like any other Sesame Repository, by creating a connection and doing queries on that:
-            RepositoryConnection conn = endpointTemp.getConnection();
-            try {
-                //Query that let me obtain all resource related with author from source sparqlendpoint 
-                String getAuthorsQuery = queriesService.getAuthorsQuery();
-                String resource = "";
-                TupleQueryResult authorsResult = conn.prepareTupleQuery(QueryLanguage.SPARQL, getAuthorsQuery).evaluate();
+            querytoCount = queriesService.getCountPersonQuery(endpoint.getGraph());
+            TupleQueryResult countPerson = conn.prepareTupleQuery(QueryLanguage.SPARQL, querytoCount).evaluate();
+            BindingSet bindingCount = countPerson.next();
+            int numPersons = Integer.parseInt(bindingCount.getValue("count").stringValue());
+            //Query that let me obtain all resource related with author from source sparqlendpoint 
+            String getAuthorsQuery = queriesService.getAuthorsQuery(endpoint.getGraph());
+            String resource = "";
+            for (int offset = 0; offset < numPersons; offset += 5000) {
+                TupleQueryResult authorsResult = conn.prepareTupleQuery(QueryLanguage.SPARQL, getAuthorsQuery + getLimitOffset(limit, offset)).evaluate();
                 while (authorsResult.hasNext()) {
                     BindingSet binding = authorsResult.next();
-                    resource = String.valueOf(binding.getValue("o"));
-                    try {
-                        if (!authorUpdateService.askAuthor(queriesService.getAskQuery(resource))) {
-                            contAutoresNuevosEncontrados++;
-                            //consultando propiedades y sus valores del author con LDClient Library de Marmotta
+                    resource = String.valueOf(binding.getValue("s"));
+                    if (!sparqlFunctionsService.askAuthor(queriesService.getAskQuery(resource))) {
+                        contAutoresNuevosEncontrados++;
+                        //consultando propiedades y sus valores del author con LDClient Library de Marmotta
+                        String getResourcePropertyQuery = "";
+                        try {
                             ClientResponse respUri = ldclient.retrieveResource(utf8DecodeQuery(resource));
                             RepositoryConnection conUri = ModelCommons.asRepository(respUri.getData()).getConnection();
                             conUri.begin();
-                            
                             // SPARQL to get all data of a Resource
-                            String getResourcePropertyQuery = queriesService.getRetrieveResourceQuery();
+                            getResourcePropertyQuery = queriesService.getRetrieveResourceQuery();
                             TupleQuery resourcequery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getResourcePropertyQuery); //
                             TupleQueryResult tripletasResult = resourcequery.evaluate();
-                            if (tripletasResult.hasNext())
-                            {
-                                contAutoresNuevosCargados++;
-                            }
                             while (tripletasResult.hasNext()) {
                                 //obtengo name, lastname, firstname, type, etc.,   para formar tripletas INSERT
                                 BindingSet tripletsResource = tripletasResult.next();
@@ -173,143 +186,167 @@ public class AuthorServiceImpl implements AuthorService {
                                 String predicado = tripletsResource.getValue("y").toString();
                                 String objeto = tripletsResource.getValue("z").toString();
                                 ///insert sparql query,
-                                String queryAuthorInsert = buildInsertQuery(sujeto, predicado, objeto);
-                                //Aqui se carga la informacion del actor nuevo en marmotta..
-                                
-                                updateAuthor(queryAuthorInsert);
-                                tripletasCargadas++;
-                                
-                            }
+                                if (!predicado.contains("rdaregistry.info")) {
+                                    String queryAuthorInsert = buildInsertQuery(sujeto, predicado, objeto);
+                                    //load data related with author
+                                    updateAuthor(queryAuthorInsert);
+                                    tripletasCargadas++;
+                                    //insert provenance triplet query
+                                    String provenanceQueryInsert = buildInsertQuery(sujeto, queriesService.getProvenanceProperty(), endpoint.getResourceId());
+                                    updateAuthor(provenanceQueryInsert);
+                                }
+                              }
                             conUri.commit();
                             conUri.close();
+                        } catch (QueryEvaluationException ex) {
+                            log.error("Fallo al intentar evaluar " + getResourcePropertyQuery);
+                            //java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (DataRetrievalException ex) {
+                            contAutoresNuevosNoCargados++;
+                            log.error("Fallo al intentar recuperar: " + resource);
+                            //java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                    } catch (AskException ex) {
-                       log.error("Fallo consulta ASK en: " + resource);
                     }
                 }
+            }//END FOR   Obteniedo resultados de acuerdo a LIMIT y OFFSET
                 /*    
-                 *    @deprecated
-                 *    ESCRIBIENDO EN ARCHIVO TEMPORAL
-                 *    NUEVAMENTE TODOS LOS DATOS SON CONSULTADOS A LA FUENTE ( dspace endpoint )
-                 *    y almacenados en archivo temporal
-                 *    @param conn, conection endpoint and configuration
-                 *    @param query, query to obtain all resource uris of authors
-                 *    @param lastUpdateUrisFile path of temporal file to save last uris update   */
-                authorUpdateService.updateLastAuthorsFile(conn, getAuthorsQuery, lastUpdateUrisFile);
-                ldclient.shutdown();
-                log.info(endpoint.getName() +" endpoint. Se detectaron" + contAutoresNuevosEncontrados + " autores nuevos ");
-                log.info(endpoint.getName() +" endpoint. Se cargaron " + contAutoresNuevosCargados + " autores nuevos exitosamente" );
-                log.info(endpoint.getName() +" endpoint. Se cargaron " + tripletasCargadas + " tripletas ");
-                log.info(endpoint.getName() +" endpoint. No se pudieron cargar " + (contAutoresNuevosEncontrados - contAutoresNuevosCargados) + " autores");
-                return "Carga Finalizada. Revise Archivo Log Para mas detalles";
-            } catch (DataRetrievalException ex) {
-                log.error("Fallo la conexion con Sparql Endpoint");
-                return "faile 2" + ex;
-            } finally {
-                conn.close();
-            }
-        } catch (RepositoryException ex) {
-            java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return "faile 4" + ex;
-        } catch (MalformedQueryException ex) {
-            java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return "faile 5" + ex;
+             *    @deprecated
+             *    ESCRIBIENDO URIS DE AUTORES EN ARCHIVO TEMPORAL
+             *    @param conn, conection endpoint and configuration
+             *    @param query, query to obtain all resource uris of authors
+             *    @param lastUpdateUrisFile path of temporal file to save last uris update   */
+            sparqlFunctionsService.updateLastAuthorsFile(conn, getAuthorsQuery, lastUpdateUrisFile);
+            ldclient.shutdown();
+            log.info(endpoint.getName() + " endpoint. Se detectaron" + contAutoresNuevosEncontrados + " autores nuevos ");
+            log.info(endpoint.getName() + " endpoint. Se cargaron " + (contAutoresNuevosEncontrados - contAutoresNuevosNoCargados) + " autores nuevos exitosamente");
+            log.info(endpoint.getName() + " endpoint. Se cargaron " + tripletasCargadas + " tripletas ");
+            log.info(endpoint.getName() + " endpoint. No se pudieron cargar " + contAutoresNuevosNoCargados + " autores");
+            return "Carga Finalizada. Revise Archivo Log Para mas detalles";
+        } catch (QueryEvaluationException ex) {
+            log.error("Error al intentar evaluar : " + querytoCount + " en " + endpoint.getName());
+            return "Revise consulta para conteo de Datos de la fuente " + endpoint.getName();
+//               java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            conn.close();
         }
+    }
+
+    /*
+     * return 0 if no load triplet
+     * return 1 if load
+     */
+    public int loadTriplet(String sujeto, String predicado, String objeto) {
+
+        if (!predicado.contains("rdaregistry.info")) {
+            String queryAuthorInsert = buildInsertQuery(sujeto, predicado, objeto);
+            //Aqui se carga la informacion del actor nuevo en marmotta..
+            updateAuthor(queryAuthorInsert);
+            return 1;
+        }
+
+        return 0;
     }
 
     @Deprecated
     public String getAuthorsSingleEP(String endpointURL, String graphUri) throws DaoException, UpdateException, AskException {
-        try {
+//        try {
+//
+//            String lastUpdateUrisFile = "C:\\Users\\Satellite\\Desktop\\result.rdf";
+//
+//            /*         *Conecting to repository using LDC ( Linked Data Client ) Library
+//             */
+//            DataProvider spqprov = new SPARQLProvider();
+//            ClientConfiguration config = new ClientConfiguration();
+//            config.addEndpoint(new SPARQLEndpoint("Unique Endpoint", endpointURL, "^http://190.15.141.102:8080/dspace/contribuidor/autor/.*"));
+//            config.addProvider(spqprov);
+//            LDClientService ldclient = new LDClient(config);
+//            Repository endpointTemp = new SPARQLRepository(endpointURL);
+//            endpointTemp.initialize();
+//            RepositoryConnection conn = endpointTemp.getConnection();           //After that you can use the endpoint like any other Sesame Repository, by creating a connection and doing queries on that:
+//            try {
+// //               List listURIS = null;
+//                //               listURIS = getLastUpdateUris(lastUpdateUrisFile);                //load last uris saved and insert in marmotta in temporal file
+//                /*
+//                 * Consultando las uris de los recursos (Autores)  a la fuente ( dspace endpoint )
+//                 * para comparar con LAST uris (Archivo donde se almacena todas las uris cargadas a marmotta anteriormente), es decir comparar con la ultima actualizacioin previa
+//                 */
+//                //Query that let me obtain all resource related with actor from source sparqlendpoint 
+//
+//                String query = queriesService.getAuthorsQuery("http://190.15.141.102:8080/dspace/");
+//                String resource = "";
+//
+//                TupleQueryResult resulta = conn.prepareTupleQuery(QueryLanguage.SPARQL, query).evaluate();
+//                while (resulta.hasNext()) {
+//                    BindingSet binding = resulta.next();
+//                    resource = String.valueOf(binding.getValue("o"));
+//                    if (!sparqlFunctionsService.askAuthor(queriesService.getAskQuery(resource))) {
+//                        // *****consult a Resource 
+//                        //consultando informacion del author nuevo con LDClient Library de Marmotta
+//                        //obtiene informacion relacionada de ese author con la URI pasada como parametro
+//                        ClientResponse respUri = null;
+//                        try {
+//                            respUri = ldclient.retrieveResource(utf8DecodeQuery(resource));
+//                        } catch (DataRetrievalException ex) {
+//                            java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+//                        }
+//                        RepositoryConnection conUri = ModelCommons.asRepository(respUri.getData()).getConnection();
+//                        conUri.begin();
+//                        //En este momento ya se obtiene toda la informacion de ese Author
+//                        //Esa informacion se la manipula con SPARQL
+//
+//                        // SPARQL to obtain all data of a Resource
+//                        String sparql = "Select ?x ?y ?z where { ?x ?y ?z }";
+//                        TupleQuery resourcequery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, sparql); //
+//                        TupleQueryResult tripletasResult = resourcequery.evaluate();
+//                        while (tripletasResult.hasNext()) {
+//                            //La consulta realizada permite obtener todas las tripletas relacionadas con esa URI ( URI DE UN AUTOR )
+//                            //obtengo name, lastname, firstname, type    de el recurso, para formar tripletas
+//                            BindingSet tripletsResource = tripletasResult.next();
+//                            String sujeto = tripletsResource.getValue("x").toString();
+//                            String predicado = tripletsResource.getValue("y").toString();
+//                            String objeto = tripletsResource.getValue("z").toString();
+//                            ///insert sparql query, 
+//                            String querytoUpdate = buildInsertQuery(sujeto, predicado, objeto);
+//                            //Aqui se carga la informacion del actor nuevo en marmotta..
+//                            // se considera a un autor como nuevo, si su respectiva uri no se encuentra en el archivo LastUpdateFile
+//                            updateAuthor(querytoUpdate);
+//                        }
+//                        conUri.commit();
+//                        conUri.close();
+//                    }
+//                }
+//                /*    
+//                 *    ESCRIBIENDO EN ARCHIVO TEMPORAL
+//                 *    NUEVAMENTE TODOS LOS DATOS SON CONSULTADOS A LA FUENTE ( dspace endpoint )
+//                 *    y almacenados en archivo temporal
+//                 *    @param conn, conection endpoint and configuration
+//                 *    @param query, query to obtain all resource uris of authors
+//                 *    @param lastUpdateUrisFile path of temporal file to save last uris update
+//                 */
+//                sparqlFunctionsService.updateLastAuthorsFile(conn, query, lastUpdateUrisFile);
+//                ldclient.shutdown();
+//                return "Se actualizo correctamente";
+//            } catch (InvalidArgumentException ex) {
+//                java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+//                return "faile 1" + ex;
+//            } finally {
+//                conn.close();
+//            }
+//        } catch (RepositoryException ex) {
+//            java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+//            return "faile 4" + ex;
+//        } catch (MalformedQueryException ex) {
+//            java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+//            return "faile 5" + ex;
+//        } catch (QueryEvaluationException ex) {
+//            java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+//            return "faile 6" + ex;
+//        }
+        return "";
+    }
 
-            String lastUpdateUrisFile = "C:\\Users\\Satellite\\Desktop\\result.rdf";
-
-            /*         *Conecting to repository using LDC ( Linked Data Client ) Library
-             */
-            DataProvider spqprov = new SPARQLProvider();
-            ClientConfiguration config = new ClientConfiguration();
-            config.addEndpoint(new SPARQLEndpoint("Unique Endpoint", endpointURL, "^http://190.15.141.102:8080/dspace/contribuidor/autor/.*"));
-            config.addProvider(spqprov);
-            LDClientService ldclient = new LDClient(config);
-            Repository endpointTemp = new SPARQLRepository(endpointURL);
-            endpointTemp.initialize();
-            RepositoryConnection conn = endpointTemp.getConnection();           //After that you can use the endpoint like any other Sesame Repository, by creating a connection and doing queries on that:
-            try {
- //               List listURIS = null;
-                //               listURIS = getLastUpdateUris(lastUpdateUrisFile);                //load last uris saved and insert in marmotta in temporal file
-                /*
-                 * Consultando las uris de los recursos (Autores)  a la fuente ( dspace endpoint )
-                 * para comparar con LAST uris (Archivo donde se almacena todas las uris cargadas a marmotta anteriormente), es decir comparar con la ultima actualizacioin previa
-                 */
-                //Query that let me obtain all resource related with actor from source sparqlendpoint 
-                String query = queriesService.getAuthorsQuery();
-                String resource = "";
-                TupleQueryResult resulta = conn.prepareTupleQuery(QueryLanguage.SPARQL, query).evaluate();
-                while (resulta.hasNext()) {
-                    BindingSet binding = resulta.next();
-                    resource = String.valueOf(binding.getValue("o"));
-                    if (!authorUpdateService.askAuthor(queriesService.getAskQuery(resource))) {
-                        // *****consult a Resource 
-                        //consultando informacion del author nuevo con LDClient Library de Marmotta
-                        //obtiene informacion relacionada de ese author con la URI pasada como parametro
-                        ClientResponse respUri = null;
-                        try {
-                            respUri = ldclient.retrieveResource(utf8DecodeQuery(resource));
-                        } catch (DataRetrievalException ex) {
-                            java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                        RepositoryConnection conUri = ModelCommons.asRepository(respUri.getData()).getConnection();
-                        conUri.begin();
-                        //En este momento ya se obtiene toda la informacion de ese Author
-                        //Esa informacion se la manipula con SPARQL
-
-                        // SPARQL to obtain all data of a Resource
-                        String sparql = "Select ?x ?y ?z where { ?x ?y ?z }";
-                        TupleQuery resourcequery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, sparql); //
-                        TupleQueryResult tripletasResult = resourcequery.evaluate();
-                        while (tripletasResult.hasNext()) {
-                            //La consulta realizada permite obtener todas las tripletas relacionadas con esa URI ( URI DE UN AUTOR )
-                            //obtengo name, lastname, firstname, type    de el recurso, para formar tripletas
-                            BindingSet tripletsResource = tripletasResult.next();
-                            String sujeto = tripletsResource.getValue("x").toString();
-                            String predicado = tripletsResource.getValue("y").toString();
-                            String objeto = tripletsResource.getValue("z").toString();
-                            ///insert sparql query, 
-                            String querytoUpdate = buildInsertQuery(sujeto, predicado, objeto);
-                            //Aqui se carga la informacion del actor nuevo en marmotta..
-                            // se considera a un autor como nuevo, si su respectiva uri no se encuentra en el archivo LastUpdateFile
-                            updateAuthor(querytoUpdate);
-                        }
-                        conUri.commit();
-                        conUri.close();
-                    }
-                }
-                /*    
-                 *    ESCRIBIENDO EN ARCHIVO TEMPORAL
-                 *    NUEVAMENTE TODOS LOS DATOS SON CONSULTADOS A LA FUENTE ( dspace endpoint )
-                 *    y almacenados en archivo temporal
-                 *    @param conn, conection endpoint and configuration
-                 *    @param query, query to obtain all resource uris of authors
-                 *    @param lastUpdateUrisFile path of temporal file to save last uris update
-                 */
-                authorUpdateService.updateLastAuthorsFile(conn, query, lastUpdateUrisFile);
-                ldclient.shutdown();
-                return "Se actualizo correctamente";
-            } catch (InvalidArgumentException ex) {
-                java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-                return "faile 1" + ex;
-            } finally {
-                conn.close();
-            }
-        } catch (RepositoryException ex) {
-            java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return "faile 4" + ex;
-        } catch (MalformedQueryException ex) {
-            java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return "faile 5" + ex;
-        } catch (QueryEvaluationException ex) {
-            java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return "faile 6" + ex;
-        }
+    public String getLimitOffset(int limit, int offset) {
+        return " " + queriesService.getLimit(String.valueOf(limit)) + " " + queriesService.getOffset(String.valueOf(offset));
     }
 
     /*
@@ -317,7 +354,7 @@ public class AuthorServiceImpl implements AuthorService {
      *   
      */
     public Boolean askAuthor(String querytoAsk) throws AskException {
-        return authorUpdateService.askAuthor(querytoAsk);
+        return sparqlFunctionsService.askAuthor(querytoAsk);
     }
 
     /*
@@ -327,14 +364,14 @@ public class AuthorServiceImpl implements AuthorService {
     public String updateAuthor(String querytoUpdate) {
 
         try {
-            authorUpdateService.updateAuthor(querytoUpdate);
+            sparqlFunctionsService.updateAuthor(querytoUpdate);
             return "Correcto";
         } catch (UpdateException ex) {
-               log.error("Error al intentar cargar al Autor" + querytoUpdate);
-               java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-             
+            log.error("Error al intentar cargar al Autor" + querytoUpdate);
+            java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+
         }
-          return "Error" + querytoUpdate;
+        return "Error" + querytoUpdate;
     }
 
     /*
@@ -361,9 +398,9 @@ public class AuthorServiceImpl implements AuthorService {
     //construyendo sparql query insert 
     public String buildInsertQuery(String sujeto, String predicado, String objeto) {
         if (queriesService.isURI(objeto)) {
-            return queriesService.getInsertDataUriQuery(sujeto, predicado, objeto);
+            return queriesService.getInsertDataUriQuery(wkhuskaGraph, sujeto, predicado, objeto);
         } else {
-            return queriesService.getInsertDataLiteralQuery(sujeto, predicado, objeto);
+            return queriesService.getInsertDataLiteralQuery(wkhuskaGraph, sujeto, predicado, objeto);
         }
     }
 

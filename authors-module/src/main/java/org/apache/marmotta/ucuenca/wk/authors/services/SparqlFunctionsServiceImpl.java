@@ -81,6 +81,7 @@ public class SparqlFunctionsServiceImpl implements SparqlFunctionsService {
         try {
             return sparqlService.ask(QueryLanguage.SPARQL, querytoAsk);
         } catch (MarmottaException ex) {
+            log.error("Excepcion: Fallo al ejecutar consulta ASK sobre: " + querytoAsk);
             Logger.getLogger(SparqlFunctionsServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
@@ -147,5 +148,6 @@ public class SparqlFunctionsServiceImpl implements SparqlFunctionsService {
         }
         return false;
     }
+
 
 }
