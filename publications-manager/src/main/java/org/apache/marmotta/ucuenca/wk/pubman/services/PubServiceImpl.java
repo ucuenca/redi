@@ -149,11 +149,15 @@ public class PubServiceImpl implements PubService {
                     //load pulications resource to autor resource
                     updatePub(querytoUpdate);
                     //insert provenance triplet query
-                    String provenanceQueryInsert = buildInsertQuery(sujeto, queriesService.getProvenanceProperty(), "\"" + nameEndpointofPublications +  "\"");
+                    String provenanceQueryInsert = buildInsertQuery(objeto, queriesService.getProvenanceProperty(), "\"" + nameEndpointofPublications +  "\"");
                     updatePub(provenanceQueryInsert);
                 }
 
                 // SPARQL to obtain all data of a publication
+             
+                
+                
+
                 String proppubsparql = "Select ?recpub ?proppub ?objpub where { ?x <http://xmlns.com/foaf/0.1/publications> ?recpub. ?recpub ?proppub ?objpub }";
                 TupleQuery resourcequery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, proppubsparql); //
                 tripletasResult = resourcequery.evaluate();
@@ -164,13 +168,12 @@ public class PubServiceImpl implements PubService {
                     String objeto = tripletsResource.getValue("objpub").toString();
                     ///insert sparql query, 
                     String querytoUpdate = buildInsertQuery(sujeto, predicado, objeto);
-
                     //load values publications to publications resource
                     updatePub(querytoUpdate);
                 }
                 //** end View Data
-                
-                
+                   conUri.commit();
+                            conUri.close();              
 //                FileOutputStream out = new FileOutputStream("C:\\Users\\Satellite\\Desktop\\" + nameToFind + "_" + cont_aut + "_test.ttl");
 //                RDFWriter writer = Rio.createWriter(RDFFormat.TURTLE, out);
 //                try {
@@ -183,7 +186,6 @@ public class PubServiceImpl implements PubService {
 //                    // oh no, do something!
 //                }
             }
-
             return "True for publications";
             // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         } catch (MarmottaException ex) {
