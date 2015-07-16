@@ -99,9 +99,9 @@ public class Queries implements QueriesService {
         return "SELECT DISTINCT ?id ?name ?url ?graph  WHERE {  "
                 + " GRAPH <" + endpointsGraph + ">"
                 + " {"
-                + " ?id <http://localhost:8080/endpoint/name> ?name ."
-                + " ?id <http://localhost:8080/endpoint/url> ?url."
-                + " ?id <http://localhost:8080/endpoint/graph> ?graph."
+                + " ?id <http://ucuenca.edu.ec/wkhuska/resource/name> ?name ."
+                + " ?id <http://ucuenca.edu.ec/wkhuska/resource/url> ?url."
+                + " ?id <http://ucuenca.edu.ec/wkhuska/resource/graph> ?graph."
                 + " }"
                 + " }";
     }
