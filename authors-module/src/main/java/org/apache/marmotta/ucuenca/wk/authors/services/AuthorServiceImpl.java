@@ -84,9 +84,13 @@ public class AuthorServiceImpl implements AuthorService {
     @Inject
     private EndpointService authorsendpointService;
 
-    private String wkhuskaGraph = "http://ucuenca.edu.ec/wkhuska";
+    private String namespaceGraph = "http://ucuenca.edu.ec/";
+    private String wkhuskaGraph = namespaceGraph + "wkhuska";
+    private String providerGraph = namespaceGraph +"wkhuska/"; //this graph was created with data source name  example:  http://ucuenca.edu.ec/wkhuska/provider_dblp
 
     private int limit = 5000;
+    
+    private int processpercent=0;
 
     @Override
     public String runAuthorsUpdateMultipleEP(String endpp, String graph) throws DaoException, UpdateException {
@@ -158,18 +162,20 @@ public class AuthorServiceImpl implements AuthorService {
             querytoCount = queriesService.getCountPersonQuery(endpoint.getGraph());
             TupleQueryResult countPerson = conn.prepareTupleQuery(QueryLanguage.SPARQL, querytoCount).evaluate();
             BindingSet bindingCount = countPerson.next();
-            int numPersons = Integer.parseInt(bindingCount.getValue("count").stringValue());
+            int allPersons = Integer.parseInt(bindingCount.getValue("count").stringValue());
             //Query that let me obtain all resource related with author from source sparqlendpoint 
             String getAuthorsQuery = queriesService.getAuthorsQuery(endpoint.getGraph());
             String resource = "";
-            for (int offset = 0; offset < numPersons; offset += 5000) {
-                TupleQueryResult authorsResult = conn.prepareTupleQuery(QueryLanguage.SPARQL, getAuthorsQuery + getLimitOffset(limit, offset)).evaluate();
+            for (int offset = 0; offset < allPersons; offset += 5000) {
+            try{
+            TupleQueryResult authorsResult = conn.prepareTupleQuery(QueryLanguage.SPARQL, getAuthorsQuery + getLimitOffset(limit, offset)).evaluate();
                 while (authorsResult.hasNext()) {
                     BindingSet binding = authorsResult.next();
                     resource = String.valueOf(binding.getValue("s"));
                     if (!sparqlFunctionsService.askAuthor(queriesService.getAskQuery(resource))) {
                         contAutoresNuevosEncontrados++;
-                        //consultando propiedades y sus valores del author con LDClient Library de Marmotta
+                        printPercentProcess(contAutoresNuevosEncontrados,allPersons,endpoint.getName());
+                        //properties and values quering with LDClient Library de Marmotta
                         String getResourcePropertyQuery = "";
                         try {
                             ClientResponse respUri = ldclient.retrieveResource(utf8DecodeQuery(resource));
@@ -186,28 +192,24 @@ public class AuthorServiceImpl implements AuthorService {
                                 String predicado = tripletsResource.getValue("y").toString();
                                 String objeto = tripletsResource.getValue("z").toString();
                                 ///insert sparql query,
-                                if (!predicado.contains("rdaregistry.info")) {
-                                    String queryAuthorInsert = buildInsertQuery(sujeto, predicado, objeto);
-                                    //load data related with author
-                                    updateAuthor(queryAuthorInsert);
-                                    tripletasCargadas++;
-                                    //insert provenance triplet query
-                                    String provenanceQueryInsert = buildInsertQuery(sujeto, queriesService.getProvenanceProperty(), endpoint.getResourceId());
-                                    updateAuthor(provenanceQueryInsert);
-                                }
-                              }
+                                tripletasCargadas = tripletasCargadas + executeInsertQuery(sujeto, predicado, objeto, endpoint);                          
+                            }
                             conUri.commit();
                             conUri.close();
                         } catch (QueryEvaluationException ex) {
-                            log.error("Fallo al intentar evaluar " + getResourcePropertyQuery);
+                            log.error("Al evaluar la consulta: " + getResourcePropertyQuery);
                             //java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
                         } catch (DataRetrievalException ex) {
                             contAutoresNuevosNoCargados++;
-                            log.error("Fallo al intentar recuperar: " + resource);
+                            //log.error("Al recuperar datos del recurso : " + resource);
                             //java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
                 }
+                }catch(QueryEvaluationException ex){
+                       log.error("Fallo consulta ASK de:  " + resource);
+                }
+                        
             }//END FOR   Obteniedo resultados de acuerdo a LIMIT y OFFSET
                 /*    
              *    @deprecated
@@ -229,6 +231,36 @@ public class AuthorServiceImpl implements AuthorService {
         } finally {
             conn.close();
         }
+    }
+
+public int executeInsertQuery(String sujeto, String predicado, String objeto, SparqlEndpoint endpoint )
+{
+      ///insert sparql query,
+                                if (!predicado.contains("rdaregistry.info")) {
+                                    String queryAuthorInsert = buildInsertQuery(sujeto, predicado, objeto);
+                                    //load data related with author
+                                    updateAuthor(queryAuthorInsert);
+                                    //insert provenance triplet query
+                                    String provenanceQueryInsert = buildInsertQuery(sujeto, queriesService.getProvenanceProperty(), endpoint.getResourceId());
+                                    updateAuthor(provenanceQueryInsert);
+                                    return 1;
+                                } 
+                                return 0;
+}
+    
+/*
+ * 
+ * @param contAutoresNuevosEncontrados
+ * @param allPersons
+ * @param endpointName 
+ */
+    public void printPercentProcess(int contAutoresNuevosEncontrados, int allPersons, String endpointName) {
+        
+        if ((contAutoresNuevosEncontrados * 100 / allPersons)!=processpercent)
+        {   
+        processpercent = contAutoresNuevosEncontrados * 100 / allPersons;
+        log.info("Procesado el: " + processpercent + " % del Endpoint: " + endpointName);
+         }
     }
 
     /*
