@@ -5,7 +5,7 @@
  */
 package org.apache.marmotta.ucuenca.wk.commons.impl;
 
-import java.net.URL;
+import org.apache.marmotta.kiwi.model.rdf.KiWiUriResource;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 
 /**
@@ -60,13 +60,11 @@ public class Queries implements QueriesService {
      */
     @Override
     public Boolean isURI(String object) {
-        URL url = null;
         try {
-            url = new URL(object);
-        } catch (Exception e1) {
+            return new KiWiUriResource(object).isUriResource();
+        } catch (Exception e) {
             return false;
         }
-        return "http".equals(url.getProtocol());
     }
 
     /**
@@ -218,11 +216,11 @@ public class Queries implements QueriesService {
     }
 
     @Override
-    public String getPublicationsPropertiesQuery(String providerGraph , String publicationResource) {
+    public String getPublicationsPropertiesQuery(String providerGraph, String publicationResource) {
         return "PREFIX owl: <http://www.w3.org/2002/07/owl#> "
                 + " PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
                 + " SELECT DISTINCT ?publicationProperties ?publicationPropertyValue WHERE { "
-                + " graph <"+providerGraph+"> "
+                + " graph <" + providerGraph + "> "
                 + " {"
                 + " <" + publicationResource + ">  ?publicationProperties ?publicationPropertyValue. "
                 + " }} ";
