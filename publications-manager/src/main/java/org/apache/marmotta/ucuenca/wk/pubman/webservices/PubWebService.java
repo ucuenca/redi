@@ -65,11 +65,33 @@ public class PubWebService {
     
     private static final int MAX_TURNS = 100;
     private static final int MIN_TURNS = 0;
-    public static final String LOAD_PUBLICATIONS = "/publications";
+    public static final String GET_PUBLICATIONS = "/publications";
+    public static final String LOAD_PUBLICATIONS = "/publications_provider_graph";
     
+    /*
+    * Get Publications Data from Source and Load into Provider Graph
+    */
+    @POST
+    @Path(GET_PUBLICATIONS)
+    public Response readPublicationsPost(@QueryParam("Endpoint") String resultType) {
+            String params = resultType;
+            log.debug("Publications Task", params);
+            return runPublicationsProviderTask(params);    
+    }
+    
+     private Response runPublicationsProviderTask(String urisString) {
+              String result = publicationsService.runPublicationsProviderTaskImpl(urisString);
+                return Response.ok().entity(result).build();        
+
+        
+     }
+    
+      /*
+    * Get Publications Data from  Provider Graph and load into General Graph
+    */
     @POST
     @Path(LOAD_PUBLICATIONS)
-    public Response addEndpointPost(@QueryParam("Endpoint") String resultType) {
+    public Response loadPublicationsPost(@QueryParam("Endpoint") String resultType) {
             String params = resultType;
             log.debug("Publications Task", params);
             return runPublicationsTask(params);    
@@ -78,10 +100,10 @@ public class PubWebService {
      private Response runPublicationsTask(String urisString) {
               String result = publicationsService.runPublicationsTaskImpl(urisString);
                 return Response.ok().entity(result).build();        
-
-        
      }
-    
+     
+     
+     
     @GET
     @Produces("text/plain; charset=utf8")
     public Response hello(@QueryParam("name") String name) {

@@ -43,6 +43,19 @@ public interface PubService {
      */
     String helloWorld(String name);
 
+    
+    /**
+     * Get publications data from source, and load into provider graph
+     * @param param
+     * @return 
+     */
+    String runPublicationsProviderTaskImpl(String param);
+    
+    /**
+     * Load publications:  Provider Graph to General Graph
+     * @param param
+     * @return 
+     */
     String runPublicationsTaskImpl(String param);
     
 }

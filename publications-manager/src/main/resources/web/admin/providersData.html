@@ -26,9 +26,9 @@
         <script type="text/javascript" src="../../core/public/js/widgets/configurator/configurator.js"></script>
         <script type="text/javascript">
             var host =  _SERVER_URL;
-            function runPub()
+            function run()
             {
-                runGeneralPublication(host);
+                runUpdatePublication(host);
             }
         </script>
         <!--###END_HEAD###-->
@@ -39,10 +39,11 @@
         -->
 
         <!--###BEGIN_CONTENT###-->
-        <h1>GET PUBLICATIONS DATA </h1>
+        <h1>GET PUBLICATIONS DATA FROM PROVIDERS </h1>
         <h2>CEDIA:  REPOSITORIO SEMÁNTICO DE INVESTIGADORES DEL ECUADOR </h2>
         <p>
             This module allows automatic extraction information regarding publications of authors.
+            The publications will be stored in different graphs by provider.
         </p>
 
 
@@ -52,7 +53,7 @@
 
         </ul>
 
-        <h2> PUBLICACIONES DE AUTORES </h2>
+        <h2> PUBLICATIONS BY PROVIDERS </h2>
 
         <!-- <p><a href="#" onClick="runUpdateAuthor();">UPDATE</a></p>    --> 
         <p>
@@ -60,9 +61,9 @@
             Publications
         </p>
         <p>"Publications-Manager" descripcion...</p>
-        <p>Obtener datos de publicaciones</p>
+        <p>get publications data</p>
         <form> 
-            <button type="button"  onclick="runPub()"  value="Activar Función">PUBLICATIONS TASK</button>
+            <button type="button"  onclick="run()"  value="Activar Función">PUBLICATIONS FROM PROVIDERS TASK</button>
             <div id="imgloading" style="visibility: hidden">
                 <img src="img/ajax-loader-big.gif" alt="Loading Authors" height="120" width="120">
                 <p> Please wait until the reply message</p>
