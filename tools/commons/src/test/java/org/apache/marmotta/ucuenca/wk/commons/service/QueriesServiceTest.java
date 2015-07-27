@@ -106,7 +106,7 @@ public class QueriesServiceTest {
         String object = "http://xmlns.com/foaf/0.1/Person";
         String wkhuskaGraph = "http://ucuenca.edu.ec/wkhuska";
         QueriesService instance = new Queries();
-        String expResult = "INSERT DATA { GRAPH <http://ucuenca.edu.ec/wkhuska> {<" + subject + "> <" + predicate + "> <" + object + "> }}";
+        String expResult = "INSERT DATA { GRAPH <http://ucuenca.edu.ec/wkhuska> { <" + subject + "> <" + predicate + "> <" + object + "> }}";
         String result = instance.getInsertDataUriQuery(wkhuskaGraph, subject, predicate, object);
         Assert.assertEquals(expResult, result);
     }

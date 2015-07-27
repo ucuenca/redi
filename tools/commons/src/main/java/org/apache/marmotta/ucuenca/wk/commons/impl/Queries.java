@@ -32,12 +32,10 @@ public class Queries implements QueriesService {
      */
     @Override
     public String getInsertDataLiteralQuery(String... varargs) {
-        String wkhuskaGraph = varargs[0];
-        String subject = varargs[1];
-        String predicate = varargs[2];
-        String object = varargs[3];
-        String graphSentence = "GRAPH <" + wkhuskaGraph + ">";
-        return "INSERT DATA { " + graphSentence + " {<" + subject + "> <" + predicate + "> " + object + " }}";
+        String graphSentence = "GRAPH <" + varargs[0] + ">";
+        String subjectSentence = "<" + varargs[1] + ">";
+        return "INSERT DATA { " + graphSentence + "  { " + subjectSentence + " <" + varargs[2] + "> " + varargs[3] + " }}";
+
     }
 
     /**
@@ -48,12 +46,9 @@ public class Queries implements QueriesService {
      */
     @Override
     public String getInsertDataUriQuery(String... varargs) {
-        String wkhuskaGraph = varargs[0];
-        String subject = varargs[1];
-        String predicate = varargs[2];
-        String object = varargs[3];
-        String graphSentence = "GRAPH <" + wkhuskaGraph + ">";
-        return "INSERT DATA { " + graphSentence + " {<" + subject + "> <" + predicate + "> <" + object + "> }}";
+        String graphSentence = "GRAPH <" + varargs[0] + ">";
+        String subjectSentence = "<" + varargs[1] + ">";
+        return "INSERT DATA { " + graphSentence + " { " + subjectSentence + " <" + varargs[2] + "> <" + varargs[3] + "> }}";
 
     }
 
@@ -74,6 +69,12 @@ public class Queries implements QueriesService {
         return "http".equals(url.getProtocol());
     }
 
+    /**
+     * Return ASK query for a resource
+     *
+     * @param resource
+     * @return
+     */
     @Override
     public String getAskQuery(String resource) {
         return "ASK { <" + resource + "> ?p ?o }";
@@ -159,7 +160,7 @@ public class Queries implements QueriesService {
     }
 
     @Override
-    public String getPublicationsQuery() {
+    public String getAuthorsQuery() {
         return " PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
                 + " SELECT * "
                 + " WHERE { "
@@ -177,4 +178,53 @@ public class Queries implements QueriesService {
                 + " }";
     }
 
+    /**
+     * get list of graphs query
+     *
+     * @return
+     */
+    @Override
+    public String getGraphsQuery() {
+        return " SELECT DISTINCT ?grafo WHERE { "
+                + " graph ?grafo {?x ?y ?z } "
+                + " } ";
+    }
+
+    /**
+     * Return ASK query for triplet
+     *
+     * @param subject
+     * @param predicate
+     * @param object
+     * @return
+     */
+    @Override
+    public String getAskQuery(String... varargs) {
+        String graphSentence = "GRAPH <" + varargs[0] + ">";
+
+        return "ASK { " + graphSentence + "{ <" + varargs[1] + "> <" + varargs[2] + "> <" + varargs[3] + "> } }";
+    }
+
+    @Override
+    public String getPublicationsQuery(String providerGraph) {
+        return " SELECT DISTINCT ?authorResource ?pubproperty ?publicationResource WHERE { "
+                + " graph <" + providerGraph + "> "
+                + " {  "
+                + " ?authorResource owl:sameAs   ?authorNative. "
+                + " ?authorNative ?pubproperty ?publicationResource. "
+                + " filter (regex(?pubproperty,\"pub\")) "
+                + " }  "
+                + " }  ";
+    }
+
+    @Override
+    public String getPublicationsPropertiesQuery(String providerGraph , String publicationResource) {
+        return "PREFIX owl: <http://www.w3.org/2002/07/owl#> "
+                + " PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
+                + " SELECT DISTINCT ?publicationProperties ?publicationPropertyValue WHERE { "
+                + " graph <"+providerGraph+"> "
+                + " {"
+                + " <" + publicationResource + ">  ?publicationProperties ?publicationPropertyValue. "
+                + " }} ";
+    }
 }
