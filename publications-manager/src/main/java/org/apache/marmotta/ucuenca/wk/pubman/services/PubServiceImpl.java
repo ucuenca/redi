@@ -221,6 +221,7 @@ public class PubServiceImpl implements PubService {
                 priorityToFind = 2;
                 do {
                     try {
+                        
                         nameToFind = priorityFindQueryBuilding(priorityToFind, firstName, lastName);
 
                         String NS_DBLP = "http://rdf.dblp.com/ns/search/";
@@ -292,12 +293,17 @@ public class PubServiceImpl implements PubService {
 //                            }
 
                         }//end if numMembers=1
-                        priorityToFind++;
+                        
                         conUri.commit();
                         conUri.close();
                     } catch (DataRetrievalException | QueryEvaluationException | MalformedQueryException | RepositoryException ex) {
                         // log.error("Fail to insert );
                     }
+                   catch (Exception e)
+                   {
+                       log.error(e.toString());
+                   }
+                    priorityToFind++;
                 } while (allMembers != 1 && priorityToFind < 5);//end do while
                 //** end View Data
 
@@ -311,7 +317,7 @@ public class PubServiceImpl implements PubService {
     }
 
     public String priorityFindQueryBuilding(int priority, String firstName, String lastName) {
-        String[] fnamelname = {"", "", "", ""};
+        String[] fnamelname = {"", "", "", "",""};
         /**
          * fnamelname[0] is a firstName A fnamelname[1] is a firstName B
          * fnamelname[2] is a lastName A fnamelname[3] is a lastName B
