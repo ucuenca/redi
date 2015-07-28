@@ -279,17 +279,17 @@ public class PubServiceImpl implements PubService {
                                 updatePub(publicationPropertyInsertQuery);
                             }
 
-                            FileOutputStream out = new FileOutputStream("C:\\Users\\Satellite\\Desktop\\" + nameToFind + "_" + cont_aut + "_test.ttl");
-                            RDFWriter writer = Rio.createWriter(RDFFormat.TURTLE, out);
-                            try {
-                                writer.startRDF();
-                                for (Statement st : model) {
-                                    writer.handleStatement(st);
-                                }
-                                writer.endRDF();
-                            } catch (RDFHandlerException e) {
-                                // oh no, do something!
-                            }
+//                            FileOutputStream out = new FileOutputStream("C:\\Users\\Satellite\\Desktop\\" + nameToFind + "_" + cont_aut + "_test.ttl");
+//                            RDFWriter writer = Rio.createWriter(RDFFormat.TURTLE, out);
+//                            try {
+//                                writer.startRDF();
+//                                for (Statement st : model) {
+//                                    writer.handleStatement(st);
+//                                }
+//                                writer.endRDF();
+//                            } catch (RDFHandlerException e) {
+//                                // oh no, do something!
+//                            }
 
                         }//end if numMembers=1
                         priorityToFind++;
@@ -303,9 +303,7 @@ public class PubServiceImpl implements PubService {
 
             }
             return "True for publications";
-        } catch (FileNotFoundException ex) {
-            log.error("File no found");
-        } catch (MarmottaException ex) {
+        }  catch (MarmottaException ex) {
             log.error("Marmotta Exception: " + ex);
         }
 
