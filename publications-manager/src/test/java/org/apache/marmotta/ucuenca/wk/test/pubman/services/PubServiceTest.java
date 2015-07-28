@@ -34,26 +34,7 @@ public class PubServiceTest {
         marmotta = new EmbeddedMarmotta();
         myService = marmotta.getService(PubService.class);
     }
-    /*
-    @Test
-    public void testDoThis() {
-
-    }*/
-
-    /*
-    @Test
-    public void testDoThat() {
-
-    }*/
-
-    @Test
-    public void testHelloWorld() {
-        Assert.assertEquals("Hello You", myService.helloWorld("You"));
-        Assert.assertEquals("Hello Steve", myService.helloWorld("Steve"));
-        Assert.assertEquals("Hello Tom", myService.helloWorld("Tom"));
-        Assert.assertEquals("Hello Ron", myService.helloWorld("Ron"));
-        Assert.assertEquals("Hello Fernández", myService.helloWorld("Fernández"));
-    }
+  
 
     @AfterClass
     public static void tearDown() {

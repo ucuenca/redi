@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.marmotta.commons.sesame.model.ModelCommons;
+import org.apache.marmotta.kiwi.model.rdf.KiWiUriResource;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
 import org.apache.marmotta.ldclient.model.ClientConfiguration;
 import org.apache.marmotta.ldclient.model.ClientResponse;
@@ -90,27 +91,8 @@ public class PubServiceImpl implements PubService {
      */
     private String graphByProviderNS = wkhuskaGraph + "/provider/";
 
-    @Override
-    public void doThis(int i) {
-        log.debug("Doing that for {} times...", i);
-        for (int j = 0; j < i; j++) {
-            doThat();
-        }
-        log.debug("Did this.");
-    }
-
-    @Override
-    public void doThat() {
-        log.debug("Doing THAT");
-    }
     @Inject
     private SparqlService sparqlService;
-
-    @Override
-    public String helloWorld(String name) {
-        log.debug("Greeting {}", name);
-        return "Hello " + name;
-    }
 
     @Override
     public String runPublicationsTaskImpl(String param) {
@@ -126,6 +108,8 @@ public class PubServiceImpl implements PubService {
 
             for (Map<String, Value> map : resultGraph) {
                 providerGraph = map.get("grafo").toString();
+                KiWiUriResource providerGraphResource = new KiWiUriResource(providerGraph);
+
                 if (providerGraph.contains("provider")) {
 
                     Properties propiedades = new Properties();
@@ -135,7 +119,7 @@ public class PubServiceImpl implements PubService {
                         ClassLoader classLoader = getClass().getClassLoader();
                         //File file = new File(classLoader.getResource("DBLPProvider.properties").getFile());
 
-                        entrada = classLoader.getResourceAsStream("DBLPProvider.properties");
+                        entrada = classLoader.getResourceAsStream(providerGraphResource.getLocalName() + ".properties");
                         // cargamos el archivo de propiedades
                         propiedades.load(entrada);
 
@@ -143,7 +127,6 @@ public class PubServiceImpl implements PubService {
                             String target = propiedades.getProperty(source);
                             mapping.put(source.replace("..", ":"), target.replace("..", ":"));
                         }
-
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     } finally {
@@ -156,15 +139,6 @@ public class PubServiceImpl implements PubService {
                         }
                     }
 
-//                    String getPublicationsQuery = ""
-//                            + " SELECT DISTINCT ?s ?object ?pubproperty ?publication WHERE { "
-//                            + " graph <http://ucuenca.edu.ec/wkhuska/provider/DBLPProvider> "
-//                            + " { "
-//                            + " ?s owl:sameAs   ?object. "
-//                            + " ?object ?pubproperty ?publication. "
-//                            + " filter (regex(?pubproperty,\"pub\")) "
-//                            + " } "
-//                            + " } ";
                     List<Map<String, Value>> resultPublications = sparqlService.query(QueryLanguage.SPARQL, queriesService.getPublicationsQuery(providerGraph));
                     for (Map<String, Value> pubresource : resultPublications) {
                         String authorResource = pubresource.get("authorResource").toString();
@@ -186,14 +160,6 @@ public class PubServiceImpl implements PubService {
                             }
                         }
 
-                        //obteniendo propiedades de la publicacion
-//                        String getpropertiesQuery = " PREFIX owl: <http://www.w3.org/2002/07/owl#> "
-//                                + " PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
-//                                + " SELECT DISTINCT ?properties ?objeto WHERE { "
-//                                + " graph <http://ucuenca.edu.ec/wkhuska/provider/DBLPProvider> "
-//                                + " { "
-//                                + " <" + publicationResource + ">  ?properties ?objeto. "
-//                                + " }} ";
                         List<Map<String, Value>> resultPubProperties = sparqlService.query(QueryLanguage.SPARQL, queriesService.getPublicationsPropertiesQuery(providerGraph, publicationResource));
                         for (Map<String, Value> pubproperty : resultPubProperties) {
                             String nativeProperty = pubproperty.get("publicationProperties").toString();
@@ -258,9 +224,7 @@ public class PubServiceImpl implements PubService {
                         nameToFind = priorityFindQueryBuilding(priorityToFind, firstName, lastName);
 
                         String NS_DBLP = "http://rdf.dblp.com/ns/search/";
-                        ClientResponse response;
-
-                        response = ldClient.retrieveResource(NS_DBLP + nameToFind);
+                        ClientResponse response = ldClient.retrieveResource(NS_DBLP + nameToFind);
 
                         String nameEndpointofPublications = ldClient.getEndpoint(NS_DBLP + nameToFind).getName();
                         String providerGraph = graphByProviderNS + nameEndpointofPublications.replace(" ", "");
@@ -272,26 +236,20 @@ public class PubServiceImpl implements PubService {
                          model = response.getData();*/
                         log.info(model.toString());
 
-                        /**
-                         * temporal
-                         *
-                         * get data in memory
-                         *
-                         */
                         RepositoryConnection conUri = ModelCommons.asRepository(response.getData()).getConnection();
                         conUri.begin();
 
-                        //verificando miembros recuperados. Si mas de un miembro, entonces cambia filtro de consulta
-                        String numMembersQuery = "SELECT DISTINCT (count(?members) as ?nummembers) where {       ?x <http://xmlns.com/foaf/0.1/member> ?members. }";
-                        TupleQuery memquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, numMembersQuery); //
+                        //verifying the number of persons retrieved. if it has recovered more than one persons then the filter is changed and search anew,
+                        String getNumMembersQuery = queriesService.getNumMembersQuery();
+                        TupleQuery memquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getNumMembersQuery); //
                         TupleQueryResult numMembersResult = memquery.evaluate();
                         BindingSet bindingCount = numMembersResult.next();
-                        allMembers = Integer.parseInt(bindingCount.getValue("nummembers").stringValue());
+                        allMembers = Integer.parseInt(bindingCount.getValue("numMembers").stringValue());
 
                         if (allMembers == 1) {
                             //SPARQL obtain all publications of author
-                            String getPublicationsFromProvidersQuery = "SELECT DISTINCT ?authorResource  ?publicationResource WHERE {  ?authorResource <http://xmlns.com/foaf/0.1/publications> ?publicationResource. }";
-                            TupleQuery pubquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationsFromProvidersQuery); //
+                            String getPublicationsFromProviderQuery = queriesService.getPublicationFromProviderQuery();
+                            TupleQuery pubquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationsFromProviderQuery); //
                             TupleQueryResult tripletasResult = pubquery.evaluate();
                             while (tripletasResult.hasNext()) {
                                 BindingSet tripletsResource = tripletasResult.next();
@@ -307,8 +265,8 @@ public class PubServiceImpl implements PubService {
                             }
 
                             // SPARQL to obtain all data of a publication
-                            String getPublicationsPropertiesQuery = "Select ?publicationResource ?publicationProperty ?publicationPropertyValue where { ?authorResource <http://xmlns.com/foaf/0.1/publications> ?publicationResource. ?publicationResource ?publicationProperty ?publicationPropertyValue }";
-                            TupleQuery resourcequery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationsPropertiesQuery); //
+                            String getPublicationPropertiesQuery = queriesService.getPublicationPropertiesQuery();
+                            TupleQuery resourcequery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationPropertiesQuery); //
                             tripletasResult = resourcequery.evaluate();
                             while (tripletasResult.hasNext()) {
                                 BindingSet tripletsResource = tripletasResult.next();
@@ -321,8 +279,6 @@ public class PubServiceImpl implements PubService {
                                 updatePub(publicationPropertyInsertQuery);
                             }
 
-                            conUri.commit();
-                            conUri.close();
                             FileOutputStream out = new FileOutputStream("C:\\Users\\Satellite\\Desktop\\" + nameToFind + "_" + cont_aut + "_test.ttl");
                             RDFWriter writer = Rio.createWriter(RDFFormat.TURTLE, out);
                             try {
@@ -334,26 +290,23 @@ public class PubServiceImpl implements PubService {
                             } catch (RDFHandlerException e) {
                                 // oh no, do something!
                             }
+
                         }//end if numMembers=1
                         priorityToFind++;
-                    } catch (DataRetrievalException ex) {
-                        java.util.logging.Logger.getLogger(PubServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (QueryEvaluationException ex) {
-                        java.util.logging.Logger.getLogger(PubServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (MalformedQueryException ex) {
-                        java.util.logging.Logger.getLogger(PubServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (RepositoryException ex) {
-                        java.util.logging.Logger.getLogger(PubServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                        conUri.commit();
+                        conUri.close();
+                    } catch (DataRetrievalException | QueryEvaluationException | MalformedQueryException | RepositoryException ex) {
+                        // log.error("Fail to insert );
                     }
-                } while (allMembers != 1 && priorityToFind < 5);//end di while
+                } while (allMembers != 1 && priorityToFind < 5);//end do while
                 //** end View Data
 
             }
             return "True for publications";
         } catch (FileNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PubServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            log.error("File no found");
         } catch (MarmottaException ex) {
-            java.util.logging.Logger.getLogger(PubServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            log.error("Marmotta Exception: " + ex);
         }
 
         return "fail";

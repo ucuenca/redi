@@ -19,29 +19,6 @@ package org.apache.marmotta.ucuenca.wk.pubman.api;
 
 public interface PubService {
 
-    /**
-     * Does that for a given number of times
-     * 
-     * @param i
-     *            number of iterations to {@link #doThat()}
-     * 
-     * @see #doThat()
-     */
-    void doThis(int i);
-
-    /**
-     * Does that.
-     */
-    void doThat();
-
-    /**
-     * Echoes <code>"Hello &lt;name&gt;"</code>.
-     * 
-     * @param name
-     *            the name to echo
-     * @return <code>"Hello &lt;name&gt;"</code>
-     */
-    String helloWorld(String name);
 
     
     /**
