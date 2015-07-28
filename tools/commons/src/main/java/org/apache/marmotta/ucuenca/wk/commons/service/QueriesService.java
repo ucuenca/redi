@@ -95,4 +95,11 @@ public interface QueriesService {
     
     String getPublicationsPropertiesQuery(String providerGraph, String publicationResource);
 
+    String getNumMembersQuery();
+    
+    String getPublicationFromProviderQuery();
+    
+    String getPublicationPropertiesQuery();
+
+    
 }

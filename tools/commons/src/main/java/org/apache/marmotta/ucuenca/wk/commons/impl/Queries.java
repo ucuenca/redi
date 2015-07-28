@@ -227,4 +227,25 @@ public class Queries implements QueriesService {
                 + " <" + publicationResource + ">  ?publicationProperties ?publicationPropertyValue. "
                 + " }} ";
     }
+
+    @Override
+    public String getNumMembersQuery() {
+        return "SELECT DISTINCT (count(?members) as ?numMembers) "
+                + " WHERE { ?x <http://xmlns.com/foaf/0.1/member> ?members. } ";
+    }
+    
+    @Override
+    public String getPublicationFromProviderQuery() {
+        return  "SELECT DISTINCT ?authorResource  ?publicationResource "
+                + " WHERE {  ?authorResource <http://xmlns.com/foaf/0.1/publications> ?publicationResource. }";
+    }
+
+    @Override
+    public String getPublicationPropertiesQuery() {
+       return "SELECT DISTINCT ?publicationResource ?publicationProperty ?publicationPropertyValue "
+               + " WHERE { ?authorResource <http://xmlns.com/foaf/0.1/publications> ?publicationResource. ?publicationResource ?publicationProperty ?publicationPropertyValue }";
+    
+    }
+    
+    
 }
