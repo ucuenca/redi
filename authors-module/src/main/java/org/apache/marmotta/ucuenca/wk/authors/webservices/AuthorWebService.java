@@ -62,39 +62,6 @@ public class AuthorWebService {
      
     public static final String AUTHOR_UPDATE = "/update";
     public static final String ADD_ENDPOINT = "/addendpoint";
-/*
-    private static final int MAX_TURNS = 100;
-    private static final int MIN_TURNS = 0;
-
-    @GET
-    @Produces("text/plain; charset=utf8")
-    public Response hello(@QueryParam("name") String name) {
-        if (StringUtils.isEmpty(name)) {
-            log.warn("No name given");
-            // No name given? Invalid request.
-            return Response.status(Status.BAD_REQUEST).entity("Missing Parameter 'name'").build();
-        }
-
-        log.debug("Sending regards to {}", name);
-        // Return the greeting.
-        return Response.ok(myService.helloWorld(name)).build();
-    }
-
-    @POST
-    public Response doThis(@FormParam("turns") @DefaultValue("2") int turns) throws DoThisException {
-        log.debug("Request to doThis {} times", turns);
-        if (turns > MAX_TURNS) {
-            throw new DoThisException("At max, 100 turns are allowed");
-        }
-        if (turns < MIN_TURNS) {
-            throw new DoThisException("Can't undo 'This'");
-        }
-
-        myService.doThis(turns);
-        return Response.noContent().build();
-    }
-
-*/
 
     /**
      * Add Endpoint Service

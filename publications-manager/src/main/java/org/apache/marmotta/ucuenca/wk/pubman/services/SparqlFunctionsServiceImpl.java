@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.apache.marmotta.ucuenca.wk.authors.services;
+package org.apache.marmotta.ucuenca.wk.pubman.services;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -12,7 +12,7 @@ import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
-import org.apache.marmotta.kiwi.model.rdf.KiWiUriResource;
+
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 
@@ -26,14 +26,13 @@ import org.openrdf.query.UpdateExecutionException;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
-import org.apache.marmotta.ucuenca.wk.authors.api.SparqlFunctionsService;
-import org.apache.marmotta.ucuenca.wk.authors.exceptions.AskException;
-import org.apache.marmotta.ucuenca.wk.authors.exceptions.UpdateException;
-import org.apache.marmotta.platform.versioning.services.VersioningSailProvider;
+import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
+//import org.apache.marmotta.ucuenca.wk.authors.exceptions.AskException;
+import org.apache.marmotta.ucuenca.wk.pubman.exceptions.PubException;
+//import org.apache.marmotta.platform.versioning.services.VersioningSailProvider;
 import org.apache.marmotta.platform.core.api.triplestore.SesameService;
 
-import org.openrdf.model.URI;
-import org.openrdf.sail.SailException;
+
 import org.openrdf.query.resultio.text.csv.SPARQLResultsCSVWriter;
 /**
  *
@@ -48,14 +47,14 @@ public class SparqlFunctionsServiceImpl implements SparqlFunctionsService {
     @Inject
     private SparqlService sparqlService;
 
-    @Inject
-    private VersioningSailProvider versioningService;
+ //   @Inject
+  //  private VersioningSailProvider versioningService;
     
     @Inject
     private SesameService sesameService;
             
     @Override
-    public boolean updateAuthor(String querytoUpdate) throws UpdateException {
+    public boolean updatePub(String querytoUpdate) throws PubException {
         try {
 
             /**
@@ -75,7 +74,7 @@ public class SparqlFunctionsServiceImpl implements SparqlFunctionsService {
         }
     }
     
-    @Override
+   /* @Override
     public boolean askAuthor(String querytoAsk) throws  AskException{
        
         try {
@@ -85,8 +84,8 @@ public class SparqlFunctionsServiceImpl implements SparqlFunctionsService {
             Logger.getLogger(SparqlFunctionsServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
-    }
-
+    }*/
+/*
     @Override
     @Deprecated
     public boolean askAuthorVersioning(String resourceURI)
@@ -111,10 +110,10 @@ public class SparqlFunctionsServiceImpl implements SparqlFunctionsService {
         }
          return false;
     }
-    
+    */
     @Override
     @Deprecated
-    public boolean updateLastAuthorsFile(RepositoryConnection conn, String query, String lastUpdateFile) throws UpdateException {
+    public boolean updateLastAuthorsFile(RepositoryConnection conn, String query, String lastUpdateFile) throws PubException {
 
         OutputStream out = null;
         try {
