@@ -76,8 +76,8 @@ public class Queries implements QueriesService {
      * @return
      */
     @Override
-    public String getAskResourceQuery(String graph, String resource) {
-        return "ASK FROM <" + graph + "> {  <" + resource + "> ?p ?o }";
+    public String getAskQuery(String resource) {
+        return "ASK { <" + resource + "> ?p ?o }";
     }
 
     @Override
@@ -140,8 +140,8 @@ public class Queries implements QueriesService {
     }
 
     @Override
-    public String getCountPersonQuery(String graph) {
-        return " PREFIX foaf: <http://xmlns.com/foaf/0.1/> SELECT (COUNT(?s) as ?count) WHERE { GRAPH <" + graph + "> { ?s rdf:type foaf:Person. }}";
+    public String getCountPersonQuery(String datagraph) {
+        return "  SELECT (COUNT(?s) as ?count) WHERE { GRAPH <" + datagraph + "> { ?s rdf:type foaf:Person. }}";
     }
 
     @Override
@@ -160,20 +160,22 @@ public class Queries implements QueriesService {
     }
 
     @Override
-    public String getAuthorsDataQuery(String graph) {
+    public String getAuthorsQuery() {
         return " PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
                 + " SELECT * "
-                + " WHERE { GRAPH <"+graph+"> { "
+                + " WHERE { "
                 + " ?subject a foaf:Person. "
                 + " ?subject foaf:name ?name."
                 + " ?subject foaf:firstName ?fname."
                 + " ?subject foaf:lastName ?lname."
-//                + " {"
-//                + " FILTER (regex(?name,\"Saquicela Galarza\"))"
-//                + " } UNION {"
-//                + " FILTER (regex(?name,\"Espinoza Mejia\"))"
-//                + " }"
-                + " }}";
+                + " {"
+                + " FILTER (regex(?name,\"Espinoza Mejia\"))"
+                + " }"
+                + " UNION"
+                + " {"
+                + " FILTER (regex(?name,\"Saquicela Galarza\"))"
+                + " }"
+                + " }";
     }
 
     /**
@@ -198,7 +200,6 @@ public class Queries implements QueriesService {
      */
     @Override
     public String getAskQuery(String... varargs) {
-        
         String graphSentence = "GRAPH <" + varargs[0] + ">";
 
         return "ASK { " + graphSentence + "{ <" + varargs[1] + "> <" + varargs[2] + "> <" + varargs[3] + "> } }";
@@ -228,8 +229,8 @@ public class Queries implements QueriesService {
     }
 
     @Override
-    public String getMembersQuery() {
-        return "SELECT DISTINCT ?members"
+    public String getNumMembersQuery() {
+        return "SELECT DISTINCT (count(?members) as ?numMembers) "
                 + " WHERE { ?x <http://xmlns.com/foaf/0.1/member> ?members. } ";
     }
     
