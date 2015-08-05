@@ -37,7 +37,7 @@ public class EndpointServiceImpl implements EndpointService {
     @Inject
     private QueriesService queriesService;
 
-    private String endpointsGraph = "http://localhost:8080/endpoints";
+    private String endpointsGraph = "http://ucuenca.edu.ec/wkhuska/endpoints";
 
     @Override
     public String addEndpoint(String name, String endpointUrl, String graphUri) {

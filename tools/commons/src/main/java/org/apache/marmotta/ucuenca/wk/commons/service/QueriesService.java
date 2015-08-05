@@ -11,12 +11,23 @@ package org.apache.marmotta.ucuenca.wk.commons.service;
  */
 public interface QueriesService {
 
+    String getAuthorsQuery();
+    
+    String getProvenanceProperty();
+
+    String getLimit(String limit);
+
+    String getOffset(String offset);
+
+    String getCountPersonQuery(String graph);
+
     /**
      * return a query to obtain all resource related with Authors
      *
+     * @param wkhuskagraph
      * @return
      */
-    String getAuthorsQuery();
+    String getAuthorsQuery(String wkhuskagraph);
 
     /**
      * return query to obtain all properties of a resource using LDC ( Linked
@@ -29,22 +40,18 @@ public interface QueriesService {
     /**
      * Return a INSERT QUERY when object is a LITERAL
      *
-     * @param s
-     * @param p
-     * @param o
+     * @param args
      * @return
      */
-    String getInsertDataLiteralQuery(String s, String p, String o);
+    String getInsertDataLiteralQuery(String... args);
 
     /**
      * Return a INSERT QUERY when object is a URI
      *
-     * @param s
-     * @param p
-     * @param o
+     * @param args
      * @return
      */
-    String getInsertDataUriQuery(String s, String p, String o);
+    String getInsertDataUriQuery(String... args);
 
     /**
      * Return true or false if object is a URI
@@ -60,16 +67,39 @@ public interface QueriesService {
      * @return
      */
     String getAskQuery(String resource);
+    /**
+     * ASK is exist a triplet
+     * @param args   //graph, subject, predicate, object arguments
+     * @return 
+     */
+    String getAskQuery(String... args);
+    
 
     String getEndpointNameQuery(String endpointsGraph, String name, String resourceHash);
 
     String getEndpointUrlQuery(String endpointsGraph, String url, String resourceHash);
 
     String getEndpointGraphQuery(String endpointsGraph, String graphUri, String resourceHash);
-    
+
     String getlisEndpointsQuery(String endpointsGraph);
 
     String getEndpointByIdQuery(String endpointsGraph, String id);
-    
+
     String getEndpointDeleteQuery(String endpointsGraph, String id);
+
+    String getWkhuskaGraph();
+    
+    String getGraphsQuery();
+    
+    String getPublicationsQuery(String providerGraph);
+    
+    String getPublicationsPropertiesQuery(String providerGraph, String publicationResource);
+
+    String getNumMembersQuery();
+    
+    String getPublicationFromProviderQuery();
+    
+    String getPublicationPropertiesQuery();
+
+    
 }

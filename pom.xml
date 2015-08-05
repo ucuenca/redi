@@ -53,6 +53,7 @@
     <module>providers</module>
     <module>base-module</module>
     <module>authors-module</module>
+    <module>publications-manager</module>
     <module>webapp</module>
   </modules>
 </project>
