@@ -8,7 +8,7 @@ package org.apache.marmotta.ucuenca.wk.authors.api;
 import org.apache.marmotta.platform.core.test.base.EmbeddedMarmotta;
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.DaoException;
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.UpdateException;
-//import org.apache.marmotta.ucuenca.wk.authors.services.AuthorServiceImpl;
+import org.apache.marmotta.ucuenca.wk.authors.services.AuthorServiceImpl;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;

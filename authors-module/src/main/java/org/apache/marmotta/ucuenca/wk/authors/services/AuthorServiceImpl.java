@@ -90,8 +90,6 @@ public class AuthorServiceImpl implements AuthorService {
     private int limit = 5000;
 
     private int processpercent = 0;
-    
-    private boolean provenanceinsert = false; //variable to know if the provenance of an author was already inserted
 
     @Override
     public String runAuthorsUpdateMultipleEP(String endpp, String graph) throws DaoException, UpdateException {
@@ -151,7 +149,7 @@ public class AuthorServiceImpl implements AuthorService {
         /* Conecting to repository using LDC ( Linked Data Client ) Library */
         DataProvider spqprov = new SPARQLProvider();
         ClientConfiguration config = new ClientConfiguration();
-        config.addEndpoint(new SPARQLEndpoint(endpoint.getName(), endpoint.getEndpointUrl(), "^http://190.15.141.102:8080/dspace/contribuidor/.*"));
+        config.addEndpoint(new SPARQLEndpoint(endpoint.getName(), endpoint.getEndpointUrl(), "^http://190.15.141.102:8080/dspace/contribuidor/autor/.*"));
         config.addProvider(spqprov);
         LDClientService ldclient = new LDClient(config);
         Repository endpointTemp = new SPARQLRepository(endpoint.getEndpointUrl());
@@ -173,7 +171,7 @@ public class AuthorServiceImpl implements AuthorService {
                     while (authorsResult.hasNext()) {
                         BindingSet binding = authorsResult.next();
                         resource = String.valueOf(binding.getValue("s"));
-                        if (!sparqlFunctionsService.askAuthor(queriesService.getAskResourceQuery(wkhuskaGraph, resource))) {
+                        if (!sparqlFunctionsService.askAuthor(queriesService.getAskQuery(resource))) {
                             contAutoresNuevosEncontrados++;
                             printPercentProcess(contAutoresNuevosEncontrados, allPersons, endpoint.getName());
                             //properties and values quering with LDClient Library de Marmotta
@@ -186,7 +184,7 @@ public class AuthorServiceImpl implements AuthorService {
                                 getResourcePropertyQuery = queriesService.getRetrieveResourceQuery();
                                 TupleQuery resourcequery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getResourcePropertyQuery); //
                                 TupleQueryResult tripletasResult = resourcequery.evaluate();
-                                provenanceinsert = false;
+                                boolean provenanceinsert = false;
                                 while (tripletasResult.hasNext()) {
                                 //obtengo name, lastname, firstname, type, etc.,   para formar tripletas INSERT
 
@@ -196,6 +194,7 @@ public class AuthorServiceImpl implements AuthorService {
                                     String objeto = tripletsResource.getValue("z").toString();
                                     ///insert sparql query,
                                     tripletasCargadas = tripletasCargadas + executeInsertQuery(sujeto, predicado, objeto, endpoint, provenanceinsert);
+                                    provenanceinsert = true;
                                 }
                                 conUri.commit();
                                 conUri.close();
@@ -239,17 +238,14 @@ public class AuthorServiceImpl implements AuthorService {
     public int executeInsertQuery(String sujeto, String predicado, String objeto, SparqlEndpoint endpoint, boolean provenanceinsert) {
         ///insert sparql query,
         if (!predicado.contains("rdaregistry.info")) {
+            String queryAuthorInsert = buildInsertQuery(sujeto, predicado, objeto);
+            //load data related with author
+            updateAuthor(queryAuthorInsert);
             //insert provenance triplet query
             if (!provenanceinsert) {
                 String provenanceQueryInsert = buildInsertQuery(sujeto, queriesService.getProvenanceProperty(), endpoint.getResourceId());
                 updateAuthor(provenanceQueryInsert);
-                provenanceinsert = true;
             }
-            String queryAuthorInsert = buildInsertQuery(sujeto, predicado, objeto);
-            //load data related with author
-            updateAuthor(queryAuthorInsert);
-            
-            
             return 1;
         }
         return 0;
