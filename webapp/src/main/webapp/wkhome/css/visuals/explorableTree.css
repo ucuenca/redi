@@ -1,0 +1,30 @@
+.tree-node {
+  cursor: pointer;
+}
+
+.tree-node circle {
+  fill: #fff;
+  stroke: black;
+  stroke-width: 2px;
+}
+
+.tree-node text {
+  font-size:15px;
+  fill: #000;
+}
+
+.tree-link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 1.5px;
+}
+
+.tree-overlay{
+  /*background-color:#FFFFFF;*/
+}
+
+.tree-main-container {
+  overflow: hidden;
+  height: auto;
+  background-color: #F6F6F6;
+}

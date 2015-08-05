@@ -1,18 +1,205 @@
-<div class="header">
-    <h1>
-        <div>Watiqai Khuska - Ecuadorian Semantic Repository</div>
-        <img src="images/Marmotta_Head.png">
-    </h1>
-</div>
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-4">
-      <!--Sidebar content-->
-      <p>{{welcome}}</p>
-
-    </div>
-    <div class="col-md-8">
-
-    </div>
+<!--
+  <ul class="nav nav-pills">
+    <li role="presentation" class="active"><a href="#/">Home</a></li>
+    <li role="presentation"><a href="#/">Profile</a></li>
+    <li role="presentation"><a href="#/">Messages</a></li>
+  </ul>
+-->
+<!--
+<div class="row">
+  <div class="col-md-12">
+    <p>{{welcome}}</p>  
   </div>
 </div>
+-->
+  <div id="tooltip" class="" style="opacity:0;">
+    <p><strong>Important Label Heading</strong>
+    </p>
+    <p><span id="value">100</span> authors</p>
+  </div>
+  <div class="row body-snap" ng-controller="SnapController" keyboard-keys>
+    <div class="main " snapscroll fit-window-height snap-index="snapIndex" after-snap="afterSnap(snapIndex)" snap-animation="snapAnimation" ng-swipe-up="swipeUp()" ng-swipe-down="swipeDown()" before-snap="beforeCallback(snapIndex)">
+      <!--Sidebar content-->
+      
+      <!-- <div class="main" snapscroll fit-window-height snap-index="snapIndex" after-snap="afterSnap(snapIndex)" snap-animation="snapAnimation" ng-swipe-up="swipeUp()" ng-swipe-down="swipeDown()"> -->
+
+      <div>
+        
+        <!--<div ng-controller="totalPersonReg" class="left-column"> -->
+          <!-- <pie-chart data="data" style="display:block"></pie-chart> -->
+        <!-- </div>
+        <div class="right-column">
+          
+        </div>
+        <div class="center-column">
+          
+        </div> -->
+
+        <div class="container-fluid">
+          <div class="row presentation" style='background-color: black'>
+            <div class="col-md-12">
+              <div id="carousel-intro" class="carousel slide" data-ride="carousel" style="padding-top:50px; height:100%">
+                <ol class="carousel-indicators">
+                  <li data-target="#carousel-intro" data-slide-to="0" class="active"></li>
+                  <li data-target="#carousel-intro" data-slide-to="1"></li>
+                  <li data-target="#carousel-intro" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner" role="listbox">
+                  <div class="item active">
+                    <div class="carousel-caption">
+                      <h3>Bootstrap 3 Carousel Layout</h3>
+                      <p>This is an example layout with carousel that uses the Bootstrap 3 styles.
+                      <p><a class="btn btn-large btn-primary" href="#">Sign up today</a>
+                    </p>
+                    </div>
+                  </div>
+                  <div class="item">
+                    <div class="carousel-caption">
+                      <h3>Testing the carousel feature</h3>
+                      <p>Testing description</p>
+                    </div>
+                  <!--
+                    <img src="/wkhome/images/books.jpg" width='100%'>
+                    <div class="container">
+                      <div class="carousel-caption">
+                        <h1>Bootstrap 3 Carousel Layout</h1>
+                        <p>This is an example layout with carousel that uses the Bootstrap 3 styles.
+                        <a title="Bootstrap 3" href="http://getbootstrap.com" class="">Bootstrap 3 RC 1 is now available!</a></p>
+                        <p><a class="btn btn-large btn-primary" href="#">Sign up today</a>
+                      </p>
+                      </div>
+                    </div>
+                    -->
+                  </div>
+                  <div class="item">
+                    <div class="carousel-caption">
+                      <h3>Testing the carousel feature</h3>
+                      <p>Testing description #2</p>
+                    </div>
+                    
+                  </div>
+                </div>
+                <!--
+                <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                  <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                  <span class="sr-only">Previous</span>
+                </a>
+                <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                  <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                  <span class="sr-only">Next</span>
+                </a> -->
+              </div>
+              
+            </div>
+          </div>
+          <div class="row stats">
+            <div class="col-md-4" ng-controller="totalPersonReg">
+              <h4>Total Number of Authors</h4>
+              <pie-chart data="data" pc-height="230" style="display:block"></pie-chart>
+            </div>
+            <div class="col-md-4"  ng-controller="totalPublicationReg">
+              <h4>Total Number of Publications</h4>
+              <pie-chart data="data" pc-height="230" style="display:block"></pie-chart>
+            </div>
+            <div class="col-md-4">
+              <h4>Discovered Research Areas</h4>
+            </div>
+
+          </div>
+
+          
+        </div>
+
+
+      </div>
+      <!--
+      <div>
+        <h1>angular-snapscroll</h1>
+        <p>angular-snapscroll adds vertical scroll-and-snap functionality to angular.</p>
+        <ol>
+          <li>JS-only implementation</li>
+          <li>Requires only angular core</li>
+          <li>5.7kB when minified, 2.1kB when gzipped</li>
+        </ol>
+        <p>This is a suite of snapscroll examples that demonstrantes:</p>
+        <ul>
+          <li>full-page snapscroll (fit-window-height attribute)</li>
+          <li>keyboard navigation (try pressing the up and down arrow keys)</li>
+          <li>resetting current snap position after a manual scroll (try to scroll by dragging the scrollbar)</li>
+          <li>snapIndex binding (the pagination showing on the right)</li>
+          <li>persisting snapIndex on page reload (using window.location.hash)</li>
+          <li>touch support (using <a href="https://github.com/marmorkuchen-net/angular-swipe">angular-swipe</a> module)</li>
+          <li><a href="#" ng-click="snapIndex=1">nested snapscrolls</a></li>
+          <li><a href="#" ng-click="snapIndex=2">before and after callbacks</a></li>
+        </ul>
+      </div>
+      -->
+      <!--
+      <div>
+        <h3>Nested snapscrolls</h3>
+        <p>Instances can be nested, side by side etc and won't interfere with each other. The first nested snapscroll below also demostrates how to keep vertical swipe gestures localized to a nested snapscroll instance.</p>
+        <div ng-controller="NestedSnapscrollController">
+          <div class="nested" snapscroll snap-index="nestedSnapIndex" ng-swipe-up="swipeUp($event)" ng-swipe-down="swipeDown($event)">
+            <div><span>1</span></div>
+            <div><span>2</span></div>
+            <div><span>3</span></div>
+            <div><span>4</span></div>
+            <div><span>5</span></div>
+          </div>
+        </div>
+        <div class="clearfix">
+          <div class="nested" snapscroll>
+            <div><span>1</span></div>
+            <div><span>2</span></div>
+            <div><span>3</span></div>
+            <div><span>4</span></div>
+            <div><span>5</span></div>
+          </div>
+          <div class="nested" snapscroll>
+            <div><span>1</span></div>
+            <div><span>2</span></div>
+            <div><span>3</span></div>
+            <div><span>4</span></div>
+            <div><span>5</span></div>
+          </div>
+        </div>
+      </div>
+      -->
+      <div>
+        <!--
+        <div class="container-fluid" style="padding: 0;">
+            <div class="row">
+              <div class="col-md-12" ng-controller="exploreAuthor">
+                <explorable-tree data="data" style="display:block; height:100vh"></explorable-tree>
+              </div>
+            </div>
+        </div>
+        -->
+      </div>
+      <div>
+      </div>
+    <!-- </div> -->
+          <!--
+          <code class="html">
+            &lt;div class="main"&gt;<br>
+              &lt;section&gt;...&lt;/section&gt;<br>
+              &lt;section&gt;...&lt;/section&gt;<br>
+              ...<br>
+            &lt;/div&gt;
+          </code>
+          
+          <code class="js">
+            $(".main").onepage_scroll();
+          </code> -->
+    
+    
+  </div>
+  <ul class="indicators">
+      <li><a href="#/" onclick="return false;" ng-click="snapIndex=0"><span ng-class="{active: snapIndex == 0}"></span></a></li>
+      <li><a href="#/" onclick="return false;" ng-click="snapIndex=1"><span ng-class="{active: snapIndex == 1}"></span></a></li>
+      <li><a href="#/" onclick="return false;" ng-click="snapIndex=2"><span ng-class="{active: snapIndex == 2}"></span></a></li>
+      <li><a href="#/" ng-click="snapIndex=3"><span ng-class="{active: snapIndex == 3}"></span></a></li>
+      <li><a href="#/" ng-click="snapIndex=4"><span ng-class="{active: snapIndex == 4}"></span></a></li>
+    </ul>
+
+    <!-- </div> -->
