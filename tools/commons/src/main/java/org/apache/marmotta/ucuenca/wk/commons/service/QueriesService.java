@@ -11,7 +11,7 @@ package org.apache.marmotta.ucuenca.wk.commons.service;
  */
 public interface QueriesService {
 
-    String getAuthorsDataQuery(String graph);
+    String getAuthorsQuery();
     
     String getProvenanceProperty();
 
@@ -63,11 +63,10 @@ public interface QueriesService {
 
     /**
      *
-     * @param graph
      * @param resource
      * @return
      */
-    String getAskResourceQuery(String graph , String resource);
+    String getAskQuery(String resource);
     /**
      * ASK is exist a triplet
      * @param args   //graph, subject, predicate, object arguments
@@ -96,7 +95,7 @@ public interface QueriesService {
     
     String getPublicationsPropertiesQuery(String providerGraph, String publicationResource);
 
-    String getMembersQuery();
+    String getNumMembersQuery();
     
     String getPublicationFromProviderQuery();
     

@@ -128,13 +128,12 @@ public class QueriesServiceTest {
      * Test of getAskQuery method, of class QueriesService.
      */
     @Test
-    public void testGetAskResourceQuery() {
+    public void testGetAskQuery() {
         System.out.println("getAskQuery");
         String resource = "http://example.test";
-        String graph = "http://ucuenca.edu.ec/wkhuska";
         QueriesService instance = new Queries();
-        String expResult = "ASK FROM <http://ucuenca.edu.ec/wkhuska> {  <http://example.test> ?p ?o }";
-        String result = instance.getAskResourceQuery(graph ,resource);
+        String expResult = "ASK { <http://example.test> ?p ?o }";
+        String result = instance.getAskQuery(resource);
         Assert.assertEquals(expResult, result);
     }
 
