@@ -224,7 +224,7 @@ public class PubServiceImpl implements PubService {
 
             String NS_DBLP = "http://rdf.dblp.com/ns/search/";
             RepositoryConnection conUri = null;
-
+            ClientResponse response = null;
             for (Map<String, Value> map : resultAllAuthors) {
                 processedPersons++;
                 log.info("Autores procesados: " + processedPersons + " de " + allPersons);
@@ -234,11 +234,14 @@ public class PubServiceImpl implements PubService {
                 priorityToFind = 1;
                 do {
                     try {
-                        boolean existNativeAuthor=true;
+                        boolean existNativeAuthor = true;
                         allMembers = 0;
                         nameToFind = priorityFindQueryBuilding(priorityToFind, firstName, lastName);
-                        ClientResponse response = ldClient.retrieveResource(NS_DBLP + nameToFind);
-
+                        log.info("verificando llamada a LDC");
+                        response = ldClient.retrieveResource(NS_DBLP + nameToFind);
+                        if (response.getHttpStatus() == 503) {
+                            log.error("ErrorCode: " + response.getHttpStatus());
+                        }
                         String nameEndpointofPublications = ldClient.getEndpoint(NS_DBLP + nameToFind).getName();
                         String providerGraph = graphByProviderNS + nameEndpointofPublications.replace(" ", "");
 
@@ -254,25 +257,24 @@ public class PubServiceImpl implements PubService {
 //                        } catch (RDFHandlerException e) {
 //                            // oh no, do something!
 //                        }
-
                         conUri = ModelCommons.asRepository(response.getData()).getConnection();
                         conUri.begin();
                         String authorNativeResource = null;
                         //verifying the number of persons retrieved. if it has recovered more than one persons then the filter is changed and search anew,
                         String getMembersQuery = queriesService.getMembersQuery();
                         TupleQueryResult membersResult = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getMembersQuery).evaluate();
-                       //  allMembers = Iterations.asList(membersResult).size();
+                        //  allMembers = Iterations.asList(membersResult).size();
                         while (membersResult.hasNext()) {
-                            allMembers ++;
+                            allMembers++;
                             BindingSet bindingCount = membersResult.next();
                             authorNativeResource = bindingCount.getValue("members").toString();
-                            existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(providerGraph, authorNativeResource ));
+                            existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(providerGraph, authorNativeResource));
                         }
                         //the author data was already loaded into the repository, only a sameAs property is associated 
                         if (allMembers == 1 && existNativeAuthor) {
-                                 //insert sameAs triplet    <http://190.15.141.102:8080/dspace/contribuidor/autor/SaquicelaGalarza_VictorHugo> owl:sameAs <http://dblp.org/pers/xr/s/Saquicela:Victor> 
-                                String sameAsInsertQuery = buildInsertQuery(providerGraph, authorResource, "http://www.w3.org/2002/07/owl#sameAs", authorNativeResource);
-                                updatePub(sameAsInsertQuery);                            
+                            //insert sameAs triplet    <http://190.15.141.102:8080/dspace/contribuidor/autor/SaquicelaGalarza_VictorHugo> owl:sameAs <http://dblp.org/pers/xr/s/Saquicela:Victor> 
+                            String sameAsInsertQuery = buildInsertQuery(providerGraph, authorResource, "http://www.w3.org/2002/07/owl#sameAs", authorNativeResource);
+                            updatePub(sameAsInsertQuery);
                         }
                         if (allMembers == 1 && !existNativeAuthor) {
                             //SPARQL obtain all publications of author
@@ -287,7 +289,7 @@ public class PubServiceImpl implements PubService {
                                 String publicationInsertQuery = buildInsertQuery(providerGraph, authorNativeResource, "http://xmlns.com/foaf/0.1/publications", publicationResource);
                                 updatePub(publicationInsertQuery);
 
-                                //insert sameAs triplet    <http://190.15.141.102:8080/dspace/contribuidor/autor/SaquicelaGalarza_VictorHugo> owl:sameAs <http://dblp.org/pers/xr/s/Saquicela:Victor> 
+                                // sameAs triplet    <http://190.15.141.102:8080/dspace/contribuidor/autor/SaquicelaGalarza_VictorHugo> owl:sameAs <http://dblp.org/pers/xr/s/Saquicela:Victor> 
                                 String sameAsInsertQuery = buildInsertQuery(providerGraph, authorResource, "http://www.w3.org/2002/07/owl#sameAs", authorNativeResource);
                                 updatePub(sameAsInsertQuery);
                             }
@@ -306,16 +308,23 @@ public class PubServiceImpl implements PubService {
                                 //load values publications to publications resource
                                 updatePub(publicationPropertyInsertQuery);
                             }
-                        }//end if numMembers=1
-                        
 
-                    } catch (DataRetrievalException | QueryEvaluationException | MalformedQueryException | RepositoryException ex) {
-                        // log.error("Fail to insert );
+                        }//end if numMembers=1
+                        conUri.commit();
+
+                    } catch (DataRetrievalException e) {
+                         log.error("Data Retrieval Exception: " + e);
+                        try {
+                            Thread.sleep(1000);                 //1000 milliseconds is one second.
+                        } catch (InterruptedException ex) {
+                            Thread.currentThread().interrupt();
+                        }
+                    } catch (QueryEvaluationException | MalformedQueryException | RepositoryException ex) {
+                        log.error("Evaluation Exception: " + ex);
                     } catch (Exception e) {
-                        //log.error(e.toString());
+                        log.error("ioexception " + e.toString());
                     } finally {
                         try {
-                            conUri.commit();
                             conUri.close();
                         } catch (RepositoryException ex) {
                             java.util.logging.Logger.getLogger(PubServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
