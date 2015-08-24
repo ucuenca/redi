@@ -16,73 +16,113 @@
 # limitations under the License.
 #
 
-ASK {	
-	<http://dblp.org/pers/xr/s/Saquicela:Victor> <http://purl.org/dc/terms/license> <http://www.opendatacommons.org/licenses/by/> ;
-	<http://purl.org/dc/terms/modified> "2015-02-03T16:31:44.000Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
-	a <http://xmlns.com/foaf/0.1/Person> ;
-	<http://xmlns.com/foaf/0.1/name> "Victor Saquicela" ;
-	<http://xmlns.com/foaf/0.1/publications> <http://dblp.org/rec/rdf/conf/agile/BlazquezSC12> , <http://dblp.org/rec/rdf/conf/clei/SaquicelaMPA14> , <http://dblp.org/rec/rdf/conf/esws/SaquicelaBC11> , <http://dblp.org/rec/rdf/conf/gis/BlazquezVSLCG10> , <http://dblp.org/rec/rdf/conf/i-semantics/LeonSVVPC10> , <http://dblp.org/rec/rdf/conf/icwe/SaquicelaVC10> , <http://dblp.org/rec/rdf/journals/ijswis/SaquicelaBC12> .
+ASK {
 
-	<http://dblp.org/rec/rdf/conf/agile/BlazquezSC12> <http://purl.org/dc/terms/contributor> <http://dblp.uni-trier.de/pers/xr/b/Bl=aacute=zquez:Luis_Manuel_Vilches> , <http://dblp.uni-trier.de/pers/xr/c/Corcho:=Oacute=scar> , <http://dblp.uni-trier.de/pers/xr/s/Saquicela:Victor> ;
-		<http://purl.org/dc/terms/isPartOf> <http://dblp.org/rec/rdf/conf/agile/2012> ;
-		<http://purl.org/dc/terms/license> <http://www.opendatacommons.org/licenses/by/> ;
-		<http://purl.org/dc/terms/publisher> "AGILE Conf." ;
-		<http://purl.org/dc/terms/title> "Interlinking Geospatial Information in the Web of Data." ;
-		<http://purl.org/ontology/bibo/numPages> "119-139" ;
-		<http://purl.org/ontology/bibo/uri> <http://dx.doi.org/10.1007/978-3-642-29063-3_7> ;
-		a <http://purl.org/ontology/bibo/Document> .
-	
-	<http://dblp.org/rec/rdf/conf/clei/SaquicelaMPA14> <http://purl.org/dc/terms/contributor> <http://dblp.uni-trier.de/pers/xr/a/Alban:Humberto> , <http://dblp.uni-trier.de/pers/xr/m/Mej=iacute=a:Mauricio_Espinoza> , <http://dblp.uni-trier.de/pers/xr/p/Palacio:Kenneth> , <http://dblp.uni-trier.de/pers/xr/s/Saquicela:Victor> ;
-		<http://purl.org/dc/terms/isPartOf> <http://dblp.org/rec/rdf/conf/clei/2014> ;
-		<http://purl.org/dc/terms/license> <http://www.opendatacommons.org/licenses/by/> ;
-		<http://purl.org/dc/terms/publisher> "CLEI" ;
-		<http://purl.org/dc/terms/title> "Enriching Electronic Program Guides using semantic technologies and external resources." ;
-		<http://purl.org/ontology/bibo/numPages> "1-8" ;
-		<http://purl.org/ontology/bibo/uri> <http://dx.doi.org/10.1109/CLEI.2014.6965173> ;
-		a <http://purl.org/ontology/bibo/Document> .
-	
-	<http://dblp.org/rec/rdf/conf/esws/SaquicelaBC11> <http://purl.org/dc/terms/contributor> <http://dblp.uni-trier.de/pers/xr/b/Bl=aacute=zquez:Luis_Manuel_Vilches> , <http://dblp.uni-trier.de/pers/xr/c/Corcho:=Oacute=scar> , <http://dblp.uni-trier.de/pers/xr/s/Saquicela:Victor> ;
-		<http://purl.org/dc/terms/isPartOf> <http://dblp.org/rec/rdf/conf/esws/2011-2> ;
-		<http://purl.org/dc/terms/license> <http://www.opendatacommons.org/licenses/by/> ;
-		<http://purl.org/dc/terms/publisher> "ESWC (2)" ;
-		<http://purl.org/dc/terms/title> "Lightweight Semantic Annotation of Geospatial RESTful Services." ;
-		<http://purl.org/ontology/bibo/numPages> "330-344" ;
-		<http://purl.org/ontology/bibo/uri> <http://dx.doi.org/10.1007/978-3-642-21064-8_23> ;
-		a <http://purl.org/ontology/bibo/Document> .
-	
-	<http://dblp.org/rec/rdf/conf/gis/BlazquezVSLCG10> <http://purl.org/dc/terms/contributor> <http://dblp.uni-trier.de/pers/xr/b/Bl=aacute=zquez:Luis_Manuel_Vilches> , <http://dblp.uni-trier.de/pers/xr/c/Corcho:=Oacute=scar> , <http://dblp.uni-trier.de/pers/xr/g/G=oacute=mez=P=eacute=rez:Asunci=oacute=n> , <http://dblp.uni-trier.de/pers/xr/l/Le=oacute=n:Alexander_de> , <http://dblp.uni-trier.de/pers/xr/s/Saquicela:Victor> , <http://dblp.uni-trier.de/pers/xr/v/Villaz=oacute=n=Terrazas:Boris> ;
-		<http://purl.org/dc/terms/isPartOf> <http://dblp.org/rec/rdf/conf/gis/2010> ;
-		<http://purl.org/dc/terms/license> <http://www.opendatacommons.org/licenses/by/> ;
-		<http://purl.org/dc/terms/publisher> "GIS" ;
-		<http://purl.org/dc/terms/title> "GeoLinked data and INSPIRE through an application case." ;
-		<http://purl.org/ontology/bibo/numPages> "446-449" ;
-		<http://purl.org/ontology/bibo/uri> <http://doi.acm.org/10.1145/1869790.1869858> ;
-		a <http://purl.org/ontology/bibo/Document> .
-	
-	<http://dblp.org/rec/rdf/conf/i-semantics/LeonSVVPC10> <http://purl.org/dc/terms/contributor> <http://dblp.uni-trier.de/pers/xr/c/Corcho:=Oacute=scar> , <http://dblp.uni-trier.de/pers/xr/l/Le=oacute=n:Alexander_de> , <http://dblp.uni-trier.de/pers/xr/p/Priyatna:Freddy> , <http://dblp.uni-trier.de/pers/xr/s/Saquicela:Victor> , <http://dblp.uni-trier.de/pers/xr/v/Vilches:Luis_M=> , <http://dblp.uni-trier.de/pers/xr/v/Villaz=oacute=n=Terrazas:Boris> ;
-		<http://purl.org/dc/terms/isPartOf> <http://dblp.org/rec/rdf/conf/i-semantics/2010> ;
-		<http://purl.org/dc/terms/license> <http://www.opendatacommons.org/licenses/by/> ;
-		<http://purl.org/dc/terms/publisher> "I-SEMANTICS" ;
-		<http://purl.org/dc/terms/title> "Geographical linked data: a Spanish use case." ;
-		<http://purl.org/ontology/bibo/uri> <http://doi.acm.org/10.1145/1839707.1839753> ;
-		a <http://purl.org/ontology/bibo/Document> .
-	
-	<http://dblp.org/rec/rdf/conf/icwe/SaquicelaVC10> <http://purl.org/dc/terms/contributor> <http://dblp.uni-trier.de/pers/xr/b/Bl=aacute=zquez:Luis_Manuel_Vilches> , <http://dblp.uni-trier.de/pers/xr/c/Corcho:=Oacute=scar> , <http://dblp.uni-trier.de/pers/xr/s/Saquicela:Victor> ;
-		<http://purl.org/dc/terms/isPartOf> <http://dblp.org/rec/rdf/conf/icwe/2010w> ;
-		<http://purl.org/dc/terms/license> <http://www.opendatacommons.org/licenses/by/> ;
-		<http://purl.org/dc/terms/publisher> "ICWE Workshops" ;
-		<http://purl.org/dc/terms/title> "Semantic Annotation of RESTful Services Using External Resources." ;
-		<http://purl.org/ontology/bibo/numPages> "266-276" ;
-		<http://purl.org/ontology/bibo/uri> <http://dx.doi.org/10.1007/978-3-642-16985-4_24> ;
-		a <http://purl.org/ontology/bibo/Document> .
-	
-	<http://dblp.org/rec/rdf/journals/ijswis/SaquicelaBC12> <http://purl.org/dc/terms/contributor> <http://dblp.uni-trier.de/pers/xr/b/Bl=aacute=zquez:Luis_Manuel_Vilches> , <http://dblp.uni-trier.de/pers/xr/c/Corcho:=Oacute=scar> , <http://dblp.uni-trier.de/pers/xr/s/Saquicela:Victor> ;
-		<http://purl.org/dc/terms/license> <http://www.opendatacommons.org/licenses/by/> ;
-		<http://purl.org/dc/terms/title> "Adding Semantic Annotations into (Geospatial) RESTful Services." ;
-		<http://purl.org/ontology/bibo/numPages> "51-71" ;
-		<http://purl.org/ontology/bibo/uri> <http://dx.doi.org/10.4018/jswis.2012040103> ;
-		a <http://purl.org/ontology/bibo/Document> .
-	
-	<http://dblp.uni-trier.de/search/author/api?q=Saquicela+Victor&format=xml> a <http://xmlns.com/foaf/0.1/Group> ;
-		<http://xmlns.com/foaf/0.1/member> <http://dblp.org/pers/xr/s/Saquicela:Victor> .
+
+<http://dblp.org/pers/s/Saquicela:Victor> <http://www.w3.org/2002/07/owl#sameAs> <http://dblp.uni-trier.de/pers/s/Saquicela:Victor> .
+
+<http://dblp.uni-trier.de/pers/s/Saquicela:Victor> <http://dblp.uni-trier.de/rdf/schema-2015-01-26#authorOf> <http://dblp.uni-trier.de/rec/conf/agile/BlazquezSC12> , <http://dblp.uni-trier.de/rec/conf/clei/SaquicelaMPA14> , <http://dblp.uni-trier.de/rec/conf/esws/SaquicelaBC11> , <http://dblp.uni-trier.de/rec/conf/gis/BlazquezVSLCG10> , <http://dblp.uni-trier.de/rec/conf/i-semantics/LeonSVVPC10> , <http://dblp.uni-trier.de/rec/conf/icwe/SaquicelaVC10> , <http://dblp.uni-trier.de/rec/journals/ijswis/SaquicelaBC12> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#coCreatorWith> <http://dblp.uni-trier.de/pers/a/Alban:Humberto> , <http://dblp.uni-trier.de/pers/b/Bl=aacute=zquez:Luis_Manuel_Vilches> , <http://dblp.uni-trier.de/pers/c/Corcho:=Oacute=scar> , <http://dblp.uni-trier.de/pers/e/Espinoza:Mauricio> , <http://dblp.uni-trier.de/pers/g/G=oacute=mez=P=eacute=rez:Asunci=oacute=n> , <http://dblp.uni-trier.de/pers/l/Le=oacute=n:Alexander_de> , <http://dblp.uni-trier.de/pers/p/Palacio:Kenneth> , <http://dblp.uni-trier.de/pers/p/Priyatna:Freddy> , <http://dblp.uni-trier.de/pers/v/Vilches:Luis_M=> , <http://dblp.uni-trier.de/pers/v/Villaz=oacute=n=Terrazas:Boris> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#personLastModifiedDate> "Tue, 03 Feb 2015 17:31:44 +0100" ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#primaryFullPersonName> "Victor Saquicela" ;
+	<http://purl.org/dc/terms/license> <http://www.opendatacommons.org/licenses/by/> ;
+	a <http://dblp.uni-trier.de/rdf/schema-2015-01-26#Person> .
+
+<http://dblp.uni-trier.de/rec/conf/agile/BlazquezSC12> <http://dblp.uni-trier.de/rdf/schema-2015-01-26#authoredBy> <http://dblp.uni-trier.de/pers/b/Bl=aacute=zquez:Luis_Manuel_Vilches> , <http://dblp.uni-trier.de/pers/c/Corcho:=Oacute=scar> , <http://dblp.uni-trier.de/pers/s/Saquicela:Victor> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#bibtexType> <http://data.bibbase.org/ontology/#Inproceedings> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#pageNumbers> "119-139" ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#primaryElectronicEdition> <http://dx.doi.org/10.1007/978-3-642-29063-3_7> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#publicationLastModifiedDate> "Sun, 16 Dec 2012 15:43:35 +0100" ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#publicationType> <http://dblp.uni-trier.de/rdf/schema-2015-01-26#Inproceedings> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#publishedAsPartOf> <http://dblp.uni-trier.de/rec/conf/agile/2012> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#publishedInBook> "AGILE Conf." ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#title> "Interlinking Geospatial Information in the Web of Data." ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#yearOfPublication> "2012" ;
+	<http://purl.org/dc/terms/license> <http://www.opendatacommons.org/licenses/by/> ;
+	a <http://dblp.uni-trier.de/rdf/schema-2015-01-26#Publication> ;
+	<http://www.w3.org/2002/07/owl#sameAs> <http://dblp.org/rec/conf/agile/BlazquezSC12> .
+
+<http://dblp.uni-trier.de/rec/conf/clei/SaquicelaMPA14> <http://dblp.uni-trier.de/rdf/schema-2015-01-26#authoredBy> <http://dblp.uni-trier.de/pers/a/Alban:Humberto> , <http://dblp.uni-trier.de/pers/m/Mej=iacute=a:Mauricio_Espinoza> , <http://dblp.uni-trier.de/pers/p/Palacio:Kenneth> , <http://dblp.uni-trier.de/pers/s/Saquicela:Victor> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#bibtexType> <http://data.bibbase.org/ontology/#Inproceedings> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#pageNumbers> "1-8" ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#primaryElectronicEdition> <http://dx.doi.org/10.1109/CLEI.2014.6965173> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#publicationLastModifiedDate> "Fri, 09 Jan 2015 10:08:07 +0100" ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#publicationType> <http://dblp.uni-trier.de/rdf/schema-2015-01-26#Inproceedings> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#publishedAsPartOf> <http://dblp.uni-trier.de/rec/conf/clei/2014> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#publishedInBook> "CLEI" ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#title> "Enriching Electronic Program Guides using semantic technologies and external resources." ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#yearOfPublication> "2014" ;
+	<http://purl.org/dc/terms/license> <http://www.opendatacommons.org/licenses/by/> ;
+	a <http://dblp.uni-trier.de/rdf/schema-2015-01-26#Publication> ;
+	<http://www.w3.org/2002/07/owl#sameAs> <http://dblp.org/rec/conf/clei/SaquicelaMPA14> .
+
+<http://dblp.uni-trier.de/rec/conf/esws/SaquicelaBC11> <http://dblp.uni-trier.de/rdf/schema-2015-01-26#authoredBy> <http://dblp.uni-trier.de/pers/b/Bl=aacute=zquez:Luis_Manuel_Vilches> , <http://dblp.uni-trier.de/pers/c/Corcho:=Oacute=scar> , <http://dblp.uni-trier.de/pers/s/Saquicela:Victor> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#bibtexType> <http://data.bibbase.org/ontology/#Inproceedings> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#pageNumbers> "330-344" ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#primaryElectronicEdition> <http://dx.doi.org/10.1007/978-3-642-21064-8_23> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#publicationLastModifiedDate> "Thu, 16 Jun 2011 07:41:57 +0200" ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#publicationType> <http://dblp.uni-trier.de/rdf/schema-2015-01-26#Inproceedings> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#publishedAsPartOf> <http://dblp.uni-trier.de/rec/conf/esws/2011-2> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#publishedInBook> "ESWC (2)" ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#title> "Lightweight Semantic Annotation of Geospatial RESTful Services." ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#yearOfPublication> "2011" ;
+	<http://purl.org/dc/terms/license> <http://www.opendatacommons.org/licenses/by/> ;
+	a <http://dblp.uni-trier.de/rdf/schema-2015-01-26#Publication> ;
+	<http://www.w3.org/2002/07/owl#sameAs> <http://dblp.org/rec/conf/esws/SaquicelaBC11> .
+
+<http://dblp.uni-trier.de/rec/conf/gis/BlazquezVSLCG10> <http://dblp.uni-trier.de/rdf/schema-2015-01-26#authoredBy> <http://dblp.uni-trier.de/pers/b/Bl=aacute=zquez:Luis_Manuel_Vilches> , <http://dblp.uni-trier.de/pers/c/Corcho:=Oacute=scar> , <http://dblp.uni-trier.de/pers/g/G=oacute=mez=P=eacute=rez:Asunci=oacute=n> , <http://dblp.uni-trier.de/pers/l/Le=oacute=n:Alexander_de> , <http://dblp.uni-trier.de/pers/s/Saquicela:Victor> , <http://dblp.uni-trier.de/pers/v/Villaz=oacute=n=Terrazas:Boris> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#bibtexType> <http://data.bibbase.org/ontology/#Inproceedings> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#pageNumbers> "446-449" ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#primaryElectronicEdition> <http://doi.acm.org/10.1145/1869790.1869858> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#publicationLastModifiedDate> "Thu, 25 Nov 2010 11:57:11 +0100" ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#publicationType> <http://dblp.uni-trier.de/rdf/schema-2015-01-26#Inproceedings> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#publishedAsPartOf> <http://dblp.uni-trier.de/rec/conf/gis/2010> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#publishedInBook> "GIS" ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#title> "GeoLinked data and INSPIRE through an application case." ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#yearOfPublication> "2010" ;
+	<http://purl.org/dc/terms/license> <http://www.opendatacommons.org/licenses/by/> ;
+	a <http://dblp.uni-trier.de/rdf/schema-2015-01-26#Publication> ;
+	<http://www.w3.org/2002/07/owl#sameAs> <http://dblp.org/rec/conf/gis/BlazquezVSLCG10> .
+
+<http://dblp.uni-trier.de/rec/conf/i-semantics/LeonSVVPC10> <http://dblp.uni-trier.de/rdf/schema-2015-01-26#authoredBy> <http://dblp.uni-trier.de/pers/c/Corcho:=Oacute=scar> , <http://dblp.uni-trier.de/pers/l/Le=oacute=n:Alexander_de> , <http://dblp.uni-trier.de/pers/p/Priyatna:Freddy> , <http://dblp.uni-trier.de/pers/s/Saquicela:Victor> , <http://dblp.uni-trier.de/pers/v/Vilches:Luis_M=> , <http://dblp.uni-trier.de/pers/v/Villaz=oacute=n=Terrazas:Boris> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#bibtexType> <http://data.bibbase.org/ontology/#Inproceedings> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#primaryElectronicEdition> <http://doi.acm.org/10.1145/1839707.1839753> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#publicationLastModifiedDate> "Wed, 22 Sep 2010 12:15:36 +0200" ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#publicationType> <http://dblp.uni-trier.de/rdf/schema-2015-01-26#Inproceedings> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#publishedAsPartOf> <http://dblp.uni-trier.de/rec/conf/i-semantics/2010> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#publishedInBook> "I-SEMANTICS" ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#title> "Geographical linked data: a Spanish use case." ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#yearOfPublication> "2010" ;
+	<http://purl.org/dc/terms/license> <http://www.opendatacommons.org/licenses/by/> ;
+	a <http://dblp.uni-trier.de/rdf/schema-2015-01-26#Publication> ;
+	<http://www.w3.org/2002/07/owl#sameAs> <http://dblp.org/rec/conf/i-semantics/LeonSVVPC10> .
+
+<http://dblp.uni-trier.de/rec/conf/icwe/SaquicelaVC10> <http://dblp.uni-trier.de/rdf/schema-2015-01-26#authoredBy> <http://dblp.uni-trier.de/pers/b/Bl=aacute=zquez:Luis_Manuel_Vilches> , <http://dblp.uni-trier.de/pers/c/Corcho:=Oacute=scar> , <http://dblp.uni-trier.de/pers/s/Saquicela:Victor> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#bibtexType> <http://data.bibbase.org/ontology/#Inproceedings> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#pageNumbers> "266-276" ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#primaryElectronicEdition> <http://dx.doi.org/10.1007/978-3-642-16985-4_24> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#publicationLastModifiedDate> "Thu, 11 Nov 2010 07:32:58 +0100" ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#publicationType> <http://dblp.uni-trier.de/rdf/schema-2015-01-26#Inproceedings> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#publishedAsPartOf> <http://dblp.uni-trier.de/rec/conf/icwe/2010w> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#publishedInBook> "ICWE Workshops" ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#title> "Semantic Annotation of RESTful Services Using External Resources." ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#yearOfPublication> "2010" ;
+	<http://purl.org/dc/terms/license> <http://www.opendatacommons.org/licenses/by/> ;
+	a <http://dblp.uni-trier.de/rdf/schema-2015-01-26#Publication> ;
+	<http://www.w3.org/2002/07/owl#sameAs> <http://dblp.org/rec/conf/icwe/SaquicelaVC10> .
+
+<http://dblp.uni-trier.de/rec/journals/ijswis/SaquicelaBC12> <http://dblp.uni-trier.de/rdf/schema-2015-01-26#authoredBy> <http://dblp.uni-trier.de/pers/b/Bl=aacute=zquez:Luis_Manuel_Vilches> , <http://dblp.uni-trier.de/pers/c/Corcho:=Oacute=scar> , <http://dblp.uni-trier.de/pers/s/Saquicela:Victor> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#bibtexType> <http://data.bibbase.org/ontology/#Article> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#pageNumbers> "51-71" ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#primaryElectronicEdition> <http://dx.doi.org/10.4018/jswis.2012040103> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#publicationLastModifiedDate> "Sat, 22 Dec 2012 12:23:46 +0100" ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#publicationType> <http://dblp.uni-trier.de/rdf/schema-2015-01-26#Article> ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#publishedInJournal> "Int. J. Semantic Web Inf. Syst." ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#publishedInJournalVolume> "8" ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#publishedInJournalVolumeIssue> "2" ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#title> "Adding Semantic Annotations into (Geospatial) RESTful Services." ;
+	<http://dblp.uni-trier.de/rdf/schema-2015-01-26#yearOfPublication> "2012" ;
+	<http://purl.org/dc/terms/license> <http://www.opendatacommons.org/licenses/by/> ;
+	a <http://dblp.uni-trier.de/rdf/schema-2015-01-26#Publication> ;
+	<http://www.w3.org/2002/07/owl#sameAs> <http://dblp.org/rec/journals/ijswis/SaquicelaBC12> .
 }
