@@ -17,6 +17,7 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.services;
 
+import info.aduna.iteration.Iterations;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -63,6 +64,7 @@ import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
 import org.openrdf.model.Value;
 import org.openrdf.query.UpdateExecutionException;
+import org.openrdf.query.impl.TupleQueryResultImpl;
 
 /**
  * Default Implementation of {@link PubVocabService}
@@ -85,6 +87,8 @@ public class PubServiceImpl implements PubService {
     private String namespaceGraph = "http://ucuenca.edu.ec/";
     private String wkhuskaGraph = namespaceGraph + "wkhuska";
 
+    private int processpercent = 0;
+
     /* graphByProvider
      Graph to save publications data by provider
      Example: http://ucuenca.edu.ec/wkhuska/dblp
@@ -101,7 +105,7 @@ public class PubServiceImpl implements PubService {
 
             String authorUri = "";
             String providerGraph = "";
-            String getAuthorsQuery = queriesService.getAuthorsQuery();
+            //String getAuthorsQuery = queriesService.getAuthorsQuery();
             String getGraphsListQuery = queriesService.getGraphsQuery();
             List<Map<String, Value>> resultGraph = sparqlService.query(QueryLanguage.SPARQL, getGraphsListQuery);
             /* FOR EACH GRAPH*/
@@ -204,63 +208,88 @@ public class PubServiceImpl implements PubService {
             //conf.addEndpoint(new DBLPEndpoint());
             LDClient ldClient = new LDClient(conf);
             //ClientResponse response = ldClient.retrieveResource("http://rdf.dblp.com/ns/m.0wqhskn");
-            int cont_aut = 0;
+
             int allMembers = 0;
-            String getAuthors = queriesService.getAuthorsQuery();
+            String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(wkhuskaGraph);
 
             // TupleQueryResult result = sparqlService.query(QueryLanguage.SPARQL, getAuthors);
             String nameToFind = "";
             String authorResource = "";
             int priorityToFind = 0;
-            List<Map<String, Value>> result = sparqlService.query(QueryLanguage.SPARQL, getAuthors);
-            for (Map<String, Value> map : result) {
-                cont_aut++;
+            List<Map<String, Value>> resultAllAuthors = sparqlService.query(QueryLanguage.SPARQL, getAllAuthorsDataQuery);
+
+            /*To Obtain Processed Percent*/
+            int allPersons = resultAllAuthors.size();
+            int processedPersons = 0;
+
+            String NS_DBLP = "http://rdf.dblp.com/ns/search/";
+            RepositoryConnection conUri = null;
+            ClientResponse response = null;
+            for (Map<String, Value> map : resultAllAuthors) {
+                processedPersons++;
+                log.info("Autores procesados: " + processedPersons + " de " + allPersons);
                 authorResource = map.get("subject").stringValue();
                 String firstName = map.get("fname").stringValue();
                 String lastName = map.get("lname").stringValue();
-                priorityToFind = 2;
+                priorityToFind = 1;
                 do {
                     try {
-                        
+                        boolean existNativeAuthor = true;
+                        allMembers = 0;
                         nameToFind = priorityFindQueryBuilding(priorityToFind, firstName, lastName);
-
-                        String NS_DBLP = "http://rdf.dblp.com/ns/search/";
-                        ClientResponse response = ldClient.retrieveResource(NS_DBLP + nameToFind);
-
+                        log.info("verificando llamada a LDC");
+                        response = ldClient.retrieveResource(NS_DBLP + nameToFind);
+                        if (response.getHttpStatus() == 503) {
+                            log.error("ErrorCode: " + response.getHttpStatus());
+                        }
                         String nameEndpointofPublications = ldClient.getEndpoint(NS_DBLP + nameToFind).getName();
                         String providerGraph = graphByProviderNS + nameEndpointofPublications.replace(" ", "");
 
-                        /*ClientResponse response = ldClient.retrieveResource(
-                         "http://dblp.uni-trier.de/search/author?xauthor=Saquicela+Victor");*/
-                        Model model = response.getData();
-                        /*response = ldClient.retrieveResource("http://dblp.uni-trier.de/pers/a/Alban:Humberto");
-                         model = response.getData();*/
-                        log.info(model.toString());
-
-                        RepositoryConnection conUri = ModelCommons.asRepository(response.getData()).getConnection();
+//                        Model model = response.getData();
+//                        FileOutputStream out = new FileOutputStream("C:\\Users\\Satellite\\Desktop\\" + nameToFind + "_test.ttl");
+//                        RDFWriter writer = Rio.createWriter(RDFFormat.TURTLE, out);
+//                        try {
+//                            writer.startRDF();
+//                            for (Statement st : model) {
+//                                writer.handleStatement(st);
+//                            }
+//                            writer.endRDF();
+//                        } catch (RDFHandlerException e) {
+//                            // oh no, do something!
+//                        }
+                        conUri = ModelCommons.asRepository(response.getData()).getConnection();
                         conUri.begin();
-
+                        String authorNativeResource = null;
                         //verifying the number of persons retrieved. if it has recovered more than one persons then the filter is changed and search anew,
-                        String getNumMembersQuery = queriesService.getNumMembersQuery();
-                        TupleQuery memquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getNumMembersQuery); //
-                        TupleQueryResult numMembersResult = memquery.evaluate();
-                        BindingSet bindingCount = numMembersResult.next();
-                        allMembers = Integer.parseInt(bindingCount.getValue("numMembers").stringValue());
-
-                        if (allMembers == 1) {
+                        String getMembersQuery = queriesService.getMembersQuery();
+                        TupleQueryResult membersResult = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getMembersQuery).evaluate();
+                        //  allMembers = Iterations.asList(membersResult).size();
+                        while (membersResult.hasNext()) {
+                            allMembers++;
+                            BindingSet bindingCount = membersResult.next();
+                            authorNativeResource = bindingCount.getValue("members").toString();
+                            existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(providerGraph, authorNativeResource));
+                        }
+                        //the author data was already loaded into the repository, only a sameAs property is associated 
+                        if (allMembers == 1 && existNativeAuthor) {
+                            //insert sameAs triplet    <http://190.15.141.102:8080/dspace/contribuidor/autor/SaquicelaGalarza_VictorHugo> owl:sameAs <http://dblp.org/pers/xr/s/Saquicela:Victor> 
+                            String sameAsInsertQuery = buildInsertQuery(providerGraph, authorResource, "http://www.w3.org/2002/07/owl#sameAs", authorNativeResource);
+                            updatePub(sameAsInsertQuery);
+                        }
+                        if (allMembers == 1 && !existNativeAuthor) {
                             //SPARQL obtain all publications of author
                             String getPublicationsFromProviderQuery = queriesService.getPublicationFromProviderQuery();
                             TupleQuery pubquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationsFromProviderQuery); //
                             TupleQueryResult tripletasResult = pubquery.evaluate();
                             while (tripletasResult.hasNext()) {
                                 BindingSet tripletsResource = tripletasResult.next();
-                                String authorNativeResource = tripletsResource.getValue("authorResource").toString();
+                                authorNativeResource = tripletsResource.getValue("authorResource").toString();
                                 String publicationResource = tripletsResource.getValue("publicationResource").toString();
                                 ///insert sparql query, 
                                 String publicationInsertQuery = buildInsertQuery(providerGraph, authorNativeResource, "http://xmlns.com/foaf/0.1/publications", publicationResource);
                                 updatePub(publicationInsertQuery);
 
-                                //insert sameAs triplet    <http://190.15.141.102:8080/dspace/contribuidor/autor/SaquicelaGalarza_VictorHugo> owl:sameAs <http://dblp.org/pers/xr/s/Saquicela:Victor> 
+                                // sameAs triplet    <http://190.15.141.102:8080/dspace/contribuidor/autor/SaquicelaGalarza_VictorHugo> owl:sameAs <http://dblp.org/pers/xr/s/Saquicela:Victor> 
                                 String sameAsInsertQuery = buildInsertQuery(providerGraph, authorResource, "http://www.w3.org/2002/07/owl#sameAs", authorNativeResource);
                                 updatePub(sameAsInsertQuery);
                             }
@@ -280,36 +309,35 @@ public class PubServiceImpl implements PubService {
                                 updatePub(publicationPropertyInsertQuery);
                             }
 
-//                            FileOutputStream out = new FileOutputStream("C:\\Users\\Satellite\\Desktop\\" + nameToFind + "_" + cont_aut + "_test.ttl");
-//                            RDFWriter writer = Rio.createWriter(RDFFormat.TURTLE, out);
-//                            try {
-//                                writer.startRDF();
-//                                for (Statement st : model) {
-//                                    writer.handleStatement(st);
-//                                }
-//                                writer.endRDF();
-//                            } catch (RDFHandlerException e) {
-//                                // oh no, do something!
-//                            }
-
                         }//end if numMembers=1
-                        
                         conUri.commit();
-                        conUri.close();
-                    } catch (DataRetrievalException | QueryEvaluationException | MalformedQueryException | RepositoryException ex) {
-                        // log.error("Fail to insert );
-                    }
-                   catch (Exception e)
-                   {
-                       log.error(e.toString());
-                   }
-                    priorityToFind++;
-                } while (allMembers != 1 && priorityToFind < 5);//end do while
-                //** end View Data
 
+                    } catch (DataRetrievalException e) {
+                         log.error("Data Retrieval Exception: " + e);
+                        try {
+                            Thread.sleep(1000);                 //1000 milliseconds is one second.
+                        } catch (InterruptedException ex) {
+                            Thread.currentThread().interrupt();
+                        }
+                    } catch (QueryEvaluationException | MalformedQueryException | RepositoryException ex) {
+                        log.error("Evaluation Exception: " + ex);
+                    } catch (Exception e) {
+                        log.error("ioexception " + e.toString());
+                    } finally {
+                        try {
+                            conUri.close();
+                        } catch (RepositoryException ex) {
+                            java.util.logging.Logger.getLogger(PubServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+                    }
+                    priorityToFind++;
+                } while (allMembers != 1 && priorityToFind < 6);//end do while
+                //** end View Data
+                printPercentProcess(processedPersons, allPersons);
             }
             return "True for publications";
-        }  catch (MarmottaException ex) {
+        } catch (MarmottaException ex) {
             log.error("Marmotta Exception: " + ex);
         }
 
@@ -317,10 +345,10 @@ public class PubServiceImpl implements PubService {
     }
 
     public String priorityFindQueryBuilding(int priority, String firstName, String lastName) {
-        String[] fnamelname = {"", "", "", "",""};
+        String[] fnamelname = {"", "", "", "", ""};
         /**
-         * fnamelname[0] is a firstName A fnamelname[1] is a firstName B
-         * fnamelname[2] is a lastName A fnamelname[3] is a lastName B
+         * fnamelname[0] is a firstName A, fnamelname[1] is a firstName B
+         * fnamelname[2] is a lastName A, fnamelname[3] is a lastName B
          *
          */
 
@@ -333,13 +361,15 @@ public class PubServiceImpl implements PubService {
         }
 
         switch (priority) {
-            case 1:
-                return fnamelname[0];
-            case 2:
+            case 5:
+                return fnamelname[3];
+            case 4:
                 return fnamelname[0] + "_" + fnamelname[2];
             case 3:
+                return fnamelname[1] + "_" + fnamelname[2] + "_" + fnamelname[3];
+            case 2:
                 return fnamelname[0] + "_" + fnamelname[2] + "_" + fnamelname[3];
-            case 4:
+            case 1:
                 return fnamelname[0] + "_" + fnamelname[1] + "_" + fnamelname[2] + "_" + fnamelname[3];
         }
         return "";
@@ -359,6 +389,20 @@ public class PubServiceImpl implements PubService {
         }
         return "Correcto";
 
+    }
+
+    /*
+     * 
+     * @param contAutoresNuevosEncontrados
+     * @param allPersons
+     * @param endpointName 
+     */
+    public void printPercentProcess(int processedPersons, int allPersons) {
+
+        if ((processedPersons * 100 / allPersons) != processpercent) {
+            processpercent = processedPersons * 100 / allPersons;
+            log.info("Procesado el: " + processpercent + " %");
+        }
     }
 
     //construyendo sparql query insert 
