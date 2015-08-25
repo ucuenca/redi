@@ -42,6 +42,7 @@ import java.util.concurrent.ConcurrentMap;
  * <p/>
  * Author: Santiago Gonzalez
  */
+@Deprecated
 public class DBLPCandidatesProvider extends AbstractXMLDataProvider implements DataProvider {
 	
     public static final String NAME = "DBLP Candidates Provider";

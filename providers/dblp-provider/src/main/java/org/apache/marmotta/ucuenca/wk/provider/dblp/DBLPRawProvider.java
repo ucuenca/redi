@@ -21,32 +21,31 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.marmotta.commons.vocabulary.FOAF;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
 
 import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
-import org.apache.marmotta.ldclient.api.provider.DataProvider;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
 import org.apache.marmotta.ldclient.model.ClientConfiguration;
 import org.apache.marmotta.ldclient.model.ClientResponse;
-import org.apache.marmotta.ldclient.provider.xml.AbstractXMLDataProvider;
-import org.apache.marmotta.ldclient.provider.xml.mapping.XPathValueMapper;
 import org.apache.marmotta.ldclient.services.ldclient.LDClient;
-import org.apache.marmotta.ucuenca.wk.provider.dblp.mapper.DBLPURIMapper;
+import org.apache.marmotta.ldclient.services.provider.AbstractHttpProvider;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.filter.ElementFilter;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.input.sax.XMLReaders;
+import org.jdom2.xpath.XPathFactory;
 import org.openrdf.model.Model;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.ValueFactoryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -55,22 +54,14 @@ import java.util.regex.Pattern;
  * <p/>
  * Author: Santiago Gonzalez
  */
-@Deprecated
-public class DBLPProvider extends AbstractXMLDataProvider implements DataProvider {
+public class DBLPRawProvider extends AbstractHttpProvider{
 	
-    public static final String NAME = "DBLP Provider";
+    public static final String NAME = "DBLP Raw Provider";
     public static final String API = "http://dblp.uni-trier.de/search/author/api?q=%s&format=xml";
     public static final String SERVICE_PATTERN = "http://dblp\\.uni\\-trier\\.de/search/author/api\\?q\\=(.*)(\\&format\\=xml)?$";
     public static final String PATTERN = "http(s?)://rdf\\.dblp\\.com/ns/search/.*";
     
-    private static ConcurrentMap<String,XPathValueMapper> mediaOntMappings = new ConcurrentHashMap<String, XPathValueMapper>();
-    static {
-        mediaOntMappings.put(FOAF.member.stringValue(), new DBLPURIMapper("/result/hits/hit/info/url"));
-    }
-
-
-
-    private static Logger log = LoggerFactory.getLogger(DBLPProvider.class);
+    private static Logger log = LoggerFactory.getLogger(DBLPRawProvider.class);
 
     /**
      * Return the name of this data provider. To be used e.g. in the configuration and in log messages.
@@ -120,53 +111,41 @@ public class DBLPProvider extends AbstractXMLDataProvider implements DataProvide
     
     @Override
     public List<String> parseResponse(String resource, String requestUrl, Model triples, InputStream input, String contentType) throws DataRetrievalException {
-    	super.parseResponse(resource, requestUrl, triples, input, contentType);
     	log.debug("Request Successful to {0}", requestUrl);
-    	ValueFactory factory = ValueFactoryImpl.getInstance();
-    	
-    	ClientConfiguration conf = new ClientConfiguration();
-        LDClient ldClient = new LDClient(conf);
-        Set<Value> candidates = triples.filter(factory.createURI(resource), FOAF.member, null).objects();
-        if(!candidates.isEmpty()) {
-	        Model candidateModel = null;
-	    	for(Value dblpAuthor: candidates) {
-	    		String author = ((Resource)dblpAuthor).stringValue();
-	    		ClientResponse response = ldClient.retrieveResource(author);
-	        	Model authorModel = response.getData();
-	        	if(candidateModel == null) {
-	        		candidateModel = authorModel;
-	        	} else {
-	        		candidateModel.addAll(authorModel);
-	        	}
+    	try {
+    		List<String> candidates = new ArrayList<String>();
+    		ValueFactory factory = ValueFactoryImpl.getInstance();
+    		final Document doc = new SAXBuilder(XMLReaders.NONVALIDATING).build(input);
+	    	for(Element element: queryElements(doc, "/result/hits/hit/info/url")) {
+	    		String candidate = element.getText();
+	    		triples.add(factory.createStatement(factory.createURI( resource ), FOAF.member, factory.createURI( candidate ) ));
+	    		candidates.add(candidate);
 	    	}
-	    	triples.addAll(candidateModel);
+	    	ClientConfiguration conf = new ClientConfiguration();
+	        LDClient ldClient = new LDClient(conf);
+	        if(!candidates.isEmpty()) {
+		        Model candidateModel = null;
+		    	for(String author: candidates) {
+		    		ClientResponse response = ldClient.retrieveResource(author);
+		        	Model authorModel = response.getData();
+		        	if(candidateModel == null) {
+		        		candidateModel = authorModel;
+		        	} else {
+		        		candidateModel.addAll(authorModel);
+		        	}
+		    	}
+		    	triples.addAll(candidateModel);
+	        }
+    	}catch (IOException e) {
+            throw new DataRetrievalException("I/O error while parsing HTML response", e);
+        }catch (JDOMException e) {
+            throw new DataRetrievalException("could not parse XML response. It is not in proper XML format", e);
         }
     	return Collections.emptyList();
     }
-
-
-
-    /**
-     * Return a mapping table mapping from RDF properties to XPath Value Mappers. Each entry in the map is evaluated
-     * in turn; in case the XPath expression yields a result, the property is added for the processed resource.
-     *
-     * @return
-     * @param requestUrl
-     */
-    @Override
-    protected Map<String, XPathValueMapper> getXPathMappings(String requestUrl) {
-        return mediaOntMappings;
-    }
-
-    /**
-     * Return a list of URIs that should be added as types for each processed resource.
-     *
-     * @return
-     * @param resource
-     */
-    @Override
-    protected List<String> getTypes(org.openrdf.model.URI resource) {
-        return ImmutableList.of(FOAF.Group.stringValue());
+    
+    protected static List<Element> queryElements(Document n, String query) {
+        return XPathFactory.instance().compile(query, new ElementFilter()).evaluate(n);
     }
     
 }

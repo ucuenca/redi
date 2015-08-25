@@ -45,6 +45,7 @@ import java.util.regex.Pattern;
  * <p/>
  * Author: Santiago Gonzalez
  */
+@Deprecated
 public class DBLPResourceProvider extends AbstractXMLDataProvider implements DataProvider {
 
 	private static final String NS_DOCUMENT = "http://purl.org/ontology/bibo/";

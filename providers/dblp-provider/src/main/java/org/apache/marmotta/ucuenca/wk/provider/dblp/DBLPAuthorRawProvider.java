@@ -18,37 +18,32 @@
 package org.apache.marmotta.ucuenca.wk.provider.dblp;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.marmotta.commons.vocabulary.DCTERMS;
-import org.apache.marmotta.commons.vocabulary.FOAF;
+import org.apache.marmotta.commons.sesame.model.ModelCommons;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
 
 import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
-import org.apache.marmotta.ldclient.api.provider.DataProvider;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
 import org.apache.marmotta.ldclient.model.ClientConfiguration;
 import org.apache.marmotta.ldclient.model.ClientResponse;
-import org.apache.marmotta.ldclient.provider.xml.AbstractXMLDataProvider;
-import org.apache.marmotta.ldclient.provider.xml.mapping.XPathLiteralMapper;
-import org.apache.marmotta.ldclient.provider.xml.mapping.XPathValueMapper;
 import org.apache.marmotta.ldclient.services.ldclient.LDClient;
-import org.apache.marmotta.ucuenca.wk.endpoint.dblp.DBLPResourceEndpoint;
-import org.apache.marmotta.ucuenca.wk.provider.dblp.mapper.DBLPDateMapper;
-import org.apache.marmotta.ucuenca.wk.provider.dblp.mapper.DBLPURIMapper;
+import org.apache.marmotta.ldclient.services.provider.AbstractHttpProvider;
 import org.openrdf.model.Model;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.model.vocabulary.OWL;
+import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFParseException;
+import org.openrdf.rio.UnsupportedRDFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -60,12 +55,11 @@ import java.util.regex.Pattern;
  * <p/>
  * Author: Santiago Gonzalez
  */
-@Deprecated
-public class DBLPAuthorProvider extends AbstractXMLDataProvider implements DataProvider {
+public class DBLPAuthorRawProvider extends AbstractHttpProvider {
 
     public static final String NS_AUTHOR = "http://rdf.dblp.com/ns/author/";
-    public static final String NAME = "DBLP Author Provider";
-    public static final String PATTERN = "http://dblp\\.org/pers/(.*)";
+    public static final String NAME = "DBLP Author Raw Provider";
+    public static final String PATTERN = "(http://dblp\\.org/pers/)(.*)";
     public static final String LEGACY_PATTERN = "(http://dblp\\.uni\\-trier\\.de/pers/)(.*)";
     
     private static ConcurrentMap<String,String> dblpNamespaces = new ConcurrentHashMap<String, String>();
@@ -77,20 +71,8 @@ public class DBLPAuthorProvider extends AbstractXMLDataProvider implements DataP
         dblpNamespaces.put("foaf","http://xmlns.com/foaf/0.1");
         dblpNamespaces.put("bibtex","http://data.bibbase.org/ontology/#");
     }
-    
-    private static final String ROOT = "/rdf:RDF/dblp:Person/";
 
-    private static ConcurrentMap<String,XPathValueMapper> mediaOntMappings = new ConcurrentHashMap<String, XPathValueMapper>();
-    static {
-    	mediaOntMappings.put(FOAF.name.stringValue(), new XPathLiteralMapper(ROOT + "dblp:primaryFullPersonName", dblpNamespaces));
-    	//mediaOntMappings.put(FOAF.name.stringValue(), new XPathLiteralMapper(ROOT + "*[dblp::primaryFullPersonName or dblp::otherFullPersonName]", dblpNamespaces));
-    	mediaOntMappings.put(DCTERMS.modified.stringValue(), new DBLPDateMapper(ROOT+ "dblp:personLastModifiedDate", dblpNamespaces));
-    	mediaOntMappings.put(DCTERMS.license.stringValue(), new DBLPURIMapper(ROOT + "dcterms:license/@rdf:resource", dblpNamespaces));
-        mediaOntMappings.put(FOAF.publications.stringValue(), new DBLPURIMapper(ROOT + "dblp:authorOf/@rdf:resource", dblpNamespaces));
-        
-    }
-
-    private static Logger log = LoggerFactory.getLogger(DBLPAuthorProvider.class);
+    private static Logger log = LoggerFactory.getLogger(DBLPAuthorRawProvider.class);
 
     /**
      * Return the name of this data provider. To be used e.g. in the configuration and in log messages.
@@ -128,26 +110,35 @@ public class DBLPAuthorProvider extends AbstractXMLDataProvider implements DataP
     public List<String> buildRequestUrl(String resource, Endpoint endpoint) {
     	String uri = "http://dblp.org/pers/xr/";
     	Matcher m = Pattern.compile(LEGACY_PATTERN).matcher(resource);
-    	if(m.find()) {
-    		uri += m.group(2);
-    	} else {
+    	if(!m.find()) {
     		m = Pattern.compile(PATTERN).matcher(resource);
         	Preconditions.checkState(StringUtils.isNotBlank(resource) && m.find());
-        	uri = resource;
     	}
+    	uri += m.group(2);
         return Collections.singletonList(uri);
     }
     
     @Override
-    public List<String> parseResponse(String resource, String requestUrl, Model triples, InputStream input, String contentType) throws DataRetrievalException {
-    	super.parseResponse(resource, requestUrl, triples, input, contentType);
-    	log.debug("Request {0} succesful");
+    public List<String> parseResponse(final String resource, String requestUrl, Model triples, InputStream input, String contentType) throws DataRetrievalException {
+    	log.debug("Request {0} succesful", requestUrl);
     	ValueFactory factory = ValueFactoryImpl.getInstance();
-    	
+    	RDFFormat format = RDFFormat.forMIMEType(contentType);
     	ClientConfiguration conf = new ClientConfiguration();
-        conf.addEndpoint(new DBLPResourceEndpoint());
         LDClient ldClient = new LDClient(conf);
-        Set<Value> resources = triples.filter(factory.createURI(resource), FOAF.publications, null).objects();
+        try {
+			ModelCommons.add(triples, input, resource, format);
+        } catch (UnsupportedRDFormatException e) {
+        	throw new DataRetrievalException("Error while parsing response. Unsupported format: " + contentType, e);
+        } catch (RDFParseException e) {
+			throw new DataRetrievalException("Error while parsing response", e);
+		} catch (IOException e) {
+			throw new DataRetrievalException("I/O error while parsing response", e);
+		}
+        Model publications = triples.filter(null, 
+        		factory.createURI(dblpNamespaces.get("dblp") + "authorOf"), null);
+        Resource subject = publications.subjects().iterator().next();
+        triples.add(factory.createURI(resource), OWL.SAMEAS, subject);
+        Set<Value> resources = publications.objects();
         if(!resources.isEmpty()) {
 	        Model resourceModel = null;
 	        for(Value dblpResource: resources) {
@@ -162,47 +153,8 @@ public class DBLPAuthorProvider extends AbstractXMLDataProvider implements DataP
 	    	}
 	        triples.addAll(resourceModel);
         }
-        if(!resource.matches(PATTERN)) {
-    		triples.add(factory.createURI(resource), OWL.SAMEAS, factory.createURI(requestUrl));
-    	}
-    	return Collections.emptyList();
+        return Collections.emptyList();
 
-    }
-
-
-
-    /**
-     * Return a mapping table mapping from RDF properties to XPath Value Mappers. Each entry in the map is evaluated
-     * in turn; in case the XPath expression yields a result, the property is added for the processed resource.
-     *
-     * @return
-     * @param requestUrl
-     */
-    @Override
-    protected Map<String, XPathValueMapper> getXPathMappings(String requestUrl) {
-        return mediaOntMappings;
-    }
-
-    /**
-     * Return a list of URIs that should be added as types for each processed resource.
-     *
-     * @return
-     * @param resource
-     */
-    @Override
-    protected List<String> getTypes(org.openrdf.model.URI resource) {
-        return ImmutableList.of(FOAF.Person.stringValue());
-    }
-    
-    /**
-     * Provide namespace mappings for the XPath expressions from namespace prefix to namespace URI. May be overridden
-     * by subclasses as appropriate, the default implementation returns an empty map.
-     *
-     * @return
-     */
-    @Override
-    protected Map<String, String> getNamespaceMappings() {
-        return dblpNamespaces;
     }
 
 }
