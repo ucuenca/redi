@@ -15,22 +15,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.marmotta.ucuenca.wk.endpoint.dblp;
+package org.apache.marmotta.ucuenca.wk.endpoint.gs;
 
 import org.apache.marmotta.commons.http.ContentType;
 import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
-import org.apache.marmotta.ucuenca.wk.provider.dblp.DBLPResourceRawProvider;
+//import org.apache.marmotta.ucuenca.wk.provider.dblp.DBLPRawProvider;
+import org.apache.marmotta.ucuenca.wk.provider.gs.GoogleScholarProvider;
 
 
 /**
- * Endpoint for accessing DBLP Resources as RDF.
+ * Endpoint for accessing Google Scholar Data as RDF.
  *
  * @author Santiago Gonzalez
  */
-public class DBLPResourceRawEndpoint extends Endpoint {
+public class GoogleScholarEndpoint extends Endpoint {
 
-    public DBLPResourceRawEndpoint() {
-        super(DBLPResourceRawProvider.NAME, DBLPResourceRawProvider.NAME, DBLPResourceRawProvider.PATTERN, null, 86400L);
+    public GoogleScholarEndpoint() {
+    	super(GoogleScholarProvider.NAME, GoogleScholarProvider.NAME, GoogleScholarProvider.PATTERN, null, 86400L);
         setPriority(PRIORITY_MEDIUM);
         addContentType(new ContentType("text", "turtle", 1.0));
         addContentType(new ContentType("text", "plain", 0.2));
