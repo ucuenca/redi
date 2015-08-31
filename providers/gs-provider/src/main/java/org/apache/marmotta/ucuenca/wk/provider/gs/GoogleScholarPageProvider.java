@@ -53,9 +53,9 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import java.io.IOException;
 import java.io.InputStream;
 //import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 //import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -142,7 +142,7 @@ public class GoogleScholarPageProvider extends AbstractHttpProvider{
             gsxml.setEncoding("iso-8859-1");
             xr.parse(gsxml);
             
-            final ArrayList<GSresult> gsresultlist = gsXMLHandler.getGSresultList();
+            final Set<GSresult> gsresultlist = gsXMLHandler.getGSresultList();
             Gson gson = new Gson();
             JsonArray json = new JsonArray();
             for (GSresult d : gsresultlist) {

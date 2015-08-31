@@ -6,7 +6,7 @@
         <artifactId>providers</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <groupId>org.apache.marmotta</groupId>
+    <groupId>org.apache.marmotta.ucuenca.wk.provider</groupId>
     <artifactId>gs-provider</artifactId>
     <packaging>jar</packaging>
     <name>LDClient Provider: GOOGLE-SCHOLAR JSON Access</name>
@@ -21,7 +21,7 @@
                     <forkMode>always</forkMode>
                 </configuration>
             </plugin>
-            <!--<plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
                 <version>3.4</version>
@@ -38,7 +38,7 @@
                         <ruleset>..${file.separator}..${file.separator}PMDRules.xml</ruleset>
                     </rulesets>
                 </configuration>
-            </plugin>-->
+            </plugin>
         </plugins>
     </build>
     <properties>

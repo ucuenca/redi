@@ -37,7 +37,7 @@ public class JSONtoRDF {
                         factory.createURI(schema.get("entity::property:link")), factory.createURI(value)));
                 this.mappingProcess(value, json);
             }
-            
+
             i++;
         }
         /*
@@ -55,13 +55,18 @@ public class JSONtoRDF {
             }
             Matcher m = Pattern.compile("^(entity::property:)(.*)$").matcher(key);
             if (m.find()) {
-                if (json.has(m.group(2))) {
-                    String value = json.get(m.group(2)).getAsString();
-                    model.add(factory.createStatement(factory.createURI(resource),
-                            factory.createURI(schema.get(key)), factory.createLiteral(value)));
-                }
+                getAllAttributes(m, key, json, resource);
             }
 
+        }
+
+    }
+
+    public void getAllAttributes(Matcher m,String key, JsonObject json, String resource) {
+        if (json.has(m.group(2))) {
+            String value = json.get(m.group(2)).getAsString();
+            model.add(factory.createStatement(factory.createURI(resource),
+                    factory.createURI(schema.get(key)), factory.createLiteral(value)));
         }
 
     }

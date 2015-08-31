@@ -12,8 +12,6 @@ import org.openrdf.model.vocabulary.RDF;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-//import static org.apache.marmotta.ucuenca.wk.provider.ma.MicrosoftAcademicsProvider.PATTERN;
-//import org.openrdf.model.impl.EmptyModel;
 
 public class JSONtoRDF {
 
@@ -71,58 +69,59 @@ public class JSONtoRDF {
             Matcher m = Pattern.compile("^(entity::property:)(.*)$").matcher(key);
             if (m.find()) {
 
-                if (json.has(m.group(2))) {
-                    String value = json.get(m.group(2)).getAsString();
-
-                    model.add(factory.createStatement(factory.createURI(resource),
-                            factory.createURI(schema.get(key)), factory.createLiteral(value)));
-                }
+                getGenericAttributes(m, key, json, resource);
             }
-            m = Pattern.compile("^(entity::property:abstract)(.*)$").matcher(key);
-            if (m.find()) {
+            getAttributesPartOne(key, json, resource);
+            getAttributesPartTwo(key, json, resource);
 
+        }
+
+    }
+
+    public void getAttributesPartOne(String key, JsonObject json, String resource) {
+
+        switch (key) {
+            case "entity::property:abstract":
                 String value = json.get("abstractt").getAsString();
                 model.add(factory.createStatement(factory.createURI(resource),
                         factory.createURI(schema.get(key)), factory.createLiteral(value)));
-            }
-            m = Pattern.compile("^(entity::property:fullversionurl)(.*)$").matcher(key);
-            if (m.find()) {
-                //if(key.matches("^rdf::property:")) {
+                break;
+            case "entity::property:fullversionurl":
                 JsonArray aux = json.get("fullVersionURL").getAsJsonArray();
                 for (JsonElement version : aux) {
                     model.add(factory.createStatement(factory.createURI(resource),
                             factory.createURI(schema.get(key)), factory.createURI(version.getAsString())));
 
                 }
-
-            }
-            m = Pattern.compile("^(entity::property:date)(.*)$").matcher(key);
-            if (m.find()) {
-                //if(key.matches("^rdf::property:")) {
-                String value = json.get("year").getAsString();
+                break;
+            case "entity::property:date":
+                value = json.get("year").getAsString();
                 model.add(factory.createStatement(factory.createURI(resource),
                         factory.createURI(schema.get(key)), factory.createLiteral(value)));
-            }
-            m = Pattern.compile("^(entity::property:uri)(.*)$").matcher(key);
-            if (m.find()) {
+                break;
+            default:
+                break;
 
+        }
+    }
+
+    public void getAttributesPartTwo(String key, JsonObject json, String resource) {
+
+        switch (key) {
+            case "entity::property:uri":
                 model.add(factory.createStatement(factory.createURI(resource),
                         factory.createURI(schema.get(key)), factory.createLiteral("http://academic.research.microsoft.com/Publication/" + json.get("id").getAsString() + "/")));
-            }
-            m = Pattern.compile("^(entity::property:quote)(.*)$").matcher(key);
-            if (m.find()) {
+                break;
+            case "entity::property:quote":
                 JsonArray aux = json.get("keyWord").getAsJsonArray();
                 for (JsonElement version : aux) {
                     model.add(factory.createStatement(factory.createURI(resource),
                             factory.createURI(schema.get(key)), factory.createLiteral(version.getAsString())));
 
                 }
-
-            }
-            m = Pattern.compile("^(entity::property:authorlist)(.*)$").matcher(key);
-            if (m.find()) {
-                //if(key.matches("^rdf::property:")) {
-                JsonArray aux = json.get("authors").getAsJsonArray();
+                break;
+            case "entity::property:authorlist":
+                aux = json.get("authors").getAsJsonArray();
                 String authors = "";
                 for (JsonElement version : aux) {
                     authors += "<" + (("http://academic.research.microsoft.com/Author/" + version.getAsJsonObject().get("id").getAsString() + "/").trim()) + "> ";
@@ -131,22 +130,28 @@ public class JSONtoRDF {
 
                 model.add(factory.createStatement(factory.createURI(resource),
                         factory.createURI(schema.get(key)), factory.createLiteral("(" + authors + ")")));
-
-            }
-            m = Pattern.compile("^(entity::property:creator)(.*)$").matcher(key);
-            if (m.find()) {
-                //if(key.matches("^rdf::property:")) {
-                JsonArray aux = json.get("authors").getAsJsonArray();
+                break;
+            case "entity::property:creator":
+                aux = json.get("authors").getAsJsonArray();
                 for (JsonElement version : aux) {
                     model.add(factory.createStatement(factory.createURI(resource),
                             factory.createURI(schema.get(key)), factory.createURI("http://academic.research.microsoft.com/Author/" + version.getAsJsonObject().get("id").getAsString() + "/")));
 
                 }
-
-            }
+                break;
+            default:
+                break;
 
         }
 
     }
 
+    public void getGenericAttributes(Matcher m, String key, JsonObject json, String resource) {
+        if (json.has(m.group(2))) {
+            String value = json.get(m.group(2)).getAsString();
+
+            model.add(factory.createStatement(factory.createURI(resource),
+                    factory.createURI(schema.get(key)), factory.createLiteral(value)));
+        }
+    }
 }
