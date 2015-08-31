@@ -19,8 +19,7 @@ package org.apache.marmotta.ucuenca.wk.endpoint.dblp;
 
 import org.apache.marmotta.commons.http.ContentType;
 import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
-import org.apache.marmotta.ucuenca.wk.provider.dblp.DBLPProvider;
-import org.apache.marmotta.ucuenca.wk.provider.dblp.DBLPProvider;
+import org.apache.marmotta.ucuenca.wk.provider.dblp.DBLPRawProvider;
 
 
 /**
@@ -31,7 +30,8 @@ import org.apache.marmotta.ucuenca.wk.provider.dblp.DBLPProvider;
 public class DBLPEndpoint extends Endpoint {
 
     public DBLPEndpoint() {
-        super(DBLPProvider.NAME, DBLPProvider.NAME, DBLPProvider.PATTERN, null, 86400L);
+        //super(DBLPProvider.NAME, DBLPProvider.NAME, DBLPProvider.PATTERN, null, 86400L);
+    	super(DBLPRawProvider.NAME, DBLPRawProvider.NAME, DBLPRawProvider.PATTERN, null, 86400L);
         setPriority(PRIORITY_MEDIUM);
         addContentType(new ContentType("text", "turtle", 1.0));
         addContentType(new ContentType("text", "plain", 0.2));

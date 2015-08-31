@@ -60,6 +60,7 @@ import java.util.regex.Pattern;
  * <p/>
  * Author: Santiago Gonzalez
  */
+@Deprecated
 public class DBLPAuthorProvider extends AbstractXMLDataProvider implements DataProvider {
 
     public static final String NS_AUTHOR = "http://rdf.dblp.com/ns/author/";

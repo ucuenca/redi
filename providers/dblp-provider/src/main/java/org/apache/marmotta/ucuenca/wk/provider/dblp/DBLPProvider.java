@@ -55,6 +55,7 @@ import java.util.regex.Pattern;
  * <p/>
  * Author: Santiago Gonzalez
  */
+@Deprecated
 public class DBLPProvider extends AbstractXMLDataProvider implements DataProvider {
 	
     public static final String NAME = "DBLP Provider";

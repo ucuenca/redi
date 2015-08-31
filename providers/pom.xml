@@ -12,5 +12,7 @@
   <packaging>pom</packaging>
   <modules>
     <module>dblp-provider</module>
+    <module>ma-provider</module>
+    <module>gs-provider</module>
   </modules>
 </project>

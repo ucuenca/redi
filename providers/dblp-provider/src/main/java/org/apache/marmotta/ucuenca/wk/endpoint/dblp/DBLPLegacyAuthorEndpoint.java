@@ -27,6 +27,7 @@ import org.apache.marmotta.ucuenca.wk.provider.dblp.DBLPAuthorProvider;
  *
  * @author Santiago Gonzalez
  */
+@Deprecated
 public class DBLPLegacyAuthorEndpoint extends Endpoint {
 
     public DBLPLegacyAuthorEndpoint() {

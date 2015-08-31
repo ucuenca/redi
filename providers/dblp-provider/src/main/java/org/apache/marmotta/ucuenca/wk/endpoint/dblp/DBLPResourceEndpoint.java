@@ -27,6 +27,7 @@ import org.apache.marmotta.ucuenca.wk.provider.dblp.DBLPResourceProvider;
  *
  * @author Santiago Gonzalez
  */
+@Deprecated
 public class DBLPResourceEndpoint extends Endpoint {
 
     public DBLPResourceEndpoint() {

@@ -27,6 +27,7 @@ import org.apache.marmotta.ucuenca.wk.provider.dblp.DBLPCandidatesProvider;
  *
  * @author Santiago Gonzalez
  */
+@Deprecated
 public class DBLPCandidatesEndpoint extends Endpoint {
 
     public DBLPCandidatesEndpoint() {
