@@ -6,13 +6,14 @@
         <artifactId>providers</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <groupId>org.apache.marmotta</groupId>
+
+    <groupId>org.apache.marmotta.ucuenca.wk.provider</groupId>
     <artifactId>ma-provider</artifactId>
     <packaging>jar</packaging>
     <name>LDClient Provider: MICROSOFTA JSON Access</name>
     <build>
         <plugins>
-            <!-- <plugin>
+             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.12.4</version>
@@ -20,7 +21,7 @@
                     <useSystemClassLoader>false</useSystemClassLoader>
                     <forkMode>always</forkMode>
                 </configuration>
-            </plugin>-->
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
