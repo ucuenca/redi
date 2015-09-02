@@ -56,7 +56,7 @@ public class PubWebService {
     }
 
     private Response runPublicationsProviderTask(String urisString) {
-        String result = publicationsService.runPublicationsProviderTaskImpl(urisString);
+        String result = publicationsService.runPublicationsMAProviderTaskImpl(urisString);
         return Response.ok().entity(result).build();
 
     }
@@ -73,7 +73,7 @@ public class PubWebService {
     }
 
     private Response runPublicationsTask(String urisString) {
-        String result = publicationsService.runPublicationsTaskImpl(urisString);
+        String result = publicationsService.runPublicationsMATaskImpl(urisString);
         return Response.ok().entity(result).build();
     }
 
