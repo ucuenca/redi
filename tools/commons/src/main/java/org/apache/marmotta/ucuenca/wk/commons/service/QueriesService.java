@@ -106,9 +106,13 @@ public interface QueriesService {
     //Microsoft Academics
     String getPublicationsMAQuery(String providerGraph);
     
-    
     String getPublicationFromMAProviderQuery();
     
     String getPublicationMAPropertiesQuery();
+    
+    //Google Scholar
+    //String getPublicationFromGSProviderQuery();
+    
+    
     
 }
