@@ -17,7 +17,7 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.api;
 
-public interface PubService {
+public interface GoogleScholarProviderService {
 
 
     
@@ -29,13 +29,6 @@ public interface PubService {
     String runPublicationsProviderTaskImpl(String param);
     
     
-    /**
-     * Get publications data from source MICRPSOFT ACADEMCS, and load into provider graph
-     * @param param
-     * @return 
-     */
-    String runPublicationsMAProviderTaskImpl(String param);
-    
     
     /**
      * Load publications:  Provider Graph to General Graph
@@ -43,14 +36,5 @@ public interface PubService {
      * @return 
      */
     String runPublicationsTaskImpl(String param);
-    
-    
-    
-    /**
-     * Load publications:  Provider Microsoft Academic Graph to General Graph
-     * @param param
-     * @return 
-     */
-    String runPublicationsMATaskImpl(String param);
     
 }
