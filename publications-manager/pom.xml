@@ -97,7 +97,16 @@
             <artifactId>dblp-provider</artifactId>
             <version>${project.version}</version>
         </dependency>
-
+ <dependency>
+            <groupId>org.apache.marmotta.ucuenca.wk.provider</groupId>
+            <artifactId>ma-provider</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+         <dependency>
+            <groupId>org.apache.marmotta.ucuenca.wk.provider</groupId>
+            <artifactId>gs-provider</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!-- Test dependencies -->
         <dependency>
             <groupId>org.apache.marmotta</groupId>
@@ -190,6 +199,8 @@
             <artifactId>commons</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+      
+
     </dependencies>
 
 </project>
