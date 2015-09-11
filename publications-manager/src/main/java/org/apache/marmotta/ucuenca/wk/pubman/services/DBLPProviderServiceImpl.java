@@ -44,10 +44,13 @@ import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.PropertyPubService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 
-import org.apache.marmotta.ucuenca.wk.pubman.api.PubService;
+import org.apache.marmotta.ucuenca.wk.pubman.api.MicrosoftAcadProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
 
 import org.apache.marmotta.ucuenca.wk.pubman.exceptions.PubException;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.marmotta.ucuenca.wk.pubman.api.DBLPProviderService;
+
 import org.openrdf.model.Model;
 import org.openrdf.model.Statement;
 import org.openrdf.query.BindingSet;
@@ -70,7 +73,7 @@ import org.openrdf.query.impl.TupleQueryResultImpl;
  * Default Implementation of {@link PubVocabService}
  */
 @ApplicationScoped
-public class PubServiceImpl implements PubService {
+public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable{
 
     @Inject
     private Logger log;
@@ -103,7 +106,6 @@ public class PubServiceImpl implements PubService {
 
         try {
 
-            String authorUri = "";
             String providerGraph = "";
             //String getAuthorsQuery = queriesService.getAuthorsQuery();
             String getGraphsListQuery = queriesService.getGraphsQuery();
@@ -132,6 +134,8 @@ public class PubServiceImpl implements PubService {
                             mapping.put(source.replace("..", ":"), target.replace("..", ":"));
                         }
                     } catch (IOException ex) {
+                        ex.printStackTrace();
+                    } catch (Exception ex) {
                         ex.printStackTrace();
                     } finally {
                         if (entrada != null) {
@@ -199,6 +203,7 @@ public class PubServiceImpl implements PubService {
         }
     }
 
+   
     @Override
     public String runPublicationsProviderTaskImpl(String param) {
         try {
@@ -227,7 +232,7 @@ public class PubServiceImpl implements PubService {
             ClientResponse response = null;
             for (Map<String, Value> map : resultAllAuthors) {
                 processedPersons++;
-                log.info("Autores procesados: " + processedPersons + " de " + allPersons);
+                log.info("Autores procesados con DBLP: " + processedPersons + " de " + allPersons);
                 authorResource = map.get("subject").stringValue();
                 String firstName = map.get("fname").stringValue();
                 String lastName = map.get("lname").stringValue();
@@ -237,11 +242,30 @@ public class PubServiceImpl implements PubService {
                         boolean existNativeAuthor = true;
                         allMembers = 0;
                         nameToFind = priorityFindQueryBuilding(priorityToFind, firstName, lastName);
-                        log.info("verificando llamada a LDC");
-                        response = ldClient.retrieveResource(NS_DBLP + nameToFind);
+
+                        boolean dataretrievee = true;//( Data Retrieve Exception )
+                        int waitTime = 30;
+                        do {
+                            dataretrievee = true;
+                            try {
+                                response = ldClient.retrieveResource(NS_DBLP + nameToFind);
+                            } catch (DataRetrievalException e) {
+                                log.error("Data Retrieval Exception: " + e);
+                                log.info("Wating: " + waitTime + " seconds for new query");
+                                dataretrievee = false;
+                                try {
+                                    Thread.sleep(waitTime * 1000);               //1000 milliseconds is one second.
+                                } catch (InterruptedException ex) {
+                                    Thread.currentThread().interrupt();
+                                }
+                                waitTime += 5;
+                            }
+                        } while (!dataretrievee && waitTime < 40);
+
                         if (response.getHttpStatus() == 503) {
                             log.error("ErrorCode: " + response.getHttpStatus());
                         }
+
                         String nameEndpointofPublications = ldClient.getEndpoint(NS_DBLP + nameToFind).getName();
                         String providerGraph = graphByProviderNS + nameEndpointofPublications.replace(" ", "");
 
@@ -285,8 +309,9 @@ public class PubServiceImpl implements PubService {
                                 BindingSet tripletsResource = tripletasResult.next();
                                 authorNativeResource = tripletsResource.getValue("authorResource").toString();
                                 String publicationResource = tripletsResource.getValue("publicationResource").toString();
+                                String publicationProperty = tripletsResource.getValue("publicationProperty").toString();
                                 ///insert sparql query, 
-                                String publicationInsertQuery = buildInsertQuery(providerGraph, authorNativeResource, "http://xmlns.com/foaf/0.1/publications", publicationResource);
+                                String publicationInsertQuery = buildInsertQuery(providerGraph, authorNativeResource, publicationProperty, publicationResource);
                                 updatePub(publicationInsertQuery);
 
                                 // sameAs triplet    <http://190.15.141.102:8080/dspace/contribuidor/autor/SaquicelaGalarza_VictorHugo> owl:sameAs <http://dblp.org/pers/xr/s/Saquicela:Victor> 
@@ -301,25 +326,18 @@ public class PubServiceImpl implements PubService {
                             while (tripletasResult.hasNext()) {
                                 BindingSet tripletsResource = tripletasResult.next();
                                 String publicationResource = tripletsResource.getValue("publicationResource").toString();
-                                String publicationProperty = tripletsResource.getValue("publicationProperty").toString();
-                                String publicationPropertyValue = tripletsResource.getValue("publicationPropertyValue").toString();
+                                String publicationProperties = tripletsResource.getValue("publicationProperties").toString();
+                                String publicationPropertiesValue = tripletsResource.getValue("publicationPropertiesValue").toString();
                                 ///insert sparql query, 
-                                String publicationPropertyInsertQuery = buildInsertQuery(providerGraph, publicationResource, publicationProperty, publicationPropertyValue);
+                                String publicationPropertiesInsertQuery = buildInsertQuery(providerGraph, publicationResource, publicationProperties, publicationPropertiesValue);
                                 //load values publications to publications resource
-                                updatePub(publicationPropertyInsertQuery);
+                                updatePub(publicationPropertiesInsertQuery);
                             }
 
                         }//end if numMembers=1
                         conUri.commit();
 
-                    } catch (DataRetrievalException e) {
-                         log.error("Data Retrieval Exception: " + e);
-                        try {
-                            Thread.sleep(1000);                 //1000 milliseconds is one second.
-                        } catch (InterruptedException ex) {
-                            Thread.currentThread().interrupt();
-                        }
-                    } catch (QueryEvaluationException | MalformedQueryException | RepositoryException ex) {
+                    }  catch (QueryEvaluationException | MalformedQueryException | RepositoryException ex) {
                         log.error("Evaluation Exception: " + ex);
                     } catch (Exception e) {
                         log.error("ioexception " + e.toString());
@@ -327,12 +345,12 @@ public class PubServiceImpl implements PubService {
                         try {
                             conUri.close();
                         } catch (RepositoryException ex) {
-                            java.util.logging.Logger.getLogger(PubServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                            java.util.logging.Logger.getLogger(MicrosoftAcadProviderServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
                         }
 
                     }
                     priorityToFind++;
-                } while (allMembers != 1 && priorityToFind < 6);//end do while
+                } while (allMembers != 1 && priorityToFind < 5);//end do while
                 //** end View Data
                 printPercentProcess(processedPersons, allPersons);
             }
@@ -344,6 +362,7 @@ public class PubServiceImpl implements PubService {
         return "fail";
     }
 
+    
     public String priorityFindQueryBuilding(int priority, String firstName, String lastName) {
         String[] fnamelname = {"", "", "", "", ""};
         /**
@@ -361,8 +380,8 @@ public class PubServiceImpl implements PubService {
         }
 
         switch (priority) {
-            case 5:
-                return fnamelname[3];
+//            case 5:
+//                return fnamelname[3];
             case 4:
                 return fnamelname[0] + "_" + fnamelname[2];
             case 3:
@@ -413,4 +432,11 @@ public class PubServiceImpl implements PubService {
             return queriesService.getInsertDataLiteralQuery(grapfhProv, sujeto, predicado, objeto);
         }
     }
+
+    @Override
+    public void run() {
+        runPublicationsProviderTaskImpl("uri");
+    }
+
+   
 }

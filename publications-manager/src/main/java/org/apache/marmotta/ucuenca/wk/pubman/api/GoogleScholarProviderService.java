@@ -17,7 +17,7 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.api;
 
-public interface PubService {
+public interface GoogleScholarProviderService {
 
 
     
@@ -27,6 +27,8 @@ public interface PubService {
      * @return 
      */
     String runPublicationsProviderTaskImpl(String param);
+    
+    
     
     /**
      * Load publications:  Provider Graph to General Graph

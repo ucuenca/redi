@@ -6,6 +6,7 @@
 package org.apache.marmotta.ucuenca.wk.commons.impl;
 
 import java.net.URL;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 
 /**
@@ -34,7 +35,9 @@ public class Queries implements QueriesService {
     public String getInsertDataLiteralQuery(String... varargs) {
         String graphSentence = "GRAPH <" + varargs[0] + ">";
         String subjectSentence = "<" + varargs[1] + ">";
-        return "INSERT DATA { " + graphSentence + "  { " + subjectSentence + " <" + varargs[2] + "> " + varargs[3] + " }}";
+        String object = "\"" + StringEscapeUtils.escapeJava(varargs[3].substring(1, varargs[3].length() - 1)) + "\"";
+
+        return "INSERT DATA { " + graphSentence + "  { " + subjectSentence + " <" + varargs[2] + "> " + object + " }}";
 
     }
 
@@ -163,16 +166,16 @@ public class Queries implements QueriesService {
     public String getAuthorsDataQuery(String graph) {
         return " PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
                 + " SELECT * "
-                + " WHERE { GRAPH <"+graph+"> { "
+                + " WHERE { GRAPH <" + graph + "> { "
                 + " ?subject a foaf:Person. "
                 + " ?subject foaf:name ?name."
                 + " ?subject foaf:firstName ?fname."
                 + " ?subject foaf:lastName ?lname."
-//                + " {"
-//                + " FILTER (regex(?name,\"Saquicela Galarza\"))"
-//                + " } UNION {"
-//                + " FILTER (regex(?name,\"Espinoza Mejia\"))"
-//                + " }"
+                //                + " {"
+                //                + " FILTER (regex(?name,\"Saquicela Galarza\"))"
+                //                + " } UNION {"
+                //                + " FILTER (regex(?name,\"Espinoza Mejia\"))"
+                //                + " }"
                 + " }}";
     }
 
@@ -198,7 +201,7 @@ public class Queries implements QueriesService {
      */
     @Override
     public String getAskQuery(String... varargs) {
-        
+
         String graphSentence = "GRAPH <" + varargs[0] + ">";
 
         return "ASK { " + graphSentence + "{ <" + varargs[1] + "> <" + varargs[2] + "> <" + varargs[3] + "> } }";
@@ -211,17 +214,28 @@ public class Queries implements QueriesService {
                 + " {  "
                 + " ?authorResource owl:sameAs   ?authorNative. "
                 + " ?authorNative ?pubproperty ?publicationResource. "
+                + " filter (regex(?pubproperty,\"authorOf\")) "
+                + " }}";
+    }
+
+    @Override
+    public String getPublicationsMAQuery(String providerGraph) {
+        return " SELECT DISTINCT ?authorResource ?pubproperty ?publicationResource WHERE { "
+                + " graph <" + providerGraph + "> "
+                + " {  "
+                + " ?authorResource owl:sameAs   ?authorNative. "
+                + " ?authorNative ?pubproperty ?publicationResource. "
                 + " filter (regex(?pubproperty,\"pub\")) "
                 + " }  "
                 + " }  ";
     }
 
     @Override
-    public String getPublicationsPropertiesQuery(String providerGraph , String publicationResource) {
+    public String getPublicationsPropertiesQuery(String providerGraph, String publicationResource) {
         return "PREFIX owl: <http://www.w3.org/2002/07/owl#> "
                 + " PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
                 + " SELECT DISTINCT ?publicationProperties ?publicationPropertyValue WHERE { "
-                + " graph <"+providerGraph+"> "
+                + " graph <" + providerGraph + "> "
                 + " {"
                 + " <" + publicationResource + ">  ?publicationProperties ?publicationPropertyValue. "
                 + " }} ";
@@ -232,19 +246,33 @@ public class Queries implements QueriesService {
         return "SELECT DISTINCT ?members"
                 + " WHERE { ?x <http://xmlns.com/foaf/0.1/member> ?members. } ";
     }
-    
+
     @Override
     public String getPublicationFromProviderQuery() {
-        return  "SELECT DISTINCT ?authorResource  ?publicationResource "
-                + " WHERE {  ?authorResource <http://xmlns.com/foaf/0.1/publications> ?publicationResource. }";
+        return "SELECT DISTINCT ?authorResource ?publicationProperty  ?publicationResource "
+                + " WHERE {  ?authorResource <http://www.w3.org/2002/07/owl#sameAs> ?authorOtherResource. "
+                + " ?authorOtherResource <http://dblp.uni-trier.de/rdf/schema-2015-01-26#authorOf> ?publicationResource. "
+                + " ?authorOtherResource ?publicationProperty ?publicationResource. }";
+    }
+
+    @Override
+    public String getPublicationFromMAProviderQuery() {
+        return "SELECT DISTINCT ?authorResource  ?publicationResource "
+                + " WHERE {  ?authorResource <http://xmlns.com/foaf/0.1/publications> ?publicationResource}";
     }
 
     @Override
     public String getPublicationPropertiesQuery() {
-       return "SELECT DISTINCT ?publicationResource ?publicationProperty ?publicationPropertyValue "
-               + " WHERE { ?authorResource <http://xmlns.com/foaf/0.1/publications> ?publicationResource. ?publicationResource ?publicationProperty ?publicationPropertyValue }";
-    
+        return "SELECT DISTINCT ?publicationResource ?publicationProperties ?publicationPropertiesValue "
+                + " WHERE { ?authorResource <http://dblp.uni-trier.de/rdf/schema-2015-01-26#authorOf> ?publicationResource. ?publicationResource ?publicationProperties ?publicationPropertiesValue }";
+
     }
-    
-    
+
+    @Override
+    public String getPublicationMAPropertiesQuery() {
+        return "SELECT DISTINCT ?publicationResource ?publicationProperties ?publicationPropertiesValue "
+                + " WHERE { ?authorResource <http://xmlns.com/foaf/0.1/publications> ?publicationResource. ?publicationResource ?publicationProperties ?publicationPropertiesValue }";
+
+    }
+
 }
