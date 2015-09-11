@@ -26,8 +26,9 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
 
-import org.apache.marmotta.ucuenca.wk.pubman.api.PubService;
+import org.apache.marmotta.ucuenca.wk.pubman.api.MicrosoftAcadProviderService;
 
 @Path("/pubman")
 @ApplicationScoped
@@ -36,9 +37,9 @@ public class PubWebService {
     @Inject
     private Logger log;
 
-    @Inject
-    private PubService publicationsService;
-
+    @Inject 
+    private CommonService commonService;
+    
     private static final int MAX_TURNS = 100;
     private static final int MIN_TURNS = 0;
     public static final String GET_PUBLICATIONS = "/publications";
@@ -56,9 +57,15 @@ public class PubWebService {
     }
 
     private Response runPublicationsProviderTask(String urisString) {
-        String result = publicationsService.runPublicationsProviderTaskImpl(urisString);
+        //String result = publicationsService.runPublicationsMAProviderTaskImpl(urisString);
+        String result = runGetDataFromProvidersService();
         return Response.ok().entity(result).build();
 
+    }
+    
+    private String runGetDataFromProvidersService()
+    {
+        return commonService.GetDataFromProvidersService();
     }
 
     /*
@@ -73,7 +80,7 @@ public class PubWebService {
     }
 
     private Response runPublicationsTask(String urisString) {
-        String result = publicationsService.runPublicationsTaskImpl(urisString);
+        String result = commonService.Data2GlobalGraph();
         return Response.ok().entity(result).build();
     }
 
