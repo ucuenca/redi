@@ -17,6 +17,12 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.webservices;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -26,9 +32,13 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.GET;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
 
-import org.apache.marmotta.ucuenca.wk.pubman.api.MicrosoftAcadProviderService;
+
 
 @Path("/pubman")
 @ApplicationScoped
@@ -44,6 +54,7 @@ public class PubWebService {
     private static final int MIN_TURNS = 0;
     public static final String GET_PUBLICATIONS = "/publications";
     public static final String LOAD_PUBLICATIONS = "/publications_provider_graph";
+    public static final String GET_AUTHOR_DATA = "/pubsearch";
 
     /*
      * Get Publications Data from Source and Load into Provider Graph
@@ -60,7 +71,6 @@ public class PubWebService {
         //String result = publicationsService.runPublicationsMAProviderTaskImpl(urisString);
         String result = runGetDataFromProvidersService();
         return Response.ok().entity(result).build();
-
     }
     
     private String runGetDataFromProvidersService()
@@ -73,7 +83,7 @@ public class PubWebService {
      */
     @POST
     @Path(LOAD_PUBLICATIONS)
-    public Response loadPublicationsPost(@QueryParam("Endpoint") String resultType) {
+    public Response loadPublicationsPost(@QueryParam("Endpoint") String resultType, @Context HttpServletRequest request) {
         String params = resultType;
         log.debug("Publications Task", params);
         return runPublicationsTask(params);
@@ -83,5 +93,27 @@ public class PubWebService {
         String result = commonService.Data2GlobalGraph();
         return Response.ok().entity(result).build();
     }
-
+    
+    /**
+     *      
+     */
+    @GET
+    @Path(GET_AUTHOR_DATA)
+    @Produces("application/json")
+    public Response searchAuthor(@QueryParam("resource") String uri, @Context HttpServletRequest request){
+        JsonArray resultjson = commonService.searchAuthor(uri);
+       
+         //List<JsonArray> result = new LinkedList<JsonArray>();
+        String result = resultjson.toString();
+        
+        
+//        List<Map<String, Object>> result = new LinkedList<Map<String, Object>>();
+//        for(JsonElement jsonel : resultjson) {
+//            String some = jsonel.getAsString();
+//            //result.add(jsonel.getAsString());
+//        }
+//        
+        
+        return Response.ok().entity(result).build(); 
+    }
 }

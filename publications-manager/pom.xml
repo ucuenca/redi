@@ -89,6 +89,11 @@
         </dependency>
         <dependency>
             <groupId>org.apache.marmotta</groupId>
+            <artifactId>ldclient-provider-rdf</artifactId>
+            <version>${marmotta.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.marmotta</groupId>
             <artifactId>ldclient-core</artifactId>
             <version>${marmotta.version}</version>
         </dependency>
@@ -182,7 +187,12 @@
             <version>${javax.el.version}</version>
             <scope>test</scope>
         </dependency>
-        
+         <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${servlet.api.version}</version>
+            <type>jar</type>
+        </dependency>
         <dependency>
             <groupId>org.apache.marmotta</groupId>
             <artifactId>kiwi-versioning</artifactId>
