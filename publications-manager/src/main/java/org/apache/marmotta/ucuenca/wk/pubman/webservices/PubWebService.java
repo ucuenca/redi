@@ -101,19 +101,8 @@ public class PubWebService {
     @Path(GET_AUTHOR_DATA)
     @Produces("application/json")
     public Response searchAuthor(@QueryParam("resource") String uri, @Context HttpServletRequest request){
-        JsonArray resultjson = commonService.searchAuthor(uri);
-       
-         //List<JsonArray> result = new LinkedList<JsonArray>();
+        JsonArray resultjson = commonService.searchAuthor(uri);       
         String result = resultjson.toString();
-        
-        
-//        List<Map<String, Object>> result = new LinkedList<Map<String, Object>>();
-//        for(JsonElement jsonel : resultjson) {
-//            String some = jsonel.getAsString();
-//            //result.add(jsonel.getAsString());
-//        }
-//        
-        
         return Response.ok().entity(result).build(); 
     }
 }
