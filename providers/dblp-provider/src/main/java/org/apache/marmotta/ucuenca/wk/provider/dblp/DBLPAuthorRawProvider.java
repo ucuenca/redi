@@ -108,13 +108,15 @@ public class DBLPAuthorRawProvider extends AbstractHttpProvider {
      */
     @Override
     public List<String> buildRequestUrl(String resource, Endpoint endpoint) {
-    	String uri = "http://dblp.org/pers/xr/";
+    	String uri = "http://dblp.org/pers/";
     	Matcher m = Pattern.compile(LEGACY_PATTERN).matcher(resource);
+    	Boolean isLegacy = Boolean.TRUE;
     	if(!m.find()) {
+    		isLegacy = Boolean.FALSE;
     		m = Pattern.compile(PATTERN).matcher(resource);
         	Preconditions.checkState(StringUtils.isNotBlank(resource) && m.find());
     	}
-    	uri += m.group(2);
+    	uri += isLegacy ? ( m.group(2).replaceFirst("^hd/", "xr/") ):( "xr/"+m.group(2) );
         return Collections.singletonList(uri);
     }
     

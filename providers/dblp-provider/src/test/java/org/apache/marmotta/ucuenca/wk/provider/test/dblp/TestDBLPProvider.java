@@ -18,7 +18,6 @@
 package org.apache.marmotta.ucuenca.wk.provider.test.dblp;
 
 import org.apache.marmotta.ldclient.test.provider.ProviderTestBase;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -37,14 +36,14 @@ public class TestDBLPProvider extends ProviderTestBase {
      *
      */
     @Test
+    //@Ignore
     public void testDBLP() throws Exception {
         testResource(DBLP, "all.Victor_Saquicela.sparql");
     }
 
     @Test
-    @Ignore
-    public void testMauricioEspinoza() throws Exception {
-        testResource("http://rdf.dblp.com/n/search/Mauricio_Espinoza");
+    public void testLegacyResolveURI() throws Exception {
+    	testResource("http://dblp.uni-trier.de/pers/hd/b/Bl=aacute=zquez:Luis_Manuel_Vilches");
     }
 
 }
