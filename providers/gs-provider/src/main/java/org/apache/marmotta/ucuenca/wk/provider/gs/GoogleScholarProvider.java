@@ -83,8 +83,7 @@ public class GoogleScholarProvider extends AbstractHttpProvider {
         MAPPINGSCHEMA.put("entity::property:link", "http://purl.org/ontology/bibo/uri");
         MAPPINGSCHEMA.put("entity::property:title", "http://purl.org/dc/terms/title");
         MAPPINGSCHEMA.put("entity::property:text", "http://purl.org/ontology/bibo/abstract");
-        MAPPINGSCHEMA.put("entity::property:journal", "http://purl.org/ontology/bibo/Journal");
-        MAPPINGSCHEMA.put("entity::property:author", "http://purl.org/dc/elements/1.1/creator");
+        MAPPINGSCHEMA.put("entity::property:journal", "http://purl.org/ontology/bibo/Journal");        
         MAPPINGSCHEMA.put("entity::property:date", "http://purl.org/dc/elements/1.1/date");
         MAPPINGSCHEMA.put("entity::property:doi", "http://purl.org/ontology/bibo/doi");
         MAPPINGSCHEMA.put("entity::property:authorlist", "http://purl.org/ontology/bibo/authorList");
@@ -98,6 +97,7 @@ public class GoogleScholarProvider extends AbstractHttpProvider {
         MAPPINGSCHEMA.put("entity::property:pdf", nsUcuenca + "pdf");
         MAPPINGSCHEMA.put("entity::property:cites", "http://purl.org/ontology/bibo/cites");
         MAPPINGSCHEMA.put("entity::property:fulltextlink", "http://purl.org/ontology/bibo/content");
+        MAPPINGSCHEMA.put("entity::property:creator", "http://purl.org/dc/elements/1.1/creator");
 
     }
 

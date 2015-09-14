@@ -19,20 +19,20 @@ package org.apache.marmotta.ucuenca.wk.endpoint.ma;
 
 import org.apache.marmotta.commons.http.ContentType;
 import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
+import org.apache.marmotta.ucuenca.wk.provider.ma.MicrosoftAcademicsAuthorProvider;
 
 
-import org.apache.marmotta.ucuenca.wk.provider.ma.MicrosoftAcademicsProvider;
 
 
 /**
- * Endpoint for accessing Google Scholar Data as RDF.
+ * Endpoint for accessing Microsoft Academics Data as RDF.
  *
- * @author Santiago Gonzalez
+ * @author Freddy Sumba
  */
-public class MicrosoftAcademicsEndpoint extends Endpoint {
+public class MicrosoftAcademicsAuthorEndpoint extends Endpoint {
 
-    public MicrosoftAcademicsEndpoint() {
-    	super(MicrosoftAcademicsProvider.NAME, MicrosoftAcademicsProvider.NAME, MicrosoftAcademicsProvider.PATTERN, null, 86400L);
+    public MicrosoftAcademicsAuthorEndpoint() {
+    	super(MicrosoftAcademicsAuthorProvider.NAME, MicrosoftAcademicsAuthorProvider.NAME, MicrosoftAcademicsAuthorProvider.PATTERN, null, 86400L);
         setPriority(PRIORITY_MEDIUM);
         addContentType(new ContentType("text", "turtle", 1.0));
         addContentType(new ContentType("text", "plain", 0.2));
