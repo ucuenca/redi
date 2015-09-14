@@ -5,6 +5,9 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.services;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -19,6 +22,7 @@ import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.PropertyPubService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
+import org.apache.marmotta.ucuenca.wk.pubman.api.DBLPProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.GoogleScholarProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.MicrosoftAcadProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
@@ -42,13 +46,15 @@ public class CommonServiceImpl implements CommonService {
 
 //    @Inject
 //    GoogleScholarProviderServiceImpl googleService;
-    
     @Inject
     GoogleScholarProviderService googleService;
 
     @Inject
     Data2GlobalGraphImpl data2GlobalGraphService;
 //
+
+    @Inject
+    DBLPProviderService dblpProviderServiceInt;
 
     @Override
     public String GetDataFromProvidersService() {
@@ -71,6 +77,10 @@ public class CommonServiceImpl implements CommonService {
         Thread data2globalTask = new Thread(data2GlobalGraphService);
         data2globalTask.start();
         return "Load Publications Data from Providers Graph to Global Graph. Task run in background.   Please review main.log file for details";
+    }
 
+    @Override
+    public JsonArray searchAuthor(String uri) {
+        return dblpProviderServiceInt.SearchAuthorTaskImpl(uri);
     }
 }

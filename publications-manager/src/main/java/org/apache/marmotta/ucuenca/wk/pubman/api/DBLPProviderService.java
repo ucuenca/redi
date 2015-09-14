@@ -17,6 +17,10 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.api;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
 public interface DBLPProviderService {
 
 
@@ -36,5 +40,13 @@ public interface DBLPProviderService {
      * @return 
      */
     String runPublicationsTaskImpl(String param);
+    
+    /**
+     * Function to Search 1 Author ( param ) in DBLP,  Insert in DBLP Graph and Return in JSONLD
+     * @param url
+     * @return 
+     */
+    JsonArray SearchAuthorTaskImpl(String url);
+    
     
 }
