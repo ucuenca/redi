@@ -53,20 +53,47 @@ public class JSONtoRDF {
                         RDF.TYPE, factory.createURI(schema.get("entity::type"))));
                 continue;
             }
-            Matcher m = Pattern.compile("^(entity::property:)(.*)$").matcher(key);
+            Matcher m = Pattern.compile("^(entity::property:creator)(.*)$").matcher(key);
             if (m.find()) {
-                getAllAttributes(m, key, json, resource);
+                getAllAttributesAuthor(key, json, resource);
+            } else {
+                m = Pattern.compile("^(entity::property:)(.*)$").matcher(key);
+                if (m.find()) {
+                    getAllAttributes(m, key, json, resource);
+                }
             }
 
         }
 
     }
 
-    public void getAllAttributes(Matcher m,String key, JsonObject json, String resource) {
+    public void getAllAttributes(Matcher m, String key, JsonObject json, String resource) {
         if (json.has(m.group(2))) {
             String value = json.get(m.group(2)).getAsString();
             model.add(factory.createStatement(factory.createURI(resource),
                     factory.createURI(schema.get(key)), factory.createLiteral(value)));
+        }
+
+    }
+
+    private void getAllAttributesAuthor(String key, JsonObject json, String resource) {
+        if (json.has("author")) {
+            String aux = json.get("author").getAsString();
+            if (aux.length() > 0) {
+                String guion = "… -";
+                try {
+                    aux = aux.substring(0, aux.indexOf(guion));
+                } catch (Exception e) {
+                    String guion2 = " - ";
+                    aux = aux.substring(0, aux.indexOf(guion2));
+                }
+                String[] authors = aux.split(",");
+                for (String author : authors) {
+                    model.add(factory.createStatement(factory.createURI(resource),
+                            factory.createURI(schema.get(key)), factory.createURI("https://scholar.google.com/scholar?start=0&q=author:%22" + author.replace(" ", "+") + "%22&hl=en&as_sdt=1%2C15&as_vis=1")));
+
+                }
+            }
         }
 
     }
