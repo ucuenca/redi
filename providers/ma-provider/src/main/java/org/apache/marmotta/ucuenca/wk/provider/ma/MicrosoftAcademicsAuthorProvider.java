@@ -58,8 +58,8 @@ public class MicrosoftAcademicsAuthorProvider extends AbstractHttpProvider {
     public static final String NAME = "Microsoft Academics Author Provider";
     public static final String API = "http://academic.research.microsoft.com/";
     public static final String PATTERN2 = "http://academic.research.microsoft.com/json.svc/search?AppId=d4d1924a-5da9-4e8b-a515-093e8a2d1748&AuthorID=34038376&ResultObjects=Publication&PublicationContent=AllInfo&StartIdx=1&EndIdx=100";
-    public static final String PATTERN = "http://academic\\.research\\.microsoft\\.com/json\\.svc/search\\?AppId\\=(.*)\\&AuthorID\\=[0-9]*\\&ResultObjects\\=Publication\\&PublicationContent\\=AllInfo\\&StartIdx\\=1\\&EndIdx\\=1(.*)$";
-    public static final String PATTERN3 = "http(s?):.*";
+    public static final String PATTERN3 = "http://academic\\.research\\.microsoft\\.com/json\\.svc/search\\?AppId\\=(.*)\\&AuthorID\\=[0-9]*\\&ResultObjects\\=Publication\\&PublicationContent\\=AllInfo\\&StartIdx\\=1\\&EndIdx\\=1(.*)$";
+    public static final String PATTERN = "http://academic\\.research\\.microsoft\\.com/Author/([0-9]*)/";
 
     private static String nsUcuenca = "https://www.cedia.org.ec/";
     private static Logger log = LoggerFactory.getLogger(MicrosoftAcademicsAuthorProvider.class);
@@ -85,7 +85,6 @@ public class MicrosoftAcademicsAuthorProvider extends AbstractHttpProvider {
         MAPPINGSCHEMA.put("entity::property:citationCount", nsUcuenca + "citationCount");
         MAPPINGSCHEMA.put("entity::property:contributor", "http://purl.org/dc/terms/contributor");
         MAPPINGSCHEMA.put("entity::property:fullversionurl", nsUcuenca + "FullVersionURL");
-        
 
     }
 
@@ -129,17 +128,12 @@ public class MicrosoftAcademicsAuthorProvider extends AbstractHttpProvider {
         String url = null;
         Matcher m = Pattern.compile(PATTERN).matcher(resource);
         if (m.find()) {
-            appId = m.group(1);
-            authorSearch = m.group(2);
+            String author = m.group(1);
 
-            log.debug("Extracting info for: {0}", authorSearch);
-            if (authorSearch.length() > 0) {
-                log.debug("Extra author search parameters: {0}", authorSearch);
-            }
-            if (appId.length() > 0) {
-                log.debug("AppId search parameters: {0}", appId);
-            }
-            url = resource;
+
+            String urlAuthor = "http://academic.research.microsoft.com/json.svc/search?AppId=d4d1924a-5da9-4e8b-a515-093e8a2d1748&AuthorID=" + author + "&ResultObjects=Publication&PublicationContent=AllInfo&StartIdx=1&EndIdx=100";
+            url = urlAuthor;
+
         }
         return Collections.singletonList(url);
     }
@@ -152,8 +146,8 @@ public class MicrosoftAcademicsAuthorProvider extends AbstractHttpProvider {
             BufferedReader streamReader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
             StringBuilder responseStrBuilder = new StringBuilder();
 
-            String inputStr=streamReader.readLine();
-            while (inputStr  != null) {
+            String inputStr = streamReader.readLine();
+            while (inputStr != null) {
                 responseStrBuilder.append(inputStr);
                 inputStr = streamReader.readLine();
             }
