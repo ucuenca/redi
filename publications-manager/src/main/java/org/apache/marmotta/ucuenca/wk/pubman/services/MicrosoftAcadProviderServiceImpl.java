@@ -69,12 +69,11 @@ import org.openrdf.query.UpdateExecutionException;
 import org.openrdf.query.impl.TupleQueryResultImpl;
 
 /**
- * Default Implementation of {@link PubVocabService}
- * Get Data From MICROSOFT ACADEMICS PROVIDER
- * 
- * Fernando Baculima
- * CEDIA - Universidad de Cuenca
- * 
+ * Default Implementation of {@link PubVocabService} Get Data From MICROSOFT
+ * ACADEMICS PROVIDER
+ *
+ * Fernando Baculima CEDIA - Universidad de Cuenca
+ *
  */
 @ApplicationScoped
 public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderService, Runnable {
@@ -105,7 +104,6 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
     @Inject
     private SparqlService sparqlService;
 
-  
     //for Microsoft Academics
     @Override
     public String runPublicationsTaskImpl(String param) {
@@ -209,7 +207,6 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
         }
     }
 
-   
     @Override
     public String runPublicationsProviderTaskImpl(String param) {
         try {
@@ -258,14 +255,13 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                             String URL_TO_FIND_Microsoft = "http://academic.research.microsoft.com/json.svc/search?AppId=d4d1924a-5da9-4e8b-a515-093e8a2d1748&AuthorQuery=" + nameToFind + "&ResultObjects=Publication&PublicationContent=AllInfo&StartIdx=1&EndIdx=100";
 
                             existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(nameProviderGraph, URL_TO_FIND_Microsoft));
-
+                            boolean dataretrievee = false;
                             if (nameToFind != "" && !existNativeAuthor) {
-                                boolean dataretrievee = true;//( Data Retrieve Exception )
                                 waitTime = 30;
                                 do {
-                                    dataretrievee = true;
                                     try {
                                         response = ldClient.retrieveResource(URL_TO_FIND_Microsoft);
+                                        dataretrievee = true;
                                     } catch (DataRetrievalException e) {
                                         log.error("Data Retrieval Exception: " + e);
                                         log.info("Wating: " + waitTime + " seconds for new query");
@@ -285,24 +281,26 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                             String nameEndpointofPublications = ldClient.getEndpoint(URL_TO_FIND_Microsoft).getName();
                             String providerGraph = graphByProviderNS + nameEndpointofPublications.replace(" ", "");
 
-//                        Model model = response.getData();
-//                        FileOutputStream out = new FileOutputStream("C:\\Users\\Satellite\\Desktop\\" + nameToFind + "_test.ttl");
-//                        RDFWriter writer = Rio.createWriter(RDFFormat.TURTLE, out);
-//                        try {
-//                            writer.startRDF();
-//                            for (Statement st : model) {
-//                                writer.handleStatement(st);
-//                            }
-//                            writer.endRDF();
-//                        } catch (RDFHandlerException e) {
-//                            // oh no, do something!
-//                        }
-                            conUri = ModelCommons.asRepository(response.getData()).getConnection();
-                            conUri.begin();
-                            String authorNativeResource = null;
+                        Model model = response.getData();
+                        FileOutputStream out = new FileOutputStream("C:\\Users\\Satellite\\Desktop\\" + nameToFind + "_test.ttl");
+                        RDFWriter writer = Rio.createWriter(RDFFormat.TURTLE, out);
+                        try {
+                            writer.startRDF();
+                            for (Statement st : model) {
+                                writer.handleStatement(st);
+                            }
+                            writer.endRDF();
+                        } catch (RDFHandlerException e) {
+                            // oh no, do something!
+                        }
+                            if (dataretrievee)//if the resource data were recovered
+                            {
+                                conUri = ModelCommons.asRepository(response.getData()).getConnection();
+                                conUri.begin();
+                                String authorNativeResource = null;
 
-                            //THIS DRIVER NO RETURN MEMBERS OF A SEARCH, ALL DATA IS RELATED WITH A AUTHOR
-                            //verifying the number of persons retrieved. if it has recovered more than one persons then the filter is changed and search anew,
+                            //THIS DRIVER NO RETURN MEMBERS OF A SEARCH, ALL DATA IS RELATED WITH 1 AUTHOR
+                                //verifying the number of persons retrieved. if it has recovered more than one persons then the filter is changed and search anew,
 //                        String getMembersQuery = queriesService.getMembersQuery();
 //                        TupleQueryResult membersResult = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getMembersQuery).evaluate();
 //                        
@@ -312,66 +310,61 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
 //                            authorNativeResource = bindingCount.getValue("members").toString();
 //                            existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(providerGraph, authorNativeResource));
 //                        }
-                            //the author data was already loaded into the repository, only a sameAs property is associated 
-                            //     <http://academic.research.microsoft.com/json.svc/search?AppId=d4d1924a-5da9-4e8b-a515-093e8a2d1748&AuthorQuery=saquicela&ResultObjects=Publication&PublicationContent=AllInfo&StartIdx=1&EndIdx=100> a <http://purl.org/ontology/bibo/Document> ;
-                            //    <http://xmlns.com/foaf/0.1/publications>
-                            authorNativeResource = URL_TO_FIND_Microsoft;
-                            existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(providerGraph, authorNativeResource));
+                                //the author data was already loaded into the repository, only a sameAs property is associated 
+                                //     <http://academic.research.microsoft.com/json.svc/search?AppId=d4d1924a-5da9-4e8b-a515-093e8a2d1748&AuthorQuery=saquicela&ResultObjects=Publication&PublicationContent=AllInfo&StartIdx=1&EndIdx=100> a <http://purl.org/ontology/bibo/Document> ;
+                                //    <http://xmlns.com/foaf/0.1/publications>
+                                authorNativeResource = URL_TO_FIND_Microsoft;
+                                existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(providerGraph, authorNativeResource));
 
-                            if (allMembers == 1 && existNativeAuthor) {
-                                //insert sameAs triplet    <http://190.15.141.102:8080/dspace/contribuidor/autor/SaquicelaGalarza_VictorHugo> owl:sameAs <http://dblp.org/pers/xr/s/Saquicela:Victor> 
-                                String sameAsInsertQuery = buildInsertQuery(providerGraph, authorResource, "http://www.w3.org/2002/07/owl#sameAs", authorNativeResource);
-                                updatePub(sameAsInsertQuery);
-                            }
-
-                            if (!existNativeAuthor) {
-                                //SPARQL obtain all publications of author
-                                String getPublicationsFromProviderQuery = queriesService.getPublicationFromMAProviderQuery();
-                                TupleQuery pubquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationsFromProviderQuery); //
-                                TupleQueryResult tripletasResult = pubquery.evaluate();
-                                while (tripletasResult.hasNext()) {
-                                    AuthorDataisLoad = true;
-
-                                    BindingSet tripletsResource = tripletasResult.next();
-                                    authorNativeResource = tripletsResource.getValue("authorResource").toString();
-                                    String publicationResource = tripletsResource.getValue("publicationResource").toString();
-                                    //String publicationProperty = tripletsResource.getValue("publicationProperty").toString();
-                                    ///insert sparql query, 
-                                    String publicationInsertQuery = buildInsertQuery(providerGraph, authorNativeResource, "http://xmlns.com/foaf/0.1/publications", publicationResource);
-                                    updatePub(publicationInsertQuery);
-
-                                    // sameAs triplet    <http://190.15.141.102:8080/dspace/contribuidor/autor/SaquicelaGalarza_VictorHugo> owl:sameAs <http://dblp.org/pers/xr/s/Saquicela:Victor> 
+                                if (allMembers == 1 && existNativeAuthor) {
+                                    //insert sameAs triplet    <http://190.15.141.102:8080/dspace/contribuidor/autor/SaquicelaGalarza_VictorHugo> owl:sameAs <http://dblp.org/pers/xr/s/Saquicela:Victor> 
                                     String sameAsInsertQuery = buildInsertQuery(providerGraph, authorResource, "http://www.w3.org/2002/07/owl#sameAs", authorNativeResource);
                                     updatePub(sameAsInsertQuery);
-
                                 }
 
-                                // SPARQL to obtain all data of a publication
-                                String getPublicationPropertiesQuery = queriesService.getPublicationMAPropertiesQuery();
-                                TupleQuery resourcequery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationPropertiesQuery); //
-                                tripletasResult = resourcequery.evaluate();
-                                while (tripletasResult.hasNext()) {
-                                    BindingSet tripletsResource = tripletasResult.next();
-                                    String publicationResource = tripletsResource.getValue("publicationResource").toString();
-                                    String publicationProperties = tripletsResource.getValue("publicationProperties").toString();
-                                    String publicationPropertiesValue = tripletsResource.getValue("publicationPropertiesValue").toString();
-                                    ///insert sparql query, 
-                                    String publicationPropertiesInsertQuery = buildInsertQuery(providerGraph, publicationResource, publicationProperties, publicationPropertiesValue);
-                                    //load values publications to publications resource
-                                    updatePub(publicationPropertiesInsertQuery);
-                                }
+                                if (!existNativeAuthor) {
+                                    //SPARQL obtain all publications of author
+                                    String getPublicationsFromProviderQuery = queriesService.getPublicationFromMAProviderQuery();
+                                    TupleQuery pubquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationsFromProviderQuery); //
+                                    TupleQueryResult tripletasResult = pubquery.evaluate();
+                                    while (tripletasResult.hasNext()) {
+                                        AuthorDataisLoad = true;
 
-                            }//end if numMembers=1
-                            conUri.commit();
+                                        BindingSet tripletsResource = tripletasResult.next();
+                                        authorNativeResource = tripletsResource.getValue("authorResource").toString();
+                                        String publicationResource = tripletsResource.getValue("publicationResource").toString();
+                                    //String publicationProperty = tripletsResource.getValue("publicationProperty").toString();
+                                        ///insert sparql query, 
+                                        String publicationInsertQuery = buildInsertQuery(providerGraph, authorNativeResource, "http://xmlns.com/foaf/0.1/publications", publicationResource);
+                                        updatePub(publicationInsertQuery);
+
+                                        // sameAs triplet    <http://190.15.141.102:8080/dspace/contribuidor/autor/SaquicelaGalarza_VictorHugo> owl:sameAs <http://dblp.org/pers/xr/s/Saquicela:Victor> 
+                                        String sameAsInsertQuery = buildInsertQuery(providerGraph, authorResource, "http://www.w3.org/2002/07/owl#sameAs", authorNativeResource);
+                                        updatePub(sameAsInsertQuery);
+
+                                    }
+
+                                    // SPARQL to obtain all data of a publication
+                                    String getPublicationPropertiesQuery = queriesService.getPublicationMAPropertiesQuery();
+                                    TupleQuery resourcequery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationPropertiesQuery); //
+                                    tripletasResult = resourcequery.evaluate();
+                                    while (tripletasResult.hasNext()) {
+                                        BindingSet tripletsResource = tripletasResult.next();
+                                        String publicationResource = tripletsResource.getValue("publicationResource").toString();
+                                        String publicationProperties = tripletsResource.getValue("publicationProperties").toString();
+                                        String publicationPropertiesValue = tripletsResource.getValue("publicationPropertiesValue").toString();
+                                        ///insert sparql query, 
+                                        String publicationPropertiesInsertQuery = buildInsertQuery(providerGraph, publicationResource, publicationProperties, publicationPropertiesValue);
+                                        //load values publications to publications resource
+                                        updatePub(publicationPropertiesInsertQuery);
+                                    }
+
+                                }//end if numMembers=1
+                                conUri.commit();
+                                conUri.close();
+                            }//end IF DATARETRIEVE
                         } catch (Exception e) {
                             log.error("ioexception " + e.toString());
-                        } finally {
-                            try {
-                                conUri.close();
-                            } catch (RepositoryException ex) {
-                                java.util.logging.Logger.getLogger(MicrosoftAcadProviderServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-
                         }
                         priorityToFind++;
                     } while (!AuthorDataisLoad && priorityToFind < 5);//end do while
@@ -386,8 +379,6 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
 
         return "fail";
     }
-    
-   
 
     public String priorityFindQueryBuilding(int priority, String firstName, String lastName) {
         String[] fnamelname = {"", "", "", "", ""};
@@ -461,7 +452,7 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
 
     @Override
     public void run() {
-    runPublicationsProviderTaskImpl("uri");
+        runPublicationsProviderTaskImpl("uri");
     }
-  
+
 }

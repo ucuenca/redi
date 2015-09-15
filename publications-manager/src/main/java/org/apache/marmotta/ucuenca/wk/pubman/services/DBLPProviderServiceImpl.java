@@ -274,18 +274,18 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                         String nameEndpointofPublications = ldClient.getEndpoint(NS_DBLP + nameToFind).getName();
                         String providerGraph = graphByProviderNS + nameEndpointofPublications.replace(" ", "");
 
-//                        Model model = response.getData();
-//                        FileOutputStream out = new FileOutputStream("C:\\Users\\Satellite\\Desktop\\" + nameToFind + "_test.ttl");
-//                        RDFWriter writer = Rio.createWriter(RDFFormat.TURTLE, out);
-//                        try {
-//                            writer.startRDF();
-//                            for (Statement st : model) {
-//                                writer.handleStatement(st);
-//                            }
-//                            writer.endRDF();
-//                        } catch (RDFHandlerException e) {
-//                            // oh no, do something!
-//                        }
+                        Model model = response.getData();
+                        FileOutputStream out = new FileOutputStream("C:\\Users\\Satellite\\Desktop\\" + nameToFind + "_test.ttl");
+                        RDFWriter writer = Rio.createWriter(RDFFormat.TURTLE, out);
+                        try {
+                            writer.startRDF();
+                            for (Statement st : model) {
+                                writer.handleStatement(st);
+                            }
+                            writer.endRDF();
+                        } catch (RDFHandlerException e) {
+                            // oh no, do something!
+                        }
                         conUri = ModelCommons.asRepository(response.getData()).getConnection();
                         conUri.begin();
                         String authorNativeResource = null;
@@ -341,19 +341,12 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
 
                         }//end if numMembers=1
                         conUri.commit();
-
+                         conUri.close();
                     } catch (QueryEvaluationException | MalformedQueryException | RepositoryException ex) {
                         log.error("Evaluation Exception: " + ex);
                     } catch (Exception e) {
                         log.error("ioexception " + e.toString());
-                    } finally {
-                        try {
-                            conUri.close();
-                        } catch (RepositoryException ex) {
-                            java.util.logging.Logger.getLogger(MicrosoftAcadProviderServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-
-                    }
+                    } 
                     priorityToFind++;
                 } while (allMembers != 1 && priorityToFind < 5);//end do while
                 //** end View Data
