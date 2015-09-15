@@ -98,10 +98,12 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'searchData',
 			    		var author = _.findWhere(node.author.jsonld["@graph"], {"@id": id, "@type": "foaf:Person"});
 			    		if(!author['foaf:name']) {
 			    			infoBar.find('h4').text("Author External Info");
-			    			infoBar.find('div#title').text('');
+			    			infoBar = $('div.tree-node-info .entityInfo');
+			    			//infoBar.find('div#title').text('');
 			    			//infoBar.find('div#title').text("Author: " + publication["dcterms:title"]);
-			    			infoBar.find('a').attr('href', id.replace('/xr/','/'))
+			    			var anchor = $("<a target='blank'>").attr('href', id.replace('/xr/','/')) //SOLO DBLP
 			    				.text("Click here for more info...");
+			    			infoBar.append(anchor);
 		    			}
 
 			    	}
@@ -189,19 +191,84 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'searchData',
 		                node.children.push( child );
 		                stack.push(entity["@id"]);
 		            });
-		            update(node);
+		            update(node, true);
 		            centerNode(node);
 			    }
 
 			    function setChildrenAndUpdateForPub(node) {
 
 			    	var infoBar = $('div.tree-node-info');
+			    	var model = {"dcterms:title": {label: "Title", containerType: "div"}, 
+			    					"bibo:uri": {label: "URL", containerType: "a"}, 
+			    					"dcterms:contributor": {label: "Contributor", containerType: "a"}, 
+			    					"dcterms:isPartOf": {label: "Is Part Of", containerType: "a"},
+			    					"dcterms:license": {label: "License", containerType: "a"},
+			    					"dcterms:provenance": {label: "Source", containerType: "div"},
+			    					"dcterms:publisher": {label:"Publisher", containerType: "div"},
+			    					"bibo:numPages": {label:"Pages", containerType: "div"}
+			    				};
 			    	if(infoBar) {
-			    		infoBar.find('h4').text("Publication Info");
-			    		var publication = _.findWhere(node.publication.jsonld["@graph"], {"@type": "bibo:Document"});
-			    		infoBar.find('div#title').text("Title: " + publication["dcterms:title"]);
-			    		infoBar.find('a').attr('href', "http://localhost:8080/marmotta/meta/text/html?uri=" + publication["@id"])
-			    			.text("More Info...");
+			    		var id = node.publication["@id"];
+			    		var sparqlDescribe = "DESCRIBE <" + id + ">";
+				    	sparqlQuery.querySrv({query: sparqlDescribe}, function(rdf) {
+				    		var context = {
+				        		"foaf": "http://xmlns.com/foaf/0.1/",
+				        		"dc": "http://purl.org/dc/elements/1.1/",
+				        		"dcterms": "http://purl.org/dc/terms/",
+				        		"bibo": "http://purl.org/ontology/bibo/",
+				        		"uc": "http://ucuenca.edu.ec/"
+							};
+							jsonld.compact(rdf, context, function(err, compacted) {
+								var entity = _.findWhere(compacted["@graph"], {"@id": id, "@type": "bibo:Document"});
+
+								infoBar.find('h4').text("Publication Info");
+								infoBar.find('div#title').text("Title: " + entity["dcterms:title"]);
+								infoBar.find('a').attr('href', "http://190.15.141.85:8080/marmottatest/meta/text/html?uri=" + entity["@id"])
+						    			.text("More Info...");
+						    	var pubInfo = $('div.tree-node-info .entityInfo');
+						    	pubInfo.html('');
+								_.each(_.keys(model), function(key, idx) {
+
+									if(entity[key]) {
+										if(model[key].containerType == 'a') {
+											var values = entity[key].length ? 
+												_.pluck(entity[key],'@id'):[entity[key]["@id"]];
+											var div = $('<div>');
+											var label = $('<span class="label label-primary">').text(model[key].label);
+											div.append(label);
+											div.append("</br>");
+											pubInfo.append(div);
+											_.map(values, function(value){
+												var anchor = $("<a target='blank'>").attr('href',value.replace('/xr/','/')/*SOLO DBLP*/).text(value);
+												div.append(anchor);
+												div.append("</br>");
+												return anchor;
+											});
+
+										} else { //append into a div container
+											var div = $('<div>');
+											var label = $('<span class="label label-primary">').text(model[key].label)
+											div.append(label);
+											div.append("</br>");
+											pubInfo.append(div);
+											var values = entity[key].length ? entity[key]:[entity[key]];
+											if(typeof(values) === 'string') {
+												var span = $('<span class="field-value">').text(values);
+												div.append(span);
+											} else {
+												_.map(values, function(value, idx) {
+													var span = $('<span class="field-value">').text(value);
+													div.append(span);
+													div.append("</br>");
+												});
+											}
+										}
+									}
+						    		
+							  	});
+				            });
+
+			            });
 
 			    	}
 			    	/*
@@ -330,7 +397,7 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'searchData',
 			        if (d.children) {
 			            removeChildrenFromExplored(d);
 			            d.children = null;
-			            update(d);
+			            update(d, false);
 			            centerNode(d);
 			        } else {
 			            if (isAuthor(d)) {
@@ -343,10 +410,11 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'searchData',
 			    }
 
 			    function click(d) {
+			    	$('div.tree-node-info .entityInfo').html('');
 			        d = toggleChildren(d);
 			    }
 
-			    function update(source) {
+			    function update(source, expand) {
 			        var levelWidth = [1];
 			        var childCount = function(level, n) {
 			            if (n.children && n.children.length > 0) {
@@ -378,20 +446,64 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'searchData',
 			                return d.id || (d.id = ++i);
 			            });
 
+			        // Tip Creation for title
+
+			        var tip = d3.tip()
+						.attr('class', 'tree-d3-tip')
+						.html(function(d){return ' ';})
+						/*.html(function(d) { 
+							if (isPublication(d)) {
+								var context = {
+					        		"foaf": "http://xmlns.com/foaf/0.1/",
+					        		"dc": "http://purl.org/dc/elements/1.1/",
+					        		"dcterms": "http://purl.org/dc/terms/",
+					        		"bibo": "http://purl.org/ontology/bibo/",
+					        		"uc": "http://ucuenca.edu.ec/"
+								};
+			                	var id = d.publication["@id"];
+			                    var publication = _.findWhere( d.publication.jsonld["@graph"], {"@id": id, "@type": "bibo:Document"} );
+			                    return publication["dcterms:title"];
+			                }
+						 })*/
+						.direction('se')
+						.offset([0, 3])
+
 			        // Enter any new nodes at the parent's previous position.
 			        var nodeEnter = node.enter().append("g")
 			            // .call(dragListener)
+			            .call( expand ? tip:function(){} )
 			            .attr("class", "tree-node")
 			            .attr("transform", function(d) {
 			                return "translate(" + source.y0 + "," + source.x0 + ")";
 			            })
 			            .on("mouseover", function(d) {
-			                if ('author' in d) {
+			            	var node = d;
+			                if ('publication' in d) {
+			                	var id = d.publication["@id"];
+			                	var sparqlDescribe = "DESCRIBE <" + id + ">";
+						    	sparqlQuery.querySrv({query: sparqlDescribe}, function(rdf) {
+						    		var context = {
+						        		"foaf": "http://xmlns.com/foaf/0.1/",
+						        		"dc": "http://purl.org/dc/elements/1.1/",
+						        		"dcterms": "http://purl.org/dc/terms/",
+						        		"bibo": "http://purl.org/ontology/bibo/",
+						        		"uc": "http://ucuenca.edu.ec/"
+									};
+									jsonld.compact(rdf, context, function(err, compacted) {
+										var entity = _.findWhere(compacted["@graph"], {"@id": id, "@type": "bibo:Document"});
+									  	tip.html(entity["dcterms:title"]);
+									  	//tip.html(function(d){return 'test';});
+									  	//tip.show(node);
+						            });
+
+					            });
+			                	tip.show(d);
 			                    //AE.getInfo(d.author);
 			                }
 			            })
 			            .on("mouseout", function(d) {
-			                if ('author' in d) {
+			                if ('publication' in d) {
+			                	tip.hide(d);
 			                    //AE.getInfoCancel();
 			                }
 			            })
@@ -484,9 +596,10 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'searchData',
 			                    var id = d.author["@id"];
 			                    var author = _.findWhere( d.author.jsonld["@graph"], {"@id": id, "@type": "foaf:Person"} );
 			                    return author["foaf:name"];
-			                }/* else if (isPublication(d)){
-			                    //return "Genre:" + AE.toTitleCase(d.genre.name);
-			                    return "Genre:";
+			                }/* else if (isPublication(d)) {
+			                	var id = d.publication["@id"];
+			                    var publication = _.findWhere( d.publication.jsonld["@graph"], {"@id": id, "@type": "bibo:Document"} );
+			                    return publication["dcterms:title"];
 			                }*/
 
 			            })
@@ -635,7 +748,7 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'searchData',
 	            root = initWithArtist(data);
 	            root.x0 = viewerHeight / 2;
 	            root.y0 = 0;
-	            update(root);
+	            update(root, true);
 	            centerNode(root);
 	            click(root);
 
