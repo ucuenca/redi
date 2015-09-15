@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Properties;
 import javax.inject.Inject;
 import org.apache.marmotta.kiwi.model.rdf.KiWiUriResource;
+import org.apache.marmotta.ldclient.services.ldclient.LDClient;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
@@ -81,6 +82,8 @@ public class CommonServiceImpl implements CommonService {
 
     @Override
     public JsonArray searchAuthor(String uri) {
+        LDClient ldclient = new LDClient();
+        ldclient.getEndpoint(uri);      
         return dblpProviderServiceInt.SearchAuthorTaskImpl(uri);
     }
 }

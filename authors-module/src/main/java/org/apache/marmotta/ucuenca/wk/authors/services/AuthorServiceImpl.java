@@ -33,16 +33,13 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.marmotta.commons.sesame.model.ModelCommons;
 import org.apache.marmotta.ldclient.api.ldclient.LDClientService;
-import org.apache.marmotta.ldclient.api.provider.DataProvider;
 import org.apache.marmotta.ldclient.endpoint.rdf.SPARQLEndpoint;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
 import org.apache.marmotta.ldclient.model.ClientConfiguration;
 import org.apache.marmotta.ldclient.model.ClientResponse;
-import org.apache.marmotta.ldclient.provider.rdf.SPARQLProvider;
 import org.apache.marmotta.ldclient.services.ldclient.LDClient;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
 //import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
-
 import org.apache.marmotta.ucuenca.wk.authors.api.AuthorService;
 import org.apache.marmotta.ucuenca.wk.authors.api.SparqlFunctionsService;
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.AskException;
@@ -149,11 +146,10 @@ public class AuthorServiceImpl implements AuthorService {
         configurationService.getHome();
         String lastUpdateUrisFile = configurationService.getHome() + "\\listAuthorsUpdate_" + endpoint.getName() + ".aut";
         /* Conecting to repository using LDC ( Linked Data Client ) Library */
-        DataProvider spqprov = new SPARQLProvider();
         ClientConfiguration config = new ClientConfiguration();
-        config.addEndpoint(new SPARQLEndpoint(endpoint.getName(), endpoint.getEndpointUrl(), "^http://190.15.141.102:8080/dspace/contribuidor/.*"));
-        config.addProvider(spqprov);
-        LDClientService ldclient = new LDClient(config);
+        config.addEndpoint(new SPARQLEndpoint(endpoint.getName(), endpoint.getEndpointUrl(), "^"+endpoint.getGraph()+".*"));
+        LDClientService ldClientEndpoint = new LDClient(config);
+        
         Repository endpointTemp = new SPARQLRepository(endpoint.getEndpointUrl());
         endpointTemp.initialize();
         //After that you can use the endpoint like any other Sesame Repository, by creating a connection and doing queries on that:
@@ -179,7 +175,7 @@ public class AuthorServiceImpl implements AuthorService {
                             //properties and values quering with LDClient Library de Marmotta
                             String getResourcePropertyQuery = "";
                             try {
-                                ClientResponse respUri = ldclient.retrieveResource(utf8DecodeQuery(resource));
+                                ClientResponse respUri = ldClientEndpoint.retrieveResource(utf8DecodeQuery(resource));
                                 RepositoryConnection conUri = ModelCommons.asRepository(respUri.getData()).getConnection();
                                 conUri.begin();
                                 // SPARQL to get all data of a Resource
@@ -189,7 +185,6 @@ public class AuthorServiceImpl implements AuthorService {
                                 provenanceinsert = false;
                                 while (tripletasResult.hasNext()) {
                                 //obtengo name, lastname, firstname, type, etc.,   para formar tripletas INSERT
-
                                     BindingSet tripletsResource = tripletasResult.next();
                                     String sujeto = tripletsResource.getValue("x").toString();
                                     String predicado = tripletsResource.getValue("y").toString();
@@ -221,7 +216,7 @@ public class AuthorServiceImpl implements AuthorService {
              *    @param query, query to obtain all resource uris of authors
              *    @param lastUpdateUrisFile path of temporal file to save last uris update   */
             sparqlFunctionsService.updateLastAuthorsFile(conn, getAuthorsQuery, lastUpdateUrisFile);
-            ldclient.shutdown();
+            ldClientEndpoint.shutdown();
             log.info(endpoint.getName() + " endpoint. Se detectaron " + contAutoresNuevosEncontrados + " autores nuevos ");
             log.info(endpoint.getName() + " endpoint. Se cargaron " + (contAutoresNuevosEncontrados - contAutoresNuevosNoCargados) + " autores nuevos exitosamente");
             log.info(endpoint.getName() + " endpoint. Se cargaron " + tripletasCargadas + " tripletas ");

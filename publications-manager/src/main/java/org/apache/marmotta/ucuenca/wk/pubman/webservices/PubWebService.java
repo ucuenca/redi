@@ -95,11 +95,13 @@ public class PubWebService {
     }
     
     /**
-     *      
+     * Service to get data related with especific author.
+     * 
+     * @param uri   //url to find
      */
-    @GET
+    @POST
     @Path(GET_AUTHOR_DATA)
-    @Produces("application/json")
+    @Produces("application/ld+json")
     public Response searchAuthor(@QueryParam("resource") String uri, @Context HttpServletRequest request){
         JsonArray resultjson = commonService.searchAuthor(uri);       
         String result = resultjson.toString();
