@@ -264,7 +264,7 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                                         dataretrievee = true;
                                     } catch (DataRetrievalException e) {
                                         log.error("Data Retrieval Exception: " + e);
-                                        log.info("Wating: " + waitTime + " seconds for new query");
+                                        log.info("Wating: " + waitTime + " seconds for new Microsoft Academics Query");
                                         dataretrievee = false;
                                         try {
                                             Thread.sleep(waitTime * 1000);               //1000 milliseconds is one second.
@@ -281,18 +281,18 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                             String nameEndpointofPublications = ldClient.getEndpoint(URL_TO_FIND_Microsoft).getName();
                             String providerGraph = graphByProviderNS + nameEndpointofPublications.replace(" ", "");
 
-                        Model model = response.getData();
-                        FileOutputStream out = new FileOutputStream("C:\\Users\\Satellite\\Desktop\\" + nameToFind + "_test.ttl");
-                        RDFWriter writer = Rio.createWriter(RDFFormat.TURTLE, out);
-                        try {
-                            writer.startRDF();
-                            for (Statement st : model) {
-                                writer.handleStatement(st);
-                            }
-                            writer.endRDF();
-                        } catch (RDFHandlerException e) {
-                            // oh no, do something!
-                        }
+//                        Model model = response.getData();
+//                        FileOutputStream out = new FileOutputStream("C:\\Users\\Satellite\\Desktop\\" + nameToFind + "_test.ttl");
+//                        RDFWriter writer = Rio.createWriter(RDFFormat.TURTLE, out);
+//                        try {
+//                            writer.startRDF();
+//                            for (Statement st : model) {
+//                                writer.handleStatement(st);
+//                            }
+//                            writer.endRDF();
+//                        } catch (RDFHandlerException e) {
+//                            // oh no, do something!
+//                        }
                             if (dataretrievee)//if the resource data were recovered
                             {
                                 conUri = ModelCommons.asRepository(response.getData()).getConnection();
@@ -370,7 +370,7 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                     } while (!AuthorDataisLoad && priorityToFind < 5);//end do while
                 }//end if ( authorResource not exist)
                 //** end View Data
-                printPercentProcess(processedPersons, allPersons);
+                printPercentProcess(processedPersons, allPersons, "Microsoft Academics");
             }
             return "True for publications";
         } catch (MarmottaException ex) {
@@ -433,11 +433,11 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
      * @param allPersons
      * @param endpointName 
      */
-    public void printPercentProcess(int processedPersons, int allPersons) {
+    public void printPercentProcess(int processedPersons, int allPersons, String provider) {
 
         if ((processedPersons * 100 / allPersons) != processpercent) {
             processpercent = processedPersons * 100 / allPersons;
-            log.info("Procesado el: " + processpercent + " %");
+            log.info("Procesado el: " + processpercent + " % de " + provider);
         }
     }
 

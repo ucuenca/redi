@@ -17,21 +17,20 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.services;
 
-import info.aduna.iteration.Iterations;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+//import info.aduna.iteration.Iterations;
+//import java.io.FileInputStream;
+//import java.io.FileNotFoundException;
+//import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
 import org.slf4j.Logger;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+
 import org.apache.marmotta.commons.sesame.model.ModelCommons;
 import org.apache.marmotta.kiwi.model.rdf.KiWiUriResource;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
@@ -43,35 +42,32 @@ import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.PropertyPubService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
-
-import org.apache.marmotta.ucuenca.wk.pubman.api.MicrosoftAcadProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
-
 import org.apache.marmotta.ucuenca.wk.pubman.exceptions.PubException;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.marmotta.ucuenca.wk.pubman.api.GoogleScholarProviderService;
 
-import org.openrdf.model.Model;
-import org.openrdf.model.Statement;
+
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
-import org.openrdf.query.QueryEvaluationException;
+//import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
 import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.RDFWriter;
-import org.openrdf.rio.Rio;
 import org.openrdf.model.Value;
 import org.openrdf.query.UpdateExecutionException;
-import org.openrdf.query.impl.TupleQueryResultImpl;
+
+//import org.openrdf.query.impl.TupleQueryResultImpl;
+//import org.openrdf.repository.RepositoryException;
+//import org.openrdf.rio.RDFFormat;
+//import org.openrdf.rio.RDFHandlerException;
+//import org.openrdf.rio.RDFWriter;
+//import org.openrdf.rio.Rio;
+//import org.openrdf.model.Model;
+//import org.openrdf.model.Statement;
 
 /**
- * Default Implementation of {@link PubVocabService} Get Data From MICROSOFT
- * ACADEMICS PROVIDER
+ * Default Implementation of {@link PubVocabService} Get Data From Google Scholar using Google Scholar Provider
  *
  * Fernando Baculima CEDIA - Universidad de Cuenca
  *
@@ -251,16 +247,14 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                             nameToFind = priorityFindQueryBuilding(priorityToFind, firstName, lastName).replace("_", "+");
                             //response = ldClient.retrieveResource(NS_DBLP + nameToFind);
                             String URL_TO_FIND = "https://scholar.google.com/scholar?start=0&q=author:%22" + nameToFind + "%22&hl=en&as_sdt=1%2C15&as_vis=1";
-
                             existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(nameProviderGraph, URL_TO_FIND));
-
                             if (nameToFind != "" && !existNativeAuthor) {
                                 boolean dataretrievee = true;//( Data Retrieve Exception )
                                 waitTime = 30;
                                 do {
-                                    dataretrievee = true;
                                     try {
                                         response = ldClient.retrieveResource(URL_TO_FIND);
+                                        dataretrievee = true;
                                     } catch (DataRetrievalException e) {
                                         log.error("Data Retrieval Exception: " + e);
                                         log.info("Wating: " + waitTime + " seconds for new query");
@@ -272,7 +266,15 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                                         }
                                         waitTime += 5;
                                     }
-                                } while (!dataretrievee && waitTime < 40);
+                                    if (response.getHttpStatus() == 503) {
+                                        try {
+                                            log.info("Wating 1 day for new Google Scholar Query ");
+                                            Thread.sleep(86400000);  // 1 day                                            
+                                        } catch (InterruptedException ex) {
+                                            Thread.currentThread().interrupt();
+                                        }
+                                    }
+                                } while (!dataretrievee && response.getHttpStatus() == 503);
 
                             }//end  if  nameToFind != ""
 
@@ -280,104 +282,64 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                             String nameEndpointofPublications = ldClient.getEndpoint(URL_TO_FIND).getName();
                             String providerGraph = graphByProviderNS + nameEndpointofPublications.replace(" ", "");
                             if (response != null) {
-                                Model model = response.getData();
-                                FileOutputStream out = new FileOutputStream("C:\\Users\\Satellite\\Desktop\\" + nameToFind.replace("?", "_") + "_test.ttl");
-                                RDFWriter writer = Rio.createWriter(RDFFormat.TURTLE, out);
-                                try {
-                                    writer.startRDF();
-                                    for (Statement st : model) {
-                                        writer.handleStatement(st);
-                                    }
-                                    writer.endRDF();
-                                } catch (RDFHandlerException e) {
-                                    // oh no, do something!
-                                }
-
+//                                Model model = response.getData();
+//                                FileOutputStream out = new FileOutputStream("C:\\Users\\Satellite\\Desktop\\" + nameToFind.replace("?", "_") + "_test.ttl");
+//                                RDFWriter writer = Rio.createWriter(RDFFormat.TURTLE, out);
+//                                try {
+//                                    writer.startRDF();
+//                                    for (Statement st : model) {
+//                                        writer.handleStatement(st);
+//                                    }
+//                                    writer.endRDF();
+//                                } catch (RDFHandlerException e) {
+//                                    // oh no, do something!
+//                                }
                                 conUri = ModelCommons.asRepository(response.getData()).getConnection();
                                 conUri.begin();
                                 String authorNativeResource = null;
 
                                 //THIS DRIVER NO RETURN MEMBERS OF A SEARCH, ALL DATA IS RELATED WITH A AUTHOR
-                                //verifying the number of persons retrieved. if it has recovered more than one persons then the filter is changed and search anew,
-//                        String getMembersQuery = queriesService.getMembersQuery();
-//                        TupleQueryResult membersResult = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getMembersQuery).evaluate();
-//                        
-//                        while (membersResult.hasNext()) {
-//                            allMembers++;
-//                            BindingSet bindingCount = membersResult.next();
-//                            authorNativeResource = bindingCount.getValue("members").toString();
-//                            existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(providerGraph, authorNativeResource));
-//                        }
-                                //the author data was already loaded into the repository, only a sameAs property is associated 
-                                //     <http://academic.research.microsoft.com/json.svc/search?AppId=d4d1924a-5da9-4e8b-a515-093e8a2d1748&AuthorQuery=saquicela&ResultObjects=Publication&PublicationContent=AllInfo&StartIdx=1&EndIdx=100> a <http://purl.org/ontology/bibo/Document> ;
-                                //    <http://xmlns.com/foaf/0.1/publications>
                                 authorNativeResource = URL_TO_FIND;
                                 existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(providerGraph, authorNativeResource));
 
-                                if (allMembers == 1 && existNativeAuthor) {
-                                    //insert sameAs triplet    <http://190.15.141.102:8080/dspace/contribuidor/autor/SaquicelaGalarza_VictorHugo> owl:sameAs <http://dblp.org/pers/xr/s/Saquicela:Victor> 
+                                if (!existNativeAuthor) {
+                                    // sameAs triplet    <http://190.15.141.102:8080/dspace/contribuidor/autor/SaquicelaGalarza_VictorHugo> owl:sameAs <http://dblp.org/pers/xr/s/Saquicela:Victor> 
                                     String sameAsInsertQuery = buildInsertQuery(providerGraph, authorResource, "http://www.w3.org/2002/07/owl#sameAs", authorNativeResource);
                                     updatePub(sameAsInsertQuery);
-                                }
-
-                                if (!existNativeAuthor) {
-                                    //SPARQL obtain all publications of author
-                                    String getPublicationsFromProviderQuery = queriesService.getPublicationFromMAProviderQuery();
+                                    //SPARQL obtain all data publications of author from Google Scholar Provider
+                                    String getPublicationsFromProviderQuery = queriesService.getRetrieveResourceQuery();
                                     TupleQuery pubquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationsFromProviderQuery); //
                                     TupleQueryResult tripletasResult = pubquery.evaluate();
+
                                     while (tripletasResult.hasNext()) {
                                         AuthorDataisLoad = true;
-
                                         BindingSet tripletsResource = tripletasResult.next();
-                                        authorNativeResource = tripletsResource.getValue("authorResource").toString();
-                                        String publicationResource = tripletsResource.getValue("publicationResource").toString();
+                                        String subject = tripletsResource.getValue("s").toString();
+                                        String predicate = tripletsResource.getValue("p").toString();
+                                        String object = tripletsResource.getValue("o").toString();
+
                                         //String publicationProperty = tripletsResource.getValue("publicationProperty").toString();
                                         ///insert sparql query, 
-                                        String publicationInsertQuery = buildInsertQuery(providerGraph, authorNativeResource, "http://xmlns.com/foaf/0.1/publications", publicationResource);
+                                        String publicationInsertQuery = buildInsertQuery(providerGraph, subject, predicate, object);
                                         updatePub(publicationInsertQuery);
-
-                                        // sameAs triplet    <http://190.15.141.102:8080/dspace/contribuidor/autor/SaquicelaGalarza_VictorHugo> owl:sameAs <http://dblp.org/pers/xr/s/Saquicela:Victor> 
-                                        String sameAsInsertQuery = buildInsertQuery(providerGraph, authorResource, "http://www.w3.org/2002/07/owl#sameAs", authorNativeResource);
-                                        updatePub(sameAsInsertQuery);
-
                                     }
-
-                                    // SPARQL to obtain all data of a publication
-                                    String getPublicationPropertiesQuery = queriesService.getPublicationMAPropertiesQuery();
-                                    TupleQuery resourcequery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationPropertiesQuery); //
-                                    tripletasResult = resourcequery.evaluate();
-                                    while (tripletasResult.hasNext()) {
-                                        BindingSet tripletsResource = tripletasResult.next();
-                                        String publicationResource = tripletsResource.getValue("publicationResource").toString();
-                                        String publicationProperties = tripletsResource.getValue("publicationProperties").toString();
-                                        String publicationPropertiesValue = tripletsResource.getValue("publicationPropertiesValue").toString();
-                                        ///insert sparql query, 
-                                        String publicationPropertiesInsertQuery = buildInsertQuery(providerGraph, publicationResource, publicationProperties, publicationPropertiesValue);
-                                        //load values publications to publications resource
-                                        updatePub(publicationPropertiesInsertQuery);
-                                    }
-                                }//end if numMembers=1
-                            conUri.commit();
-                            conUri.close();
-                             }//fin    IF RESPONDE!= NULL
-                           
+                                }//end if existNativeAuthor
+                                conUri.commit();
+                                conUri.close();
+                            }//fin    IF RESPONDE!= NULL
                         } catch (Exception e) {
                             log.error("ioexception " + e.toString());
                         }
                         priorityToFind++;
-
                     } while (!AuthorDataisLoad && priorityToFind < 5);//end do while
-
                 }//end if ( authorResource not exist)
-                //** end View Data
-                printPercentProcess(processedPersons, allPersons);
+                printPercentProcess(processedPersons, allPersons, "Google Scholar");
             }
-            return "True for publications";
+            return "True for GS publications";
         } catch (MarmottaException ex) {
             log.error("Marmotta Exception: " + ex);
         }
-
-        return "fail";
+        return "fail GS";
     }
 
     public String priorityFindQueryBuilding(int priority, String firstName, String lastName) {
@@ -433,11 +395,11 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
      * @param allPersons
      * @param endpointName 
      */
-    public void printPercentProcess(int processedPersons, int allPersons) {
+    public void printPercentProcess(int processedPersons, int allPersons, String provider) {
 
         if ((processedPersons * 100 / allPersons) != processpercent) {
             processpercent = processedPersons * 100 / allPersons;
-            log.info("Procesado el: " + processpercent + " %");
+            log.info("Procesado el: " + processpercent + " % de " + provider);
         }
     }
 

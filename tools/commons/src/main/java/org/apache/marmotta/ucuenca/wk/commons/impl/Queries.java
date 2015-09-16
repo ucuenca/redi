@@ -6,6 +6,8 @@
 package org.apache.marmotta.ucuenca.wk.commons.impl;
 
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 
@@ -74,7 +76,11 @@ public class Queries implements QueriesService {
         } catch (Exception e1) {
             return false;
         }
-        return "http".equals(url.getProtocol());
+        Pattern pat = Pattern.compile("^[hH]ttp(s?)");
+        Matcher mat = pat.matcher(url.getProtocol());
+        return mat.matches();
+
+        // return "http".equals(url.getProtocol()) || "https".equals(url.getProtocol()) ;
     }
 
     /**
@@ -176,11 +182,11 @@ public class Queries implements QueriesService {
                 + " ?subject foaf:name ?name."
                 + " ?subject foaf:firstName ?fname."
                 + " ?subject foaf:lastName ?lname."
-                + " {"
-                + " FILTER (regex(?name,\"Saquicela Galarza\"))"
-                + " } UNION {"
-                + " FILTER (regex(?name,\"Espinoza Mejia\"))"
-                + " }"
+//                + " {"
+//                + " FILTER (regex(?name,\"Saquicela Galarza\"))"
+//                + " } UNION {"
+//                + " FILTER (regex(?name,\"Espinoza Mejia\"))"
+//                + " }"
                 + " }}";
     }
 
