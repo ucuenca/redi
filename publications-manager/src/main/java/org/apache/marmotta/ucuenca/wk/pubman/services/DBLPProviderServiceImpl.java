@@ -274,18 +274,18 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                         String nameEndpointofPublications = ldClient.getEndpoint(NS_DBLP + nameToFind).getName();
                         String providerGraph = graphByProviderNS + nameEndpointofPublications.replace(" ", "");
 
-                        Model model = response.getData();
-                        FileOutputStream out = new FileOutputStream("C:\\Users\\Satellite\\Desktop\\" + nameToFind + "_test.ttl");
-                        RDFWriter writer = Rio.createWriter(RDFFormat.TURTLE, out);
-                        try {
-                            writer.startRDF();
-                            for (Statement st : model) {
-                                writer.handleStatement(st);
-                            }
-                            writer.endRDF();
-                        } catch (RDFHandlerException e) {
-                            // oh no, do something!
-                        }
+//                        Model model = response.getData();
+//                        FileOutputStream out = new FileOutputStream("C:\\Users\\Satellite\\Desktop\\" + nameToFind + "_test.ttl");
+//                        RDFWriter writer = Rio.createWriter(RDFFormat.TURTLE, out);
+//                        try {
+//                            writer.startRDF();
+//                            for (Statement st : model) {
+//                                writer.handleStatement(st);
+//                            }
+//                            writer.endRDF();
+//                        } catch (RDFHandlerException e) {
+//                            // oh no, do something!
+//                        }
                         conUri = ModelCommons.asRepository(response.getData()).getConnection();
                         conUri.begin();
                         String authorNativeResource = null;
@@ -422,19 +422,19 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
 
                 Model model = response.getData();
 
-                OutputStream out = new FileOutputStream("C:\\Users\\Satellite\\Desktop\\searchauthor_test.ttl");
-                RDFWriter writer = Rio.createWriter(RDFFormat.JSONLD, out);
-                String json = "";
-                try {
-                    writer.startRDF();
-                    for (Statement st : model) {
-                        writer.handleStatement(st);
-                        json = json + st.toString();
-                    }
-                    writer.endRDF();
-                } catch (RDFHandlerException e) {
-                    // oh no, do something!
-                }
+//                OutputStream out = new FileOutputStream("C:\\Users\\Satellite\\Desktop\\searchauthor_test.ttl");
+//                RDFWriter writer = Rio.createWriter(RDFFormat.JSONLD, out);
+//                String json = "";
+//                try {
+//                    writer.startRDF();
+//                    for (Statement st : model) {
+//                        writer.handleStatement(st);
+//                        json = json + st.toString();
+//                    }
+//                    writer.endRDF();
+//                } catch (RDFHandlerException e) {
+//                    // oh no, do something!
+//                }
                 conUri = ModelCommons.asRepository(response.getData()).getConnection();
                 conUri.begin();
                 String authorNativeResource = null;

@@ -281,18 +281,18 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                             String nameEndpointofPublications = ldClient.getEndpoint(URL_TO_FIND_Microsoft).getName();
                             String providerGraph = graphByProviderNS + nameEndpointofPublications.replace(" ", "");
 
-                        Model model = response.getData();
-                        FileOutputStream out = new FileOutputStream("C:\\Users\\Satellite\\Desktop\\" + nameToFind + "_test.ttl");
-                        RDFWriter writer = Rio.createWriter(RDFFormat.TURTLE, out);
-                        try {
-                            writer.startRDF();
-                            for (Statement st : model) {
-                                writer.handleStatement(st);
-                            }
-                            writer.endRDF();
-                        } catch (RDFHandlerException e) {
-                            // oh no, do something!
-                        }
+//                        Model model = response.getData();
+//                        FileOutputStream out = new FileOutputStream("C:\\Users\\Satellite\\Desktop\\" + nameToFind + "_test.ttl");
+//                        RDFWriter writer = Rio.createWriter(RDFFormat.TURTLE, out);
+//                        try {
+//                            writer.startRDF();
+//                            for (Statement st : model) {
+//                                writer.handleStatement(st);
+//                            }
+//                            writer.endRDF();
+//                        } catch (RDFHandlerException e) {
+//                            // oh no, do something!
+//                        }
                             if (dataretrievee)//if the resource data were recovered
                             {
                                 conUri = ModelCommons.asRepository(response.getData()).getConnection();
