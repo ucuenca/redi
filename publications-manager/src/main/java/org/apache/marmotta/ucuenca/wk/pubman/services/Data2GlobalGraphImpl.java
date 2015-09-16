@@ -83,11 +83,9 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable{
                     try {
                         ClassLoader classLoader = getClass().getClassLoader();
                         //File file = new File(classLoader.getResource("DBLPProvider.properties").getFile());
-
                         entrada = classLoader.getResourceAsStream(providerGraphResource.getLocalName() + ".properties");
                         // cargamos el archivo de propiedades
                         propiedades.load(entrada);
-
                         for (String source : propiedades.stringPropertyNames()) {
                             String target = propiedades.getProperty(source);
                             mapping.put(source.replace("..", ":"), target.replace("..", ":"));
@@ -105,13 +103,11 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable{
                             }
                         }
                     }
-
                     List<Map<String, Value>> resultPublications = sparqlService.query(QueryLanguage.SPARQL, queriesService.getPublicationsQuery(providerGraph));
                     for (Map<String, Value> pubresource : resultPublications) {
                         String authorResource = pubresource.get("authorResource").toString();
                         String publicationResource = pubresource.get("publicationResource").toString();
                         String publicationProperty = pubVocabService.getPubProperty();
-
                         //verificar existencia de la publicacion y su author sobre el grafo general
                         String askTripletQuery = queriesService.getAskQuery(wkhuskaGraph, authorResource, publicationProperty, publicationResource);
                         if (!sparqlService.ask(QueryLanguage.SPARQL, askTripletQuery)) {
@@ -151,7 +147,6 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable{
                         //mapping.get(map)
                     }
                 }
-
                 //in this part, for each graph
             }
             return "Los datos de las publicaciones se han cargado exitosamente.";

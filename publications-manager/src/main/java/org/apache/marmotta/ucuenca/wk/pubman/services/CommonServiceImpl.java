@@ -45,8 +45,9 @@ public class CommonServiceImpl implements CommonService {
     @Inject
     DBLPProviderServiceImpl dblpProviderService;
 
-//    @Inject
-//    GoogleScholarProviderServiceImpl googleService;
+    @Inject
+    GoogleScholarProviderServiceImpl googleProviderService;
+    
     @Inject
     GoogleScholarProviderService googleService;
 
@@ -66,9 +67,9 @@ public class CommonServiceImpl implements CommonService {
         Thread DblpProvider = new Thread(dblpProviderService);
         DblpProvider.start();
 
-        //       return googleService.runPublicationsProviderTaskImpl("d");
-//        Thread googleProvider = new Thread(googleScholarProviderService);
-//        googleProvider.start();
+     //         return googleService.runPublicationsProviderTaskImpl("d");
+        Thread googleProvider = new Thread(googleProviderService);
+        googleProvider.start();
         return "Data Providers are extracted in background.   Please review main.log file for details";
 
     }
