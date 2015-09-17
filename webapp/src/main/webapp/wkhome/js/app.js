@@ -43,6 +43,10 @@ wkhomeApp.config(['$routeProvider',
         templateUrl: 'partials/geoplain.html',
         controller: 'worldPath'
       }).
+      when('/tags/cloud', {
+        templateUrl: 'partials/tags.html',
+        controller: 'getKeywordsTag'
+      }).
       when('/d3/:geoId.json', {
         templateUrl: 'partials/phone-detail.html',
         controller: 'PhoneDetailCtrl'

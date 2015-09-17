@@ -85,6 +85,12 @@ height: 100%
     color: aliceblue;*/
 }
 
+.subject-cloud > div {
+  height: 100vh;
+  padding-top: 50px;
+
+}
+
 
 .main > div {
     height: 100vh;
