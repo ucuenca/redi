@@ -6,6 +6,8 @@
 package org.apache.marmotta.ucuenca.wk.commons.impl;
 
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 
@@ -35,7 +37,12 @@ public class Queries implements QueriesService {
     public String getInsertDataLiteralQuery(String... varargs) {
         String graphSentence = "GRAPH <" + varargs[0] + ">";
         String subjectSentence = "<" + varargs[1] + ">";
-        String object = "\"" + StringEscapeUtils.escapeJava(varargs[3].substring(1, varargs[3].length() - 1)) + "\"";
+        String object = null;
+        if (varargs[3].contains("^^")) {
+            object = "\"" + StringEscapeUtils.escapeJava(varargs[3].substring(1, varargs[3].indexOf("^^") - 1)) + "\"" + varargs[3].substring(varargs[3].indexOf("^^"));
+        } else {
+            object = "\"" + StringEscapeUtils.escapeJava(varargs[3].substring(1, varargs[3].length() - 1)) + "\"";
+        }
 
         return "INSERT DATA { " + graphSentence + "  { " + subjectSentence + " <" + varargs[2] + "> " + object + " }}";
 
@@ -69,7 +76,11 @@ public class Queries implements QueriesService {
         } catch (Exception e1) {
             return false;
         }
-        return "http".equals(url.getProtocol());
+        Pattern pat = Pattern.compile("^[hH]ttp(s?)");
+        Matcher mat = pat.matcher(url.getProtocol());
+        return mat.matches();
+
+        // return "http".equals(url.getProtocol()) || "https".equals(url.getProtocol()) ;
     }
 
     /**
@@ -171,11 +182,11 @@ public class Queries implements QueriesService {
                 + " ?subject foaf:name ?name."
                 + " ?subject foaf:firstName ?fname."
                 + " ?subject foaf:lastName ?lname."
-                //                + " {"
-                //                + " FILTER (regex(?name,\"Saquicela Galarza\"))"
-                //                + " } UNION {"
-                //                + " FILTER (regex(?name,\"Espinoza Mejia\"))"
-                //                + " }"
+//                + " {"
+//                + " FILTER (regex(?name,\"Saquicela Galarza\"))"
+//                + " } UNION {"
+//                + " FILTER (regex(?name,\"Espinoza Mejia\"))"
+//                + " }"
                 + " }}";
     }
 
@@ -214,7 +225,9 @@ public class Queries implements QueriesService {
                 + " {  "
                 + " ?authorResource owl:sameAs   ?authorNative. "
                 + " ?authorNative ?pubproperty ?publicationResource. "
-                + " filter (regex(?pubproperty,\"authorOf\")) "
+                + " { FILTER (regex(?pubproperty,\"authorOf\")) } "
+                + " UNION"
+                + " { FILTER (regex(?pubproperty,\"pub\")) } "
                 + " }}";
     }
 

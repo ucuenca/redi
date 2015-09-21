@@ -4,6 +4,9 @@
 
 var wkhomeServices = angular.module('wkhomeServices', ['ngResource']);
 
+//For testing purposes
+//wkhomeServices.serverInstance = 'http://190.15.141.85:8080/marmottatest';
+
 /* Sample of a RESTful client Service */
 wkhomeServices.factory('Phone', ['$resource',
   function($resource){
@@ -19,7 +22,9 @@ wkhomeServices.factory('sparqlQuery', ['$resource', '$http', '$window',
     var transform = function(data){
         return $.param(data);
     }
-    return $resource('http://' + $window.location.hostname + ($window.location.port ? ':8080':'') + '/marmotta/sparql/select', {}, {
+    var serverInstance = wkhomeServices.serverInstance ? wkhomeServices.serverInstance :
+      'http://' + $window.location.hostname + ($window.location.port ? ':8080':'') + '/marmotta';
+    return $resource(serverInstance + '/sparql/select', {}, {
       querySrv: {method:'POST', isArray:true, transformRequest: transform}
     });
   }]);

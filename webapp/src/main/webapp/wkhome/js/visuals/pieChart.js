@@ -9,7 +9,7 @@ pieChart.directive('pieChart', ["d3",
 	function(d3){
 		
 			//	we	will	soon	implement	this	function
-			var draw = function draw(svg,	width,	height,	data) {
+			var draw = function draw(svg,	width,	height,	entityName, data) {
 				var outerRadius = height / 2 - 20,
 					    innerRadius = outerRadius / 3,
 					    cornerRadius = 10;
@@ -122,7 +122,7 @@ x
 					        .style("top", d3.event.pageY + "px")
 					        .style("opacity", 1)
 					        .select("#value")
-					        .text(d.value);
+					        .text(d.value + ' ' + entityName);
 					    
 					    
 					})
@@ -243,7 +243,9 @@ x
 								//	Update	the	chart
 								var data = scope.data;
 								if(data) {
-									draw(svg,width, height, data);
+									var entityName = data.entityName;
+									data = data.data;
+									draw(svg,width, height, entityName, data);
 								}
 						},	true);
 
