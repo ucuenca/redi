@@ -20,6 +20,8 @@ wkhomeApp.service('searchData', function () {
   this.authorSearch = null;
 });
 
+
+
 wkhomeApp.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
@@ -49,6 +51,10 @@ wkhomeApp.config(['$routeProvider',
       }).
       when('/d3/:geoId.json', {
         templateUrl: 'partials/phone-detail.html',
+        controller: 'PhoneDetailCtrl'
+      }).
+      when('/cloud/autornames', {
+        templateUrl: 'partials/cloudgroup.html',
         controller: 'PhoneDetailCtrl'
       }).
       /*when('/phones/:phoneId', {
