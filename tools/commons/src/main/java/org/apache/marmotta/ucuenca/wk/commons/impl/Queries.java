@@ -182,11 +182,11 @@ public class Queries implements QueriesService {
                 + " ?subject foaf:name ?name."
                 + " ?subject foaf:firstName ?fname."
                 + " ?subject foaf:lastName ?lname."
-//                + " {"
-//                + " FILTER (regex(?name,\"Saquicela Galarza\"))"
-//                + " } UNION {"
-//                + " FILTER (regex(?name,\"Espinoza Mejia\"))"
-//                + " }"
+                //                + " {"
+                //                + " FILTER (regex(?name,\"Saquicela Galarza\"))"
+                //                + " } UNION {"
+                //                + " FILTER (regex(?name,\"Espinoza Mejia\"))"
+                //                + " }"
                 + " }}";
     }
 
@@ -221,7 +221,7 @@ public class Queries implements QueriesService {
     @Override
     public String getPublicationsQuery(String providerGraph) {
         return " SELECT DISTINCT ?authorResource ?pubproperty ?publicationResource WHERE { "
-                + " graph <" + providerGraph + "> "
+                + " graph  <" + providerGraph + "> "
                 + " {  "
                 + " ?authorResource owl:sameAs   ?authorNative. "
                 + " ?authorNative ?pubproperty ?publicationResource. "
@@ -286,6 +286,40 @@ public class Queries implements QueriesService {
         return "SELECT DISTINCT ?publicationResource ?publicationProperties ?publicationPropertiesValue "
                 + " WHERE { ?authorResource <http://xmlns.com/foaf/0.1/publications> ?publicationResource. ?publicationResource ?publicationProperties ?publicationPropertiesValue }";
 
+    }
+
+    @Override
+    public String getAuthorPublicationsQuery(String providerGraph, String author, String prefix) {
+        return " SELECT DISTINCT  ?authorResource  ?pubproperty  ?publicationResource "
+                + "?title WHERE { "
+                + " graph   <" + providerGraph + "> "
+                    + " { <" + author + "> <http://xmlns.com/foaf/0.1/publications> "
+                + "?publicationResource.  ?publicationResource "
+                + "<"+prefix+"> "
+                + "?title } }";
+    }
+
+    @Override
+    public String getPublicationDetails(String publicationResource) {
+
+        return "SELECT DISTINCT ?property ?hasValue  WHERE {\n"
+                + "  { <" + publicationResource + "> ?property ?hasValue }\n"
+                + "UNION\n"
+                + "  { ?isValueOf ?property <" + publicationResource + "> }\n"
+                + "}\n"
+                + "ORDER BY ?property ?hasValue ?isValueOf";
+    }
+
+    @Override
+    public String getPublicationsTitleQuery(String providerGraph, String prefix) {
+        return ""
+                + " SELECT DISTINCT ?authorResource ?pubproperty ?publicationResource ?title "
+                + "WHERE {  graph <" + providerGraph + ">  "
+                + "{   ?authorResource owl:sameAs   ?authorNative.  "
+                + "?authorNative ?pubproperty ?publicationResource.  "
+                + "?publicationResource <" + prefix + ">  ?title\n"
+                + "\n" + "{ FILTER (regex(?pubproperty,\"authorOf\")) }  "
+                + "UNION { FILTER (regex(?pubproperty,\"pub\")) }                                                                                        }} ";
     }
 
 }
