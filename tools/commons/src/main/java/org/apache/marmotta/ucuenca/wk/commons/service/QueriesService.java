@@ -12,7 +12,7 @@ package org.apache.marmotta.ucuenca.wk.commons.service;
 public interface QueriesService {
 
     String getAuthorsDataQuery(String graph);
-    
+
     String getProvenanceProperty();
 
     String getLimit(String limit);
@@ -67,14 +67,15 @@ public interface QueriesService {
      * @param resource
      * @return
      */
-    String getAskResourceQuery(String graph , String resource);
+    String getAskResourceQuery(String graph, String resource);
+
     /**
      * ASK is exist a triplet
-     * @param args   //graph, subject, predicate, object arguments
-     * @return 
+     *
+     * @param args //graph, subject, predicate, object arguments
+     * @return
      */
     String getAskQuery(String... args);
-    
 
     String getEndpointNameQuery(String endpointsGraph, String name, String resourceHash);
 
@@ -89,30 +90,32 @@ public interface QueriesService {
     String getEndpointDeleteQuery(String endpointsGraph, String id);
 
     String getWkhuskaGraph();
-    
+
     String getGraphsQuery();
-    
+
     String getPublicationsQuery(String providerGraph);
-    
+
     String getPublicationsPropertiesQuery(String providerGraph, String publicationResource);
 
     String getMembersQuery();
-    
+
     String getPublicationFromProviderQuery();
-    
+
     String getPublicationPropertiesQuery();
 
-    
     //Microsoft Academics
     String getPublicationsMAQuery(String providerGraph);
-    
+
     String getPublicationFromMAProviderQuery();
-    
+
     String getPublicationMAPropertiesQuery();
-    
+
     //Google Scholar
     //String getPublicationFromGSProviderQuery();
-    
-    
-    
+    String getAuthorPublicationsQuery(String providerGraph, String author, String prefix);
+
+    String getPublicationDetails(String publicationResource);
+
+    String getPublicationsTitleQuery(String providerGraph, String prefix);
+
 }
