@@ -63,8 +63,12 @@ import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
+import org.openrdf.query.QueryResults;
+
 import org.openrdf.query.TupleQuery;
 import org.openrdf.query.TupleQueryResult;
+import org.openrdf.query.GraphQueryResult;
+
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFFormat;
@@ -341,12 +345,12 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
 
                         }//end if numMembers=1
                         conUri.commit();
-                         conUri.close();
+                        conUri.close();
                     } catch (QueryEvaluationException | MalformedQueryException | RepositoryException ex) {
                         log.error("Evaluation Exception: " + ex);
                     } catch (Exception e) {
                         log.error("ioexception " + e.toString());
-                    } 
+                    }
                     priorityToFind++;
                 } while (allMembers != 1 && priorityToFind < 5);//end do while
                 //** end View Data
@@ -364,19 +368,36 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
     public JsonArray SearchAuthorTaskImpl(String uri) {
 
         JsonParser parser = new JsonParser();
-        try {
 
-            //new AuthorVersioningJob(log).proveSomething();
+        try {
+//new AuthorVersioningJob(log).proveSomething();
             ClientConfiguration conf = new ClientConfiguration();
             //conf.addEndpoint(new DBLPEndpoint());
             LDClient ldClient = new LDClient(conf);
-            //ClientResponse response = ldClient.retrieveResource("http://rdf.dblp.com/ns/m.0wqhskn");
+                //ClientResponse response = ldClient.retrieveResource("http://rdf.dblp.com/ns/m.0wqhskn");
+
+            String AuthorTofind = uri;
+            String providerName = ldClient.getEndpoint(AuthorTofind).getName();
+            String providerGraph = graphByProviderNS + providerName.replace(" ", "");
+
+            Properties propiedades = new Properties();
+            InputStream entrada = null;
+            Map<String, String> mapping = new HashMap<String, String>();
+
+            ClassLoader classLoader = getClass().getClassLoader();
+            //File file = new File(classLoader.getResource("DBLPProvider.properties").getFile());
+            entrada = classLoader.getResourceAsStream(providerName.replace(" ", "") + ".properties");
+            // cargamos el archivo de propiedades
+            propiedades.load(entrada);
+            for (String source : propiedades.stringPropertyNames()) {
+                String target = propiedades.getProperty(source);
+                mapping.put(source.replace("..", ":"), target.replace("..", ":"));
+            }
 
             int allMembers = 0;
             String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(wkhuskaGraph);
 
-            // TupleQueryResult result = sparqlService.query(QueryLanguage.SPARQL, getAuthors);
-            String nameToFind = "";
+                // TupleQueryResult result = sparqlService.query(QueryLanguage.SPARQL, getAuthors);
             String authorResource = "";
             int priorityToFind = 0;
 
@@ -392,113 +413,78 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
             try {
                 boolean existNativeAuthor = true;
                 allMembers = 0;
-                nameToFind = uri.replace("\"", "");
+                AuthorTofind = uri.replace("\"", "");
 
                 boolean dataretrievee = true;//( Data Retrieve Exception )
-                int waitTime = 30;
-                do {
-                    dataretrievee = true;
-                    try {
-                        response = ldClient.retrieveResource(nameToFind);
-                    } catch (DataRetrievalException e) {
-                        log.error("Data Retrieval Exception: " + e);
-                        log.info("Wating: " + waitTime + " seconds for  new DBLP Query");
-                        dataretrievee = false;
-                        try {
-                            Thread.sleep(waitTime * 1000);               //1000 milliseconds is one second.
-                        } catch (InterruptedException ex) {
-                            Thread.currentThread().interrupt();
-                        }
-                        waitTime += 5;
-                    }
-                } while (!dataretrievee && waitTime < 40);
+
+                dataretrievee = true;
+                try {
+                    response = ldClient.retrieveResource(AuthorTofind);
+                } catch (DataRetrievalException e) {
+                    log.error("Data Retrieval Exception: " + e);
+                    dataretrievee = false;
+
+                }
 
                 if (response.getHttpStatus() == 503) {
                     log.error("ErrorCode: " + response.getHttpStatus());
                 }
 
-                String nameEndpointofPublications = ldClient.getEndpoint(NS_DBLP + nameToFind).getName();
-                String providerGraph = graphByProviderNS + nameEndpointofPublications.replace(" ", "");
-
                 Model model = response.getData();
 
-//                OutputStream out = new FileOutputStream("C:\\Users\\Satellite\\Desktop\\searchauthor_test.ttl");
-//                RDFWriter writer = Rio.createWriter(RDFFormat.JSONLD, out);
-//                String json = "";
-//                try {
-//                    writer.startRDF();
-//                    for (Statement st : model) {
-//                        writer.handleStatement(st);
-//                        json = json + st.toString();
-//                    }
-//                    writer.endRDF();
-//                } catch (RDFHandlerException e) {
-//                    // oh no, do something!
-//                }
+                OutputStream out = new FileOutputStream("C:\\Users\\Satellite\\Desktop\\searchauthor_test.ttl");
+                RDFWriter writer = Rio.createWriter(RDFFormat.N3, out);
+                String json = "";
+                try {
+                    writer.startRDF();
+                    for (Statement st : model) {
+                        writer.handleStatement(st);
+                        json = json + st.toString();
+                    }
+                    writer.endRDF();
+                } catch (RDFHandlerException e) {
+                    // oh no, do something!
+                }
+                out.close();
                 conUri = ModelCommons.asRepository(response.getData()).getConnection();
                 conUri.begin();
                 String authorNativeResource = null;
-                //verifying the number of persons retrieved. if it has recovered more than one persons then the filter is changed and search anew,
-                String getMembersQuery = queriesService.getMembersQuery();
-                TupleQueryResult membersResult = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getMembersQuery).evaluate();
-                //  allMembers = Iterations.asList(membersResult).size();
 
-                while (membersResult.hasNext()) {
-                    allMembers++;
-                    BindingSet bindingCount = membersResult.next();
-                    authorNativeResource = bindingCount.getValue("members").toString();
-                    existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(providerGraph, authorNativeResource));
-                }
-
-                //the author data was already loaded into the repository, only a sameAs property is associated 
-                if (allMembers == 1 && existNativeAuthor) {
-                    //insert sameAs triplet    <http://190.15.141.102:8080/dspace/contribuidor/autor/SaquicelaGalarza_VictorHugo> owl:sameAs <http://dblp.org/pers/xr/s/Saquicela:Victor> 
-                    String sameAsInsertQuery = buildInsertQuery(providerGraph, authorResource, "http://www.w3.org/2002/07/owl#sameAs", authorNativeResource);
-                    updatePub(sameAsInsertQuery);
-                }
-
-                if (allMembers == 1 && !existNativeAuthor) {
-                    //SPARQL obtain all publications of author
-                    String getPublicationsFromProviderQuery = queriesService.getPublicationFromProviderQuery();
-                    TupleQuery pubquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationsFromProviderQuery); //
-                    TupleQueryResult tripletasResult = pubquery.evaluate();
-                    while (tripletasResult.hasNext()) {
-                        BindingSet tripletsResource = tripletasResult.next();
-                        authorNativeResource = tripletsResource.getValue("authorResource").toString();
-                        String publicationResource = tripletsResource.getValue("publicationResource").toString();
-                        String publicationProperty = tripletsResource.getValue("publicationProperty").toString();
-                        ///insert sparql query, 
-                        String publicationInsertQuery = buildInsertQuery(providerGraph, authorNativeResource, publicationProperty, publicationResource);
-                        updatePub(publicationInsertQuery);
-
-                        // sameAs triplet    <http://190.15.141.102:8080/dspace/contribuidor/autor/SaquicelaGalarza_VictorHugo> owl:sameAs <http://dblp.org/pers/xr/s/Saquicela:Victor> 
-                        String sameAsInsertQuery = buildInsertQuery(providerGraph, authorResource, "http://www.w3.org/2002/07/owl#sameAs", authorNativeResource);
-                        updatePub(sameAsInsertQuery);
-                    }
-
-                    // SPARQL to obtain all data of a publication
-                    String getPublicationPropertiesQuery = queriesService.getPublicationPropertiesQuery();
-                    TupleQuery resourcequery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationPropertiesQuery); //
-                    tripletasResult = resourcequery.evaluate();
-                    while (tripletasResult.hasNext()) {
-                        BindingSet tripletsResource = tripletasResult.next();
-                        String publicationResource = tripletsResource.getValue("publicationResource").toString();
-                        String publicationProperties = tripletsResource.getValue("publicationProperties").toString();
-                        String publicationPropertiesValue = tripletsResource.getValue("publicationPropertiesValue").toString();
-                        ///insert sparql query, 
-                        String publicationPropertiesInsertQuery = buildInsertQuery(providerGraph, publicationResource, publicationProperties, publicationPropertiesValue);
-                        //load values publications to publications resource
-                        updatePub(publicationPropertiesInsertQuery);
-                    }
-
-                }//end if numMembers=1
-
+                //SPARQL obtain all publications of author
+                String getPublicationsFromProviderQuery = " PREFIX dc: <http://purl.org/dc/elements/1.1/> "
+                        + " PREFIX dct: <http://purl.org/dc/terms/> "
+                        + " PREFIX bibo: <http://purl.org/ontology/bibo/> "
+                        + " PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
+                        + " CONSTRUCT  { <"+AuthorTofind+"> foaf:publications ?uripub. "
+                        + " ?uripub  a bibo:Document. ?uripub bibo:uri ?uri. "
+                        + " ?uripub  bibo:abstract ?abstract. ?uripub bibo:Quote ?keyword. " 
+                        + " ?uripub dct:title ?title. ?uripub dct:contributor ?coauthor. "
+                        + " ?uripub bibo:numPages ?numPages. ?uripub dct:isPartOf ?isPartOf. ?uripub dct:publisher ?publisher. "
+                        + " } "
+                        + " WHERE "
+                        + " { "
+                        + " <"+AuthorTofind+">  <"+mapping.get("publicationProperty")+"> ?publication. "
+                        + " ?publication <"+mapping.get("title")+"> ?title. "
+                        + " OPTIONAL { ?publication <"+mapping.get("uri")+"> ?uri. } "
+                        + " OPTIONAL { ?publication <"+mapping.get("abstract")+">  ?abstract. }"
+                        + " OPTIONAL { ?publication <"+mapping.get("keyword")+">  ?keyword. }"
+                        + " OPTIONAL { ?publication <"+mapping.get("contributor")+"> ?coauthor. }"
+                        + " OPTIONAL { ?publication <"+mapping.get("numPages")+"> ?numPages. }"
+                        + " OPTIONAL { ?publication <"+mapping.get("isPartOf")+"> ?isPartOf. }"
+                        + " OPTIONAL { ?publication <"+mapping.get("publisher")+"> ?publisher. }"
+                        + " BIND (REPLACE(?title,\" \", \"_\",\"i\") as ?newtitle) "
+                        + " BIND (IRI(CONCAT(\"http://ucuenca.edu.ec/wkhuska/publication/\",?newtitle)) as ?uripub) "
+                        + " } LIMIT 170 ";
+                 //
+              //  String getPublicationsFromProviderQueryto = "Construct {?s ?p ?o} where { ?s ?p ?o}";
+                GraphQueryResult graphQueryResult =    conUri.prepareGraphQuery(QueryLanguage.SPARQL, getPublicationsFromProviderQuery).evaluate();
+                Model resultModel = QueryResults.asModel(graphQueryResult);
                 //Getting data in JSONLD format 
                 StringWriter writerdata = new StringWriter();
                 RDFWriter writerjld = Rio.createWriter(RDFFormat.JSONLD, writerdata);
                 try {
                     writerjld.startRDF();
-                    for (Statement st : model) {
+                    for (Statement st : resultModel) {
                         writerjld.handleStatement(st);
                     }
                     writerjld.endRDF();
@@ -509,7 +495,6 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                 conUri.commit();
                 conUri.close();
 
-                
                 return parser.parse(writerdata.toString()).getAsJsonArray();
                 // return writerdata.toString();
 
@@ -519,7 +504,7 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                 log.error("ioexception " + e.toString());
             }
             priorityToFind++;
-                //** end View Data
+            //** end View Data
 
         } catch (Exception ex) {
             log.error("Marmotta Exception: " + ex);

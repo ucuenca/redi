@@ -33,6 +33,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -102,7 +103,7 @@ public class PubWebService {
     @POST
     @Path(GET_AUTHOR_DATA)
     @Produces("application/ld+json")
-    public Response searchAuthor(@QueryParam("resource") String uri, @Context HttpServletRequest request){
+    public Response searchAuthor(@FormParam("resource") String uri, @Context HttpServletRequest request){
         JsonArray resultjson = commonService.searchAuthor(uri);       
         String result = resultjson.toString();
         return Response.ok().entity(result).build(); 

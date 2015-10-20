@@ -116,7 +116,8 @@ public class DBLPAuthorRawProvider extends AbstractHttpProvider {
     		m = Pattern.compile(PATTERN).matcher(resource);
         	Preconditions.checkState(StringUtils.isNotBlank(resource) && m.find());
     	}
-    	uri += isLegacy ? ( m.group(2).replaceFirst("^hd/", "xr/") ):( "xr/"+m.group(2) );
+    	//uri += isLegacy ? ( m.group(2).replaceFirst("^hd/", "xr/") ):( "xr/"+m.group(2) );
+        uri += isLegacy ? ("xr/"+ m.group(2)):( "xr/"+m.group(2) );
         return Collections.singletonList(uri);
     }
     

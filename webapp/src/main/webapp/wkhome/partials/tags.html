@@ -1,6 +1,64 @@
 <div class="row subject-cloud">
-  <div class="col-md-12" ng-controller="getKeywordsTag">
-    <h4>Subject Tag Cloud</h4>
-    <cloud-tag data="data" style="display: block; height: 100%"></cloud-tag> 
-  </div>
+    <div class="col-md-12" ng-controller="getKeywordsTag" >
+
+        <cloud-tag data="data" style="display: block; height: 90%" ctrl-fn="ctrlFn(value)" ng-model="value"></cloud-tag> 
+        <div id="scrollToHere">
+        </div> 
+        <hr>
+        <hr>
+        <div id="blackspace">
+        </div>
+        <div class="col-md-12 head-info">
+            <div id="title" style="font-size:50pt">
+
+
+            </div>
+
+
+        </div>
+        <div  class="col-md-12 tree-node-info" style="height:100vh" >
+
+            <!--      <div class="entityInfo">
+                      <span style="font-weigth:bold"> </span> 
+                      <div id="title"></div>
+                      <a href="" target="_blank"></a>
+                  </div>         
+            -->
+
+
+            <h3></h3>
+            <h5> Total of Publications found: {{todos.length}} </h5>
+
+
+            <ul>
+                <li  ng-repeat="todo in filteredTodos">
+                    <!--  <h3> <a href="{{todo.id}}" target='_blank'>{{todo.title}}</a> </h3>
+                      </br> Abstract: {{todo.abstract}} </br>
+                    -->
+                    <a href="{{todo.uri}}" >
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h2 class="panel-title"><a href="{{todo.uri}}" target='_blank'>{{todo.title}}</a></h2>
+                            </div>
+                            <div class="panel-body">
+                                Abstract: {{todo.abstract}}
+                                </br>
+                                <a href="{{todo.uri}}" target='_blank'>{{todo.uri}}</a>
+                            </div>
+                        </div>
+                    </a>
+
+                </li>
+            </ul>
+            <center>
+                <pagination 
+                    ng-model="currentPage"
+                    total-items="todos.length"
+                    max-size="maxSize"  
+                    boundary-links="true">
+                </pagination>
+            </center>
+        </div>
+    </div>
+
 </div>
