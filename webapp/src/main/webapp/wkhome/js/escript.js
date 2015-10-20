@@ -138,11 +138,11 @@ function create(data) {
             return 'Bottom';
     }
 
-//        $('#board').change(function() {
-//          $('#chart').empty();
-//
-//          start(this.value);
-//        });
+        $('#board').change(function() {
+          $('#chart').empty();
+
+          start(this.value);
+        });
 
     $('#group').change(function () {
         group = this.value;

@@ -182,8 +182,8 @@ wkhomeControllers.controller('groupTagsController', ['$scope', 'sparqlQuery',
         });
         $scope.putSelectedItem = function (value) {
             loadResources(value); //query and load resource related with selected theme
-          
-            
+
+
             //no hace nada por ahora
             $scope.relatedthemes = [];
             waitingDialog.show();
@@ -210,7 +210,7 @@ wkhomeControllers.controller('groupTagsController', ['$scope', 'sparqlQuery',
                         model["tag"] = pub["rdfs:label"];
                         $scope.$apply(function () {
                             $scope.relatedthemes.push({tag: model["tag"]});
-                           
+
                         });
                     });
                 });
@@ -237,13 +237,18 @@ wkhomeControllers.controller('groupTagsController', ['$scope', 'sparqlQuery',
                     + '                 ?publicationUri bibo:Quote ?k .'
                     + '                 ?publicationUri  dct:title ?title .'
                     + '                 ?publicationUri bibo:abstract  ?abstract. '
-                    + '                 ?publicationUri bibo:Quote "' + value + '"^^xsd:string . '
+                    + '                 { '
+                    + '                     ?publicationUri bibo:Quote "' + value + '"^^xsd:string . '
+                    + '                 } UNION '
+                    + '                 { '
+                    + '                     ?publicationUri bibo:Quote "' + value + '" . '
+                    + '                 } '
                     + '                 BIND(REPLACE( ?k , " ", "_", "i") AS ?key) . '
                     + '                 BIND (IRI(CONCAT(?publicationUri,?key)) as ?resource )  '
                     + '            } '
                     + '         }  '
                     + '         }';
-            
+
             $scope.publicationsByKeyword = [];
             sparqlQuery.querySrv({query: queryRelatedPublications}, function (rdf) {
                 var context = {
@@ -252,8 +257,8 @@ wkhomeControllers.controller('groupTagsController', ['$scope', 'sparqlQuery',
                     "foaf": "http://xmlns.com/foaf/0.1/",
                     "bibo": "http://purl.org/ontology/bibo/"
                 };
-               
-               jsonld.compact(rdf, context, function (err, compacted) {
+
+                jsonld.compact(rdf, context, function (err, compacted) {
                     _.map(compacted["@graph"], function (pub) {
                         var model = {};
                         model["Publication"] = pub["foaf:publications"]["@id"];
@@ -261,17 +266,17 @@ wkhomeControllers.controller('groupTagsController', ['$scope', 'sparqlQuery',
                         model["Keyword"] = pub["bibo:Quote"];
                         model["Abstract"] = pub["bibo:abstract"];
                         $scope.$apply(function () {
-                        $scope.publicationsByKeyword.push({title:model["Title"], publication:model["Publication"], keyword:model["Keyword"], abstract:model["Abstract"]});
-                            });
+                            $scope.publicationsByKeyword.push({title: model["Title"], publication: model["Publication"], keyword: model["Keyword"], abstract: model["Abstract"]});
+                        });
                     });
-                   //$scope.data =  $scope.publicationsByKeyword;
-                   startCloud($scope.publicationsByKeyword);          
+                    //$scope.data =  $scope.publicationsByKeyword;
+                    startCloud($scope.publicationsByKeyword);
                 });  //end jsonld.compact
-               
+
             }); //end sparqlService
-         
+
         }//end Load Resources
-       
+
 
 //        $scope.putSelectedItem = function (value) {
 //            drawByGroup(value);
@@ -280,7 +285,7 @@ wkhomeControllers.controller('groupTagsController', ['$scope', 'sparqlQuery',
     }]); //end groupTagsController 
 
 
-wkhomeControllers.controller('getKeywordsTag', ['$scope', 'sparqlQuery', 
+wkhomeControllers.controller('getKeywordsTag', ['$scope', 'sparqlQuery',
     function ($scope, sparqlQuery) {
         $scope.todos = [];
         $scope.ctrlFn = function (value)
@@ -289,12 +294,18 @@ wkhomeControllers.controller('getKeywordsTag', ['$scope', 'sparqlQuery',
             var model = {};
             _.map(value, function (pub) {
                 //var keys = Object.keys(author);
-                model["id"] = pub["@id"];
-                model["title"] = pub["dcterms:title"];
-                model["abstract"] = pub["bibo:abstract"];
+               
+                    model["id"] = pub["@id"];
+                    model["title"] = pub["dcterms:title"];
+                    model["abstract"] = pub["bibo:abstract"];
+                    model["uri"] = pub["bibo:uri"]["@id"];
 //                if (model["abstract"].length > 0 && model["title"].length > 0 )
 //                {
-                $scope.todos.push({id: model["id"], title: model["title"], abstract: model["abstract"]});
+                    if (model["title"])
+                    {
+                        $scope.todos.push({id: model["id"], title: model["title"], abstract: model["abstract"], uri: model["uri"]});
+                    }
+                
                 //  }
             });
             $('html,body').animate({
@@ -319,11 +330,11 @@ wkhomeControllers.controller('getKeywordsTag', ['$scope', 'sparqlQuery',
                 , $scope.currentPage = 1
                 , $scope.numPerPage = 10
                 , $scope.maxSize = 5;
-        $scope.$watch('currentPage + numPerPage', function () {
-            var begin = (($scope.currentPage - 1) * $scope.numPerPage)
-                    , end = begin + $scope.numPerPage;
-            $scope.filteredTodos = $scope.todos.slice(begin, end);
-        });
+//        $scope.$watch('currentPage + numPerPage', function () {
+//            var begin = (($scope.currentPage - 1) * $scope.numPerPage)
+//                    , end = begin + $scope.numPerPage;
+//            $scope.filteredTodos = $scope.todos.slice(begin, end);
+//        });
         waitingDialog.show();
         //if(window.location.hash == '#/1') {
         var queryKeywords = 'PREFIX bibo: <http://purl.org/ontology/bibo/> '
@@ -333,7 +344,7 @@ wkhomeControllers.controller('getKeywordsTag', ['$scope', 'sparqlQuery',
                 + 'SELECT ?keyword ?k (COUNT(DISTINCT(?subject)) AS ?totalPub) WHERE { ?subject bibo:Quote ?k . '
                 + 'BIND(IRI(?k) AS ?keyword) . } '
                 + 'GROUP BY ?keyword ?k '
-                + 'HAVING(?totalPub > 10) '
+                + 'HAVING(?totalPub > 100) '
                 //+'ORDER BY DESC(?totalPub) '
                 + '}';
         sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
@@ -358,26 +369,34 @@ wkhomeControllers.controller('exploreAuthor', ['$scope', '$rootScope', 'searchDa
 
             if (searchData.authorSearch) {
                 var authorSearch = searchData.authorSearch["@graph"];
-                if (authorSearch.length > 1) {
-                    var candidates = _.map(authorSearch, function (author) {
-                        var model = {};
-                        //var keys = Object.keys(author);
-                        model["id"] = author["@id"];
-                        model["name"] = author["foaf:name"];
-                        return model;
-                    });
-                    $scope.candidates = candidates;
-                    $scope.selectedAuthor = function ($event, uri) {
-                        searchData.authorSearch["@graph"] = _.where(authorSearch, {"@id": uri});
-                        //$scope.data = _.where(authorSearch, {"@id": uri});
+                if (authorSearch) {
+                    if (authorSearch.length > 1) {
+                        var candidates = _.map(authorSearch, function (author) {
+                            var model = {};
+                            //var keys = Object.keys(author);
+                            model["id"] = author["@id"];
+                            model["name"] = author["foaf:name"];
+                            return model;
+                        });
+                        $scope.candidates = candidates;
+                        $scope.selectedAuthor = function ($event, uri) {
+                            searchData.authorSearch["@graph"] = _.where(authorSearch, {"@id": uri});
+                            //$scope.data = _.where(authorSearch, {"@id": uri});
+                            $scope.data = searchData.authorSearch;
+                            $('#searchResults').modal('hide');
+                        }
+                        waitingDialog.hide();
+                        $('#searchResults').modal('show');
+                    } else {
+                        //$scope.data = authorSearch[0];
                         $scope.data = searchData.authorSearch;
-                        $('#searchResults').modal('hide');
+                        waitingDialog.hide();
                     }
+                }//End if(authorSearch)
+                else
+                {
+                    alert("Author not found");
                     waitingDialog.hide();
-                    $('#searchResults').modal('show');
-                } else {
-                    //$scope.data = authorSearch[0];
-                    $scope.data = searchData.authorSearch;
                 }
             }
         }, true);
@@ -447,6 +466,7 @@ wkhomeControllers.controller('SearchController', ['$scope', '$rootScope', '$wind
                     });
                     //$rootScope.$emit('authorSearch', rdf);
                 });
+
             }
         }
 

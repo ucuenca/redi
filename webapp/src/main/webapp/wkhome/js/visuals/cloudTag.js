@@ -37,7 +37,7 @@ pieChart.directive('cloudTag', ["d3", 'sparqlQuery',
         };
         collisionPadding = 10;
         minCollisionRadius = 12;
-        jitter = 0.1;  
+        jitter = 0.1;
         transformData = function (rawData) {
             rawData.forEach(function (d) {
                 d.value = parseInt(d.value);
@@ -191,24 +191,37 @@ pieChart.directive('cloudTag', ["d3", 'sparqlQuery',
             };
             if (infoBar) {
                 var keyword = d.label;
+                var headbar = $('div.head-info');
+                headbar.find('title').text("ddddddtitletitle");
+                headbar.html('');
+                var div = $('<div>');
+                var label = $('<span class="label label-primary" style="font-size:35px">').text("PUBLICATIONS CONTAINING THE KEYWORD: " + keyword);
+                div.append(label);
+                div.append("</br>");
+                headbar.append(div);
+
                 //var sparqlDescribe = "DESCRIBE <" + id + ">";
                 var sparqlPublications = 'PREFIX dct: <http://purl.org/dc/terms/> PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
                         + ' PREFIX bibo: <http://purl.org/ontology/bibo/> '
                         + ' PREFIX uc: <http://ucuenca.edu.ec/wkhuska/resource/> '
                         + " CONSTRUCT { ?keyword uc:publication ?publicationUri. "
+                        + " ?publicationUri a bibo:Document. "
                         + " ?publicationUri dct:title ?title. "
-                        + " ?publicationUri bibo:abstract ?abstract "   
+                        + " ?publicationUri bibo:abstract ?abstract. "
+                        + " ?publicationUri bibo:uri ?uri. "
                         + " } "
                         + " WHERE {"
                         + " GRAPH <http://ucuenca.edu.ec/wkhuska>"
                         + " {"
                         + " ?publicationUri dct:title ?title . "
                         + " ?publicationUri bibo:abstract  ?abstract. "
-                        + " ?publicationUri bibo:Quote \"" + keyword + "\"^^xsd:string ."
+                        + " ?publicationUri bibo:uri  ?uri. "
+                        + " ?publicationUri bibo:Quote \"" + keyword + "\" ."
                         + "  BIND(REPLACE( \"" + keyword + "\", \" \", \"_\", \"i\") AS ?key) ."
                         + "  BIND(IRI(?key) as ?keyword)"
                         + " }"
                         + "}";
+                waitingDialog.show("Searching publications with the keyword: " + keyword);
 
                 sparqlQuery.querySrv({query: sparqlPublications}, function (rdf) {
                     var context = {
@@ -218,49 +231,27 @@ pieChart.directive('cloudTag', ["d3", 'sparqlQuery',
                         "bibo": "http://purl.org/ontology/bibo/",
                         "uc": "http://ucuenca.edu.ec/wkhuska/resource"
                     };
-                    jsonld.compact(rdf, context, function (err, compacted) {
-                        //var entity = _.findWhere(compacted["@graph"], {"@id": id, "@type": "bibo:Document"});
-                        var entity = compacted["@graph"];
 
-                        infoBar.find('h4').text("Publication Info");
+                    jsonld.compact(rdf, context, function (err, compacted) {
+                        if (compacted)
+                        {
+                            var entity = compacted["@graph"];
+                            //     infoBar.find('h4').text("Publication Info");
+
 //                        infoBar.find('div#title').text("Title: " + entity["dcterms:title"]);
 //                        infoBar.find('a').attr('href', "http://190.15.141.85:8080/marmottatest/meta/text/html?uri=" + entity["@id"])
 //                                .text("More Info...");
+                            var final_entity = _.where(entity, {"@type": "bibo:Document"});
+                            var values = final_entity.length ? final_entity : [final_entity];
+                            //send data to getKeywordTag Controller
+                            scope.ctrlFn({value: values});
+                            waitingDialog.hide();
 
-
-
-                      //  var pubInfo = $('div.tree-node-info .entityInfo');
-                      //  pubInfo.html('');
-                        var values = entity.length ? entity : [entity];
-
-
-//                        _.map(values, function (value) {
-//
-//                            var div = $('<div>');
-//                            var lblTitle = $('<span class="label label-primary">').text(model["dcterms:title"].label);
-//                            div.append(lblTitle);
-//                            div.append("</br>");
-//                            pubInfo.append(div);
-//                            var span = $('<span class="field-value"> ng-model="titulo"').text(value["dcterms:title"]);
-//                            div.append(span);
-//                            div.append("</br>");
-//                            //adding url
-//                            var div = $('<div>');
-//                            var lblUrl = $('<span class="label label-primary">').text(model["bibo:uri"].label)
-//                            div.append(lblUrl);
-//                            div.append("</br>");
-//                            pubInfo.append(div);
-////                            var spanId = $('<span class="field-value">').text(value["@id"]);
-////                            div.append(spanId);
-////                            div.append("</br>");
-//                            var anchor = $("<a target='blank'>").attr('href', value["@id"].replace('/xr/', '/')/*SOLO DBLP*/).text(value["@id"]);
-//                            div.append(anchor);
-//                            div.append("</br>");
-//
-//                        });
-                        //send data to getKeywordTag Controller
-                        scope.ctrlFn({value: values});
-
+                        }
+                        else
+                        {
+                            waitingDialog.hide();
+                        }
                     });
                 });
             }
