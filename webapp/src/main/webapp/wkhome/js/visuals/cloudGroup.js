@@ -322,7 +322,7 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
                     scope.$watch('data', function (newVal, oldVal, scope) {
                         //	Update	the	chart
                         var data = scope.data;
-                        if (data) {
+                        if (data[0]) {
                             //var jsonld = data.data;
                             //var schema = data.schema;
                             //var fields = schema.fields;

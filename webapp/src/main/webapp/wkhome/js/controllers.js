@@ -227,7 +227,7 @@ wkhomeControllers.controller('groupTagsController', ['$scope', 'sparqlQuery',
                     var model = {};
                     model["id"] = pub["@id"];
                     model["tag"] = pub["rdfs:label"];
-                    $scope.themes.push({tag: model["@id"]});
+                    $scope.themes.push({tag: model["tag"]});
                 });33
             });
             waitingDialog.hide();
@@ -321,11 +321,12 @@ wkhomeControllers.controller('groupTagsController', ['$scope', 'sparqlQuery',
                             $scope.publicationsByKeyword.push({title: model["Title"], publication: model["Publication"], keyword: model["Keyword"], abstract: model["Abstract"]});
                         });
                     });
-                    $scope.data = $scope.publicationsByKeyword;
+                        $scope.data = $scope.publicationsByKeyword;        
        //             startCloud($scope.publicationsByKeyword);
                 }); //end jsonld.compact
 
             }); //end sparqlService
+            
 
         }//end Load Resources
 
