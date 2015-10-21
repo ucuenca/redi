@@ -18,6 +18,7 @@ var wkhomeApp = angular.module('wkhomeApp', [
 
 wkhomeApp.service('searchData', function () {
   this.authorSearch = null;
+  this.genericData = null;
 });
 
 
@@ -37,6 +38,11 @@ wkhomeApp.config(['$routeProvider',
         templateUrl: 'partials/search.html',
         controller: 'ExploreController'
       }).
+      when('/w/cloud?:text', {
+        templateUrl: 'partials/genericcloud.html',
+        controller: 'ExploreController'
+      }).
+      
       when('/a/a', {
         templateUrl: 'partials/d3.html',
         controller: 'MainCtrl'
@@ -51,11 +57,11 @@ wkhomeApp.config(['$routeProvider',
       }).
       when('/d3/:geoId.json', {
         templateUrl: 'partials/phone-detail.html',
-        controller: 'PhoneDetailCtrl'
+        controller: 'ExploreController'
       }).
       when('/cloud/autornames', {
         templateUrl: 'partials/cloudgroup.html',
-        controller: 'PhoneDetailCtrl'
+        controller: 'ExploreController'
       }).
       /*when('/phones/:phoneId', {
         templateUrl: 'partials/phone-detail.html',

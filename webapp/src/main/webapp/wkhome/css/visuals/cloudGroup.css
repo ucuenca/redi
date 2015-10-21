@@ -2,7 +2,7 @@
       html, body {
     //    overflow:hidden;
       }
-      circle {
+/*      circle {
         stroke: #555;
         stroke-width: 2px;
         opacity: .8;
@@ -10,13 +10,13 @@
       circle:hover {
         stroke:#000;
         opacity:1;
-      }
+      }*/
       .btn-group {
         margin-left: 330px;
       }
       .label {
         font-size: 10px;
-        fill: black;
+        fill: blue;
       }
       .color-legend {
         min-height: 100%; 
@@ -25,7 +25,7 @@
         display: flex;
         align-items: center;
 
-        height:34px; font-weight:bold; text-align:center; color:black;
+        height:34px; font-weight:bold; text-align:center; color:blue;
         text-shadow: 2px 2px #333;
       }
       .poweredby {

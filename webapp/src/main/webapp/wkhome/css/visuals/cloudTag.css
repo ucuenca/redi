@@ -5,8 +5,24 @@
 
 .bubble-node {
   /* fill: #d1e0f3; */
-  fill: #DCE9BE;
+  fill: #DCE9BE; 
+ 
 }
+
+#kcircle {
+   stroke: #555;
+    stroke-width: 1px;
+    opacity: .4;
+    fill: #6FD10C;
+ 
+}
+#kcircle:hover {
+    stroke:#000;
+    opacity:1;
+
+}
+
+
 
 .bubble-hover {
   /* fill: #b8c7d9; */

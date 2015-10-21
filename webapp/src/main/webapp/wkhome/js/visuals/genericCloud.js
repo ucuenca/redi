@@ -1,17 +1,17 @@
 'use strict';
 
-var pieChart = angular.module('cloudTag', []);
+var genericCloud = angular.module('genericCloud', []);
 //	D3	Factory
-pieChart.factory('d3', function () {
+genericCloud.factory('d3', function () {
     return	d3;
 });
-pieChart.directive('cloudTag', ["d3", 'sparqlQuery',
+genericCloud.directive('genericCloud', ["d3", 'sparqlQuery',
     function (d3, sparqlQuery) {
 
         var chart, clear, click, collide, collisionPadding, connectEvents, data, force, gravity, hashchange, height, idValue, jitter, label, margin, maxRadius, minCollisionRadius, mouseout, mouseover, node, rScale, rValue, textValue, tick, transformData, update, updateActive, updateLabels, updateNodes, width;
         var scope;
         var attrs;
-        
+        var ctrlFn;
         width;// = 980;
         height;// = 510;
         data = [];
@@ -73,9 +73,9 @@ pieChart.directive('cloudTag', ["d3", 'sparqlQuery',
                 svgEnter = svg.enter().append("svg");
                 svg.attr("width", width + margin.left + margin.right);
                 svg.attr("height", height + margin.top + margin.bottom);
-                node = svgEnter.append("g").attr("id", "bubble-nodes").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-                node.append("rect").attr("id", "bubble-background").attr("width", width).attr("height", height).on("click", clear);
-                label = d3.select(this).selectAll("#bubble-labels").data([data]).enter().append("div").attr("id", "bubble-labels");
+                node = svgEnter.append("g").attr("id", "gbubble-nodes").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                node.append("rect").attr("id", "gbubble-background").attr("width", width).attr("height", height).on("click", clear);
+                label = d3.select(this).selectAll("#gbubble-labels").data([data]).enter().append("div").attr("id", "gbubble-labels");
                 update();
                 /*hashchange();
                  return d3.select(window).on("hashchange", hashchange);*/
@@ -91,29 +91,29 @@ pieChart.directive('cloudTag', ["d3", 'sparqlQuery',
             return updateLabels();
         };
         updateNodes = function () {
-            node = node.selectAll(".bubble-node").data(data, function (d) {
+            node = node.selectAll(".gbubble-node").data(data, function (d) {
                 return idValue(d);
             });
             node.exit().remove();
-            return node.enter().append("a").attr("class", "bubble-node").attr("xlink:href", function (d) {
+            return node.enter().append("a").attr("class", "gbubble-node").attr("xlink:href", function (d) {
                 return "#" + (encodeURIComponent(idValue(d)));
-            }).call(force.drag).call(connectEvents).append("circle").attr("id", "kcircle").attr("r", function (d) {
+            }).call(force.drag).call(connectEvents).append("circle").attr("id", "gcircle").attr("r", function (d) {
                 return rScale(rValue(d));
             });
         };
         updateLabels = function () {
             var labelEnter;
-            label = label.selectAll(".bubble-label").data(data, function (d) {
+            label = label.selectAll(".gbubble-label").data(data, function (d) {
                 return idValue(d);
             });
             label.exit().remove();
-            labelEnter = label.enter().append("a").attr("class", "bubble-label").attr("href", function (d) {
+            labelEnter = label.enter().append("a").attr("class", "gbubble-label").attr("href", function (d) {
                 return "#" + (encodeURIComponent(idValue(d)));
             }).call(force.drag).call(connectEvents);
-            labelEnter.append("div").attr("class", "bubble-label-name").text(function (d) {
+            labelEnter.append("div").attr("class", "gbubble-label-name").text(function (d) {
                 return textValue(d);
             });
-            labelEnter.append("div").attr("class", "bubble-label-value").text(function (d) {
+            labelEnter.append("div").attr("class", "gbubble-label-value").text(function (d) {
                 return rValue(d);
             });
             label.style("font-size", function (d) {
@@ -263,7 +263,7 @@ pieChart.directive('cloudTag', ["d3", 'sparqlQuery',
             return updateActive(id);
         };
         updateActive = function (id) {
-            node.classed("bubble-selected", function (d) {
+            node.classed("gbubble-selected", function (d) {
                 return id === idValue(d);
             });
             if (id.length > 0) {
@@ -273,12 +273,12 @@ pieChart.directive('cloudTag', ["d3", 'sparqlQuery',
             }
         };
         mouseover = function (d) {
-            return node.classed("bubble-hover", function (p) {
+            return node.classed("gbubble-hover", function (p) {
                 return p === d;
             });
         };
         mouseout = function (d) {
-            return node.classed("bubble-hover", false);
+            return node.classed("gbubble-hover", false);
         };
         chart.jitter = function (_) {
             if (!arguments.length) {
@@ -315,7 +315,6 @@ pieChart.directive('cloudTag', ["d3", 'sparqlQuery',
             height = heightEl;
             scope = scopeEl;
             attrs = attrsEl;
- 
             force = d3.layout.force().gravity(0).charge(0).size([width, height]).on("tick", tick);
             element.datum(data).call(chart);
 
@@ -379,4 +378,3 @@ pieChart.directive('cloudTag', ["d3", 'sparqlQuery',
             }
         };
     }]);
-
