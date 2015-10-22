@@ -8,8 +8,8 @@ var wkhomeApp = angular.module('wkhomeApp', [
   'snapscroll',
   /*'phonecatAnimations',*/
   /*'bootstrap',*/
-  'myChart',
-  'geoPlain',
+ // 'myChart',   //aqui
+ // 'geoPlain',   //aqui
   'wkhomeControllers',
   'commonDirectives',
   /*'phonecatFilters',*/
@@ -18,6 +18,7 @@ var wkhomeApp = angular.module('wkhomeApp', [
 
 wkhomeApp.service('searchData', function () {
   this.authorSearch = null;
+  this.genericData = null;
 });
 
 
@@ -27,16 +28,21 @@ wkhomeApp.config(['$routeProvider',
     $routeProvider.
       when('/', {
         templateUrl: 'partials/home.html',
-        controller: 'indexInformation'
+//        controller: 'indexInformation'
       }).
       when('/:section', {
         templateUrl: 'partials/home.html',
-        controller: 'showSection'
+//        controller: 'showSection'
       }).
       when('/w/search?:text', {
         templateUrl: 'partials/search.html',
-        controller: 'ExploreController'
+  //      controller: 'ExploreController'
       }).
+      when('/w/cloud?:text', {
+        templateUrl: 'partials/genericcloud.html',
+//        controller: 'ExploreController'
+      }).
+      
       when('/a/a', {
         templateUrl: 'partials/d3.html',
         controller: 'MainCtrl'
@@ -47,15 +53,15 @@ wkhomeApp.config(['$routeProvider',
       }).
       when('/tags/cloud', {
         templateUrl: 'partials/tags.html',
-        controller: 'getKeywordsTag'
+ //       controller: 'getKeywordsTag'
       }).
       when('/d3/:geoId.json', {
         templateUrl: 'partials/phone-detail.html',
-        controller: 'PhoneDetailCtrl'
+ //       controller: 'ExploreController'
       }).
       when('/cloud/autornames', {
         templateUrl: 'partials/cloudgroup.html',
-        controller: 'PhoneDetailCtrl'
+  //      controller: 'ExploreController'
       }).
       /*when('/phones/:phoneId', {
         templateUrl: 'partials/phone-detail.html',

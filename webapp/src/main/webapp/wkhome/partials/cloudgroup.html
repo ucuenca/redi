@@ -11,7 +11,7 @@
 <div class="col-md-12" ng-controller="groupTagsController">
     <div class="col-md-3">
         Tags:
-        <select class="form-control" name="board" id="board" ng-change="putSelectedItem(selectedItem)" ng-model="selectedItem"  ng-options="key.tag as key.tag for key  in themes">
+        <select class="form-control" name="board" id="board" ng-model="selectedItem"  ng-options="key.tag as key.tag for key  in relatedthemes">
             <option value="">Select Theme</option>
         </select>
 
@@ -19,12 +19,15 @@
 
     <div class="col-md-3">
         Group By:
-        <select  class="form-control" name="group" id="group" ng-change="putSelectedGroup(group)" ng-model="group" >
-            <option value="">Select Related Tag</option>
+        <select  var="groupBy" class="form-control" name="group" id="group" ng-model="gbselectedItem" >
+            <option value="noselected">Select Related Tag</option>
             <option value="keyword">Keyword</option>
             <option value="publication">Publication</option>
         </select>
     </div>
+    
+    
+      <cloud-group data="data" style="display: block; height: 90%"></cloud-group> 
 <!--
     <div class="col-md-3">
         Size By:
@@ -55,9 +58,13 @@
               </div>
           </div>
       </div>    -->
+<div class="col-md-12">
+
+</div> 
+<!-- <div class="col-md-12" id="chart"></div>   -->  
+
 </div>
- <!--<div class="col-md-12">
-  <cloud-group data="data" style="display: block; height: 90%"></cloud-group> 
-</div>  -->
- <div class="col-md-12" id="chart"></div>  
+
+
+
 
