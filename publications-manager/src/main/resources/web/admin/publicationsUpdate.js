@@ -92,3 +92,41 @@ function runUpdatePublication(options) {
     });
 
 }
+
+/**
+ * Method count the number publications in each graph and add this count to graph  khuskaCounters.
+ * @author Freddy Sumba
+ * @param {options} options
+ */
+function runPublicationsCount(options) {
+
+    document.getElementById("imgloading").style.visibility = "visible";
+
+    var endpoint = "http://example";
+    var graphuri = "http://example/data";
+    var settings = {
+        host: options
+    }
+    var dataT = {
+        "Endpoint": endpoint,
+        "GraphUri": graphuri
+    };
+
+    $.ajax({
+        type: "POST",
+        data: JSON.stringify(dataT),
+        dataType: "text", //result data type
+        contentType: "application/json", // send data type
+        url: settings.host + "pubman/publications",
+        //    url:  "http://localhost:8079/marmotta/authors-module/update",
+        success: function (Result) {
+            document.getElementById("imgloading").style.visibility = "hidden";
+            alert(Result);
+        },
+        error: function (data) {
+            document.getElementById("imgloading").style.visibility = "hidden";
+            alert("Error" + data.responseText);
+        }
+    });
+
+}
