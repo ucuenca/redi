@@ -10,8 +10,9 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
         var group = '';
         var size = '';
         var color = '';
-        function create(svgElement, data) {
+        function create(svgElement, dataToDraw, groupByOption) {
 
+          
             var colors = {
                 exchange: {
                     NYSE: 'red',
@@ -37,29 +38,32 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
                 default: '#4CC1E9'
             };
 
-            var radius = 50;
+            var radius = 250;
             var width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
             var height = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
             var fill = d3.scale.ordinal().range(['#FF00CC', '#FF00CC', '#00FF00', '#00FF00', '#FFFF00', '#FF0000', '#FF0000', '#FF0000', '#FF0000', '#7F0000']);
             //var svg = d3.select("#chart").append("svg")
+            var pubInfo = svgElement;
+            pubInfo.html('');
             var svg = svgElement.append("svg")
                     .attr("width", width)
                     .attr("height", height);
 
-            data = getDataMapping(data, size);
 
-            var padding = 5;
-            var maxRadius = d3.max(_.pluck(data, 'radius'));
+            var dataMapping = getDataMapping(dataToDraw, size);
+
+            var padding = 20;
+            var maxRadius = d3.max(_.pluck(dataMapping, 'radius'));
 
             var maximums = {
-                volume: d3.max(_.pluck(data, 'volume')),
-                lasPrice: d3.max(_.pluck(data, 'lastPrice')),
-                standardDeviation: d3.max(_.pluck(data, 'standardDeviation'))
+                volume: d3.max(_.pluck(dataMapping, 'volume')),
+                lasPrice: d3.max(_.pluck(dataMapping, 'lastPrice')),
+                standardDeviation: d3.max(_.pluck(dataMapping, 'standardDeviation'))
             };
 
             var getCenters = function (vname, size) {
                 var centers, map;
-                centers = _.uniq(_.pluck(data, vname)).map(function (d) {
+                centers = _.uniq(_.pluck(dataMapping, vname)).map(function (d) {
                     return {name: d, value: 1};
                 });
 
@@ -70,7 +74,7 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
             };
 
             var nodes = svg.selectAll("circle")
-                    .data(data);
+                    .data(dataMapping);
 
             nodes.enter().append("circle")
                     .attr("class", "node")
@@ -93,23 +97,23 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
                         removePopovers();
                     });
 
-            function getDataMapping(data, vname) {
-                var max = d3.max(_.pluck(data, vname));
-
-                for (var j = 0; j < data.length; j++) {
-                    data[j].radius = (vname != '') ? radius * (data[j][vname] / max) : 15;
-                    data[j].x = data[j].x ? data[j].x : Math.random() * width;
-                    data[j].y = data[j].y ? data[j].y : Math.random() * height;
-                    data[j].volumeCategory = getCategory('volume', data[j]);
-                    data[j].lastPriceCategory = getCategory('lastPrice', data[j]);
-                    data[j].standardDeviationCategory = getCategory('standardDeviation', data[j]);
+            function getDataMapping(dataM, vname) {
+                var max = d3.max(_.pluck(dataM, vname));
+                var newData = dataM;
+                for (var j = 0; j < dataM.length; j++) {
+                    newData[j].radius = (vname != '') ? radius * (dataM[j][vname] / max) : 15;
+                    newData[j].x = dataM[j].x ? dataM[j].x : Math.random() * width;
+                    newData[j].y = dataM[j].y ? dataM[j].y : Math.random() * height;
+                    newData[j].volumeCategory = getCategory('volume', dataM[j]);
+                    newData[j].lastPriceCategory = getCategory('lastPrice', dataM[j]);
+                    newData[j].standardDeviationCategory = getCategory('standardDeviation', dataM[j]);
                 }
 
-                return data;
+                return newData;
             }
 
             function getCategory(type, d) {
-                var max = d3.max(_.pluck(data, type));
+                var max = d3.max(_.pluck(dataMapping, type));
                 var val = d[type] / max;
 
                 if (val > 0.4)
@@ -133,13 +137,13 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
 
             $('#size').change(function () {
                 var val = this.value;
-                var max = d3.max(_.pluck(data, val));
+                var max = d3.max(_.pluck(dataMapping, val));
 
                 d3.selectAll("circle")
-                        .data(getDataMapping(data, this.value))
+                        .data(getDataMapping(dataMapping, this.value))
                         .transition()
                         .attr('r', function (d, i) {
-                            return val ? (radius * (data[i][val] / max)) : 15
+                            return val ? (radius * (dataMapping[i][val] / max)) : 15
                         })
                         .attr('cx', function (d) {
                             return d.x
@@ -147,7 +151,7 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
                         .attr('cy', function (d) {
                             return d.y
                         })
-                        .duration(1000);
+                        .duration(2000);
 
                 size = this.value;
 
@@ -181,13 +185,15 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
             var force = d3.layout.force();
 
             changeColor(color);
-            draw(group);
+            draw(groupByOption);
 
             function draw(varname) {
+
                 var centers = getCenters(varname, [width, height]);
                 force.on("tick", tick(centers, varname));
                 labels(centers)
                 force.start();
+
             }
 
             function tick(centers, varname) {
@@ -196,8 +202,8 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
                     foci[centers[i].name] = centers[i];
                 }
                 return function (e) {
-                    for (var i = 0; i < data.length; i++) {
-                        var o = data[i];
+                    for (var i = 0; i < dataMapping.length; i++) {
+                        var o = dataMapping[i];
                         var f = foci[o[varname]];
                         o.y += ((f.y + (f.dy / 2)) - o.y) * e.alpha;
                         o.x += ((f.x + (f.dx / 2)) - o.x) * e.alpha;
@@ -256,7 +262,7 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
             }
 
             function collide(alpha) {
-                var quadtree = d3.geom.quadtree(data);
+                var quadtree = d3.geom.quadtree(dataMapping);
                 return function (d) {
                     var r = d.radius + maxRadius + padding,
                             nx1 = d.x - r,
@@ -281,6 +287,7 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
                     });
                 };
             }
+
         }
 
         return {
@@ -321,17 +328,21 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
                      },	true);*/
                     scope.$watch('data', function (newVal, oldVal, scope) {
                         //	Update	the	chart
-                        var data = scope.data;
-                        if (data[0]) {
-                            //var jsonld = data.data;
-                            //var schema = data.schema;
-                            //var fields = schema.fields;
-                            //var mappedData = [];
+
+                        if (scope.data && scope.data[0] && scope.data[0]["value"] && scope.data[0]["value"][0]  &&
+                                    (JSON.stringify(newVal[0]["value"][0]["title"] ? newVal[0]["value"][0]["title"] : newVal) != JSON.stringify(oldVal[0]["value"][0] ? oldVal[0]["value"][0]["title"] : oldVal))) {
+                                //var jsonld = data.data;
+                                //var schema = data.schema;
+                                //var fields = schema.fields;
+                                //var mappedData = [];
 //                            _.each(jsonld['@graph'], function (keyword, idx) {
 //                                mappedData.push({label: keyword[fields[0]], value: keyword[fields[1]]["@value"]});
 //                            });
-                            create(svg, data);
-                        }
+                                var dataToDraw = scope.data[0]["value"];
+                                var groupByOption = scope.data[0]["group"];
+                                create(svg, dataToDraw, groupByOption);
+                            }
+                       
                     }, true);
 
                 };

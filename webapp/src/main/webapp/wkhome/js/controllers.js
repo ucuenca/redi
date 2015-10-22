@@ -2,7 +2,7 @@
 
 /* Controllers */
 
-var wkhomeControllers = angular.module('wkhomeControllers', ['pieChart', 'explorableTree', 'cloudTag', 'cloudGroup', 'genericCloud', 'snapscroll', 'ui.bootstrap.pagination']);
+var wkhomeControllers = angular.module('wkhomeControllers', ['cloudTag', 'pieChart', 'explorableTree', 'cloudGroup', 'genericCloud', 'snapscroll', 'ui.bootstrap.pagination']);
 wkhomeControllers.controller('indexInformation', ['$scope', '$window', 'Phone',
     function ($scope, $window, Phone) {
         $scope.welcome = "Hello World!";
@@ -11,14 +11,14 @@ wkhomeControllers.controller('indexInformation', ['$scope', '$window', 'Phone',
          $scope.orderProp = 'age';*/
 
     }]);
-wkhomeControllers.controller('showSection', ['$scope', '$routeParams', '$window', 'Phone',
-    function ($scope, $routeParams, $window, Phone) {
-        $scope.welcome = "Hello " + ($routeParams.section == 0 ? "World" : "Miami") + "!";
-        $scope.user = {};
-        /*$scope.phones = Phone.query();
-         $scope.orderProp = 'age';*/
-
-    }]);
+//wkhomeControllers.controller('showSection', ['$scope', '$routeParams', '$window', 'Phone',
+//    function ($scope, $routeParams, $window, Phone) {
+//        $scope.welcome = "Hello " + ($routeParams.section == 0 ? "World" : "Miami") + "!";
+//        $scope.user = {};
+//        /*$scope.phones = Phone.query();
+//         $scope.orderProp = 'age';*/
+//
+//    }]);
 //  Main  application controller - TEST D3
 wkhomeControllers.controller('MainCtrl', ['$scope', '$interval',
     function ($scope, $interval) {
@@ -91,7 +91,7 @@ wkhomeControllers.controller('totalPersonReg', ['$scope', '$window', 'sparqlQuer
                     data.push({label: endpoint['uc:name'], value: endpoint['uc:total']['@value']});
                 });
                 $scope.data = {'entityName': 'Authors', 'data': data};
-              });
+            });
             //$rootScope.$emit('authorSearch', rdf);
 
             /*$scope.data = [*//*{label: "Lorem ipsum", value: 1, color: "#98abc5"}, 
@@ -202,10 +202,9 @@ wkhomeControllers.controller('totalResearchAreas', ['$scope', 'sparqlQuery',
             });
         });
     }]);
-wkhomeControllers.controller('groupTagsController', ['$scope', 'sparqlQuery',
-    function ($scope, sparqlQuery) {
+wkhomeControllers.controller('groupTagsController', ['$scope', '$timeout', 'sparqlQuery',
+    function ($scope, $timeout, sparqlQuery) {
         $scope.themes = [];
-        $scope.relatedthemes = [];
         waitingDialog.show();
         var queryKeywords = 'PREFIX bibo: <http://purl.org/ontology/bibo/> '
                 + 'CONSTRUCT { ?keyword rdfs:label ?k } '
@@ -228,54 +227,36 @@ wkhomeControllers.controller('groupTagsController', ['$scope', 'sparqlQuery',
                     model["id"] = pub["@id"];
                     model["tag"] = pub["rdfs:label"];
                     $scope.themes.push({tag: model["tag"]});
-                });33
+                });
+                $scope.$apply(function () {
+                    $scope.relatedthemes = $scope.themes;
+                });
+                waitingDialog.hide();
             });
-            waitingDialog.hide();
+
         });
-        $scope.putSelectedItem = function (value) {
-            loadResources(value); //query and load resource related with selected theme
+        $scope.gbselectedItem = "noselected";
 
+        $scope.$watch('gbselectedItem', function () {
+            groupByResources($scope.dataaux, $scope.gbselectedItem);
+        });
 
-            //no hace nada por ahora
-         
-//            $scope.relatedthemes = [];
-//            waitingDialog.show();
-//            var queryRelatedKeywords = 'PREFIX bibo: <http://purl.org/ontology/bibo/> '
-//                    + 'CONSTRUCT { ?keyword rdfs:label ?k } '
-//                    + '	FROM <http://ucuenca.edu.ec/wkhuska> '
-//                    + '	WHERE { '
-//                    + '		SELECT DISTINCT ?keyword ?k '
-//                    + '             WHERE { ?subject bibo:Quote ?k . '
-//                    + '                     ?subject bibo:Quote "' + value + '"^^xsd:string . '
-//                    + '                     BIND(REPLACE( ?k , " ", "_", "i") AS ?key) . '
-//                    + '                     BIND(IRI(?key) as ?keyword)'
-//                    + '                   } '
-//                    + '             ORDER BY ?k'
-//                    + '     } ';
-//            sparqlQuery.querySrv({query: queryRelatedKeywords}, function (rdf) {
-//                var context = {
-//                    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-//                };
-//                jsonld.compact(rdf, context, function (err, compacted) {
-//                    _.map(compacted["@graph"], function (pub) {
-//                        var model = {};
-//                        model["id"] = pub["@id"];
-//                        model["tag"] = pub["rdfs:label"];
-//                        $scope.$apply(function () {
-//                            $scope.relatedthemes.push({tag: model["tag"]});
-//                        });
-//                    });
-//                });
-//            });
-//            waitingDialog.hide();
+        $scope.$watch('selectedItem', function () {
+            //alert($scope.selectedItem);
+            loadResources($scope.selectedItem, $scope.gbselectedItem); //query and load resource related with selected theme
 
+        });
 
-        }; //end PutSelectedItem
-
-
-
-        function loadResources(value)//load resources related with selected keyword
+        function groupByResources(values, groupby)//grouByResources resources by ...
         {
+           // executeDraw(values,groupby);
+           //this activity is cheking directly in cloudGroup.js 
+        }//end grouByResources
+
+
+        function loadResources(value, groupby)//load resources related with selected keyword
+        {
+
             var queryRelatedPublications = 'PREFIX dct: <http://purl.org/dc/terms/> '
                     + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
                     + '     PREFIX bibo: <http://purl.org/ontology/bibo/> '
@@ -313,7 +294,8 @@ wkhomeControllers.controller('groupTagsController', ['$scope', 'sparqlQuery',
                 jsonld.compact(rdf, context, function (err, compacted) {
                     _.map(compacted["@graph"], function (pub) {
                         var model = {};
-                        model["Publication"] = pub["foaf:publications"]["@id"];
+                        //model["Publication"] = pub["foaf:publications"]["@id"];
+                        model["Publication"] = pub["dcterms:title"];
                         model["Title"] = pub["dcterms:title"];
                         model["Keyword"] = pub["bibo:Quote"];
                         model["Abstract"] = pub["bibo:abstract"];
@@ -321,14 +303,29 @@ wkhomeControllers.controller('groupTagsController', ['$scope', 'sparqlQuery',
                             $scope.publicationsByKeyword.push({title: model["Title"], publication: model["Publication"], keyword: model["Keyword"], abstract: model["Abstract"]});
                         });
                     });
-                        $scope.data = $scope.publicationsByKeyword;        
-       //             startCloud($scope.publicationsByKeyword);
+                    executeDraw($scope.publicationsByKeyword, groupby);
+//                    $scope.$apply(function () {
+//                        //$scope.data = $scope.publicationsByKeyword;
+//                        $scope.data = [{value: $scope.publicationsByKeyword, group: groupby}];
+//                        $scope.dataaux = $scope.publicationsByKeyword;
+//                        $scope.oldData
+//                     });
+                    //             startCloud($scope.publicationsByKeyword);
                 }); //end jsonld.compact
 
             }); //end sparqlService
-            
 
         }//end Load Resources
+
+
+        function executeDraw(dataToDraw, groupby)
+        {
+           $scope.$apply(function () {
+               $scope.data = [{value: dataToDraw, group: groupby}];
+                $scope.dataaux = dataToDraw;
+          });
+        }
+
 
 
 //        $scope.putSelectedItem = function (value) {
@@ -379,10 +376,10 @@ wkhomeControllers.controller('getKeywordsTag', ['$scope', 'sparqlQuery',
                 });
             });
         };
-        $scope.filteredTodos = []
-                , $scope.currentPage = 1
-                , $scope.numPerPage = 10
-                , $scope.maxSize = 5;
+//        $scope.filteredTodos = []
+//                , $scope.currentPage = 1
+//                , $scope.numPerPage = 10
+//                , $scope.maxSize = 5;
 //        $scope.$watch('currentPage + numPerPage', function () {
 //            var begin = (($scope.currentPage - 1) * $scope.numPerPage)
 //                    , end = begin + $scope.numPerPage;
@@ -406,8 +403,10 @@ wkhomeControllers.controller('getKeywordsTag', ['$scope', 'sparqlQuery',
                 "uc": "http://ucuenca.edu.ec/wkhuska/resource/"
             };
             jsonld.compact(rdf, context, function (err, compacted) {
-                $scope.data = {schema: {"context": context, fields: ["rdfs:label", "uc:total"]}, data: compacted};
-                waitingDialog.hide();
+                $scope.$apply(function () {
+                    $scope.data = {schema: {"context": context, fields: ["rdfs:label", "uc:total"]}, data: compacted};
+                    waitingDialog.hide();
+                });
             });
         });
         //}
@@ -467,9 +466,9 @@ wkhomeControllers.controller('exploreAuthor', ['$scope', '$rootScope', 'searchDa
          "uri":"spotify:artist:43ZHCT0cAZBISjO8DG9PnE"};*/
     }]); // end exploreAuthor
 
-wkhomeControllers.controller('SearchController', ['$scope', '$rootScope', '$window', 'sparqlQuery', 'searchData',
-    function ($scope, $rootScope, $window, sparqlQuery, searchData) {
-        $scope.sparqlQuery = sparqlQuery;
+wkhomeControllers.controller('SearchController', ['$scope', '$window', 'sparqlQuery', 'searchData',
+    function ($scope, $window, sparqlQuery, searchData) {
+        //$scope.sparqlQuery = sparqlQuery;
         String.format = function () {
             // The string containing the format items (e.g. "{0}")
             // will and always has to be the first argument.
@@ -498,8 +497,8 @@ wkhomeControllers.controller('SearchController', ['$scope', '$rootScope', '$wind
                 var queryAuthors = "PREFIX foaf: <http://xmlns.com/foaf/0.1/> CONSTRUCT{?s a foaf:Person . ?s foaf:name ?name} "
                         + "FROM <http://ucuenca.edu.ec/wkhuska> WHERE { ?s a foaf:Person . ?s foaf:name ?name . ?s foaf:publications ?pub . {0} } ";
                 var filterPath = 'FILTER(CONTAINS(UCASE(?name), "{0}" )) . ';
-                var searchText = $scope.searchText.trim();
-                var keywords = searchText.split(" ");
+                var searchTextt = $scope.searchText.trim();
+                var keywords = searchTextt.split(" ");
                 var filterContainer = "";
                 keywords.forEach(function (val) {
                     if (val.length > 0) {
@@ -507,7 +506,8 @@ wkhomeControllers.controller('SearchController', ['$scope', '$rootScope', '$wind
                     }
                 });
                 queryAuthors = String.format(queryAuthors, filterContainer);
-                $scope.sparqlQuery.querySrv({query: queryAuthors},
+                //$scope.sparqlQuery.querySrv({query: queryAuthors},
+                sparqlQuery.querySrv({query: queryAuthors},
                 function (rdf) {
                     var context = {
                         "foaf": "http://xmlns.com/foaf/0.1/"/*,
@@ -534,37 +534,28 @@ wkhomeControllers.controller('ExploreController', ['$scope', '$window',
 
 wkhomeControllers.controller('genericcloudController', ['$scope', '$window', 'sparqlQuery', 'searchData',
     function ($scope, $window, sparqlQuery, searchData) {
-
-
         $scope.$watch('searchData.genericData', function (newValue, oldValue, scope) {
-           
             var context = {
                 "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
                 "uc": "http://ucuenca.edu.ec/wkhuska/resource/"
             };
-            
             $scope.data = {schema: {"context": context, fields: ["rdfs:label", "uc:total"]}, data: searchData.genericData};
-                
-            
         });
-
-
-
     }]);//end genericcloudController 
 
 
 
 /* Sample of a oontroller that manages requests with URL params */
-wkhomeControllers.controller('PhoneDetailCtrl', ['$scope', '$routeParams', 'Phone',
-    function ($scope, $routeParams, Phone) {
-
-        $scope.phone = Phone.get({phoneId: $routeParams.phoneId}, function (phone) {
-            $scope.mainImageUrl = phone.images[0];
-        });
-        $scope.setImage = function (imageUrl) {
-            $scope.mainImageUrl = imageUrl;
-        }
-    }]);
+//wkhomeControllers.controller('PhoneDetailCtrl', ['$scope', '$routeParams', 'Phone',
+//    function ($scope, $routeParams, Phone) {
+//
+//        $scope.phone = Phone.get({phoneId: $routeParams.phoneId}, function (phone) {
+//            $scope.mainImageUrl = phone.images[0];
+//        });
+//        $scope.setImage = function (imageUrl) {
+//            $scope.mainImageUrl = imageUrl;
+//        }
+//    }]);
 /*
  wkhomeControllers.controller('CallbacksController', ['$scope', function ($scope) {
  $scope.beforeSnapMessages = [];
@@ -621,54 +612,8 @@ wkhomeControllers.controller('SnapController', ['$scope', '$window',
             console.log("afterCallback");
         };
     }]);
-wkhomeControllers.controller('viewController', ['$scope', 'publicationsLinksData',
-    function ($scope, publicationsLinksData) {
-        // variable passed to app controller
 
 
-
-
-        $scope.persona = {
-            nombre: "Lorenzo",
-            ape1: "Garcia"
-        }
-
-        $scope.$watch("values", function (newValue, oldValue) {
-            if (newValue === oldValue) {
-                return;
-            }
-
-            alert("El valor ha cambiado");
-        });
-        $scope.change = function () {
-            $scope.persona = {
-                nombre: "Lorenzo",
-                ape1: "Garcia"
-            }
-        }
-
-
-
-
-        $scope.filteredTodos = []
-                , $scope.currentPage = 1
-                , $scope.numPerPage = 10
-                , $scope.maxSize = 5
-                , $scope.data = publicationsLinksData.pubData
-                , $scope.todos = [];
-        $scope.makeTodos = function () {
-            $scope.todos.push = ({text: 'Dato Origen ', done: false}); //$scope.data;
-//    for (i=1;i<=1000;i++) {
-//      $scope.todos.push({ text:'todo '+i, done:false});
-//    }
-        };
-        $scope.makeTodos();
-        $scope.$watch('currentPage + numPerPage', function () {
-            var begin = (($scope.currentPage - 1) * $scope.numPerPage)
-                    , end = begin + $scope.numPerPage;
-            // $scope.filteredTodos = $scope.todos.slice(begin, end);
-        });
-    }]);
 /*
  wkhomeControllers.directive('keyboardKeys', ['$document', function ($document) {
  return {

@@ -2,7 +2,7 @@
       html, body {
     //    overflow:hidden;
       }
-/*      circle {
+      circle {
         stroke: #555;
         stroke-width: 2px;
         opacity: .8;
@@ -10,7 +10,7 @@
       circle:hover {
         stroke:#000;
         opacity:1;
-      }*/
+      }
       .btn-group {
         margin-left: 330px;
       }

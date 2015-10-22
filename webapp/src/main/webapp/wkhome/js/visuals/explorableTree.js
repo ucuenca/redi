@@ -5,8 +5,8 @@ var explorableTree = angular.module('explorableTree', []);
 explorableTree.factory('d3', function () {
     return	d3;
 });
-explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'searchData', 'authorRestQuery',
-    function (d3, sparqlQuery, searchData, authorRestQuery) {
+explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuery',
+    function (d3, sparqlQuery, authorRestQuery) {
 
 
 

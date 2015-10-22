@@ -8,8 +8,8 @@ var wkhomeApp = angular.module('wkhomeApp', [
   'snapscroll',
   /*'phonecatAnimations',*/
   /*'bootstrap',*/
-  'myChart',
-  'geoPlain',
+ // 'myChart',   //aqui
+ // 'geoPlain',   //aqui
   'wkhomeControllers',
   'commonDirectives',
   /*'phonecatFilters',*/
@@ -28,19 +28,19 @@ wkhomeApp.config(['$routeProvider',
     $routeProvider.
       when('/', {
         templateUrl: 'partials/home.html',
-        controller: 'indexInformation'
+//        controller: 'indexInformation'
       }).
       when('/:section', {
         templateUrl: 'partials/home.html',
-        controller: 'showSection'
+//        controller: 'showSection'
       }).
       when('/w/search?:text', {
         templateUrl: 'partials/search.html',
-        controller: 'ExploreController'
+  //      controller: 'ExploreController'
       }).
       when('/w/cloud?:text', {
         templateUrl: 'partials/genericcloud.html',
-        controller: 'ExploreController'
+//        controller: 'ExploreController'
       }).
       
       when('/a/a', {
@@ -53,15 +53,15 @@ wkhomeApp.config(['$routeProvider',
       }).
       when('/tags/cloud', {
         templateUrl: 'partials/tags.html',
-        controller: 'getKeywordsTag'
+ //       controller: 'getKeywordsTag'
       }).
       when('/d3/:geoId.json', {
         templateUrl: 'partials/phone-detail.html',
-        controller: 'ExploreController'
+ //       controller: 'ExploreController'
       }).
       when('/cloud/autornames', {
         templateUrl: 'partials/cloudgroup.html',
-        controller: 'ExploreController'
+  //      controller: 'ExploreController'
       }).
       /*when('/phones/:phoneId', {
         templateUrl: 'partials/phone-detail.html',
