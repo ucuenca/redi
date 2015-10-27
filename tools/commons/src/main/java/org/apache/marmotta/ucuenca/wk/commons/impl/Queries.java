@@ -267,6 +267,13 @@ public class Queries implements QueriesService {
                 + " ?authorOtherResource <http://dblp.uni-trier.de/rdf/schema-2015-01-26#authorOf> ?publicationResource. "
                 + " ?authorOtherResource ?publicationProperty ?publicationResource. }";
     }
+    
+    @Override
+    public String getPublicationForExternalAuthorFromProviderQuery(String property) {
+        return "SELECT DISTINCT ?authorResource ?publicationProperty  ?publicationResource "
+                + " WHERE { ?authorResource <"+property+"> ?publicationResource. "
+                + " ?authorOtherResource ?publicationProperty ?publicationResource. }";
+    }
 
     @Override
     public String getPublicationFromMAProviderQuery() {

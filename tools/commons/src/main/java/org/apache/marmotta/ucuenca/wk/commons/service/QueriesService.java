@@ -100,6 +100,8 @@ public interface QueriesService {
     String getMembersQuery();
 
     String getPublicationFromProviderQuery();
+    
+    String getPublicationForExternalAuthorFromProviderQuery(String property);
 
     String getPublicationPropertiesQuery();
 

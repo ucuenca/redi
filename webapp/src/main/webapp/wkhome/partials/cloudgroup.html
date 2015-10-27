@@ -1,0 +1,70 @@
+<div class="col-md-12 page-header">
+    <h3>.</h3>
+
+
+    <center>
+        <div class="page-header">
+            <h3>PUBLICATIONS BY AUTHORS CLOUD</h3>
+        </div>
+    </center>
+</div>
+<div class="col-md-12" ng-controller="groupTagsController">
+    <div class="col-md-3">
+        Tags:
+        <select class="form-control" name="board" id="board" ng-model="selectedItem"  ng-options="key.tag as key.tag for key  in relatedthemes">
+            <option value="">Select Theme</option>
+        </select>
+
+    </div>
+
+    <div class="col-md-3">
+        Group By:
+        <select  var="groupBy" class="form-control" name="group" id="group" ng-model="gbselectedItem" >
+            <option value="noselected">Select Related Tag</option>
+            <option value="keyword">Keyword</option>
+            <option value="publication">Publication</option>
+        </select>
+    </div>
+    
+    
+      <cloud-group data="data" style="display: block; height: 90%"></cloud-group> 
+<!--
+    <div class="col-md-3">
+        Size By:
+        <select class="form-control" name="size" id="size">
+            <option value=""></option>
+            <option value="volume">Volume</option>
+            <option value="lastPrice">Last Price</option>
+            <option value="standardDeviation">Standard Deviation</option>
+        </select>
+    </div>
+-->
+<!--
+    <div class="col-md-3">
+        Color By:
+        <select class="form-control" name="color" id="color">
+            <option value=""></option>
+            <option value="exchange">Exchange</option>
+            <option value="volumeCategory">Volume</option>
+            <option value="lastPriceCategory">Last Price</option>
+            <option value="standardDeviationCategory">Standard Deviation</option>
+        </select>
+    </div>
+-->
+    <!--  <div class="col">
+          Colors:
+          <div class="row">
+              <div class="colors" style="height:34px;">
+              </div>
+          </div>
+      </div>    -->
+<div class="col-md-12">
+
+</div> 
+<!-- <div class="col-md-12" id="chart"></div>   -->  
+
+</div>
+
+
+
+

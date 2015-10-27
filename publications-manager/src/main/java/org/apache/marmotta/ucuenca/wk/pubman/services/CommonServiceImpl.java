@@ -93,8 +93,7 @@ public class CommonServiceImpl implements CommonService {
 
     @Override
     public JsonArray searchAuthor(String uri) {
-        LDClient ldclient = new LDClient();
-        ldclient.getEndpoint(uri);      
+      
         return dblpProviderServiceInt.SearchAuthorTaskImpl(uri);
     }
 }
