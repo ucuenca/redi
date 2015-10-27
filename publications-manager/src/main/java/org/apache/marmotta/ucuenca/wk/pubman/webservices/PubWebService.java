@@ -56,7 +56,6 @@ public class PubWebService {
     public static final String GET_PUBLICATIONS = "/publications";
     public static final String LOAD_PUBLICATIONS = "/publications_provider_graph";
     public static final String GET_AUTHOR_DATA = "/pubsearch";
-    public static final String COUNT_PUBLICATIONS = "/count_publications_graph";
 
     /*
      * Get Publications Data from Source and Load into Provider Graph
@@ -68,6 +67,7 @@ public class PubWebService {
         log.debug("Publications Task", params);
         return runPublicationsProviderTask(params);
     }
+    
     private Response runPublicationsProviderTask(String urisString) {
         //String result = publicationsService.runPublicationsMAProviderTaskImpl(urisString);
         String result = runGetDataFromProvidersService();
@@ -108,7 +108,7 @@ public class PubWebService {
         String result = resultjson.toString();
         return Response.ok().entity(result).build();
     }
-
+    public static final String COUNT_PUBLICATIONS = "/count_publications_graph";
     /**
      * @Author Freddy Sumba. Service that count the publications in the provider
      * an central graph.
