@@ -39,8 +39,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
 
-
-
 @Path("/pubman")
 @ApplicationScoped
 public class PubWebService {
@@ -48,9 +46,9 @@ public class PubWebService {
     @Inject
     private Logger log;
 
-    @Inject 
+    @Inject
     private CommonService commonService;
-    
+
     private static final int MAX_TURNS = 100;
     private static final int MIN_TURNS = 0;
     public static final String GET_PUBLICATIONS = "/publications";
@@ -73,9 +71,8 @@ public class PubWebService {
         String result = runGetDataFromProvidersService();
         return Response.ok().entity(result).build();
     }
-    
-    private String runGetDataFromProvidersService()
-    {
+
+    private String runGetDataFromProvidersService() {
         return commonService.GetDataFromProvidersService();
     }
 
@@ -94,21 +91,22 @@ public class PubWebService {
         String result = commonService.Data2GlobalGraph();
         return Response.ok().entity(result).build();
     }
-    
+
     /**
      * Service to get data related with especific author.
-     * 
-     * @param uri   //url to find
+     *
+     * @param uri //url to find
      */
     @POST
     @Path(GET_AUTHOR_DATA)
     @Produces("application/ld+json")
-    public Response searchAuthor(@QueryParam("resource") String uri, @Context HttpServletRequest request) {
-        JsonArray resultjson = commonService.searchAuthor(uri);
+    public Response searchAuthor(@FormParam("resource") String uri, @Context HttpServletRequest request) {
+        JsonArray resultjson = commonService.searchAuthor(uri);       
         String result = resultjson.toString();
-        return Response.ok().entity(result).build();
+        return Response.ok().entity(result).build(); 
     }
     public static final String COUNT_PUBLICATIONS = "/count_publications_graph";
+
     /**
      * @Author Freddy Sumba. Service that count the publications in the provider
      * an central graph.
