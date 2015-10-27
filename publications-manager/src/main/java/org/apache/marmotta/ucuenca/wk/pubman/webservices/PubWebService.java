@@ -67,14 +67,14 @@ public class PubWebService {
         log.debug("Publications Task", params);
         return runPublicationsProviderTask(params);
     }
-    
+
     private Response runPublicationsProviderTask(String urisString) {
         //String result = publicationsService.runPublicationsMAProviderTaskImpl(urisString);
         String result = runGetDataFromProvidersService();
         return Response.ok().entity(result).build();
     }
     
-    private String runGetDataFromProvidersService() 
+    private String runGetDataFromProvidersService()
     {
         return commonService.GetDataFromProvidersService();
     }
@@ -94,7 +94,7 @@ public class PubWebService {
         String result = commonService.Data2GlobalGraph();
         return Response.ok().entity(result).build();
     }
-
+    
     /**
      * Service to get data related with especific author.
      *
