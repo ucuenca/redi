@@ -123,7 +123,7 @@ public class PubWebService {
     }
 
     private Response runPublicationsCountTask(String urisString) {
-        String result = commonService.Data2GlobalGraph();
+        String result = commonService.CountPublications();
         return Response.ok().entity(result).build();
     }
 

@@ -117,16 +117,16 @@ function runPublicationsCount(options) {
         data: JSON.stringify(dataT),
         dataType: "text", //result data type
         contentType: "application/json", // send data type
-        url: settings.host + "pubman/publications",
+        url: settings.host + "pubman/count_publications_graph",
         //    url:  "http://localhost:8079/marmotta/authors-module/update",
         success: function (Result) {
-            document.getElementById("imgloading").style.visibility = "hidden";
+            //document.getElementById("imgloading").style.visibility = "hidden";
             alert(Result);
         },
         error: function (data) {
-            document.getElementById("imgloading").style.visibility = "hidden";
+            //document.getElementById("imgloading").style.visibility = "hidden";
             alert("Error" + data.responseText);
-        }
+        }        
     });
 
 }
