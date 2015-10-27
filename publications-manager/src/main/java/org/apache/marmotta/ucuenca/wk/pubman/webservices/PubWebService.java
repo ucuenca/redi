@@ -68,13 +68,11 @@ public class PubWebService {
         log.debug("Publications Task", params);
         return runPublicationsProviderTask(params);
     }
-
     private Response runPublicationsProviderTask(String urisString) {
         //String result = publicationsService.runPublicationsMAProviderTaskImpl(urisString);
         String result = runGetDataFromProvidersService();
         return Response.ok().entity(result).build();
     }
-  
     private String runGetDataFromProvidersService() 
     {
         return commonService.GetDataFromProvidersService();
