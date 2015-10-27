@@ -39,6 +39,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
 
+
+
 @Path("/pubman")
 @ApplicationScoped
 public class PubWebService {
