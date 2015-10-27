@@ -73,11 +73,12 @@ public class PubWebService {
         String result = runGetDataFromProvidersService();
         return Response.ok().entity(result).build();
     }
+    
     private String runGetDataFromProvidersService() 
     {
         return commonService.GetDataFromProvidersService();
     }
-    
+
     /*
      * Get Publications Data from  Provider Graph and load into General Graph
      */
