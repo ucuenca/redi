@@ -98,7 +98,7 @@ public class PubWebService {
     /**
      * Service to get data related with especific author.
      *
-     * @param uri //url to find
+     * @param uri   //url to find
      */
     @POST
     @Path(GET_AUTHOR_DATA)
