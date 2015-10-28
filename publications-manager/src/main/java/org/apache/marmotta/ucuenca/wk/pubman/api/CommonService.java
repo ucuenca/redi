@@ -17,7 +17,7 @@ public interface CommonService {
    String GetDataFromProvidersService(); 
    
    String Data2GlobalGraph();
-   
+   String CountPublications();
    
    JsonArray searchAuthor(String uri);
 }

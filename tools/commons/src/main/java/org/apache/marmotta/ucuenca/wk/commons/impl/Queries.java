@@ -41,7 +41,7 @@ public class Queries implements QueriesService {
         if (varargs[3].contains("^^")) {
             object = "\"" + StringEscapeUtils.escapeJava(varargs[3].substring(1, varargs[3].indexOf("^^") - 1)) + "\"" + varargs[3].substring(varargs[3].indexOf("^^"));
         } else {
-            object = "\"" + StringEscapeUtils.escapeJava(varargs[3].substring(1, varargs[3].length() - 1)) + "\"";
+            object = "\"" + StringEscapeUtils.escapeJava(varargs[3].substring(1, varargs[3].length() - 1))+"\""  + (varargs.length > 4 ? varargs[4] != null ? "^^xsd:" + varargs[4] : "^^xsd:string" : "");
         }
 
         return "INSERT DATA { " + graphSentence + "  { " + subjectSentence + " <" + varargs[2] + "> " + object + " }}";
@@ -267,6 +267,13 @@ public class Queries implements QueriesService {
                 + " ?authorOtherResource <http://dblp.uni-trier.de/rdf/schema-2015-01-26#authorOf> ?publicationResource. "
                 + " ?authorOtherResource ?publicationProperty ?publicationResource. }";
     }
+    
+    @Override
+    public String getPublicationForExternalAuthorFromProviderQuery(String property) {
+        return "SELECT DISTINCT ?authorResource ?publicationProperty  ?publicationResource "
+                + " WHERE { ?authorResource <"+property+"> ?publicationResource. "
+                + " ?authorOtherResource ?publicationProperty ?publicationResource. }";
+    }
 
     @Override
     public String getPublicationFromMAProviderQuery() {
@@ -293,9 +300,9 @@ public class Queries implements QueriesService {
         return " SELECT DISTINCT  ?authorResource  ?pubproperty  ?publicationResource "
                 + "?title WHERE { "
                 + " graph   <" + providerGraph + "> "
-                    + " { <" + author + "> <http://xmlns.com/foaf/0.1/publications> "
+                + " { <" + author + "> <http://xmlns.com/foaf/0.1/publications> "
                 + "?publicationResource.  ?publicationResource "
-                + "<"+prefix+"> "
+                + "<" + prefix + "> "
                 + "?title } }";
     }
 
@@ -320,6 +327,29 @@ public class Queries implements QueriesService {
                 + "?publicationResource <" + prefix + ">  ?title\n"
                 + "\n" + "{ FILTER (regex(?pubproperty,\"authorOf\")) }  "
                 + "UNION { FILTER (regex(?pubproperty,\"pub\")) }                                                                                        }} ";
+    }
+
+    @Override
+    public String getPublicationsCount(String graph) {
+        return "SELECT  (COUNT(?publicationResource) AS ?total)WHERE { \n"
+                + "                 graph  <" + graph + "> \n"
+                + "                 {  \n"
+                + "                 ?authorResource owl:sameAs   ?authorNative. \n"
+                + "                 ?authorNative ?pubproperty ?publicationResource. \n"
+                + "                 \n"
+                + "                 }}";
+    }
+
+    @Override
+    public String getTotalAuthorWithPublications(String graph) {
+
+        return "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                + "SELECT   (COUNT(distinct ?authorResource) as ?total) WHERE { \n"
+                + "                 graph  <http://ucuenca.edu.ec/wkhuska> \n"
+                + "                 {  \n"
+                + "                 ?authorResource foaf:publications  ?authorNative\n"
+                + "                 \n"
+                + "                 }}";
     }
 
 }

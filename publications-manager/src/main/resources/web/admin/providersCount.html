@@ -1,0 +1,72 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements. See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership. The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<html>
+    <head>
+        <!--###BEGIN_HEAD###-->
+        <title>Publications Module</title>
+        <script type="text/javascript" src="../../webjars/jquery/1.8.2/jquery.min.js"></script>
+        <script type="text/javascript" src="publicationsUpdate.js"></script>
+        <script type="text/javascript" src="../../core/public/js/widgets/configurator/configurator.js"></script>
+        <script type="text/javascript">
+            var host = _SERVER_URL;
+            function run()
+            {
+                runPublicationsCount(host);
+            }
+        </script>
+        <!--###END_HEAD###-->
+    </head>
+    <body>
+
+        <!--<h1><a id="Introduction"></a>Introduction on Base Module<a class="section_anchor" href="#Introduction"></a></h1>
+        -->
+
+        <!--###BEGIN_CONTENT###-->
+        <h1>COUNT PUBLICATIONS AND AUTHORS FROM CENTRAL GRAPH AND PROVIDERS GRAPH </h1>
+        <h2>CEDIA:  REPOSITORIO SEMÁNTICO DE INVESTIGADORES DEL ECUADOR </h2>
+        <p>
+            This module allows automatic extraction information regarding publications of authors.
+            The publications will be stored in different graphs by provider.
+        </p>
+
+
+        <h2> INFO  </h2>
+        <ul>
+            <li> Params </li>
+
+        </ul>
+
+        <h2> COUNT PUBLICATIONS AND AUTHORS IN PROVIDERS AND CENTRAL GRAPH</h2>
+
+        <!-- <p><a href="#" onClick="runUpdateAuthor();">UPDATE</a></p>    --> 
+
+        <form> 
+            <button type="button"  onclick="run()"  value="Activar Función">COUNT PUBLICATIONS AND AUTHORS TASK</button>
+
+            <div id="imgloading" style="visibility: hidden">
+                <img src="img/ajax-loader-big.gif" alt="Loading count publications" height="120" width="120">
+                <p> Please wait until the reply message</p>
+            </div>
+        </form>
+
+        <!--###END_CONTENT###-->
+    </body>
+</html>
+

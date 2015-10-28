@@ -33,6 +33,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -102,9 +103,30 @@ public class PubWebService {
     @POST
     @Path(GET_AUTHOR_DATA)
     @Produces("application/ld+json")
-    public Response searchAuthor(@QueryParam("resource") String uri, @Context HttpServletRequest request){
+    public Response searchAuthor(@FormParam("resource") String uri, @Context HttpServletRequest request){
         JsonArray resultjson = commonService.searchAuthor(uri);       
         String result = resultjson.toString();
         return Response.ok().entity(result).build(); 
     }
+    public static final String COUNT_PUBLICATIONS = "/count_publications_graph";
+    /**
+     * @Author Freddy Sumba. Service that count the publications in the provider
+     * an central graph.
+     * @param resultType
+     * @param request
+     * @return
+     */
+    @POST
+    @Path(COUNT_PUBLICATIONS)
+    public Response CountPublicationsPost(@QueryParam("Endpoint") String resultType, @Context HttpServletRequest request) {
+        String params = resultType;
+        log.debug("Publications Task Count", params);
+        return runPublicationsCountTask(params);
+    }
+
+    private Response runPublicationsCountTask(String urisString) {
+        String result = commonService.CountPublications();
+        return Response.ok().entity(result).build();
+    }
+
 }
