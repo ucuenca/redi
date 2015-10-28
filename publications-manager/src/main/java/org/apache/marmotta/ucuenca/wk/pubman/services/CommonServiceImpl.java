@@ -53,6 +53,10 @@ public class CommonServiceImpl implements CommonService {
 
     @Inject
     Data2GlobalGraphImpl data2GlobalGraphService;
+
+    @Inject
+    CountPublicationsServiceImpl countPublicationsService;
+
 //
 
     @Inject
@@ -79,6 +83,12 @@ public class CommonServiceImpl implements CommonService {
         Thread data2globalTask = new Thread(data2GlobalGraphService);
         data2globalTask.start();
         return "Load Publications Data from Providers Graph to Global Graph. Task run in background.   Please review main.log file for details";
+    }
+    @Override
+    public String CountPublications() {
+        Thread countPublications = new Thread(countPublicationsService);
+        countPublications.start();
+        return "Count Publications from Providers and  Global Graph. Task run in background.   Please review main.log file for details";
     }
 
     @Override

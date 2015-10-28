@@ -120,4 +120,8 @@ public interface QueriesService {
 
     String getPublicationsTitleQuery(String providerGraph, String prefix);
 
+    String getPublicationsCount(String graph);
+
+    String getTotalAuthorWithPublications(String graph);
+
 }
