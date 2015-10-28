@@ -11,7 +11,7 @@ genericCloud.directive('genericCloud', ["d3", 'sparqlQuery',
         var chart, clear, click, collide, collisionPadding, connectEvents, data, force, gravity, hashchange, height, idValue, jitter, label, margin, maxRadius, minCollisionRadius, mouseout, mouseover, node, rScale, rValue, textValue, tick, transformData, update, updateActive, updateLabels, updateNodes, width;
         var scope;
         var attrs;
-        var ctrlFn;
+        var pageTitle;
         width;// = 980;
         height;// = 510;
         data = [];
@@ -24,7 +24,7 @@ genericCloud.directive('genericCloud', ["d3", 'sparqlQuery',
             bottom: 0,
             left: 0
         };
-        maxRadius = 65;
+        maxRadius = 35;
         rScale = d3.scale.sqrt().range([0, maxRadius]);
         rValue = function (d) {
             return parseInt(d.value);
@@ -56,7 +56,7 @@ genericCloud.directive('genericCloud', ["d3", 'sparqlQuery',
                  }*/      //POSITION OF LABEL
                 return (17 + (margin.left + d.x) - d.dx / 2) + "px";
             }).style("top", function (d) {
-                return (50 + (margin.top + d.y) - d.dy / 2) + "px";
+                return (120 + (margin.top + d.y) - d.dy / 2) + "px";
             });
         };
 
@@ -166,6 +166,7 @@ genericCloud.directive('genericCloud', ["d3", 'sparqlQuery',
                 });
             };
         };
+       
         connectEvents = function (d) {
             d.on("click", click);
             d.on("mouseover", mouseover);
@@ -174,6 +175,7 @@ genericCloud.directive('genericCloud', ["d3", 'sparqlQuery',
         clear = function () {
             return location.replace("#");
         };
+        
         click = function (d) {
             //   location.replace("#" + encodeURIComponent(idValue(d)));
 
@@ -190,21 +192,22 @@ genericCloud.directive('genericCloud', ["d3", 'sparqlQuery',
                 "bibo:numPages": {label: "Pages", containerType: "div"}
             };
             if (infoBar) {
-                var keyword = d.label;
+                var key = d.label;
                 var headbar = $('div.head-info');
                 headbar.find('title').text("ddddddtitletitle");
                 headbar.html('');
                 var div = $('<div>');
-                var label = $('<span class="label label-primary" style="font-size:35px">').text("PUBLICATIONS CONTAINING THE KEYWORD: " + keyword);
+                var label = $('<span class="label label-primary" style="font-size:35px">').text("PUBLICATIONS OF : " + d.label);
                 div.append(label);
                 div.append("</br>");
                 headbar.append(div);
 
                 //var sparqlDescribe = "DESCRIBE <" + id + ">";
-                var sparqlPublications = 'PREFIX dct: <http://purl.org/dc/terms/> PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
+                var sparqlPublications = 'PREFIX dct: <http://purl.org/dc/terms/> '
+                        + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
                         + ' PREFIX bibo: <http://purl.org/ontology/bibo/> '
                         + ' PREFIX uc: <http://ucuenca.edu.ec/wkhuska/resource/> '
-                        + " CONSTRUCT { ?keyword uc:publication ?publicationUri. "
+                        + " CONSTRUCT { ?subject uc:publication ?publicationUri. "
                         + " ?publicationUri a bibo:Document. "
                         + " ?publicationUri dct:title ?title. "
                         + " ?publicationUri bibo:abstract ?abstract. "
@@ -213,15 +216,14 @@ genericCloud.directive('genericCloud', ["d3", 'sparqlQuery',
                         + " WHERE {"
                         + " GRAPH <http://ucuenca.edu.ec/wkhuska>"
                         + " {"
-                        + " ?publicationUri dct:title ?title . "
-                        + " ?publicationUri bibo:abstract  ?abstract. "
-                        + " ?publicationUri bibo:uri  ?uri. "
-                        + " ?publicationUri bibo:Quote \"" + keyword + "\" ."
-                        + "  BIND(REPLACE( \"" + keyword + "\", \" \", \"_\", \"i\") AS ?key) ."
-                        + "  BIND(IRI(?key) as ?keyword)"
+                        + " ?subject foaf:name \""+key+"\"^^xsd:string ."
+                        + " ?subject foaf:publications ?publicationUri. "
+                        + " ?publicationUri dct:title ?title .  "
+                        + " OPTIONAL { ?publicationUri bibo:abstract  ?abstract.  } "
+                        + " OPTIONAL { ?publicationUri bibo:uri  ?uri.  } "
                         + " }"
                         + "}";
-                waitingDialog.show("Searching publications with the keyword: " + keyword);
+                waitingDialog.show("Searching Publications of: " + key);
 
                 sparqlQuery.querySrv({query: sparqlPublications}, function (rdf) {
                     var context = {
@@ -310,11 +312,13 @@ genericCloud.directive('genericCloud', ["d3", 'sparqlQuery',
             return chart;
         };
 
-        var draw = function draw(element, widthEl, heightEl, data, scopeEl, attrsEl) {
+        var draw = function draw(element, widthEl, heightEl, data, scopeEl, attrsEl, pageTitleEl) {
             width = widthEl;
             height = heightEl;
             scope = scopeEl;
             attrs = attrsEl;
+            pageTitle = pageTitleEl;
+            d3.select('div.head-pagetitle').text(pageTitle);
             force = d3.layout.force().gravity(0).charge(0).size([width, height]).on("tick", tick);
             element.datum(data).call(chart);
 
@@ -367,10 +371,16 @@ genericCloud.directive('genericCloud', ["d3", 'sparqlQuery',
                             var schema = data.schema;
                             var fields = schema.fields;
                             var mappedData = [];
+                            
                             _.each(jsonld['@graph'], function (keyword, idx) {
-                                mappedData.push({label: keyword[fields[0]], value: keyword[fields[1]]["@value"]});
+                                if (keyword["rdfs:label"])
+                                {
+                                    mappedData.push({label: keyword[fields[0]], value: keyword[fields[1]]["@value"]});
+                                }
                             });
-                            draw(svg, width, height, mappedData, scope, attrs);
+                            var pageTitle = "";                           
+                            pageTitle = _.findWhere(jsonld['@graph'],{"@type": "uc:pagetitle"})["uc:viewtitle"];
+                            draw(svg, width, height, mappedData, scope, attrs, pageTitle);
                         }
                     }, true);
 

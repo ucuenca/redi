@@ -20,9 +20,9 @@ wkhomeServices.factory('Phone', ['$resource',
 /* RESTful client Service */
 wkhomeServices.factory('authorRestQuery', ['$resource', '$http', '$window',
     function ($resource, $http, $window) {
-        $http.defaults.useXDomain = true;
-        $http.defaults.withCredentials = true;
-        delete $http.defaults.headers.common["X-Requested-With"];
+ //       $http.defaults.useXDomain = true;
+ //       $http.defaults.withCredentials = true;
+ //       delete $http.defaults.headers.common["X-Requested-With"];
         $http.defaults.headers.common['content-type'] = 'application/x-www-form-urlencoded';
         $http.defaults.headers.common['Accept'] = 'application/ld+json';
         var transform = function (data) {

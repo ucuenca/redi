@@ -11,7 +11,7 @@ pieChart.directive('cloudTag', ["d3", 'sparqlQuery',
         var chart, clear, click, collide, collisionPadding, connectEvents, data, force, gravity, hashchange, height, idValue, jitter, label, margin, maxRadius, minCollisionRadius, mouseout, mouseover, node, rScale, rValue, textValue, tick, transformData, update, updateActive, updateLabels, updateNodes, width;
         var scope;
         var attrs;
-        
+
         width;// = 980;
         height;// = 510;
         data = [];
@@ -24,7 +24,7 @@ pieChart.directive('cloudTag', ["d3", 'sparqlQuery',
             bottom: 0,
             left: 0
         };
-        maxRadius = 65;
+        maxRadius = 35;
         rScale = d3.scale.sqrt().range([0, maxRadius]);
         rValue = function (d) {
             return parseInt(d.value);
@@ -175,8 +175,6 @@ pieChart.directive('cloudTag', ["d3", 'sparqlQuery',
             return location.replace("#");
         };
         click = function (d) {
-            //   location.replace("#" + encodeURIComponent(idValue(d)));
-
 
             //adding information about publications of THIS keyword into "tree-node-info"   DIV
             var infoBar = $('div.tree-node-info');
@@ -236,11 +234,6 @@ pieChart.directive('cloudTag', ["d3", 'sparqlQuery',
                         if (compacted)
                         {
                             var entity = compacted["@graph"];
-                            //     infoBar.find('h4').text("Publication Info");
-
-//                        infoBar.find('div#title').text("Title: " + entity["dcterms:title"]);
-//                        infoBar.find('a').attr('href', "http://190.15.141.85:8080/marmottatest/meta/text/html?uri=" + entity["@id"])
-//                                .text("More Info...");
                             var final_entity = _.where(entity, {"@type": "bibo:Document"});
                             var values = final_entity.length ? final_entity : [final_entity];
                             //send data to getKeywordTag Controller
@@ -315,7 +308,7 @@ pieChart.directive('cloudTag', ["d3", 'sparqlQuery',
             height = heightEl;
             scope = scopeEl;
             attrs = attrsEl;
- 
+
             force = d3.layout.force().gravity(0).charge(0).size([width, height]).on("tick", tick);
             element.datum(data).call(chart);
 
@@ -328,11 +321,6 @@ pieChart.directive('cloudTag', ["d3", 'sparqlQuery',
                 data: '='
             },
             compile: function (element, attrs, transclude) {
-                //	Create	a	SVG	root	element
-                /*var	svg	=	d3.select(element[0]).append('svg');
-                 svg.append('g').attr('class', 'data');
-                 svg.append('g').attr('class', 'x-axis axis');
-                 svg.append('g').attr('class', 'y-axis axis');*/
                 //	Define	the	dimensions	for	the	chart
                 //var width = 960, height = 500;
                 var elementWidth = parseInt(element.css('width'));
@@ -340,28 +328,14 @@ pieChart.directive('cloudTag', ["d3", 'sparqlQuery',
                 var width = attrs.ctWidth ? attrs.ctWidth : elementWidth;
                 var height = attrs.ctHeight ? attrs.ctHeight : elementHeight;
 
-
-
+                //	Create	a	SVG	root	element
                 var svg = d3.select(element[0]);
 
                 //	Return	the	link	function
                 return	function (scope, element, attrs) {
                     //	Watch	the	data	attribute	of	the	scope
-                    /*scope.$watch('$parent.logs', function(newVal, oldVal, scope) {
-                     //	Update	the	chart
-                     var data = scope.$parent.logs.map(function(d) {
-                     return {
-                     x: d.time,
-                     y: d.visitors
-                     }
-                     
-                     });
-                     
-                     draw(svg, width, height, data);
-                     },	true);*/
                     scope.$watch('data', function (newVal, oldVal, scope) {
                         //	Update	the	chart
-
                         var data = scope.data;
                         if (data) {
                             var jsonld = data.data;
@@ -374,7 +348,6 @@ pieChart.directive('cloudTag', ["d3", 'sparqlQuery',
                             draw(svg, width, height, mappedData, scope, attrs);
                         }
                     }, true);
-
                 };
             }
         };
