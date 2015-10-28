@@ -108,4 +108,25 @@ public class PubWebService {
         String result = resultjson.toString();
         return Response.ok().entity(result).build(); 
     }
+    public static final String COUNT_PUBLICATIONS = "/count_publications_graph";
+    /**
+     * @Author Freddy Sumba. Service that count the publications in the provider
+     * an central graph.
+     * @param resultType
+     * @param request
+     * @return
+     */
+    @POST
+    @Path(COUNT_PUBLICATIONS)
+    public Response CountPublicationsPost(@QueryParam("Endpoint") String resultType, @Context HttpServletRequest request) {
+        String params = resultType;
+        log.debug("Publications Task Count", params);
+        return runPublicationsCountTask(params);
+    }
+
+    private Response runPublicationsCountTask(String urisString) {
+        String result = commonService.CountPublications();
+        return Response.ok().entity(result).build();
+    }
+
 }

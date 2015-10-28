@@ -9,7 +9,7 @@ package org.apache.marmotta.ucuenca.wk.pubman.api;
  *
  * @author Satellite
  */
-public interface Data2GlobalGraph {
-    String LoadData2GlobalGraph();
+public interface CountPublicationsService {
+    String CountPublicationsService();
     
 }
