@@ -100,7 +100,7 @@ public interface QueriesService {
     String getMembersQuery();
 
     String getPublicationFromProviderQuery();
-    
+
     String getPublicationForExternalAuthorFromProviderQuery(String property);
 
     String getPublicationPropertiesQuery();
@@ -123,5 +123,9 @@ public interface QueriesService {
     String getPublicationsCount(String graph);
 
     String getTotalAuthorWithPublications(String graph);
+
+    String getPublicationsCountCentralGraph();
+
+    String deleteDataGraph(String graph);
 
 }
