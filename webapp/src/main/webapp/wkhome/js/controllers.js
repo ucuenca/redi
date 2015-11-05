@@ -327,7 +327,7 @@ wkhomeControllers.controller('getKeywordsTag', ['$scope', 'sparqlQuery',
                 + 'SELECT ?keyword ?k (COUNT(DISTINCT(?subject)) AS ?totalPub) WHERE { ?subject bibo:Quote ?k . '
                 + 'BIND(IRI(?k) AS ?keyword) . } '
                 + 'GROUP BY ?keyword ?k '
-                + 'HAVING(?totalPub > 50 && ?totalPub < 100) '
+                + 'HAVING(?totalPub > 25 && ?totalPub < 200) '
                 //+'ORDER BY DESC(?totalPub) '
                 + '}';
         sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
