@@ -331,13 +331,24 @@ public class Queries implements QueriesService {
 
     @Override
     public String getPublicationsCount(String graph) {
-        return "SELECT  (COUNT(?publicationResource) AS ?total)WHERE { \n"
+        return "SELECT  (COUNT(distinct ?publicationResource) AS ?total)WHERE { \n"
                 + "                 graph  <" + graph + "> \n"
                 + "                 {  \n"
                 + "                 ?authorResource owl:sameAs   ?authorNative. \n"
                 + "                 ?authorNative ?pubproperty ?publicationResource. \n"
                 + "                 \n"
                 + "                 }}";
+    }
+
+    @Override
+    public String getPublicationsCountCentralGraph() {
+        return "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                + "               SELECT   (COUNT(distinct ?authorNative) as ?total) WHERE { \n"
+                + "                                 graph  <http://ucuenca.edu.ec/wkhuska> \n"
+                + "                                {  \n"
+                + "                                 ?authorResource foaf:publications  ?authorNative\n"
+                + "                                \n"
+                + "                                 }}";
     }
 
     @Override
@@ -350,6 +361,17 @@ public class Queries implements QueriesService {
                 + "                 ?authorResource foaf:publications  ?authorNative\n"
                 + "                 \n"
                 + "                 }}";
+    }
+
+    @Override
+    public String deleteDataGraph(String graph) {
+        return "DELETE  { \n"
+                + "   ?s ?p ?o } \n"
+                + "where\n"
+                + "{\n"
+                + "graph <" + graph + "> {\n"
+                + "  ?s ?p ?o }\n"
+                + "}";
     }
 
 }
