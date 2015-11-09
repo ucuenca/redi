@@ -14,6 +14,9 @@
   <link rel="stylesheet" href="css/visuals/cloudGroup.css" type="text/css">
   <link rel="stylesheet" href="css/visuals/chart.css">
   <link rel="stylesheet" href="css/visuals/geoplain.css">
+  <link rel="stylesheet" href="css/visuals/map-sources.css">
+  
+  
   <script src="../bower_components/jquery/dist/jquery.js"></script>
   <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="../bower_components/underscore/underscore-min.js"></script>
@@ -27,11 +30,12 @@
   <script src="../bower_components/angular-route/angular-route.js"></script>
   <script src="../bower_components/angular-resource/angular-resource.js"></script>
   <script src="../bower_components/angular-ui-bootstrap/src/pagination/pagination.js"></script>
-  <script src="../bower_components/d3/d3.js"></script>
-  <script src="../bower_components/d3-tip/index.js"></script>
-  <script src="../bower_components/d3-geo-projection/d3.geo.projection.min.js"></script>
   <script src="../bower_components/topojson/topojson.js"></script>
   <script src="../bower_components/underscore/underscore-min.js"></script>
+  <script src="../bower_components/d3/d3.js"></script>
+  <script src="js/components/d3.geo.js"></script>
+  <script src="../bower_components/d3-tip/index.js"></script>
+  
   <script src="js/components/waitingDialog.js"></script>
   <script src="js/app.js"></script>
   <script src="js/animations.js"></script>
@@ -40,6 +44,7 @@
   <script src="js/filters.js"></script>
   <script src="js/services.js"></script>
   <!--<script src="js/escript.js"></script>-->
+
   
   <script src="js/visuals/pieChart.js"></script>
   <script src="js/visuals/explorableTree.js"></script>
@@ -47,6 +52,7 @@
   <script src="js/visuals/cloudGroup.js"></script>
   <!--<script src="js/visuals/chart.js"></script>-->
   <script src="js/visuals/genericCloud.js"></script>
+  <script src="js/visuals/maps-view.js"></script>
   <!--<script src="js/visuals/geoplain.js"></script>-->
   
 </head>
@@ -71,8 +77,10 @@
           <ul class="nav navbar-nav">
               <li ><a href="#/">Home<span class="sr-only">(current)</span></a></li>
             <li><a href="#/tags/cloud">Tag Cloud</a></li>
-            <li><a href="#/cloud/autornames">Authors Cloud</a></li>
-           
+            <li><a href="#/cloud/group-by">Group By</a></li>
+            <li><a href="#/geo-views/sources">Map</a></li>
+       <!--     <li><a href="geo-views/sources.html">Map</a></li> -->
+
             
             <!-- <li><img src="images/cedia-logo.png"></li> -->
             <!--

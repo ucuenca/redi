@@ -52,7 +52,7 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
 
             var dataMapping = getDataMapping(dataToDraw, size);
 
-            var padding = 20;
+            var padding = 15;
             var maxRadius = d3.max(_.pluck(dataMapping, 'radius'));
 
             var maximums = {
@@ -247,9 +247,10 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
                     html: true,
                     content: function () {
                         return "Title: " + d.title + "<br />" +
-                                //"Uri: " + d.title + "<br />" +
-                                "Keyword: " + d.keyword + "<br />" +
-                                "Abstract: " + d.abstract.substring(0, 50) + "<br />"
+                                "Abstract: " + d.abstract.substring(0, 50) + "<br />" + 
+                                "Author: " + d.author +  "<br />"
+                                "Author Source: " + d.source +  "<br />"
+                        
 //                        "Country: " + d.country + "<br />" +
 //                        "SIC Sector: " + d.sicSector + "<br />" +
 //                        "Last: " + d.lastPrice + " (" + d.pricePercentChange + "%)<br />" +

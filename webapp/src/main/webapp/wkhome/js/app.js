@@ -19,6 +19,7 @@ var wkhomeApp = angular.module('wkhomeApp', [
 wkhomeApp.service('searchData', function () {
   this.authorSearch = null;
   this.genericData = null;
+  this.researchArea = "Semantic Web";
 });
 
 
@@ -59,8 +60,12 @@ wkhomeApp.config(['$routeProvider',
         templateUrl: 'partials/phone-detail.html',
  //       controller: 'ExploreController'
       }).
-      when('/cloud/autornames', {
+      when('/cloud/group-by', {
         templateUrl: 'partials/cloudgroup.html',
+  //      controller: 'ExploreController'
+      }).
+      when('/geo-views/sources', {
+        templateUrl: 'partials/map-sources.html',
   //      controller: 'ExploreController'
       }).
       /*when('/phones/:phoneId', {

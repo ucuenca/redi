@@ -1,5 +1,4 @@
 'use strict';
-
 var explorableTree = angular.module('explorableTree', []);
 //	D3	Factory
 explorableTree.factory('d3', function () {
@@ -8,51 +7,27 @@ explorableTree.factory('d3', function () {
 explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuery',
     function (d3, sparqlQuery, authorRestQuery) {
 
-
-
         var draw = function draw(svg, width, height, data, scope) {
-
-            /*var exampleNode = {"external_urls":{"spotify":"https://open.spotify.com/artist/43ZHCT0cAZBISjO8DG9PnE"},
-             "followers":{"href":null,"total":833907},
-             "genres":["rock-and-roll","rockabilly"],"href":"https://api.spotify.com/v1/artists/43ZHCT0cAZBISjO8DG9PnE",
-             "id":"43ZHCT0cAZBISjO8DG9PnE",
-             "images":[{"height":1296,"url":"https://i.scdn.co/image/c7b8708eab6d0f0902908c1b9f9ba1daaeed06af","width":1000},
-             {"height":829,"url":"https://i.scdn.co/image/e25cb372ca9a5317c17d5f62b3556f76ce2edde8","width":640},
-             {"height":259,"url":"https://i.scdn.co/image/7d0e683d6bb4cbb384586cd6d9007f5a40928251","width":200},
-             {"height":83,"url":"https://i.scdn.co/image/16045a251c9e9f5772d4aeb3f6fa23fe4fdeb54a","width":64}],
-             "name":"Elvis Presley",
-             "popularity":82,
-             "type":"artist",
-             "uri":"spotify:artist:43ZHCT0cAZBISjO8DG9PnE"};
-             var consumedNodes = [];
-             consumedNodes.push(exampleNode);*/
 
             // Misc. variables
             var i = 0;
             var duration = 750;
             var root;
             var rightPaneWidth = 350;
-
             var exploredArtistIds = [];
             var exploredPublicationsIds = [];
-
             // avoid clippath issue by assigning each image its own clippath
             var clipPathId = 0;
-
             var lastExpandedNode;
-
             // size of the diagram
             var viewerWidth = width;
             var viewerHeight = height;
-
             var tree = d3.layout.tree()
                     .size([height, width]);
-
             var diagonal = d3.svg.diagonal()
                     .projection(function (d) {
                         return [d.y, d.x];
                     });
-
             // Define the zoom function for the zoomable tree
 
             function zoom() {
@@ -65,7 +40,6 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                     .attr("height", viewerHeight)
                     .attr("class", "tree-overlay")
                     .call(zoomListener);
-
             function updateWindow() {
                 viewerWidth = $(window).width() - rightPaneWidth;
                 viewerHeight = $(window).height();
@@ -90,168 +64,176 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                 zoomListener.scale(scale);
                 zoomListener.translate([x, y]);
             }
+            //second parameter "if click right event"
+            function setChildrenAndUpdateForAuthor(node, right) {
 
-            function setChildrenAndUpdateForAuthor(node) {
-                var infoBar = $('div.tree-node-info');
-                ///if (infoBar) {
-                var id = node.author["@id"];
-                var author = _.findWhere(node.author.jsonld["@graph"], {"@id": id, "@type": "foaf:Person"});
-                if (!author['foaf:name'] && node.author.jsonld["@graph"].length <= 1) {
-                    infoBar.find('h4').text("Author External Info");
-                    infoBar = $('div.tree-node-info .entityInfo');
-                    //infoBar.find('div#title').text('');
-                    //infoBar.find('div#title').text("Author: " + publication["dcterms:title"]);
-                    var anchor = $("<a target='blank'>").attr('href', id.replace('/xr/', '/')) //SOLO DBLP & MICROSOFT ACADEMICS
-                            .text("Click here for more info...");
 
-                    // 
-                    var context = {
-                        "foaf": "http://xmlns.com/foaf/0.1/",
-                        "dcterms": "http://purl.org/dc/terms/",
-                        "bibo": "http://purl.org/ontology/bibo/",
-                        "cedia": "https://www.cedia.org.ec/"/*,
-                         "publications": {"@id": "http://xmlns.com/foaf/0.1/publications", "@type": "@id"},
-                         "provenance": {"@id": "http://purl.org/dc/terms/provenance"},
-                         "title": {"@id": "http://purl.org/dc/terms/title"}*/
-                    };
-                    var authorToFind = author["@id"];
-                    waitingDialog.show("Searching publications of the external author");
-                    authorRestQuery.query({resource: authorToFind}, function (rdf) {
-
-                        jsonld.compact(rdf, context, function (err, compacted) {
-                            if (!compacted["@graph"])
-                            {
-                                waitingDialog.hide();
-                                alert("Papers not obtained for external author, you can try again");
-                            }
-                            else
-                            {
-                                var rs = compacted;
-                                //if(compacted['@graph']) {
-                                node.author.jsonld["@context"] = _.extend(node.author.jsonld["@context"], context);
-                                node.author.jsonld["@graph"] = _.flatten([node.author.jsonld["@graph"], compacted["@graph"]]);
-
-                                setChildrenAndUpdate('publication', node, node.author.jsonld, {"@type": "bibo:Document"}, context, exploredPublicationsIds);
-                                //} else { //no results
-                                waitingDialog.hide();
-                            }
-                            //}
-                            /*if (!node.children) {
-                             node.children = []
-                             }
-                             
-                             var publications = _.where( node.author.jsonld["@graph"], {"@type": "bibo:Document"} );
-                             
-                             publications.forEach(function(publication) {
-                             
-                             node.children.push(
-                             {
-                             'publication': {'@id': publication["@id"], 
-                             jsonld: {'@context': context, '@graph': [publication] }},
-                             'children': null
-                             }
-                             )
-                             exploredPublicationsIds.push(publication["@id"]);
-                             //exploredArtistIds.push(author.id);
-                             
-                             });
-                             update(node);
-                             centerNode(node);*/
-                        });
-
-                    });
-
-                    infoBar.append(anchor);
-                }
-                else {
-                    //         }// End if (infoBar)
-                    /*var b = jQuery.extend({}, exampleNode);
-                     b.name = b.name + "" + Math.random();
-                     consumedNodes.push(b);
-                     var artists = consumedNodes;*/ //****
-                    //AE.getRelated(node.author.id, exploredArtistIds).then(function(authors) {
-                    var model;
-                    var context = {
-                        "foaf": "http://xmlns.com/foaf/0.1/",
-                        "dcterms": "http://purl.org/dc/terms/",
-                        "bibo": "http://purl.org/ontology/bibo/"/*,
-                         "publications": {"@id": "http://xmlns.com/foaf/0.1/publications", "@type": "@id"},
-                         "provenance": {"@id": "http://purl.org/dc/terms/provenance"},
-                         "title": {"@id": "http://purl.org/dc/terms/title"}*/
-                    };
-                    if (node.author.jsonld["@graph"].length > 1) {
-                        model = node.author.jsonld;
-                        setChildrenAndUpdate('publication', node, model, {"@type": "bibo:Document"}, context, exploredPublicationsIds);
-                    } else {
-                        var nodeId = node.author['@id'];
-                        var queryPublications = ' PREFIX dct: <http://purl.org/dc/terms/> PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
+                if (right)
+                {
+                    var id = node.author["@id"];
+                    var author = _.findWhere(node.author.jsonld["@graph"], {"@id": id, "@type": "foaf:Person"});
+                    if (author["foaf:name"])
+                    {
+                        var sparqlquery = 'PREFIX http: <http://www.w3.org/2011/http#> '
+                                + ' PREFIX dct: <http://purl.org/dc/terms/> '
                                 + ' PREFIX bibo: <http://purl.org/ontology/bibo/> '
-                                + ' CONSTRUCT { '
-                                + ' <' + nodeId + '> foaf:publications ?pub . '
-                                + ' ?pub a bibo:Document . '
-                                + ' ?pub dct:title ?title .   '
-                                + ' ?pub bibo:abstract ?abstract. '
-                                + ' ?pub bibo:uri ?uri. '
-                                + ' ?pub dct:contributor ?contributor. '
-                                + ' ?pub dct:publisher ?publisher. '
-                                + ' ?pub bibo:Quote ?keyword. '
-                                + ' ?pub dct:isPartOf ?isPartOf. '
-                                + ' ?pub bibo:numPages ?numPages. '
-                                + ' } '
-                                + ' WHERE { graph <http://ucuenca.edu.ec/wkhuska> {  '
-                                + ' <' + nodeId + '> foaf:publications ?pub . '
-                                + '?pub dct:title ?title '
-                                + ' OPTIONAL {?pub bibo:abstract ?abstract. } '
-                                + ' OPTIONAL {?pub bibo:uri ?uri. } '
-                                + ' OPTIONAL {?pub dct:contributor ?contributor. } '
-                                + ' OPTIONAL {?pub dct:publisher ?publisher. } '
-                                + ' OPTIONAL {?pub bibo:Quote ?keyword. } '
-                                + ' OPTIONAL {?pub dct:isPartOf ?isPartOf. } '
-                                + ' OPTIONAL {?pub bibo:numPages ?numPages. } '
-                                + ' } }';
+                                + '  PREFIX foaf: <http://xmlns.com/foaf/0.1/>  '
+                                + ' PREFIX uc: <http://ucuenca.edu.ec/wkhuska/resource/>  '
+                                + '  CONSTRUCT { '
+                                + ' <http://ucuenca.edu.ec/wkhuska/resultTitle> a uc:pagetitle. <http://ucuenca.edu.ec/wkhuska/resultTitle> uc:viewtitle "Authors Related With ' + author["foaf:name"] + '" . '
+                                + '        ?subject rdfs:label ?name. '
+                                + '        ?subject uc:total ?totalPub '
+                                + '  } '
+                                + '  WHERE { '
+                                + '  { '
+                                + '     SELECT ?subject (count(?pub) as ?totalPub) ?name '
+                                + '         WHERE { '
+                                + '             GRAPH <http://ucuenca.edu.ec/wkhuska> { '
+                                + '             <' + id + '> foaf:publications ?pub.  '
+                                + '            ?subject foaf:publications ?pub. '
+                                + '            ?subject foaf:name ?name.  } '
+                                + '             } '
+                                + '         GROUP BY ?subject ?name '
+                                + '  }                                                                                  \n\
+                                }';
+                        waitingDialog.show("Loading Authors Related with " + author["foaf:name"]);
+                        sparqlQuery.querySrv({query: sparqlquery}, function (rdf) {
+                            var context = {
+                                "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+                                "foaf": "http://xmlns.com/foaf/0.1/",
+                                "dc": "http://purl.org/dc/elements/1.1/",
+                                "dcterms": "http://purl.org/dc/terms/",
+                                "bibo": "http://purl.org/ontology/bibo/",
+                                "uc": "http://ucuenca.edu.ec/wkhuska/resource/"
+                            };
+                            jsonld.compact(rdf, context, function (err, compacted) {
+                                if (compacted)
+                                {
+                                    var entity = compacted["@graph"];
+                                    //var final_entity = _.where(entity, {"@type": "bibo:Document"});
+                                    var values = entity.length ? entity : [entity];
+                                    //send data to getKeywordTag Controller
+                                    scope.ifrightClick({value: compacted});
+                                    waitingDialog.hide();
+                                }
+                                else
+                                {
+                                    waitingDialog.hide();
+                                }
+                            });
+                        }); // end  sparqlQuery.querySrv(...
+                    }//end if authoir["foaf:name"]
 
-
-
-                        sparqlQuery.querySrv({query: queryPublications}, function (rdf) {
+                }
+                else
+                {
+                    var infoBar = $('div.tree-node-info');
+                    ///if (infoBar) {
+                    var id = node.author["@id"];
+                    var author = _.findWhere(node.author.jsonld["@graph"], {"@id": id, "@type": "foaf:Person"});
+                    if (!author['foaf:name'] && node.author.jsonld["@graph"].length <= 1) {
+                        infoBar.find('h4').text("Author External Info");
+                        infoBar = $('div.tree-node-info .entityInfo');
+                        //infoBar.find('div#title').text('');
+                        //infoBar.find('div#title').text("Author: " + publication["dcterms:title"]);
+                        var anchor = $("<a target='blank'>").attr('href', id.replace('/xr/', '/')) //SOLO DBLP & MICROSOFT ACADEMICS
+                                .text("Click here for more info...");
+                        // 
+                        var context = {
+                            "foaf": "http://xmlns.com/foaf/0.1/",
+                            "dcterms": "http://purl.org/dc/terms/",
+                            "bibo": "http://purl.org/ontology/bibo/",
+                            "cedia": "https://www.cedia.org.ec/"/*,
+                             "publications": {"@id": "http://xmlns.com/foaf/0.1/publications", "@type": "@id"},
+                             "provenance": {"@id": "http://purl.org/dc/terms/provenance"},
+                             "title": {"@id": "http://purl.org/dc/terms/title"}*/
+                        };
+                        var authorToFind = author["@id"];
+                        waitingDialog.show("Searching publications of the external author");
+                        authorRestQuery.query({resource: authorToFind}, function (rdf) {
 
                             jsonld.compact(rdf, context, function (err, compacted) {
-                                var rs = compacted;
-                                //if(compacted['@graph']) {
-                                node.author.jsonld["@context"] = _.extend(node.author.jsonld["@context"], context);
-                                node.author.jsonld["@graph"] = _.flatten([node.author.jsonld["@graph"], compacted["@graph"]]);
-
-                                setChildrenAndUpdate('publication', node, node.author.jsonld, {"@type": "bibo:Document"}, context, exploredPublicationsIds);
-                                //} else { //no results
-
-                                //}
-                                /*if (!node.children) {
-                                 node.children = []
-                                 }
-                                 
-                                 var publications = _.where( node.author.jsonld["@graph"], {"@type": "bibo:Document"} );
-                                 
-                                 publications.forEach(function(publication) {
-                                 
-                                 node.children.push(
-                                 {
-                                 'publication': {'@id': publication["@id"], 
-                                 jsonld: {'@context': context, '@graph': [publication] }},
-                                 'children': null
-                                 }
-                                 )
-                                 exploredPublicationsIds.push(publication["@id"]);
-                                 //exploredArtistIds.push(author.id);
-                                 
-                                 });
-                                 update(node);
-                                 centerNode(node);*/
+                                if (!compacted["@graph"])
+                                {
+                                    waitingDialog.hide();
+                                    alert("Papers not obtained for external author, you can try again");
+                                }
+                                else
+                                {
+                                    var rs = compacted;
+                                    //if(compacted['@graph']) {
+                                    node.author.jsonld["@context"] = _.extend(node.author.jsonld["@context"], context);
+                                    node.author.jsonld["@graph"] = _.flatten([node.author.jsonld["@graph"], compacted["@graph"]]);
+                                    setChildrenAndUpdate('publication', node, node.author.jsonld, {"@type": "bibo:Document"}, context, exploredPublicationsIds);
+                                    //} else { //no results
+                                    waitingDialog.hide();
+                                }
                             });
-
                         });
+                        infoBar.append(anchor);
                     }
+                    else {
+                        //         }// End if (infoBar)
+                        /*var b = jQuery.extend({}, exampleNode);
+                         b.name = b.name + "" + Math.random();
+                         consumedNodes.push(b);
+                         var artists = consumedNodes;*/ //****
+                        //AE.getRelated(node.author.id, exploredArtistIds).then(function(authors) {
+                        var model;
+                        var context = {
+                            "foaf": "http://xmlns.com/foaf/0.1/",
+                            "dcterms": "http://purl.org/dc/terms/",
+                            "bibo": "http://purl.org/ontology/bibo/"/*,
+                             "publications": {"@id": "http://xmlns.com/foaf/0.1/publications", "@type": "@id"},
+                             "provenance": {"@id": "http://purl.org/dc/terms/provenance"},
+                             "title": {"@id": "http://purl.org/dc/terms/title"}*/
+                        };
+                        if (node.author.jsonld["@graph"].length > 1) {
+                            model = node.author.jsonld;
+                            setChildrenAndUpdate('publication', node, model, {"@type": "bibo:Document"}, context, exploredPublicationsIds);
+                        } else {
+                            var nodeId = node.author['@id'];
+                            var queryPublications = ' PREFIX dct: <http://purl.org/dc/terms/> PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
+                                    + ' PREFIX bibo: <http://purl.org/ontology/bibo/> '
+                                    + ' CONSTRUCT { '
+                                    + ' <' + nodeId + '> foaf:publications ?pub . '
+                                    + ' ?pub a bibo:Document . '
+                                    + ' ?pub dct:title ?title .   '
+                                    + ' ?pub bibo:abstract ?abstract. '
+                                    + ' ?pub bibo:uri ?uri. '
+                                    + ' ?pub dct:contributor ?contributor. '
+                                    + ' ?pub dct:publisher ?publisher. '
+                                    + ' ?pub bibo:Quote ?keyword. '
+                                    + ' ?pub dct:isPartOf ?isPartOf. '
+                                    + ' ?pub bibo:numPages ?numPages. '
+                                    + ' } '
+                                    + ' WHERE { graph <http://ucuenca.edu.ec/wkhuska> {  '
+                                    + ' <' + nodeId + '> foaf:publications ?pub . '
+                                    + '?pub dct:title ?title '
+                                    + ' OPTIONAL {?pub bibo:abstract ?abstract. } '
+                                    + ' OPTIONAL {?pub bibo:uri ?uri. } '
+                                    + ' OPTIONAL {?pub dct:contributor ?contributor. } '
+                                    + ' OPTIONAL {?pub dct:publisher ?publisher. } '
+                                    + ' OPTIONAL {?pub bibo:Quote ?keyword. } '
+                                    + ' OPTIONAL {?pub dct:isPartOf ?isPartOf. } '
+                                    + ' OPTIONAL {?pub bibo:numPages ?numPages. } '
+                                    + ' } }';
+                            sparqlQuery.querySrv({query: queryPublications}, function (rdf) {
 
-                }//End else if(!author["foaf:name"] &&  ...
-                //});
+                                jsonld.compact(rdf, context, function (err, compacted) {
+                                    var rs = compacted;                   
+                                    node.author.jsonld["@context"] = _.extend(node.author.jsonld["@context"], context);
+                                    node.author.jsonld["@graph"] = _.flatten([node.author.jsonld["@graph"], compacted["@graph"]]);
+                                    setChildrenAndUpdate('publication', node, node.author.jsonld, {"@type": "bibo:Document"}, context, exploredPublicationsIds);                            
+                                });
+                            });
+                        }
+
+                    }//End else if(!author["foaf:name"] &&  ...
+                    //});
+
+                }//end IF clickright
+
             }
 
             function setChildrenAndUpdate(entityName, node, jsonld, filter, context, stack) {
@@ -273,7 +255,6 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                     child[entityName] = {'@id': entity["@id"],
                         jsonld: {'@context': context, '@graph': [entity], '@id': jsonld['@id']}};
                     child['children'] = null;
-
                     node.children.push(child);
                     stack.push(entity["@id"]);
                 });
@@ -332,9 +313,7 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                                     div.append(anchor);
                                     div.append("</br>");
                                     return anchor;
-
                                 });
-
                             } else { //append into a div container
                                 var div = $('<div>');
                                 var label = $('<span class="label label-primary">').text(model[key].label)
@@ -356,130 +335,8 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                         }
 
                     });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//                    
-//                    
-//                    var sparqlDescribe = 'CONSTRUCT { <' + id + '> ?y ?z } '
-//                            + ' FROM <http://ucuenca.edu.ec/wkhuska> '
-//                            + ' WHERE'
-//                            + ' { '
-//                            + ' <' + id + '> ?y ?z }';
-//                    
-//                    
-//                    
-//                    
-//                    
-//                    
-//
-//                    sparqlQuery.querySrv({query: sparqlDescribe}, function (rdf) {
-//                        var context = {
-//                            "foaf": "http://xmlns.com/foaf/0.1/",
-//                            "dc": "http://purl.org/dc/elements/1.1/",
-//                            "dcterms": "http://purl.org/dc/terms/",
-//                            "bibo": "http://purl.org/ontology/bibo/",
-//                            "uc": "http://ucuenca.edu.ec/"
-//                        };
-//                        jsonld.compact(rdf, context, function (err, compacted) {
-//                            var entity = compacted["@graph"][0];
-//
-//                            var model = {"dcterms:title": {label: "Title", containerType: "div"},
-//                                "bibo:uri": {label: "URL", containerType: "a"},
-//                                "dcterms:contributor": {label: "Contributor", containerType: "a"},
-//                                "dcterms:isPartOf": {label: "Is Part Of", containerType: "a"},
-//                                "dcterms:license": {label: "License", containerType: "a"},
-//                                "dcterms:provenance": {label: "Source", containerType: "div"},
-//                                "dcterms:publisher": {label: "Publisher", containerType: "div"},
-//                                "bibo:numPages": {label: "Pages", containerType: "div"}
-//                            };
-//
-//
-//
-//
-//                            infoBar.find('h4').text("Publication Info");
-//                            infoBar.find('div#title').text("Title: " + entity["dcterms:title"]);
-//                            infoBar.find('a').attr('href', "http://190.15.141.85:8080/marmottatest/meta/text/html?uri=" + entity["@id"])
-//                                    .text("More Info...");
-//                            var pubInfo = $('div.tree-node-info .entityInfo');
-//                            pubInfo.html('');
-//                            _.each(_.keys(model), function (key, idx) {
-//
-//                                if (entity[key]) {
-//                                    if (model[key].containerType == 'a') {
-//                                        var values = entity[key].length ?
-//                                                _.pluck(entity[key], '@id') : [entity[key]["@id"]];
-//                                        var div = $('<div>');
-//                                        var label = $('<span class="label label-primary">').text(model[key].label);
-//                                        div.append(label);
-//                                        div.append("</br>");
-//                                        pubInfo.append(div);
-//                                        _.map(values, function (value) {
-//                                            var anchor = $("<a target='blank'>").attr('href', value).text(value);
-//                                            div.append(anchor);
-//                                            div.append("</br>");
-//                                            return anchor;
-//
-//                                        });
-//
-//                                    } else { //append into a div container
-//                                        var div = $('<div>');
-//                                        var label = $('<span class="label label-primary">').text(model[key].label)
-//                                        div.append(label);
-//                                        div.append("</br>");
-//                                        pubInfo.append(div);
-//                                        var values = entity[key].length ? entity[key] : [entity[key]];
-//                                        if (typeof (values) === 'string') {
-//                                            var span = $('<span class="field-value">').text(values);
-//                                            div.append(span);
-//                                        } else {
-//                                            _.map(values, function (value, idx) {
-//                                                var span = $('<span class="field-value">').text(value);
-//                                                div.append(span);
-//                                                div.append("</br>");
-//                                            });
-//                                        }
-//                                    }
-//                                }
-//
-//                            });
-//                        });
-//
-//                    });//end sparql.queryServ(...
-
-
-
                 }
-                /*
-                 var authors;
-                 AE.getArtistsForGenre(node.genre.name).then(function(authors) {
-                 if (!node.children) {
-                 node.children = []
-                 }
-                 
-                 authors.forEach(function(author) {
-                 node.children.push(
-                 {
-                 'author': author,
-                 'children': null
-                 }
-                 )
-                 exploredArtistIds.push(author.id);
-                 });
-                 update(node);
-                 centerNode(node);
-                 });*/
+
                 var model;
                 var context = {
                     "foaf": "http://xmlns.com/foaf/0.1/",
@@ -496,49 +353,7 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                         coAuthors.push({'@id': val["@id"], '@type': 'foaf:Person'});
                     });
                     var contributorsjsonld = {"@graph": coAuthors};
-
                     setChildrenAndUpdate('author', node, contributorsjsonld, 'foaf:Person', context, exploredArtistIds);
-
-                    var queryAuthors = 'PREFIX dct: <http://purl.org/dc/terms/> PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
-                            + 'CONSTRUCT { <' + nodeId + '> dct:contributor ?con . ?con a foaf:Person . ?con foaf:name ?name } '
-                            + 'WHERE { <' + nodeId + '> dct:contributor ?con . '
-                            + 'OPTIONAL {?con foaf:name ?name. } '
-                            + '}';
-
-
-//                    sparqlQuery.querySrv({query: queryAuthors}, function (rdf) {
-//
-//                        jsonld.compact(rdf, context, function (err, compacted) {
-//                            var rs = compacted;
-//                            node.publication.jsonld["@context"] = _.extend(node.publication.jsonld["@context"], context);
-//                            node.publication.jsonld["@graph"] = _.flatten([node.publication.jsonld["@graph"], compacted["@graph"]]);
-//                            node.publication.jsonld["@id"] = compacted["@id"];
-//
-//                            setChildrenAndUpdate('author', node, node.publication.jsonld, {"@type": "foaf:Person"}, context, exploredArtistIds);
-//                            /*
-//                             
-//                             if (!node.children) {
-//                             node.children = []
-//                             }
-//                             
-//                             var authors = _.where( node.publication.jsonld["@graph"], {"@type": "foaf:Person"} );
-//                             
-//                             authors.forEach(function(author) {
-//                             
-//                             node.children.push(
-//                             {
-//                             'author': {"@id": author['@id'], 
-//                             jsonld: { '@context': context, '@graph': [author], '@id': compacted["@id"] }},
-//                             'children': null
-//                             }
-//                             )
-//                             exploredArtistIds.push(author['@id'])
-//                             });
-//                             update(node);
-//                             centerNode(node);*/
-//                        });
-//
-//                    });  // End sparqlQuery.querySrv
                 }
             }
 
@@ -551,7 +366,6 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                 }
             }
             ;
-
             function initWithGenre(genreName) {
                 return {
                     'genre': {
@@ -561,7 +375,6 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                 }
             }
             ;
-
             function isAuthor(d) {
                 return 'author' in d;
             }
@@ -591,7 +404,20 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                 });
             }
 
-
+            // Toggle children function
+            function toggleChildrenRightClick(d) {
+                if (d.children) {
+                    removeChildrenFromExplored(d);
+                    d.children = null;
+                    update(d, false);
+                    centerNode(d);
+                } else {
+                    if (isAuthor(d)) {
+                        setChildrenAndUpdateForAuthor(d, true);
+                    }
+                }
+                return d;
+            }
             // Toggle children function
             function toggleChildren(d) {
                 if (d.children) {
@@ -601,7 +427,7 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                     centerNode(d);
                 } else {
                     if (isAuthor(d)) {
-                        setChildrenAndUpdateForAuthor(d);
+                        setChildrenAndUpdateForAuthor(d, false);
                     } else if (isPublication(d)) {
                         setChildrenAndUpdateForPub(d);
                     }
@@ -614,64 +440,156 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                 d = toggleChildren(d);
             }
 
+
+            function contextMenu() {
+                var height,
+                        width,
+                        margin = 0.1, // fraction of width
+                        items = [],
+                        rescale = false,
+                        style = {
+                            'rect': {
+                                'mouseout': {
+                                    'fill': 'rgb(244,244,244)',
+                                    'stroke': 'white',
+                                    'stroke-width': '1px'
+                                },
+                                'mouseover': {
+                                    'fill': 'rgb(200,200,200)'
+                                }
+                            },
+                            'text': {
+                                'fill': 'steelblue',
+                                'font-size': '13'
+                            }
+                        };
+                function menu(x, y) {
+                    d3.select('.context-menu').remove();
+                    scaleItems();
+                    // Draw the menu
+                    d3.select('svg')
+                            .append('g').attr('class', 'context-menu')
+                            .selectAll('tmp')
+                            .data(items).enter()
+                            .append('g').attr('class', 'menu-entry')
+                            .style({'cursor': 'pointer'})
+                            .on('mouseover', function () {
+                                d3.select(this).select('rect').style(style.rect.mouseover)
+                            })
+                            .on('mouseout', function () {
+                                d3.select(this).select('rect').style(style.rect.mouseout)
+                            });
+                    d3.selectAll('.menu-entry')
+                            .append('rect')
+                            .attr('x', x)
+                            .attr('y', function (d, i) {
+                                return y + (i * height);
+                            })
+                            .attr('width', width)
+                            .attr('height', height)
+                            .style(style.rect.mouseout);
+                    d3.selectAll('.menu-entry')
+                            .append('text')
+                            .text(function (d) {
+                                return d;
+                            })
+                            .attr('x', x)
+                            .attr('y', function (d, i) {
+                                return y + (i * height);
+                            })
+                            .attr('dy', height - margin / 2)
+                            .attr('dx', margin)
+                            .style(style.text);
+                    // Other interactions
+                    d3.select('body')
+                            .on('click', function () {
+                                d3.select('.context-menu').remove();
+                            });
+                }
+
+                menu.items = function (e) {
+                    if (!arguments.length)
+                        return items;
+                    for (i in arguments)
+                        items.push(arguments[i]);
+                    rescale = true;
+                    return menu;
+                }
+
+                // Automatically set width, height, and margin;
+                function scaleItems() {
+                    if (rescale) {
+                        d3.select('g.tree-node').selectAll('tmp')
+                                .data(items).enter()
+                                .append('text')
+                                .text(function (d) {
+                                    return d;
+                                })
+                                .style(style.text)
+                                .attr('x', -1000)
+                                .attr('y', -1000)
+                                .attr('class', 'tmp');
+                        var z = d3.selectAll('.tmp')[0]
+                                .map(function (x) {
+                                    return x.getBBox();
+                                });
+                        width = d3.max(z.map(function (x) {
+                            return x.width;
+                        }));
+                        margin = margin * width;
+                        width = width + 2 * margin;
+                        height = d3.max(z.map(function (x) {
+                            return x.height + margin / 2;
+                        }));
+                        // cleanup
+                        d3.selectAll('.tmp').remove();
+                        rescale = false;
+                    }
+                }
+
+                return menu;
+            }
+
+            var menu = contextMenu().items('first item', 'second option', 'whatever, man');
             function update(source, expand) {
                 var levelWidth = [1];
                 var childCount = function (level, n) {
                     if (n.children && n.children.length > 0) {
                         if (levelWidth.length <= level + 1)
                             levelWidth.push(0);
-
                         levelWidth[level + 1] += n.children.length;
                         n.children.forEach(function (d) {
                             childCount(level + 1, d);
                         });
                     }
                 };
-
                 childCount(0, root);
                 var newHeight = d3.max(levelWidth) * 100;
                 tree = tree.size([newHeight, viewerWidth]);
-
                 // Compute the new tree layout.
                 var nodes = tree.nodes(root).reverse();
                 var links = tree.links(nodes);
-
                 // Set widths between levels
                 nodes.forEach(function (d) {
                     d.y = (d.depth * 220);
                 });
-
                 // Update the nodes…
                 var node = svgGroup.selectAll("g.tree-node")
                         .data(nodes, function (d) {
                             return d.id || (d.id = ++i);
                         });
-
                 // Tip Creation for title
 
                 var tip = d3.tip()
                         .attr('class', 'tree-d3-tip')
                         .html(function (d) {
                             return ' ';
-                        })
-                        /*.html(function(d) { 
-                         if (isPublication(d)) {
-                         var context = {
-                         "foaf": "http://xmlns.com/foaf/0.1/",
-                         "dc": "http://purl.org/dc/elements/1.1/",
-                         "dcterms": "http://purl.org/dc/terms/",
-                         "bibo": "http://purl.org/ontology/bibo/",
-                         "uc": "http://ucuenca.edu.ec/"
-                         };
-                         var id = d.publication["@id"];
-                         var publication = _.findWhere( d.publication.jsonld["@graph"], {"@id": id, "@type": "bibo:Document"} );
-                         return publication["dcterms:title"];
-                         }
-                         })*/
-                        .direction('se')
-                        .offset([0, 3])
+                        });
+//                        .direction('se')
+//                        .offset([0, 3]);
 
                 // Enter any new nodes at the parent's previous position.
+
                 var nodeEnter = node.enter().append("g")
                         // .call(dragListener)
                         .call(expand ? tip : function () {
@@ -686,30 +604,6 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                                 var id = d.publication["@id"];
                                 var title = _.findWhere(node.publication.jsonld["@graph"], {"@id": id, "@type": "bibo:Document"})["dcterms:title"];
                                 tip.html(title);
-//                                var sparqlDescribe = ' PREFIX dct: <http://purl.org/dc/terms/> '
-//                                        + ' CONSTRUCT { <' + id + '> dct:title ?o. '
-//                                        + ' } '
-//                                        + ' FROM <http://ucuenca.edu.ec/wkhuska>  '
-//                                        + ' WHERE { '
-//                                        + ' <' + id + '> dct:title ?o. '
-//                                        + ' } ';
-//                                //var sparqlDescribe = "DESCRIBE <" + id + ">";  deprecated. Return Excesive Information 
-//                                sparqlQuery.querySrv({query: sparqlDescribe}, function (rdf) {
-//                                    var context = {
-//                                        "foaf": "http://xmlns.com/foaf/0.1/",
-//                                        "dc": "http://purl.org/dc/elements/1.1/",
-//                                        "dcterms": "http://purl.org/dc/terms/",
-//                                        "bibo": "http://purl.org/ontology/bibo/",
-//                                        "uc": "http://ucuenca.edu.ec/"
-//                                    };
-//                                    jsonld.compact(rdf, context, function (err, compacted) {
-//                                        var entity = compacted["@graph"][0]; //only return 1 resource from repository
-//                                        tip.html(entity["dcterms:title"]);
-//
-//                                        //tip.html(function(d){return 'test';});
-//                                        //tip.show(node);
-//                                    });
-//                                });
                                 tip.show(d);
                                 //AE.getInfo(d.author);
                             } else if ('author' in d)
@@ -729,16 +623,17 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                                 //AE.getInfoCancel();
                             }
                         })
+                        .on('contextmenu', function (d) {
+                            d3.event.preventDefault();
+                            toggleChildrenRightClick(d);
+                        })
                         .on('click', click);
-
                 nodeEnter.append("circle")
                         .attr("r", 32)
                         .style("fill", function (d) {
                             return d._children ? "black" : "#fff";
                         });
-
                 clipPathId++;
-
                 nodeEnter.append("clipPath")
                         .attr("id", "clipCircle" + clipPathId)
                         .append("circle")
@@ -834,11 +729,9 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                         .attr("transform", function (d) {
                             return "translate(" + d.y + "," + d.x + ")";
                         });
-
                 // Fade the text in
                 nodeUpdate.select("text")
                         .style("fill-opacity", 1);
-
                 // Transition exiting nodes to the parent's new position.
                 var nodeExit = node.exit().transition()
                         .duration(duration)
@@ -846,19 +739,15 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                             return "translate(" + source.y + "," + source.x + ")";
                         })
                         .remove();
-
                 nodeExit.select("circle")
                         .attr("r", 0);
-
                 nodeExit.select("text")
                         .style("fill-opacity", 0);
-
                 // Update the links…
                 var link = svgGroup.selectAll("path.tree-link")
                         .data(links, function (d) {
                             return d.target.id;
                         });
-
                 // Enter any new links at the parent's previous position.
                 link.enter().insert("path", "g")
                         .attr("class", "tree-link")
@@ -872,12 +761,10 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                                 target: o
                             });
                         });
-
                 // Transition links to their new position.
                 link.transition()
                         .duration(duration)
                         .attr("d", diagonal);
-
                 // Transition exiting nodes to the parent's new position.
                 link.exit().transition()
                         .duration(duration)
@@ -892,7 +779,6 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                             });
                         })
                         .remove();
-
                 // Stash the old positions for transition.
                 nodes.forEach(function (d) {
                     d.x0 = d.x;
@@ -902,7 +788,6 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
 
             // Append a group which holds all nodes and which the zoom Listener can act upon.
             var svgGroup = svg.append("g");
-
             function copyTree(from, to) {
                 if (from.author) {
                     to.author = from.author
@@ -973,43 +858,25 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
             update(root, true);
             centerNode(root);
             click(root);
-
         }
 
         return {
             restrict: 'E',
             scope: {
-                data: '='
+                data: '=',
+                ifrightClick: '&'
             },
             compile: function (element, attrs, transclude) {
-                //	Create	a	SVG	root	element
-                /*var	svg	=	d3.select(element[0]).append('svg');
-                 svg.append('g').attr('class', 'data');
-                 svg.append('g').attr('class', 'x-axis axis');
-                 svg.append('g').attr('class', 'y-axis axis');*/
+               
                 //	Define	the	dimensions	for	the	chart
                 //var width = 960, height = 500;
                 var width = $(element).width(),
                         height = $(element).height();
-
-
+                 //	Create	a	SVG	root	element
                 var svg = d3.select(element[0]).append("svg");
-
                 //	Return	the	link	function
                 return	function (scope, element, attrs) {
                     //	Watch	the	data	attribute	of	the	scope
-                    /*scope.$watch('$parent.logs', function(newVal, oldVal, scope) {
-                     //	Update	the	chart
-                     var data = scope.$parent.logs.map(function(d) {
-                     return {
-                     x: d.time,
-                     y: d.visitors
-                     }
-                     
-                     });
-                     
-                     draw(svg, width, height, data);
-                     },	true);*/
                     scope.$watch('data', function (newVal, oldVal, scope) {
                         //	Update	the	chart
                         if (scope.data &&
@@ -1018,7 +885,6 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                             draw(svg, width, height, data, scope);
                         }
                     }, true);
-
                 };
             }
         };

@@ -104,7 +104,7 @@
                     </div>
                     <div class="col-md-4" ng-controller="totalResearchAreas">
                         <h4>Discovered Research Areas</h4>
-                        <pie-chart data="data" pc-height="230" style="display:block"></pie-chart>
+                        <pie-chart data="data" pc-height="230" style="display:block" if-click="ifClick(value)" ng-model="value"></pie-chart>
                     </div>
 
                 </div>
