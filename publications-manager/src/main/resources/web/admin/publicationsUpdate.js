@@ -120,13 +120,20 @@ function runPublicationsCount(options) {
         url: settings.host + "pubman/count_publications_graph",
         //    url:  "http://localhost:8079/marmotta/authors-module/update",
         success: function (Result) {
-            //document.getElementById("imgloading").style.visibility = "hidden";
+
+            var start = new Date().getTime();
+            for (var i = 0; i < 1e7; i++) {
+                if ((new Date().getTime() - start) > 3000) {
+                    break;
+                }
+            }
+            document.getElementById("imgloading").style.visibility = "hidden";
             alert(Result);
         },
         error: function (data) {
             //document.getElementById("imgloading").style.visibility = "hidden";
             alert("Error" + data.responseText);
-        }        
+        }
     });
 
 }

@@ -49,8 +49,7 @@ public class CountPublicationsServiceImpl implements CountPublicationsService, R
     @Inject
     private SparqlFunctionsService sparqlFunctionsService;
 
-    private String graphCountName = "http://ucuenca.edu.ec/counters";
-
+    private String graphCountName = "http://ucuenca.edu.ec/wkhuska/counters";
     /**
      * graphByProvider Graph to count publications data by provider and central
      * graph.
@@ -62,6 +61,13 @@ public class CountPublicationsServiceImpl implements CountPublicationsService, R
     public String CountPublicationsService() {
         try {
 
+            try {
+                sparqlService.update(QueryLanguage.SPARQL, queriesService.deleteDataGraph("http://ucuenca.edu.ec/wkhuska/counters"));
+                log.error( "Graph was DELETE");
+            } catch (MarmottaException | InvalidArgumentException | MalformedQueryException | UpdateExecutionException ex) {
+                log.error("MARMOTTA: error to delete graph of counters");
+            }
+
             String providerGraph = "";
             //String getAuthorsQuery = queriesService.getAuthorsQuery();
             String getGraphsListQuery = queriesService.getGraphsQuery();
@@ -72,7 +78,7 @@ public class CountPublicationsServiceImpl implements CountPublicationsService, R
                 providerGraph = map.get("grafo").toString();
                 KiWiUriResource providerGraphResource = new KiWiUriResource(providerGraph);
 
-                if (providerGraph.contains("provider") || providerGraph.equals("http://ucuenca.edu.ec/wkhuska")) {
+                if (providerGraph.contains("provider")) {
                     //load the properties of each graph provider
 //                    loadPropertiesProvider(providerGraphResource);
 
@@ -81,13 +87,20 @@ public class CountPublicationsServiceImpl implements CountPublicationsService, R
                         String contPublications = map2.get("total").stringValue();
                         insertPublicationToCentralGraph(providerGraph + "/publications", "http://purl.org/ontology/bibo/number", "\"" + contPublications + "\"", "integer");
                     }
-                    if (providerGraph.equals("http://ucuenca.edu.ec/wkhuska")) {
-                        List<Map<String, Value>> countAuthors = sparqlService.query(QueryLanguage.SPARQL, queriesService.getTotalAuthorWithPublications(providerGraph));
-                        for (Map<String, Value> map3 : countAuthors) {
-                            String contAuthors = map3.get("total").stringValue();
-                            insertPublicationToCentralGraph(providerGraph + "/authors", "http://purl.org/ontology/bibo/number", "\"" + contAuthors + "\"", "integer");
-                        }
+
+                }
+                if (providerGraph.equals("http://ucuenca.edu.ec/wkhuska")) {
+                    List<Map<String, Value>> countAuthors = sparqlService.query(QueryLanguage.SPARQL, queriesService.getTotalAuthorWithPublications(providerGraph));
+                    for (Map<String, Value> map3 : countAuthors) {
+                        String contAuthors = map3.get("total").stringValue();
+                        insertPublicationToCentralGraph(providerGraph + "/authors", "http://purl.org/ontology/bibo/number", "\"" + contAuthors + "\"", "integer");
                     }
+                    List<Map<String, Value>> countPublicationCentral = sparqlService.query(QueryLanguage.SPARQL, queriesService.getPublicationsCountCentralGraph());
+                    for (Map<String, Value> map4 : countPublicationCentral) {
+                        String contPublications = map4.get("total").stringValue();
+                        insertPublicationToCentralGraph(providerGraph + "/publications", "http://purl.org/ontology/bibo/number", "\"" + contPublications + "\"", "integer");
+                    }
+
                 }
             }
 

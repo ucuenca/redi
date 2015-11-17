@@ -10,19 +10,18 @@
 </div>
 <div class="col-md-12" ng-controller="groupTagsController">
     <div class="col-md-3">
-        Tags:
+        Select Research Area:
         <select class="form-control" name="board" id="board" ng-model="selectedItem"  ng-options="key.tag as key.tag for key  in relatedthemes">
             <option value="">Select Theme</option>
         </select>
-
     </div>
 
     <div class="col-md-3">
         Group By:
         <select  var="groupBy" class="form-control" name="group" id="group" ng-model="gbselectedItem" >
-            <option value="noselected">Select Related Tag</option>
-            <option value="keyword">Keyword</option>
-            <option value="publication">Publication</option>
+            <option value="all">All</option>
+            <option value="author">Author</option>
+            <option value="source">Source</option>
         </select>
     </div>
     
