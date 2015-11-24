@@ -1,0 +1,3 @@
+org.apache.marmotta.ucuenca.wk.endpoint.scopus.ScopusAuthorEndpoint
+org.apache.marmotta.ucuenca.wk.endpoint.scopus.ScopusPublicationRawEndpoint
+org.apache.marmotta.ucuenca.wk.endpoint.scopus.ScopusPublicationEndpoint
