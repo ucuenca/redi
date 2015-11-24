@@ -18,6 +18,7 @@ var wkhomeApp = angular.module('wkhomeApp', [
 
 wkhomeApp.service('searchData', function () {
   this.authorSearch = null;
+  this.areaSearch = null;
   this.genericData = null;
   this.researchArea = "Semantic Web";
 });
@@ -35,10 +36,11 @@ wkhomeApp.config(['$routeProvider',
         templateUrl: 'partials/home.html',
 //        controller: 'showSection'
       }).
-      when('/w/search?:text', {
+      when('/w/search?:text', {   //when user search an author in textbox
         templateUrl: 'partials/search.html',
   //      controller: 'ExploreController'
       }).
+               
       when('/w/cloud?:text', {
         templateUrl: 'partials/genericcloud.html',
 //        controller: 'ExploreController'

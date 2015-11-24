@@ -35,9 +35,9 @@ pieChart.directive('cloudTag', ["d3", 'sparqlQuery',
         textValue = function (d) {
             return d.label;
         };
-        collisionPadding = 10;
-        minCollisionRadius = 12;
-        jitter = 0.1;
+        collisionPadding = 1;
+        minCollisionRadius = 2;
+        jitter = 0.08;
         transformData = function (rawData) {
             rawData.forEach(function (d) {
                 d.value = parseInt(d.value);
@@ -46,7 +46,7 @@ pieChart.directive('cloudTag', ["d3", 'sparqlQuery',
         };
         tick = function (e) {
             var dampenedAlpha;
-            dampenedAlpha = e.alpha * 0.1;
+            dampenedAlpha = e.alpha * 0.01;
             node.each(gravity(dampenedAlpha)).each(collide(jitter)).attr("transform", function (d) {
                 return "translate(" + d.x + "," + d.y + ")";
             });
