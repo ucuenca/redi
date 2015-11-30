@@ -226,10 +226,22 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
                         .attr("class", "label")
                         .attr("fill", "red")
                         .text(function (d) {
-                            return d.name
+                            if(d.name != null && (d.name.constructor === Array || d.name instanceof Array))
+                                d.name = d.name[0];
+                            if (d.name != null && (typeof d.name === 'string' || d.name instanceof String)) {
+                                var names = d.name.split(",");
+                                var surname = [""];
+                                var firstName = [""];
+                                if (names[0] != null)
+                                    surname = names[0].trimLeft().split(" ");
+                                if (names[1] != null)
+                                    firstName = names[1].trimLeft().split(" ");
+                                return surname[0] + ", " + firstName[0];
+                            }
+                            return d.name;
                         })
                         .attr("transform", function (d) {
-                            return "translate(" + (d.x + (d.dx / 2)) + ", " + (d.y + 20) + ")";
+                            return "translate(" + (d.x + (d.dx / 2) - 40) + ", " + (d.y + 20) + ")";
                         });
             }
 
