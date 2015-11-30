@@ -56,7 +56,7 @@ genericCloud.directive('genericCloud', ["d3", 'sparqlQuery',
                  }*/      //POSITION OF LABEL
                 return (17 + (margin.left + d.x) - d.dx / 2) + "px";
             }).style("top", function (d) {
-                return (120 + (margin.top + d.y) - d.dy / 2) + "px";
+                return (140 + (margin.top + d.y) - d.dy / 2) + "px";
             });
         };
 

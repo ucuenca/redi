@@ -35,10 +35,10 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
                     Middle: 'darkolivegreen',
                     Bottom: 'orangered'
                 },
-                default: '#4CC1E9'
+                default: '#5882FA'
             };
 
-            var radius = 250;
+            var radius = 350;
             var width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
             var height = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
             var fill = d3.scale.ordinal().range(['#FF00CC', '#FF00CC', '#00FF00', '#00FF00', '#FFFF00', '#FF0000', '#FF0000', '#FF0000', '#FF0000', '#7F0000']);
@@ -52,7 +52,7 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
 
             var dataMapping = getDataMapping(dataToDraw, size);
 
-            var padding = 15;
+            var padding = 8;
             var maxRadius = d3.max(_.pluck(dataMapping, 'radius'));
 
             var maximums = {
@@ -101,7 +101,7 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
                 var max = d3.max(_.pluck(dataM, vname));
                 var newData = dataM;
                 for (var j = 0; j < dataM.length; j++) {
-                    newData[j].radius = (vname != '') ? radius * (dataM[j][vname] / max) : 15;
+                    newData[j].radius = (vname != '') ? radius * (dataM[j][vname] / max) : 8;
                     newData[j].x = dataM[j].x ? dataM[j].x : Math.random() * width;
                     newData[j].y = dataM[j].y ? dataM[j].y : Math.random() * height;
                     newData[j].volumeCategory = getCategory('volume', dataM[j]);
