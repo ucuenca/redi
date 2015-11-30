@@ -1,46 +1,65 @@
-<div class="container-fluid" style="padding-top: 50px;" ng-controller="exploreAuthor">
-    <div class="row">
-      <div class="col-md-9">
-          <explorable-tree data="data" class="tree-main-container" style="display:block; height:100vh"  ifright-Click="ifrightClick(value)" ng-model="value"></explorable-tree>
-      </div>
-      <div class="col-md-3 tree-node-info" style="height:100vh">
-        <h4>Publication Info</h4>
-        <div class="entityInfo">
-        	<!-- <span style="font-weigth:bold">Title: </span> -->
-        	<div id="title" style="font-size:50pt"></div>
-        	<a href="" target="_blank"></a>
-    	  </div>
-      </div>
+
+
+<div class="col-md-2">
+    <div  style="padding: 20px; padding-top: 80px" >
+        <h3 class="text-primary" style="text-align: center; border-top-width: 5px"   class="active">BROWSE</h3>
     </div>
 
-    <div class="modal fade" id="searchResults" tabindex="-1" role="dialog" aria-labelledby="Search Results" aria-hidden="true">
-        <div class="modal-dialog  modal-md">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-              <h4 class="modal-title" id="myModalLabel">Search Results</h4>
+
+    <ul class="nav nav-pills nav-stacked">
+        <li><a href="#/">Home</a></li>
+        <li><a href="#/tags/cloud">Keywords Cloud</a></li>
+        <li><a href="#/cloud/group-by">Group By Keyword</a></li>
+        <!--<li><a href="#/">Research Areas Cloud</a></li>-->
+        <li><a href="#/geo-views/sources">Map View</a></li>
+    </ul>
+
+</div>
+<div class="col-md-10">
+    <div class="container-fluid" style="padding-top: 50px;" ng-controller="exploreAuthor">
+        <div class="row">
+            <div class="col-md-9">
+                <explorable-tree data="data" class="tree-main-container" style="display:block; height:100vh"  ifright-Click="ifrightClick(value)" ng-model="value"></explorable-tree>
             </div>
-            
-              <div class="modal-body">
-                <table class="table table-striped ">
-                  <thead>
-                      <tr>
-                          <th>Author</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      <tr ng-repeat="author in candidates">
-                          <td><a class="candidate" ng-click="selectedAuthor($event, author.id)" href="">{{author.name}}</a></td>
-                      </tr>
-                  </tbody>
-                </table>
-              </div>
-            <!--
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <div class="col-md-3 tree-node-info" style="height:100vh">
+                <h4>Publication Info</h4>
+                <div class="entityInfo">
+                    <!-- <span style="font-weigth:bold">Title: </span> -->
+                    <div id="title" style="font-size:50pt"></div>
+                    <a href="" target="_blank"></a>
+                </div>
             </div>
-            -->
-          </div>
         </div>
-      </div>
+
+        <div class="modal fade" id="searchResults" tabindex="-1" role="dialog" aria-labelledby="Search Results" aria-hidden="true">
+            <div class="modal-dialog  modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Search Results</h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <table class="table table-striped ">
+                            <thead>
+                                <tr>
+                                    <th>Author</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="author in candidates">
+                                    <td><a class="candidate" ng-click="selectedAuthor($event, author.id)" href="">{{author.name}}</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!--
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                    -->
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

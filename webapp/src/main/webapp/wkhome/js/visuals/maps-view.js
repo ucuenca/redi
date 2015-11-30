@@ -11,13 +11,13 @@ cloudGroup.directive('mapView', ["d3", 'sparqlQuery',
         {
             var pubInfo = element;
             pubInfo.html('');
-            var w = 550,
-                    h = 600;
+            var w = 450,
+                h = 600;
             var projection = d3.geo.azimuthal()
                     //  .mode("equidistant")
                     .origin([-84, -1])//lat long origin
                     .scale(4500)
-                    .translate([-140, 230]);
+                    .translate([-250, 230]);
             var path = d3.geo.path()
                     .projection(projection);
             //var svg = d3.select("#map").insert("svg:svg", "h2")
