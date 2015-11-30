@@ -71,8 +71,8 @@ pieChart.directive('pieChart', ["d3", "sparqlQuery",
              
              });*/
             svg
-                    .attr("width", width)
-                    .attr("height", height);
+                    .attr("width", width- 30)
+                    .attr("height", height - 50);
 
 
             var g = svg.append("g");
@@ -83,7 +83,7 @@ pieChart.directive('pieChart', ["d3", "sparqlQuery",
                     .attr("class", "labels");
             g.append("g")
                     .attr("class", "lines");
-            g.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+            g.attr("transform", "translate(" + (width - 30) / 2 + "," + (height - 50) / 2 + ")");
 
             var key = function (d) {
                 return d.data.label;
