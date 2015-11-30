@@ -12,7 +12,7 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
         var color = '';
         function create(svgElement, dataToDraw, groupByOption) {
 
-          
+
             var colors = {
                 exchange: {
                     NYSE: 'red',
@@ -247,10 +247,10 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
                     html: true,
                     content: function () {
                         return "Title: " + d.title + "<br />" +
-                                "Abstract: " + d.abstract.substring(0, 50) + "<br />" + 
-                                "Author: " + d.author +  "<br />"
-                                "Author Source: " + d.source +  "<br />"
-                        
+                                "Abstract: " + d.abstract.substring(0, 50) + "<br />" +
+                                "Author: " + d.author + "<br />"
+                        "Author Source: " + d.source + "<br />"
+
 //                        "Country: " + d.country + "<br />" +
 //                        "SIC Sector: " + d.sicSector + "<br />" +
 //                        "Last: " + d.lastPrice + " (" + d.pricePercentChange + "%)<br />" +
@@ -330,20 +330,29 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
                     scope.$watch('data', function (newVal, oldVal, scope) {
                         //	Update	the	chart
 
-                        if (scope.data && scope.data[0] && scope.data[0]["value"] && scope.data[0]["value"][0]  &&
-                                    (JSON.stringify(newVal[0]["value"][0]["title"] ? newVal[0]["value"][0]["title"] : newVal) != JSON.stringify(oldVal[0]["value"][0] ? oldVal[0]["value"][0]["title"] : oldVal))) {
-                                //var jsonld = data.data;
-                                //var schema = data.schema;
-                                //var fields = schema.fields;
-                                //var mappedData = [];
+
+                        if (scope.data && scope.data[0] && scope.data[0]["value"] && scope.data[0]["value"][0]
+                                && !oldVal) {
+                            var dataToDraw = scope.data[0]["value"];
+                            var groupByOption = scope.data[0]["group"];
+                            create(svg, dataToDraw, groupByOption);
+                        }
+                        else
+
+                        if (scope.data && scope.data[0] && scope.data[0]["value"] && scope.data[0]["value"][0] &&
+                                (JSON.stringify(newVal[0]["value"][0]["title"] ? newVal[0]["value"][0]["title"] : newVal) != JSON.stringify(oldVal[0]["value"][0] ? oldVal[0]["value"][0]["title"] : oldVal))) {
+                            //var jsonld = data.data;
+                            //var schema = data.schema;
+                            //var fields = schema.fields;
+                            //var mappedData = [];
 //                            _.each(jsonld['@graph'], function (keyword, idx) {
 //                                mappedData.push({label: keyword[fields[0]], value: keyword[fields[1]]["@value"]});
 //                            });
-                                var dataToDraw = scope.data[0]["value"];
-                                var groupByOption = scope.data[0]["group"];
-                                create(svg, dataToDraw, groupByOption);
-                            }
-                       
+                            var dataToDraw = scope.data[0]["value"];
+                            var groupByOption = scope.data[0]["group"];
+                            create(svg, dataToDraw, groupByOption);
+                        }
+
                     }, true);
 
                 };
