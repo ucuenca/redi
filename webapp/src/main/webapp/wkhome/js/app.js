@@ -19,7 +19,7 @@ wkhomeApp.service('searchData', function () {
     this.authorSearch = null;
     this.areaSearch = null;
     this.genericData = null;
-    this.allKeywords = null;
+  //  this.allKeywords = null;
     this.researchArea = "Semantic Web";
     
 });

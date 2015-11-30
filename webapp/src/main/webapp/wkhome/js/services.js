@@ -6,6 +6,7 @@ var wkhomeServices = angular.module('wkhomeServices', ['ngResource']);
 
 //For testing purposes
 //wkhomeServices.serverInstance = 'http://190.15.141.85:8080/marmottatest';
+//wkhomeServices.serverInstance = 'http://190.15.141.85:8080/marmotta';
 
 /* Sample of a RESTful client Service */
 wkhomeServices.factory('Phone', ['$resource',
