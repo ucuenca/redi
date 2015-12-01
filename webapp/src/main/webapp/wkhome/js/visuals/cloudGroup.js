@@ -233,9 +233,9 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
                                 var surname = [""];
                                 var firstName = [""];
                                 if (names[0] != null)
-                                    surname = names[0].trimLeft().split(" ");
+                                    surname = names[0].trim().split(" ");
                                 if (names[1] != null)
-                                    firstName = names[1].trimLeft().split(" ");
+                                    firstName = names[1].trim().split(" ");
                                 return surname[0] + ", " + firstName[0];
                             }
                             return d.name;
