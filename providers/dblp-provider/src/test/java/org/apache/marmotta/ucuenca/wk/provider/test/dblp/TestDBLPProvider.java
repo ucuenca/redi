@@ -38,7 +38,7 @@ public class TestDBLPProvider extends ProviderTestBase {
     @Test
     //@Ignore
     public void testDBLP() throws Exception {
-        testResource(DBLP, "all.Victor_Saquicela.sparql");
+       // testResource(DBLP, "all.Victor_Saquicela.sparql");
     }
 
     @Test
