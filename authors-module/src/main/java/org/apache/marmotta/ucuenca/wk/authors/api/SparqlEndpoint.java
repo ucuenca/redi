@@ -70,8 +70,30 @@ public class SparqlEndpoint implements Comparable<SparqlEndpoint> {
      */
     private String resourceId;
 
+    /**
+     * Full name for this endpoint.
+     */
+    private String fullName;
     
+    /**
+     * City name for this endpoint.
+     */
+    private String city;
     
+    /**
+     * Province name for this endpoint.
+     */
+    private String province;
+    
+    /**
+     * Latitude for this endpoint.
+     */
+    private String latitude;
+    
+    /**
+     * Longitude for this endpoint.
+     */
+    private String longitude;
     
     /**
      * The type of the endpoint. Either the name of a data provider, or the special name "NONE" to indicate that
@@ -170,6 +192,46 @@ public class SparqlEndpoint implements Comparable<SparqlEndpoint> {
 
     public void setGraph(String graph) {
         this.graph = graph;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
     }
   
     public boolean isActive() {

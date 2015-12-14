@@ -191,6 +191,11 @@
             tr.append($("<td/>").text("Name"));
             tr.append($("<td/>").text("Endpoint URL"));
             tr.append($("<td/>").text("Graph URI"));
+            tr.append($("<td/>").text("Full Name"));
+            tr.append($("<td/>").text("City"));
+            tr.append($("<td/>").text("Province"));
+            tr.append($("<td/>").text("Latitude"));
+            tr.append($("<td/>").text("Longitude"));
             //tr.append($("<td/>").text("Endpoint"));
             //tr.append($("<td/>").text("Mimetype"));
             //tr.append($("<td/>").text("Expiry"));
@@ -237,6 +242,11 @@
                 $("<td/>").text(ps[i].name || '').appendTo(tr);
                 $("<td/>").text(ps[i].url || '').appendTo(tr);
                 $("<td/>").text(ps[i].graph || '').appendTo(tr);
+                $("<td/>").text(ps[i].fullName || '').appendTo(tr);
+                $("<td/>").text(ps[i].city || '').appendTo(tr);
+                $("<td/>").text(ps[i].province || '').appendTo(tr);
+                $("<td/>").text(ps[i].latitude || '').appendTo(tr);
+                $("<td/>").text(ps[i].longitude || '').appendTo(tr);
                 //$("<td/>").text(ps[i].endpoint || '').appendTo(tr);
                 //$("<td/>").text(ps[i].mimetype != undefined ? ctToString(ps[i].mimetype) : '').appendTo(tr);
                 //$("<td/>").text(ps[i].expiry || '').appendTo(tr);
@@ -358,6 +368,11 @@
             var name = document.getElementById('txtname').value;
             var endpoint = document.getElementById('txtendpoint').value;
             var graphuri = document.getElementById("txtgraphuri").value;
+            var fullname = document.getElementById("txtfullname").value;
+            var city = document.getElementById("txtcity").value;
+            var province = document.getElementById("txtprovince").value;
+            var latitude = document.getElementById("txtlatitude").value;
+            var longitude = document.getElementById("txtlongitude").value;
 
             if (name == '') {
                 alert("name may not be empty!");
@@ -371,10 +386,35 @@
                 alert("graphuri may not be empty!");
                 return;
             }
+            if (fullname == '') {
+                alert("fullname may not be empty!");
+                return;
+            }
+            if (city == '') {
+                alert("city may not be empty!");
+                return;
+            }
+            if (province == '') {
+                alert("province may not be empty!");
+                return;
+            }
+            if (latitude == '') {
+                alert("latitude may not be empty!");
+                return;
+            }
+            if (longitude == '') {
+                alert("longitude may not be empty!");
+                return;
+            }
             var dataT = {
                 "Name": name,
                 "Endpoint": endpoint,
-                "GraphUri": graphuri
+                "GraphUri": graphuri,
+                "FullName": fullname,
+                "City": city,
+                "Province": province,
+                "Latitude": latitude,
+                "Longitude": longitude
 
             };
 

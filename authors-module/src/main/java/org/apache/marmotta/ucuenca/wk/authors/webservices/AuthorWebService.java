@@ -121,6 +121,11 @@ public class AuthorWebService {
         resultMap.put("name",endpoint.getName());
         resultMap.put("url",endpoint.getEndpointUrl());
         resultMap.put("graph", endpoint.getGraph());
+        resultMap.put("fullName", endpoint.getFullName());
+        resultMap.put("city", endpoint.getCity());
+        resultMap.put("province", endpoint.getProvince());
+        resultMap.put("latitude", endpoint.getLatitude());
+        resultMap.put("longitude", endpoint.getLongitude());
  //       resultMap.put("active", endpoint.isActive());
     
         return resultMap;
@@ -141,7 +146,12 @@ public class AuthorWebService {
                 String name = urisString.split("\"")[3];
                 String endpoint = urisString.split("\"")[7];
                  String graphUri = urisString.split("\"")[11];
-                String result = endpointService.addEndpoint(name, endpoint, graphUri);
+                 String fullName = urisString.split("\"")[15];
+                 String city = urisString.split("\"")[19];
+                 String province = urisString.split("\"")[23];
+                 String latitude = urisString.split("\"")[27];
+                 String longitude = urisString.split("\"")[31];
+                String result = endpointService.addEndpoint(name, endpoint, graphUri, fullName, city, province, latitude, longitude);
                 return Response.ok().entity(result).build();
         }
      
