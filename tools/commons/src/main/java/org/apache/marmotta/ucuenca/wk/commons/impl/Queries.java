@@ -17,6 +17,9 @@ import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
  */
 public class Queries implements QueriesService {
 
+    private String insertData = "INSERT DATA { GRAPH <";
+    private String endpointString = "> { <http://ucuenca.edu.ec/wkhuska/endpoint/";
+    
     @Override
     public String getAuthorsQuery(String datagraph) {
         return "SELECT DISTINCT ?s WHERE { GRAPH <" + datagraph + "> { ?s rdf:type foaf:Person }}";
@@ -96,39 +99,75 @@ public class Queries implements QueriesService {
 
     @Override
     public String getEndpointNameQuery(String endpointsGraph, String name, String resourceHash) {
-        return "INSERT DATA { GRAPH <" + endpointsGraph + "> { <http://ucuenca.edu.ec/wkhuska/endpoint/" + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/name>  \"" + name + "\" }}";
+        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/name>  \"" + name + "\" }}";
     }
 
     @Override
     public String getEndpointUrlQuery(String endpointsGraph, String url, String resourceHash) {
-        return "INSERT DATA { GRAPH <" + endpointsGraph + "> { <http://ucuenca.edu.ec/wkhuska/endpoint/" + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/url>  <" + url + "> }}";
+        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/url>  <" + url + "> }}";
     }
 
     @Override
     public String getEndpointGraphQuery(String endpointsGraph, String graphUri, String resourceHash) {
-        return "INSERT DATA { GRAPH <" + endpointsGraph + "> { <http://ucuenca.edu.ec/wkhuska/endpoint/" + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/graph>  <" + graphUri + "> }}";
+        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/graph>  <" + graphUri + "> }}";
     }
-
+    
+    
+    @Override
+    public String getEndpointFullNameQuery(String endpointsGraph, String fullName, String resourceHash){
+        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/fullName>  \"" + fullName + "\" }}";
+    }
+    
+    @Override
+    public String getEndpointCityQuery(String endpointsGraph, String city, String resourceHash){
+        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/city>  \"" + city + "\" }}";
+    }
+    
+    @Override
+    public String getEndpointProvinceQuery(String endpointsGraph, String province, String resourceHash){
+        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/province>  \"" + province + "\"}}";
+    }
+    
+    @Override
+    public String getEndpointLatitudeQuery(String endpointsGraph, String latitude, String resourceHash){
+        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/latitude>  \"" + latitude + "\"}}";
+    }
+    
+    @Override
+    public String getEndpointLongitudeQuery(String endpointsGraph, String longitude, String resourceHash){
+        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/longitude>  \"" + longitude + "\"}}";
+    }
+    
     @Override
     public String getlisEndpointsQuery(String endpointsGraph) {
-        return "SELECT DISTINCT ?id ?name ?url ?graph  WHERE {  "
+        return "SELECT DISTINCT ?id ?name ?url ?graph ?fullName ?city ?province ?latitude ?longitude  WHERE {  "
                 + " GRAPH <" + endpointsGraph + ">"
                 + " {"
                 + " ?id <http://ucuenca.edu.ec/wkhuska/resource/name> ?name ."
                 + " ?id <http://ucuenca.edu.ec/wkhuska/resource/url> ?url."
                 + " ?id <http://ucuenca.edu.ec/wkhuska/resource/graph> ?graph."
+                + " ?id <http://ucuenca.edu.ec/wkhuska/resource/fullName> ?fullName."
+                + " ?id <http://ucuenca.edu.ec/wkhuska/resource/city> ?city."
+                + " ?id <http://ucuenca.edu.ec/wkhuska/resource/province> ?province."
+                + " ?id <http://ucuenca.edu.ec/wkhuska/resource/latitude> ?latitude."
+                + " ?id <http://ucuenca.edu.ec/wkhuska/resource/longitude> ?longitude."
                 + " }"
                 + " }";
     }
 
     @Override
     public String getEndpointByIdQuery(String endpointsGraph, String id) {
-        return "SELECT DISTINCT ?id ?name ?url ?graph  WHERE {  "
+        return "SELECT DISTINCT ?id ?name ?url ?graph ?fullName ?city ?province ?latitude ?longitude  WHERE {  "
                 + " GRAPH <" + endpointsGraph + ">"
                 + " {"
                 + " ?id <http://ucuenca.edu.ec/wkhuska/resource/name> ?name ."
                 + " ?id <http://ucuenca.edu.ec/wkhuska/resource/url> ?url."
                 + " ?id <http://ucuenca.edu.ec/wkhuska/resource/graph> ?graph."
+                + " ?id <http://ucuenca.edu.ec/wkhuska/resource/fullName> ?fullName."
+                + " ?id <http://ucuenca.edu.ec/wkhuska/resource/city> ?city."
+                + " ?id <http://ucuenca.edu.ec/wkhuska/resource/province> ?province."
+                + " ?id <http://ucuenca.edu.ec/wkhuska/resource/latitude> ?latitude."
+                + " ?id <http://ucuenca.edu.ec/wkhuska/resource/longitude> ?longitude."
                 + " FILTER(?id = <" + id + ">)"
                 + " }"
                 + " }";
