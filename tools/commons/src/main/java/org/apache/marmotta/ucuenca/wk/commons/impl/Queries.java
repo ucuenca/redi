@@ -22,7 +22,8 @@ public class Queries implements QueriesService {
     
     @Override
     public String getAuthorsQuery(String datagraph) {
-        return "SELECT DISTINCT ?s WHERE { GRAPH <" + datagraph + "> { ?s rdf:type foaf:Person }}";
+        return "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
+                + "SELECT DISTINCT ?s WHERE { GRAPH <" + datagraph + "> { ?s rdf:type foaf:Person }}";
     }
 
     @Override
@@ -194,7 +195,8 @@ public class Queries implements QueriesService {
 
     @Override
     public String getCountPersonQuery(String graph) {
-        return " PREFIX foaf: <http://xmlns.com/foaf/0.1/> SELECT (COUNT(?s) as ?count) WHERE { GRAPH <" + graph + "> { ?s rdf:type foaf:Person. }}";
+        return " PREFIX foaf: <http://xmlns.com/foaf/0.1/> PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "
+                + " SELECT (COUNT(?s) as ?count) WHERE { GRAPH <" + graph + "> { ?s rdf:type foaf:Person. }}";
     }
 
     @Override
