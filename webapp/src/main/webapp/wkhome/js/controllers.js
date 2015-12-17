@@ -80,9 +80,6 @@ wkhomeControllers.controller('totalPersonReg', ['$scope', '$window', 'sparqlQuer
                 });
             });
         });
-
-
-
         /*************************************************************/
         /*************************************************************/
         /*query to get the keywords in memory */
@@ -95,18 +92,14 @@ wkhomeControllers.controller('totalPersonReg', ['$scope', '$window', 'sparqlQuer
                     + ' CONSTRUCT { ?keyword rdfs:label ?key } '
                     + '	FROM <http://ucuenca.edu.ec/wkhuska> '
                     + ' WHERE { '
-                    + ' { '
-                    + ' SELECT  ?keyword (count(?key) as ?k) ?key '
+                    + ' SELECT  (count(?key) as ?k) ?key '
                     + ' WHERE { '
-                    + ' ?person foaf:publications ?subject. '
                     + ' ?subject bibo:Quote ?key. '
-                    + ' BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
-                    + ' BIND(IRI(?unickey) as ?keyword) '
+                    + '         BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
+                    + '         BIND(IRI(?unickey) as ?keyword) '
                     + ' } '
-                    + ' group by ?keyword ?key '
-                    + '  order by ?keyword '
-                    + ' } '
-                    + ' filter (?k > 2)'
+                    + ' group by ?keyword  ?key '
+                    + ' HAVING(?k > 10) '
                     + '}';
             sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
                 var context = {
@@ -163,8 +156,6 @@ wkhomeControllers.controller('totalPersonReg', ['$scope', '$window', 'sparqlQuer
                 });
             });
         });
-
-
         //***************************************************//
 
 
@@ -261,7 +252,9 @@ wkhomeControllers.controller('totalResearchAreas', ['$scope', 'sparqlQuery', 'se
     }]);
 wkhomeControllers.controller('groupTagsController', ['$scope', '$timeout', 'sparqlQuery', 'searchData', '$route', '$window',
     function ($scope, $timeout, sparqlQuery, searchData, $window) {
-
+        $('html,body').animate({
+            scrollTop: $("#scrollToTop").offset().top
+        }, "slow");
         $scope.$watch('searchData.areaSearch', function (newValue, oldValue, scope) {
 
             if (searchData.areaSearch) {
@@ -294,34 +287,28 @@ wkhomeControllers.controller('groupTagsController', ['$scope', '$timeout', 'spar
             }
 
         }, true);
-
-
         if (!searchData.allkeywords)
         {
             $scope.themes = [];
-            // waitingDialog.show();
+             waitingDialog.show();
             executeGroupTags();
             function executeGroupTags() {
 
                 //only keywords that appear in more than 2 articles
-                var queryKeywords = 'PREFIX bibo: <http://purl.org/ontology/bibo/> '
-                        + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
-                        + ' CONSTRUCT { ?keyword rdfs:label ?key } '
-                        + '	FROM <http://ucuenca.edu.ec/wkhuska> '
-                        + ' WHERE { '
-                        + ' { '
-                        + ' SELECT  ?keyword (count(?key) as ?k) ?key '
-                        + ' WHERE { '
-                        + ' ?person foaf:publications ?subject. '
-                        + ' ?subject bibo:Quote ?key. '
-                        + ' BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
-                        + ' BIND(IRI(?unickey) as ?keyword) '
-                        + ' } '
-                        + ' group by ?keyword ?key '
-                        + '  order by ?keyword '
-                        + ' } '
-                        + ' filter (?k > 2)'
-                        + '}';
+             var queryKeywords = 'PREFIX bibo: <http://purl.org/ontology/bibo/> '
+                    + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
+                    + ' CONSTRUCT { ?keyword rdfs:label ?key } '
+                    + '	FROM <http://ucuenca.edu.ec/wkhuska> '
+                    + ' WHERE { '
+                    + ' SELECT  (count(?key) as ?k) ?key '
+                    + ' WHERE { '
+                    + ' ?subject bibo:Quote ?key. '
+                    + '         BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
+                    + '         BIND(IRI(?unickey) as ?keyword) '
+                    + ' } '
+                    + ' group by ?keyword  ?key '
+                    + ' HAVING(?k > 10) '
+                    + '}';
                 sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
                     waitingDialog.show();
                     var context = {
@@ -344,6 +331,7 @@ wkhomeControllers.controller('groupTagsController', ['$scope', '$timeout', 'spar
                 $scope.$apply(function () {
                     $scope.relatedthemes = $scope.themes;
                     $scope.selectedItem = searchData.researchArea; // Selected Research Area Filter Default
+                    searchData.allkeywords = $scope.themes;
                 });
             }
             ;
@@ -445,6 +433,9 @@ wkhomeControllers.controller('groupTagsController', ['$scope', '$timeout', 'spar
 
 wkhomeControllers.controller('getKeywordsTag', ['$scope', 'sparqlQuery', 'searchData',
     function ($scope, sparqlQuery, searchData) {
+        $('html,body').animate({
+            scrollTop: $("#scrollToTop").offset().top
+        }, "slow");
         $scope.todos = [];
         $scope.ctrlFn = function (value)
         {
@@ -480,8 +471,6 @@ wkhomeControllers.controller('getKeywordsTag', ['$scope', 'sparqlQuery', 'search
                 });
             });
         };
-
-
         if (!searchData.allkeywordsCloud) // if no load data by default
         {
             waitingDialog.show();
@@ -507,6 +496,7 @@ wkhomeControllers.controller('getKeywordsTag', ['$scope', 'sparqlQuery', 'search
                 jsonld.compact(rdf, context, function (err, compacted) {
                     $scope.$apply(function () {
                         $scope.data = {schema: {"context": context, fields: ["rdfs:label", "uc:total"]}, data: compacted};
+                        searchData.allkeywordsCloud = {schema: {"context": context, fields: ["rdfs:label", "uc:total"]}, data: compacted};
                         waitingDialog.hide();
                     });
                 });
@@ -804,18 +794,14 @@ wkhomeControllers.controller('resourcesMap', ['$scope', '$window', 'sparqlQuery'
                     + ' CONSTRUCT { ?keyword rdfs:label ?key } '
                     + '	FROM <http://ucuenca.edu.ec/wkhuska> '
                     + ' WHERE { '
-                    + ' { '
-                    + ' SELECT  ?keyword (count(?key) as ?k) ?key '
+                    + ' SELECT  (count(?key) as ?k) ?key '
                     + ' WHERE { '
-                    + ' ?person foaf:publications ?subject. '
                     + ' ?subject bibo:Quote ?key. '
-                    + ' BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
-                    + ' BIND(IRI(?unickey) as ?keyword) '
+                    + '         BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
+                    + '         BIND(IRI(?unickey) as ?keyword) '
                     + ' } '
-                    + ' group by ?keyword ?key '
-                    + '  order by ?keyword '
-                    + ' } '
-                    + ' filter (?k > 2)'
+                    + ' group by ?keyword  ?key '
+                    + ' HAVING(?k > 10) '
                     + '}';
             sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
                 var context = {
@@ -831,6 +817,7 @@ wkhomeControllers.controller('resourcesMap', ['$scope', '$window', 'sparqlQuery'
                     $scope.$apply(function () {
                         $scope.relatedtags = $scope.themes;
                         $scope.selectedTagItem = 'Semantic Web';
+                        searchData.allkeywords = $scope.themes;
                     });
                     waitingDialog.hide();
                 });
