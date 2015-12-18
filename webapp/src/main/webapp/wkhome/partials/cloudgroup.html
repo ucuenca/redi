@@ -1,69 +1,128 @@
-<div class="col-md-12 page-header">
-    <h3>.</h3>
-
-
-    <center>
-        <div class="page-header">
-            <h3>PUBLICATIONS BY AUTHORS CLOUD</h3>
-        </div>
-    </center>
-</div>
-<div class="col-md-12" ng-controller="groupTagsController">
-    <div class="col-md-3">
-        Select Research Area:
-        <select class="form-control" name="board" id="board" ng-model="selectedItem"  ng-options="key.tag as key.tag for key  in relatedthemes">
-            <option value="">Select Theme</option>
-        </select>
-    </div>
-
-    <div class="col-md-3">
-        Group By:
-        <select  var="groupBy" class="form-control" name="group" id="group" ng-model="gbselectedItem" >
-            <option value="all">All</option>
-            <option value="author">Author</option>
-            <option value="source">Source</option>
-        </select>
-    </div>
-    
-    
-      <cloud-group data="data" style="display: block; height: 90%"></cloud-group> 
-<!--
-    <div class="col-md-3">
-        Size By:
-        <select class="form-control" name="size" id="size">
-            <option value=""></option>
-            <option value="volume">Volume</option>
-            <option value="lastPrice">Last Price</option>
-            <option value="standardDeviation">Standard Deviation</option>
-        </select>
-    </div>
--->
-<!--
-    <div class="col-md-3">
-        Color By:
-        <select class="form-control" name="color" id="color">
-            <option value=""></option>
-            <option value="exchange">Exchange</option>
-            <option value="volumeCategory">Volume</option>
-            <option value="lastPriceCategory">Last Price</option>
-            <option value="standardDeviationCategory">Standard Deviation</option>
-        </select>
-    </div>
--->
-    <!--  <div class="col">
-          Colors:
-          <div class="row">
-              <div class="colors" style="height:34px;">
-              </div>
-          </div>
-      </div>    -->
-<div class="col-md-12">
-
+<div id="scrollToTop">
 </div> 
-<!-- <div class="col-md-12" id="chart"></div>   -->  
+
+<div class="col-md-2">
+    <div  style="padding: 20px; padding-top: 80px" >
+        <h3 class="text-primary" style="text-align: center; border-top-width: 5px">BROWSE</h3>
+    </div>
+
+
+    <ul class="nav nav-pills nav-stacked">
+        <li><a href="#/">Home</a></li>
+        <li><a href="#/tags/cloud">Keywords Cloud</a></li>
+        <li  class="active"><a href="#/cloud/group-by">Group By Keyword</a></li>
+        <!--<li><a href="#/">Research Areas Cloud</a></li>-->
+        <li><a href="#/geo-views/sources">Map View</a></li>
+    </ul>
 
 </div>
 
+<div class="col-md-10">
+
+    <div class="col-md-12 page-header">
+        <h3>.</h3>
 
 
+        <center>
+            <div class="page-header">
+                <h2 class="text-success">Grouping Publications</h2>
+            </div>
+        </center>
+    </div>
+    <div class="col-md-12" ng-controller="groupTagsController">
+        <div class="col-md-3">
+            <h3 class="text-success" style="text-align: left">Select Research Area:</h3>
+            <select class="form-control" name="board" id="board" ng-model="selectedItem"  ng-options="key.tag as key.tag for key  in relatedthemes">
+                <option value="">Select Theme</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <h3 class="text-success" style="text-align: left">Group By:</h3>
+            <select   class="form-control" name="group" id="group" ng-model="gbselectedItem" >
+                <option value="all">All</option>
+                <option value="author">Author</option>
+                <option value="source">Source</option>
+            </select>
+        </div>
+
+
+        <cloud-group data="data" style="display: block; height: 90%"></cloud-group> 
+        <!--
+            <div class="col-md-3">
+                Size By:
+                <select class="form-control" name="size" id="size">
+                    <option value=""></option>
+                    <option value="volume">Volume</option>
+                    <option value="lastPrice">Last Price</option>
+                    <option value="standardDeviation">Standard Deviation</option>
+                </select>
+            </div>
+        -->
+        <!--
+            <div class="col-md-3">
+                Color By:
+                <select class="form-control" name="color" id="color">
+                    <option value=""></option>
+                    <option value="exchange">Exchange</option>
+                    <option value="volumeCategory">Volume</option>
+                    <option value="lastPriceCategory">Last Price</option>
+                    <option value="standardDeviationCategory">Standard Deviation</option>
+                </select>
+            </div>
+        -->
+        <!--  <div class="col">
+              Colors:
+              <div class="row">
+                  <div class="colors" style="height:34px;">
+                  </div>
+              </div>
+          </div>    -->
+
+        <div class="col-md-6">
+            <div class="modal fade" id="searchResults" tabindex="-1" role="dialog" aria-labelledby="Search Results" aria-hidden="false">
+                <div class="modal-dialog  modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Search Results</h4>
+                        </div>
+
+                        <div class="modal-body">
+                            <table class="table table-striped ">
+                                <thead>
+                                    <tr>
+                                        <th>Research Area</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="area in candidates">
+                                        <td><a class="candidate" ng-click="selectedAuthor($event, area.label)" href="">{{area.label}}</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                        -->
+                    </div>
+                </div>
+            </div>
+        </div>  
+
+
+
+        <div class="col-md-12">
+
+        </div> 
+        <!-- <div class="col-md-12" id="chart"></div>   -->  
+
+
+
+    </div>
+
+
+</div>
 

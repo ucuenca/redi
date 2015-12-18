@@ -3,7 +3,7 @@
     //    overflow:hidden;
       }
       circle {
-        stroke: #555;
+        stroke: #5554;
         stroke-width: 2px;
         opacity: .8;
       }
@@ -15,7 +15,7 @@
         margin-left: 330px;
       }
       .label {
-        font-size: 7px;
+        font-size: 9.5px;
         fill: blue;
       }
       .color-legend {

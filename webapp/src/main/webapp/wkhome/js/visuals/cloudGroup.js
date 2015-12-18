@@ -12,7 +12,7 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
         var color = '';
         function create(svgElement, dataToDraw, groupByOption) {
 
-          
+
             var colors = {
                 exchange: {
                     NYSE: 'red',
@@ -35,10 +35,10 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
                     Middle: 'darkolivegreen',
                     Bottom: 'orangered'
                 },
-                default: '#4CC1E9'
+                default: '#5882FA'
             };
 
-            var radius = 250;
+            var radius = 350;
             var width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
             var height = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
             var fill = d3.scale.ordinal().range(['#FF00CC', '#FF00CC', '#00FF00', '#00FF00', '#FFFF00', '#FF0000', '#FF0000', '#FF0000', '#FF0000', '#7F0000']);
@@ -52,7 +52,7 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
 
             var dataMapping = getDataMapping(dataToDraw, size);
 
-            var padding = 15;
+            var padding = 8;
             var maxRadius = d3.max(_.pluck(dataMapping, 'radius'));
 
             var maximums = {
@@ -101,7 +101,7 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
                 var max = d3.max(_.pluck(dataM, vname));
                 var newData = dataM;
                 for (var j = 0; j < dataM.length; j++) {
-                    newData[j].radius = (vname != '') ? radius * (dataM[j][vname] / max) : 15;
+                    newData[j].radius = (vname != '') ? radius * (dataM[j][vname] / max) : 8;
                     newData[j].x = dataM[j].x ? dataM[j].x : Math.random() * width;
                     newData[j].y = dataM[j].y ? dataM[j].y : Math.random() * height;
                     newData[j].volumeCategory = getCategory('volume', dataM[j]);
@@ -226,10 +226,22 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
                         .attr("class", "label")
                         .attr("fill", "red")
                         .text(function (d) {
-                            return d.name
+                            if(d.name != null && (d.name.constructor === Array || d.name instanceof Array))
+                                d.name = d.name[0];
+                            if (d.name != null && (typeof d.name === 'string' || d.name instanceof String)) {
+                                var names = d.name.split(",");
+                                var surname = [""];
+                                var firstName = [""];
+                                if (names[0] != null)
+                                    surname = names[0].trim().split(" ");
+                                if (names[1] != null)
+                                    firstName = names[1].trim().split(" ");
+                                return surname[0] + ", " + firstName[0];
+                            }
+                            return d.name;
                         })
                         .attr("transform", function (d) {
-                            return "translate(" + (d.x + (d.dx / 2)) + ", " + (d.y + 20) + ")";
+                            return "translate(" + (d.x + (d.dx / 2) - 40) + ", " + (d.y + 20) + ")";
                         });
             }
 
@@ -247,10 +259,10 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
                     html: true,
                     content: function () {
                         return "Title: " + d.title + "<br />" +
-                                "Abstract: " + d.abstract.substring(0, 50) + "<br />" + 
-                                "Author: " + d.author +  "<br />"
-                                "Author Source: " + d.source +  "<br />"
-                        
+                                "Abstract: " + d.abstract.substring(0, 50) + "<br />" +
+                                "Author: " + d.author + "<br />"
+                        "Author Source: " + d.source + "<br />"
+
 //                        "Country: " + d.country + "<br />" +
 //                        "SIC Sector: " + d.sicSector + "<br />" +
 //                        "Last: " + d.lastPrice + " (" + d.pricePercentChange + "%)<br />" +
@@ -330,20 +342,29 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
                     scope.$watch('data', function (newVal, oldVal, scope) {
                         //	Update	the	chart
 
-                        if (scope.data && scope.data[0] && scope.data[0]["value"] && scope.data[0]["value"][0]  &&
-                                    (JSON.stringify(newVal[0]["value"][0]["title"] ? newVal[0]["value"][0]["title"] : newVal) != JSON.stringify(oldVal[0]["value"][0] ? oldVal[0]["value"][0]["title"] : oldVal))) {
-                                //var jsonld = data.data;
-                                //var schema = data.schema;
-                                //var fields = schema.fields;
-                                //var mappedData = [];
+
+                        if (scope.data && scope.data[0] && scope.data[0]["value"] && scope.data[0]["value"][0]
+                                && !oldVal) {
+                            var dataToDraw = scope.data[0]["value"];
+                            var groupByOption = scope.data[0]["group"];
+                            create(svg, dataToDraw, groupByOption);
+                        }
+                        else
+
+                        if (scope.data && scope.data[0] && scope.data[0]["value"] && scope.data[0]["value"][0] &&
+                                (JSON.stringify(newVal[0]["value"][0]["title"] ? newVal[0]["value"][0]["title"] : newVal) != JSON.stringify(oldVal[0]["value"][0] ? oldVal[0]["value"][0]["title"] : oldVal))) {
+                            //var jsonld = data.data;
+                            //var schema = data.schema;
+                            //var fields = schema.fields;
+                            //var mappedData = [];
 //                            _.each(jsonld['@graph'], function (keyword, idx) {
 //                                mappedData.push({label: keyword[fields[0]], value: keyword[fields[1]]["@value"]});
 //                            });
-                                var dataToDraw = scope.data[0]["value"];
-                                var groupByOption = scope.data[0]["group"];
-                                create(svg, dataToDraw, groupByOption);
-                            }
-                       
+                            var dataToDraw = scope.data[0]["value"];
+                            var groupByOption = scope.data[0]["group"];
+                            create(svg, dataToDraw, groupByOption);
+                        }
+
                     }, true);
 
                 };
