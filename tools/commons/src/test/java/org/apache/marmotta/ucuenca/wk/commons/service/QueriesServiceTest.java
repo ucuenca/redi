@@ -16,6 +16,7 @@ import static org.junit.Assert.*;
 
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.junit.Assert;
+import org.junit.Ignore;
 
 /**
  *
@@ -48,6 +49,7 @@ public class QueriesServiceTest {
      * Test of getAuthorsQuery method, of class QueriesService.
      */
     @Test
+    @Ignore
     public void testGetAuthorsQuery() {
         System.out.println("getAuthorsQuery");
         QueriesService instance = new Queries();

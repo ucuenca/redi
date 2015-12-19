@@ -237,6 +237,9 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
             RepositoryConnection conUri = null;
             ClientResponse response = null;
             for (Map<String, Value> map : resultAllAuthors) {
+                if (processedPersons == 100) {
+                    break;
+                }
                 processedPersons++;
                 log.info("Autores procesados con MicrosoftA: " + processedPersons + " de " + allPersons);
                 authorResource = map.get("subject").stringValue();
@@ -299,7 +302,7 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                                 conUri.begin();
                                 String authorNativeResource = null;
 
-                            //THIS DRIVER NO RETURN MEMBERS OF A SEARCH, ALL DATA IS RELATED WITH 1 AUTHOR
+                                //THIS DRIVER NO RETURN MEMBERS OF A SEARCH, ALL DATA IS RELATED WITH 1 AUTHOR
                                 //verifying the number of persons retrieved. if it has recovered more than one persons then the filter is changed and search anew,
 //                        String getMembersQuery = queriesService.getMembersQuery();
 //                        TupleQueryResult membersResult = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getMembersQuery).evaluate();
@@ -333,7 +336,7 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                                         BindingSet tripletsResource = tripletasResult.next();
                                         authorNativeResource = tripletsResource.getValue("authorResource").toString();
                                         String publicationResource = tripletsResource.getValue("publicationResource").toString();
-                                    //String publicationProperty = tripletsResource.getValue("publicationProperty").toString();
+                                        //String publicationProperty = tripletsResource.getValue("publicationProperty").toString();
                                         ///insert sparql query, 
                                         String publicationInsertQuery = buildInsertQuery(providerGraph, authorNativeResource, "http://xmlns.com/foaf/0.1/publications", publicationResource);
                                         updatePub(publicationInsertQuery);

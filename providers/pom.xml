@@ -14,5 +14,6 @@
     <module>dblp-provider</module>
     <module>ma-provider</module>
     <module>gs-provider</module>
+    <module>scopus-provider</module>
   </modules>
 </project>
