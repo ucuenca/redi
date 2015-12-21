@@ -65,7 +65,7 @@ public class TestScopusProvider extends ProviderTestBase {
         try {
             ClientResponse res;
 
-            res = ldclient.retrieveResource("http://api.elsevier.com/content/search/author?query=authfirst%28Mauricio%29authlast%28Espinoza%29&apiKey=a3b64e9d82a8f7b14967b9b9ce8d513d&httpAccept=application/xml");
+            res = ldclient.retrieveResource("http://api.elsevier.com/content/search/author?query=authfirst%28Mauricio%29authlast%28Espinoza%29+AND+affil%28Ecuador%29&apiKey=a3b64e9d82a8f7b14967b9b9ce8d513d&httpAccept=application/xml");
 
                 RDFHandler handler = new RDFXMLPrettyWriter(System.out);
             try {
