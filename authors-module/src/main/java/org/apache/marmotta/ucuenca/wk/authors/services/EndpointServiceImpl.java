@@ -57,6 +57,29 @@ public class EndpointServiceImpl implements EndpointService {
         }
         return "AddEndpoint Error";
     }
+    /**
+     * Funcion que agrega un nuevo endpoint
+     * @param args //String name, String endpointUrl, String graphUri, String fullName, String city, String province, String latitude, String longitude
+     * @return 
+     */
+    public String addEndpoint(String... args) {
+        try {
+            String resourceHash = getHashCode(args[0], args[1], args[2]);
+            addEndpointName(endpointsGraph, args[0], resourceHash);
+            addEndpointUrl(endpointsGraph, args[1], resourceHash);
+            addEndpointGraph(endpointsGraph, args[2], resourceHash);
+            addEndpointFullName(endpointsGraph, args[3], resourceHash);
+            addEndpointCity(endpointsGraph, args[4], resourceHash);
+            addEndpointProvince(endpointsGraph, args[5], resourceHash);
+            addEndpointLatitude(endpointsGraph, args[6], resourceHash);
+            addEndpointLongitude(endpointsGraph, args[7], resourceHash);
+            
+            return "Endpoint Insertado Correctamente";
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "AddEndpoint Error";
+    }
 
     public void addEndpointName(String endpointsGraph, String name, String resourceHash) {
         try {
@@ -81,6 +104,51 @@ public class EndpointServiceImpl implements EndpointService {
         try {
             String queryEndpointGraph = queriesService.getEndpointGraphQuery(endpointsGraph, graphUri, resourceHash);
             sparqlService.update(QueryLanguage.SPARQL, queryEndpointGraph);
+        } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
+            Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void addEndpointFullName(String endpointsGraph, String fullName, String resourceHash) {
+        try {
+            String queryFullName = queriesService.getEndpointFullNameQuery(endpointsGraph, fullName, resourceHash);
+            sparqlService.update(QueryLanguage.SPARQL, queryFullName);
+        } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
+            Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void addEndpointCity(String endpointsGraph, String city, String resourceHash) {
+        try {
+            String queryCity = queriesService.getEndpointCityQuery(endpointsGraph, city, resourceHash);
+            sparqlService.update(QueryLanguage.SPARQL, queryCity);
+        } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
+            Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void addEndpointProvince(String endpointsGraph, String province, String resourceHash) {
+        try {
+            String queryProvince = queriesService.getEndpointProvinceQuery(endpointsGraph, province, resourceHash);
+            sparqlService.update(QueryLanguage.SPARQL, queryProvince);
+        } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
+            Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void addEndpointLatitude(String endpointsGraph, String latitude, String resourceHash) {
+        try {
+            String queryLatitude = queriesService.getEndpointLatitudeQuery(endpointsGraph, latitude, resourceHash);
+            sparqlService.update(QueryLanguage.SPARQL, queryLatitude);
+        } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
+            Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void addEndpointLongitude(String endpointsGraph, String longitude, String resourceHash) {
+        try {
+            String queryLongitude = queriesService.getEndpointLongitudeQuery(endpointsGraph, longitude, resourceHash);
+            sparqlService.update(QueryLanguage.SPARQL, queryLongitude);
         } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
             Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -118,6 +186,11 @@ public class EndpointServiceImpl implements EndpointService {
                 endpoint.setName(singleendpoint.get("name").stringValue());
                 endpoint.setEndpointUrl(singleendpoint.get("url").stringValue());
                 endpoint.setGraph(singleendpoint.get("graph").stringValue());
+                endpoint.setFullName(singleendpoint.get("fullName").stringValue());
+                endpoint.setCity(singleendpoint.get("city").stringValue());
+                endpoint.setProvince(singleendpoint.get("province").stringValue());
+                endpoint.setLatitude(singleendpoint.get("latitude").stringValue());
+                endpoint.setLongitude(singleendpoint.get("longitude").stringValue());
                 result.add(endpoint);
             }
             return result;
@@ -136,6 +209,11 @@ public class EndpointServiceImpl implements EndpointService {
             endpoint.setName(endpointresult.get(0).get("name").stringValue());
             endpoint.setEndpointUrl(endpointresult.get(0).get("url").stringValue());
             endpoint.setGraph(endpointresult.get(0).get("graph").stringValue());
+            endpoint.setFullName(endpointresult.get(0).get("fullName").stringValue());
+            endpoint.setCity(endpointresult.get(0).get("city").stringValue());
+            endpoint.setProvince(endpointresult.get(0).get("province").stringValue());
+            endpoint.setLatitude(endpointresult.get(0).get("latitude").stringValue());
+            endpoint.setLongitude(endpointresult.get(0).get("longitude").stringValue());
             return endpoint;
         } catch (MarmottaException ex) {
             Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);

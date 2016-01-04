@@ -21,6 +21,8 @@ public interface EndpointService {
      * @return 
      */
     String addEndpoint(String name, String endpointUrl, String graphUri);
+    
+    String addEndpoint(String... args);
   
     
     SparqlEndpoint getEndpoint(String resourceId);
