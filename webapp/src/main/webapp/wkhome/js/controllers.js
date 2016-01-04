@@ -99,7 +99,7 @@ wkhomeControllers.controller('totalPersonReg', ['$scope', '$window', 'sparqlQuer
                     + '         BIND(IRI(?unickey) as ?keyword) '
                     + ' } '
                     + ' group by ?keyword  ?key '
-                    + ' HAVING(?k > 10) '
+                    + ' HAVING(?k > 2) '
                     + '}';
             sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
                 var context = {
@@ -629,7 +629,9 @@ wkhomeControllers.controller('SearchController', ['$scope', '$window', 'sparqlQu
             if ($scope.searchText) {
                 console.log($scope.searchText);
                 waitingDialog.show();
-                var queryAuthors = "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
+                var queryAuthors = ""
+                        + " PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
+                        + " PREFIX mm: <http://marmotta.apache.org/vocabulary/sparql-functions#> "
                         + " CONSTRUCT { ?subject a foaf:Person. ?subject foaf:name ?name } "
                         + " WHERE { "
                         + " { "
@@ -638,21 +640,23 @@ wkhomeControllers.controller('SearchController', ['$scope', '$window', 'sparqlQu
                         + "         GRAPH <http://ucuenca.edu.ec/wkhuska> {"
                         + "         ?s a foaf:Person. "
                         + "         ?s foaf:name ?name."
-                        + "         ?s foaf:publications ?pub. {0}"
+                        + "         ?s foaf:publications ?pub. "
+                        //+ "         {0}"
+                        + '         FILTER(mm:fulltext-search(str(?name), "'+$scope.searchText+'")).'
                         + "     } } "
                         + "     GROUP BY ?name "
                         + "  } "
                         + " }";
-                var filterPath = 'FILTER(CONTAINS(UCASE(?name), "{0}" )) . ';
-                var searchTextt = $scope.searchText.trim();
-                var keywords = searchTextt.split(" ");
-                var filterContainer = "";
-                keywords.forEach(function (val) {
-                    if (val.length > 0) {
-                        filterContainer += String.format(filterPath, val.toUpperCase());
-                    }
-                });
-                queryAuthors = String.format(queryAuthors, filterContainer);
+//                var filterPath = 'FILTER(CONTAINS(UCASE(?name), "{0}" )) . ';
+//                var searchTextt = $scope.searchText.trim();
+//                var keywords = searchTextt.split(" ");
+//                var filterContainer = "";
+//                keywords.forEach(function (val) {
+//                    if (val.length > 0) {
+//                        filterContainer += String.format(filterPath, val.toUpperCase());
+//                    }
+//                });
+//                queryAuthors = String.format(queryAuthors, filterContainer);
                 sparqlQuery.querySrv({query: queryAuthors},
                 function (rdf) {
                     var context = {
@@ -671,6 +675,7 @@ wkhomeControllers.controller('SearchController', ['$scope', '$window', 'sparqlQu
                             waitingDialog.show();
                             var queryAuthors = "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
                                     + " PREFIX bibo: <http://purl.org/ontology/bibo/> "
+                                    + " PREFIX mm: <http://marmotta.apache.org/vocabulary/sparql-functions#> "
                                     + " PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
                                     + " CONSTRUCT { ?keywordduri rdfs:label ?k } "
                                     + " WHERE { "
@@ -681,21 +686,22 @@ wkhomeControllers.controller('SearchController', ['$scope', '$window', 'sparqlQu
                                     + "         ?s foaf:publications ?pub. "
                                     + "         ?pub bibo:Quote ?k."
                                     + "         BIND(IRI(?k) AS ?keyword) . "
-                                    + "         {0}"
+                                   // + "         {0}"
+                                    + '         FILTER(mm:fulltext-search(str(?k), "'+$scope.searchText+'")).'
                                     + "     } } "
                                     + "     GROUP BY ?k "
                                     + "  } "
                                     + " }";
-                            var filterPath = 'FILTER(CONTAINS(UCASE(?k), "{0}" )) . ';
-                            var searchTextt = $scope.searchText.trim();
-                            var keywords = searchTextt.split(" ");
-                            var filterContainer = "";
-                            keywords.forEach(function (val) {
-                                if (val.length > 0) {
-                                    filterContainer += String.format(filterPath, val.toUpperCase());
-                                }
-                            });
-                            queryAuthors = String.format(queryAuthors, filterContainer);
+//                            var filterPath = 'FILTER(CONTAINS(UCASE(?k), "{0}" )) . ';
+//                            var searchTextt = $scope.searchText.trim();
+//                            var keywords = searchTextt.split(" ");
+//                            var filterContainer = "";
+//                            keywords.forEach(function (val) {
+//                                if (val.length > 0) {
+//                                    filterContainer += String.format(filterPath, val.toUpperCase());
+//                                }
+//                            });
+                            //queryAuthors = String.format(queryAuthors, filterContainer);
                             sparqlQuery.querySrv({query: queryAuthors},
                             function (rdf) {
                                 var context = {
@@ -845,9 +851,9 @@ wkhomeControllers.controller('resourcesMap', ['$scope', '$window', 'sparqlQuery'
                     + '         ?urikeyword uc:name ?sourcename.  '
                     + '         ?urikeyword uc:lat ?lat. '
                     + '         ?urikeyword uc:long ?long. '
-                    + '         ?urikeyword uc:provincia ?province. '
-                    + '         ?urikeyword uc:ciudad ?city. '
-                    + '         ?urikeyword uc:nombre_completo ?fullname. '
+                    + '         ?urikeyword uc:province ?province. '
+                    + '         ?urikeyword uc:city ?city. '
+                    + '         ?urikeyword uc:fullname ?fullname. '
                     + ' } '
                     + 'WHERE {'
                     + '     SELECT (count(?object) as ?cont) ?provenance  ?urikeyword ?provenance ?sourcename ?lat ?long ?province ?city ?fullname  WHERE {'
@@ -860,11 +866,11 @@ wkhomeControllers.controller('resourcesMap', ['$scope', '$window', 'sparqlQuery'
                     + '             WHERE { '
                     + '                 GRAPH <http://ucuenca.edu.ec/wkhuska/endpoints>  { '
                     + '                     ?provenance uc:name ?sourcename. '
-                    + '                     ?provenance  uc:lat ?lat. '
-                    + '                     ?provenance uc:long ?long. '
-                    + '                     ?provenance uc:provincia ?province. '
-                    + '                     ?provenance uc:ciudad ?city. '
-                    + '                     ?provenance uc:nombre_completo ?fullname.'
+                    + '                     ?provenance  uc:latitude ?lat. '
+                    + '                     ?provenance uc:longitude ?long. '
+                    + '                     ?provenance uc:province ?province. '
+                    + '                     ?provenance uc:city ?city. '
+                    + '                     ?provenance uc:fullName ?fullname.'
                     + '                 } '
                     + '             } '
                     + '         } '
@@ -889,13 +895,13 @@ wkhomeControllers.controller('resourcesMap', ['$scope', '$window', 'sparqlQuery'
                         var model = {};
                         model["id"] = resource["@id"];
                         model["name"] = resource["uc:name"];
-                        model["fullname"] = resource["uc:nombre_completo"];
+                        model["fullname"] = resource["uc:fullname"];
                         model["total"] = resource["uc:totalpublications"]["@value"];
                         model["lat"] = resource["uc:lat"];
                         model["long"] = resource["uc:long"];
                         model["keyword"] = resource["bibo:Quote"];
-                        model["city"] = resource["uc:ciudad"];
-                        model["province"] = resource["uc:provincia"];
+                        model["city"] = resource["uc:city"];
+                        model["province"] = resource["uc:province"];
                         if (model["id"])
                         {
                             $scope.publicationsBySource.push({id: model["id"], name: model["name"], fullname: model["fullname"], total: model["total"], latitude: model["lat"]
