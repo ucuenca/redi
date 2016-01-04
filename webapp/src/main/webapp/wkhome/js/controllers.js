@@ -99,7 +99,7 @@ wkhomeControllers.controller('totalPersonReg', ['$scope', '$window', 'sparqlQuer
                     + '         BIND(IRI(?unickey) as ?keyword) '
                     + ' } '
                     + ' group by ?keyword  ?key '
-                    + ' HAVING(?k > 2) '
+                    + ' HAVING(?k > 10) '
                     + '}';
             sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
                 var context = {
