@@ -653,10 +653,10 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                 nodeEnter.append("image")
                         .attr("xlink:href", function (d) {
                             if (isAuthor(d)) {
-                                return 'images/author-default.png';
+                                return 'wkhome/images/author-default.png';
                                 //return AE.getSuitableImage(d.author.images);
                             } else {
-                                return 'images/document-default.png'
+                                return 'wkhome/images/document-default.png'
                             }
                         })
                         .attr("x", "-32px")
