@@ -31,7 +31,8 @@ wkhomeServices.factory('authorRestQuery', ['$resource', '$http', '$window',
             //return data;
         }
         var serverInstance = wkhomeServices.serverInstance ? wkhomeServices.serverInstance :
-                'http://' + $window.location.hostname + ($window.location.port ? ':8080' : '') + '/marmotta';
+                //'http://' + $window.location.hostname + ($window.location.port ? ':8080' : '') + '/marmotta';
+                'http://' + $window.location.hostname + ($window.location.port ? ':8080' : '') + '';
         return $resource(serverInstance + '/pubman/pubsearch', {}, {
             query: {method: 'POST', isArray: true, transformRequest: transform}
         });
@@ -46,7 +47,8 @@ wkhomeServices.factory('sparqlQuery', ['$resource', '$http', '$window',
             return $.param(data);
         }
         var serverInstance = wkhomeServices.serverInstance ? wkhomeServices.serverInstance :
-                'http://' + $window.location.hostname + ($window.location.port ? ':8080' : '') + '/marmotta';
+                //'http://' + $window.location.hostname + ($window.location.port ? ':8080' : '') + '/marmotta';
+                'http://' + $window.location.hostname + ($window.location.port ? ':8080' : '') + '';
         return $resource(serverInstance + '/sparql/select', {}, {
             querySrv: {method: 'POST', isArray: true, transformRequest: transform}
         });

@@ -30,53 +30,53 @@ wkhomeApp.config(['$routeProvider',
     function ($routeProvider) {
         $routeProvider.
                 when('/', {
-                    templateUrl: 'partials/home.html',
+                    templateUrl: '/wkhome/partials/home.html',
 //        controller: 'indexInformation'
                 }).
                 when('/:section', {
-                    templateUrl: 'partials/home.html',
+                    templateUrl: '/wkhome/partials/home.html',
 //        controller: 'showSection'
                 }).
                 when('/w/search?:text', {//when user search an author in textbox
-                    templateUrl: 'partials/search.html',
+                    templateUrl: '/wkhome/partials/search.html',
                     //      controller: 'ExploreController'
                 }).
                 when('/w/cloud?:text', {
-                    templateUrl: 'partials/genericcloud.html',
+                    templateUrl: '/wkhome/partials/genericcloud.html',
 //        controller: 'ExploreController'
                 }).
                 when('/a/a', {
-                    templateUrl: 'partials/d3.html',
+                    templateUrl: '/wkhome/partials/d3.html',
                     controller: 'MainCtrl'
                 }).
                 when('/b/', {
-                    templateUrl: 'partials/geoplain.html',
+                    templateUrl: '/wkhome/partials/geoplain.html',
                     controller: 'worldPath'
                 }).
                 when('/tags/cloud', {
-                    templateUrl: 'partials/tags.html',
+                    templateUrl: '/wkhome/partials/tags.html',
                     //       controller: 'getKeywordsTag'
                 }).
                 when('/d3/:geoId.json', {
-                    templateUrl: 'partials/phone-detail.html',
+                    templateUrl: '/wkhome/partials/phone-detail.html',
                     //       controller: 'ExploreController'
                 }).
                 when('/cloud/group-by', {
-                    templateUrl: 'partials/cloudgroup.html',
+                    templateUrl: '/wkhome/partials/cloudgroup.html',
                     //      controller: 'ExploreController'
                 }).
                 when('/geo-views/sources', {
-                    templateUrl: 'partials/map-sources.html',
+                    templateUrl: '/wkhome/partials/map-sources.html',
                     //      controller: 'ExploreController'
                 }).
                 when('/info/about', {
-                    templateUrl: 'partials/about.html'
+                    templateUrl: '/wkhome/partials/about.html'
                 }).
                 when('/info/help', {
-                    templateUrl: 'partials/help.html'
+                    templateUrl: '/wkhome/partials/help.html'
                 }).
                 when('/info/contact', {
-                    templateUrl: 'partials/contact.html'
+                    templateUrl: '/wkhome/partials/contact.html'
                 }).
                 /*when('/phones/:phoneId', {
                  templateUrl: 'partials/phone-detail.html',
