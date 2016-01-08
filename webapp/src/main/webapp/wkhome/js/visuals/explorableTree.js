@@ -221,10 +221,10 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                             sparqlQuery.querySrv({query: queryPublications}, function (rdf) {
 
                                 jsonld.compact(rdf, context, function (err, compacted) {
-                                    var rs = compacted;                   
+                                    var rs = compacted;
                                     node.author.jsonld["@context"] = _.extend(node.author.jsonld["@context"], context);
                                     node.author.jsonld["@graph"] = _.flatten([node.author.jsonld["@graph"], compacted["@graph"]]);
-                                    setChildrenAndUpdate('publication', node, node.author.jsonld, {"@type": "bibo:Document"}, context, exploredPublicationsIds);                            
+                                    setChildrenAndUpdate('publication', node, node.author.jsonld, {"@type": "bibo:Document"}, context, exploredPublicationsIds);
                                 });
                             });
                         }
@@ -653,7 +653,14 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                 nodeEnter.append("image")
                         .attr("xlink:href", function (d) {
                             if (isAuthor(d)) {
-                                return 'wkhome/images/author-default.png';
+                                if (d.author.jsonld["@graph"][0]["foaf:name"])
+                                {
+                                    return 'wkhome/images/author-ec.png';
+                                }
+                                else
+                                {
+                                    return 'wkhome/images/author-default.png';
+                                }
                                 //return AE.getSuitableImage(d.author.images);
                             } else {
                                 return 'wkhome/images/document-default.png'
@@ -867,12 +874,12 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                 ifrightClick: '&'
             },
             compile: function (element, attrs, transclude) {
-               
+
                 //	Define	the	dimensions	for	the	chart
                 //var width = 960, height = 500;
                 var width = $(element).width(),
                         height = $(element).height();
-                 //	Create	a	SVG	root	element
+                //	Create	a	SVG	root	element
                 var svg = d3.select(element[0]).append("svg");
                 //	Return	the	link	function
                 return	function (scope, element, attrs) {
