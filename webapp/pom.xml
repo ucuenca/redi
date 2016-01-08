@@ -37,12 +37,12 @@
    	    <!-- For deployment only -->
 	    <marmotta.home>${java.io.tmpdir}${file.separator}Watiqay Khuska</marmotta.home>
 	    <marmotta.context>/</marmotta.context>
-	    <marmotta.port>8079</marmotta.port>
+	    <marmotta.port>8080</marmotta.port>
 	    <marmotta.backend>kiwi</marmotta.backend>
     </properties>
 
     <build>
-        <finalName>marmotta</finalName>
+        <finalName>ROOT</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>
