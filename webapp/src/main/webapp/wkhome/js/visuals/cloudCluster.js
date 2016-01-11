@@ -10,11 +10,9 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
         var group = '';
         var size = '';
         var color = '';
+        var arrayColors = new Array();
+        arrayColors['default'] = '#5882FA';
         function create(svgElement, dataToDraw, groupByOption) {
-
-            var colors = {
-                default: '#5882FA'
-            };
             
             var radius = 350;
             var width = Math.max(document.documentElement.clientWidth * (1- 16.7 / 83.3), window.innerWidth * (1- 16.7 / 83.3) || 0);
@@ -35,15 +33,19 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
             var getCenters = function (vname, size) {
                 var centers, map;
                 centers = _.uniq(_.pluck(dataMapping, vname)).map(function (d) {
-                    var cont = 0;
-                    var i = 0;
                     var keyw = '';
-                    while (d != null && cont == 0 && dataMapping[i] != null) {
-                        if (dataMapping[i].cluster == d){
-                            keyw = dataMapping[i].keyword;
-                            cont++;
+                    if (vname == 'cluster') {
+                        var cont = 0;
+                        var i = 0;
+                        //Finding the keywords of the first node with that cluster name
+                        while (d != null && cont == 0 && dataMapping[i] != null) {
+                            if (dataMapping[i].cluster == d){
+                                keyw = dataMapping[i].keyword;
+                                arrayColors[d] = '#' + Math.floor(Math.random() * 16777215).toString(16);
+                                cont++;
+                            }
+                            i++;
                         }
-                        i++;
                     }
                     return {name: d, value: 1, keyword: keyw};
                 });
@@ -69,7 +71,7 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
                         return d.radius;
                     })
                     .style("fill", function (d, i) {
-                        return colors['default'];
+                        return arrayColors['default'];
                     })
                     .on("mouseover", function (d) {
                         showPopover.call(this, d);
@@ -118,33 +120,29 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
                 force.start();
             });
 
-            $('#color').change(function () {
+            /*$('#color').change(function () {
                 color = this.value;
                 changeColor(this.value);
-            });
+            });*/
 
 
-            function changeColor(val) {
-                console.log(val);
+            function changeColor(groupOption) {
                 d3.selectAll("circle")
                         .transition()
                         .style('fill', function (d) {
-                            return val ? colors[val][d[val]] : colors['default']
+                            if (groupOption == 'cluster') {
+                                return d ? arrayColors[d.cluster] : arrayColors['default'];
+                            } else {
+                                return arrayColors['default'];
+                            }
                         })
-                        .duration(1000);
-
-                $('.colors').empty();
-                if (val) {
-                    for (var label in colors[val]) {
-                        $('.colors').append('<div class="col-xs-1 color-legend" style="background:' + colors[val][label] + ';">' + label + '</div>')
-                    }
-                }
+                        .duration(100);
             }
 
 
             var force = d3.layout.force();
 
-            changeColor(color);
+            //changeColor(color);
             draw(groupByOption);
 
             function draw(varname) {
@@ -153,7 +151,7 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
                 force.on("tick", tick(centers, varname));
                 labels(centers)
                 force.start();
-
+                changeColor(varname);
             }
 
             function tick(centers, varname) {
@@ -186,8 +184,8 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
                         .attr("class", "label")
                         .attr("fill", "red")
                         .text(function (d) {
-                            if(d.keyword != null && (d.keyword.constructor === Array || d.keyword instanceof Array))
-                                d.keyword = d.keyword[0];
+                            //if(d.keyword != null && (d.keyword.constructor === Array || d.keyword instanceof Array))
+                            //    d.keyword = d.keyword[0];
                             if (d.keyword != null && (typeof d.keyword === 'string' || d.keyword instanceof String)) {
                                 var keyArray = d.keyword.toString().split(",");
                                 var keyword = keyArray.length > 0 ? (keyArray[0].length > 1 ? keyArray[0].trim().replace("\"", "").substring(0, 20):'') : '';
