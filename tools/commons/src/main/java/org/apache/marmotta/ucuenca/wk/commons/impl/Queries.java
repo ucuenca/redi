@@ -22,12 +22,6 @@ public class Queries implements QueriesService {
     private String endpointString = "> { <http://ucuenca.edu.ec/wkhuska/endpoint/";
 
     @Override
-    public String getAuthorsQuery(String datagraph) {
-        return "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
-                + "SELECT DISTINCT ?s WHERE { GRAPH <" + datagraph + "> { ?s rdf:type foaf:Person }}";
-    }
-
-    @Override
     public String getRetrieveResourceQuery() {
         return "SELECT ?x ?y ?z WHERE { ?x ?y ?z }";
     }
@@ -466,4 +460,11 @@ public class Queries implements QueriesService {
                 + "}}\n"
                 + "ORDER BY ?property ?hasValue ?isValueOf";
     }
+
+    @Override
+    public String getAuthorsQuery(String datagraph) {
+        return "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
+                + "SELECT DISTINCT ?s WHERE { GRAPH <" + datagraph + "> { ?s rdf:type foaf:Person }}";
+    }
+
 }

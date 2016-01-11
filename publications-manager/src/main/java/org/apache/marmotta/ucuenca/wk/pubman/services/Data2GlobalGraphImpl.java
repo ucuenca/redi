@@ -199,7 +199,7 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
                         List<Map<String, Value>> resultPubProperties = sparqlService.query(QueryLanguage.SPARQL, queriesService.getPublicationsPropertiesQuery(providerGraph, publicationResource));
 
                         for (Map<String, Value> pubproperty : resultPubProperties) {
-                            String nativeProperty = pubproperty.get("publicationProperties").stringValue();
+                            String nativeProperty = pubproperty.get("publicationProperties").toString();
                             if (mapping.get(nativeProperty) != null) {
                                 countNumProperties += 1;
                                 if (countNumProperties > 150) {
@@ -207,7 +207,7 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
                                 }
 
                                 String newPublicationProperty = mapping.get(nativeProperty);
-                                String publicacionPropertyValue = pubproperty.get("publicationPropertyValue").stringValue();
+                                String publicacionPropertyValue = pubproperty.get("publicationPropertyValue").toString();
 
                                 String insertPublicationPropertyQuery = buildInsertQuery(wkhuskaGraph, newInsert ? (uriPublication + publicationTitle) : bufferTitle == null ? (uriPublication + publicationTitle) : bufferTitle, newPublicationProperty, publicacionPropertyValue);
 
@@ -362,7 +362,7 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
 
                     List<Map<String, Value>> resultAuthorProperties = sparqlService.query(QueryLanguage.SPARQL, queriesService.authorDetailsOfProvenance(authorsGraph, authorResource));
                     for (Map<String, Value> property : resultAuthorProperties) {
-                        String insertPubQuery = buildInsertQuery(wkhuskaGraph, newuri, property.get("property").stringValue(), property.get("hasValue").stringValue());
+                        String insertPubQuery = buildInsertQuery(wkhuskaGraph, newuri, property.get("property").stringValue(), queriesService.isURI(property.get("hasValue").stringValue()) ? property.get("hasValue").stringValue() : " " + property.get("hasValue").stringValue() + " ");
                         try {
                             sparqlService.update(QueryLanguage.SPARQL, insertPubQuery);
                         } catch (MalformedQueryException ex) {
