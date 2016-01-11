@@ -2,7 +2,7 @@
 
 /* Controllers */
 
-var wkhomeControllers = angular.module('wkhomeControllers', ['mapView', 'cloudTag', 'pieChart', 'explorableTree', 'cloudGroup', 'genericCloud', 'snapscroll', 'ui.bootstrap.pagination']);
+var wkhomeControllers = angular.module('wkhomeControllers', ['mapView', 'cloudTag', 'pieChart', 'explorableTree', 'cloudGroup', 'cloudCluster', 'genericCloud', 'snapscroll', 'ui.bootstrap.pagination']);
 wkhomeControllers.controller('indexInformation', ['$scope', '$window', 'Phone',
     function ($scope, $window, Phone) {
         $scope.welcome = "Hello World!";
@@ -954,4 +954,223 @@ wkhomeControllers.controller('SnapController', ['$scope', '$window',
             console.log("afterCallback");
         };
     }]);
+wkhomeControllers.controller('clusterTagsController', ['$scope', '$timeout', 'sparqlQuery', 'clustersQuery', 'searchData', '$route', '$window',
+    function ($scope, $timeout, sparqlQuery, clustersQuery, searchData, $window) {
+
+        $('html,body').animate({
+            scrollTop: $("#scrollToTop").offset().top
+        }, "slow");
+        $scope.$watch('searchData.areaSearch', function (newValue, oldValue, scope) {
+
+            if (searchData.areaSearch) {
+                var areaSearch = searchData.areaSearch["@graph"];
+                if (areaSearch) {
+                    //    if (authorSearch.length > 1) {
+                    var candidates = _.map(areaSearch, function (area) {
+                        var model = {};
+                        //var keys = Object.keys(author);
+                        model["id"] = area["@id"];
+                        model["label"] = area["rdfs:label"];
+                        return model;
+                    });
+                    $scope.candidates = candidates;
+                    $scope.selectedAuthor = function ($event, label) {
+                        $('#searchResults').modal('hide');
+                        searchData.researchArea = label;
+                        $scope.selectedItem = label;
+                    };
+                    waitingDialog.hide();
+                    $('#searchResults').modal('show');
+                }//End if(authorSearch)
+                else
+                {
+                    alert("Information not found");
+                    $window.location.hash = "/";
+                    waitingDialog.hide();
+                }
+
+            }
+
+        }, true);
+        if (!searchData.allkeywords)
+        {
+            $scope.themes = [];
+             waitingDialog.show();
+            executeGroupTags();
+            function executeGroupTags() {
+
+                //only keywords that appear in more than 2 articles
+             var queryKeywords = 'PREFIX bibo: <http://purl.org/ontology/bibo/> '
+                    + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
+                    + ' CONSTRUCT { ?keyword rdfs:label ?key } '
+                    + '	FROM <http://ucuenca.edu.ec/wkhuska> '
+                    + ' WHERE { '
+                    + ' SELECT  (count(?key) as ?k) ?key '
+                    + ' WHERE { '
+                    + ' ?subject bibo:Quote ?key. '
+                    + '         BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
+                    + '         BIND(IRI(?unickey) as ?keyword) '
+                    + ' } '
+                    + ' group by ?keyword  ?key '
+                    + ' HAVING(?k > 10) '
+                    + '}';
+                sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
+                    waitingDialog.show();
+                    var context = {
+                        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+                    };
+                    jsonld.compact(rdf, context, function (err, compacted) {
+
+                        _.map(compacted["@graph"], function (pub) {
+                            var model = {};
+                            model["id"] = pub["@id"];
+                            model["tag"] = pub["rdfs:label"];
+                            $scope.themes.push({tag: model["tag"]});
+                        });
+                        applyvalues();
+                        waitingDialog.hide();
+                    });
+                });
+            }
+            function applyvalues() {
+                $scope.$apply(function () {
+                    $scope.relatedthemes = $scope.themes;
+                    $scope.selectedItem = searchData.researchArea; // Selected Research Area Filter Default
+                    searchData.allkeywords = $scope.themes;
+                });
+            }
+            ;
+        }
+        else
+        {
+            $scope.relatedthemes = searchData.allkeywords;
+            $scope.selectedItem = searchData.researchArea;
+        } //  end  if (!searchData.allkeywords)
+
+
+
+        $scope.$watch('gbselectedItem', function () {
+            groupByResources($scope.dataaux, $scope.gbselectedItem);
+        });
+        $scope.$watch('selectedItem', function () {
+            //alert($scope.selectedItem);
+            loadResources($scope.selectedItem, $scope.gbselectedItem); //query and load resource related with selected theme
+        });
+        function groupByResources(values, groupby)//grouByResources resources by ...
+        {
+            // executeDraw(values,groupby);
+            //this activity is cheking directly in cloudGroup.js 
+        }//end grouByResources
+
+        function loadResources(value, groupby)//load resources related with selected keyword
+        {
+            $scope.publicationsByKeyword = [];
+            clustersQuery.success(function(data) {
+                $scope.clusters = data;
+                var myArray = new Array();
+                for (i = 0, len = data.length; i < len; i++) {  
+                    myArray[data[i].cluster.toString()] = myArray[data[i].cluster.toString()] == null ? 1 : myArray[data[i].cluster.toString()] + 1;
+                }
+                for (i = 0, len = data.length; i < len; i++) { 
+                    var numCluster = Number(data[i].cluster.toString().trim());
+                    if (numCluster < 500 && myArray[data[i].cluster.toString()] > 4 ) { 
+                        var model = {};
+                            model["Cluster"] = data[i].cluster;
+                            model["Author"] = data[i].author;
+                            model["Keyword"] = data[i].kw;
+                            model["Title"] = data[i].title.toString();
+                            model["URI"] = data[i].uri;
+                            $scope.$apply(function () {
+                                $scope.publicationsByKeyword.push({cluster: model["Cluster"], author: model["Author"], keyword: model["Keyword"], title: model["Title"], uri: model["URI"]});
+                            });
+                    }
+                }
+                
+                executeDraw($scope.publicationsByKeyword, groupby);
+                searchData.areaSearch = null;
+                
+                /*var model = {};
+                        //model["Publication"] = pub["foaf:publications"]["@id"];
+                        model["Publication"] = pub["id"];
+                        model["Title"] = pub["uc:title"];
+                        model["Source"] = pub["uc:namesource"];
+                        model["Abstract"] = pub["uc:abstract"];
+                        model["Author"] = pub["uc:nameauthor"];
+                        $scope.$apply(function () {
+                            $scope.publicationsByKeyword.push({title: model["Title"], publication: model["Publication"], source: model["Source"], abstract: model["Abstract"], author: model["Author"]});
+                        });*/
+                
+            });
+            
+            /*var queryRelatedPublications = ' PREFIX dct: <http://purl.org/dc/terms/>   '
+                    + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>      '
+                    + ' PREFIX bibo: <http://purl.org/ontology/bibo/>    '
+                    + ' PREFIX uc: <http://ucuenca.edu.ec/wkhuska/resource/> '
+                    + ' construct { '
+                    + '  ?publicationUri uc:title ?title; uc:nameauthor ?nameauthor; uc:namesource ?namesource ; uc:abstract ?abstract '
+                    + ' }'
+                    + ' WHERE'
+                    + ' {'
+                    + '     SELECT ?publicationUri ?title ?nameauthor ?namesource ?abstract '
+                    + '         WHERE {   '
+                    + '             graph <http://ucuenca.edu.ec/wkhuska> { '
+                    + '                     ?subject foaf:publications ?publicationUri .      '
+                    + '                     ?subject foaf:name ?nameauthor.           '
+                    + '                     ?subject dct:provenance ?source.'
+                    + '                     ?publicationUri  dct:title ?title .       '
+                    + '                     OPTIONAL { ?publicationUri bibo:abstract  ?abstract. }     '
+                    + '                     {         '
+                    + '                         ?publicationUri bibo:Quote "' + value + '"^^xsd:string . '
+                    + '                     } UNION     '
+                    + '                     {             '
+                    + '                         ?publicationUri bibo:Quote "' + value + '" .      '
+                    + '                     }       '
+                    + '                     { '
+                    + '                         SELECT * WHERE{ '
+                    + '                             GRAPH <http://ucuenca.edu.ec/wkhuska/endpoints>  { '
+                    + '                                  ?source  <http://ucuenca.edu.ec/wkhuska/resource/name> ?namesource. '
+                    + '                             } '
+                    + '                         }'
+                    + '                     } '
+                    + '             } '
+                    + '         }  '
+                    + ' } ';
+            $scope.publicationsByKeyword = [];
+            sparqlQuery.querySrv({query: queryRelatedPublications}, function (rdf) {
+                var context = {
+                    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+                    "uc": "http://ucuenca.edu.ec/wkhuska/resource/",
+                    "foaf": "http://xmlns.com/foaf/0.1/",
+                    "bibo": "http://purl.org/ontology/bibo/"
+                };
+                jsonld.compact(rdf, context, function (err, compacted) {
+                    _.map(compacted["@graph"], function (pub) {
+                        var model = {};
+                        //model["Publication"] = pub["foaf:publications"]["@id"];
+                        model["Publication"] = pub["id"];
+                        model["Title"] = pub["uc:title"];
+                        model["Source"] = pub["uc:namesource"];
+                        model["Abstract"] = pub["uc:abstract"];
+                        model["Author"] = pub["uc:nameauthor"];
+                        $scope.$apply(function () {
+                            $scope.publicationsByKeyword.push({title: model["Title"], publication: model["Publication"], source: model["Source"], abstract: model["Abstract"], author: model["Author"]});
+                        });
+                    });
+                    executeDraw($scope.publicationsByKeyword, groupby);
+                    searchData.areaSearch = null;
+                }); //end jsonld.compact
+            }); //end sparqlService*/
+        }//end Load Resources
+
+        function executeDraw(dataToDraw, groupby)
+        {
+            $scope.$apply(function () {
+                $scope.data = [{value: dataToDraw, group: groupby}];
+                $scope.dataaux = dataToDraw;
+            });
+        }
+
+
+    }]); //end clusterTagsController 
+
 
