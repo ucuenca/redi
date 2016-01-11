@@ -10,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
+import org.openrdf.model.vocabulary.FOAF;
 
 /**
  *
@@ -215,7 +216,7 @@ public class Queries implements QueriesService {
 
     @Override
     public String getAuthorsDataQuery(String graph) {
-        return " PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
+        return " PREFIX foaf: <" + FOAF.NAMESPACE + "> "
                 + " SELECT * "
                 + " WHERE { GRAPH <" + graph + "> { "
                 + " ?subject a foaf:Person. "
@@ -354,6 +355,18 @@ public class Queries implements QueriesService {
     }
 
     @Override
+    public String getAuthorPublicationsQueryFromProvider(String providerGraph, String authorResource, String prefix) {
+
+        return " SELECT DISTINCT  ?pubproperty ?publicationResource ?title  "
+                + "WHERE {  graph <" + providerGraph + ">  "
+                + "{    <" + authorResource + "> "
+                + "owl:sameAs   ?authorNative.  ?authorNative ?pubproperty ?publicationResource.  "
+                + "?publicationResource <" + prefix + ">  ?title\n"
+                + "\n"
+                + "{ FILTER (regex(?pubproperty,\"authorOf\")) }  UNION { FILTER (regex(?pubproperty,\"pub\")) }                                                                                        }} ";
+    }
+
+    @Override
     public String getPublicationDetails(String publicationResource) {
 
         return "SELECT DISTINCT ?property ?hasValue  WHERE {\n"
@@ -421,4 +434,36 @@ public class Queries implements QueriesService {
                 + "}";
     }
 
+    @Override
+    public String getTitlePublications(String graph) {
+        return "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "PREFIX foaf: <" + FOAF.NAMESPACE + ">\n"
+                + "SELECT *  WHERE { graph <" + graph + ">\n"
+                + "  {?authorResource foaf:publications  ?publicationResource.\n"
+                + "   ?publicationResource dct:title ?title\n"
+                + "  }\n"
+                + "}";
+    }
+
+    @Override
+    public String getFirstNameLastNameAuhor(String graph, String authorResource) {
+        return "PREFIX foaf: <" + FOAF.NAMESPACE + ">\n"
+                + "SELECT distinct (str(?firstname) as ?fname) (str(?lastname) as ?lname) from <" + graph + "> WHERE {\n"
+                + "                <" + authorResource + "> a foaf:Person; \n"
+                + "                 foaf:firstName ?firstname;\n"
+                + "                 foaf:lastName ?lastname;  \n"
+                + "}";
+    }
+
+    @Override
+    public String authorDetailsOfProvenance(String graph, String authorResource) {
+        return "SELECT DISTINCT ?property ?hasValue  WHERE {\n"
+                + "  \n"
+                + "  graph <" + graph + ">{\n"
+                + "  { <" + authorResource + "> ?property ?hasValue }\n"
+                + "UNION\n"
+                + "  { ?isValueOf ?property <" + authorResource + "> }\n"
+                + "}}\n"
+                + "ORDER BY ?property ?hasValue ?isValueOf";
+    }
 }

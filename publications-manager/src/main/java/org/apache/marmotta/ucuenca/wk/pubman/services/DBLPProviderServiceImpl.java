@@ -18,12 +18,7 @@
 package org.apache.marmotta.ucuenca.wk.pubman.services;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import info.aduna.iteration.Iterations;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,7 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
 import org.slf4j.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -50,11 +44,9 @@ import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.PropertyPubService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 
-import org.apache.marmotta.ucuenca.wk.pubman.api.MicrosoftAcadProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
 
 import org.apache.marmotta.ucuenca.wk.pubman.exceptions.PubException;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.marmotta.ucuenca.wk.pubman.api.DBLPProviderService;
 
 import org.openrdf.model.Model;
@@ -77,7 +69,6 @@ import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
 import org.openrdf.model.Value;
 import org.openrdf.query.UpdateExecutionException;
-import org.openrdf.query.impl.TupleQueryResultImpl;
 
 /**
  * Default Implementation of {@link PubVocabService}
@@ -97,8 +88,8 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
     @Inject
     private SparqlFunctionsService sparqlFunctionsService;
 
-    private String namespaceGraph = "http://ucuenca.edu.ec/";
-    private String wkhuskaGraph = namespaceGraph + "wkhuska";
+    private String namespaceGraph = "http://ucuenca.edu.ec/wkhuska/";
+    private String authorGraph = namespaceGraph + "authors";
 
     private int processpercent = 0;
 
@@ -106,7 +97,7 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
      Graph to save publications data by provider
      Example: http://ucuenca.edu.ec/wkhuska/dblp
      */
-    private String graphByProviderNS = wkhuskaGraph + "/provider/";
+    private String graphByProviderNS = namespaceGraph + "wkhuska" + "/provider/";
 
     @Inject
     private SparqlService sparqlService;
@@ -164,9 +155,9 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                         String publicationProperty = pubVocabService.getPubProperty();
 
                         //verificar existencia de la publicacion y su author sobre el grafo general
-                        String askTripletQuery = queriesService.getAskQuery(wkhuskaGraph, authorResource, publicationProperty, publicationResource);
+                        String askTripletQuery = queriesService.getAskQuery(authorGraph, authorResource, publicationProperty, publicationResource);
                         if (!sparqlService.ask(QueryLanguage.SPARQL, askTripletQuery)) {
-                            String insertPubQuery = buildInsertQuery(wkhuskaGraph, authorResource, publicationProperty, publicationResource);
+                            String insertPubQuery = buildInsertQuery(authorGraph, authorResource, publicationProperty, publicationResource);
                             try {
                                 sparqlService.update(QueryLanguage.SPARQL, insertPubQuery);
                             } catch (MalformedQueryException ex) {
@@ -185,7 +176,7 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
 
                                 String newPublicationProperty = mapping.get(nativeProperty);
                                 String publicacionPropertyValue = pubproperty.get("publicationPropertyValue").toString();
-                                String insertPublicationPropertyQuery = buildInsertQuery(wkhuskaGraph, publicationResource, newPublicationProperty, publicacionPropertyValue);
+                                String insertPublicationPropertyQuery = buildInsertQuery(authorGraph, publicationResource, newPublicationProperty, publicacionPropertyValue);
 
                                 try {
                                     sparqlService.update(QueryLanguage.SPARQL, insertPublicationPropertyQuery);
@@ -224,7 +215,7 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
             //ClientResponse response = ldClient.retrieveResource("http://rdf.dblp.com/ns/m.0wqhskn");
 
             int allMembers = 0;
-            String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(wkhuskaGraph);
+            String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(authorGraph);
 
             // TupleQueryResult result = sparqlService.query(QueryLanguage.SPARQL, getAuthors);
             String nameToFind = "";
@@ -374,7 +365,7 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
             ClientConfiguration conf = new ClientConfiguration();
             //conf.addEndpoint(new DBLPEndpoint());
             LDClient ldClient = new LDClient(conf);
-                //ClientResponse response = ldClient.retrieveResource("http://rdf.dblp.com/ns/m.0wqhskn");
+            //ClientResponse response = ldClient.retrieveResource("http://rdf.dblp.com/ns/m.0wqhskn");
 
             String AuthorTofind = uri;
             String providerName = ldClient.getEndpoint(AuthorTofind).getName();
@@ -395,9 +386,9 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
             }
 
             int allMembers = 0;
-            String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(wkhuskaGraph);
+            String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(authorGraph);
 
-                // TupleQueryResult result = sparqlService.query(QueryLanguage.SPARQL, getAuthors);
+            // TupleQueryResult result = sparqlService.query(QueryLanguage.SPARQL, getAuthors);
             String authorResource = "";
             int priorityToFind = 0;
 
@@ -455,29 +446,29 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                         + " PREFIX dct: <http://purl.org/dc/terms/> "
                         + " PREFIX bibo: <http://purl.org/ontology/bibo/> "
                         + " PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
-                        + " CONSTRUCT  { <"+AuthorTofind+"> foaf:publications ?uripub. "
+                        + " CONSTRUCT  { <" + AuthorTofind + "> foaf:publications ?uripub. "
                         + " ?uripub  a bibo:Document. ?uripub bibo:uri ?uri. "
-                        + " ?uripub  bibo:abstract ?abstract. ?uripub bibo:Quote ?keyword. " 
+                        + " ?uripub  bibo:abstract ?abstract. ?uripub bibo:Quote ?keyword. "
                         + " ?uripub dct:title ?title. ?uripub dct:contributor ?coauthor. "
                         + " ?uripub bibo:numPages ?numPages. ?uripub dct:isPartOf ?isPartOf. ?uripub dct:publisher ?publisher. "
                         + " } "
                         + " WHERE "
                         + " { "
-                        + " <"+AuthorTofind+">  <"+mapping.get("publicationProperty")+"> ?publication. "
-                        + " ?publication <"+mapping.get("title")+"> ?title. "
-                        + " OPTIONAL { ?publication <"+mapping.get("uri")+"> ?uri. } "
-                        + " OPTIONAL { ?publication <"+mapping.get("abstract")+">  ?abstract. }"
-                        + " OPTIONAL { ?publication <"+mapping.get("keyword")+">  ?keyword. }"
-                        + " OPTIONAL { ?publication <"+mapping.get("contributor")+"> ?coauthor. }"
-                        + " OPTIONAL { ?publication <"+mapping.get("numPages")+"> ?numPages. }"
-                        + " OPTIONAL { ?publication <"+mapping.get("isPartOf")+"> ?isPartOf. }"
-                        + " OPTIONAL { ?publication <"+mapping.get("publisher")+"> ?publisher. }"
+                        + " <" + AuthorTofind + ">  <" + mapping.get("publicationProperty") + "> ?publication. "
+                        + " ?publication <" + mapping.get("title") + "> ?title. "
+                        + " OPTIONAL { ?publication <" + mapping.get("uri") + "> ?uri. } "
+                        + " OPTIONAL { ?publication <" + mapping.get("abstract") + ">  ?abstract. }"
+                        + " OPTIONAL { ?publication <" + mapping.get("keyword") + ">  ?keyword. }"
+                        + " OPTIONAL { ?publication <" + mapping.get("contributor") + "> ?coauthor. }"
+                        + " OPTIONAL { ?publication <" + mapping.get("numPages") + "> ?numPages. }"
+                        + " OPTIONAL { ?publication <" + mapping.get("isPartOf") + "> ?isPartOf. }"
+                        + " OPTIONAL { ?publication <" + mapping.get("publisher") + "> ?publisher. }"
                         + " BIND (REPLACE(?title,\" \", \"_\",\"i\") as ?newtitle) "
                         + " BIND (IRI(CONCAT(\"http://ucuenca.edu.ec/wkhuska/publication/\",?newtitle)) as ?uripub) "
                         + " } LIMIT 170 ";
-                 //
-              //  String getPublicationsFromProviderQueryto = "Construct {?s ?p ?o} where { ?s ?p ?o}";
-                GraphQueryResult graphQueryResult =    conUri.prepareGraphQuery(QueryLanguage.SPARQL, getPublicationsFromProviderQuery).evaluate();
+                //
+                //  String getPublicationsFromProviderQueryto = "Construct {?s ?p ?o} where { ?s ?p ?o}";
+                GraphQueryResult graphQueryResult = conUri.prepareGraphQuery(QueryLanguage.SPARQL, getPublicationsFromProviderQuery).evaluate();
                 Model resultModel = QueryResults.asModel(graphQueryResult);
                 //Getting data in JSONLD format 
                 StringWriter writerdata = new StringWriter();

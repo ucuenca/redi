@@ -116,6 +116,8 @@ public interface QueriesService {
     //String getPublicationFromGSProviderQuery();
     String getAuthorPublicationsQuery(String providerGraph, String author, String prefix);
 
+    String getAuthorPublicationsQueryFromProvider(String providerGraph, String authorResource, String prefix);
+
     String getPublicationDetails(String publicationResource);
 
     String getPublicationsTitleQuery(String providerGraph, String prefix);
@@ -139,5 +141,11 @@ public interface QueriesService {
     String getEndpointLatitudeQuery(String endpointsGraph, String latitude, String resourceHash);
 
     String getEndpointLongitudeQuery(String endpointsGraph, String longitude, String resourceHash);
+
+    String getTitlePublications(String graph);
+
+    String getFirstNameLastNameAuhor(String graph, String authorResource);
+
+    String authorDetailsOfProvenance(String graph,String authorResource);
 
 }

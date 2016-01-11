@@ -87,8 +87,8 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
     @Inject
     private SparqlFunctionsService sparqlFunctionsService;
 
-    private String namespaceGraph = "http://ucuenca.edu.ec/";
-    private String wkhuskaGraph = namespaceGraph + "wkhuska";
+    private String namespaceGraph = "http://ucuenca.edu.ec/wkhuska/";
+    private String authorGraph = namespaceGraph + "authors";
 
     private int processpercent = 0;
 
@@ -96,7 +96,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
      Graph to save publications data by provider
      Example: http://ucuenca.edu.ec/wkhuska/dblp
      */
-    private String graphByProviderNS = wkhuskaGraph + "/provider/";
+    private String graphByProviderNS = namespaceGraph + "wkhuska" + "/provider/";
 
     @Inject
     private SparqlService sparqlService;
@@ -155,9 +155,9 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                         String publicationProperty = pubVocabService.getPubProperty();
 
                         //verificar existencia de la publicacion y su author sobre el grafo general
-                        String askTripletQuery = queriesService.getAskQuery(wkhuskaGraph, authorResource, publicationProperty, publicationResource);
+                        String askTripletQuery = queriesService.getAskQuery(authorGraph, authorResource, publicationProperty, publicationResource);
                         if (!sparqlService.ask(QueryLanguage.SPARQL, askTripletQuery)) {
-                            String insertPubQuery = buildInsertQuery(wkhuskaGraph, authorResource, publicationProperty, publicationResource);
+                            String insertPubQuery = buildInsertQuery(authorGraph, authorResource, publicationProperty, publicationResource);
                             try {
                                 sparqlService.update(QueryLanguage.SPARQL, insertPubQuery);
                             } catch (MalformedQueryException ex) {
@@ -176,7 +176,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
 
                                 String newPublicationProperty = mapping.get(nativeProperty);
                                 String publicacionPropertyValue = pubproperty.get("publicationPropertyValue").toString();
-                                String insertPublicationPropertyQuery = buildInsertQuery(wkhuskaGraph, publicationResource, newPublicationProperty, publicacionPropertyValue);
+                                String insertPublicationPropertyQuery = buildInsertQuery(authorGraph, publicationResource, newPublicationProperty, publicacionPropertyValue);
 
                                 try {
                                     sparqlService.update(QueryLanguage.SPARQL, insertPublicationPropertyQuery);
@@ -216,7 +216,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
 
             int allMembers = 0;
             String nameProviderGraph = "http://ucuenca.edu.ec/wkhuska/provider/GoogleScholarProvider";
-            String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(wkhuskaGraph);
+            String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(authorGraph);
 
             // TupleQueryResult result = sparqlService.query(QueryLanguage.SPARQL, getAuthors);
             String nameToFind = "";

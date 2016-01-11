@@ -73,8 +73,8 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
     @Inject
     private SparqlFunctionsService sparqlFunctionsService;
 
-    private String namespaceGraph = "http://ucuenca.edu.ec/";
-    private String wkhuskaGraph = namespaceGraph + "wkhuska";
+    private String namespaceGraph = "http://ucuenca.edu.ec/wkhuska/";
+    private String authorGraph = namespaceGraph + "authors";
 
     private int processpercent = 0;
 
@@ -82,7 +82,7 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
      Graph to save publications data by provider
      Example: http://ucuenca.edu.ec/wkhuska/ScopusProvider
      */
-    private String graphByProviderNS = wkhuskaGraph + "/provider/";
+    private String graphByProviderNS = namespaceGraph + "wkhuska" + "/provider/";
 
     private String URLSEARCHSCOPUS = "http://api.elsevier.com/content/search/author?query=authfirst%28FIRSTNAME%29authlast%28LASTNAME%29+AND+affil%28PAIS%29&apiKey=a3b64e9d82a8f7b14967b9b9ce8d513d&httpAccept=application/xml";
     @Inject
@@ -100,7 +100,7 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
             ClientConfiguration conf = new ClientConfiguration();
             LDClient ldClient = new LDClient(conf);
             int membersSearchResult = 0;
-            String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(wkhuskaGraph);
+            String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(authorGraph);
             String nameToFind = "";
             String authorResource = "";
             int priorityToFind = 0;
