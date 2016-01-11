@@ -69,6 +69,9 @@ wkhomeApp.config(['$routeProvider',
                     templateUrl: '/wkhome/partials/map-sources.html',
                     //      controller: 'ExploreController'
                 }).
+		when('/cloud/clusters', {
+                    templateUrl: '/wkhome/partials/cloudcluster.html',
+                }).
                 when('/info/about', {
                     templateUrl: '/wkhome/partials/about.html'
                 }).
