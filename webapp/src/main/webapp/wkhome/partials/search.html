@@ -1,26 +1,45 @@
 
 
 <div class="col-md-2">
-    <div  style="padding: 20px; padding-top: 80px" >
-        <h3 class="text-primary" style="text-align: center; border-top-width: 5px"   class="active">BROWSE</h3>
+    <div>
+        <div  style="padding: 20px; padding-top: 80px" >
+            <h3 class="text-primary" style="text-align: center; border-top-width: 5px"   class="active">BROWSE</h3>
+        </div>
+
+
+        <ul class="nav nav-pills nav-stacked">
+            <li><a href="#/">Home</a></li>
+            <li><a href="#/tags/cloud">Keywords Cloud</a></li>
+            <li><a href="#/cloud/group-by">Group By Keyword</a></li>
+            <!--<li><a href="#/">Research Areas Cloud</a></li>-->
+            <li><a href="#/geo-views/sources">Map View</a></li>
+            <li><a href="#/cloud/clusters">Research Areas Cloud</a></li>
+        </ul>
     </div>
+    <hr>
 
-
-    <ul class="nav nav-pills nav-stacked">
-        <li><a href="#/">Home</a></li>
-        <li><a href="#/tags/cloud">Keywords Cloud</a></li>
-        <li><a href="#/cloud/group-by">Group By Keyword</a></li>
-        <!--<li><a href="#/">Research Areas Cloud</a></li>-->
-        <li><a href="#/geo-views/sources">Map View</a></li>
-        <li><a href="#/cloud/clusters">Research Areas Cloud</a></li>
-    </ul>
+    <div class="tree-node-author-info" style="height:100vh">
+        <h4>RELATED AUTHORS</h4>
+        <h4>By Clustering</h4>
+        <div class="authorsByClusters">
+            <!-- <span style="font-weigth:bold">Title: </span> -->
+            <div id="title" style="font-size:50pt"></div>
+            <a href="" target="_blank"></a>
+        </div>
+        <h4>By Publications</h4>
+        <div class="authorsByPublications">
+            <!-- <span style="font-weigth:bold">Title: </span> -->
+            <div id="title" style="font-size:50pt"></div>
+            <a href="" target="_blank"></a>
+        </div>
+    </div>
 
 </div>
 <div class="col-md-10">
     <div class="container-fluid" style="padding-top: 50px;" ng-controller="exploreAuthor">
         <div class="row">
             <div class="col-md-9">
-                <explorable-tree data="data" class="tree-main-container" style="display:block; height:100vh"  ifright-Click="ifrightClick(value)" ng-model="value"></explorable-tree>
+                <explorable-tree data="data" class="tree-main-container" style="display:block; height:200vh"  ifright-Click="ifrightClick(value)"  clickon-Relatedauthor="clickonRelatedauthor(value)" ng-model="value"></explorable-tree>
             </div>
             <div class="col-md-3 tree-node-info" style="height:100vh">
                 <h4>Publication Info</h4>
