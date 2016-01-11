@@ -10,7 +10,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
-import org.openrdf.model.vocabulary.FOAF;
 
 /**
  *
@@ -20,9 +19,6 @@ public class Queries implements QueriesService {
 
     private String insertData = "INSERT DATA { GRAPH <";
     private String endpointString = "> { <http://ucuenca.edu.ec/wkhuska/endpoint/";
-    
-    
-    
     
     @Override
     public String getAuthorsQuery(String datagraph) {
