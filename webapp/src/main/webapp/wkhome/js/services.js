@@ -65,3 +65,14 @@ wkhomeServices.factory('d3JSON', ['$resource',
             query: {method: 'GET', params: {geoId: 'world-50m'}, isArray: true}
         });
     }]);
+
+wkhomeServices.factory('clustersQuery', ['$resource', '$http', '$window',
+    function ($resource, $http, $window) {
+        return $http.get('resources/datos_clustering.json')
+         .success(function(data) {
+           return data;
+         })
+         .error(function(data) {
+           return data;
+         });
+    }]);
