@@ -90,7 +90,7 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
 
     private String namespaceGraph = "http://ucuenca.edu.ec/wkhuska/";
     private String authorGraph = namespaceGraph + "authors";
-
+    private String externalAuthorGraph = namespaceGraph + "wkhuska/externalauthors";
     private int processpercent = 0;
 
     /* graphByProvider
