@@ -20,7 +20,7 @@ public class Queries implements QueriesService {
 
     private String insertData = "INSERT DATA { GRAPH <";
     private String endpointString = "> { <http://ucuenca.edu.ec/wkhuska/endpoint/";
-  
+
     @Override
     public String getAuthorsQuery(String datagraph) {
         return "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
@@ -132,11 +132,6 @@ public class Queries implements QueriesService {
     @Override
     public String getEndpointLatitudeQuery(String endpointsGraph, String latitude, String resourceHash) {
         return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/latitude>  \"" + latitude + "\"}}";
-    }
-
-    @Override
-    public String getEndpointLongitudeQuery(String endpointsGraph, String longitude, String resourceHash) {
-        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/longitude>  \"" + longitude + "\"}}";
     }
 
     @Override
@@ -467,4 +462,8 @@ public class Queries implements QueriesService {
                 + "ORDER BY ?property ?hasValue ?isValueOf";
     }
 
+    @Override
+    public String getEndpointLongitudeQuery(String endpointsGraph, String longitude, String resourceHash) {
+        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/longitude>  \"" + longitude + "\"}}";
+    }
 }
