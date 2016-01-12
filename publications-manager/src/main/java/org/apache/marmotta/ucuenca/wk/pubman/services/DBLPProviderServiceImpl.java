@@ -91,6 +91,7 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
     private String namespaceGraph = "http://ucuenca.edu.ec/wkhuska/";
     private String authorGraph = namespaceGraph + "authors";
     private String externalAuthorGraph = namespaceGraph + "wkhuska/externalauthors";
+
     private int processpercent = 0;
 
     /* graphByProvider
@@ -385,25 +386,17 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                 mapping.put(source.replace("..", ":"), target.replace("..", ":"));
             }
 
-            int allMembers = 0;
-            String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(authorGraph);
-
             // TupleQueryResult result = sparqlService.query(QueryLanguage.SPARQL, getAuthors);
             String authorResource = "";
             int priorityToFind = 0;
 
             /*To Obtain Processed Percent*/
-            int processedPersons = 0;
-
-            String NS_DBLP = "http://rdf.dblp.com/ns/search/";
             RepositoryConnection conUri = null;
             ClientResponse response = null;
-            processedPersons++;
             log.info("Buscando Informacion de: " + uri);
 
             try {
                 boolean existNativeAuthor = true;
-                allMembers = 0;
                 AuthorTofind = uri.replace("\"", "");
 
                 boolean dataretrievee = true;//( Data Retrieve Exception )
@@ -466,8 +459,7 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                         + " BIND (REPLACE(?title,\" \", \"_\",\"i\") as ?newtitle) "
                         + " BIND (IRI(CONCAT(\"http://ucuenca.edu.ec/wkhuska/publication/\",?newtitle)) as ?uripub) "
                         + " } LIMIT 170 ";
-                //
-                //  String getPublicationsFromProviderQueryto = "Construct {?s ?p ?o} where { ?s ?p ?o}";
+
                 GraphQueryResult graphQueryResult = conUri.prepareGraphQuery(QueryLanguage.SPARQL, getPublicationsFromProviderQuery).evaluate();
                 Model resultModel = QueryResults.asModel(graphQueryResult);
                 //Getting data in JSONLD format 
