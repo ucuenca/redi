@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 package org.apache.marmotta.ucuenca.wk.commons.impl;
-
 import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
