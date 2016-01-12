@@ -115,7 +115,33 @@ public class Queries implements QueriesService {
     public String getEndpointGraphQuery(String endpointsGraph, String graphUri, String resourceHash) {
         return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/graph>  <" + graphUri + "> }}";
     }
-
+    
+    
+    @Override
+    public String getEndpointFullNameQuery(String endpointsGraph, String fullName, String resourceHash){
+        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/fullName>  \"" + fullName + "\" }}";
+    }
+    
+    @Override
+    public String getEndpointCityQuery(String endpointsGraph, String city, String resourceHash){
+        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/city>  \"" + city + "\" }}";
+    }
+    
+    @Override
+    public String getEndpointProvinceQuery(String endpointsGraph, String province, String resourceHash){
+        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/province>  \"" + province + "\"}}";
+    }
+    
+    @Override
+    public String getEndpointLatitudeQuery(String endpointsGraph, String latitude, String resourceHash){
+        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/latitude>  \"" + latitude + "\"}}";
+    }
+    
+    @Override
+    public String getEndpointLongitudeQuery(String endpointsGraph, String longitude, String resourceHash){
+        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/longitude>  \"" + longitude + "\"}}";
+    }
+    
     @Override
     public String getlisEndpointsQuery(String endpointsGraph) {
         return "SELECT DISTINCT ?id ?name ?url ?graph ?fullName ?city ?province ?latitude ?longitude  WHERE {  "

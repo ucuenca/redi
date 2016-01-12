@@ -164,7 +164,6 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                             try {
                                 sparqlService.update(QueryLanguage.SPARQL, insertPubQuery);
                             } catch (MalformedQueryException ex) {
-                                log.error("Malformed Query:  " + insertPubQuery);
                             } catch (UpdateExecutionException ex) {
                                 log.error("Update Query :  " + insertPubQuery);
                             } catch (MarmottaException ex) {
