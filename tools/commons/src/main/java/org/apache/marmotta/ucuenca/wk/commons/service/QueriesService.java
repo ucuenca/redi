@@ -142,16 +142,7 @@ public interface QueriesService {
 
     String getPublicationPropertiesAsResourcesQuery();
 
-    String getEndpointFullNameQuery(String endpointsGraph, String fullName, String resourceHash);
-
-    String getEndpointCityQuery(String endpointsGraph, String city, String resourceHash);
-
-    String getEndpointProvinceQuery(String endpointsGraph, String province, String resourceHash);
-
-    String getEndpointLatitudeQuery(String endpointsGraph, String latitude, String resourceHash);
-
-    String getEndpointLongitudeQuery(String endpointsGraph, String longitude, String resourceHash);
-
+ 
     String getTitlePublications(String graph);
 
     String getFirstNameLastNameAuhor(String graph, String authorResource);
