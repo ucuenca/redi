@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package org.apache.marmotta.ucuenca.wk.commons.impl;
+
 import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,6 +14,8 @@ import org.openrdf.model.vocabulary.FOAF;
 
 /**
  *
+ * 
+ * 
  * @author Satellite
  */
 public class Queries implements QueriesService {
@@ -111,26 +114,6 @@ public class Queries implements QueriesService {
     @Override
     public String getEndpointGraphQuery(String endpointsGraph, String graphUri, String resourceHash) {
         return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/graph>  <" + graphUri + "> }}";
-    }
-
-    @Override
-    public String getEndpointFullNameQuery(String endpointsGraph, String fullName, String resourceHash) {
-        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/fullName>  \"" + fullName + "\" }}";
-    }
-
-    @Override
-    public String getEndpointCityQuery(String endpointsGraph, String city, String resourceHash) {
-        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/city>  \"" + city + "\" }}";
-    }
-
-    @Override
-    public String getEndpointProvinceQuery(String endpointsGraph, String province, String resourceHash) {
-        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/province>  \"" + province + "\"}}";
-    }
-
-    @Override
-    public String getEndpointLatitudeQuery(String endpointsGraph, String latitude, String resourceHash) {
-        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/latitude>  \"" + latitude + "\"}}";
     }
 
     @Override
@@ -465,4 +448,25 @@ public class Queries implements QueriesService {
     public String getEndpointLongitudeQuery(String endpointsGraph, String longitude, String resourceHash) {
         return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/longitude>  \"" + longitude + "\"}}";
     }
+
+    @Override
+    public String getEndpointFullNameQuery(String endpointsGraph, String fullName, String resourceHash) {
+        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/fullName>  \"" + fullName + "\" }}";
+    }
+
+    @Override
+    public String getEndpointCityQuery(String endpointsGraph, String city, String resourceHash) {
+        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/city>  \"" + city + "\" }}";
+    }
+
+    @Override
+    public String getEndpointProvinceQuery(String endpointsGraph, String province, String resourceHash) {
+        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/province>  \"" + province + "\"}}";
+    }
+
+    @Override
+    public String getEndpointLatitudeQuery(String endpointsGraph, String latitude, String resourceHash) {
+        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/latitude>  \"" + latitude + "\"}}";
+    }
+
 }
