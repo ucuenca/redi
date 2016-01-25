@@ -4,8 +4,8 @@ var explorableTree = angular.module('explorableTree', []);
 explorableTree.factory('d3', function () {
     return	d3;
 });
-explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuery',
-    function (d3, sparqlQuery, authorRestQuery) {
+explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuery', '$window',
+    function (d3, sparqlQuery, authorRestQuery, $window) {
         var getRelatedAuthorsByClustersQuery = 'PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
                 + ' PREFIX http: <http://www.w3.org/2011/http#> '
                 + ' PREFIX dct: <http://purl.org/dc/terms/>  '
@@ -247,7 +247,7 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                                 + 'PREFIX dct: <http://purl.org/dc/terms/> '
                                 + 'PREFIX bibo: <http://purl.org/ontology/bibo/> '
                                 + 'PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
-                                + 'CONSTRUCT  { <'+authorToFind+'> ?propaut ?obbaut. ?obbaut ?propub ?objpub.'
+                                + 'CONSTRUCT  { <' + authorToFind + '> ?propaut ?obbaut. ?obbaut ?propub ?objpub.'
                                 + '    } '
                                 + 'WHERE'
                                 + '{'
@@ -477,7 +477,7 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                     _.map(contributors, function (val) {
                         coAuthors.push({'@id': val["@id"], '@type': 'foaf:Person'});
                     });
-                    
+
                     //****  GETTING LOCAL CONTRIBUTOR OF PUBLICATION ***** //    
                     var getLocalcoAuthorsSparqlQuery = 'PREFIX dct: <http://purl.org/dc/terms/> '
                             + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
@@ -511,9 +511,9 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
 //                        });
 //                    });
                     //**** END GETTING EXTERNAL CONTRIBUTORS OF PUBLICATION ***/
-                              var contributorsjsonld = {"@graph": coAuthors};
-                            setChildrenAndUpdate('author', node, contributorsjsonld, 'foaf:Person', context, exploredArtistIds);
-                  
+                    var contributorsjsonld = {"@graph": coAuthors};
+                    setChildrenAndUpdate('author', node, contributorsjsonld, 'foaf:Person', context, exploredArtistIds);
+
                 }
             }
 
@@ -566,15 +566,8 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
 
             // Toggle children function
             function toggleChildrenRightClick(d) {
-                if (d.children) {
-                    removeChildrenFromExplored(d);
-                    d.children = null;
-                    update(d, false);
-                    centerNode(d);
-                } else {
-                    if (isAuthor(d)) {
-                        setChildrenAndUpdateForAuthor(d, true);
-                    }
+                if (isAuthor(d)) {
+                    setChildrenAndUpdateForAuthor(d, true);
                 }
                 return d;
             }
@@ -605,7 +598,7 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                 var height,
                         width,
                         margin = 0.1, // fraction of width
-                        items = [],
+                        items = ["ad", "addd"],
                         rescale = false,
                         style = {
                             'rect': {
@@ -674,7 +667,7 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                         items.push(arguments[i]);
                     rescale = true;
                     return menu;
-                }
+                };
 
                 // Automatically set width, height, and margin;
                 function scaleItems() {
@@ -710,7 +703,13 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                 return menu;
             }
 
-            var menu = contextMenu().items('first item', 'second option', 'whatever, man');
+            var menu = [
+                {
+                    title: 'Autores Relacionados',
+                    action: function (elm, d, i) {
+                        toggleChildrenRightClick(d);
+                    }
+                }];
             function update(source, expand) {
                 var levelWidth = [1];
                 var childCount = function (level, n) {
@@ -749,7 +748,7 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
 //                        .offset([0, 3]);
 
                 // Enter any new nodes at the parent's previous position.
-
+                
                 var nodeEnter = node.enter().append("g")
                         // .call(dragListener)
                         .call(expand ? tip : function () {
@@ -783,10 +782,15 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                                 //AE.getInfoCancel();
                             }
                         })
-                        .on('contextmenu', function (d) {
-                            d3.event.preventDefault();
-                            toggleChildrenRightClick(d);
-                        })
+                        .on('contextmenu', d3.contextMenu(menu,  function (d) {
+                            console.log('Quick! Before the menu appears!');//function (d) {
+                            if (!('author' in d))
+                            {
+                                window.stop();
+                            }
+                        }
+
+                        )) 
                         .on('click', click);
                 nodeEnter.append("circle")
                         .attr("r", 32)

@@ -1,35 +1,71 @@
 .tree-node {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .tree-node circle {
-  fill: #fff;
-  stroke: black;
-  stroke-width: 2px;
+    fill: #fff;
+    stroke: black;
+    stroke-width: 2px;
 }
 
 .tree-node text {
-  font-size:15px;
-  fill: #000;
+    font-size:15px;
+    fill: #000;
 }
 
 .tree-link {
-  fill: none;
-  stroke: #ccc;
-  stroke-width: 1.5px;
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 1.5px;
 }
 
 .tree-overlay{
-  /*background-color:#FFFFFF;*/
+    /*background-color:#FFFFFF;*/
 }
 
 .tree-main-container {
-  overflow: hidden;
-  height: auto;
-  background-color: #F6F6F6;
+    overflow: hidden;
+    height: auto;
+    background-color: #F6F6F6;
 }
 
 .relatedauthors{
-    
+
     font-size: x-small;
+}
+
+/* d3-context-menu styles */
+
+.d3-context-menu {
+    position: absolute;
+    display: none;
+    background-color: #222A0A;
+    
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    //min-width: 150px;
+    border: 1px solid #d4d4d4;
+    color: #F2F2F2;
+    z-index:1200;
+    opacity: 0.8;
+    
+
+
+}
+
+.d3-context-menu ul {
+    list-style-type: none;
+    margin: 4px 0px;
+    padding: 0px;
+    cursor: default;
+}
+
+.d3-context-menu ul li {
+    padding: 4px 16px;
+    border-radius: 40px;
+}
+
+.d3-context-menu ul li:hover {
+    background-color: #4677f8;
+    color: #fefefe;
 }
