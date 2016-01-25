@@ -12,19 +12,42 @@ var wkhomeApp = angular.module('wkhomeApp', [
     'wkhomeControllers',
     'commonDirectives',
     /*'phonecatFilters',*/
-    'wkhomeServices'
+    'wkhomeServices',
+    
 ]);
 
 wkhomeApp.service('searchData', function () {
     this.authorSearch = null;
     this.areaSearch = null;
     this.genericData = null;
-  //  this.allKeywords = null;
+    //  this.allKeywords = null;
     this.researchArea = "Semantic Web";
-    
+    this.globalauthor= null;
 });
 
-
+wkhomeApp.service('globalData', function () {
+    this.centralGraph = "http://ucuenca.edu.ec/wkhuska";
+    this.clustersGraph = "http://ucuenca.edu.ec/wkhuska/clusters";
+    this.authorsGraph = "http://ucuenca.edu.ec/wkhuska/authors";
+    this.endpointsGraph = "http://ucuenca.edu.ec/wkhuska/endpoints";
+    
+    this.PREFIX =     ' PREFIX bibo: <http://purl.org/ontology/bibo/>'
+                    + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>  '
+                    + ' PREFIX dct: <http://purl.org/dc/terms/> '
+                    + ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> '
+                    + ' PREFIX uc: <http://ucuenca.edu.ec/resource/>  '
+                    + ' PREFIX mm: <http://marmotta.apache.org/vocabulary/sparql-functions#> '
+                    ;
+    this.CONTEXT = {
+                        "uc": "http://ucuenca.edu.ec/resource/",
+                        "foaf": "http://xmlns.com/foaf/0.1/", 
+                        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+                        "bibo": "http://purl.org/ontology/bibo/",
+                        "dc": "http://purl.org/dc/elements/1.1/",
+                        "dct": "http://purl.org/dc/terms/"
+                        
+                   };
+ });
 
 wkhomeApp.config(['$routeProvider',
     function ($routeProvider) {
@@ -57,6 +80,10 @@ wkhomeApp.config(['$routeProvider',
                     templateUrl: '/wkhome/partials/tags.html',
                     //       controller: 'getKeywordsTag'
                 }).
+                when('/tags/cloud/clusters', {
+                    templateUrl: '/wkhome/partials/colorcluster.html',
+                    //       controller: 'getKeywordsTag'
+                }).
                 when('/d3/:geoId.json', {
                     templateUrl: '/wkhome/partials/phone-detail.html',
                     //       controller: 'ExploreController'
@@ -69,7 +96,7 @@ wkhomeApp.config(['$routeProvider',
                     templateUrl: '/wkhome/partials/map-sources.html',
                     //      controller: 'ExploreController'
                 }).
-		when('/cloud/clusters', {
+                when('/cloud/clusters', {
                     templateUrl: '/wkhome/partials/cloudcluster.html',
                 }).
                 when('/info/about', {

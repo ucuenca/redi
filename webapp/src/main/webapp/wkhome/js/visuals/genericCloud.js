@@ -5,8 +5,8 @@ var genericCloud = angular.module('genericCloud', []);
 genericCloud.factory('d3', function () {
     return	d3;
 });
-genericCloud.directive('genericCloud', ["d3", 'sparqlQuery',
-    function (d3, sparqlQuery) {
+genericCloud.directive('genericCloud', ["d3", 'globalData','sparqlQuery',
+    function (d3, globalData, sparqlQuery) {
 
         var chart, clear, click, collide, collisionPadding, connectEvents, data, force, gravity, hashchange, height, idValue, jitter, label, margin, maxRadius, minCollisionRadius, mouseout, mouseover, node, rScale, rValue, textValue, tick, transformData, update, updateActive, updateLabels, updateNodes, width;
         var scope;
@@ -203,10 +203,7 @@ genericCloud.directive('genericCloud', ["d3", 'sparqlQuery',
                 headbar.append(div);
 
                 //var sparqlDescribe = "DESCRIBE <" + id + ">";
-                var sparqlPublications = 'PREFIX dct: <http://purl.org/dc/terms/> '
-                        + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
-                        + ' PREFIX bibo: <http://purl.org/ontology/bibo/> '
-                        + ' PREFIX uc: <http://ucuenca.edu.ec/wkhuska/resource/> '
+                var sparqlPublications = globalData.PREFIX
                         + " CONSTRUCT { ?subject uc:publication ?publicationUri. "
                         + " ?publicationUri a bibo:Document. "
                         + " ?publicationUri dct:title ?title. "
@@ -214,7 +211,7 @@ genericCloud.directive('genericCloud', ["d3", 'sparqlQuery',
                         + " ?publicationUri bibo:uri ?uri. "
                         + " } "
                         + " WHERE {"
-                        + " GRAPH <http://ucuenca.edu.ec/wkhuska>"
+                        + " GRAPH <"+globalData.centralGraph+">"
                         + " {"
                         + " ?subject foaf:name \""+key+"\"^^xsd:string ."
                         + " ?subject foaf:publications ?publicationUri. "
@@ -226,15 +223,8 @@ genericCloud.directive('genericCloud', ["d3", 'sparqlQuery',
                 waitingDialog.show("Searching Publications of: " + key);
 
                 sparqlQuery.querySrv({query: sparqlPublications}, function (rdf) {
-                    var context = {
-                        "foaf": "http://xmlns.com/foaf/0.1/",
-                        "dc": "http://purl.org/dc/elements/1.1/",
-                        "dcterms": "http://purl.org/dc/terms/",
-                        "bibo": "http://purl.org/ontology/bibo/",
-                        "uc": "http://ucuenca.edu.ec/wkhuska/resource"
-                    };
-
-                    jsonld.compact(rdf, context, function (err, compacted) {
+                   
+                    jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                         if (compacted)
                         {
                             var entity = compacted["@graph"];
