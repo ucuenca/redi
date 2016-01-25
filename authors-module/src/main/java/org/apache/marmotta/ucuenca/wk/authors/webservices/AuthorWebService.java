@@ -96,6 +96,19 @@ public class AuthorWebService {
         endpointService.removeEndpoint(resourceid);
         return Response.ok().entity("Endpoint was successfully removed").build();
     }
+    
+     @POST
+    @Path("/endpoint/updatestatus")
+    public Response updateEndpoint(@QueryParam("id") String resourceid, @QueryParam("oldstatus") String oldstatus, @QueryParam("newstatus") String newstatus ) {
+
+        SparqlEndpoint endpoint = endpointService.getEndpoint(resourceid);
+        if (endpoint == null) 
+        {    
+            return Response.ok().entity("notFound " +  resourceid + " Endpoint").build();
+        }        
+        endpointService.updateEndpoint(resourceid, oldstatus, newstatus);
+        return Response.ok().entity("Endpoint was successfully removed").build();
+    }
 
     
     @GET
@@ -118,6 +131,7 @@ public class AuthorWebService {
      private Map<String, Object> buildEndpointJSON(SparqlEndpoint endpoint) {
         HashMap<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("id",endpoint.getResourceId());
+        resultMap.put("status",endpoint.getStatus());
         resultMap.put("name",endpoint.getName());
         resultMap.put("url",endpoint.getEndpointUrl());
         resultMap.put("graph", endpoint.getGraph());
@@ -143,15 +157,16 @@ public class AuthorWebService {
         if (StringUtils.isBlank(urisString)) {
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity("Required Endpoint and GraphURI").build();
         } else {
-                String name = urisString.split("\"")[3];
-                String endpoint = urisString.split("\"")[7];
-                 String graphUri = urisString.split("\"")[11];
-                 String fullName = urisString.split("\"")[15];
-                 String city = urisString.split("\"")[19];
-                 String province = urisString.split("\"")[23];
-                 String latitude = urisString.split("\"")[27];
-                 String longitude = urisString.split("\"")[31];
-                String result = endpointService.addEndpoint(name, endpoint, graphUri, fullName, city, province, latitude, longitude);
+                String status = urisString.split("\"")[3];
+                String name = urisString.split("\"")[7];
+                String endpoint = urisString.split("\"")[11];
+                 String graphUri = urisString.split("\"")[15];
+                 String fullName = urisString.split("\"")[19];
+                 String city = urisString.split("\"")[23];
+                 String province = urisString.split("\"")[27];
+                 String latitude = urisString.split("\"")[31];
+                 String longitude = urisString.split("\"")[35];
+                String result = endpointService.addEndpoint(status, name, endpoint, graphUri, fullName, city, province, latitude, longitude);
                 return Response.ok().entity(result).build();
         }
      

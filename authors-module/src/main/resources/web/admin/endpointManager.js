@@ -109,16 +109,15 @@
             });
         }
         function activateProgram(b, active) {
-            var enable = active || (b.attr('data-active') !== "true"),
-                    url = settings.host + "cache/endpoint/" + b.attr('data-id') + "/enable?enable=" + enable;
-
+            var url = settings.host + "authors-module/endpoint/updatestatus?id=" + b.attr('data-id')+"&oldstatus="+b.attr('data-oldstatus')+"&newstatus="+b.attr('data-newstatus');
             $.ajax({
                 type: "POST",
                 url: url,
                 success: function () {
-                    $.getJSON(settings.host + "cache/endpoint/list", function (data) {
+                    $.getJSON(settings.host + "authors-module/endpoint/list", function (data) {
                         writePrograms(data);
                     });
+                    alert("success");
                 },
                 error: function (jXHR, textStatus) {
                     alert("Error: " + jXHR.responseText);
@@ -188,6 +187,7 @@
             var table = $("<table class='simple_table'/>");
             var tr = $("<tr class='title' valign='top' style='font-weight:bold;color: white;background-color:gray;'/>");
             //tr.append($("<td/>").html("&nbsp;"));
+            tr.append($("<td/>").text("Enable"));
             tr.append($("<td/>").text("Name"));
             tr.append($("<td/>").text("Endpoint URL"));
             tr.append($("<td/>").text("Graph URI"));
@@ -226,7 +226,7 @@
                     delBtn.click(function () {
                         removeProgram($(this));
                     });
-                    var modBtn = $("<button>", {text: (ps[i].active ? "deactivate" : "activate"), 'data-id': ps[i].id, 'data-active': ps[i].active})
+                    var modBtn = $("<button>", {text: (ps[i].status === 'true' ? "deactivate" : "activate"), 'data-id': ps[i].id, 'data-oldstatus': (ps[i].status === 'false' ? "false" : "true"), 'data-newstatus': (ps[i].status === 'false' ? "true" : "false")})
                     modBtn.click(function () {
                         activateProgram($(this));
                     });
@@ -238,7 +238,7 @@
                     col = "odd";
                 }
                 var tr = $("<tr class='" + col + "'/>");
-                //$("<td/>").append(buildIcon(ps[i].active)).appendTo(tr);
+                $("<td/>").text(ps[i].status || '').appendTo(tr);
                 $("<td/>").text(ps[i].name || '').appendTo(tr);
                 $("<td/>").text(ps[i].url || '').appendTo(tr);
                 $("<td/>").text(ps[i].graph || '').appendTo(tr);
@@ -251,10 +251,10 @@
                 //$("<td/>").text(ps[i].mimetype != undefined ? ctToString(ps[i].mimetype) : '').appendTo(tr);
                 //$("<td/>").text(ps[i].expiry || '').appendTo(tr);
                 //   if(!ps[i].volatile) {
-                
-                //$("<td/>").append(modBtn).append(delBtn).appendTo(tr);
-                $("<td/>").append(delBtn).appendTo(tr);
-                 
+
+                $("<td/>").append(modBtn).append(delBtn).appendTo(tr);
+                //$("<td/>").append(delBtn).appendTo(tr);
+
                 //   } else {
                 //       $("<td>autoregistered</td>").appendTo(tr);
                 //   }
@@ -363,8 +363,7 @@
 
 
         function addEndpoint() {
-            
-         
+
             var name = document.getElementById('txtname').value;
             var endpoint = document.getElementById('txtendpoint').value;
             var graphuri = document.getElementById("txtgraphuri").value;
@@ -407,6 +406,7 @@
                 return;
             }
             var dataT = {
+                "State": "true",
                 "Name": name,
                 "Endpoint": endpoint,
                 "GraphUri": graphuri,
