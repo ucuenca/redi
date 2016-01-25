@@ -537,8 +537,8 @@ wkhomeControllers.controller('getKeywordsTag', ['$scope', 'globalData', 'sparqlQ
             sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
                 jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                     $scope.$apply(function () {
-                        $scope.data = {schema: {"context": context, fields: ["rdfs:label", "uc:total"]}, data: compacted};
-                        searchData.allkeywordsCloud = {schema: {"context": context, fields: ["rdfs:label", "uc:total"]}, data: compacted};
+                        $scope.data = {schema: {"context": globalData.CONTEXT, fields: ["rdfs:label", "uc:total"]}, data: compacted};
+                        searchData.allkeywordsCloud = {schema: {"context": globalData.CONTEXT, fields: ["rdfs:label", "uc:total"]}, data: compacted};
                         waitingDialog.hide();
                     });
                 });
