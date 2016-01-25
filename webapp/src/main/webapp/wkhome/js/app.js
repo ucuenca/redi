@@ -45,6 +45,10 @@ wkhomeApp.config(['$routeProvider',
                     templateUrl: '/wkhome/partials/genericcloud.html',
 //        controller: 'ExploreController'
                 }).
+                when('/w/clusters?:text', {
+                    templateUrl: '/wkhome/partials/clusterskeywcloud.html',
+//        controller: 'ExploreController'
+                }).
                 when('/a/a', {
                     templateUrl: '/wkhome/partials/d3.html',
                     controller: 'MainCtrl'
@@ -71,6 +75,9 @@ wkhomeApp.config(['$routeProvider',
                 }).
 		when('/cloud/clusters', {
                     templateUrl: '/wkhome/partials/cloudcluster.html',
+                }).
+                when('/cloud/keywords', {
+                    templateUrl: '/wkhome/partials/kwcloudcluster.html',
                 }).
                 when('/info/about', {
                     templateUrl: '/wkhome/partials/about.html'
