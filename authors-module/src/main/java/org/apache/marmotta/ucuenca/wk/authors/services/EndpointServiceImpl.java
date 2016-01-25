@@ -57,28 +57,41 @@ public class EndpointServiceImpl implements EndpointService {
         }
         return "AddEndpoint Error";
     }
+
     /**
      * Funcion que agrega un nuevo endpoint
-     * @param args //String name, String endpointUrl, String graphUri, String fullName, String city, String province, String latitude, String longitude
-     * @return 
+     *
+     * @param args //String name, String endpointUrl, String graphUri, String
+     * fullName, String city, String province, String latitude, String longitude
+     * @return
      */
     public String addEndpoint(String... args) {
         try {
-            String resourceHash = getHashCode(args[0], args[1], args[2]);
-            addEndpointName(endpointsGraph, args[0], resourceHash);
-            addEndpointUrl(endpointsGraph, args[1], resourceHash);
-            addEndpointGraph(endpointsGraph, args[2], resourceHash);
-            addEndpointFullName(endpointsGraph, args[3], resourceHash);
-            addEndpointCity(endpointsGraph, args[4], resourceHash);
-            addEndpointProvince(endpointsGraph, args[5], resourceHash);
-            addEndpointLatitude(endpointsGraph, args[6], resourceHash);
-            addEndpointLongitude(endpointsGraph, args[7], resourceHash);
-            
+            String resourceHash = getHashCode(args[1], args[2], args[3]);
+            addEndpointStatus(endpointsGraph, args[0], resourceHash);
+            addEndpointName(endpointsGraph, args[1], resourceHash);
+            addEndpointUrl(endpointsGraph, args[2], resourceHash);
+            addEndpointGraph(endpointsGraph, args[3], resourceHash);
+            addEndpointFullName(endpointsGraph, args[4], resourceHash);
+            addEndpointCity(endpointsGraph, args[5], resourceHash);
+            addEndpointProvince(endpointsGraph, args[6], resourceHash);
+            addEndpointLatitude(endpointsGraph, args[7], resourceHash);
+            addEndpointLongitude(endpointsGraph, args[8], resourceHash);
+
             return "Endpoint Insertado Correctamente";
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return "AddEndpoint Error";
+    }
+
+    public void addEndpointStatus(String endpointsGraph, String status, String resourceHash) {
+        try {
+            String queryEndpointStatus = queriesService.getEndpointStatusQuery(endpointsGraph, status, resourceHash);
+            sparqlService.update(QueryLanguage.SPARQL, queryEndpointStatus);
+        } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
+            Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void addEndpointName(String endpointsGraph, String name, String resourceHash) {
@@ -108,7 +121,7 @@ public class EndpointServiceImpl implements EndpointService {
             Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void addEndpointFullName(String endpointsGraph, String fullName, String resourceHash) {
         try {
             String queryFullName = queriesService.getEndpointFullNameQuery(endpointsGraph, fullName, resourceHash);
@@ -117,7 +130,7 @@ public class EndpointServiceImpl implements EndpointService {
             Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void addEndpointCity(String endpointsGraph, String city, String resourceHash) {
         try {
             String queryCity = queriesService.getEndpointCityQuery(endpointsGraph, city, resourceHash);
@@ -126,7 +139,7 @@ public class EndpointServiceImpl implements EndpointService {
             Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void addEndpointProvince(String endpointsGraph, String province, String resourceHash) {
         try {
             String queryProvince = queriesService.getEndpointProvinceQuery(endpointsGraph, province, resourceHash);
@@ -135,7 +148,7 @@ public class EndpointServiceImpl implements EndpointService {
             Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void addEndpointLatitude(String endpointsGraph, String latitude, String resourceHash) {
         try {
             String queryLatitude = queriesService.getEndpointLatitudeQuery(endpointsGraph, latitude, resourceHash);
@@ -144,7 +157,7 @@ public class EndpointServiceImpl implements EndpointService {
             Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void addEndpointLongitude(String endpointsGraph, String longitude, String resourceHash) {
         try {
             String queryLongitude = queriesService.getEndpointLongitudeQuery(endpointsGraph, longitude, resourceHash);
@@ -177,12 +190,13 @@ public class EndpointServiceImpl implements EndpointService {
 
     @Override
     public List<SparqlEndpoint> listEndpoints() {
-       try {
+        try {
             List<SparqlEndpoint> result = new ArrayList<SparqlEndpoint>();
             List<Map<String, Value>> endpointsresult = sparqlService.query(QueryLanguage.SPARQL, queriesService.getlisEndpointsQuery(endpointsGraph));
             for (Map<String, Value> singleendpoint : endpointsresult) {
                 SparqlEndpoint endpoint = new SparqlEndpoint();
                 endpoint.setResourceId(singleendpoint.get("id").stringValue());
+                endpoint.setStatus(singleendpoint.get("status").stringValue());
                 endpoint.setName(singleendpoint.get("name").stringValue());
                 endpoint.setEndpointUrl(singleendpoint.get("url").stringValue());
                 endpoint.setGraph(singleendpoint.get("graph").stringValue());
@@ -206,6 +220,7 @@ public class EndpointServiceImpl implements EndpointService {
             List<Map<String, Value>> endpointresult = sparqlService.query(QueryLanguage.SPARQL, queriesService.getEndpointByIdQuery(endpointsGraph, resourceId));
             SparqlEndpoint endpoint = new SparqlEndpoint();
             endpoint.setResourceId(endpointresult.get(0).get("id").stringValue());
+            endpoint.setStatus(endpointresult.get(0).get("status").stringValue());
             endpoint.setName(endpointresult.get(0).get("name").stringValue());
             endpoint.setEndpointUrl(endpointresult.get(0).get("url").stringValue());
             endpoint.setGraph(endpointresult.get(0).get("graph").stringValue());
@@ -227,6 +242,17 @@ public class EndpointServiceImpl implements EndpointService {
     public String removeEndpoint(String resourceid) {
         try {
             sparqlService.update(QueryLanguage.SPARQL, queriesService.getEndpointDeleteQuery(endpointsGraph, resourceid));
+            return "Endpoint was DELETE";
+        } catch (MarmottaException | InvalidArgumentException | MalformedQueryException | UpdateExecutionException ex) {
+            Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    @Override
+    public String updateEndpoint(String resourceid, String oldstatus, String newstatus ) {
+         try {
+            sparqlService.update(QueryLanguage.SPARQL, queriesService.getEndpointUpdateStatusQuery(endpointsGraph, resourceid, oldstatus, newstatus));
             return "Endpoint was DELETE";
         } catch (MarmottaException | InvalidArgumentException | MalformedQueryException | UpdateExecutionException ex) {
             Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
