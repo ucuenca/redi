@@ -1,12 +1,12 @@
 'use strict';
 
-var keywClusters = angular.module('keywClusters', []);
+var pieChart = angular.module('colorCluster', []);
 //	D3	Factory
-keywClusters.factory('d3', function () {
+pieChart.factory('d3', function () {
     return	d3;
 });
-keywClusters.directive('keywClusters', ["d3", 'globalData', 'sparqlQuery',
-    function (d3, globalData, sparqlQuery) {
+pieChart.directive('colorCluster', ["d3", 'sparqlQuery',
+    function (d3, sparqlQuery) {
 
         var chart, clear, click, collide, collisionPadding, connectEvents, data, force, gravity, hashchange, height, idValue, jitter, label, margin, maxRadius, minCollisionRadius, mouseout, mouseover, node, rScale, rValue, textValue, tick, transformData, update, updateActive, updateLabels, updateNodes, width;
         var scope;
@@ -45,11 +45,37 @@ keywClusters.directive('keywClusters', ["d3", 'globalData', 'sparqlQuery',
             return rawData;
         };
         tick = function (e) {
-            var dampenedAlpha;
-            dampenedAlpha = e.alpha * 0.01;
-            node.each(gravity(dampenedAlpha)).each(collide(jitter)).attr("transform", function (d) {
-                return "translate(" + d.x + "," + d.y + ")";
-            });
+//            var dampenedAlpha;
+//            dampenedAlpha = e.alpha * 0.01;
+//            node.each(gravity(dampenedAlpha)).each(collide(jitter)).attr("transform", function (d) {
+//                return "translate(" + d.x + "," + d.y + ")";
+//            });
+
+
+            var foci = {};
+            for (var i = 0; i < centers.length; i++) {
+                foci[centers[i].name] = centers[i];
+            }
+            return function (e) {
+                for (var i = 0; i < dataMapping.length; i++) {
+                    var o = dataMapping[i];
+                    var f = foci[o[varname]];
+                    o.y += ((f.y + (f.dy / 2)) - o.y) * e.alpha;
+                    o.x += ((f.x + (f.dx / 2)) - o.x) * e.alpha;
+                }
+                nodes.each(collide(.11))
+                        .attr("cx", function (d) {
+                            return d.x;
+                        })
+                        .attr("cy", function (d) {
+                            return d.y;
+                        });
+            }
+
+
+
+
+
             return label.style("left", function (d) {
                 /*if(d.label == "Amino Acid") { 
                  d = d;
@@ -97,7 +123,9 @@ keywClusters.directive('keywClusters', ["d3", 'globalData', 'sparqlQuery',
             node.exit().remove();
             return node.enter().append("a").attr("class", "bubble-node").attr("xlink:href", function (d) {
                 return "#" + (encodeURIComponent(idValue(d)));
-            }).call(force.drag).call(connectEvents).append("circle").attr("id", "kcircle").attr("r", function (d) {
+            }).call(force.drag).call(connectEvents).append("circle").attr("id", "kcircle").style("fill", function (d) {
+                return d.color;
+            }).attr("r", function (d) {
                 return rScale(rValue(d));
             });
         };
@@ -176,78 +204,79 @@ keywClusters.directive('keywClusters', ["d3", 'globalData', 'sparqlQuery',
         };
         click = function (d) {
 
+            //adding information about publications of THIS keyword into "tree-node-info"   DIV
+            var infoBar = $('div.tree-node-info');
+            var model = {"dcterms:title": {label: "Title", containerType: "div"},
+                "bibo:uri": {label: "URL", containerType: "a"},
+                "dcterms:contributor": {label: "Contributor", containerType: "a"},
+                "dcterms:isPartOf": {label: "Is Part Of", containerType: "a"},
+                "dcterms:license": {label: "License", containerType: "a"},
+                "dcterms:provenance": {label: "Source", containerType: "div"},
+                "dcterms:publisher": {label: "Publisher", containerType: "div"},
+                "bibo:numPages": {label: "Pages", containerType: "div"}
+            };
+            if (infoBar) {
+                var keyword = d.label;
+                var headbar = $('div.head-info');
+                headbar.find('title').text("ddddddtitletitle");
+                headbar.html('');
+                var div = $('<div>');
+                var label = $('<span class="label label-primary" style="font-size:35px">').text("PUBLICATIONS CONTAINING THE KEYWORD: " + keyword);
+                div.append(label);
+                div.append("</br>");
+                headbar.append(div);
 
-            /**/
-            
-            var sparqlquery = globalData.PREFIX
+                //var sparqlDescribe = "DESCRIBE <" + id + ">";
+                var sparqlPublications = 'PREFIX dct: <http://purl.org/dc/terms/> PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
+                        + ' PREFIX bibo: <http://purl.org/ontology/bibo/> '
+                        + ' PREFIX uc: <http://ucuenca.edu.ec/wkhuska/resource/> '
+                        + " CONSTRUCT { ?keyword uc:publication ?publicationUri. "
+                        + " ?publicationUri a bibo:Document. "
+                        + " ?publicationUri dct:title ?title. "
+                        + " ?publicationUri bibo:abstract ?abstract. "
+                        + " ?publicationUri bibo:uri ?uri. "
+                        + " } "
+                        + " WHERE {"
+                        + " GRAPH <http://ucuenca.edu.ec/wkhuska>"
+                        + " {"
+                        + " ?publicationUri dct:title ?title . "
+                        + " ?publicationUri bibo:abstract  ?abstract. "
+                        + " ?publicationUri bibo:uri  ?uri. "
+                        + " ?publicationUri bibo:Quote \"" + keyword + "\" ."
+                        + "  BIND(REPLACE( \"" + keyword + "\", \" \", \"_\", \"i\") AS ?key) ."
+                        + "  BIND(IRI(?key) as ?keyword)"
+                        + " }"
+                        + "}";
+                waitingDialog.show("Searching publications with the keyword: " + keyword);
 
-            +' Construct {'
+                sparqlQuery.querySrv({query: sparqlPublications}, function (rdf) {
+                    var context = {
+                        "foaf": "http://xmlns.com/foaf/0.1/",
+                        "dc": "http://purl.org/dc/elements/1.1/",
+                        "dcterms": "http://purl.org/dc/terms/",
+                        "bibo": "http://purl.org/ontology/bibo/",
+                        "uc": "http://ucuenca.edu.ec/wkhuska/resource"
+                    };
 
-            +'  <http://ucuenca.edu.ec/wkhuska/resource/resultTitle> a uc:pagetitle.'
-            +' <http://ucuenca.edu.ec/wkhuska/resource/resultTitle> uc:viewtitle "Clusters that contain \'' + d.label + '\' Keyword".'
-            +'  ?cluster rdfs:label "keyword". ?cluster uc:total ?totalpub.'
-            +'} '
-            +'WHERE'
-            +'{'
-            +'{'
-            +'SELECT ?cluster (COUNT(?pubb) as ?totalpub)'
-            +'WHERE' 
-            +'{'
-            +'  graph <'+globalData.clustersGraph+'>'
-            +'        {'
-            +'          ?cluster <http://ucuenca.edu.ec/resource/hasPerson> ?subject.'
-            +'  		?subject foaf:publications ?pubb. '
-            +'          	{'
-            +'      			select  ?pubb ?title '
-            +'            		where'
-            +'            		{'
-            +'            			graph <'+globalData.centralGraph+'>'
-            +'            			{'      
-            +'            				?pubb bibo:Quote "' + d.label + '".'
-            +'                          	?pubb dct:title ?title.'
-            +'              			}'
-            +'          			}'
+                    jsonld.compact(rdf, context, function (err, compacted) {
+                        if (compacted)
+                        {
+                            var entity = compacted["@graph"];
+                            var final_entity = _.where(entity, {"@type": "bibo:Document"});
+                            var values = final_entity.length ? final_entity : [final_entity];
+                            //send data to getKeywordTag Controller
+                            scope.ctrlFn({value: values});
+                            waitingDialog.hide();
 
-            +'          	}'
-            +'          }'
-            +' }'
-            +'  group by ?cluster'
-            + '         }'
-            + ' Filter(?totalpub > 2)'
-            + '}';
-
-            
-            waitingDialog.show("Loading Authors Related with " + d.label);
-            sparqlQuery.querySrv({query: sparqlquery}, function (rdf) {
-                var context = {
-                    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-                    "foaf": "http://xmlns.com/foaf/0.1/",
-                    "dc": "http://purl.org/dc/elements/1.1/",
-                    "dcterms": "http://purl.org/dc/terms/",
-                    "bibo": "http://purl.org/ontology/bibo/",
-                    "uc": "http://ucuenca.edu.ec/wkhuska/resource/"
-                };
-                jsonld.compact(rdf, context, function (err, compacted) {
-                    if (compacted)
-                    {
-                        var entity = compacted["@graph"];
-                        //var final_entity = _.where(entity, {"@type": "bibo:Document"});
-                        var values = entity.length ? entity : [entity];
-                        //Change data
-                        for (var i = 0, len = compacted["@graph"].length; i < len; i++) {
-                            compacted["@graph"][i]["rdfs:label"] = compacted["@graph"][i]["@id"].toString().replace("http://ucuenca.edu.ec/resource/cluster","");
                         }
-                        //send data to getKeywordTag Controller
-                        scope.ifClick({value: compacted});
-                        waitingDialog.hide();
-                    } else
-                    {
-                        waitingDialog.hide();
-                    }
+                        else
+                        {
+                            waitingDialog.hide();
+                        }
+                    });
                 });
-            });   // end  sparqlQuery.querySrv(...
-
-            
+            }
+            return d3.event.preventDefault();
         };
         hashchange = function () {
             var id;
@@ -311,13 +340,12 @@ keywClusters.directive('keywClusters', ["d3", 'globalData', 'sparqlQuery',
             force = d3.layout.force().gravity(0).charge(0).size([width, height]).on("tick", tick);
             element.datum(data).call(chart);
 
-        }
+        };
 
         return {
             restrict: 'E',
             scope: {
-                //'ctrlFn': "&",
-                'ifClick': "&",
+                'ctrlFn': "&",
                 data: '='
             },
             compile: function (element, attrs, transclude) {
@@ -339,11 +367,22 @@ keywClusters.directive('keywClusters', ["d3", 'globalData', 'sparqlQuery',
                         var data = scope.data;
                         if (data) {
                             var jsonld = data.data;
-                            var schema = data.schema;
-                            var fields = schema.fields;
+
                             var mappedData = [];
-                            _.each(jsonld['@graph'], function (keyword, idx) {
-                                mappedData.push({label: keyword[fields[0]], value: keyword[fields[1]]["@value"]});
+                            _.each(jsonld, function (cluster, idx) {
+                                var a = cluster['color'].split("(")[1].split(")")[0];
+                                a = a.split(",");
+                                var b = a.map(function (x) {             //For each array element
+                                    x = parseInt(x).toString(16);      //Convert to a base16 string
+                                    return (x.length == 1) ? "0" + x : x;  //Add zero if we get only one character
+                                });
+                                b = "#" + b.join("");
+
+                                _.each(cluster['members'], function (person, idx) {
+                                    mappedData.push({label: person['@id'], value: 5, color: b});
+                                });
+
+
                             });
                             draw(svg, width, height, mappedData, scope, attrs);
                         }
@@ -352,5 +391,4 @@ keywClusters.directive('keywClusters', ["d3", 'globalData', 'sparqlQuery',
             }
         };
     }]);
-
 

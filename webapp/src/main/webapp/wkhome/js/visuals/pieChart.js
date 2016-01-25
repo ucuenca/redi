@@ -5,8 +5,8 @@ var pieChart = angular.module('pieChart', []);
 pieChart.factory('d3', function () {
     return	d3;
 });
-pieChart.directive('pieChart', ["d3", "sparqlQuery",
-    function (d3, sparqlQuery) {
+pieChart.directive('pieChart', ["d3", "globalData", "sparqlQuery",
+    function (d3, globalData, sparqlQuery) {
 
         //	we	will	soon	implement	this	function
         var draw = function draw(svg, width, height, entityName, data, scope) {
@@ -129,24 +129,25 @@ pieChart.directive('pieChart', ["d3", "sparqlQuery",
                         }
                         else
                         {
-                            var sparqlquery = 'PREFIX dct: <http://purl.org/dc/terms/> '
-                                    + ' PREFIX bibo: <http://purl.org/ontology/bibo/>  '
-                                    + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>  '
-                                    + ' PREFIX uc: <http://ucuenca.edu.ec/wkhuska/resource/>  '
-                                    + ' CONSTRUCT { <http://ucuenca.edu.ec/wkhuska/resultTitle> a uc:pagetitle. <http://ucuenca.edu.ec/wkhuska/resultTitle> uc:viewtitle "Authors from ' + key + ' "  .  ?subject rdfs:label ?name. ?subject uc:total ?totalPub }   '
+                            var sparqlquery = globalData.PREFIX
+                                    + ' CONSTRUCT { '
+                                    + ' uc:resultTitle a uc:pagetitle. '
+                                    + ' uc:resultTitle uc:viewtitle "Authors from ' + key + ' "  .  '  
+                                    + ' ?subject rdfs:label ?name. '  
+                                    + ' ?subject uc:total ?totalPub }   '
                                     + ' WHERE {  '
                                     + ' {       '
                                     + ' SELECT ?subject ?name (COUNT(?pub) AS ?totalPub)  '
                                     + ' WHERE { '
-                                    + ' GRAPH <http://ucuenca.edu.ec/wkhuska> {'
+                                    + ' GRAPH <'+globalData.centralGraph+'> {'
                                     + ' 	?subject foaf:publications  ?pub . '
                                     + ' 	?subject foaf:name       ?name.        '
                                     + ' 	?subject dct:provenance ?provenance. '
                                     + '     { '
                                     + '         SELECT * '
                                     + '         WHERE { '
-                                    + '         GRAPH <http://ucuenca.edu.ec/wkhuska/endpoints> { '
-                                    + '             ?provenance <http://ucuenca.edu.ec/wkhuska/resource/name> "' + key + '" } '
+                                    + '         GRAPH <'+globalData.endpointsGraph+'> { '
+                                    + '             ?provenance uc:name "' + key + '" } '
                                     + '         } '
                                     + '     } '
                                     + ' } } '
@@ -157,16 +158,8 @@ pieChart.directive('pieChart', ["d3", "sparqlQuery",
                             waitingDialog.show("Loading All Authors of Selected Source");
 
                             sparqlQuery.querySrv({query: sparqlquery}, function (rdf) {
-                                var context = {
-                                    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-                                    "foaf": "http://xmlns.com/foaf/0.1/",
-                                    "dc": "http://purl.org/dc/elements/1.1/",
-                                    "dcterms": "http://purl.org/dc/terms/",
-                                    "bibo": "http://purl.org/ontology/bibo/",
-                                    "uc": "http://ucuenca.edu.ec/wkhuska/resource/"
-                                };
 
-                                jsonld.compact(rdf, context, function (err, compacted) {
+                                jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                                     if (compacted)
                                     {
                                         var entity = compacted["@graph"];

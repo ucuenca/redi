@@ -49,8 +49,48 @@ wkhomeControllers.controller('worldPath', ['$scope',
             ]
         };
     }]);
-wkhomeControllers.controller('totalPersonReg', ['$scope', '$window', 'sparqlQuery', 'searchData',
-    function ($scope, $window, sparqlQuery, searchData) {
+
+
+wkhomeControllers.controller('colorClusterCloud', ['$scope', '$window', 'globalData', 'sparqlQuery', 'searchData',
+    function ($scope, $window, globalData, sparqlQuery, searchData) {
+        var queryTotalAuthors = globalData.PREFIX
+                + ' CONSTRUCT { ?cluster a uc:Cluster . '
+                + ' ?cluster uc:hasPerson ?person .  '
+                + '            ?person a foaf:Person }  '
+                + ' WHERE { '
+                + '     GRAPH <' + globalData.clustersGraph + '> '
+                + '         { '
+                + '         	?cluster uc:hasPerson ?person.   '
+                + '         } '
+                + ' } ORDER BY ?cluster LIMIT 100';
+
+        sparqlQuery.querySrv({query: queryTotalAuthors}, function (rdf) {
+            jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
+                //$scope.data = compacted;
+                var clusters = _.where(compacted['@graph'], {"@type": "uc:Cluster"});
+
+                //var clusters = compacted['@graph'];
+                var data = []
+                clusters.forEach(function (cluster) {
+                    data.push({label: cluster['@id'], members: cluster['uc:hasPerson'], color: get_random_color2()});
+                });
+                $scope.$apply(function () {
+                    $scope.data = {'entityName': 'Authors', 'data': data};
+                });
+            });
+        });// End sparqlQuery.querySrv ...
+
+        function get_random_color2()
+        {
+            var r = function () {
+                return Math.floor(Math.random() * 256)
+            };
+            return "rgb(" + r() + "," + r() + "," + r() + ")";
+        }
+    }]);
+
+wkhomeControllers.controller('totalPersonReg', ['$scope', '$window', 'globalData', 'sparqlQuery', 'searchData',
+    function ($scope, $window, globalData, sparqlQuery, searchData) {
         //if click in pie-chart (Authors)
         $scope.ifClick = function (value)
         {
@@ -58,17 +98,33 @@ wkhomeControllers.controller('totalPersonReg', ['$scope', '$window', 'sparqlQuer
             $window.location.hash = "w/cloud?" + "datacloud";
         };
         //sparql construct to get total authors of publications
-        var queryTotalAuthors = 'PREFIX dct: <http://purl.org/dc/terms/> PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
-                + 'PREFIX uc: <http://ucuenca.edu.ec/wkhuska/resource/> '
-                + 'CONSTRUCT { ?provenance a uc:Endpoint . ?provenance uc:name ?name . ?provenance uc:total ?total } '
-                + 'WHERE { SELECT ?provenance ?name (COUNT(DISTINCT(?s)) AS ?total) WHERE { '
-                + '?s a foaf:Person. ?s foaf:publications ?pub . ?s dct:provenance ?provenance . ?provenance uc:name ?name . }GROUP BY ?provenance ?name '
-                + '}';
+        var queryTotalAuthors = globalData.PREFIX
+                + 'CONSTRUCT { '
+                + '         ?provenance a uc:Endpoint . '
+                + '         ?provenance uc:name ?name . '
+                + '         ?provenance uc:total ?total  } '
+                + 'WHERE { '
+                + '         SELECT ?provenance ?name (COUNT(DISTINCT(?s)) AS ?total) '
+                + '             WHERE { '
+                + '                 ?s a foaf:Person. '
+                + '                 ?s foaf:publications ?pub . '
+                + '                 ?s dct:provenance ?provenance . '
+                + '                 ?provenance uc:name ?name . } '
+                + ' GROUP BY ?provenance ?name '
+                + ' } ';
+
+        //for parliament triplestore test
+//        var queryTotalAuthors = 'PREFIX dct: <http://purl.org/dc/terms/> PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
+//                + 'PREFIX uc: <http://ucuenca.edu.ec/wkhuska/resource/> '
+//                + 'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> '
+//                +       " construct { ?s ?p ?o } "  
+//                +    "  WHERE {  ?s ?p ?o } limit 10 " ;
+
         sparqlQuery.querySrv({query: queryTotalAuthors}, function (rdf) {
             var context = {
-                "uc": "http://ucuenca.edu.ec/wkhuska/resource/"
+                "uc": "http://ucuenca.edu.ec/resource/"
             };
-            jsonld.compact(rdf, context, function (err, compacted) {
+            jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                 //$scope.data = compacted;
                 var endpoints = compacted['@graph'];
                 var data = []
@@ -79,7 +135,7 @@ wkhomeControllers.controller('totalPersonReg', ['$scope', '$window', 'sparqlQuer
                     $scope.data = {'entityName': 'Authors', 'data': data};
                 });
             });
-        });
+        });// End sparqlQuery.querySrv ...
         /*************************************************************/
         /*************************************************************/
         /*query to get the keywords in memory */
@@ -87,25 +143,24 @@ wkhomeControllers.controller('totalPersonReg', ['$scope', '$window', 'sparqlQuer
         loadAllKeyword();
         $scope.themes = [];
         function loadAllKeyword() {
-            var queryKeywords = 'PREFIX bibo: <http://purl.org/ontology/bibo/> '
-                    + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
+            var queryKeywords = globalData.PREFIX
                     + ' CONSTRUCT { ?keyword rdfs:label ?key } '
-                    + '	FROM <http://ucuenca.edu.ec/wkhuska> '
+                    + '	FROM <' + globalData.centralGraph + '> '
                     + ' WHERE { '
-                    + ' SELECT  (count(?key) as ?k) ?key '
-                    + ' WHERE { '
-                    + ' ?subject bibo:Quote ?key. '
-                    + '         BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
-                    + '         BIND(IRI(?unickey) as ?keyword) '
-                    + ' } '
-                    + ' group by ?keyword  ?key '
-                    + ' HAVING(?k > 10) '
+                    + '     SELECT  (count(?key) as ?k) ?key '
+                    + '         WHERE { '
+                    + '             ?subject bibo:Quote ?key. '
+                    + '             BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
+                    + '             BIND(IRI(?unickey) as ?keyword) '
+                    + '         } '
+                    + '     GROUP BY ?keyword  ?key '
+                    + '     HAVING(?k > 10) '
                     + '}';
             sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
                 var context = {
                     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
                 };
-                jsonld.compact(rdf, context, function (err, compacted) {
+                jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                     _.map(compacted["@graph"], function (pub) {
                         var model = {};
                         model["id"] = pub["@id"];
@@ -129,26 +184,28 @@ wkhomeControllers.controller('totalPersonReg', ['$scope', '$window', 'sparqlQuer
         /* LOAD DATA TO KEYWORDS CLUD */
         /*********************************************/
 
-        var queryKeywords = ' PREFIX bibo: <http://purl.org/ontology/bibo/> '
-                + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
-                + ' PREFIX uc: <http://ucuenca.edu.ec/wkhuska/resource/> '
-                + ' CONSTRUCT { ?keyword rdfs:label ?k; uc:total ?totalPub } FROM <http://ucuenca.edu.ec/wkhuska> WHERE { '
-                + ' SELECT ?keyword ?k (COUNT(DISTINCT(?subject)) AS ?totalPub) '
+        var queryKeywords = globalData.PREFIX
+                + ' CONSTRUCT { '
+                + '         ?keyword rdfs:label ?k; '
+                + '               uc:total ?totalPub } '
+                + ' FROM <' + globalData.centralGraph + '>  '
                 + ' WHERE { '
-                + ' ?person foaf:publications ?subject. '
-                + ' ?subject bibo:Quote ?k . '
-                + ' BIND(IRI(?k) AS ?keyword) . } '
-                + ' GROUP BY ?keyword ?k '
-                + ' HAVING(?totalPub > 25 && ?totalPub < 200) '
-                + ' LIMIT 150'
-                //+'ORDER BY DESC(?totalPub) '
+                + '     SELECT ?keyword ?k (COUNT(DISTINCT(?subject)) AS ?totalPub) '
+                + '     WHERE { '
+                + '         ?person foaf:publications ?subject. '
+                + '         ?subject bibo:Quote ?k . '
+                + '         BIND(IRI(?k) AS ?keyword) . '
+                + '     } '
+                + '     GROUP BY ?keyword ?k '
+                + '     HAVING(?totalPub > 25 && ?totalPub < 200) '
+                + '     LIMIT 150'
                 + '}';
         sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
             var context = {
                 "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-                "uc": "http://ucuenca.edu.ec/wkhuska/resource/"
+                "uc": "http://ucuenca.edu.ec/resource/"
             };
-            jsonld.compact(rdf, context, function (err, compacted) {
+            jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                 $scope.$apply(function () {
                     //$scope.data = {schema: {"context": context, fields: ["rdfs:label", "uc:total"]}, data: compacted};
                     searchData.allkeywordsCloud = {schema: {"context": context, fields: ["rdfs:label", "uc:total"]}, data: compacted};
@@ -166,29 +223,30 @@ wkhomeControllers.controller('totalPersonReg', ['$scope', '$window', 'sparqlQuer
 
 
     }]);
-wkhomeControllers.controller('totalPublicationReg', ['$scope', 'sparqlQuery',
-    function ($scope, sparqlQuery) {
-        var queryTotalAuthors = ''
-                + ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>'
-                + ' PREFIX uc: <http://ucuenca.edu.ec/wkhuska/resource/> '
-                + ' CONSTRUCT { ?graph a uc:Provider. ?graph uc:name ?name; uc:total ?total }'
+wkhomeControllers.controller('totalPublicationReg', ['$scope', 'globalData', 'sparqlQuery',
+    function ($scope, globalData, sparqlQuery) {
+        var queryTotalAuthors = globalData.PREFIX
+                + ' CONSTRUCT { '
+                + ' ?graph a uc:Provider. '
+                + ' ?graph uc:name ?name; '
+                + '         uc:total ?total }'
                 + ' WHERE {  '
                 + '     SELECT ?graph (substr(?graph,40) as ?name) ?total'
-                + '     WHERE {'
-                + '         SELECT DISTINCT ?graph (COUNT(?s) AS ?total)'
                 + '         WHERE {'
-                + '             GRAPH ?graph {'
-                + '                 ?s owl:sameAs ?same'
+                + '             SELECT DISTINCT ?graph (COUNT(?s) AS ?total)'
+                + '             WHERE {'
+                + '                 GRAPH ?graph {'
+                + '                     ?s owl:sameAs ?same'
+                + '                 }'
                 + '             }'
+                + '             GROUP BY ?graph'
                 + '         }'
-                + '         GROUP BY ?graph'
-                + '     }'
                 + ' }';
         sparqlQuery.querySrv({query: queryTotalAuthors}, function (rdf) {
             var context = {
-                "uc": "http://ucuenca.edu.ec/wkhuska/resource/"
+                "uc": "http://ucuenca.edu.ec/resource/"
             };
-            jsonld.compact(rdf, context, function (err, compacted) {
+            jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                 //$scope.data = compacted;
                 var endpoints = compacted['@graph'];
                 var data = []
@@ -201,43 +259,38 @@ wkhomeControllers.controller('totalPublicationReg', ['$scope', 'sparqlQuery',
             });
         });
     }]);
-wkhomeControllers.controller('totalResearchAreas', ['$scope', 'sparqlQuery', 'searchData', '$window',
-    function ($scope, sparqlQuery, searchData, $window) {
+wkhomeControllers.controller('totalResearchAreas', ['$scope', 'globalData', 'sparqlQuery', 'searchData', '$window',
+    function ($scope, globalData, sparqlQuery, searchData, $window) {
         //if click in pie-chart (Research Areas)
         $scope.ifClick = function (value)
         {
             searchData.researchArea = value;
             $window.location.hash = "cloud/group-by";
         };
-        var queryTotalAreas = ''
-                + ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>'
-                + ' PREFIX uc: <http://ucuenca.edu.ec/wkhuska/resource/> '
-                + ' PREFIX bibo: <http://purl.org/ontology/bibo/> '
-                + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
-                + ' CONSTRUCT { ?uriArea a uc:ResearchArea. ?uriArea uc:name ?keyword; uc:total ?total }'
+        var queryTotalAreas = globalData.PREFIX
+                + ' CONSTRUCT { '
+                + '     ?uriArea a uc:ResearchArea. '
+                + '     ?uriArea uc:name ?keyword; '
+                + '                 uc:total ?total }'
                 + ' WHERE {  '
                 + '     SELECT ?keyword (IRI(REPLACE(?keyword, " ", "_", "i")) as ?uriArea) ?total '
                 + '     WHERE { '
                 + '         { '
                 + '             SELECT DISTINCT ?keyword (COUNT(?keyword) AS ?total) '
                 + '             WHERE { '
-                + '                 GRAPH <http://ucuenca.edu.ec/wkhuska> { '
-                + '                 ?s foaf:publications ?publications. '
-                + '                 ?publications bibo:Quote ?keyword. '
+                + '                 GRAPH <' + globalData.centralGraph + '> { '
+                + '                     ?s foaf:publications ?publications. '
+                + '                     ?publications bibo:Quote ?keyword. '
                 + '                 } '
                 + '              } '
                 + '              GROUP BY ?keyword '
                 + '              ORDER BY DESC(?total) '
-                + '              limit 10 '
+                + '              LIMIT 10 '
                 + '         } '
                 + '     }'
                 + ' }';
         sparqlQuery.querySrv({query: queryTotalAreas}, function (rdf) {
-            var context = {
-                "uc": "http://ucuenca.edu.ec/wkhuska/resource/",
-                "bibo": "http://purl.org/ontology/bibo/> "
-            };
-            jsonld.compact(rdf, context, function (err, compacted) {
+            jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                 //$scope.data = compacted;
                 var endpoints = compacted['@graph'];
                 var data = []
@@ -250,8 +303,8 @@ wkhomeControllers.controller('totalResearchAreas', ['$scope', 'sparqlQuery', 'se
             });
         });
     }]);
-wkhomeControllers.controller('groupTagsController', ['$scope', '$timeout', 'sparqlQuery', 'searchData', '$route', '$window',
-    function ($scope, $timeout, sparqlQuery, searchData, $window) {
+wkhomeControllers.controller('groupTagsController', ['$scope', 'globalData', 'sparqlQuery', 'searchData', '$route', '$window',
+    function ($scope, globalData, sparqlQuery, searchData, $window) {
         $('html,body').animate({
             scrollTop: $("#scrollToTop").offset().top
         }, "slow");
@@ -295,14 +348,13 @@ wkhomeControllers.controller('groupTagsController', ['$scope', '$timeout', 'spar
             function executeGroupTags() {
 
                 //only keywords that appear in more than 2 articles
-                var queryKeywords = 'PREFIX bibo: <http://purl.org/ontology/bibo/> '
-                        + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
+                var queryKeywords = globalData.PREFIX
                         + ' CONSTRUCT { ?keyword rdfs:label ?key } '
-                        + '	FROM <http://ucuenca.edu.ec/wkhuska> '
+                        + '	FROM <' + globalData.centralGraph + '> '
                         + ' WHERE { '
                         + ' SELECT  (count(?key) as ?k) ?key '
                         + ' WHERE { '
-                        + ' ?subject bibo:Quote ?key. '
+                        + '         ?subject bibo:Quote ?key. '
                         + '         BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
                         + '         BIND(IRI(?unickey) as ?keyword) '
                         + ' } '
@@ -311,10 +363,7 @@ wkhomeControllers.controller('groupTagsController', ['$scope', '$timeout', 'spar
                         + '}';
                 sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
                     waitingDialog.show();
-                    var context = {
-                        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-                    };
-                    jsonld.compact(rdf, context, function (err, compacted) {
+                    jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
 
                         _.map(compacted["@graph"], function (pub) {
                             var model = {};
@@ -360,18 +409,18 @@ wkhomeControllers.controller('groupTagsController', ['$scope', '$timeout', 'spar
         function loadResources(value, groupby)//load resources related with selected keyword
         {
 
-            var queryRelatedPublications = ' PREFIX dct: <http://purl.org/dc/terms/>   '
-                    + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>      '
-                    + ' PREFIX bibo: <http://purl.org/ontology/bibo/>    '
-                    + ' PREFIX uc: <http://ucuenca.edu.ec/wkhuska/resource/> '
-                    + ' construct { '
-                    + '  ?publicationUri uc:title ?title; uc:nameauthor ?nameauthor; uc:namesource ?namesource ; uc:abstract ?abstract '
+            var queryRelatedPublications = globalData.PREFIX
+                    + ' CONSTRUCT { '
+                    + '     ?publicationUri uc:title ?title; '
+                    + '     uc:nameauthor ?nameauthor; '
+                    + '     uc:namesource ?namesource ; '
+                    + '     uc:abstract ?abstract '
                     + ' }'
                     + ' WHERE'
                     + ' {'
                     + '     SELECT ?publicationUri ?title ?nameauthor ?namesource ?abstract '
                     + '         WHERE {   '
-                    + '             graph <http://ucuenca.edu.ec/wkhuska> { '
+                    + '             graph <' + globalData.centralGraph + '> { '
                     + '                     ?subject foaf:publications ?publicationUri .      '
                     + '                     ?subject foaf:name ?nameauthor.           '
                     + '                     ?subject dct:provenance ?source.'
@@ -385,8 +434,8 @@ wkhomeControllers.controller('groupTagsController', ['$scope', '$timeout', 'spar
                     + '                     }       '
                     + '                     { '
                     + '                         SELECT * WHERE{ '
-                    + '                             GRAPH <http://ucuenca.edu.ec/wkhuska/endpoints>  { '
-                    + '                                  ?source  <http://ucuenca.edu.ec/wkhuska/resource/name> ?namesource. '
+                    + '                             GRAPH <' + globalData.endpointsGraph + '>  { '
+                    + '                                  ?source  <http://ucuenca.edu.ec/resource/name> ?namesource. '
                     + '                             } '
                     + '                         }'
                     + '                     } '
@@ -395,13 +444,7 @@ wkhomeControllers.controller('groupTagsController', ['$scope', '$timeout', 'spar
                     + ' } ';
             $scope.publicationsByKeyword = [];
             sparqlQuery.querySrv({query: queryRelatedPublications}, function (rdf) {
-                var context = {
-                    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-                    "uc": "http://ucuenca.edu.ec/wkhuska/resource/",
-                    "foaf": "http://xmlns.com/foaf/0.1/",
-                    "bibo": "http://purl.org/ontology/bibo/"
-                };
-                jsonld.compact(rdf, context, function (err, compacted) {
+                jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                     _.map(compacted["@graph"], function (pub) {
                         var model = {};
                         //model["Publication"] = pub["foaf:publications"]["@id"];
@@ -431,8 +474,8 @@ wkhomeControllers.controller('groupTagsController', ['$scope', '$timeout', 'spar
     }]); //end groupTagsController 
 
 
-wkhomeControllers.controller('getKeywordsTag', ['$scope', 'sparqlQuery', 'searchData',
-    function ($scope, sparqlQuery, searchData) {
+wkhomeControllers.controller('getKeywordsTag', ['$scope', 'globalData', 'sparqlQuery', 'searchData',
+    function ($scope, globalData, sparqlQuery, searchData) {
         $('html,body').animate({
             scrollTop: $("#scrollToTop").offset().top
         }, "slow");
@@ -445,7 +488,7 @@ wkhomeControllers.controller('getKeywordsTag', ['$scope', 'sparqlQuery', 'search
                 //var keys = Object.keys(author);
 
                 model["id"] = pub["@id"];
-                model["title"] = pub["dcterms:title"];
+                model["title"] = pub["dct:title"];
                 model["abstract"] = pub["bibo:abstract"];
                 model["uri"] = pub["bibo:uri"]["@id"];
                 if (model["title"] && model["abstract"])
@@ -474,29 +517,28 @@ wkhomeControllers.controller('getKeywordsTag', ['$scope', 'sparqlQuery', 'search
         if (!searchData.allkeywordsCloud) // if no load data by default
         {
             waitingDialog.show();
-            var queryKeywords = ' PREFIX bibo: <http://purl.org/ontology/bibo/> '
-                    + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
-                    + ' PREFIX uc: <http://ucuenca.edu.ec/wkhuska/resource/> '
-                    + ' CONSTRUCT { ?keyword rdfs:label ?k; uc:total ?totalPub } FROM <http://ucuenca.edu.ec/wkhuska> WHERE { '
-                    + ' SELECT ?keyword ?k (COUNT(DISTINCT(?subject)) AS ?totalPub) '
+            var queryKeywords = globalData.PREFIX
+                    + ' CONSTRUCT { '
+                    + ' ?keyword rdfs:label ?k; '
+                    + ' uc:total ?totalPub } '
+                    + ' FROM <' + globalData.centralGraph + '> '
                     + ' WHERE { '
-                    + ' ?person foaf:publications ?subject. '
-                    + ' ?subject bibo:Quote ?k . '
-                    + ' BIND(IRI(?k) AS ?keyword) . } '
-                    + ' GROUP BY ?keyword ?k '
-                    + ' HAVING(?totalPub > 25 && ?totalPub < 200) '
+                    + '     SELECT ?keyword ?k (COUNT(DISTINCT(?subject)) AS ?totalPub) '
+                    + '     WHERE { '
+                    + '         ?person foaf:publications ?subject. '
+                    + '         ?subject bibo:Quote ?k . '
+                    + '         BIND(IRI(?k) AS ?keyword) . '
+                    + '     } '
+                    + '     GROUP BY ?keyword ?k '
+                    + '     HAVING(?totalPub > 25 && ?totalPub < 200) '
                     + ' LIMIT 150'
                     //+'ORDER BY DESC(?totalPub) '
                     + '}';
             sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
-                var context = {
-                    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-                    "uc": "http://ucuenca.edu.ec/wkhuska/resource/"
-                };
-                jsonld.compact(rdf, context, function (err, compacted) {
+                jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                     $scope.$apply(function () {
-                        $scope.data = {schema: {"context": context, fields: ["rdfs:label", "uc:total"]}, data: compacted};
-                        searchData.allkeywordsCloud = {schema: {"context": context, fields: ["rdfs:label", "uc:total"]}, data: compacted};
+                        $scope.data = {schema: {"context": globalData.CONTEXT, fields: ["rdfs:label", "uc:total"]}, data: compacted};
+                        searchData.allkeywordsCloud = {schema: {"context": globalData.CONTEXT, fields: ["rdfs:label", "uc:total"]}, data: compacted};
                         waitingDialog.hide();
                     });
                 });
@@ -509,8 +551,8 @@ wkhomeControllers.controller('getKeywordsTag', ['$scope', 'sparqlQuery', 'search
 
 
     }]);
-wkhomeControllers.controller('exploreAuthor', ['$scope', '$rootScope', 'searchData', '$window', 'sparqlQuery',
-    function ($scope, $rootScope, searchData, $window, sparqlQuery) {
+wkhomeControllers.controller('exploreAuthor', ['$scope', '$rootScope', 'globalData', 'searchData', '$window', 'sparqlQuery',
+    function ($scope, $rootScope, globalData, searchData, $window, sparqlQuery) {
 
         $rootScope.$on("CallParentMethod", function(author){
            $scope.clickonRelatedauthor (author);
@@ -520,8 +562,7 @@ wkhomeControllers.controller('exploreAuthor', ['$scope', '$rootScope', 'searchDa
 
         clickonRelatedauthor = function (author)
         {
-            var getAuthorDataQuery = ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>  '
-                    + ' PREFIX uc: <http://ucuenca.edu.ec/wkhuska/resource/> '
+            var getAuthorDataQuery = globalData.PREFIX
                     + ' CONSTRUCT {   <' + author + '> foaf:name ?name; a foaf:Person  '
                     + ' }   '
                     + ' WHERE '
@@ -530,19 +571,14 @@ wkhomeControllers.controller('exploreAuthor', ['$scope', '$rootScope', 'searchDa
                     + ' } ';
 
             sparqlQuery.querySrv({query: getAuthorDataQuery}, function (rdf) {
-                   var context = {
-                    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-                    "uc": "http://ucuenca.edu.ec/wkhuska/resource/",
-                    "foaf": "http://xmlns.com/foaf/0.1/",
-                };
-                jsonld.compact(rdf, context, function (err, compacted) {
+                jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                     $scope.$apply(function () {
-                        
+
                         $scope.data = compacted;
                     });
                 });
             });
-      
+
 
         };
         $scope.ifrightClick = function (value)
@@ -581,7 +617,7 @@ wkhomeControllers.controller('exploreAuthor', ['$scope', '$rootScope', 'searchDa
                         //$scope.data = _.where(authorSearch, {"@id": uri});
                         $scope.data = searchData.authorSearch;
                         $('#searchResults').modal('hide');
-                    }
+                    };
                     waitingDialog.hide();
                     $('#searchResults').modal('show');
                     } else {
@@ -633,8 +669,6 @@ wkhomeControllers.controller('exploreresearchArea', ['$scope', '$rootScope', 'se
                     };
                     waitingDialog.hide();
                     $('#searchResults').modal('show');
-//                  
-//                    
 //                        } else {
 //                        searchData.authorSearch["@graph"] = authorSearch;
 //                        $scope.data = searchData.authorSearch;         
@@ -652,11 +686,8 @@ wkhomeControllers.controller('exploreresearchArea', ['$scope', '$rootScope', 'se
         }, true);
     }]); // end exploreresearchArea
 
-
-
-
-wkhomeControllers.controller('SearchController', ['$scope', '$window', 'sparqlQuery', 'searchData',
-    function ($scope, $window, sparqlQuery, searchData) {
+wkhomeControllers.controller('SearchController', ['$scope', '$window', 'globalData', 'sparqlQuery', 'searchData',
+    function ($scope, $window, globalData, sparqlQuery, searchData) {
         //$scope.sparqlQuery = sparqlQuery;
         String.format = function () {
             // The string containing the format items (e.g. "{0}")
@@ -675,20 +706,19 @@ wkhomeControllers.controller('SearchController', ['$scope', '$window', 'sparqlQu
             if ($scope.searchText) {
                 console.log($scope.searchText);
                 waitingDialog.show();
-                var queryAuthors = ""
-                        + " PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
-                        + " PREFIX mm: <http://marmotta.apache.org/vocabulary/sparql-functions#> "
-                        + " CONSTRUCT { ?subject a foaf:Person. ?subject foaf:name ?name } "
+                var queryAuthors = globalData.PREFIX
+                        + " CONSTRUCT { "
+                        + " ?subject a foaf:Person. "
+                        + " ?subject foaf:name ?name } "
                         + " WHERE { "
                         + " { "
                         + "     SELECT DISTINCT (sample(?s) AS ?subject) ?name "
                         + "     WHERE { "
-                        + "         GRAPH <http://ucuenca.edu.ec/wkhuska> {"
-                        + "         ?s a foaf:Person. "
-                        + "         ?s foaf:name ?name."
-                        + "         ?s foaf:publications ?pub. "
-                        //+ "         {0}"
-                        + '         FILTER(mm:fulltext-search(str(?name), "' + $scope.searchText + '")).'
+                        + '         GRAPH <' + globalData.centralGraph + '> {'
+                        + "             ?s a foaf:Person. "
+                        + "             ?s foaf:name ?name."
+                        + "             ?s foaf:publications ?pub. "
+                        + '             FILTER(mm:fulltext-search(str(?name), "' + $scope.searchText + '")).'
                         + "     } } "
                         + "     GROUP BY ?name "
                         + "  } "
@@ -710,7 +740,7 @@ wkhomeControllers.controller('SearchController', ['$scope', '$window', 'sparqlQu
                          "foaf:name": {"@id": "http://xmlns.com/foaf/0.1/name"},
                          "foaf:Person": {"@id": "http://xmlns.com/foaf/0.1/Person"}*/
                     };
-                    jsonld.compact(rdf, context, function (err, compacted) {
+                    jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                         if (compacted["@graph"])
                         {
                             searchData.authorSearch = compacted;
@@ -719,16 +749,13 @@ wkhomeControllers.controller('SearchController', ['$scope', '$window', 'sparqlQu
                         else
                         {
                             waitingDialog.show();
-                            var queryAuthors = "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
-                                    + " PREFIX bibo: <http://purl.org/ontology/bibo/> "
-                                    + " PREFIX mm: <http://marmotta.apache.org/vocabulary/sparql-functions#> "
-                                    + " PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
+                            var queryAuthors = globalData.PREFIX
                                     + " CONSTRUCT { ?keywordduri rdfs:label ?k } "
                                     + " WHERE { "
                                     + " { "
                                     + "     SELECT DISTINCT (sample(?keyword) AS ?keywordduri) ?k "
                                     + "     WHERE { "
-                                    + "         GRAPH <http://ucuenca.edu.ec/wkhuska> {"
+                                    + '         GRAPH <' + globalData.centralGraph + '> {'
                                     + "         ?s foaf:publications ?pub. "
                                     + "         ?pub bibo:Quote ?k."
                                     + "         BIND(IRI(?k) AS ?keyword) . "
@@ -750,13 +777,7 @@ wkhomeControllers.controller('SearchController', ['$scope', '$window', 'sparqlQu
                             //queryAuthors = String.format(queryAuthors, filterContainer);
                             sparqlQuery.querySrv({query: queryAuthors},
                             function (rdf) {
-                                var context = {
-                                    "foaf": "http://xmlns.com/foaf/0.1/",
-                                    "rdfs": "http://www.w3.org/2000/01/rdf-schema#"   /*,
-                                     "foaf:name": {"@id": "http://xmlns.com/foaf/0.1/name"},
-                                     "foaf:Person": {"@id": "http://xmlns.com/foaf/0.1/Person"}*/
-                                };
-                                jsonld.compact(rdf, context, function (err, compacted) {
+                                jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                                     if (compacted["@graph"])
                                     {
                                         searchData.areaSearch = compacted;
@@ -781,8 +802,8 @@ wkhomeControllers.controller('ExploreController', ['$scope', '$window',
     function ($scope, $window) {
         console.log($scope.text);
     }]);
-wkhomeControllers.controller('genericcloudController', ['$scope', '$window', 'sparqlQuery', 'searchData',
-    function ($scope, $window, sparqlQuery, searchData) {
+wkhomeControllers.controller('genericcloudController', ['$scope', '$window', 'globalData', 'sparqlQuery', 'searchData',
+    function ($scope, $window, globalData, sparqlQuery, searchData) {
         $scope.todos = [];
         $scope.ctrlFn = function (value)
         {
@@ -791,7 +812,7 @@ wkhomeControllers.controller('genericcloudController', ['$scope', '$window', 'sp
             _.map(value, function (pub) {
                 //var keys = Object.keys(author);
                 model["id"] = pub["@id"];
-                model["title"] = pub["dcterms:title"];
+                model["title"] = pub["dct:title"];
                 model["abstract"] = pub["bibo:abstract"];
                 if (pub["bibo:uri"]) {
                     model["uri"] = pub["bibo:uri"]["@id"];
@@ -820,16 +841,12 @@ wkhomeControllers.controller('genericcloudController', ['$scope', '$window', 'sp
             });
         };
         $scope.$watch('searchData.genericData', function (newValue, oldValue, scope) {
-            var context = {
-                "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-                "uc": "http://ucuenca.edu.ec/wkhuska/resource/"
-            };
-            $scope.data = {schema: {"context": context, fields: ["rdfs:label", "uc:total"]}, data: searchData.genericData};
+            $scope.data = {schema: {"context": globalData.CONTEXT, fields: ["rdfs:label", "uc:total"]}, data: searchData.genericData};
         });
     }]); //end genericcloudController 
 
-wkhomeControllers.controller('resourcesMap', ['$scope', '$window', 'sparqlQuery', 'searchData',
-    function ($scope, $window, sparqlQuery, searchData) {
+wkhomeControllers.controller('resourcesMap', ['$scope', '$window', 'globalData', 'sparqlQuery', 'searchData',
+    function ($scope, $window, globalData, sparqlQuery, searchData) {
 
         //if click in pie-chart
         $scope.ifClick = function (value)
@@ -841,25 +858,21 @@ wkhomeControllers.controller('resourcesMap', ['$scope', '$window', 'sparqlQuery'
         if (!searchData.allkeywords)
         {
             waitingDialog.show("Loading Research Areas");
-            var queryKeywords = 'PREFIX bibo: <http://purl.org/ontology/bibo/> '
-                    + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
+            var queryKeywords = globalData.PREFIX
                     + ' CONSTRUCT { ?keyword rdfs:label ?key } '
-                    + '	FROM <http://ucuenca.edu.ec/wkhuska> '
+                    + '	FROM <' + globalData.centralGraph + '> '
                     + ' WHERE { '
-                    + ' SELECT  (count(?key) as ?k) ?key '
-                    + ' WHERE { '
-                    + ' ?subject bibo:Quote ?key. '
+                    + '     SELECT  (count(?key) as ?k) ?key '
+                    + '     WHERE { '
+                    + '         ?subject bibo:Quote ?key. '
                     + '         BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
                     + '         BIND(IRI(?unickey) as ?keyword) '
-                    + ' } '
-                    + ' group by ?keyword  ?key '
-                    + ' HAVING(?k > 10) '
+                    + '     } '
+                    + '     GROUP BY ?keyword  ?key '
+                    + '     HAVING(?k > 10) '
                     + '}';
             sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
-                var context = {
-                    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-                };
-                jsonld.compact(rdf, context, function (err, compacted) {
+               jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                     _.map(compacted["@graph"], function (pub) {
                         var model = {};
                         model["id"] = pub["@id"];
@@ -886,11 +899,7 @@ wkhomeControllers.controller('resourcesMap', ['$scope', '$window', 'sparqlQuery'
         //default selectedTagItem =  Semantic Web  - > see in app.js
         $scope.$watch('selectedTagItem', function () {
             //alert($scope.selectedItem);
-            var queryBySource = 'PREFIX dct: <http://purl.org/dc/terms/> '
-                    + ' PREFIX prov: <http://www.w3.org/ns/prov#> '
-                    + ' PREFIX bibo: <http://purl.org/ontology/bibo/> '
-                    + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
-                    + ' PREFIX uc: <http://ucuenca.edu.ec/wkhuska/resource/> '
+            var queryBySource = globalData.PREFIX
                     + ' CONSTRUCT { '
                     + '         ?urikeyword bibo:Quote "' + $scope.selectedTagItem + '". '
                     + '         ?urikeyword uc:totalpublications ?cont. '
@@ -902,38 +911,39 @@ wkhomeControllers.controller('resourcesMap', ['$scope', '$window', 'sparqlQuery'
                     + '         ?urikeyword uc:fullname ?fullname. '
                     + ' } '
                     + 'WHERE {'
-                    + '     SELECT (count(?object) as ?cont) ?provenance  ?urikeyword ?provenance ?sourcename ?lat ?long ?province ?city ?fullname  WHERE {'
-                    + '     GRAPH <http://ucuenca.edu.ec/wkhuska>  {'
-                    + '         ?subject foaf:publications ?object.'
-                    + '         ?object bibo:Quote "' + $scope.selectedTagItem + '".'
-                    + '         ?subject dct:provenance ?provenance.'
-                    + '         { '
-                    + '             SELECT DISTINCT ?sourcename ?lat ?long ?province ?city ?fullname '
-                    + '             WHERE { '
-                    + '                 GRAPH <http://ucuenca.edu.ec/wkhuska/endpoints>  { '
-                    + '                     ?provenance uc:name ?sourcename. '
-                    + '                     ?provenance  uc:latitude ?lat. '
-                    + '                     ?provenance uc:longitude ?long. '
-                    + '                     ?provenance uc:province ?province. '
-                    + '                     ?provenance uc:city ?city. '
-                    + '                     ?provenance uc:fullName ?fullname.'
+                    + '     SELECT (count(?object) as ?cont) ?provenance  ?urikeyword ?provenance ?sourcename ?lat ?long ?province ?city ?fullname '
+                    + '     WHERE {'
+                    + '         GRAPH <' + globalData.centralGraph + '>  {'
+                    + '             ?subject foaf:publications ?object.'
+                    + '             ?object bibo:Quote "' + $scope.selectedTagItem + '".'
+                    + '             ?subject dct:provenance ?provenance.'
+                    + '             { '
+                    + '                 SELECT DISTINCT ?sourcename ?lat ?long ?province ?city ?fullname '
+                    + '                 WHERE { '
+                    + '                     GRAPH <' + globalData.endpointsGraph + '>  { '
+                    + '                         ?provenance uc:name ?sourcename. '
+                    + '                         ?provenance  uc:latitude ?lat. '
+                    + '                         ?provenance uc:longitude ?long. '
+                    + '                         ?provenance uc:province ?province. '
+                    + '                         ?provenance uc:city ?city. '
+                    + '                         ?provenance uc:fullName ?fullname.'
+                    + '                     } '
                     + '                 } '
                     + '             } '
+                    + '             BIND(REPLACE("' + $scope.selectedTagItem + '"," ","_","i") + "_" + ?sourcename  as ?iduri). '
+                    + '             BIND(IRI(?iduri) as ?urikeyword) '
                     + '         } '
-                    + '         BIND(REPLACE("' + $scope.selectedTagItem + '"," ","_","i") + "_" + ?sourcename  as ?iduri). '
-                    + '         BIND(IRI(?iduri) as ?urikeyword) '
                     + '     } '
-                    + ' } '
-                    + ' GROUP BY ?sourcename ?provenance ?lat ?long ?province ?city ?fullname  ?urikeyword '
+                    + '     GROUP BY ?sourcename ?provenance ?lat ?long ?province ?city ?fullname  ?urikeyword '
                     + ' } ';
             $scope.publicationsBySource = [];
             sparqlQuery.querySrv({query: queryBySource},
             function (rdf) {
                 var context = {
                     "bibo": "http://purl.org/ontology/bibo/",
-                    "uc": "http://ucuenca.edu.ec/wkhuska/resource/"
+                    "uc": "http://ucuenca.edu.ec/resource/"
                 };
-                jsonld.compact(rdf, context, function (err, compacted) {
+                jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                     var sd;
                     var model = [];
                     _.map(compacted["@graph"], function (resource) {
@@ -1000,8 +1010,8 @@ wkhomeControllers.controller('SnapController', ['$scope', '$window',
             console.log("afterCallback");
         };
     }]);
-wkhomeControllers.controller('clusterTagsController', ['$scope', '$timeout', 'sparqlQuery', 'clustersQuery', 'searchData', '$route', '$window',
-    function ($scope, $timeout, sparqlQuery, clustersQuery, searchData, $window) {
+wkhomeControllers.controller('clusterTagsController', ['$scope', 'globalData', 'sparqlQuery', 'clustersQuery', 'searchData', '$route', '$window',
+    function ($scope, globalData, sparqlQuery, clustersQuery, searchData, $window) {
 
         $('html,body').animate({
             scrollTop: $("#scrollToTop").offset().top
@@ -1046,26 +1056,25 @@ wkhomeControllers.controller('clusterTagsController', ['$scope', '$timeout', 'sp
             function executeGroupTags() {
 
                 //only keywords that appear in more than 2 articles
-                var queryKeywords = 'PREFIX bibo: <http://purl.org/ontology/bibo/> '
-                        + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
+                var queryKeywords = globalData.PREFIX
                         + ' CONSTRUCT { ?keyword rdfs:label ?key } '
-                        + '	FROM <http://ucuenca.edu.ec/wkhuska> '
+                        + '	FROM <' + globalData.centralGraph + '> '
                         + ' WHERE { '
-                        + ' SELECT  (count(?key) as ?k) ?key '
-                        + ' WHERE { '
-                        + ' ?subject bibo:Quote ?key. '
+                        + '     SELECT  (count(?key) as ?k) ?key '
+                        + '     WHERE { '
+                        + '         ?subject bibo:Quote ?key. '
                         + '         BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
                         + '         BIND(IRI(?unickey) as ?keyword) '
-                        + ' } '
-                        + ' group by ?keyword  ?key '
-                        + ' HAVING(?k > 10) '
+                        + '     } '
+                        + '     GROUP BY ?keyword  ?key '
+                        + '     HAVING(?k > 10) '
                         + '}';
                 sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
                     waitingDialog.show();
                     var context = {
                         "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
                     };
-                    jsonld.compact(rdf, context, function (err, compacted) {
+                    jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
 
                         _.map(compacted["@graph"], function (pub) {
                             var model = {};

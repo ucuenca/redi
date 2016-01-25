@@ -5,8 +5,8 @@ var clusterKeywCloud = angular.module('clusterKeywCloud', []);
 clusterKeywCloud.factory('d3', function () {
     return	d3;
 });
-clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'sparqlQuery',
-    function (d3, sparqlQuery) {
+clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery',
+    function (d3, globalData, sparqlQuery) {
 
         var chart, clear, click, collide, collisionPadding, connectEvents, data, force, gravity, hashchange, height, idValue, jitter, label, margin, maxRadius, minCollisionRadius, mouseout, mouseover, node, rScale, rValue, textValue, tick, transformData, update, updateActive, updateLabels, updateNodes, width;
         var scope;
@@ -202,11 +202,7 @@ clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'sparqlQuery',
                 div.append("</br>");
                 headbar.append(div);
 
-                var sparqlPublications = 'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>'
-                        + ' PREFIX dct: <http://purl.org/dc/terms/>'
-                        + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>'
-                        + ' PREFIX bibo: <http://purl.org/ontology/bibo/>'
-                        + ' PREFIX uc: <http://ucuenca.edu.ec/resource/>'
+                var sparqlPublications = globalData.PREFIX
 
                         + 'CONSTRUCT '
                         + '{'
@@ -220,7 +216,7 @@ clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'sparqlQuery',
                         + ' SELECT DISTINCT ?subject ?name ?keywords'
                         + ' WHERE '
                         + ' {  '
-                        + '   graph <http://ucuenca.edu.ec/wkhuska/clusters>        '
+                        + '   graph <'+globalData.clustersGraph+'>        '
                         + '   {          '
                         + '     <http://ucuenca.edu.ec/resource/cluster' + d.label + '>  <http://ucuenca.edu.ec/resource/hasPerson> ?subject.'
                         + '     {      			'
