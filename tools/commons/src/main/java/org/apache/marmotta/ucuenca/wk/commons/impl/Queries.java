@@ -98,6 +98,10 @@ public class Queries implements QueriesService {
         return "ASK FROM <" + graph + "> {  <" + resource + "> ?p ?o }";
     }
 
+     @Override
+    public String getEndpointStateQuery(String endpointsGraph, String state, String resourceHash) {
+        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/resource/state>  \"" + state + "\" }}";
+    }
     @Override
     public String getEndpointNameQuery(String endpointsGraph, String name, String resourceHash) {
         return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/resource/name>  \"" + name + "\" }}";
@@ -141,9 +145,10 @@ public class Queries implements QueriesService {
     
     @Override
     public String getlisEndpointsQuery(String endpointsGraph) {
-        return "SELECT DISTINCT ?id ?name ?url ?graph ?fullName ?city ?province ?latitude ?longitude  WHERE {  "
+        return "SELECT DISTINCT ?id ?state ?name ?url ?graph ?fullName ?city ?province ?latitude ?longitude  WHERE {  "
                 + " GRAPH <" + endpointsGraph + ">"
                 + " {"
+                + " ?id <http://ucuenca.edu.ec/resource/state> ?state ."
                 + " ?id <http://ucuenca.edu.ec/resource/name> ?name ."
                 + " ?id <http://ucuenca.edu.ec/resource/url> ?url."
                 + " ?id <http://ucuenca.edu.ec/resource/graph> ?graph."
@@ -158,9 +163,10 @@ public class Queries implements QueriesService {
 
     @Override
     public String getEndpointByIdQuery(String endpointsGraph, String id) {
-        return "SELECT DISTINCT ?id ?name ?url ?graph ?fullName ?city ?province ?latitude ?longitude  WHERE {  "
+        return "SELECT DISTINCT ?id ?state ?name ?url ?graph ?fullName ?city ?province ?latitude ?longitude  WHERE {  "
                 + " GRAPH <" + endpointsGraph + ">"
                 + " {"
+                + " ?id <http://ucuenca.edu.ec/resource/state> ?state ."
                 + " ?id <http://ucuenca.edu.ec/resource/name> ?name ."
                 + " ?id <http://ucuenca.edu.ec/resource/url> ?url."
                 + " ?id <http://ucuenca.edu.ec/resource/graph> ?graph."

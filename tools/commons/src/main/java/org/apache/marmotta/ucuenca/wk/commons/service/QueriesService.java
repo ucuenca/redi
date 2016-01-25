@@ -77,6 +77,8 @@ public interface QueriesService {
      */
     String getAskQuery(String... args);
 
+    String getEndpointStateQuery(String endpointsGraph, String state, String resourceHash);
+
     String getEndpointNameQuery(String endpointsGraph, String name, String resourceHash);
 
     String getEndpointUrlQuery(String endpointsGraph, String url, String resourceHash);
