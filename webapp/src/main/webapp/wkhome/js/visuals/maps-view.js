@@ -4,8 +4,8 @@ var cloudGroup = angular.module('mapView', []);
 cloudGroup.factory('d3', function () {
     return	d3;
 });
-cloudGroup.directive('mapView', ["d3", 'sparqlQuery',
-    function (d3, sparqlQuery) {
+cloudGroup.directive('mapView', ["d3", 'globalData', 'sparqlQuery',
+    function (d3, globalData, sparqlQuery) {
 
         function drawResourcesOnMap(data, element, scope)
         {
@@ -98,10 +98,7 @@ cloudGroup.directive('mapView', ["d3", 'sparqlQuery',
                             tip.hide(d);
                         })
                         .on("click", function (d, i) {
-                            var sparqlquery = 'PREFIX dct: <http://purl.org/dc/terms/> '
-                                    + ' PREFIX bibo: <http://purl.org/ontology/bibo/>  '
-                                    + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>  '
-                                    + ' PREFIX uc: <http://ucuenca.edu.ec/wkhuska/resource/>  '
+                            var sparqlquery = globalData.PREFIX
                                     + ' CONSTRUCT { <http://ucuenca.edu.ec/wkhuska/resultTitle> a uc:pagetitle. <http://ucuenca.edu.ec/wkhuska/resultTitle> uc:viewtitle "Authors from ' + d.name + ' , taking place in ' + d.keyword + ' field" . ?subject rdfs:label ?name. ?subject uc:total ?totalPub }   '
                                     + ' WHERE {  '
                                     + '     SELECT ?subject ?totalPub ?name '
@@ -111,14 +108,14 @@ cloudGroup.directive('mapView', ["d3", 'sparqlQuery',
                                     + '         { '
                                     + '         SELECT ?subject ?name (COUNT(?pub) AS ?totalPub)  '
                                     + '             WHERE { '
-                                    + '                 GRAPH <http://ucuenca.edu.ec/wkhuska>  { '
+                                    + '                 GRAPH <'+globalData.centralGraph+'>  { '
                                     + '                     ?subject foaf:publications  ?pub . '
                                     + '                     ?subject foaf:name       ?name.        '
                                     + '                     ?subject dct:provenance ?provenance. '
                                     + '                     {  '
                                     + '                         SELECT * WHERE { '
-                                    + '                             GRAPH <http://ucuenca.edu.ec/wkhuska/endpoints>  { '
-                                    + '                                 ?provenance <http://ucuenca.edu.ec/wkhuska/resource/name> "' + d.name + '"  '
+                                    + '                             GRAPH <'+globalData.endpointsGraph+'>  { '
+                                    + '                                 ?provenance uc:name "' + d.name + '"  '
                                     + '                             } '
                                     + '                         } '
                                     + '                     } '
@@ -130,15 +127,7 @@ cloudGroup.directive('mapView', ["d3", 'sparqlQuery',
                                     + ' }  ';
                             waitingDialog.show("Loading Authors Related with " + d.keyword);
                             sparqlQuery.querySrv({query: sparqlquery}, function (rdf) {
-                                var context = {
-                                    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-                                    "foaf": "http://xmlns.com/foaf/0.1/",
-                                    "dc": "http://purl.org/dc/elements/1.1/",
-                                    "dcterms": "http://purl.org/dc/terms/",
-                                    "bibo": "http://purl.org/ontology/bibo/",
-                                    "uc": "http://ucuenca.edu.ec/wkhuska/resource/"
-                                };
-                                jsonld.compact(rdf, context, function (err, compacted) {
+                                jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                                     if (compacted)
                                     {
                                         var entity = compacted["@graph"];
