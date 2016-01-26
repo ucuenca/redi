@@ -183,8 +183,8 @@ keywClusters.directive('keywClusters', ["d3", 'globalData', 'sparqlQuery',
 
             +' Construct {'
 
-            +'  <http://ucuenca.edu.ec/wkhuska/resource/resultTitle> a uc:pagetitle.'
-            +' <http://ucuenca.edu.ec/wkhuska/resource/resultTitle> uc:viewtitle "Clusters that contain \'' + d.label + '\' Keyword".'
+            +' uc:resultTitle a uc:pagetitle.'
+            +' uc:resultTitle uc:viewtitle "Clusters that contain \'' + d.label + '\' Keyword".'
             +'  ?cluster rdfs:label "keyword". ?cluster uc:total ?totalpub.'
             +'} '
             +'WHERE'
@@ -195,7 +195,7 @@ keywClusters.directive('keywClusters', ["d3", 'globalData', 'sparqlQuery',
             +'{'
             +'  graph <'+globalData.clustersGraph+'>'
             +'        {'
-            +'          ?cluster <http://ucuenca.edu.ec/resource/hasPerson> ?subject.'
+            +'          ?cluster uc:hasPerson ?subject.'
             +'  		?subject foaf:publications ?pubb. '
             +'          	{'
             +'      			select  ?pubb ?title '
@@ -219,15 +219,7 @@ keywClusters.directive('keywClusters', ["d3", 'globalData', 'sparqlQuery',
             
             waitingDialog.show("Loading Authors Related with " + d.label);
             sparqlQuery.querySrv({query: sparqlquery}, function (rdf) {
-                var context = {
-                    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-                    "foaf": "http://xmlns.com/foaf/0.1/",
-                    "dc": "http://purl.org/dc/elements/1.1/",
-                    "dcterms": "http://purl.org/dc/terms/",
-                    "bibo": "http://purl.org/ontology/bibo/",
-                    "uc": "http://ucuenca.edu.ec/wkhuska/resource/"
-                };
-                jsonld.compact(rdf, context, function (err, compacted) {
+                jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                     if (compacted)
                     {
                         var entity = compacted["@graph"];
@@ -235,7 +227,7 @@ keywClusters.directive('keywClusters', ["d3", 'globalData', 'sparqlQuery',
                         var values = entity.length ? entity : [entity];
                         //Change data
                         for (var i = 0, len = compacted["@graph"].length; i < len; i++) {
-                            compacted["@graph"][i]["rdfs:label"] = compacted["@graph"][i]["@id"].toString().replace("http://ucuenca.edu.ec/resource/cluster","");
+                            compacted["@graph"][i]["rdfs:label"] = compacted["@graph"][i]["@id"].toString().replace("uc:cluster","");
                         }
                         //send data to getKeywordTag Controller
                         scope.ifClick({value: compacted});

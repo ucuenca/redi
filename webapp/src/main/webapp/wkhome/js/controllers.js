@@ -559,6 +559,10 @@ wkhomeControllers.controller('exploreAuthor', ['$scope', '$rootScope', 'globalDa
         });
         
         $scope.data = '';
+        
+        $('html,body').animate({
+                scrollTop: $("#scrollToHere").offset().top
+        }, "slow");
 
         clickonRelatedauthor = function (author)
         {
@@ -1159,8 +1163,8 @@ wkhomeControllers.controller('clusterTagsController', ['$scope', 'globalData', '
 
     }]); //end clusterTagsController 
 
-wkhomeControllers.controller('kwCloudClusterController', ['$scope', '$window', 'sparqlQuery', 'searchData',
-    function ($scope, $window, sparqlQuery, searchData) {
+wkhomeControllers.controller('kwCloudClusterController', ['$scope', '$window', 'sparqlQuery', 'searchData', 'globalData',
+    function ($scope, $window, sparqlQuery, searchData, globalData) {
 
         $scope.ifClick = function (value)
         {
@@ -1189,10 +1193,8 @@ wkhomeControllers.controller('kwCloudClusterController', ['$scope', '$window', '
         if (!searchData.allkeywordsCloud) // if no load data by default
         {
             waitingDialog.show();
-            var queryKeywords = ' PREFIX bibo: <http://purl.org/ontology/bibo/> '
-                    + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
-                    + ' PREFIX uc: <http://ucuenca.edu.ec/wkhuska/resource/> '
-                    + ' CONSTRUCT { ?keyword rdfs:label ?k; uc:total ?totalPub } FROM <http://ucuenca.edu.ec/wkhuska> WHERE { '
+            var queryKeywords = globalData.PREFIX
+                    + ' CONSTRUCT { ?keyword rdfs:label ?k; uc:total ?totalPub } FROM <' + globalData.centralGraph + '> WHERE { '
                     + ' SELECT ?keyword ?k (COUNT(DISTINCT(?subject)) AS ?totalPub) '
                     + ' WHERE { '
                     + ' ?person foaf:publications ?subject. '
@@ -1204,14 +1206,10 @@ wkhomeControllers.controller('kwCloudClusterController', ['$scope', '$window', '
                     //+'ORDER BY DESC(?totalPub) '
                     + '}';
             sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
-                var context = {
-                    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-                    "uc": "http://ucuenca.edu.ec/wkhuska/resource/"
-                };
-                jsonld.compact(rdf, context, function (err, compacted) {
+                jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                     $scope.$apply(function () {
-                        $scope.data = {schema: {"context": context, fields: ["rdfs:label", "uc:total"]}, data: compacted};
-                        searchData.allkeywordsCloud = {schema: {"context": context, fields: ["rdfs:label", "uc:total"]}, data: compacted};
+                        $scope.data = {schema: {"context": globalData.CONTEXT, fields: ["rdfs:label", "uc:total"]}, data: compacted};
+                        searchData.allkeywordsCloud = {schema: {"context": globalData.CONTEXT, fields: ["rdfs:label", "uc:total"]}, data: compacted};
                         waitingDialog.hide();
                     });
                 });
@@ -1223,8 +1221,8 @@ wkhomeControllers.controller('kwCloudClusterController', ['$scope', '$window', '
         } // end if if (!searchData.allkeywordsCloud)     
     }]);
 
-wkhomeControllers.controller('clustersWithKeywordCloudController', ['$scope', '$window', 'sparqlQuery', 'searchData',
-    function ($scope, $window, sparqlQuery, searchData) {
+wkhomeControllers.controller('clustersWithKeywordCloudController', ['$scope', '$window', 'sparqlQuery', 'searchData', 'globalData',
+    function ($scope, $window, sparqlQuery, searchData, globalData) {
         $scope.todos = [];
         $scope.ctrlFn = function (value)
         {
@@ -1262,22 +1260,17 @@ wkhomeControllers.controller('clustersWithKeywordCloudController', ['$scope', '$
             });
         };
         $scope.$watch('searchData.genericData', function (newValue, oldValue, scope) {
-            var context = {
-                "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-                "uc": "http://ucuenca.edu.ec/wkhuska/resource/"
-            };
-            $scope.data = {schema: {"context": context, fields: ["rdfs:label", "uc:total"]}, data: searchData.genericData};
+            $scope.data = {schema: {"context": globalData.CONTEXT, fields: ["rdfs:label", "uc:total"]}, data: searchData.genericData};
         });
         
         $scope.searchAuthor = function (author)
         {
-             var getAuthorDataQuery = ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>  '
-                    + ' PREFIX uc: <http://ucuenca.edu.ec/wkhuska/resource/> '
+             var getAuthorDataQuery = globalData.PREFIX
                     + ' CONSTRUCT {   <' + author + '> foaf:name ?name; a foaf:Person  '
                     + ' }   '
                     + ' WHERE '
                     + ' {'
-                    + 'Graph <http://ucuenca.edu.ec/wkhuska>'
+                    + 'Graph <'+globalData.centralGraph+'>'
                     +'{'
                     + '     <' + author + '> a foaf:Person.'
                     + '     <' + author + '> foaf:name ?name'
@@ -1286,12 +1279,7 @@ wkhomeControllers.controller('clustersWithKeywordCloudController', ['$scope', '$
                     +'}';
 
             sparqlQuery.querySrv({query: getAuthorDataQuery}, function (rdf) {
-                   var context = {
-                    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-                    "uc": "http://ucuenca.edu.ec/wkhuska/resource/",
-                    "foaf": "http://xmlns.com/foaf/0.1/",
-                };
-                jsonld.compact(rdf, context, function (err, compacted) {
+                jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                     $scope.$apply(function () {
                         searchData.authorSearch = compacted;
                         //alert(author);

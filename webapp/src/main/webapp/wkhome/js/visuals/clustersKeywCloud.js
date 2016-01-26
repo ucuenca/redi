@@ -218,12 +218,12 @@ clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery
                         + ' {  '
                         + '   graph <'+globalData.clustersGraph+'>        '
                         + '   {          '
-                        + '     <http://ucuenca.edu.ec/resource/cluster' + d.label + '>  <http://ucuenca.edu.ec/resource/hasPerson> ?subject.'
+                        + '     uc:cluster' + d.label + '  uc:hasPerson ?subject.'
                         + '     {      			'
                         + '       select  ?subject ?name (group_concat(distinct ?key;separator=", ") as ?keywords)            		'
                         + '       where            		'
                         + '                     {            	'
-                        + '                       graph <http://ucuenca.edu.ec/wkhuska>            			'
+                        + '                       graph <'+globalData.centralGraph+'>            			'
                         + '                             {            				  '
                         + '                               ?subject foaf:name ?name.'
                         + '                               ?subject foaf:publications ?publicationUri. '
@@ -240,15 +240,8 @@ clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery
                 waitingDialog.show("Searching Authors of the cluster " + key);
 
                 sparqlQuery.querySrv({query: sparqlPublications}, function (rdf) {
-                    var context = {
-                        "foaf": "http://xmlns.com/foaf/0.1/",
-                        "dc": "http://purl.org/dc/elements/1.1/",
-                        "dcterms": "http://purl.org/dc/terms/",
-                        "bibo": "http://purl.org/ontology/bibo/",
-                        "uc": "http://ucuenca.edu.ec/wkhuska/resource"
-                    };
 
-                    jsonld.compact(rdf, context, function (err, compacted) {
+                    jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                         if (compacted)
                         {
                             var entity = compacted["@graph"];
@@ -390,7 +383,7 @@ clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery
                                     if (keyword[fields[1]] || keyword[field1]) {
                                         val = keyword[fields[1]] ? keyword[fields[1]]["@value"] : keyword[field1]["@value"];
                                     }
-                                    if (keyword[fields[0]] != 'uc:resultTitle'){
+                                    if (keyword[fields[0]] != 'uc:resultTitle' && keyword[fields[0]] != 'http://ucuenca.edu.ec/wkhuska/resource/resultTitle'){
                                     	mappedData.push({label: keyword[fields[0]], value: val});
 				    }
 
