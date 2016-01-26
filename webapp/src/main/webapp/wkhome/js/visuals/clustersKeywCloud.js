@@ -1,17 +1,17 @@
 'use strict';
 
-var pieChart = angular.module('colorCluster', []);
+var clusterKeywCloud = angular.module('clusterKeywCloud', []);
 //	D3	Factory
-pieChart.factory('d3', function () {
+clusterKeywCloud.factory('d3', function () {
     return	d3;
 });
-pieChart.directive('colorCluster', ["d3", 'globalData', 'sparqlQuery',
+clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery',
     function (d3, globalData, sparqlQuery) {
 
         var chart, clear, click, collide, collisionPadding, connectEvents, data, force, gravity, hashchange, height, idValue, jitter, label, margin, maxRadius, minCollisionRadius, mouseout, mouseover, node, rScale, rValue, textValue, tick, transformData, update, updateActive, updateLabels, updateNodes, width;
         var scope;
         var attrs;
-
+        var pageTitle;
         width;// = 980;
         height;// = 510;
         data = [];
@@ -35,9 +35,9 @@ pieChart.directive('colorCluster', ["d3", 'globalData', 'sparqlQuery',
         textValue = function (d) {
             return d.label;
         };
-        collisionPadding = 1;
-        minCollisionRadius = 2;
-        jitter = 0.08;
+        collisionPadding = 10;
+        minCollisionRadius = 12;
+        jitter = 0.1;
         transformData = function (rawData) {
             rawData.forEach(function (d) {
                 d.value = parseInt(d.value);
@@ -45,44 +45,18 @@ pieChart.directive('colorCluster', ["d3", 'globalData', 'sparqlQuery',
             return rawData;
         };
         tick = function (e) {
-//            var dampenedAlpha;
-//            dampenedAlpha = e.alpha * 0.01;
-//            node.each(gravity(dampenedAlpha)).each(collide(jitter)).attr("transform", function (d) {
-//                return "translate(" + d.x + "," + d.y + ")";
-//            });
-
-
-            var foci = {};
-            for (var i = 0; i < centers.length; i++) {
-                foci[centers[i].name] = centers[i];
-            }
-            return function (e) {
-                for (var i = 0; i < dataMapping.length; i++) {
-                    var o = dataMapping[i];
-                    var f = foci[o[varname]];
-                    o.y += ((f.y + (f.dy / 2)) - o.y) * e.alpha;
-                    o.x += ((f.x + (f.dx / 2)) - o.x) * e.alpha;
-                }
-                nodes.each(collide(.11))
-                        .attr("cx", function (d) {
-                            return d.x;
-                        })
-                        .attr("cy", function (d) {
-                            return d.y;
-                        });
-            }
-
-
-
-
-
+            var dampenedAlpha;
+            dampenedAlpha = e.alpha * 0.1;
+            node.each(gravity(dampenedAlpha)).each(collide(jitter)).attr("transform", function (d) {
+                return "translate(" + d.x + "," + d.y + ")";
+            });
             return label.style("left", function (d) {
                 /*if(d.label == "Amino Acid") { 
                  d = d;
                  }*/      //POSITION OF LABEL
                 return (17 + (margin.left + d.x) - d.dx / 2) + "px";
             }).style("top", function (d) {
-                return (50 + (margin.top + d.y) - d.dy / 2) + "px";
+                return (140 + (margin.top + d.y) - d.dy / 2) + "px";
             });
         };
 
@@ -99,9 +73,9 @@ pieChart.directive('colorCluster', ["d3", 'globalData', 'sparqlQuery',
                 svgEnter = svg.enter().append("svg");
                 svg.attr("width", width + margin.left + margin.right);
                 svg.attr("height", height + margin.top + margin.bottom);
-                node = svgEnter.append("g").attr("id", "bubble-nodes").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-                node.append("rect").attr("id", "bubble-background").attr("width", width).attr("height", height).on("click", clear);
-                label = d3.select(this).selectAll("#bubble-labels").data([data]).enter().append("div").attr("id", "bubble-labels");
+                node = svgEnter.append("g").attr("id", "gbubble-nodes").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                node.append("rect").attr("id", "gbubble-background").attr("width", width).attr("height", height).on("click", clear);
+                label = d3.select(this).selectAll("#gbubble-labels").data([data]).enter().append("div").attr("id", "gbubble-labels");
                 update();
                 /*hashchange();
                  return d3.select(window).on("hashchange", hashchange);*/
@@ -117,31 +91,29 @@ pieChart.directive('colorCluster', ["d3", 'globalData', 'sparqlQuery',
             return updateLabels();
         };
         updateNodes = function () {
-            node = node.selectAll(".bubble-node").data(data, function (d) {
+            node = node.selectAll(".gbubble-node").data(data, function (d) {
                 return idValue(d);
             });
             node.exit().remove();
-            return node.enter().append("a").attr("class", "bubble-node").attr("xlink:href", function (d) {
+            return node.enter().append("a").attr("class", "gbubble-node").attr("xlink:href", function (d) {
                 return "#" + (encodeURIComponent(idValue(d)));
-            }).call(force.drag).call(connectEvents).append("circle").attr("id", "kcircle").style("fill", function (d) {
-                return d.color;
-            }).attr("r", function (d) {
+            }).call(force.drag).call(connectEvents).append("circle").attr("id", "gcircle").attr("r", function (d) {
                 return rScale(rValue(d));
             });
         };
         updateLabels = function () {
             var labelEnter;
-            label = label.selectAll(".bubble-label").data(data, function (d) {
+            label = label.selectAll(".gbubble-label").data(data, function (d) {
                 return idValue(d);
             });
             label.exit().remove();
-            labelEnter = label.enter().append("a").attr("class", "bubble-label").attr("href", function (d) {
+            labelEnter = label.enter().append("a").attr("class", "gbubble-label").attr("href", function (d) {
                 return "#" + (encodeURIComponent(idValue(d)));
             }).call(force.drag).call(connectEvents);
-            labelEnter.append("div").attr("class", "bubble-label-name").text(function (d) {
+            labelEnter.append("div").attr("class", "gbubble-label-name").text(function (d) {
                 return textValue(d);
             });
-            labelEnter.append("div").attr("class", "bubble-label-value").text(function (d) {
+            labelEnter.append("div").attr("class", "gbubble-label-value").text(function (d) {
                 return rValue(d);
             });
             label.style("font-size", function (d) {
@@ -194,6 +166,7 @@ pieChart.directive('colorCluster', ["d3", 'globalData', 'sparqlQuery',
                 });
             };
         };
+       
         connectEvents = function (d) {
             d.on("click", click);
             d.on("mouseover", mouseover);
@@ -202,7 +175,10 @@ pieChart.directive('colorCluster', ["d3", 'globalData', 'sparqlQuery',
         clear = function () {
             return location.replace("#");
         };
+        
         click = function (d) {
+            //   location.replace("#" + encodeURIComponent(idValue(d)));
+
 
             //adding information about publications of THIS keyword into "tree-node-info"   DIV
             var infoBar = $('div.tree-node-info');
@@ -216,36 +192,52 @@ pieChart.directive('colorCluster', ["d3", 'globalData', 'sparqlQuery',
                 "bibo:numPages": {label: "Pages", containerType: "div"}
             };
             if (infoBar) {
-                var keyword = d.label;
+                var key = d.label;
                 var headbar = $('div.head-info');
                 headbar.find('title').text("ddddddtitletitle");
                 headbar.html('');
                 var div = $('<div>');
-                var label = $('<span class="label label-primary" style="font-size:35px">').text("PUBLICATIONS CONTAINING THE KEYWORD: " + keyword);
+                var label = $('<span class="label label-primary" style="font-size:35px">').text("AUTHORS OF CLUSTER " + d.label);
                 div.append(label);
                 div.append("</br>");
                 headbar.append(div);
 
-                //var sparqlDescribe = "DESCRIBE <" + id + ">";
                 var sparqlPublications = globalData.PREFIX
-                        + " CONSTRUCT { ?keyword uc:publication ?publicationUri. "
-                        + " ?publicationUri a bibo:Document. "
-                        + " ?publicationUri dct:title ?title. "
-                        + " ?publicationUri bibo:abstract ?abstract. "
-                        + " ?publicationUri bibo:uri ?uri. "
-                        + " } "
-                        + " WHERE {"
-                        + " GRAPH <"+globalData.centralGraph+">"
-                        + " {"
-                        + " ?publicationUri dct:title ?title . "
-                        + " ?publicationUri bibo:abstract  ?abstract. "
-                        + " ?publicationUri bibo:uri  ?uri. "
-                        + " ?publicationUri bibo:Quote \"" + keyword + "\" ."
-                        + "  BIND(REPLACE( \"" + keyword + "\", \" \", \"_\", \"i\") AS ?key) ."
-                        + "  BIND(IRI(?key) as ?keyword)"
-                        + " }"
-                        + "}";
-                waitingDialog.show("Searching publications with the keyword: " + keyword);
+
+                        + 'CONSTRUCT '
+                        + '{'
+                        + '     ?subject a foaf:Person. '
+                        + '	?subject foaf:name ?name. '
+                        
+                        + '	?subject bibo:Quote ?keywords. '
+                        + '} '
+                        + 'where'
+                        + '{'
+                        + ' SELECT DISTINCT ?subject ?name ?keywords'
+                        + ' WHERE '
+                        + ' {  '
+                        + '   graph <'+globalData.clustersGraph+'>        '
+                        + '   {          '
+                        + '     uc:cluster' + d.label + '  uc:hasPerson ?subject.'
+                        + '     {      			'
+                        + '       select  ?subject ?name (group_concat(distinct ?key;separator=", ") as ?keywords)            		'
+                        + '       where            		'
+                        + '                     {            	'
+                        + '                       graph <'+globalData.centralGraph+'>            			'
+                        + '                             {            				  '
+                        + '                               ?subject foaf:name ?name.'
+                        + '                               ?subject foaf:publications ?publicationUri. '
+                        + ' 							  ?publicationUri dct:title ?title .'
+                        + '                           ?publicationUri bibo:Quote ?key.'
+                        + '                         }          			'
+                        + '                 } group by ?subject ?name         	'
+                        + ' }           '
+                        + ' } '
+                        + ' } '
+                        + ' } ';
+                
+                        
+                waitingDialog.show("Searching Authors of the cluster " + key);
 
                 sparqlQuery.querySrv({query: sparqlPublications}, function (rdf) {
 
@@ -253,9 +245,10 @@ pieChart.directive('colorCluster', ["d3", 'globalData', 'sparqlQuery',
                         if (compacted)
                         {
                             var entity = compacted["@graph"];
-                            var final_entity = _.where(entity, {"@type": "bibo:Document"});
+                            //Each author is a person
+                            var final_entity = _.where(entity, {"@type": "foaf:Person"});
                             var values = final_entity.length ? final_entity : [final_entity];
-                            //send data to getKeywordTag Controller
+                            //send data to the controller
                             scope.ctrlFn({value: values});
                             waitingDialog.hide();
 
@@ -275,7 +268,7 @@ pieChart.directive('colorCluster', ["d3", 'globalData', 'sparqlQuery',
             return updateActive(id);
         };
         updateActive = function (id) {
-            node.classed("bubble-selected", function (d) {
+            node.classed("gbubble-selected", function (d) {
                 return id === idValue(d);
             });
             if (id.length > 0) {
@@ -285,12 +278,12 @@ pieChart.directive('colorCluster', ["d3", 'globalData', 'sparqlQuery',
             }
         };
         mouseover = function (d) {
-            return node.classed("bubble-hover", function (p) {
+            return node.classed("gbubble-hover", function (p) {
                 return p === d;
             });
         };
         mouseout = function (d) {
-            return node.classed("bubble-hover", false);
+            return node.classed("gbubble-hover", false);
         };
         chart.jitter = function (_) {
             if (!arguments.length) {
@@ -322,16 +315,17 @@ pieChart.directive('colorCluster', ["d3", 'globalData', 'sparqlQuery',
             return chart;
         };
 
-        var draw = function draw(element, widthEl, heightEl, data, scopeEl, attrsEl) {
+        var draw = function draw(element, widthEl, heightEl, data, scopeEl, attrsEl, pageTitleEl) {
             width = widthEl;
             height = heightEl;
             scope = scopeEl;
             attrs = attrsEl;
-
+            pageTitle = pageTitleEl;
+            d3.select('div.head-pagetitle').text(pageTitle);
             force = d3.layout.force().gravity(0).charge(0).size([width, height]).on("tick", tick);
             element.datum(data).call(chart);
 
-        };
+        }
 
         return {
             restrict: 'E',
@@ -340,6 +334,11 @@ pieChart.directive('colorCluster', ["d3", 'globalData', 'sparqlQuery',
                 data: '='
             },
             compile: function (element, attrs, transclude) {
+                //	Create	a	SVG	root	element
+                /*var	svg	=	d3.select(element[0]).append('svg');
+                 svg.append('g').attr('class', 'data');
+                 svg.append('g').attr('class', 'x-axis axis');
+                 svg.append('g').attr('class', 'y-axis axis');*/
                 //	Define	the	dimensions	for	the	chart
                 //var width = 960, height = 500;
                 var elementWidth = parseInt(element.css('width'));
@@ -347,39 +346,61 @@ pieChart.directive('colorCluster', ["d3", 'globalData', 'sparqlQuery',
                 var width = attrs.ctWidth ? attrs.ctWidth : elementWidth;
                 var height = attrs.ctHeight ? attrs.ctHeight : elementHeight;
 
-                //	Create	a	SVG	root	element
+
+
                 var svg = d3.select(element[0]);
 
                 //	Return	the	link	function
                 return	function (scope, element, attrs) {
                     //	Watch	the	data	attribute	of	the	scope
+                    /*scope.$watch('$parent.logs', function(newVal, oldVal, scope) {
+                     //	Update	the	chart
+                     var data = scope.$parent.logs.map(function(d) {
+                     return {
+                     x: d.time,
+                     y: d.visitors
+                     }
+                     
+                     });
+                     
+                     draw(svg, width, height, data);
+                     },	true);*/
                     scope.$watch('data', function (newVal, oldVal, scope) {
                         //	Update	the	chart
+
                         var data = scope.data;
                         if (data) {
                             var jsonld = data.data;
-
+                            var schema = data.schema;
+                            var fields = schema.fields;
                             var mappedData = [];
-                            _.each(jsonld, function (cluster, idx) {
-                                var a = cluster['color'].split("(")[1].split(")")[0];
-                                a = a.split(",");
-                                var b = a.map(function (x) {             //For each array element
-                                    x = parseInt(x).toString(16);      //Convert to a base16 string
-                                    return (x.length == 1) ? "0" + x : x;  //Add zero if we get only one character
-                                });
-                                b = "#" + b.join("");
+                            
+                            _.each(jsonld['@graph'], function (keyword, idx) {
+                                if (keyword["rdfs:label"])
+                                {
+                                    var field1 = fields[1].replace("uc:","http://ucuenca.edu.ec/resource/");
+                                    var val = "";
+                                    if (keyword[fields[1]] || keyword[field1]) {
+                                        val = keyword[fields[1]] ? keyword[fields[1]]["@value"] : keyword[field1]["@value"];
+                                    }
+                                    if (keyword[fields[0]] != 'uc:resultTitle' && keyword[fields[0]] != 'http://ucuenca.edu.ec/wkhuska/resource/resultTitle'){
+                                    	mappedData.push({label: keyword[fields[0]], value: val});
+				    }
 
-                                _.each(cluster['members'], function (person, idx) {
-                                    mappedData.push({label: person['@id'], value: 5, color: b});
-                                });
-
-
+                                }
                             });
-                            draw(svg, width, height, mappedData, scope, attrs);
+                            var pageTitle = "";
+                            try {
+                                pageTitle = _.findWhere(jsonld['@graph'],{"@type": "uc:pagetitle"})["uc:viewtitle"];
+                            }
+                            catch(err) {
+                                pageTitle = _.findWhere(jsonld['@graph'],{"@type": "http://ucuenca.edu.ec/resource/pagetitle"})["http://ucuenca.edu.ec/resource/viewtitle"];
+                            }
+                            draw(svg, width, height, mappedData, scope, attrs, pageTitle);
                         }
                     }, true);
+
                 };
             }
         };
     }]);
-

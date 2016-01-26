@@ -9,12 +9,12 @@
 
     <ul class="nav nav-pills nav-stacked">
         <li><a href="#/">Home</a></li>
-        <li  class="active"><a href="#/tags/cloud">Keywords Cloud</a></li>
+        <li><a href="#/tags/cloud">Keywords Cloud</a></li>
         <li><a href="#/cloud/group-by">Group By Keyword</a></li>
         <!--<li><a href="#/">Research Areas Cloud</a></li>-->
         <li><a href="#/geo-views/sources">Map View</a></li>
         <li><a href="#/cloud/clusters">Clustering by Research Area</a></li>
-        <li><a href="#/cloud/keywords">Clusters by Keyword</a></li>
+        <li class="active"><a href="#/cloud/keywords">Clusters by Keywords</a></li>
     </ul>
 
 </div>
@@ -24,9 +24,11 @@
 
     <div class="row subject-cloud">
 
-        <div class="col-md-12" ng-controller="getKeywordsTag" >
+        <div class="col-md-12" ng-controller="kwCloudClusterController" >
 
-            <cloud-tag data="data" style="display: block; height: 90%" ctrl-fn="ctrlFn(value)" ng-model="value"></cloud-tag> 
+            <keyw-clusters data="data" style="display: block; height: 90%" if-click="ifClick(value)" ng-model="value"></keyw-clusters>  
+            <!--keyw-clusters data="data" style="display: block; height: 90%" ctrl-fn="ctrlFn(value)" ng-model="value"></keyw-clusters--> 
+            <!--if-click="ifClick(value)"-->
             <div id="scrollToHere">
             </div> 
             <hr>
@@ -41,25 +43,15 @@
 
 
             </div>
-            <div  class="col-md-12 tree-node-info" style="height:100vh" >
-
-                <!--      <div class="entityInfo">
-                          <span style="font-weigth:bold"> </span> 
-                          <div id="title"></div>
-                          <a href="" target="_blank"></a>
-                      </div>         
-                -->
-
+            <!--div  class="col-md-12 tree-node-info" style="height:100vh" >
 
                 <h3></h3>
-                <h4 style="padding: 20px" class="text-success"> Total of Publications found: {{todos.length}} </h4>
+                <h4 style="padding: 20px" class="text-success"> Total of Authors found: {{todos.length}} </h4>
 
 
                 <ul>
                     <li  ng-repeat="todo in filteredTodos">
-                        <!--  <h3> <a href="{{todo.id}}" target='_blank'>{{todo.title}}</a> </h3>
-                          </br> Abstract: {{todo.abstract}} </br>
-                        -->
+                        
                         <a href="{{todo.uri}}" >
                             <div class="panel panel-info">
                                 <div class="panel-heading">
@@ -83,7 +75,7 @@
                         boundary-links="true">
                     </pagination>
                 </center>
-            </div>
+            </div-->
         </div>
     </div>
 </div>

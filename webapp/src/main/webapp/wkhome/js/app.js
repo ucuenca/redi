@@ -30,6 +30,7 @@ wkhomeApp.service('globalData', function () {
     this.clustersGraph = "http://ucuenca.edu.ec/wkhuska/clusters";
     this.authorsGraph = "http://ucuenca.edu.ec/wkhuska/authors";
     this.endpointsGraph = "http://ucuenca.edu.ec/wkhuska/endpoints";
+    this.externalAuthorsGraph = "http://ucuenca.edu.ec/wkhuska/externalauthors";
     
     this.PREFIX =     ' PREFIX bibo: <http://purl.org/ontology/bibo/>'
                     + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>  '
@@ -44,7 +45,8 @@ wkhomeApp.service('globalData', function () {
                         "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
                         "bibo": "http://purl.org/ontology/bibo/",
                         "dc": "http://purl.org/dc/elements/1.1/",
-                        "dct": "http://purl.org/dc/terms/"
+                        "dct": "http://purl.org/dc/terms/",
+                        "cedia": "https://www.cedia.org.ec/"
                         
                    };
  });
@@ -66,6 +68,10 @@ wkhomeApp.config(['$routeProvider',
                 }).
                 when('/w/cloud?:text', {
                     templateUrl: '/wkhome/partials/genericcloud.html',
+//        controller: 'ExploreController'
+                }).
+                when('/w/clusters?:text', {
+                    templateUrl: '/wkhome/partials/clusterskeywcloud.html',
 //        controller: 'ExploreController'
                 }).
                 when('/a/a', {
@@ -98,6 +104,9 @@ wkhomeApp.config(['$routeProvider',
                 }).
                 when('/cloud/clusters', {
                     templateUrl: '/wkhome/partials/cloudcluster.html',
+                }).
+                when('/cloud/keywords', {
+                    templateUrl: '/wkhome/partials/kwcloudcluster.html',
                 }).
                 when('/info/about', {
                     templateUrl: '/wkhome/partials/about.html'
