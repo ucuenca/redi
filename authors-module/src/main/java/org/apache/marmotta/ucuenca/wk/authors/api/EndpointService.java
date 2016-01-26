@@ -35,5 +35,7 @@ public interface EndpointService {
     
     
     String removeEndpoint(String resourceid);
+  
+    String updateEndpoint(String resourceid , String oldstatus, String newstatus);
     
 }

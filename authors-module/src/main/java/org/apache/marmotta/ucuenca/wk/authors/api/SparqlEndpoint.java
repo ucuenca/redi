@@ -47,6 +47,11 @@ public class SparqlEndpoint implements Comparable<SparqlEndpoint> {
     public final static int PRIORITY_LOW = 1;
 
     /**
+     * A state enable to work ( true || false ) for this endpoint.
+     */
+    private String status;
+    
+    /**
      * A human-readable name for this endpoint.
      */
     private String name;
@@ -176,6 +181,14 @@ public class SparqlEndpoint implements Comparable<SparqlEndpoint> {
 
     public void setResourceId(String resourceId) {
         this.resourceId = resourceId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
     
     public String getEndpointUrl() {
