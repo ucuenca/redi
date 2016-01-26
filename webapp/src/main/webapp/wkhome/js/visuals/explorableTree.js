@@ -4,17 +4,13 @@ var explorableTree = angular.module('explorableTree', []);
 explorableTree.factory('d3', function () {
     return	d3;
 });
-explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuery', '$window',
-    function (d3, sparqlQuery, authorRestQuery, $window) {
-        var getRelatedAuthorsByClustersQuery = 'PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
-                + ' PREFIX http: <http://www.w3.org/2011/http#> '
-                + ' PREFIX dct: <http://purl.org/dc/terms/>  '
-                + ' PREFIX bibo: <http://purl.org/ontology/bibo/>  '
-                + ' PREFIX uc: <http://ucuenca.edu.ec/wkhuska/resource/>  '
+explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', 'authorRestQuery', '$window',
+    function (d3, globalData, sparqlQuery, authorRestQuery, $window) {
+        var getRelatedAuthorsByClustersQuery = globalData.PREFIX
                 + ' CONSTRUCT {  <http://ucuenca.edu.ec/wkhuska/resultTitle> a uc:pagetitle. <http://ucuenca.edu.ec/wkhuska/resultTitle> uc:viewtitle "Authors Related With {0}"  .         ?subject rdfs:label ?name.         ?subject uc:total ?totalPub   }   WHERE {   { '
                 + ' SELECT DISTINCT  ?subject ?name (count(?pub) as ?totalPub)'
                 + ' WHERE { '
-                + '   GRAPH <http://ucuenca.edu.ec/wkhuska/clusters> '
+                + '   GRAPH <'+globalData.clustersGraph+'> '
                 + '         { '
                 + ' ?cluster <http://ucuenca.edu.ec/resource/hasPerson> <{1}> .'
                 + ' ?cluster <http://ucuenca.edu.ec/resource/hasPerson> ?subject.'
@@ -22,7 +18,7 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                 + '          {'
                 + ' SELECT ?name'
                 + ' {'
-                + '      graph <http://ucuenca.edu.ec/wkhuska>'
+                + '      graph <'+globalData.centralGraph+'>'
                 + '            {'
                 + '        	?subject foaf:name ?name.'
                 + '            }'
@@ -33,11 +29,7 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                 + '          }}    ';
 
 
-        var getRelatedAuthorsByPublicationsQuery = 'PREFIX http: <http://www.w3.org/2011/http#> '
-                + ' PREFIX dct: <http://purl.org/dc/terms/> '
-                + ' PREFIX bibo: <http://purl.org/ontology/bibo/> '
-                + '  PREFIX foaf: <http://xmlns.com/foaf/0.1/>  '
-                + ' PREFIX uc: <http://ucuenca.edu.ec/wkhuska/resource/>  '
+        var getRelatedAuthorsByPublicationsQuery = globalData.PREFIX
                 + '  CONSTRUCT { '
                 + ' <http://ucuenca.edu.ec/wkhuska/resultTitle> a uc:pagetitle. <http://ucuenca.edu.ec/wkhuska/resultTitle> uc:viewtitle "Authors Related With {0}" . '
                 + '        ?subject rdfs:label ?name. '
@@ -47,7 +39,7 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                 + '  { '
                 + '     SELECT ?subject (count(?pub) as ?totalPub) ?name '
                 + '         WHERE { '
-                + '             GRAPH <http://ucuenca.edu.ec/wkhuska> { '
+                + '             GRAPH <'+globalData.centralGraph+'> { '
                 + '             <{1}> foaf:publications ?pub.  '
                 + '            ?subject foaf:publications ?pub. '
                 + '            ?subject foaf:name ?name.  } '
@@ -106,14 +98,7 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
             function executeRelatedAuthors(querytoExecute, divtoload) {
                 var sparqlquery = querytoExecute;
                 sparqlQuery.querySrv({query: sparqlquery}, function (rdf) {
-                    var context = {
-                        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-                        "foaf": "http://xmlns.com/foaf/0.1/",
-                        "dc": "http://purl.org/dc/elements/1.1/",
-                        "dcterms": "http://purl.org/dc/terms/",
-                        "uc": "http://ucuenca.edu.ec/wkhuska/resource/"
-                    };
-                    jsonld.compact(rdf, context, function (err, compacted) {
+                    jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                         if (compacted)
                         {
                             var entity = compacted["@graph"];
@@ -185,15 +170,8 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                         var sparqlquery = String.format(getRelatedAuthorsByClustersQuery, author["foaf:name"], id);
                         waitingDialog.show("Loading Authors Related with " + author["foaf:name"]);
                         sparqlQuery.querySrv({query: sparqlquery}, function (rdf) {
-                            var context = {
-                                "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-                                "foaf": "http://xmlns.com/foaf/0.1/",
-                                "dc": "http://purl.org/dc/elements/1.1/",
-                                "dcterms": "http://purl.org/dc/terms/",
-                                "bibo": "http://purl.org/ontology/bibo/",
-                                "uc": "http://ucuenca.edu.ec/wkhuska/resource/"
-                            };
-                            jsonld.compact(rdf, context, function (err, compacted) {
+                            
+                            jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                                 if (compacted)
                                 {
                                     var entity = compacted["@graph"];
@@ -229,41 +207,30 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                         var anchor = $("<a target='blank'>").attr('href', id.replace('/xr/', '/')) //SOLO DBLP & MICROSOFT ACADEMICS
                                 .text("Click here for more info...");
                         // 
-                        var context = {
-                            "foaf": "http://xmlns.com/foaf/0.1/",
-                            "dcterms": "http://purl.org/dc/terms/",
-                            "bibo": "http://purl.org/ontology/bibo/",
-                            "cedia": "https://www.cedia.org.ec/"/*,
-                             "publications": {"@id": "http://xmlns.com/foaf/0.1/publications", "@type": "@id"},
-                             "provenance": {"@id": "http://purl.org/dc/terms/provenance"},
-                             "title": {"@id": "http://purl.org/dc/terms/title"}*/
-                        };
+                        
                         var authorToFind = author["@id"];
                         waitingDialog.show("Searching publications of the external author");
 
 
 
-                        var getExternalAuthorFromLocal = 'PREFIX dc: <http://purl.org/dc/elements/1.1/>  '
-                                + 'PREFIX dct: <http://purl.org/dc/terms/> '
-                                + 'PREFIX bibo: <http://purl.org/ontology/bibo/> '
-                                + 'PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
+                        var getExternalAuthorFromLocal = globalData.PREFIX
                                 + 'CONSTRUCT  { <' + authorToFind + '> ?propaut ?obbaut. ?obbaut ?propub ?objpub.'
                                 + '    } '
                                 + 'WHERE'
                                 + '{'
-                                + 'graph <http://ucuenca.edu.ec/wkhuska/externalauthors>'
+                                + 'graph <'+globalData.externalAuthorsGraph+'>'
                                 + '        {'
                                 + '<' + authorToFind + '> ?propaut ?obbaut.'
                                 + '?obbaut ?propub ?objpub.'
                                 + '}'
                                 + '      }';
                         sparqlQuery.querySrv({query: getExternalAuthorFromLocal}, function (rdf) {
-                            jsonld.compact(rdf, context, function (err, compacted) {
+                            jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                                 if (!compacted["@graph"])
                                 {
                                     authorRestQuery.query({resource: authorToFind}, function (rdf) {
 
-                                        jsonld.compact(rdf, context, function (err, compacted) {
+                                        jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                                             if (!compacted["@graph"])
                                             {
                                                 waitingDialog.hide();
@@ -273,9 +240,9 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                                             {
                                                 var rs = compacted;
                                                 //if(compacted['@graph']) {
-                                                node.author.jsonld["@context"] = _.extend(node.author.jsonld["@context"], context);
+                                                node.author.jsonld["@context"] = _.extend(node.author.jsonld["@context"], globalData.CONTEXT);
                                                 node.author.jsonld["@graph"] = _.flatten([node.author.jsonld["@graph"], compacted["@graph"]]);
-                                                setChildrenAndUpdate('publication', node, node.author.jsonld, {"@type": "bibo:Document"}, context, exploredPublicationsIds);
+                                                setChildrenAndUpdate('publication', node, node.author.jsonld, {"@type": "bibo:Document"}, globalData.CONTEXT, exploredPublicationsIds);
                                                 //} else { //no results
                                                 waitingDialog.hide();
                                             }
@@ -285,9 +252,9 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                                 else
                                 {
                                     //if(compacted['@graph']) {
-                                    node.author.jsonld["@context"] = _.extend(node.author.jsonld["@context"], context);
+                                    node.author.jsonld["@context"] = _.extend(node.author.jsonld["@context"], globalData.CONTEXT);
                                     node.author.jsonld["@graph"] = _.flatten([node.author.jsonld["@graph"], compacted["@graph"]]);
-                                    setChildrenAndUpdate('publication', node, node.author.jsonld, {"@type": "bibo:Document"}, context, exploredPublicationsIds);
+                                    setChildrenAndUpdate('publication', node, node.author.jsonld, {"@type": "bibo:Document"}, globalData.CONTEXT, exploredPublicationsIds);
                                     //} else { //no results
                                     waitingDialog.hide();
                                 }
@@ -304,21 +271,13 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                          var artists = consumedNodes;*/ //****
                         //AE.getRelated(node.author.id, exploredArtistIds).then(function(authors) {
                         var model;
-                        var context = {
-                            "foaf": "http://xmlns.com/foaf/0.1/",
-                            "dcterms": "http://purl.org/dc/terms/",
-                            "bibo": "http://purl.org/ontology/bibo/"/*,
-                             "publications": {"@id": "http://xmlns.com/foaf/0.1/publications", "@type": "@id"},
-                             "provenance": {"@id": "http://purl.org/dc/terms/provenance"},
-                             "title": {"@id": "http://purl.org/dc/terms/title"}*/
-                        };
+
                         if (node.author.jsonld["@graph"].length > 1) {
                             model = node.author.jsonld;
-                            setChildrenAndUpdate('publication', node, model, {"@type": "bibo:Document"}, context, exploredPublicationsIds);
+                            setChildrenAndUpdate('publication', node, model, {"@type": "bibo:Document"}, globalData.CONTEXT, exploredPublicationsIds);
                         } else {
                             var nodeId = node.author['@id'];
-                            var queryPublications = ' PREFIX dct: <http://purl.org/dc/terms/> PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
-                                    + ' PREFIX bibo: <http://purl.org/ontology/bibo/> '
+                            var queryPublications = globalData.PREFIX
                                     + ' CONSTRUCT { '
                                     + ' <' + nodeId + '> foaf:publications ?pub . '
                                     + ' ?pub a bibo:Document . '
@@ -331,7 +290,7 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                                     + ' ?pub dct:isPartOf ?isPartOf. '
                                     + ' ?pub bibo:numPages ?numPages. '
                                     + ' } '
-                                    + ' WHERE { graph <http://ucuenca.edu.ec/wkhuska> {  '
+                                    + ' WHERE { graph <'+globalData.centralGraph+'> {  '
                                     + ' <' + nodeId + '> foaf:publications ?pub . '
                                     + '?pub dct:title ?title '
                                     + ' OPTIONAL {?pub bibo:abstract ?abstract. } '
@@ -344,11 +303,11 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                                     + ' } }';
                             sparqlQuery.querySrv({query: queryPublications}, function (rdf) {
 
-                                jsonld.compact(rdf, context, function (err, compacted) {
+                                jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                                     var rs = compacted;
-                                    node.author.jsonld["@context"] = _.extend(node.author.jsonld["@context"], context);
+                                    node.author.jsonld["@context"] = _.extend(node.author.jsonld["@context"], globalData.CONTEXT);
                                     node.author.jsonld["@graph"] = _.flatten([node.author.jsonld["@graph"], compacted["@graph"]]);
-                                    setChildrenAndUpdate('publication', node, node.author.jsonld, {"@type": "bibo:Document"}, context, exploredPublicationsIds);
+                                    setChildrenAndUpdate('publication', node, node.author.jsonld, {"@type": "bibo:Document"}, globalData.CONTEXT, exploredPublicationsIds);
                                 });
                             });
                         }
@@ -462,13 +421,10 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                 }
 
                 var model;
-                var context = {
-                    "foaf": "http://xmlns.com/foaf/0.1/",
-                    "dcterms": "http://purl.org/dc/terms/",
-                };
+
                 if (node.publication.jsonld["@graph"].length > 1) {
                     model = node.publication.jsonld;
-                    setChildrenAndUpdate('author', node, model, {"@type": "foaf:Person"}, context, exploredArtistIds);
+                    setChildrenAndUpdate('author', node, model, {"@type": "foaf:Person"}, globalData.CONTEXT, exploredArtistIds);
                 } else {
                     var nodeId = node.publication['@id'];
                     var coAuthors = [];
@@ -479,15 +435,14 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                     });
 
                     //****  GETTING LOCAL CONTRIBUTOR OF PUBLICATION ***** //    
-                    var getLocalcoAuthorsSparqlQuery = 'PREFIX dct: <http://purl.org/dc/terms/> '
-                            + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
+                    var getLocalcoAuthorsSparqlQuery = globalData.PREFIX
                             + ' CONSTRUCT { '
                             + ' <' + node.publication['@id'] + '> dct:contributors ?subject. '
                             + ' ?subject foaf:name ?name. '
                             + ' ?subject a foaf:Person. '
                             + ' } '
                             + ' WHERE { '
-                            + ' GRAPH <http://ucuenca.edu.ec/wkhuska> '
+                            + ' GRAPH <'+globalData.centralGraph+'> '
                             + ' { '
                             + ' ?subject foaf:publications  <' + node.publication['@id'] + '>. '
                             + ' ?subject foaf:name ?name. '
@@ -512,7 +467,7 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
 //                    });
                     //**** END GETTING EXTERNAL CONTRIBUTORS OF PUBLICATION ***/
                     var contributorsjsonld = {"@graph": coAuthors};
-                    setChildrenAndUpdate('author', node, contributorsjsonld, 'foaf:Person', context, exploredArtistIds);
+                    setChildrenAndUpdate('author', node, contributorsjsonld, 'foaf:Person', globalData.CONTEXT, exploredArtistIds);
 
                 }
             }
