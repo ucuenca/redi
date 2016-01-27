@@ -225,11 +225,12 @@ public class Queries implements QueriesService {
                 + " ?subject foaf:name ?name."
                 + " ?subject foaf:firstName ?fname."
                 + " ?subject foaf:lastName ?lname."
-                //                + " {"
-                //                + " FILTER (regex(?name,\"Saquicela Galarza\"))"
-                //                + " } UNION {"
-                //                + " FILTER (regex(?name,\"Espinoza Mejia\"))"
-                //                + " }"
+                + "?subject dct:provenance ?pro."
+                + "{ select ?resource where"
+                + "{ graph <http://ucuenca.edu.ec/wkhuska/endpoints> {"
+                + "?pro <http://ucuenca.edu.ec/resource/status> ?resource "
+                + "}}} filter (regex(?resource,\"true\"))"
+                + "                }} "
                 + " }}";
     }
 
@@ -294,7 +295,8 @@ public class Queries implements QueriesService {
                 + " graph <" + providerGraph + "> "
                 + " {"
                 + " <" + publicationResource + ">  ?publicationProperties ?publicationPropertyValue. "
-                + " }} ";
+                + " } }"
+                + "ORDER BY DESC(?publicationProperties) ";
     }
 
     @Override
@@ -438,9 +440,9 @@ public class Queries implements QueriesService {
 
     @Override
     public String getTitlePublications(String graph) {
-        return "PREFIX dct: <http://purl.org/dc/terms/>\n"
-                + "PREFIX foaf: <" + FOAF.NAMESPACE + ">\n"
-                + "SELECT *  WHERE { graph <" + graph + ">\n"
+        return "PREFIX dct: <http://purl.org/dc/terms/> "
+                + "PREFIX foaf: <" + FOAF.NAMESPACE + "> "
+                + "SELECT *  WHERE { graph <" + graph + "> "
                 + "  {?authorResource foaf:publications  ?publicationResource.\n"
                 + "   ?publicationResource dct:title ?title\n"
                 + "  }\n"
@@ -467,6 +469,26 @@ public class Queries implements QueriesService {
                 + "  { ?isValueOf ?property <" + authorResource + "> }\n"
                 + "}}\n"
                 + "ORDER BY ?property ?hasValue ?isValueOf";
+    }
+
+    @Override
+    public String getAuthorPublicationFilter(String graph, String fname, String lname) {
+        return "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
+                + "PREFIX dct: <http://purl.org/dc/terms/> "
+                + "PREFIX mm: <http://marmotta.apache.org/vocabulary/sparql-functions#> "
+                + "              "
+                + "                SELECT distinct ?authorResource  ?publicationResource ?title  WHERE { "
+                + "graph <" + graph + ">\n"
+                + "                  { \n"
+                + "                   ?authorResource foaf:firstName ?fname.\n"
+                + "                    ?authorResource foaf:lastName  ?lname.\n"
+                + "                   ?authorResource foaf:publications   ?publicationResource.\n"
+                + "                   ?publicationResource dct:title ?title\n"
+                + "                                        \n"
+                + "					    {FILTER( mm:fulltext-query(str(?fname), \"" + fname + "\")  "
+                + "                                               && mm:fulltext-query(str(?lname), \"" + lname + "\"))\n"
+                + "                   }}}";
+
     }
 
 }

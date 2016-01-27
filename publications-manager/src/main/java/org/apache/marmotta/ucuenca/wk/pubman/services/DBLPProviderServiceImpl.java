@@ -109,7 +109,7 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
      Graph to save publications data by provider
      Example: http://ucuenca.edu.ec/wkhuska/dblp
      */
-    private String graphByProviderNS = namespaceGraph + "wkhuska" + "/provider/";
+    private String graphByProviderNS = namespaceGraph + "provider/";
 
     @Inject
     private SparqlService sparqlService;
@@ -264,14 +264,14 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                                 log.error("Data Retrieval Exception: " + e);
                                 log.info("Wating: " + waitTime + " seconds for new query");
                                 dataretrievee = false;
-                                try {
-                                    Thread.sleep(waitTime * 1000);               //1000 milliseconds is one second.
-                                } catch (InterruptedException ex) {
-                                    Thread.currentThread().interrupt();
-                                }
+//                                try {
+//                                    Thread.sleep(waitTime * 1000);               //1000 milliseconds is one second.
+//                                } catch (InterruptedException ex) {
+//                                    Thread.currentThread().interrupt();
+//                                }
                                 waitTime += 5;
                             }
-                        } while (!dataretrievee && waitTime < 40);
+                        } while (!dataretrievee && waitTime < 31);
 
                         if (response.getHttpStatus() == 503) {
                             log.error("ErrorCode: " + response.getHttpStatus());
@@ -312,6 +312,7 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                             updatePub(sameAsInsertQuery);
                         }
                         if (allMembers == 1 && !existNativeAuthor) {
+                            priorityToFind = 5;
                             //SPARQL obtain all publications of author
                             String getPublicationsFromProviderQuery = queriesService.getPublicationFromProviderQuery();
                             TupleQuery pubquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationsFromProviderQuery); //
@@ -485,13 +486,13 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
         switch (priority) {
 //            case 5:
 //                return fnamelname[3];
-            case 4:
+            case 1:
                 return fnamelname[0] + "_" + fnamelname[2];
             case 3:
                 return fnamelname[1] + "_" + fnamelname[2] + "_" + fnamelname[3];
             case 2:
                 return fnamelname[0] + "_" + fnamelname[2] + "_" + fnamelname[3];
-            case 1:
+            case 4:
                 return fnamelname[0] + "_" + fnamelname[1] + "_" + fnamelname[2] + "_" + fnamelname[3];
         }
         return "";

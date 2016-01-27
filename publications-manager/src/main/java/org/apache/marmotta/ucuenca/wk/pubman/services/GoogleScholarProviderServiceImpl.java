@@ -96,7 +96,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
      Graph to save publications data by provider
      Example: http://ucuenca.edu.ec/wkhuska/dblp
      */
-    private String graphByProviderNS = namespaceGraph + "wkhuska" + "/provider/";
+    private String graphByProviderNS = namespaceGraph +  "/provider/";
 
     @Inject
     private SparqlService sparqlService;

@@ -48,17 +48,27 @@ public class CommonServiceImpl implements CommonService {
 
         Thread ScopusThread = new Thread((Runnable) providerServiceScopus);
         ScopusThread.start();
+        
 
-        Thread MicrosofProvider = new Thread(microsoftAcadProviderService);
-        MicrosofProvider.start();
+        //         return googleService.runPublicationsProviderTaskImpl("d");
+//        Thread googleProvider = new Thread(googleProviderService);
+//        googleProvider.start();
+        return "Data Provider SCOPUS are extracted in background.   Please review main.log file for details";
+
+    }
+
+    @Override
+    public String GetDataFromProvidersServiceDBLP() {
         Thread DblpProvider = new Thread(dblpProviderService);
         DblpProvider.start();
+        return "Data Provider DBLP are extracted in background.   Please review main.log file for details";
+    }
 
-     //         return googleService.runPublicationsProviderTaskImpl("d");
-        Thread googleProvider = new Thread(googleProviderService);
-        googleProvider.start();
-        return "Data Providers are extracted in background.   Please review main.log file for details";
-
+    @Override
+    public String GetDataFromProvidersServiceMicrosoftAcademics() {
+        Thread MicrosofProvider = new Thread(microsoftAcadProviderService);
+        MicrosofProvider.start();
+        return "Data Provider MICROSOFT ACEDEMICS are extracted in background.   Please review main.log file for details";
     }
 
     @Override

@@ -39,8 +39,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
 
-
-
 @Path("/pubman")
 @ApplicationScoped
 public class PubWebService {
@@ -48,12 +46,14 @@ public class PubWebService {
     @Inject
     private Logger log;
 
-    @Inject 
+    @Inject
     private CommonService commonService;
-    
+
     private static final int MAX_TURNS = 100;
     private static final int MIN_TURNS = 0;
     public static final String GET_PUBLICATIONS = "/publications";
+    public static final String GET_PUBLICATIONS_DBLP = "/publications_dblp";
+    public static final String GET_PUBLICATIONS_MA = "/publications_ma";
     public static final String LOAD_PUBLICATIONS = "/publications_provider_graph";
     public static final String GET_AUTHOR_DATA = "/pubsearch";
 
@@ -68,14 +68,38 @@ public class PubWebService {
         return runPublicationsProviderTask(params);
     }
 
+
+    /*
+     * Get Publications Data from Source and Load into Provider Graph
+     */
+    @POST
+    @Path(GET_PUBLICATIONS_DBLP)
+    public Response readPublicationsPostDBLP(@QueryParam("Endpoint") String resultType) {
+        String params = resultType;
+        log.debug("Publications Task", params);
+        String result = commonService.GetDataFromProvidersServiceDBLP();
+        return Response.ok().entity(result).build();
+    }
+
+    /*
+     * Get Publications Data from Source and Load into Provider Graph
+     */
+    @POST
+    @Path(GET_PUBLICATIONS_MA)
+    public Response readPublicationsPostMA(@QueryParam("Endpoint") String resultType) {
+        String params = resultType;
+        log.debug("Publications Task", params);
+        String result = commonService.GetDataFromProvidersServiceMicrosoftAcademics();
+        return Response.ok().entity(result).build();
+    }
+
     private Response runPublicationsProviderTask(String urisString) {
         //String result = publicationsService.runPublicationsMAProviderTaskImpl(urisString);
         String result = runGetDataFromProvidersService();
         return Response.ok().entity(result).build();
     }
-    
-    private String runGetDataFromProvidersService()
-    {
+
+    private String runGetDataFromProvidersService() {
         return commonService.GetDataFromProvidersService();
     }
 
@@ -94,21 +118,22 @@ public class PubWebService {
         String result = commonService.Data2GlobalGraph();
         return Response.ok().entity(result).build();
     }
-    
+
     /**
      * Service to get data related with especific author.
-     * 
-     * @param uri   //url to find
+     *
+     * @param uri //url to find
      */
     @POST
     @Path(GET_AUTHOR_DATA)
     @Produces("application/ld+json")
-    public Response searchAuthor(@FormParam("resource") String uri, @Context HttpServletRequest request){
-        JsonArray resultjson = commonService.searchAuthor(uri);       
+    public Response searchAuthor(@FormParam("resource") String uri, @Context HttpServletRequest request) {
+        JsonArray resultjson = commonService.searchAuthor(uri);
         String result = resultjson.toString();
-        return Response.ok().entity(result).build(); 
+        return Response.ok().entity(result).build();
     }
     public static final String COUNT_PUBLICATIONS = "/count_publications_graph";
+
     /**
      * @Author Freddy Sumba. Service that count the publications in the provider
      * an central graph.

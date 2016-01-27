@@ -14,10 +14,16 @@ import com.google.gson.JsonObject;
  * @author Satellite
  */
 public interface CommonService {
-   String GetDataFromProvidersService(); 
-   
-   String Data2GlobalGraph();
-   String CountPublications();
-   
-   JsonArray searchAuthor(String uri);
+
+    String GetDataFromProvidersService();
+
+    String Data2GlobalGraph();
+
+    String CountPublications();
+
+    String GetDataFromProvidersServiceDBLP();
+
+    String GetDataFromProvidersServiceMicrosoftAcademics();
+
+    JsonArray searchAuthor(String uri);
 }

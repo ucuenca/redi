@@ -82,7 +82,7 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
      Graph to save publications data by provider
      Example: http://ucuenca.edu.ec/wkhuska/ScopusProvider
      */
-    private String graphByProviderNS = namespaceGraph + "wkhuska" + "/provider/";
+    private String graphByProviderNS = namespaceGraph +  "provider/";
 
     private String URLSEARCHSCOPUS = "http://api.elsevier.com/content/search/author?query=authfirst%28FIRSTNAME%29authlast%28LASTNAME%29+AND+affil%28PAIS%29&apiKey=a3b64e9d82a8f7b14967b9b9ce8d513d&httpAccept=application/xml";
     @Inject

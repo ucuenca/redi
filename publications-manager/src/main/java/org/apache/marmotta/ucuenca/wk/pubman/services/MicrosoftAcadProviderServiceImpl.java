@@ -99,7 +99,7 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
      Graph to save publications data by provider
      Example: http://ucuenca.edu.ec/wkhuska/dblp
      */
-    private String graphByProviderNS = namespaceGraph + "wkhuska" + "/provider/";
+    private String graphByProviderNS = namespaceGraph + "provider/";
 
     @Inject
     private SparqlService sparqlService;
@@ -268,14 +268,14 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                                         log.error("Data Retrieval Exception: " + e);
                                         log.info("Wating: " + waitTime + " seconds for new Microsoft Academics Query");
                                         dataretrievee = false;
-                                        try {
-                                            Thread.sleep(waitTime * 1000);               //1000 milliseconds is one second.
-                                        } catch (InterruptedException ex) {
-                                            Thread.currentThread().interrupt();
-                                        }
+//                                        try {
+//                                            Thread.sleep(waitTime * 1000);               //1000 milliseconds is one second.
+//                                        } catch (InterruptedException ex) {
+//                                            Thread.currentThread().interrupt();
+//                                        }
                                         waitTime += 5;
                                     }
-                                } while (!dataretrievee && waitTime < 40);
+                                } while (!dataretrievee && waitTime < 31);
 
                             }//end  if  nameToFind != ""
 
@@ -326,6 +326,7 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
 
                                 if (!existNativeAuthor) {
                                     //SPARQL obtain all publications of author
+                                    priorityToFind = 5;
                                     String getPublicationsFromProviderQuery = queriesService.getPublicationFromMAProviderQuery();
                                     TupleQuery pubquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationsFromProviderQuery); //
                                     TupleQueryResult tripletasResult = pubquery.evaluate();
@@ -401,13 +402,13 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
         switch (priority) {
 //            case 5:
 //                return fnamelname[3];
-            case 4:
+            case 1:
                 return fnamelname[0] + "_" + fnamelname[2];
             case 3:
                 return fnamelname[1] + "_" + fnamelname[2] + "_" + fnamelname[3];
             case 2:
                 return fnamelname[0] + "_" + fnamelname[2] + "_" + fnamelname[3];
-            case 1:
+            case 4:
                 return fnamelname[0] + "_" + fnamelname[1] + "_" + fnamelname[2] + "_" + fnamelname[3];
         }
         return "";
