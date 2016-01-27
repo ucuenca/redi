@@ -82,8 +82,7 @@ public class AuthorServiceImpl implements AuthorService {
     private EndpointService authorsendpointService;
 
     private String namespaceGraph = "http://ucuenca.edu.ec/wkhuska/";
-    private String authorGraph = namespaceGraph + "authors";
-
+    private String wkhuskaGraph = namespaceGraph + "authors";
     private int limit = 5000;
 
     private int processpercent = 0;
@@ -167,7 +166,7 @@ public class AuthorServiceImpl implements AuthorService {
                     BindingSet binding = authorsResult.next();
                     resource = String.valueOf(binding.getValue("s"));
                     try {
-                        if (!sparqlFunctionsService.askAuthor(queriesService.getAskResourceQuery(authorGraph, resource))) {
+                        if (!sparqlFunctionsService.askAuthor(queriesService.getAskResourceQuery(wkhuskaGraph, resource))) {
                             contAutoresNuevosEncontrados++;
                             printPercentProcess(contAutoresNuevosEncontrados, allPersons, endpoint.getName());
                             //properties and values quering with LDClient Library de Marmotta
@@ -409,9 +408,9 @@ public class AuthorServiceImpl implements AuthorService {
     //construyendo sparql query insert 
     public String buildInsertQuery(String sujeto, String predicado, String objeto) {
         if (queriesService.isURI(objeto)) {
-            return queriesService.getInsertDataUriQuery(authorGraph, sujeto, predicado, objeto);
+            return queriesService.getInsertDataUriQuery(wkhuskaGraph, sujeto, predicado, objeto);
         } else {
-            return queriesService.getInsertDataLiteralQuery(authorGraph, sujeto, predicado, objeto);
+            return queriesService.getInsertDataLiteralQuery(wkhuskaGraph, sujeto, predicado, objeto);
         }
     }
 

@@ -118,27 +118,27 @@ public class Queries implements QueriesService {
 
     @Override
     public String getEndpointFullNameQuery(String endpointsGraph, String fullName, String resourceHash) {
-        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/fullName>  \"" + fullName + "\" }}";
+        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/resource/fullName>  \"" + fullName + "\" }}";
     }
 
     @Override
     public String getEndpointCityQuery(String endpointsGraph, String city, String resourceHash) {
-        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/city>  \"" + city + "\" }}";
+        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/resource/city>  \"" + city + "\" }}";
     }
 
     @Override
     public String getEndpointProvinceQuery(String endpointsGraph, String province, String resourceHash) {
-        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/province>  \"" + province + "\"}}";
+        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/resource/province>  \"" + province + "\"}}";
     }
 
     @Override
     public String getEndpointLatitudeQuery(String endpointsGraph, String latitude, String resourceHash) {
-        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/latitude>  \"" + latitude + "\"}}";
+        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/resource/latitude>  \"" + latitude + "\"}}";
     }
 
     @Override
     public String getEndpointLongitudeQuery(String endpointsGraph, String longitude, String resourceHash) {
-        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/longitude>  \"" + longitude + "\"}}";
+        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/resource/longitude>  \"" + longitude + "\"}}";
     }
 
     @Override

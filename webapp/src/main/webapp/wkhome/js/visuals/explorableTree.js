@@ -317,9 +317,7 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                             setChildrenAndUpdate('publication', node, model, {"@type": "bibo:Document"}, context, exploredPublicationsIds);
                         } else {
                             var nodeId = node.author['@id'];
-                            var queryPublications = ' PREFIX dct: <http://purl.org/dc/terms/> PREFIX foaf: <http://xmlns.com/foaf/0.1/> '
-                                    + ' PREFIX bibo: <http://purl.org/ontology/bibo/> '
-                                    + ' PREFIX dc: <http://purl.org/dc/elements/1.1/> '                           
+                            var queryPublications = globalData.PREFIX                          
                                     + ' CONSTRUCT { '
                                     + ' <' + nodeId + '> foaf:publications ?pub . '
                                     + ' ?pub a bibo:Document . '
