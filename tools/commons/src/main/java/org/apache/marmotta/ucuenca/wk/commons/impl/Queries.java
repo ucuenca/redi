@@ -102,18 +102,23 @@ public class Queries implements QueriesService {
     }
 
     @Override
+    public String getEndpointStatusQuery(String endpointsGraph, String status, String resourceHash) {
+        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/resource/status>  '" + status + "' }}";
+    }
+
+    @Override
     public String getEndpointNameQuery(String endpointsGraph, String name, String resourceHash) {
-        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/name>  \"" + name + "\" }}";
+        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/resource/name>  \"" + name + "\" }}";
     }
 
     @Override
     public String getEndpointUrlQuery(String endpointsGraph, String url, String resourceHash) {
-        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/url>  <" + url + "> }}";
+        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/resource/url>  <" + url + "> }}";
     }
 
     @Override
     public String getEndpointGraphQuery(String endpointsGraph, String graphUri, String resourceHash) {
-        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/wkhuska/resource/graph>  <" + graphUri + "> }}";
+        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/resource/graph>  <" + graphUri + "> }}";
     }
 
     @Override
@@ -143,34 +148,36 @@ public class Queries implements QueriesService {
 
     @Override
     public String getlisEndpointsQuery(String endpointsGraph) {
-        return "SELECT DISTINCT ?id ?name ?url ?graph ?fullName ?city ?province ?latitude ?longitude  WHERE {  "
+        return "SELECT DISTINCT ?id ?status ?name ?url ?graph ?fullName ?city ?province ?latitude ?longitude  WHERE {  "
                 + " GRAPH <" + endpointsGraph + ">"
                 + " {"
-                + " ?id <http://ucuenca.edu.ec/wkhuska/resource/name> ?name ."
-                + " ?id <http://ucuenca.edu.ec/wkhuska/resource/url> ?url."
-                + " ?id <http://ucuenca.edu.ec/wkhuska/resource/graph> ?graph."
-                + " ?id <http://ucuenca.edu.ec/wkhuska/resource/fullName> ?fullName."
-                + " ?id <http://ucuenca.edu.ec/wkhuska/resource/city> ?city."
-                + " ?id <http://ucuenca.edu.ec/wkhuska/resource/province> ?province."
-                + " ?id <http://ucuenca.edu.ec/wkhuska/resource/latitude> ?latitude."
-                + " ?id <http://ucuenca.edu.ec/wkhuska/resource/longitude> ?longitude."
+                + " ?id <http://ucuenca.edu.ec/resource/status> ?status ."
+                + " ?id <http://ucuenca.edu.ec/resource/name> ?name ."
+                + " ?id <http://ucuenca.edu.ec/resource/url> ?url."
+                + " ?id <http://ucuenca.edu.ec/resource/graph> ?graph."
+                + " ?id <http://ucuenca.edu.ec/resource/fullName> ?fullName."
+                + " ?id <http://ucuenca.edu.ec/resource/city> ?city."
+                + " ?id <http://ucuenca.edu.ec/resource/province> ?province."
+                + " ?id <http://ucuenca.edu.ec/resource/latitude> ?latitude."
+                + " ?id <http://ucuenca.edu.ec/resource/longitude> ?longitude."
                 + " }"
                 + " }";
     }
 
     @Override
     public String getEndpointByIdQuery(String endpointsGraph, String id) {
-        return "SELECT DISTINCT ?id ?name ?url ?graph ?fullName ?city ?province ?latitude ?longitude  WHERE {  "
+        return "SELECT DISTINCT ?id ?status ?name ?url ?graph ?fullName ?city ?province ?latitude ?longitude  WHERE {  "
                 + " GRAPH <" + endpointsGraph + ">"
                 + " {"
-                + " ?id <http://ucuenca.edu.ec/wkhuska/resource/name> ?name ."
-                + " ?id <http://ucuenca.edu.ec/wkhuska/resource/url> ?url."
-                + " ?id <http://ucuenca.edu.ec/wkhuska/resource/graph> ?graph."
-                + " ?id <http://ucuenca.edu.ec/wkhuska/resource/fullName> ?fullName."
-                + " ?id <http://ucuenca.edu.ec/wkhuska/resource/city> ?city."
-                + " ?id <http://ucuenca.edu.ec/wkhuska/resource/province> ?province."
-                + " ?id <http://ucuenca.edu.ec/wkhuska/resource/latitude> ?latitude."
-                + " ?id <http://ucuenca.edu.ec/wkhuska/resource/longitude> ?longitude."
+                + " ?id <http://ucuenca.edu.ec/resource/status> ?status ."
+                + " ?id <http://ucuenca.edu.ec/resource/name> ?name ."
+                + " ?id <http://ucuenca.edu.ec/resource/url> ?url."
+                + " ?id <http://ucuenca.edu.ec/resource/graph> ?graph."
+                + " ?id <http://ucuenca.edu.ec/resource/fullName> ?fullName."
+                + " ?id <http://ucuenca.edu.ec/resource/city> ?city."
+                + " ?id <http://ucuenca.edu.ec/resource/province> ?province."
+                + " ?id <http://ucuenca.edu.ec/resource/latitude> ?latitude."
+                + " ?id <http://ucuenca.edu.ec/resource/longitude> ?longitude."
                 + " FILTER(?id = <" + id + ">)"
                 + " }"
                 + " }";
@@ -188,6 +195,22 @@ public class Queries implements QueriesService {
                 + " FILTER(?id = <" + id + ">) "
                 + " } "
                 + " }";
+    }
+
+    @Override
+    public String getEndpointUpdateStatusQuery(String... args) {
+        return " DELETE{ graph <" + args[0] + "> "
+                + " { <" + args[1] + "> <http://ucuenca.edu.ec/resource/status> '" + args[2] + "'"
+                + "}}"
+                + "INSERT"
+                + "{    graph <" + args[0] + ">  {"
+                + "         <" + args[1] + "> <http://ucuenca.edu.ec/resource/status> '" + args[3] + "'"
+                + "}    }"
+                + "WHERE"
+                + "{"
+                + "     graph <" + args[0] + ">  {"
+                + "         <" + args[1] + "> <http://ucuenca.edu.ec/resource/status> '" + args[2] + "'"
+                + "}} ";
     }
 
     @Override

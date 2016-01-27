@@ -1,11 +1,11 @@
 'use strict';
 
-var pieChart = angular.module('cloudTag', []);
+var pieChart = angular.module('colorCluster', []);
 //	D3	Factory
 pieChart.factory('d3', function () {
     return	d3;
 });
-pieChart.directive('cloudTag', ["d3", 'globalData', 'sparqlQuery',
+pieChart.directive('colorCluster', ["d3", 'globalData', 'sparqlQuery',
     function (d3, globalData, sparqlQuery) {
 
         var chart, clear, click, collide, collisionPadding, connectEvents, data, force, gravity, hashchange, height, idValue, jitter, label, margin, maxRadius, minCollisionRadius, mouseout, mouseover, node, rScale, rValue, textValue, tick, transformData, update, updateActive, updateLabels, updateNodes, width;
@@ -45,11 +45,37 @@ pieChart.directive('cloudTag', ["d3", 'globalData', 'sparqlQuery',
             return rawData;
         };
         tick = function (e) {
-            var dampenedAlpha;
-            dampenedAlpha = e.alpha * 0.01;
-            node.each(gravity(dampenedAlpha)).each(collide(jitter)).attr("transform", function (d) {
-                return "translate(" + d.x + "," + d.y + ")";
-            });
+//            var dampenedAlpha;
+//            dampenedAlpha = e.alpha * 0.01;
+//            node.each(gravity(dampenedAlpha)).each(collide(jitter)).attr("transform", function (d) {
+//                return "translate(" + d.x + "," + d.y + ")";
+//            });
+
+
+            var foci = {};
+            for (var i = 0; i < centers.length; i++) {
+                foci[centers[i].name] = centers[i];
+            }
+            return function (e) {
+                for (var i = 0; i < dataMapping.length; i++) {
+                    var o = dataMapping[i];
+                    var f = foci[o[varname]];
+                    o.y += ((f.y + (f.dy / 2)) - o.y) * e.alpha;
+                    o.x += ((f.x + (f.dx / 2)) - o.x) * e.alpha;
+                }
+                nodes.each(collide(.11))
+                        .attr("cx", function (d) {
+                            return d.x;
+                        })
+                        .attr("cy", function (d) {
+                            return d.y;
+                        });
+            }
+
+
+
+
+
             return label.style("left", function (d) {
                 /*if(d.label == "Amino Acid") { 
                  d = d;
@@ -97,7 +123,9 @@ pieChart.directive('cloudTag', ["d3", 'globalData', 'sparqlQuery',
             node.exit().remove();
             return node.enter().append("a").attr("class", "bubble-node").attr("xlink:href", function (d) {
                 return "#" + (encodeURIComponent(idValue(d)));
-            }).call(force.drag).call(connectEvents).append("circle").attr("id", "kcircle").attr("r", function (d) {
+            }).call(force.drag).call(connectEvents).append("circle").attr("id", "kcircle").style("fill", function (d) {
+                return d.color;
+            }).attr("r", function (d) {
                 return rScale(rValue(d));
             });
         };
@@ -220,7 +248,7 @@ pieChart.directive('cloudTag', ["d3", 'globalData', 'sparqlQuery',
                 waitingDialog.show("Searching publications with the keyword: " + keyword);
 
                 sparqlQuery.querySrv({query: sparqlPublications}, function (rdf) {
-                
+
                     jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                         if (compacted)
                         {
@@ -303,7 +331,7 @@ pieChart.directive('cloudTag', ["d3", 'globalData', 'sparqlQuery',
             force = d3.layout.force().gravity(0).charge(0).size([width, height]).on("tick", tick);
             element.datum(data).call(chart);
 
-        }
+        };
 
         return {
             restrict: 'E',
@@ -330,11 +358,22 @@ pieChart.directive('cloudTag', ["d3", 'globalData', 'sparqlQuery',
                         var data = scope.data;
                         if (data) {
                             var jsonld = data.data;
-                            var schema = data.schema;
-                            var fields = schema.fields;
+
                             var mappedData = [];
-                            _.each(jsonld['@graph'], function (keyword, idx) {
-                                mappedData.push({label: keyword[fields[0]], value: keyword[fields[1]]["@value"]});
+                            _.each(jsonld, function (cluster, idx) {
+                                var a = cluster['color'].split("(")[1].split(")")[0];
+                                a = a.split(",");
+                                var b = a.map(function (x) {             //For each array element
+                                    x = parseInt(x).toString(16);      //Convert to a base16 string
+                                    return (x.length == 1) ? "0" + x : x;  //Add zero if we get only one character
+                                });
+                                b = "#" + b.join("");
+
+                                _.each(cluster['members'], function (person, idx) {
+                                    mappedData.push({label: person['@id'], value: 5, color: b});
+                                });
+
+
                             });
                             draw(svg, width, height, mappedData, scope, attrs);
                         }

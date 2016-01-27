@@ -96,24 +96,25 @@ public class AuthorServiceImpl implements AuthorService {
         StringBuilder response = new StringBuilder();
         if (authorsendpointService.listEndpoints().size() != 0) {
             for (SparqlEndpoint endpoint : authorsendpointService.listEndpoints()) {
-                //       if (endpoint.isActive()) {
-                response.append("\n ENDPOINT: ");
-                response.append(endpoint.getName());
-                response.append(":  ");
-                try {
-                    response.append(getAuthorsMultipleEP(endpoint));
-                } catch (RepositoryException ex) {
-                    log.error("Excepcion de repositorio. Problemas en conectarse a " + endpoint.getName());
-                    java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (MalformedQueryException ex) {
-                    log.error("Excepcion de forma de consulta. Revise consultas SPARQL y sintaxis. Revise estandar SPARQL");
-                    java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (QueryEvaluationException ex) {
-                    log.error("Excepcion de ejecucion de consulta. No se ha ejecutado la consulta general para la obtencion de los Authores.");
-                    java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                someUpdate = true;
-                //     }
+                if (endpoint.getStatus().equals("true")) {
+                    response.append("\n ENDPOINT: ");
+                    response.append(endpoint.getName());
+                    response.append(":  ");
+                    try {
+                        response.append(getAuthorsMultipleEP(endpoint));
+
+                    } catch (RepositoryException ex) {
+                        log.error("Excepcion de repositorio. Problemas en conectarse a " + endpoint.getName());
+                        java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (MalformedQueryException ex) {
+                        log.error("Excepcion de forma de consulta. Revise consultas SPARQL y sintaxis. Revise estandar SPARQL");
+                        java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (QueryEvaluationException ex) {
+                        log.error("Excepcion de ejecucion de consulta. No se ha ejecutado la consulta general para la obtencion de los Authores.");
+                        java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    someUpdate = true;
+                }// end if endpoint.status == true
             }
             if (!someUpdate) {
                 return "Any  Endpoints";
@@ -145,7 +146,7 @@ public class AuthorServiceImpl implements AuthorService {
         String lastUpdateUrisFile = configurationService.getHome() + "\\listAuthorsUpdate_" + endpoint.getName() + ".aut";
         /* Conecting to repository using LDC ( Linked Data Client ) Library */
         ClientConfiguration config = new ClientConfiguration();
-        config.addEndpoint(new SPARQLEndpoint(endpoint.getName(), endpoint.getEndpointUrl(), "^" + endpoint.getGraph() + ".*"));
+        config.addEndpoint(new SPARQLEndpoint(endpoint.getName(), endpoint.getEndpointUrl(), "^" + "http://" + ".*"));
         LDClientService ldClientEndpoint = new LDClient(config);
 
         Repository endpointTemp = new SPARQLRepository(endpoint.getEndpointUrl());

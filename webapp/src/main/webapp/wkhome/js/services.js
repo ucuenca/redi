@@ -8,6 +8,10 @@ var wkhomeServices = angular.module('wkhomeServices', ['ngResource']);
 //wkhomeServices.serverInstance = 'http://190.15.141.85:8080/marmottatest';
 //wkhomeServices.serverInstance = 'http://190.15.141.85:80';
 
+//for parliament triplestore test
+//wkhomeServices.serverInstance = 'http://localhost:8080/parliament';
+
+
 /* Sample of a RESTful client Service */
 wkhomeServices.factory('Phone', ['$resource',
     function ($resource) {
@@ -21,9 +25,6 @@ wkhomeServices.factory('Phone', ['$resource',
 /* RESTful client Service */
 wkhomeServices.factory('authorRestQuery', ['$resource', '$http', '$window',
     function ($resource, $http, $window) {
- //       $http.defaults.useXDomain = true;
- //       $http.defaults.withCredentials = true;
- //       delete $http.defaults.headers.common["X-Requested-With"];
         $http.defaults.headers.common['content-type'] = 'application/x-www-form-urlencoded';
         $http.defaults.headers.common['Accept'] = 'application/ld+json';
         var transform = function (data) {

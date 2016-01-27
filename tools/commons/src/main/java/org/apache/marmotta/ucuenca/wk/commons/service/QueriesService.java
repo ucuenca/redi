@@ -77,6 +77,8 @@ public interface QueriesService {
      */
     String getAskQuery(String... args);
 
+    String getEndpointStatusQuery(String endpointsGraph, String state, String resourceHash);
+
     String getEndpointNameQuery(String endpointsGraph, String name, String resourceHash);
 
     String getEndpointUrlQuery(String endpointsGraph, String url, String resourceHash);
@@ -98,6 +100,8 @@ public interface QueriesService {
     String getEndpointByIdQuery(String endpointsGraph, String id);
 
     String getEndpointDeleteQuery(String endpointsGraph, String id);
+    
+    String getEndpointUpdateStatusQuery(String... args);
 
     String getWkhuskaGraph();
 

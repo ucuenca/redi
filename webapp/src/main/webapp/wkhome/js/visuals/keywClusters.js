@@ -1,11 +1,11 @@
 'use strict';
 
-var pieChart = angular.module('cloudTag', []);
+var keywClusters = angular.module('keywClusters', []);
 //	D3	Factory
-pieChart.factory('d3', function () {
+keywClusters.factory('d3', function () {
     return	d3;
 });
-pieChart.directive('cloudTag', ["d3", 'globalData', 'sparqlQuery',
+keywClusters.directive('keywClusters', ["d3", 'globalData', 'sparqlQuery',
     function (d3, globalData, sparqlQuery) {
 
         var chart, clear, click, collide, collisionPadding, connectEvents, data, force, gravity, hashchange, height, idValue, jitter, label, margin, maxRadius, minCollisionRadius, mouseout, mouseover, node, rScale, rValue, textValue, tick, transformData, update, updateActive, updateLabels, updateNodes, width;
@@ -176,70 +176,70 @@ pieChart.directive('cloudTag', ["d3", 'globalData', 'sparqlQuery',
         };
         click = function (d) {
 
-            //adding information about publications of THIS keyword into "tree-node-info"   DIV
-            var infoBar = $('div.tree-node-info');
-            var model = {"dcterms:title": {label: "Title", containerType: "div"},
-                "bibo:uri": {label: "URL", containerType: "a"},
-                "dcterms:contributor": {label: "Contributor", containerType: "a"},
-                "dcterms:isPartOf": {label: "Is Part Of", containerType: "a"},
-                "dcterms:license": {label: "License", containerType: "a"},
-                "dcterms:provenance": {label: "Source", containerType: "div"},
-                "dcterms:publisher": {label: "Publisher", containerType: "div"},
-                "bibo:numPages": {label: "Pages", containerType: "div"}
-            };
-            if (infoBar) {
-                var keyword = d.label;
-                var headbar = $('div.head-info');
-                headbar.find('title').text("ddddddtitletitle");
-                headbar.html('');
-                var div = $('<div>');
-                var label = $('<span class="label label-primary" style="font-size:35px">').text("PUBLICATIONS CONTAINING THE KEYWORD: " + keyword);
-                div.append(label);
-                div.append("</br>");
-                headbar.append(div);
 
-                //var sparqlDescribe = "DESCRIBE <" + id + ">";
-                var sparqlPublications = globalData.PREFIX
-                        + " CONSTRUCT { ?keyword uc:publication ?publicationUri. "
-                        + " ?publicationUri a bibo:Document. "
-                        + " ?publicationUri dct:title ?title. "
-                        + " ?publicationUri bibo:abstract ?abstract. "
-                        + " ?publicationUri bibo:uri ?uri. "
-                        + " } "
-                        + " WHERE {"
-                        + " GRAPH <"+globalData.centralGraph+">"
-                        + " {"
-                        + " ?publicationUri dct:title ?title . "
-                        + " ?publicationUri bibo:abstract  ?abstract. "
-                        + " ?publicationUri bibo:uri  ?uri. "
-                        + " ?publicationUri bibo:Quote \"" + keyword + "\" ."
-                        + "  BIND(REPLACE( \"" + keyword + "\", \" \", \"_\", \"i\") AS ?key) ."
-                        + "  BIND(IRI(?key) as ?keyword)"
-                        + " }"
-                        + "}";
-                waitingDialog.show("Searching publications with the keyword: " + keyword);
+            /**/
+            
+            var sparqlquery = globalData.PREFIX
 
-                sparqlQuery.querySrv({query: sparqlPublications}, function (rdf) {
-                
-                    jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
-                        if (compacted)
-                        {
-                            var entity = compacted["@graph"];
-                            var final_entity = _.where(entity, {"@type": "bibo:Document"});
-                            var values = final_entity.length ? final_entity : [final_entity];
-                            //send data to getKeywordTag Controller
-                            scope.ctrlFn({value: values});
-                            waitingDialog.hide();
+            +' Construct {'
 
+            +' uc:resultTitle a uc:pagetitle.'
+            +' uc:resultTitle uc:viewtitle "Clusters that contain \'' + d.label + '\' Keyword".'
+            +'  ?cluster rdfs:label "keyword". ?cluster uc:total ?totalpub.'
+            +'} '
+            +'WHERE'
+            +'{'
+            +'{'
+            +'SELECT ?cluster (COUNT(?pubb) as ?totalpub)'
+            +'WHERE' 
+            +'{'
+            +'  graph <'+globalData.clustersGraph+'>'
+            +'        {'
+            +'          ?cluster uc:hasPerson ?subject.'
+            +'  		?subject foaf:publications ?pubb. '
+            +'          	{'
+            +'      			select  ?pubb ?title '
+            +'            		where'
+            +'            		{'
+            +'            			graph <'+globalData.centralGraph+'>'
+            +'            			{'      
+            +'            				?pubb bibo:Quote "' + d.label + '".'
+            +'                          	?pubb dct:title ?title.'
+            +'              			}'
+            +'          			}'
+
+            +'          	}'
+            +'          }'
+            +' }'
+            +'  group by ?cluster'
+            + '         }'
+            + ' Filter(?totalpub > 2)'
+            + '}';
+
+            
+            waitingDialog.show("Loading Authors Related with " + d.label);
+            sparqlQuery.querySrv({query: sparqlquery}, function (rdf) {
+                jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
+                    if (compacted)
+                    {
+                        var entity = compacted["@graph"];
+                        //var final_entity = _.where(entity, {"@type": "bibo:Document"});
+                        var values = entity.length ? entity : [entity];
+                        //Change data
+                        for (var i = 0, len = compacted["@graph"].length; i < len; i++) {
+                            compacted["@graph"][i]["rdfs:label"] = compacted["@graph"][i]["@id"].toString().replace("uc:cluster","");
                         }
-                        else
-                        {
-                            waitingDialog.hide();
-                        }
-                    });
+                        //send data to getKeywordTag Controller
+                        scope.ifClick({value: compacted});
+                        waitingDialog.hide();
+                    } else
+                    {
+                        waitingDialog.hide();
+                    }
                 });
-            }
-            return d3.event.preventDefault();
+            });   // end  sparqlQuery.querySrv(...
+
+            
         };
         hashchange = function () {
             var id;
@@ -308,7 +308,8 @@ pieChart.directive('cloudTag', ["d3", 'globalData', 'sparqlQuery',
         return {
             restrict: 'E',
             scope: {
-                'ctrlFn': "&",
+                //'ctrlFn': "&",
+                'ifClick': "&",
                 data: '='
             },
             compile: function (element, attrs, transclude) {
@@ -343,4 +344,5 @@ pieChart.directive('cloudTag', ["d3", 'globalData', 'sparqlQuery',
             }
         };
     }]);
+
 

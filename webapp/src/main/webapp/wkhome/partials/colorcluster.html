@@ -13,8 +13,7 @@
         <li><a href="#/cloud/group-by">Group By Keyword</a></li>
         <!--<li><a href="#/">Research Areas Cloud</a></li>-->
         <li><a href="#/geo-views/sources">Map View</a></li>
-        <li><a href="#/cloud/clusters">Clustering by Research Area</a></li>
-        <li><a href="#/cloud/keywords">Clusters by Keyword</a></li>
+        <li><a href="#/cloud/clusters">Research Areas Cloud</a></li>
     </ul>
 
 </div>
@@ -24,9 +23,9 @@
 
     <div class="row subject-cloud">
 
-        <div class="col-md-12" ng-controller="getKeywordsTag" >
+        <div  class="col-md-12" ng-controller="colorClusterCloud" >
 
-            <cloud-tag data="data" style="display: block; height: 90%" ctrl-fn="ctrlFn(value)" ng-model="value"></cloud-tag> 
+            <color-cluster data="data" style="display: block; height: 90%" ctrl-fn="ctrlFn(value)" ng-model="value"></color-cluster> 
             <div id="scrollToHere">
             </div> 
             <hr>

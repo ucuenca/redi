@@ -53,6 +53,7 @@ public class EndpointServiceTest {
     @Test
     public void testAddEndpoint() {
         System.out.println("addEndpoint");
+        String state = "true";
         String name = "PRUEBA";
         String endpointUrl = "http://example.ec/sparql";
         String graphUri = "http://example.ec/data";
@@ -63,7 +64,7 @@ public class EndpointServiceTest {
         String longitude = "4.1245 W";
         EndpointService instance = new EndpointServiceImpl();
         String expResult = "Endpoint Insertado Correctamente";
-        String result = myService.addEndpoint(name, endpointUrl, graphUri, fullName, city, province, latitude, longitude);
+        String result = myService.addEndpoint(state, name, endpointUrl, graphUri, fullName, city, province, latitude, longitude);
         //String result = instance.addEndpoint(name, endpointUrl, graphUri);
         Assert.assertEquals(expResult, result);
     }
@@ -113,7 +114,6 @@ public class EndpointServiceTest {
         System.out.println("removeEndpoint");
          try {
             System.out.println("getEndpoint");
-            
             String name = "PRUEBA";
             String endpointUrl = "http://example.ec/sparql";
             String graphUri = "http://example.ec/data";
