@@ -83,6 +83,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     private String namespaceGraph = "http://ucuenca.edu.ec/wkhuska/";
     private String wkhuskaGraph = namespaceGraph + "authors";
+
     private int limit = 5000;
 
     private int processpercent = 0;

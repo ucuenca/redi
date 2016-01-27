@@ -317,7 +317,7 @@ explorableTree.directive('explorableTree', ['d3', 'sparqlQuery', 'authorRestQuer
                             setChildrenAndUpdate('publication', node, model, {"@type": "bibo:Document"}, context, exploredPublicationsIds);
                         } else {
                             var nodeId = node.author['@id'];
-                            var queryPublications = globalData.PREFIX                          
+                            var queryPublications = globalData.PREFIX
                                     + ' CONSTRUCT { '
                                     + ' <' + nodeId + '> foaf:publications ?pub . '
                                     + ' ?pub a bibo:Document . '
