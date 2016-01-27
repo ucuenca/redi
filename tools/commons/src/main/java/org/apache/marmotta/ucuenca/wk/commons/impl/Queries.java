@@ -101,6 +101,19 @@ public class Queries implements QueriesService {
         return "ASK FROM <" + graph + "> {  <" + resource + "> ?p ?o }";
     }
 
+    /**
+     * Return ASK propertie query for a resource
+     *
+     * @param graph
+     * @param resource
+     * @param propertie
+     * @return
+     */
+    @Override
+    public String getAskResourcePropertieQuery(String graph, String resource, String propertie) {
+        return "ASK FROM <" + graph + "> {  <" + resource + ">  <" + propertie + "> ?o }";
+    }
+
     @Override
     public String getEndpointStatusQuery(String endpointsGraph, String status, String resourceHash) {
         return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/resource/status>  '" + status + "' }}";
@@ -242,6 +255,7 @@ public class Queries implements QueriesService {
     @Override
     public String getAuthorsDataQuery(String graph) {
         return " PREFIX foaf: <" + FOAF.NAMESPACE + "> "
+                + " PREFIX dct: <http://purl.org/dc/terms/> "
                 + " SELECT * "
                 + " WHERE { GRAPH <" + graph + "> { "
                 + " ?subject a foaf:Person. "
@@ -254,7 +268,7 @@ public class Queries implements QueriesService {
                 + " ?pro <http://ucuenca.edu.ec/resource/status> ?resource "
                 + " }}} filter (regex(?resource,\"true\")) "
                 + "                }} "
-                + " }}";
+                + " ";
     }
 
     /**

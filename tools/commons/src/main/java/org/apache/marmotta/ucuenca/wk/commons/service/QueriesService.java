@@ -100,7 +100,7 @@ public interface QueriesService {
     String getEndpointByIdQuery(String endpointsGraph, String id);
 
     String getEndpointDeleteQuery(String endpointsGraph, String id);
-    
+
     String getEndpointUpdateStatusQuery(String... args);
 
     String getWkhuskaGraph();
@@ -153,4 +153,6 @@ public interface QueriesService {
     String authorDetailsOfProvenance(String graph, String authorResource);
 
     String getAuthorPublicationFilter(String graph, String fname, String lname);
+
+    String getAskResourcePropertieQuery(String graph, String resource, String propertie);
 }

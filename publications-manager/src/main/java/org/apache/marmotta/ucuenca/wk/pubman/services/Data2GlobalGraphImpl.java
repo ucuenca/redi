@@ -67,6 +67,7 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
     private double totalPublicationRecognized = 0;
     private double totalPublicationNotRecognized = 0;
     private double totalPublications = 0;
+    private double totalPublicationsProcess = 0;
     private double problemWithTitle = 0;
     private boolean newInsert = false;
     private String bufferTitle = null;
@@ -137,7 +138,9 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
 
                     List<Map<String, Value>> resultPublications = sparqlService.query(QueryLanguage.SPARQL, queriesService.getPublicationsTitleQuery(providerGraph, prefixTitle));
                     results.add(providerGraph + " :size :" + resultPublications.size());
+                    totalPublicationsProcess = 0;
                     for (Map<String, Value> pubresource : resultPublications) {
+                        totalPublicationsProcess += 1;
                         String authorResource = pubresource.get("authorResource").stringValue();
                         String publicationResource = pubresource.get("publicationResource").stringValue();
                         String publicationTitle = cleanPublicationTitle(pubresource.get("title").stringValue());
@@ -197,20 +200,29 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
                         for (Map<String, Value> pubproperty : resultPubProperties) {
                             String nativeProperty = pubproperty.get("publicationProperties").toString();
                             if (mapping.get(nativeProperty) != null) {
-
                                 String newPublicationProperty = mapping.get(nativeProperty);
-                                String publicacionPropertyValue = pubproperty.get("publicationPropertyValue").toString();
 
-                                String insertPublicationPropertyQuery = buildInsertQuery(wkhuskaGraph, newInsert ? (uriPublication + publicationTitle) : bufferTitle == null ? (uriPublication + publicationTitle) : bufferTitle, newPublicationProperty, publicacionPropertyValue);
-
+                                String askTripletPropertieQuery = queriesService.getAskResourcePropertieQuery(wkhuskaGraph, publicationResource, newPublicationProperty);
                                 try {
-                                    sparqlService.update(QueryLanguage.SPARQL, insertPublicationPropertyQuery);
-                                } catch (MalformedQueryException ex) {
-                                    log.error("Malformed Query:  " + insertPublicationPropertyQuery);
-                                } catch (UpdateExecutionException ex) {
-                                    log.error("Update Query:  " + insertPublicationPropertyQuery);
-                                } catch (MarmottaException ex) {
-                                    log.error("Marmotta Exception:  " + insertPublicationPropertyQuery);
+
+                                    boolean askPropertie = sparqlService.ask(QueryLanguage.SPARQL, askTripletPropertieQuery);
+                                    if (!askPropertie) {
+                                        String publicacionPropertyValue = pubproperty.get("publicationPropertyValue").toString();
+
+                                        String insertPublicationPropertyQuery = buildInsertQuery(wkhuskaGraph, newInsert ? (uriPublication + publicationTitle) : bufferTitle == null ? (uriPublication + publicationTitle) : bufferTitle, newPublicationProperty, publicacionPropertyValue);
+
+                                        try {
+                                            sparqlService.update(QueryLanguage.SPARQL, insertPublicationPropertyQuery);
+                                        } catch (MalformedQueryException ex) {
+                                            log.error("Malformed Query:  " + insertPublicationPropertyQuery);
+                                        } catch (UpdateExecutionException ex) {
+                                            log.error("Update Query:  " + insertPublicationPropertyQuery);
+                                        } catch (MarmottaException ex) {
+                                            log.error("Marmotta Exception:  " + insertPublicationPropertyQuery);
+                                        }
+                                    }
+                                } catch (Exception ex) {
+
                                 }
                             }
                         }
@@ -218,6 +230,8 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
                         //mapping.get(map)
                         newInsert = false;
                         bufferTitle = null;
+                        log.info("Integration process is: " + totalPublicationsProcess + " of : " + resultPublications.size() + " - from provider:" + providerGraphResource.getLocalName());
+
                     }
                 }
                 //in this part, for each graph
@@ -289,7 +303,7 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
         total += 1;
 
         float similarity = (float) ((compare + compare2) / 2.0);
-        log.info("Titulos " + publicationResourceOne + "," + publicationResourceTwo + ": similaridad " + similarity * 100 + "%");
+        //log.info("Titulos " + publicationResourceOne + "," + publicationResourceTwo + ": similaridad " + similarity * 100 + "%");
 
         if (similarity > 0.9) {
             totalPublicationRecognized += 1;
@@ -318,7 +332,7 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
                     if (compareTitlePublicationWithSimmetrics(publicacionParam.get("title").stringValue(), title)) {
                         String sameAsInsertQuery = buildInsertQuery(wkhuskaGraph, authorNativeResource, OWL.SAME_AS, newUriAuthorCentral);
                         sparqlService.update(QueryLanguage.SPARQL, sameAsInsertQuery);
-                        log.info("publication that coinside between authors: 1:" + publicationResource + "2: " + publicacionParam + ", author: " + authorResource);
+                        //log.info("publication that coinside between authors: 1:" + publicationResource + "2: " + publicacionParam + ", author: " + authorResource);
 
                         return authorResource;
                     }
