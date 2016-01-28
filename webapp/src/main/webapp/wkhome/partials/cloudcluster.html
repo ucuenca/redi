@@ -1,24 +1,9 @@
 <div id="scrollToTop">
 </div> 
 
-<div class="col-md-2">
-    <div  style="padding: 20px; padding-top: 80px" >
-        <h3 class="text-primary" style="text-align: center; border-top-width: 5px">BROWSE</h3>
-    </div>
-
-
-    <ul class="nav nav-pills nav-stacked">
-        <li><a href="#/">Home</a></li>
-        <li><a href="#/tags/cloud">Keywords Cloud</a></li>
-        <li><a href="#/cloud/group-by">Group By Keyword</a></li>
-        <!--<li><a href="#/">Research Areas Cloud</a></li>-->
-        <li><a href="#/geo-views/sources">Map View</a></li>
-        <li class="active"><a href="#/cloud/clusters">Clustering by Research Area</a></li>
-        <li><a href="#/cloud/keywords">Clusters by Keyword</a></li>
-        
-    </ul>
-
-</div>
+<hr>
+<hr>
+<div class='col-md-2' ng-include="'/wkhome/partials/mainmenu.html'"/> 
 
 <div class="col-md-10">
 
@@ -28,7 +13,7 @@
 
         <center>
             <div class="page-header">
-                <h2 class="text-success">Grouping Publications</h2>
+                <h2 class="text-success">{{'Clustering Publications' | translate }}</h2>
             </div>
         </center>
     </div>
@@ -41,7 +26,7 @@
         </div-->
 
         <div class="col-md-3">
-            <h3 class="text-success" style="text-align: left">Group by:</h3>
+            <h3 class="text-success" style="text-align: left">{{'Group by' | translate}}:</h3>
             <select   class="form-control" name="group" id="group" ng-model="gbselectedItem" >
                 <option value="all">All</option>
                 <option value="cluster">Area</option>
