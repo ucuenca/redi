@@ -31,7 +31,9 @@
         <script src="../bower_components/restangular/dist/restangular.min.js"></script>
         <script src="../bower_components/angular-animate/angular-animate.js"></script>
         <script src="../bower_components/angular-route/angular-route.js"></script>
+        <script src="../bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
         <script src="../bower_components/angular-resource/angular-resource.js"></script>
+        <script src="../bower_components/angular-translate/angular-translate.js"></script>
         <script src="../bower_components/angular-ui-bootstrap/src/pagination/pagination.js"></script>
         <script src="../bower_components/topojson/topojson.js"></script>
         <script src="../bower_components/underscore/underscore-min.js"></script>
@@ -39,14 +41,20 @@
         <script src="/wkhome/js/components/d3.geo.js"></script>
         <script src="../bower_components/d3-tip/index.js"></script>
         <script src="../custom_libs/d3-context-menu/js/d3-context-menu.js"></script>
+        <script src="../custom_libs/angular-sanitize/angular-sanitize.js"></script>
 
-        <script src="wkhome/js/components/waitingDialog.js"></script>
+
         <script src="wkhome/js/app.js"></script>
         <script src="wkhome/js/animations.js"></script>
         <script src="wkhome/js/controllers.js"></script>
         <script src="wkhome/js/directives.js"></script>
         <script src="wkhome/js/filters.js"></script>
         <script src="wkhome/js/services.js"></script>
+
+        <script src="wkhome/js/components/waitingDialog.js"></script>
+        <script src="wkhome/js/components/en.js"></script>
+        <script src="wkhome/js/components/es.js"></script>
+        <script src="wkhome/js/components/translation.js"></script>
 
         <script src="wkhome/js/visuals/pieChart.js"></script>
         <script src="wkhome/js/visuals/explorableTree.js"></script>
@@ -61,6 +69,7 @@
         <script src="wkhome/js/visuals/colorCluster.js"></script>
 
         <script type="text/javascript">
+           $locale.
             <!--
       $(document).ready(function () {
                 var mCarouselTO = setTimeout(function () {
@@ -93,11 +102,11 @@
                     <a class="navbar-brand" style="padding-top: 1px;" href="#/"><img style="height: 50px" src='wkhome/images/logo_wk.png'  alt="Research Together :  Investiguemos Juntos"></a>
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav">
-                        <li ><a href="#/">Home<span class="sr-only">(current)</span></a></li>
-                        <li><a href="#/info/about">About</a></li>
-                        <li><a href="#/info/help">Help</a></li>
-                        <li><a href="#/info/contact">Contact</a></li>
+                    <ul class="nav navbar-nav" ng-controller="mainBar">
+                        <li ><a href="#/{{lang}}/">{{'home' | translate}}<span class="sr-only">(current)</span></a></li>
+                        <li><a href="#/{{lang}}/info/about">{{'about' | translate}}</a></li>
+                        <li><a href="#/{{lang}}/info/help">{{'help' | translate}}</a></li>
+                        <li><a href="#/{{lang}}/info/contact">{{'contact' | translate}}</a></li>
                         <!--     <li><a href="geo-views/sources.html">Map</a></li> -->
 
 
@@ -117,11 +126,26 @@
                         </li>
                         -->
                     </ul>
-                    
+
                     <ul class="nav navbar-nav navbar-right" style="padding-right:0px">
+                        <li ng-controller="translate"> 
+                            <a style="padding-top: 10px;" href="#/es/" ng-click="setLanguage('es')" >
+                                <img style="height: 15px" src='wkhome/images/es-icon.gif'>
+                            </a>
+                        </li>
+                        <li ng-controller="translate">
+                            <a style="padding-top: 10px;" href="#/en/" ng-click="setLanguage('en')" ng-controller="translate">
+                                <img style="height:15px" src='wkhome/images/en-icon.gif'>
+                            </a>
+                        </li>
+
+                     
+
+
+
                         <form class="navbar-form navbar-left" role="search" ng-submit="submit()" ng-controller="SearchController">
                             <div class="form-group">
-                                <input name="searchText" ng-model="searchText" type="text" class="form-control input-md" placeholder="Search...">
+                                <input name="searchText" ng-model="searchText" type="text" class="form-control input-md" placeholder="{{'Search'| translate}}...">
                             </div>
                         </form>
                     </ul>
