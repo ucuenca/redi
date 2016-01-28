@@ -385,26 +385,30 @@ public class Queries implements QueriesService {
     }
 
     @Override
-    public String getAuthorPublicationsQuery(String providerGraph, String author, String prefix) {
-        return " SELECT DISTINCT  ?authorResource  ?pubproperty  ?publicationResource "
+    public String getAuthorPublicationsQuery(String... varargs) {
+        return "PREFIX mm: <http://marmotta.apache.org/vocabulary/sparql-functions#>"
+                + "SELECT DISTINCT  ?authorResource  ?pubproperty  ?publicationResource "
                 + "?title WHERE { "
-                + " graph   <" + providerGraph + "> "
-                + " { <" + author + "> <http://xmlns.com/foaf/0.1/publications> "
+                + " graph   <" + varargs[0] + "> "
+                + " { <" + varargs[1] + "> <http://xmlns.com/foaf/0.1/publications> "
                 + "?publicationResource.  ?publicationResource "
-                + "<" + prefix + "> "
-                + "?title } }";
+                + "<" + varargs[2] + "> "
+                + "?title "
+                + "FILTER( mm:fulltext-query(str(?title),\"" + varargs[3] + "\"))"
+                + " } }";
     }
 
     @Override
-    public String getAuthorPublicationsQueryFromProvider(String providerGraph, String authorResource, String prefix) {
+    public String getAuthorPublicationsQueryFromProvider(String... varargs) {
 
-        return " SELECT DISTINCT  ?pubproperty ?publicationResource ?title  "
-                + "WHERE {  graph <" + providerGraph + ">  "
-                + "{    <" + authorResource + "> "
+        return "PREFIX query: <http://marmotta.apache.org/vocabulary/sparql-functions#>	"
+                + " SELECT DISTINCT  ?pubproperty ?publicationResource ?title  "
+                + "WHERE {  graph <" + varargs[0] + ">  "
+                + "{    <" + varargs[1] + "> "
                 + "owl:sameAs   ?authorNative.  ?authorNative ?pubproperty ?publicationResource.  "
-                + "?publicationResource <" + prefix + ">  ?title\n"
+                + "?publicationResource <" + varargs[2] + ">  ?title\n"
                 + "\n"
-                + "{ FILTER (regex(?pubproperty,\"authorOf\")) }  UNION { FILTER (regex(?pubproperty,\"pub\")) }                                                                                        }} ";
+                + " { FILTER( query:fulltext-query(str(?title),\"" + varargs[3] + "\")) }                                                                                       }} ";
     }
 
     @Override

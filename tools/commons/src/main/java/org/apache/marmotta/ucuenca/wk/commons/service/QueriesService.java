@@ -128,9 +128,9 @@ public interface QueriesService {
 
     //Google Scholar
     //String getPublicationFromGSProviderQuery();
-    String getAuthorPublicationsQuery(String providerGraph, String author, String prefix);
+    String getAuthorPublicationsQuery(String... varargs);
 
-    String getAuthorPublicationsQueryFromProvider(String providerGraph, String authorResource, String prefix);
+    String getAuthorPublicationsQueryFromProvider(String... varargs);
 
     String getPublicationDetails(String publicationResource);
 

@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.marmotta.commons.vocabulary.FOAF;
@@ -143,13 +145,14 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
                         totalPublicationsProcess += 1;
                         String authorResource = pubresource.get("authorResource").stringValue();
                         String publicationResource = pubresource.get("publicationResource").stringValue();
-                        String publicationTitle = cleanPublicationTitle(pubresource.get("title").stringValue());
+                        String publicationTitleCleaned = cleanPublicationTitle(pubresource.get("title").stringValue());
+                        String publicationTitle = pubresource.get("title").stringValue();
                         String publicationProperty = pubVocabService.getPubProperty();
                         totalPublications += 1;
 
                         //verificar existencia de la publicacion y su author sobre el grafo general
                         String newUriAuthorCentral = buildNewUri(authorResource);
-                        String askTripletQuery = queriesService.getAskQuery(wkhuskaGraph, newUriAuthorCentral, publicationProperty, uriPublication + publicationTitle);
+                        String askTripletQuery = queriesService.getAskQuery(wkhuskaGraph, newUriAuthorCentral, publicationProperty, uriPublication + publicationTitleCleaned);
                         boolean ask = false;
                         try {
 
@@ -163,18 +166,19 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
                         }
 
                         if (!ask) {
-                            List<Map<String, Value>> resultPublicationsAuthor = sparqlService.query(QueryLanguage.SPARQL, queriesService.getAuthorPublicationsQuery(wkhuskaGraph, newUriAuthorCentral, "http://purl.org/dc/terms/title"));
-                            List<Map<String, Value>> resultPublicationsAuthorOfProvider = sparqlService.query(QueryLanguage.SPARQL, queriesService.getAuthorPublicationsQueryFromProvider(providerGraph, authorResource, prefixTitle));
+                            List<Map<String, Value>> resultPublicationsAuthor = sparqlService.query(QueryLanguage.SPARQL, queriesService.getAuthorPublicationsQuery(wkhuskaGraph, newUriAuthorCentral, "http://purl.org/dc/terms/title", getQuerySearchTextAuthor(publicationTitle)));
+                            List<Map<String, Value>> resultPublicationsAuthorOfProvider = sparqlService.query(QueryLanguage.SPARQL, queriesService.getAuthorPublicationsQueryFromProvider(providerGraph, authorResource, prefixTitle, getQuerySearchTextAuthor(publicationTitle)));
                             boolean flagPublicationAlreadyExist = false;
                             String authorResourceBuilding = searchAuthorOfpublication(resultPublicationsAuthorOfProvider, authorResource, newUriAuthorCentral);
                             String authorResourceCentral = authorResourceBuilding == null ? newUriAuthorCentral : authorResourceBuilding;
                             for (Map<String, Value> publicacion : resultPublicationsAuthor) {
-                                if (compareTitlePublicationWithSimmetrics(publicationTitle, cleanPublicationTitle(publicacion.get("title").stringValue()))) {
+                                if (compareTitlePublicationWithSimmetrics(publicationTitleCleaned, cleanPublicationTitle(publicacion.get("title").stringValue()))) {
                                     flagPublicationAlreadyExist = true;
                                     bufferTitle = publicacion.get("publicationResource").stringValue();
                                     String insertPublicationPropertyQuery = buildInsertQuery(wkhuskaGraph, bufferTitle, "http://purl.org/dc/terms/contributor", authorResourceCentral);
                                     try {
                                         sparqlService.update(QueryLanguage.SPARQL, insertPublicationPropertyQuery);
+
                                     } catch (MalformedQueryException ex) {
                                         log.error("Malformed Query:  " + insertPublicationPropertyQuery);
                                     } catch (UpdateExecutionException ex) {
@@ -187,7 +191,16 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
 
                             }
                             if (!flagPublicationAlreadyExist || resultPublicationsAuthor.isEmpty()) {
-                                insertPublicationToCentralGraph(authorResourceCentral, publicationProperty, uriPublication + publicationTitle);
+                                insertPublicationToCentralGraph(authorResourceCentral, publicationProperty, uriPublication + publicationTitleCleaned);
+                                String insertSourceOfPublication = buildInsertQuery(wkhuskaGraph, uriPublication + publicationTitleCleaned, "http://xmlns.com/foaf/0.1/Organization", getNameOfProvider(providerGraph));
+                                try {
+                                    sparqlService.update(QueryLanguage.SPARQL, insertSourceOfPublication);
+                                } catch (MalformedQueryException ex) {
+                                    java.util.logging.Logger.getLogger(Data2GlobalGraphImpl.class.getName()).log(Level.SEVERE, null, ex);
+                                } catch (UpdateExecutionException ex) {
+                                    java.util.logging.Logger.getLogger(Data2GlobalGraphImpl.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+
                                 newInsert = true;
                             }
 
@@ -195,21 +208,21 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
                             countPublicationAskIngnored += 1;
 
                         }
-                        List<Map<String, Value>> resultPubProperties = sparqlService.query(QueryLanguage.SPARQL, queriesService.getPublicationsPropertiesQuery(providerGraph, publicationResource));
-                        resultPubProperties = resultPubProperties.size() > 150 ? resultPubProperties.subList(0, 150) : resultPubProperties;
-                        for (Map<String, Value> pubproperty : resultPubProperties) {
-                            String nativeProperty = pubproperty.get("publicationProperties").toString();
-                            if (mapping.get(nativeProperty) != null) {
-                                String newPublicationProperty = mapping.get(nativeProperty);
 
-                                String askTripletPropertieQuery = queriesService.getAskResourcePropertieQuery(wkhuskaGraph, publicationResource, newPublicationProperty);
-                                try {
+                        String askTripletProcessPublicationQuery = queriesService.getAskQuery(wkhuskaGraph, uriPublication + publicationTitleCleaned, "http://xmlns.com/foaf/0.1/Organization", getNameOfProvider(providerGraph));
+                        boolean askPublication = false;
+                        try {
 
-                                    boolean askPropertie = sparqlService.ask(QueryLanguage.SPARQL, askTripletPropertieQuery);
-                                    if (!askPropertie) {
+                            askPublication = sparqlService.ask(QueryLanguage.SPARQL, askTripletProcessPublicationQuery);
+                            if (!askPublication || newInsert) {
+                                List<Map<String, Value>> resultPubProperties = sparqlService.query(QueryLanguage.SPARQL, queriesService.getPublicationsPropertiesQuery(providerGraph, publicationResource));
+                                resultPubProperties = resultPubProperties.size() > 150 ? resultPubProperties.subList(0, 150) : resultPubProperties;
+                                for (Map<String, Value> pubproperty : resultPubProperties) {
+                                    String nativeProperty = pubproperty.get("publicationProperties").toString();
+                                    if (mapping.get(nativeProperty) != null) {
+                                        String newPublicationProperty = mapping.get(nativeProperty);
                                         String publicacionPropertyValue = pubproperty.get("publicationPropertyValue").toString();
-
-                                        String insertPublicationPropertyQuery = buildInsertQuery(wkhuskaGraph, newInsert ? (uriPublication + publicationTitle) : bufferTitle == null ? (uriPublication + publicationTitle) : bufferTitle, newPublicationProperty, publicacionPropertyValue);
+                                        String insertPublicationPropertyQuery = buildInsertQuery(wkhuskaGraph, newInsert ? (uriPublication + publicationTitleCleaned) : bufferTitle == null ? (uriPublication + publicationTitleCleaned) : bufferTitle, newPublicationProperty, publicacionPropertyValue);
 
                                         try {
                                             sparqlService.update(QueryLanguage.SPARQL, insertPublicationPropertyQuery);
@@ -219,13 +232,19 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
                                             log.error("Update Query:  " + insertPublicationPropertyQuery);
                                         } catch (MarmottaException ex) {
                                             log.error("Marmotta Exception:  " + insertPublicationPropertyQuery);
+                                        } catch (Exception ex) {
+
                                         }
                                     }
-                                } catch (Exception ex) {
-
                                 }
+
                             }
+
+                        } catch (Exception ex) {
+                            log.error("Marmotta Exception:  " + askTripletQuery);
+
                         }
+
                         //compare properties with the mapping and insert new properties
                         //mapping.get(map)
                         newInsert = false;
@@ -418,6 +437,37 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
             java.util.logging.Logger.getLogger(Data2GlobalGraphImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return names;
+
+    }
+
+    public String getQuerySearchTextAuthor(String title) {
+        String query = "";
+        String pipe = " & ";
+        for (String token : title.split(" ")) {
+            Pattern pat = Pattern.compile("[a-zA-Z]{4,20}");
+            Matcher mat = pat.matcher(token);
+            if (mat.matches()) {
+                if (query.length() > 1) {
+                    query += pipe;
+                }
+                query += token;
+            }
+        }
+        return query;
+    }
+
+    private String getNameOfProvider(String providerGraph) {
+
+        if (providerGraph.toUpperCase().contains("DBLP")) {
+            return "http://dblp.uni-trier.de/";
+        } else if (providerGraph.toUpperCase().contains("MICROSOFT")) {
+            return "http://academic.research.microsoft.com/";
+
+        } else if (providerGraph.toUpperCase().contains("SCOPUS")) {
+            return "http://scopus/";
+        } else {
+            return "No definida";
+        }
 
     }
 }
