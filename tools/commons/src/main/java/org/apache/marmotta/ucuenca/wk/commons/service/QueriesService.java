@@ -78,7 +78,7 @@ public interface QueriesService {
     String getEndpointByIdQuery(String endpointsGraph, String id);
 
     String getEndpointDeleteQuery(String endpointsGraph, String id);
-    
+
     String getEndpointUpdateStatusQuery(String... args);
 
     String getGraphsQuery();
@@ -104,7 +104,9 @@ public interface QueriesService {
 
     //Google Scholar
     //String getPublicationFromGSProviderQuery();
-    String getAuthorPublicationsQuery(String providerGraph, String author, String prefix);
+    String getAuthorPublicationsQuery(String... varargs);
+
+    String getAuthorPublicationsQueryFromProvider(String... varargs);
 
     String getPublicationDetails(String publicationResource);
 
@@ -118,4 +120,15 @@ public interface QueriesService {
 
     String deleteDataGraph(String graph);
 
+    String getPublicationPropertiesAsResourcesQuery();
+
+    String getTitlePublications(String graph);
+
+    String getFirstNameLastNameAuhor(String graph, String authorResource);
+
+    String authorDetailsOfProvenance(String graph, String authorResource);
+
+    String getAuthorPublicationFilter(String graph, String fname, String lname);
+
+    String getAskResourcePropertieQuery(String graph, String resource, String propertie);
 }

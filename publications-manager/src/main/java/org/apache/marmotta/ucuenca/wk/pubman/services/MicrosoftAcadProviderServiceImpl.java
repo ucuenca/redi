@@ -90,8 +90,8 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
     @Inject
     private SparqlFunctionsService sparqlFunctionsService;
 
-    private String namespaceGraph = "http://ucuenca.edu.ec/";
-    private String wkhuskaGraph = namespaceGraph + "wkhuska";
+    private String namespaceGraph = "http://ucuenca.edu.ec/wkhuska/";
+    private String authorGraph = namespaceGraph + "authors";
 
     private int processpercent = 0;
 
@@ -99,7 +99,7 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
      Graph to save publications data by provider
      Example: http://ucuenca.edu.ec/wkhuska/dblp
      */
-    private String graphByProviderNS = wkhuskaGraph + "/provider/";
+    private String graphByProviderNS = namespaceGraph + "provider/";
 
     @Inject
     private SparqlService sparqlService;
@@ -158,9 +158,9 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                         String publicationProperty = pubVocabService.getPubProperty();
 
                         //verificar existencia de la publicacion y su author sobre el grafo general
-                        String askTripletQuery = queriesService.getAskQuery(wkhuskaGraph, authorResource, publicationProperty, publicationResource);
+                        String askTripletQuery = queriesService.getAskQuery(authorGraph, authorResource, publicationProperty, publicationResource);
                         if (!sparqlService.ask(QueryLanguage.SPARQL, askTripletQuery)) {
-                            String insertPubQuery = buildInsertQuery(wkhuskaGraph, authorResource, publicationProperty, publicationResource);
+                            String insertPubQuery = buildInsertQuery(authorGraph, authorResource, publicationProperty, publicationResource);
                             try {
                                 sparqlService.update(QueryLanguage.SPARQL, insertPubQuery);
                             } catch (MalformedQueryException ex) {
@@ -178,7 +178,7 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
 
                                 String newPublicationProperty = mapping.get(nativeProperty);
                                 String publicacionPropertyValue = pubproperty.get("publicationPropertyValue").toString();
-                                String insertPublicationPropertyQuery = buildInsertQuery(wkhuskaGraph, publicationResource, newPublicationProperty, publicacionPropertyValue);
+                                String insertPublicationPropertyQuery = buildInsertQuery(authorGraph, publicationResource, newPublicationProperty, publicacionPropertyValue);
 
                                 try {
                                     sparqlService.update(QueryLanguage.SPARQL, insertPublicationPropertyQuery);
@@ -218,7 +218,7 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
 
             int allMembers = 0;
             String nameProviderGraph = "http://ucuenca.edu.ec/wkhuska/provider/MicrosoftAcademicsProvider";
-            String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(wkhuskaGraph);
+            String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(authorGraph);
 
             // TupleQueryResult result = sparqlService.query(QueryLanguage.SPARQL, getAuthors);
             String nameToFind = "";
@@ -236,6 +236,9 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
             RepositoryConnection conUri = null;
             ClientResponse response = null;
             for (Map<String, Value> map : resultAllAuthors) {
+                if (processedPersons == 100) {
+                    break;
+                }
                 processedPersons++;
                 log.info("Autores procesados con MicrosoftA: " + processedPersons + " de " + allPersons);
                 authorResource = map.get("subject").stringValue();
@@ -265,14 +268,14 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                                         log.error("Data Retrieval Exception: " + e);
                                         log.info("Wating: " + waitTime + " seconds for new Microsoft Academics Query");
                                         dataretrievee = false;
-                                        try {
-                                            Thread.sleep(waitTime * 1000);               //1000 milliseconds is one second.
-                                        } catch (InterruptedException ex) {
-                                            Thread.currentThread().interrupt();
-                                        }
+//                                        try {
+//                                            Thread.sleep(waitTime * 1000);               //1000 milliseconds is one second.
+//                                        } catch (InterruptedException ex) {
+//                                            Thread.currentThread().interrupt();
+//                                        }
                                         waitTime += 5;
                                     }
-                                } while (!dataretrievee && waitTime < 40);
+                                } while (!dataretrievee && waitTime < 31);
 
                             }//end  if  nameToFind != ""
 
@@ -298,7 +301,7 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                                 conUri.begin();
                                 String authorNativeResource = null;
 
-                            //THIS DRIVER NO RETURN MEMBERS OF A SEARCH, ALL DATA IS RELATED WITH 1 AUTHOR
+                                //THIS DRIVER NO RETURN MEMBERS OF A SEARCH, ALL DATA IS RELATED WITH 1 AUTHOR
                                 //verifying the number of persons retrieved. if it has recovered more than one persons then the filter is changed and search anew,
 //                        String getMembersQuery = queriesService.getMembersQuery();
 //                        TupleQueryResult membersResult = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getMembersQuery).evaluate();
@@ -323,6 +326,7 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
 
                                 if (!existNativeAuthor) {
                                     //SPARQL obtain all publications of author
+                                    priorityToFind = 5;
                                     String getPublicationsFromProviderQuery = queriesService.getPublicationFromMAProviderQuery();
                                     TupleQuery pubquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationsFromProviderQuery); //
                                     TupleQueryResult tripletasResult = pubquery.evaluate();
@@ -332,7 +336,7 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                                         BindingSet tripletsResource = tripletasResult.next();
                                         authorNativeResource = tripletsResource.getValue("authorResource").toString();
                                         String publicationResource = tripletsResource.getValue("publicationResource").toString();
-                                    //String publicationProperty = tripletsResource.getValue("publicationProperty").toString();
+                                        //String publicationProperty = tripletsResource.getValue("publicationProperty").toString();
                                         ///insert sparql query, 
                                         String publicationInsertQuery = buildInsertQuery(providerGraph, authorNativeResource, "http://xmlns.com/foaf/0.1/publications", publicationResource);
                                         updatePub(publicationInsertQuery);
@@ -398,13 +402,13 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
         switch (priority) {
 //            case 5:
 //                return fnamelname[3];
-            case 4:
+            case 1:
                 return fnamelname[0] + "_" + fnamelname[2];
             case 3:
                 return fnamelname[1] + "_" + fnamelname[2] + "_" + fnamelname[3];
             case 2:
                 return fnamelname[0] + "_" + fnamelname[2] + "_" + fnamelname[3];
-            case 1:
+            case 4:
                 return fnamelname[0] + "_" + fnamelname[1] + "_" + fnamelname[2] + "_" + fnamelname[3];
         }
         return "";

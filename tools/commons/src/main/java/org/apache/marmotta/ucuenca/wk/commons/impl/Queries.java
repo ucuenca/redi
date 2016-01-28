@@ -10,9 +10,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
-import org.apache.marmotta.ucuenca.wk.commons.impl.Constant;
+import org.openrdf.model.vocabulary.FOAF;
 
 /**
+ *
+ *
  *
  * @author Satellite
  */
@@ -96,6 +98,19 @@ public class Queries implements QueriesService {
     @Override
     public String getAskResourceQuery(String graph, String resource) {
         return "ASK FROM <" + graph + "> {  <" + resource + "> ?p ?o }";
+    }
+
+    /**
+     * Return ASK propertie query for a resource
+     *
+     * @param graph
+     * @param resource
+     * @param propertie
+     * @return
+     */
+    @Override
+    public String getAskResourcePropertieQuery(String graph, String resource, String propertie) {
+        return "ASK FROM <" + graph + "> {  <" + resource + ">    <" + propertie + "> ?o }";
     }
 
     @Override
@@ -195,14 +210,15 @@ public class Queries implements QueriesService {
                 + " WHERE { " + con.getGraphString(graph) + " { "
                 + " ?subject a foaf:Person. "
                 + " ?subject foaf:name ?name."
-                + " ?subject foaf:firstName ?fname."
-                + " ?subject foaf:lastName ?lname."
-                //                + " {"
-                //                + " FILTER (regex(?name,\"Saquicela Galarza\"))"
-                //                + " } UNION {"
-                //                + " FILTER (regex(?name,\"Espinoza Mejia\"))"
-                //                + " }"
-                + " }}";
+                + " ?subject foaf:firstName ?fname. "
+                + " ?subject foaf:lastName ?lname. "
+                + "?subject dct:provenance ?pro. "
+                + " { select ?resource where "
+                + " { graph <http://ucuenca.edu.ec/wkhuska/endpoints> {"
+                + " ?pro <http://ucuenca.edu.ec/resource/status> ?resource "
+                + " }}} filter (regex(?resource,\"true\")) "
+                + "                }} "
+                + " ";
     }
 
     /**
@@ -263,7 +279,8 @@ public class Queries implements QueriesService {
                 + con.getGraphString(providerGraph)
                 + " {"
                 + " <" + publicationResource + ">  ?publicationProperties ?publicationPropertyValue. "
-                + " }} ";
+                + " } }"
+                + "ORDER BY DESC(?publicationProperties) ";
     }
 
     @Override
@@ -308,14 +325,37 @@ public class Queries implements QueriesService {
     }
 
     @Override
-    public String getAuthorPublicationsQuery(String providerGraph, String author, String prefix) {
-        return " SELECT DISTINCT  ?authorResource  ?pubproperty  ?publicationResource "
+    public String getPublicationPropertiesAsResourcesQuery() {
+        return "SELECT DISTINCT ?publicationResource ?publicationProperties ?publicationPropertiesValue "
+                + " WHERE { ?authorResource <http://xmlns.com/foaf/0.1/publications> ?publicationResourceItem. ?publicationResourceItem ?publicationPropertiesItem ?publicationResource. ?publicationResource ?publicationProperties ?publicationPropertiesValue }";
+
+    }
+
+    @Override
+    public String getAuthorPublicationsQuery(String... varargs) {
+        return "PREFIX mm: <http://marmotta.apache.org/vocabulary/sparql-functions#>"
+                + "SELECT DISTINCT  ?authorResource  ?pubproperty  ?publicationResource "
                 + "?title WHERE { "
-                + con.getGraphString(providerGraph)
-                + " { <" + author + "> " + con.foaf("publications") 
+                + con.getGraphString(varargs[0])
+                + " { <" + varargs[1] + "> " + con.foaf("publications")
                 + "?publicationResource.  ?publicationResource "
-                + "<" + prefix + "> "
-                + "?title } }";
+                + "<" + varargs[2] + "> "
+                + "?title "
+                + "FILTER( mm:fulltext-query(str(?title),\"" + varargs[3] + "\"))"
+                + " } }";
+    }
+
+    @Override
+    public String getAuthorPublicationsQueryFromProvider(String... varargs) {
+
+        return "PREFIX query: <http://marmotta.apache.org/vocabulary/sparql-functions#>	"
+                + " SELECT DISTINCT  ?pubproperty ?publicationResource ?title  "
+                + "WHERE {  graph <" + varargs[0] + ">  "
+                + "{    <" + varargs[1] + "> "
+                + "owl:sameAs   ?authorNative.  ?authorNative ?pubproperty ?publicationResource.  "
+                + "?publicationResource <" + varargs[2] + ">  ?title\n"
+                + "\n"
+                + " { FILTER( query:fulltext-query(str(?title),\"" + varargs[3] + "\")) }                                                                                       }} ";
     }
 
     @Override
@@ -381,5 +421,58 @@ public class Queries implements QueriesService {
                 + " {"
                 + "  ?s ?p ?o }"
                 + "}";
+    }
+    
+    @Override
+    public String getTitlePublications(String graph) {
+        return "PREFIX dct: <http://purl.org/dc/terms/> "
+                + "PREFIX foaf: <" + FOAF.NAMESPACE + "> "
+                + "SELECT *  WHERE { graph <" + graph + "> "
+                + "  {?authorResource foaf:publications  ?publicationResource.\n"
+                + "   ?publicationResource dct:title ?title\n"
+                + "  }\n"
+                + "}";
+    }
+
+    @Override
+    public String getFirstNameLastNameAuhor(String graph, String authorResource) {
+        return "PREFIX foaf: <" + FOAF.NAMESPACE + ">\n"
+                + "SELECT distinct (str(?firstname) as ?fname) (str(?lastname) as ?lname) from <" + graph + "> WHERE {\n"
+                + "                <" + authorResource + "> a foaf:Person; \n"
+                + "                 foaf:firstName ?firstname;\n"
+                + "                 foaf:lastName ?lastname;  \n"
+                + "}";
+    }
+
+    @Override
+    public String authorDetailsOfProvenance(String graph, String authorResource) {
+        return "SELECT DISTINCT ?property ?hasValue  WHERE {\n"
+                + "  \n"
+                + "  graph <" + graph + ">{\n"
+                + "  { <" + authorResource + "> ?property ?hasValue }\n"
+                + "UNION\n"
+                + "  { ?isValueOf ?property <" + authorResource + "> }\n"
+                + "}}\n"
+                + "ORDER BY ?property ?hasValue ?isValueOf";
+    }
+
+    @Override
+    public String getAuthorPublicationFilter(String graph, String fname, String lname) {
+        return "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
+                + "PREFIX dct: <http://purl.org/dc/terms/> "
+                + "PREFIX mm: <http://marmotta.apache.org/vocabulary/sparql-functions#> "
+                + "              "
+                + "                SELECT distinct ?authorResource  ?publicationResource ?title  WHERE { "
+                + "graph <" + graph + ">\n"
+                + "                  { \n"
+                + "                   ?authorResource foaf:firstName ?fname.\n"
+                + "                    ?authorResource foaf:lastName  ?lname.\n"
+                + "                   ?authorResource foaf:publications   ?publicationResource.\n"
+                + "                   ?publicationResource dct:title ?title\n"
+                + "                                        \n"
+                + "					    {FILTER( mm:fulltext-query(str(?fname), \"" + fname + "\")  "
+                + "                                               && mm:fulltext-query(str(?lname), \"" + lname + "\"))\n"
+                + "                   }}}";
+
     }
 }
