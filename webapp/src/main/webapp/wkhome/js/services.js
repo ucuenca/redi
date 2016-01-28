@@ -40,7 +40,7 @@ wkhomeServices.factory('authorRestQuery', ['$resource', '$http', '$window',
     }]);
 
 
-wkhomeServices.factory('sparqlQuery', ['$resource', '$http', '$window',
+wkhomeServices.factory('sparqlQuery', ['$resource', '$http', '$window', 
     function ($resource, $http, $window) {
         $http.defaults.headers.common['content-type'] = 'application/x-www-form-urlencoded';
         $http.defaults.headers.common['Accept'] = 'application/ld+json';
@@ -77,3 +77,14 @@ wkhomeServices.factory('clustersQuery', ['$resource', '$http', '$window',
            return data;
          });
     }]);
+
+wkhomeServices.factory('translateService', ['$resource', '$http', '$window', 'globalData',
+      function ($resource, $http, $window, globalData) {
+        return $resource('resources/:data.json', {}, {
+            query: {method: 'GET', params: {data: globalData.language}, isArray: false}
+        });
+    
+    }]);
+
+
+

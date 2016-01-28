@@ -1,0 +1,17 @@
+
+<div style="background-color: #CCCCCC;  border-radius: 15px"  ng-controller="translate">
+
+    <div  style="padding: 20px" >
+        <h3 class="text-primary" style="text-align: center; border-top-width: 5px">{{'Browse' | translate}}</h3>
+    </div>
+    <div>          
+        <ul class="nav nav-pills nav-stacked">
+            <li><a href="#/{{lang}}/">{{'Home' | translate}}</a></li>
+            <li><a href="#/{{lang}}/tags/cloud">{{'Keywords Cloud' | translate}}</a></li>
+            <li><a href="#/{{lang}}/cloud/group-by">{{'Group By Keyword' | translate}}</a></li>
+            <li><a href="#/{{lang}}/geo-views/sources">{{'Map View' | translate}}</a></li>
+            <li><a href="#/{{lang}}/cloud/clusters">{{'Clustering by Research Area' | translate}}</a></li>
+            <li><a href="#/{{lang}}/cloud/keywords">{{'Clusters by Keyword' | translate}}</a></li>
+        </ul>
+    </div>
+</div>

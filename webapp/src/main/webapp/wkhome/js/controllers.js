@@ -3,6 +3,8 @@
 /* Controllers */
 
 var wkhomeControllers = angular.module('wkhomeControllers', ['mapView', 'cloudTag', 'pieChart', 'explorableTree', 'cloudGroup', 'cloudCluster', 'genericCloud', 'snapscroll', 'ui.bootstrap.pagination', 'keywClusters', 'clusterKeywCloud']);
+
+
 wkhomeControllers.controller('indexInformation', ['$scope', '$window', 'Phone',
     function ($scope, $window, Phone) {
         $scope.welcome = "Hello World!";
@@ -89,8 +91,23 @@ wkhomeControllers.controller('colorClusterCloud', ['$scope', '$window', 'globalD
         }
     }]);
 
-wkhomeControllers.controller('totalPersonReg', ['$scope', '$window', 'globalData', 'sparqlQuery', 'searchData',
-    function ($scope, $window, globalData, sparqlQuery, searchData) {
+wkhomeControllers.controller('mainBar', ['$translate', '$routeParams', '$scope', '$window', 'globalData', 'sparqlQuery', 'searchData',
+    function ($translate, $routeParams, $scope, $window, globalData, sparqlQuery, searchData) {
+       $translate.use($routeParams.lang);
+       $scope.lang = globalData.language;
+        $scope.$watch('globalData.language', function(){
+            $scope.lang = globalData.language;
+        });
+    }]);
+
+
+wkhomeControllers.controller('totalPersonReg', ['$translate', '$routeParams', '$scope', '$window', 'globalData', 'sparqlQuery', 'searchData',
+    function ($translate, $routeParams, $scope, $window, globalData, sparqlQuery, searchData) {
+
+        //$window.location.hash = "/es/";
+
+        $translate.use($routeParams.lang);
+
         //if click in pie-chart (Authors)
         $scope.ifClick = function (value)
         {
@@ -121,9 +138,6 @@ wkhomeControllers.controller('totalPersonReg', ['$scope', '$window', 'globalData
 //                +    "  WHERE {  ?s ?p ?o } limit 10 " ;
 
         sparqlQuery.querySrv({query: queryTotalAuthors}, function (rdf) {
-            var context = {
-                "uc": "http://ucuenca.edu.ec/resource/"
-            };
             jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                 //$scope.data = compacted;
                 var endpoints = compacted['@graph'];
@@ -216,9 +230,13 @@ wkhomeControllers.controller('totalPersonReg', ['$scope', '$window', 'globalData
         //***************************************************//
 
 
-
-
-
+//*****************************************//
+//*********FOR TRANSLATE*******************//
+        //  $scope.translate = globalData.translateData; //query and load resource related with selected theme
+        $scope.$watch('globalData.language', function (newValue, oldValue, scope) {
+            //alert($scope.selectedItem);
+            $scope.translate = globalData.translateData; //query and load resource related with selected theme
+        });
 
 
 
@@ -303,8 +321,10 @@ wkhomeControllers.controller('totalResearchAreas', ['$scope', 'globalData', 'spa
             });
         });
     }]);
-wkhomeControllers.controller('groupTagsController', ['$scope', 'globalData', 'sparqlQuery', 'searchData', '$route', '$window',
-    function ($scope, globalData, sparqlQuery, searchData, $window) {
+wkhomeControllers.controller('groupTagsController', ['$translate', '$routeParams', '$scope', 'globalData', 'sparqlQuery', 'searchData', '$route', '$window',
+    function ($translate, $routeParams, $scope, globalData, sparqlQuery, searchData, $window) {
+        $translate.use($routeParams.lang);
+
         $('html,body').animate({
             scrollTop: $("#scrollToTop").offset().top
         }, "slow");
@@ -554,14 +574,14 @@ wkhomeControllers.controller('getKeywordsTag', ['$scope', 'globalData', 'sparqlQ
 wkhomeControllers.controller('exploreAuthor', ['$scope', '$rootScope', 'globalData', 'searchData', '$window', 'sparqlQuery',
     function ($scope, $rootScope, globalData, searchData, $window, sparqlQuery) {
 
-        $rootScope.$on("CallParentMethod", function(author){
-           $scope.clickonRelatedauthor (author);
+        $rootScope.$on("CallParentMethod", function (author) {
+            $scope.clickonRelatedauthor(author);
         });
-        
+
         $scope.data = '';
-        
+
         $('html,body').animate({
-                scrollTop: $("#scrollToHere").offset().top
+            scrollTop: $("#scrollToHere").offset().top
         }, "slow");
 
         clickonRelatedauthor = function (author)
@@ -590,40 +610,40 @@ wkhomeControllers.controller('exploreAuthor', ['$scope', '$rootScope', 'globalDa
             searchData.genericData = value;
             $window.location.hash = "w/cloud?" + "datacloud";
         };
-        
+
         if (searchData.authorSearch != null && searchData.authorSearch["@graph"].length == 1) {
             //$scope.data = searchData.authorSearch;
             clickonRelatedauthor(searchData.authorSearch["@graph"][0]["@id"]);
-        } 
-        
+        }
+
         $scope.$watch('searchData.authorSearch', function (newValue, oldValue, scope) {
 
             if (searchData.authorSearch) {
                 var authorSearch = searchData.authorSearch["@graph"];
                 if (authorSearch) {
-                        if (authorSearch.length > 1) {
-                    var candidates = _.map(authorSearch, function (author) {
-                        var model = {};
-                        //var keys = Object.keys(author);
-                        model["id"] = author["@id"];
-                        model["name"] = author["foaf:name"];
-                        return model;
-                    });
-                    $scope.candidates = candidates;
-                    
-                    /*if (searchData.authorSearch["@graph"].length === 1)
-                    {
-                        $scope.data = searchData.authorSearch;
-                    }*/
-                    
-                    $scope.selectedAuthor = function ($event, uri) {
-                        searchData.authorSearch["@graph"] = _.where(authorSearch, {"@id": uri});
-                        //$scope.data = _.where(authorSearch, {"@id": uri});
-                        $scope.data = searchData.authorSearch;
-                        $('#searchResults').modal('hide');
-                    };
-                    waitingDialog.hide();
-                    $('#searchResults').modal('show');
+                    if (authorSearch.length > 1) {
+                        var candidates = _.map(authorSearch, function (author) {
+                            var model = {};
+                            //var keys = Object.keys(author);
+                            model["id"] = author["@id"];
+                            model["name"] = author["foaf:name"];
+                            return model;
+                        });
+                        $scope.candidates = candidates;
+
+                        /*if (searchData.authorSearch["@graph"].length === 1)
+                         {
+                         $scope.data = searchData.authorSearch;
+                         }*/
+
+                        $scope.selectedAuthor = function ($event, uri) {
+                            searchData.authorSearch["@graph"] = _.where(authorSearch, {"@id": uri});
+                            //$scope.data = _.where(authorSearch, {"@id": uri});
+                            $scope.data = searchData.authorSearch;
+                            $('#searchResults').modal('hide');
+                        };
+                        waitingDialog.hide();
+                        $('#searchResults').modal('show');
                     } else {
                         searchData.authorSearch["@graph"] = authorSearch;
                         //$scope.data = searchData.authorSearch;         
@@ -876,7 +896,7 @@ wkhomeControllers.controller('resourcesMap', ['$scope', '$window', 'globalData',
                     + '     HAVING(?k > 10) '
                     + '}';
             sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
-               jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
+                jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                     _.map(compacted["@graph"], function (pub) {
                         var model = {};
                         model["id"] = pub["@id"];
@@ -1075,9 +1095,6 @@ wkhomeControllers.controller('clusterTagsController', ['$scope', 'globalData', '
                         + '}';
                 sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
                     waitingDialog.show();
-                    var context = {
-                        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-                    };
                     jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
 
                         _.map(compacted["@graph"], function (pub) {
@@ -1149,7 +1166,7 @@ wkhomeControllers.controller('clusterTagsController', ['$scope', 'globalData', '
                 searchData.areaSearch = null;
 
             });
-            
+
         }//end Load Resources
 
         function executeDraw(dataToDraw, groupby)
@@ -1171,9 +1188,9 @@ wkhomeControllers.controller('kwCloudClusterController', ['$scope', '$window', '
             searchData.genericData = value;
             $window.location.hash = "w/clusters?" + "datacloud";
         };
-        
+
         $scope.todos = [];
-        
+
         $scope.loadData = function () {
             $scope.$apply(function () {
                 $scope.filteredTodos = []
@@ -1187,9 +1204,9 @@ wkhomeControllers.controller('kwCloudClusterController', ['$scope', '$window', '
                 });
             });
         };
-        
-        
-        
+
+
+
         if (!searchData.allkeywordsCloud) // if no load data by default
         {
             waitingDialog.show();
@@ -1234,8 +1251,8 @@ wkhomeControllers.controller('clustersWithKeywordCloudController', ['$scope', '$
                 model["name"] = obj["foaf:name"];
                 model["keywords"] = obj["bibo:Quote"];
                 /*if (obj["bibo:uri"]) {
-                    model["uri"] = obj["bibo:uri"]["@id"];
-                }*/
+                 model["uri"] = obj["bibo:uri"]["@id"];
+                 }*/
                 if (model["name"] && model["keywords"])
                 {
                     $scope.todos.push({id: model["id"], name: model["name"], keywords: model["keywords"], uri: model["id"]});
@@ -1262,33 +1279,52 @@ wkhomeControllers.controller('clustersWithKeywordCloudController', ['$scope', '$
         $scope.$watch('searchData.genericData', function (newValue, oldValue, scope) {
             $scope.data = {schema: {"context": globalData.CONTEXT, fields: ["rdfs:label", "uc:total"]}, data: searchData.genericData};
         });
-        
+
         $scope.searchAuthor = function (author)
         {
-             var getAuthorDataQuery = globalData.PREFIX
+            var getAuthorDataQuery = globalData.PREFIX
                     + ' CONSTRUCT {   <' + author + '> foaf:name ?name; a foaf:Person  '
                     + ' }   '
                     + ' WHERE '
                     + ' {'
-                    + 'Graph <'+globalData.centralGraph+'>'
-                    +'{'
+                    + 'Graph <' + globalData.centralGraph + '>'
+                    + '{'
                     + '     <' + author + '> a foaf:Person.'
                     + '     <' + author + '> foaf:name ?name'
-                    
-                    + ' } '
-                    +'}';
 
-            sparqlQuery.querySrv({query: getAuthorDataQuery}, function (rdf) {
+                    + ' } '
+                    + '}';
+
+            sparqlQuery.querySrv({'@id': getAuthorDataQuery}, function (rdf) {
                 jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                     $scope.$apply(function () {
                         searchData.authorSearch = compacted;
                         //alert(author);
                         $window.location.hash = "w/search?" + author;
-                        
+
                     });
                 });
             });
-            
-                    
+
+
         };
     }]); //end clusterscloudController
+
+wkhomeControllers.controller('translate', ['$translate','$routeParams', '$scope', '$window', 'translateService', 'globalData',
+    function ($translate, $routeParams, $scope, $window, translateService, globalData) {
+        $translate.use($routeParams.lang);
+
+        $scope.lang = globalData.language;
+
+        $scope.setLanguage = function (value) {
+            globalData.language = value;
+            $scope.lang = globalData.language;
+        };
+
+//        $scope.$watch('globalData.language', function () {
+//            translateService.query({data: globalData.language}, function (data) {
+//                globalData.translateData = data;
+//
+//            });
+//        });
+    }]); //end translate controller
