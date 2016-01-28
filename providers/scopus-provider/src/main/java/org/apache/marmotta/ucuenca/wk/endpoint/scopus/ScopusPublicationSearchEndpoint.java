@@ -16,21 +16,20 @@
  */
 package org.apache.marmotta.ucuenca.wk.endpoint.scopus;
 
-//import org.apache.marmotta.ucuenca.wk.endpoint.dblp.*;
 import org.apache.marmotta.commons.http.ContentType;
 import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
-import org.apache.marmotta.ucuenca.wk.provider.scopus.ScopusAuthorProvider;
-import org.apache.marmotta.ucuenca.wk.provider.scopus.ScopusPublicationRawProvider;
+import org.apache.marmotta.ucuenca.wk.provider.scopus.ScopusPublicationSearchProvider;
+import org.apache.marmotta.ucuenca.wk.provider.scopus.ScopusPublicationSearchProvider;
 
 /**
  * Endpoint for accessing Scopus Data as XML.
  *
  * @author Jose Luis Cullcay
  */
-public class ScopusPublicationRawEndpoint extends Endpoint {
+public class ScopusPublicationSearchEndpoint extends Endpoint {
 
-    public ScopusPublicationRawEndpoint() {
-        super(ScopusPublicationRawProvider.NAME, ScopusPublicationRawProvider.NAME, ScopusPublicationRawProvider.PATTERN, null, 86400L);
+    public ScopusPublicationSearchEndpoint() {
+        super(ScopusPublicationSearchProvider.NAME, ScopusPublicationSearchProvider.NAME, ScopusPublicationSearchProvider.PATTERN, null, 86400L);
         setPriority(PRIORITY_MEDIUM);
         addContentType(new ContentType("text", "turtle", 1.0));
         addContentType(new ContentType("text", "plain", 0.2));
