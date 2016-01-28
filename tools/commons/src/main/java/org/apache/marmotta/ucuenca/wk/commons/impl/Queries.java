@@ -425,8 +425,7 @@ public class Queries implements QueriesService {
     
     @Override
     public String getTitlePublications(String graph) {
-        return "PREFIX dct: <http://purl.org/dc/terms/> "
-                + "PREFIX foaf: <" + FOAF.NAMESPACE + "> "
+        return con.PREFIX
                 + "SELECT *  WHERE { graph <" + graph + "> "
                 + "  {?authorResource foaf:publications  ?publicationResource.\n"
                 + "   ?publicationResource dct:title ?title\n"
@@ -458,10 +457,7 @@ public class Queries implements QueriesService {
 
     @Override
     public String getAuthorPublicationFilter(String graph, String fname, String lname) {
-        return "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
-                + "PREFIX dct: <http://purl.org/dc/terms/> "
-                + "PREFIX mm: <http://marmotta.apache.org/vocabulary/sparql-functions#> "
-                + "              "
+        return con.PREFIX
                 + "                SELECT distinct ?authorResource  ?publicationResource ?title  WHERE { "
                 + "graph <" + graph + ">\n"
                 + "                  { \n"

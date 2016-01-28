@@ -6,6 +6,7 @@
 package org.apache.marmotta.ucuenca.wk.commons.impl;
 
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
+import org.openrdf.model.vocabulary.FOAF;
 
 /**
  *
@@ -56,7 +57,7 @@ public class Constant implements ConstantService{
     
     @Override
     public String foaf(String pred){
-        return "<http://xmlns.com/foaf/0.1/" + pred + ">";
+        return "<" + FOAF.NAMESPACE + pred + ">";
     }
     
     @Override
@@ -68,5 +69,10 @@ public class Constant implements ConstantService{
     public String dblp(String pred) {
         return "<http://dblp.uni-trier.de/rdf/schema-2015-01-26#" + pred + ">";
     }
+    
+    public FOAF foaf() {
+        return new FOAF();
+    }
+    
     
 }
