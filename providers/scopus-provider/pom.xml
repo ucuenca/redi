@@ -12,7 +12,7 @@
 	<artifactId>scopus-provider</artifactId>
 	<packaging>jar</packaging>
 
-    <name>LDClient Provider: Scopus XML Access</name>
+    <name>LDClient Provider: Scopus RDF Access</name>
     <description>Implements Linked Data model over Scopus data.</description>
     
     <build>

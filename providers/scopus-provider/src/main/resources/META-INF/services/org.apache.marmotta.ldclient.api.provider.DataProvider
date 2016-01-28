@@ -1,9 +1,4 @@
 org.apache.marmotta.ucuenca.wk.provider.scopus.ScopusAuthorProvider
-org.apache.marmotta.ucuenca.wk.provider.scopus.ScopusPublicationRawProvider
+org.apache.marmotta.ucuenca.wk.provider.scopus.ScopusAuthorSearchProvider
 org.apache.marmotta.ucuenca.wk.provider.scopus.ScopusPublicationProvider
-
-#org.apache.marmotta.ucuenca.wk.provider.dblp.DBLPAuthorProvider
-#org.apache.marmotta.ucuenca.wk.provider.dblp.DBLPAuthorRawProvider
-#org.apache.marmotta.ucuenca.wk.provider.dblp.DBLPResourceProvider
-#org.apache.marmotta.ucuenca.wk.provider.dblp.DBLPResourceRawProvider
-#org.apache.marmotta.ucuenca.wk.provider.dblp.DBLPCandidatesProvider
+org.apache.marmotta.ucuenca.wk.provider.scopus.ScopusPublicationSearchProvider

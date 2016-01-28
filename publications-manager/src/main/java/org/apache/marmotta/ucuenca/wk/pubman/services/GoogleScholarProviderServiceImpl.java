@@ -23,6 +23,7 @@ package org.apache.marmotta.ucuenca.wk.pubman.services;
 //import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +47,6 @@ import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
 import org.apache.marmotta.ucuenca.wk.pubman.exceptions.PubException;
 import org.apache.marmotta.ucuenca.wk.pubman.api.GoogleScholarProviderService;
 
-
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
 //import org.openrdf.query.QueryEvaluationException;
@@ -65,9 +65,9 @@ import org.openrdf.query.UpdateExecutionException;
 //import org.openrdf.rio.Rio;
 //import org.openrdf.model.Model;
 //import org.openrdf.model.Statement;
-
 /**
- * Default Implementation of {@link PubVocabService} Get Data From Google Scholar using Google Scholar Provider
+ * Default Implementation of {@link PubVocabService} Get Data From Google
+ * Scholar using Google Scholar Provider
  *
  * Fernando Baculima CEDIA - Universidad de Cuenca
  *
@@ -87,8 +87,8 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
     @Inject
     private SparqlFunctionsService sparqlFunctionsService;
 
-    private String namespaceGraph = "http://ucuenca.edu.ec/";
-    private String wkhuskaGraph = namespaceGraph + "wkhuska";
+    private String namespaceGraph = "http://ucuenca.edu.ec/wkhuska/";
+    private String authorGraph = namespaceGraph + "authors";
 
     private int processpercent = 0;
 
@@ -96,7 +96,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
      Graph to save publications data by provider
      Example: http://ucuenca.edu.ec/wkhuska/dblp
      */
-    private String graphByProviderNS = wkhuskaGraph + "/provider/";
+    private String graphByProviderNS = namespaceGraph +  "/provider/";
 
     @Inject
     private SparqlService sparqlService;
@@ -155,9 +155,9 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                         String publicationProperty = pubVocabService.getPubProperty();
 
                         //verificar existencia de la publicacion y su author sobre el grafo general
-                        String askTripletQuery = queriesService.getAskQuery(wkhuskaGraph, authorResource, publicationProperty, publicationResource);
+                        String askTripletQuery = queriesService.getAskQuery(authorGraph, authorResource, publicationProperty, publicationResource);
                         if (!sparqlService.ask(QueryLanguage.SPARQL, askTripletQuery)) {
-                            String insertPubQuery = buildInsertQuery(wkhuskaGraph, authorResource, publicationProperty, publicationResource);
+                            String insertPubQuery = buildInsertQuery(authorGraph, authorResource, publicationProperty, publicationResource);
                             try {
                                 sparqlService.update(QueryLanguage.SPARQL, insertPubQuery);
                             } catch (MalformedQueryException ex) {
@@ -176,7 +176,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
 
                                 String newPublicationProperty = mapping.get(nativeProperty);
                                 String publicacionPropertyValue = pubproperty.get("publicationPropertyValue").toString();
-                                String insertPublicationPropertyQuery = buildInsertQuery(wkhuskaGraph, publicationResource, newPublicationProperty, publicacionPropertyValue);
+                                String insertPublicationPropertyQuery = buildInsertQuery(authorGraph, publicationResource, newPublicationProperty, publicacionPropertyValue);
 
                                 try {
                                     sparqlService.update(QueryLanguage.SPARQL, insertPublicationPropertyQuery);
@@ -216,7 +216,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
 
             int allMembers = 0;
             String nameProviderGraph = "http://ucuenca.edu.ec/wkhuska/provider/GoogleScholarProvider";
-            String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(wkhuskaGraph);
+            String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(authorGraph);
 
             // TupleQueryResult result = sparqlService.query(QueryLanguage.SPARQL, getAuthors);
             String nameToFind = "";
@@ -230,6 +230,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
 
             RepositoryConnection conUri = null;
             ClientResponse response = null;
+            List<Map<String, Value>> resultAllAuthorsAux = new ArrayList<>();
             for (Map<String, Value> map : resultAllAuthors) {
                 processedPersons++;
                 log.info("Autores procesados con GoogleScholar: " + processedPersons + " de " + allPersons);
@@ -250,31 +251,32 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                             existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(nameProviderGraph, URL_TO_FIND));
                             if (nameToFind != "" && !existNativeAuthor) {
                                 boolean dataretrievee = true;//( Data Retrieve Exception )
-                                waitTime = 30;
-                                do {
+                                waitTime = 0;
+                                //do {
+                                try {
+                                    response = ldClient.retrieveResource(URL_TO_FIND);
+                                    dataretrievee = true;
+                                } catch (DataRetrievalException e) {
+                                    log.error("Data Retrieval Exception: " + e);
+                                    log.info("Wating: " + waitTime + " seconds for new query");
+                                    dataretrievee = false;
                                     try {
-                                        response = ldClient.retrieveResource(URL_TO_FIND);
-                                        dataretrievee = true;
-                                    } catch (DataRetrievalException e) {
-                                        log.error("Data Retrieval Exception: " + e);
-                                        log.info("Wating: " + waitTime + " seconds for new query");
-                                        dataretrievee = false;
-                                        try {
-                                            Thread.sleep(waitTime * 1000);               //1000 milliseconds is one second.
-                                        } catch (InterruptedException ex) {
-                                            Thread.currentThread().interrupt();
-                                        }
-                                        waitTime += 5;
+                                        Thread.sleep(waitTime * 1000);               //1000 milliseconds is one second.
+                                    } catch (InterruptedException ex) {
+                                        Thread.currentThread().interrupt();
                                     }
-                                    if (response.getHttpStatus() == 503) {
-                                        try {
-                                            log.info("Wating 1 day for new Google Scholar Query ");
-                                            Thread.sleep(86400000);  // 1 day                                            
-                                        } catch (InterruptedException ex) {
-                                            Thread.currentThread().interrupt();
-                                        }
+                                    waitTime += 5;
+                                }
+                                if (response.getHttpStatus() == 503) {
+                                    try {
+                                        log.info("Wating 1 day for new Google Scholar Query ");
+                                        Thread.sleep(86400000);  // 1 day                                            
+                                    } catch (InterruptedException ex) {
+                                        Thread.currentThread().interrupt();
                                     }
-                                } while (!dataretrievee && response.getHttpStatus() == 503);
+                                }
+                                // } while (true);
+                                //(!dataretrievee && response.getHttpStatus() == 503);
 
                             }//end  if  nameToFind != ""
 
@@ -331,7 +333,8 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                             log.error("ioexception " + e.toString());
                         }
                         priorityToFind++;
-                    } while (!AuthorDataisLoad && priorityToFind < 5);//end do while
+                        //} while (true);   !AuthorDataisLoad &&
+                    } while (priorityToFind < 5);//end do while
                 }//end if ( authorResource not exist)
                 printPercentProcess(processedPersons, allPersons, "Google Scholar");
             }
