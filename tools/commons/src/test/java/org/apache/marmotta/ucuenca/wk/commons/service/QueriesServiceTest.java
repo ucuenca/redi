@@ -52,7 +52,7 @@ public class QueriesServiceTest {
         System.out.println("getAuthorsQuery");
         QueriesService instance = new Queries();
         String wkhuskagraph = "http://ucuenca.edu.ec/wkhuska";
-        String expResult = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> SELECT DISTINCT ?s WHERE { GRAPH <"+wkhuskagraph+"> { ?s rdf:type foaf:Person }}";
+        String expResult = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> PREFIX owl: <http://www.w3.org/2002/07/owl#> SELECT DISTINCT ?s WHERE { GRAPH <"+wkhuskagraph+"> { ?s rdf:type foaf:Person }}";
         String result = instance.getAuthorsQuery(wkhuskagraph);
         Assert.assertEquals(expResult, result);
     }
@@ -106,7 +106,7 @@ public class QueriesServiceTest {
         String object = "http://xmlns.com/foaf/0.1/Person";
         String wkhuskaGraph = "http://ucuenca.edu.ec/wkhuska";
         QueriesService instance = new Queries();
-        String expResult = "INSERT DATA { GRAPH <http://ucuenca.edu.ec/wkhuska> { <" + subject + "> <" + predicate + "> <" + object + "> }}";
+        String expResult = "INSERT DATA {  GRAPH <http://ucuenca.edu.ec/wkhuska>  { <" + subject + "> <" + predicate + "> <" + object + "> }}";
         String result = instance.getInsertDataUriQuery(wkhuskaGraph, subject, predicate, object);
         Assert.assertEquals(expResult, result);
     }

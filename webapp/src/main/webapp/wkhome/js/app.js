@@ -45,8 +45,7 @@ wkhomeApp.service('globalData', function () {
                         "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
                         "bibo": "http://purl.org/ontology/bibo/",
                         "dc": "http://purl.org/dc/elements/1.1/",
-                        "dct": "http://purl.org/dc/terms/",
-                        "cedia": "https://www.cedia.org.ec/"
+                        "dct": "http://purl.org/dc/terms/"
                         
                    };
  });

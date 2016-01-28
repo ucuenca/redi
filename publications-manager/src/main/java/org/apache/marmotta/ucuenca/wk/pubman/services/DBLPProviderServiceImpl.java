@@ -48,7 +48,7 @@ import org.apache.marmotta.ldclient.services.ldclient.LDClient;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
-import org.apache.marmotta.ucuenca.wk.commons.service.PropertyPubService;
+import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 
 import org.apache.marmotta.ucuenca.wk.pubman.api.MicrosoftAcadProviderService;
@@ -94,7 +94,7 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
     private QueriesService queriesService;
 
     @Inject
-    private PropertyPubService pubVocabService;
+    private ConstantService pubVocabService;
 
     @Inject
     private SparqlFunctionsService sparqlFunctionsService;
