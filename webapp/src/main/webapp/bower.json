@@ -1,43 +1,46 @@
 {
-  "name": "wkhome",
-  "description": "Watiqai Khuska Frontend",
-  "version": "0.0.1",
-  "homepage": "https://santteegt@bitbucket.org/ecsemanticrep/watiqay-khuska-ecuadorian-semantic-repository-for-researchers.git",
-  "license": "Apache License 2.0",
-  "private": true,
-  "authors": [
-    "University of Cuenca <hernan.gonzalezt@ucuenca.edu.ec>"
-  ],
-  "main": "index.html",
-  "keywords": [
-    "semantic",
-    "repository",
-    "ecuador",
-    "homepage"
-  ],
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests"
-  ],
-  "dependencies": {
-    "angular": "1.3.x",
-    "angular-mocks": "1.3.x",
-    "angular-swipe": "~0.0.x",
-    "jsonld": "~0.3.x",
-    "jquery": "~2.1.3",
-    "bootstrap": "~3.3.x",
-    "underscore": "~1.8.x",
-    "angular-route": "1.3.x",
-    "angular-resource": "1.3.x",
-    "angular-animate": "1.3.x",
-    "d3": "~3.5.x",
-    "d3-tip": "~0.6.x",
-    "topojson": "~1.6.x",
-    "angular-ui-bootstrap": "0.14.3",
-    "jsonproxy": "0.3.1",
-    "restangular": "~1.4.0"
-  }
+    "name": "wkhome",
+    "description": "Watiqai Khuska Frontend",
+    "version": "0.0.1",
+    "homepage": "https://santteegt@bitbucket.org/ecsemanticrep/watiqay-khuska-ecuadorian-semantic-repository-for-researchers.git",
+    "license": "Apache License 2.0",
+    "private": true,
+    "authors": [
+        "University of Cuenca <hernan.gonzalezt@ucuenca.edu.ec>"
+    ],
+    "main": "index.html",
+    "keywords": [
+        "semantic",
+        "repository",
+        "ecuador",
+        "homepage"
+    ],
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ],
+    "dependencies": {
+        "angular": "1.3.x",
+        "angular-mocks": "1.3.x",
+        "angular-swipe": "~0.0.x",
+        "jsonld": "~0.3.x",
+        "jquery": "~2.1.3",
+        "bootstrap": "~3.3.x",
+        "underscore": "~1.8.x",
+        "angular-route": "1.3.x",
+        "angular-ui-router": "^0.2.15",
+        "angular-resource": "1.3.x",
+        "angular-animate": "1.3.x",
+        "d3": "~3.5.x",
+        "d3-tip": "~0.6.x",
+        "topojson": "~1.6.x",
+        "angular-ui-bootstrap": "0.14.3",
+        "jsonproxy": "0.3.1",
+        "restangular": "~1.4.0",
+        "angular-translate": "2.9.0"
+
+    }
 }

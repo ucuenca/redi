@@ -1,19 +1,7 @@
 
-<div class="col-md-2">
-    <div  style="padding: 20px; padding-top: 80px" >
-        <h3 class="text-primary" style="text-align: center; border-top-width: 5px">BROWSE</h3>
-    </div>
-
-    <ul class="nav nav-pills nav-stacked">
-        <li><a href="#/">Home</a></li>
-        <li><a href="#/tags/cloud">Keywords Cloud</a></li>
-        <li><a href="#/cloud/group-by">Group By Keyword</a></li>
-        <!--<li><a href="#/">Research Areas Cloud</a></li>-->
-        <li  class="active"><a href="#/geo-views/sources">Map View</a></li>
-        <li><a href="#/cloud/clusters">Clustering by Research Area</a></li>
-        <li><a href="#/cloud/keywords">Clusters by Keyword</a></li>
-    </ul>
-</div>
+<hr>
+<hr>
+<div class='col-md-2' ng-include="'/wkhome/partials/mainmenu.html'"/> 
 
 <div class="col-md-10">
 
@@ -22,36 +10,36 @@
         <div ng-controller="resourcesMap">
             <div class="col-md-5">
                 <hr>
-                <hr>
+               
 
                 <h2 class="text-success">
-                    <span>Location by Research Area</span>  <br>
-                    Semantic Repository of Ecuadorian Researchers - 2016
+                    {{'Location by Research Area'| translate}}  <br>
+                   
                 </h2>
                 <hr>
 
-                <h3 class="text-primary">Research Area</h3><h3 class="tag" style="color: #B18904">Semantic Web</h3>
+                <h3 class="text-primary">{{'Research Area' | translate }}</h3><h3 class="tag" style="color: #B18904">Semantic Web</h3>
                 <br>
-                <h3 class="text-primary">Total of Publications</h3><h3 class="total" style="color: #B18904"></h3>
+                <h3 class="text-primary">{{'Total Publicaciones' | translate }}</h3><h3 class="total" style="color: #B18904"></h3>
                 <hr>
-                <h3 class="text-primary">Institute</h3><h3 class="name" style="color: #B18904"></h3>
+                <h3 class="text-primary">{{'Institute'| translate}}</h3><h3 class="name" style="color: #B18904"></h3>
                 <br>
-                <h3 class="text-primary">Full Name</h3><h3 class="fullname" style="color: #B18904"></h3>
+                <h3 class="text-primary">{{'Full Name' | translate}}</h3><h3 class="fullname" style="color: #B18904"></h3>
                 <br>
-                <h3 class="text-primary">City</h3><h3 class="city" style="color: #B18904"></h3>
+                <h3 class="text-primary">{{'City' | translate }}</h3><h3 class="city" style="color: #B18904"></h3>
                 <br>
-                <h3 class="text-primary">Province</h3><h3 class="province" style="color: #B18904"></h3>
+                <h3 class="text-primary">{{'Province'  | translate }}</h3><h3 class="province" style="color: #B18904"></h3>
                 <br>
-                <h3 class="text-primary">Latitud</h3><h3 class="latitude" style="color: #B18904"></h3>
+                <h3 class="text-primary">{{'Latitude' | translate}}</h3><h3 class="latitude" style="color: #B18904"></h3>
                 <br>
-                <h3 class="text-primary">Longitude</h3><h3 class="longitude" style="color: #B18904"></h3>
+                <h3 class="text-primary">{{'Longitude' | translate}}</h3><h3 class="longitude" style="color: #B18904"></h3>
 
             </div>
 
             <hr>
             <hr>
             <div class="col-md-2">
-                <h3 class="text-success">Select Research Area:</h3>
+                <h3 class="text-success">{{'Select Research Area' | translate}}:</h3>
                 <select class="form-control" name="board" id="board" ng-model="selectedTagItem"  ng-options="key.tag as key.tag for key  in relatedtags">
                     <option value="">Select Theme</option>
                 </select>
