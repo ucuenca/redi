@@ -64,7 +64,7 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
     private String uriPublication = "http://ucuenca.edu.ec/wkhuska/publication/";
     private String bibloTitle = "http://purl.org/dc/terms/title";
     private String publicationOntology = "http://purl.org/ontology/bibo/Article";
-    private String uriNewAuthor = "http://ucuenca.edu.ec/resource/";
+    private String uriNewAuthor = "http://ucuenca.edu.ec/resource/author/";
     private double total = 0;
     private double totalPublicationRecognized = 0;
     private double totalPublicationNotRecognized = 0;
