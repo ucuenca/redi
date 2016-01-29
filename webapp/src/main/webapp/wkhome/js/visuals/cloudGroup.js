@@ -258,6 +258,8 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
                     trigger: 'manual',
                     html: true,
                     content: function () {
+                        if(d.abstract != null && (d.abstract.constructor === Array || d.abstract instanceof Array))
+                                d.abstract = d.abstract[0];
                         return "Title: " + d.title + "<br />" +
                                 "Abstract: " + d.abstract.substring(0, 50) + "<br />" +
                                 "Author: " + d.author + "<br />"

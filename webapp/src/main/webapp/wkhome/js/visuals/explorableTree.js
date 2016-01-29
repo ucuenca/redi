@@ -281,7 +281,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                                     + ' CONSTRUCT { '
                                     + ' <' + nodeId + '> foaf:publications ?pub . '
                                     + ' ?pub a bibo:Document . '
-                                    + ' ?pub dc:title ?title .   '
+                                    + ' ?pub dct:title ?title .   '
                                     + ' ?pub bibo:abstract ?abstract. '
                                     + ' ?pub bibo:uri ?uri. '
                                     + ' ?pub dct:contributor ?contributor. '
@@ -292,7 +292,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                                     + ' } '
                                     + ' WHERE { graph <'+globalData.centralGraph+'> {  '
                                     + ' <' + nodeId + '> foaf:publications ?pub . '
-                                    + '?pub dc:title ?title '
+                                    + '?pub dct:title ?title '
                                     + ' OPTIONAL {?pub bibo:abstract ?abstract. } '
                                     + ' OPTIONAL {?pub bibo:uri ?uri. } '
                                     + ' OPTIONAL {?pub dct:contributor ?contributor. } '
@@ -348,13 +348,13 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
             function setChildrenAndUpdateForPub(node) {
 
                 var infoBar = $('div.tree-node-info');
-                var model = {"dcterms:title": {label: "Title", containerType: "div"},
+                var model = {"dct:title": {label: "Title", containerType: "div"},
                     "bibo:uri": {label: "URL", containerType: "a"},
-                    "dcterms:contributor": {label: "Contributor", containerType: "a"},
-                    "dcterms:isPartOf": {label: "Is Part Of", containerType: "a"},
-                    "dcterms:license": {label: "License", containerType: "a"},
-                    "dcterms:provenance": {label: "Source", containerType: "div"},
-                    "dcterms:publisher": {label: "Publisher", containerType: "div"},
+                    "dct:contributor": {label: "Contributor", containerType: "a"},
+                    "dct:isPartOf": {label: "Is Part Of", containerType: "a"},
+                    "dct:license": {label: "License", containerType: "a"},
+                    "dct:provenance": {label: "Source", containerType: "div"},
+                    "dct:publisher": {label: "Publisher", containerType: "div"},
                     "bibo:numPages": {label: "Pages", containerType: "div"}
                 };
                 if (infoBar) {
@@ -363,19 +363,19 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
 
                     //view data in infoBar
                     var entity = _.findWhere(node.publication.jsonld["@graph"], {"@id": id, "@type": "bibo:Document"});
-                    var model = {"dcterms:title": {label: "Title", containerType: "div"},
+                    var model = {"dct:title": {label: "Title", containerType: "div"},
                         "bibo:uri": {label: "URL", containerType: "a"},
-                        "dcterms:contributor": {label: "Contributor", containerType: "a"},
-                        "dcterms:isPartOf": {label: "Is Part Of", containerType: "a"},
-                        "dcterms:license": {label: "License", containerType: "a"},
-                        "dcterms:provenance": {label: "Source", containerType: "div"},
-                        "dcterms:publisher": {label: "Publisher", containerType: "div"},
+                        "dct:contributor": {label: "Contributor", containerType: "a"},
+                        "dct:isPartOf": {label: "Is Part Of", containerType: "a"},
+                        "dct:license": {label: "License", containerType: "a"},
+                        "dct:provenance": {label: "Source", containerType: "div"},
+                        "dct:publisher": {label: "Publisher", containerType: "div"},
                         "bibo:numPages": {label: "Pages", containerType: "div"},
                         "bibo:abstract": {label: "Abstract", containerType: "div"},
                         "bibo:Quote": {label: "Keywords", containerType: "div"}
                     };
                     infoBar.find('h4').text("Publication Info");
-                    infoBar.find('div#title').text("Title: " + entity["dcterms:title"]);
+                    infoBar.find('div#title').text("Title: " + entity["dct:title"]);
                     infoBar.find('a').attr('href', "http://190.15.141.85:8080/marmottatest/meta/text/html?uri=" + entity["@id"])
                             .text("More Info...");
                     var pubInfo = $('div.tree-node-info .entityInfo');
@@ -429,7 +429,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                     var nodeId = node.publication['@id'];
                     var coAuthors = [];
                     //**** GETTING EXTERNAL CONTRIBUTORS OF PUBLICATION ***/
-                    var contributors = node.publication.jsonld["@graph"][0]["dcterms:contributor"];
+                    var contributors = node.publication.jsonld["@graph"][0]["dct:contributor"];
                     _.map(contributors, function (val) {
                         coAuthors.push({'@id': val["@id"], '@type': 'foaf:Person'});
                     });
@@ -716,7 +716,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                             var node = d;
                             if ('publication' in d) {
                                 var id = d.publication["@id"];
-                                var title = _.findWhere(node.publication.jsonld["@graph"], {"@id": id, "@type": "bibo:Document"})["dcterms:title"];
+                                var title = _.findWhere(node.publication.jsonld["@graph"], {"@id": id, "@type": "bibo:Document"})["dct:title"];
                                 tip.html(title);
                                 tip.show(d);
                                 //AE.getInfo(d.author);
