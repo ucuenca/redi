@@ -147,7 +147,7 @@ pieChart.directive('pieChart', ["d3", "globalData", "sparqlQuery",
                                     + '         SELECT * '
                                     + '         WHERE { '
                                     + '         GRAPH <'+globalData.endpointsGraph+'> { '
-                                    + '             ?provenance uc:name "' + key + '" } '
+                                    + '             ?provenance uc:name "' + key + '"^^xsd:string } '
                                     + '         } '
                                     + '     } '
                                     + ' } } '

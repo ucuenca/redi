@@ -178,13 +178,13 @@ pieChart.directive('cloudTag', ["d3", 'globalData', 'sparqlQuery',
 
             //adding information about publications of THIS keyword into "tree-node-info"   DIV
             var infoBar = $('div.tree-node-info');
-            var model = {"dcterms:title": {label: "Title", containerType: "div"},
+            var model = {"dct:title": {label: "Title", containerType: "div"},
                 "bibo:uri": {label: "URL", containerType: "a"},
-                "dcterms:contributor": {label: "Contributor", containerType: "a"},
-                "dcterms:isPartOf": {label: "Is Part Of", containerType: "a"},
-                "dcterms:license": {label: "License", containerType: "a"},
-                "dcterms:provenance": {label: "Source", containerType: "div"},
-                "dcterms:publisher": {label: "Publisher", containerType: "div"},
+                "dct:contributor": {label: "Contributor", containerType: "a"},
+                "dct:isPartOf": {label: "Is Part Of", containerType: "a"},
+                "dct:license": {label: "License", containerType: "a"},
+                "dct:provenance": {label: "Source", containerType: "div"},
+                "dct:publisher": {label: "Publisher", containerType: "div"},
                 "bibo:numPages": {label: "Pages", containerType: "div"}
             };
             if (infoBar) {
