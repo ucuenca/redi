@@ -112,7 +112,7 @@ wkhomeControllers.controller('totalPersonReg', ['$translate', '$routeParams', '$
         $scope.ifClick = function (value)
         {
             searchData.genericData = value;
-            $window.location.hash = "w/cloud?" + "datacloud";
+            $window.location.hash = "/" + $routeParams.lang + "/w/cloud?" + "datacloud";
         };
         //sparql construct to get total authors of publications
         var queryTotalAuthors = globalData.PREFIX
@@ -277,13 +277,13 @@ wkhomeControllers.controller('totalPublicationReg', ['$scope', 'globalData', 'sp
             });
         });
     }]);
-wkhomeControllers.controller('totalResearchAreas', ['$scope', 'globalData', 'sparqlQuery', 'searchData', '$window',
-    function ($scope, globalData, sparqlQuery, searchData, $window) {
+wkhomeControllers.controller('totalResearchAreas', ['$routeParams','$scope', 'globalData', 'sparqlQuery', 'searchData', '$window',
+    function ($routeParams, $scope, globalData, sparqlQuery, searchData, $window) {
         //if click in pie-chart (Research Areas)
         $scope.ifClick = function (value)
         {
             searchData.researchArea = value;
-            $window.location.hash = "cloud/group-by";
+            $window.location.hash = "/" + $routeParams.lang + "/cloud/group-by";
         };
         var queryTotalAreas = globalData.PREFIX
                 + ' CONSTRUCT { '
@@ -571,8 +571,8 @@ wkhomeControllers.controller('getKeywordsTag', ['$scope', 'globalData', 'sparqlQ
 
 
     }]);
-wkhomeControllers.controller('exploreAuthor', ['$scope', '$rootScope', 'globalData', 'searchData', '$window', 'sparqlQuery',
-    function ($scope, $rootScope, globalData, searchData, $window, sparqlQuery) {
+wkhomeControllers.controller('exploreAuthor', ['$routeParams','$scope', '$rootScope', 'globalData', 'searchData', '$window', 'sparqlQuery',
+    function ($routeParams, $scope, $rootScope, globalData, searchData, $window, sparqlQuery) {
 
         $rootScope.$on("CallParentMethod", function (author) {
             $scope.clickonRelatedauthor(author);
@@ -608,7 +608,7 @@ wkhomeControllers.controller('exploreAuthor', ['$scope', '$rootScope', 'globalDa
         $scope.ifrightClick = function (value)
         {
             searchData.genericData = value;
-            $window.location.hash = "w/cloud?" + "datacloud";
+            $window.location.hash = "/" + $routeParams.lang + "/w/cloud?" + "datacloud";
         };
 
         if (searchData.authorSearch != null && searchData.authorSearch["@graph"].length == 1) {
@@ -662,12 +662,12 @@ wkhomeControllers.controller('exploreAuthor', ['$scope', '$rootScope', 'globalDa
 
 
 
-wkhomeControllers.controller('exploreresearchArea', ['$scope', '$rootScope', 'searchData', '$window', '$route',
-    function ($scope, $rootScope, searchData, $window) {
+wkhomeControllers.controller('exploreresearchArea', ['$routeParams','$scope', '$rootScope', 'searchData', '$window', '$route',
+    function ($routeParams, $scope, $rootScope, searchData, $window) {
         $scope.ifrightClick = function (value)
         {
             searchData.genericData = value;
-            $window.location.hash = "w/cloud?" + "datacloud";
+            $window.location.hash = "/" + $routeParams.lang + "/w/cloud?" + "datacloud";
         };
         $scope.$watch('searchData.areaSearch', function (newValue, oldValue, scope) {
 
@@ -759,11 +759,6 @@ wkhomeControllers.controller('SearchController', ['$scope', '$window', 'globalDa
 //                queryAuthors = String.format(queryAuthors, filterContainer);
                 sparqlQuery.querySrv({query: queryAuthors},
                 function (rdf) {
-                    var context = {
-                        "foaf": "http://xmlns.com/foaf/0.1/"/*,
-                         "foaf:name": {"@id": "http://xmlns.com/foaf/0.1/name"},
-                         "foaf:Person": {"@id": "http://xmlns.com/foaf/0.1/Person"}*/
-                    };
                     jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                         if (compacted["@graph"])
                         {
@@ -869,14 +864,14 @@ wkhomeControllers.controller('genericcloudController', ['$scope', '$window', 'gl
         });
     }]); //end genericcloudController 
 
-wkhomeControllers.controller('resourcesMap', ['$scope', '$window', 'globalData', 'sparqlQuery', 'searchData',
-    function ($scope, $window, globalData, sparqlQuery, searchData) {
+wkhomeControllers.controller('resourcesMap', ['$routeParams','$scope', '$window', 'globalData', 'sparqlQuery', 'searchData',
+    function ($routeParams, $scope, $window, globalData, sparqlQuery, searchData) {
 
         //if click in pie-chart
         $scope.ifClick = function (value)
         {
             searchData.genericData = value;
-            $window.location.hash = "w/cloud?" + "datacloud";
+            $window.location.hash = "/" + $routeParams.lang + "/w/cloud?" + "datacloud";
         };
         $scope.themes = [];
         if (!searchData.allkeywords)
@@ -963,10 +958,6 @@ wkhomeControllers.controller('resourcesMap', ['$scope', '$window', 'globalData',
             $scope.publicationsBySource = [];
             sparqlQuery.querySrv({query: queryBySource},
             function (rdf) {
-                var context = {
-                    "bibo": "http://purl.org/ontology/bibo/",
-                    "uc": "http://ucuenca.edu.ec/resource/"
-                };
                 jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                     var sd;
                     var model = [];
@@ -1180,13 +1171,13 @@ wkhomeControllers.controller('clusterTagsController', ['$scope', 'globalData', '
 
     }]); //end clusterTagsController 
 
-wkhomeControllers.controller('kwCloudClusterController', ['$scope', '$window', 'sparqlQuery', 'searchData', 'globalData',
-    function ($scope, $window, sparqlQuery, searchData, globalData) {
+wkhomeControllers.controller('kwCloudClusterController', ['$routeParams','$scope', '$window', 'sparqlQuery', 'searchData', 'globalData',
+    function ($routeParams, $scope, $window, sparqlQuery, searchData, globalData) {
 
         $scope.ifClick = function (value)
         {
             searchData.genericData = value;
-            $window.location.hash = "w/clusters?" + "datacloud";
+            $window.location.hash = '/' + $routeParams.lang + "/w/clusters?" + "datacloud";
         };
 
         $scope.todos = [];

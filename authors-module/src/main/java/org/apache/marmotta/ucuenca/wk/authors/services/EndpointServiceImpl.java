@@ -42,19 +42,15 @@ public class EndpointServiceImpl implements EndpointService {
     @Override
     public String addEndpoint(String name, String endpointUrl, String graphUri) {
 
-        try {
-
-            //          String queryEndpointToAdd = queriesService.getEndpointToAddQuery(endpointGraph, name, endpointUrl, graphUri);
-            //sparqlService.update(QueryLanguage.SPARQL, queryEndpointToAdd);
+        /*try {
             String resourceHash = getHashCode(name, endpointUrl, graphUri);
-            addEndpointName(endpointsGraph, name, resourceHash);
-            addEndpointUrl(endpointsGraph, endpointUrl, resourceHash);
-            addEndpointGraph(endpointsGraph, graphUri, resourceHash);
+            addEndpointData(endpointsGraph, "name", name, resourceHash);
+            addEndpointData(endpointsGraph, "url", endpointUrl, resourceHash);
+            addEndpointData(endpointsGraph, "graph", graphUri, resourceHash);
             return "Endpoint Insertado Correctamente";
-            //  return "Error al intentar agregar el Endpoint";
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
         return "AddEndpoint Error";
     }
 
@@ -68,15 +64,17 @@ public class EndpointServiceImpl implements EndpointService {
     public String addEndpoint(String... args) {
         try {
             String resourceHash = getHashCode(args[1], args[2], args[3]);
-            addEndpointStatus(endpointsGraph, args[0], resourceHash);
-            addEndpointName(endpointsGraph, args[1], resourceHash);
-            addEndpointUrl(endpointsGraph, args[2], resourceHash);
-            addEndpointGraph(endpointsGraph, args[3], resourceHash);
-            addEndpointFullName(endpointsGraph, args[4], resourceHash);
-            addEndpointCity(endpointsGraph, args[5], resourceHash);
-            addEndpointProvince(endpointsGraph, args[6], resourceHash);
-            addEndpointLatitude(endpointsGraph, args[7], resourceHash);
-            addEndpointLongitude(endpointsGraph, args[8], resourceHash);
+            String cad = "string"; String dec = "string";
+            //List of parameters to pass
+            addEndpointData(endpointsGraph, "status", args[0], resourceHash, "boolean");
+            addEndpointData(endpointsGraph, "name", args[1], resourceHash, cad);
+            addEndpointData(endpointsGraph, "url", args[2], resourceHash,cad);
+            addEndpointData(endpointsGraph, "graph", args[3], resourceHash,cad);
+            addEndpointData(endpointsGraph, "fullName", args[4], resourceHash,cad);
+            addEndpointData(endpointsGraph, "city", args[5], resourceHash,cad);
+            addEndpointData(endpointsGraph, "province", args[6], resourceHash,cad);
+            addEndpointData(endpointsGraph, "latitude", args[7], resourceHash,dec);
+            addEndpointData(endpointsGraph, "longitude", args[8], resourceHash,dec);
 
             return "Endpoint Insertado Correctamente";
         } catch (NoSuchAlgorithmException ex) {
@@ -85,83 +83,10 @@ public class EndpointServiceImpl implements EndpointService {
         return "AddEndpoint Error";
     }
 
-    public void addEndpointStatus(String endpointsGraph, String status, String resourceHash) {
+    public void addEndpointData(String... parameters) {
         try {
-            String queryEndpointStatus = queriesService.getEndpointStatusQuery(endpointsGraph, status, resourceHash);
-            sparqlService.update(QueryLanguage.SPARQL, queryEndpointStatus);
-        } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
-            Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public void addEndpointName(String endpointsGraph, String name, String resourceHash) {
-        try {
-            String queryEndpointName = queriesService.getEndpointNameQuery(endpointsGraph, name, resourceHash);
-            sparqlService.update(QueryLanguage.SPARQL, queryEndpointName);
-        } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
-            Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public void addEndpointUrl(String endpointsGraph, String endpointUrl, String resourceHash) {
-        try {
-            String queryEndpointUrl = queriesService.getEndpointUrlQuery(endpointsGraph, endpointUrl, resourceHash);
-
-            sparqlService.update(QueryLanguage.SPARQL, queryEndpointUrl);
-        } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
-            Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public void addEndpointGraph(String endpointsGraph, String graphUri, String resourceHash) {
-        try {
-            String queryEndpointGraph = queriesService.getEndpointGraphQuery(endpointsGraph, graphUri, resourceHash);
-            sparqlService.update(QueryLanguage.SPARQL, queryEndpointGraph);
-        } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
-            Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public void addEndpointFullName(String endpointsGraph, String fullName, String resourceHash) {
-        try {
-            String queryFullName = queriesService.getEndpointFullNameQuery(endpointsGraph, fullName, resourceHash);
-            sparqlService.update(QueryLanguage.SPARQL, queryFullName);
-        } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
-            Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public void addEndpointCity(String endpointsGraph, String city, String resourceHash) {
-        try {
-            String queryCity = queriesService.getEndpointCityQuery(endpointsGraph, city, resourceHash);
-            sparqlService.update(QueryLanguage.SPARQL, queryCity);
-        } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
-            Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public void addEndpointProvince(String endpointsGraph, String province, String resourceHash) {
-        try {
-            String queryProvince = queriesService.getEndpointProvinceQuery(endpointsGraph, province, resourceHash);
-            sparqlService.update(QueryLanguage.SPARQL, queryProvince);
-        } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
-            Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public void addEndpointLatitude(String endpointsGraph, String latitude, String resourceHash) {
-        try {
-            String queryLatitude = queriesService.getEndpointLatitudeQuery(endpointsGraph, latitude, resourceHash);
-            sparqlService.update(QueryLanguage.SPARQL, queryLatitude);
-        } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
-            Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public void addEndpointLongitude(String endpointsGraph, String longitude, String resourceHash) {
-        try {
-            String queryLongitude = queriesService.getEndpointLongitudeQuery(endpointsGraph, longitude, resourceHash);
-            sparqlService.update(QueryLanguage.SPARQL, queryLongitude);
+            String queryEndpoint = queriesService.getEndpointDataQuery(parameters);
+            sparqlService.update(QueryLanguage.SPARQL, queryEndpoint);
         } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
             Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
