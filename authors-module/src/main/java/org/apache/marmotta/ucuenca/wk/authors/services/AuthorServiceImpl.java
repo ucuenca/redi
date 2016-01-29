@@ -46,6 +46,7 @@ import org.apache.marmotta.ucuenca.wk.authors.exceptions.AskException;
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.DaoException;
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.UpdateException;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
+import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.authors.api.EndpointService;
 import org.apache.marmotta.ucuenca.wk.authors.api.SparqlEndpoint;
 
@@ -77,6 +78,9 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Inject
     private QueriesService queriesService;
+    
+    @Inject
+    private ConstantService constantService;
 
     @Inject
     private EndpointService authorsendpointService;
@@ -232,7 +236,7 @@ public class AuthorServiceImpl implements AuthorService {
         if (!predicado.contains("rdaregistry.info")) {
             //insert provenance triplet query
             if (!provenanceinsert) {
-                String provenanceQueryInsert = buildInsertQuery(sujeto, queriesService.getProvenanceProperty(), endpoint.getResourceId());
+                String provenanceQueryInsert = buildInsertQuery(sujeto, constantService.getProvenanceProperty(), endpoint.getResourceId());
                 updateAuthor(provenanceQueryInsert);
                 provenanceinsert = true;
             }
@@ -358,7 +362,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     public String getLimitOffset(int limit, int offset) {
-        return " " + queriesService.getLimit(String.valueOf(limit)) + " " + queriesService.getOffset(String.valueOf(offset));
+        return " " + constantService.getLimit(String.valueOf(limit)) + " " + constantService.getOffset(String.valueOf(offset));
     }
 
     /*

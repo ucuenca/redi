@@ -20,13 +20,12 @@ import org.openrdf.model.vocabulary.FOAF;
  */
 public class Queries implements QueriesService {
 
-    private String insertData = "INSERT DATA { GRAPH <";
-    private String endpointString = "> { <http://ucuenca.edu.ec/wkhuska/endpoint/";
+    private final Constant con = new Constant();
 
     @Override
     public String getAuthorsQuery(String datagraph) {
-        return "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
-                + "SELECT DISTINCT ?s WHERE { GRAPH <" + datagraph + "> { ?s rdf:type foaf:Person }}";
+        return con.PREFIX
+                + "SELECT DISTINCT ?s WHERE {" + con.getGraphString(datagraph) + "{ ?s rdf:type foaf:Person }}";
     }
 
     @Override
@@ -42,7 +41,7 @@ public class Queries implements QueriesService {
      */
     @Override
     public String getInsertDataLiteralQuery(String... varargs) {
-        String graphSentence = "GRAPH <" + varargs[0] + ">";
+        String graphSentence = con.getGraphString(varargs[0]);
         String subjectSentence = "<" + varargs[1] + ">";
         String object = null;
         if (varargs[3].contains("^^")) {
@@ -51,7 +50,7 @@ public class Queries implements QueriesService {
             object = "\"" + StringEscapeUtils.escapeJava(varargs[3].substring(1, varargs[3].length() - 1)) + "\"" + (varargs.length > 4 ? varargs[4] != null ? "^^xsd:" + varargs[4] : "^^xsd:string" : "");
         }
 
-        return "INSERT DATA { " + graphSentence + "  { " + subjectSentence + " <" + varargs[2] + "> " + object + " }}";
+        return con.INSERTDATA + graphSentence + "  { " + subjectSentence + " <" + varargs[2] + "> " + object + " }}";
 
     }
 
@@ -63,9 +62,9 @@ public class Queries implements QueriesService {
      */
     @Override
     public String getInsertDataUriQuery(String... varargs) {
-        String graphSentence = "GRAPH <" + varargs[0] + ">";
+        String graphSentence = con.getGraphString(varargs[0]);
         String subjectSentence = "<" + varargs[1] + ">";
-        return "INSERT DATA { " + graphSentence + " { " + subjectSentence + " <" + varargs[2] + "> <" + varargs[3] + "> }}";
+        return con.INSERTDATA + graphSentence + " " + "{ " + subjectSentence + " <" + varargs[2] + "> <" + varargs[3] + "> }}";
 
     }
 
@@ -111,86 +110,57 @@ public class Queries implements QueriesService {
      */
     @Override
     public String getAskResourcePropertieQuery(String graph, String resource, String propertie) {
-        return "ASK FROM <" + graph + "> {  <" + resource + ">  <" + propertie + "> ?o }";
+        return "ASK FROM <" + graph + "> {  <" + resource + ">    <" + propertie + "> ?o }";
     }
 
     @Override
-    public String getEndpointStatusQuery(String endpointsGraph, String status, String resourceHash) {
-        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/resource/status>  '" + status + "' }}";
+    public String getEndpointDataQuery(String... arg) {
+        String endpointsGraph = arg[0];
+        String parameter = arg[1];
+        String newValue = arg[2]; 
+        String resourceHash = arg[3];
+        String type = arg[4];
+        boolean condition = "url".equals(parameter) || "graph".equals(parameter);
+        if (condition){
+            return con.INSERTDATA + con.getGraphString(endpointsGraph) + "{<" + con.ENDPOINTPREFIX + resourceHash + ">  <" + con.CENTRALGRAPHPREFIX + parameter + ">  <" + newValue + "> }}";
+        } else {
+            return con.INSERTDATA + con.getGraphString(endpointsGraph) + "{<" + con.ENDPOINTPREFIX + resourceHash + ">  <" + con.CENTRALGRAPHPREFIX + parameter + ">  '" + newValue + "'^^xsd:" + type + " }} ";
+        }
     }
-
-    @Override
-    public String getEndpointNameQuery(String endpointsGraph, String name, String resourceHash) {
-        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/resource/name>  \"" + name + "\" }}";
-    }
-
-    @Override
-    public String getEndpointUrlQuery(String endpointsGraph, String url, String resourceHash) {
-        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/resource/url>  <" + url + "> }}";
-    }
-
-    @Override
-    public String getEndpointGraphQuery(String endpointsGraph, String graphUri, String resourceHash) {
-        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/resource/graph>  <" + graphUri + "> }}";
-    }
-
-    @Override
-    public String getEndpointFullNameQuery(String endpointsGraph, String fullName, String resourceHash) {
-        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/resource/fullName>  \"" + fullName + "\" }}";
-    }
-
-    @Override
-    public String getEndpointCityQuery(String endpointsGraph, String city, String resourceHash) {
-        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/resource/city>  \"" + city + "\" }}";
-    }
-
-    @Override
-    public String getEndpointProvinceQuery(String endpointsGraph, String province, String resourceHash) {
-        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/resource/province>  \"" + province + "\"}}";
-    }
-
-    @Override
-    public String getEndpointLatitudeQuery(String endpointsGraph, String latitude, String resourceHash) {
-        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/resource/latitude>  \"" + latitude + "\"}}";
-    }
-
-    @Override
-    public String getEndpointLongitudeQuery(String endpointsGraph, String longitude, String resourceHash) {
-        return insertData + endpointsGraph + endpointString + resourceHash + ">  <http://ucuenca.edu.ec/resource/longitude>  \"" + longitude + "\"}}";
-    }
-
+    
     @Override
     public String getlisEndpointsQuery(String endpointsGraph) {
+        String id = " ?id ";
         return "SELECT DISTINCT ?id ?status ?name ?url ?graph ?fullName ?city ?province ?latitude ?longitude  WHERE {  "
                 + " GRAPH <" + endpointsGraph + ">"
                 + " {"
-                + " ?id <http://ucuenca.edu.ec/resource/status> ?status ."
-                + " ?id <http://ucuenca.edu.ec/resource/name> ?name ."
-                + " ?id <http://ucuenca.edu.ec/resource/url> ?url."
-                + " ?id <http://ucuenca.edu.ec/resource/graph> ?graph."
-                + " ?id <http://ucuenca.edu.ec/resource/fullName> ?fullName."
-                + " ?id <http://ucuenca.edu.ec/resource/city> ?city."
-                + " ?id <http://ucuenca.edu.ec/resource/province> ?province."
-                + " ?id <http://ucuenca.edu.ec/resource/latitude> ?latitude."
-                + " ?id <http://ucuenca.edu.ec/resource/longitude> ?longitude."
-                + " }"
-                + " }";
+                + id + con.uc("status") + " ?status."
+                + id + con.uc("name") + " ?name ."
+                + id + con.uc("url") + " ?url."
+                + id + con.uc("graph") + " ?graph."
+                + id + con.uc("fullName") + " ?fullName."
+                + id + con.uc("city") + " ?city."
+                + id + con.uc("province") + " ?province."
+                + id + con.uc("latitude") + " ?latitude."
+                + id + con.uc("longitude") + " ?longitude."
+                + "}}";
     }
 
     @Override
     public String getEndpointByIdQuery(String endpointsGraph, String id) {
+        String idc = " ?id ";
         return "SELECT DISTINCT ?id ?status ?name ?url ?graph ?fullName ?city ?province ?latitude ?longitude  WHERE {  "
-                + " GRAPH <" + endpointsGraph + ">"
+                + con.getGraphString(endpointsGraph)
                 + " {"
-                + " ?id <http://ucuenca.edu.ec/resource/status> ?status ."
-                + " ?id <http://ucuenca.edu.ec/resource/name> ?name ."
-                + " ?id <http://ucuenca.edu.ec/resource/url> ?url."
-                + " ?id <http://ucuenca.edu.ec/resource/graph> ?graph."
-                + " ?id <http://ucuenca.edu.ec/resource/fullName> ?fullName."
-                + " ?id <http://ucuenca.edu.ec/resource/city> ?city."
-                + " ?id <http://ucuenca.edu.ec/resource/province> ?province."
-                + " ?id <http://ucuenca.edu.ec/resource/latitude> ?latitude."
-                + " ?id <http://ucuenca.edu.ec/resource/longitude> ?longitude."
+                + idc + con.uc("status") + " ?status."
+                + idc + con.uc("name") + " ?name ."
+                + idc + con.uc("url") + " ?url."
+                + idc + con.uc("graph") + " ?graph."
+                + idc + con.uc("fullName") + " ?fullName."
+                + idc + con.uc("city") + " ?city."
+                + idc + con.uc("province") + " ?province."
+                + idc + con.uc("latitude") + " ?latitude."
+                + idc + con.uc("longitude") + " ?longitude."
                 + " FILTER(?id = <" + id + ">)"
                 + " }"
                 + " }";
@@ -202,7 +172,7 @@ public class Queries implements QueriesService {
         return "DELETE { ?id ?p ?o } "
                 + "WHERE"
                 + " { "
-                + " GRAPH <" + endpointsGraph + ">"
+                + con.getGraphString(endpointsGraph)
                 + " { "
                 + " ?id ?p ?o . "
                 + " FILTER(?id = <" + id + ">) "
@@ -212,52 +182,32 @@ public class Queries implements QueriesService {
 
     @Override
     public String getEndpointUpdateStatusQuery(String... args) {
-        return " DELETE{ graph <" + args[0] + "> "
-                + " { <" + args[1] + "> <http://ucuenca.edu.ec/resource/status> '" + args[2] + "'"
+        String estatus = con.uc("status");
+        return " DELETE{ " + con.getGraphString(args[0])
+                + " { <" + args[1] + "> " + estatus + " '" + args[2] + "'"
                 + "}}"
                 + "INSERT"
-                + "{    graph <" + args[0] + ">  {"
-                + "         <" + args[1] + "> <http://ucuenca.edu.ec/resource/status> '" + args[3] + "'"
+                + "{    " + con.getGraphString(args[0]) + "  {"
+                + "         <" + args[1] + "> " + estatus + " '" + args[3] + "'"
                 + "}    }"
                 + "WHERE"
                 + "{"
-                + "     graph <" + args[0] + ">  {"
-                + "         <" + args[1] + "> <http://ucuenca.edu.ec/resource/status> '" + args[2] + "'"
+                + "   " + con.getGraphString(args[0]) + "  {"
+                + "         <" + args[1] + "> " + estatus + " '" + args[2] + "'"
                 + "}} ";
     }
 
     @Override
-    public String getWkhuskaGraph() {
-        return "http://ucuenca.edu.ec/wkhuska";
-    }
-
-    @Override
     public String getCountPersonQuery(String graph) {
-        return " PREFIX foaf: <http://xmlns.com/foaf/0.1/> PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "
-                + " SELECT (COUNT(?s) as ?count) WHERE { GRAPH <" + graph + "> { ?s rdf:type foaf:Person. }}";
-    }
-
-    @Override
-    public String getLimit(String limit) {
-        return " Limit " + limit;
-    }
-
-    @Override
-    public String getOffset(String offset) {
-        return " offset " + offset;
-    }
-
-    @Override
-    public String getProvenanceProperty() {
-        return "http://purl.org/dc/terms/provenance";
+        return con.PREFIX
+                + " SELECT (COUNT(?s) as ?count) WHERE { " + con.getGraphString(graph) + " { ?s rdf:type foaf:Person. }}";
     }
 
     @Override
     public String getAuthorsDataQuery(String graph) {
-        return " PREFIX foaf: <" + FOAF.NAMESPACE + "> "
-                + " PREFIX dct: <http://purl.org/dc/terms/> "
+        return con.PREFIX
                 + " SELECT * "
-                + " WHERE { GRAPH <" + graph + "> { "
+                + " WHERE { " + con.getGraphString(graph) + " { "
                 + " ?subject a foaf:Person. "
                 + " ?subject foaf:name ?name."
                 + " ?subject foaf:firstName ?fname. "
@@ -293,16 +243,14 @@ public class Queries implements QueriesService {
      */
     @Override
     public String getAskQuery(String... varargs) {
-
-        String graphSentence = "GRAPH <" + varargs[0] + ">";
-
+        String graphSentence = con.getGraphString(varargs[0]);
         return "ASK { " + graphSentence + "{ <" + varargs[1] + "> <" + varargs[2] + "> <" + varargs[3] + "> } }";
     }
 
     @Override
     public String getPublicationsQuery(String providerGraph) {
         return " SELECT DISTINCT ?authorResource ?pubproperty ?publicationResource WHERE { "
-                + " graph  <" + providerGraph + "> "
+                + con.getGraphString(providerGraph)
                 + " {  "
                 + " ?authorResource owl:sameAs   ?authorNative. "
                 + " ?authorNative ?pubproperty ?publicationResource. "
@@ -315,7 +263,7 @@ public class Queries implements QueriesService {
     @Override
     public String getPublicationsMAQuery(String providerGraph) {
         return " SELECT DISTINCT ?authorResource ?pubproperty ?publicationResource WHERE { "
-                + " graph <" + providerGraph + "> "
+                + con.getGraphString(providerGraph)
                 + " {  "
                 + " ?authorResource owl:sameAs   ?authorNative. "
                 + " ?authorNative ?pubproperty ?publicationResource. "
@@ -326,10 +274,9 @@ public class Queries implements QueriesService {
 
     @Override
     public String getPublicationsPropertiesQuery(String providerGraph, String publicationResource) {
-        return "PREFIX owl: <http://www.w3.org/2002/07/owl#> "
-                + " PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
+        return con.PREFIX
                 + " SELECT DISTINCT ?publicationProperties ?publicationPropertyValue WHERE { "
-                + " graph <" + providerGraph + "> "
+                + con.getGraphString(providerGraph)
                 + " {"
                 + " <" + publicationResource + ">  ?publicationProperties ?publicationPropertyValue. "
                 + " } }"
@@ -339,14 +286,14 @@ public class Queries implements QueriesService {
     @Override
     public String getMembersQuery() {
         return "SELECT DISTINCT ?members"
-                + " WHERE { ?x <http://xmlns.com/foaf/0.1/member> ?members. } ";
+                + " WHERE { ?x " + con.foaf("member") + " ?members. } ";
     }
 
     @Override
     public String getPublicationFromProviderQuery() {
         return "SELECT DISTINCT ?authorResource ?publicationProperty  ?publicationResource "
-                + " WHERE {  ?authorResource <http://www.w3.org/2002/07/owl#sameAs> ?authorOtherResource. "
-                + " ?authorOtherResource <http://dblp.uni-trier.de/rdf/schema-2015-01-26#authorOf> ?publicationResource. "
+                + " WHERE {  ?authorResource " + con.owl("sameAs") + " ?authorOtherResource. "
+                + " ?authorOtherResource " + con.dblp("authorOf") + " ?publicationResource. "
                 + " ?authorOtherResource ?publicationProperty ?publicationResource. }";
     }
 
@@ -360,20 +307,20 @@ public class Queries implements QueriesService {
     @Override
     public String getPublicationFromMAProviderQuery() {
         return "SELECT DISTINCT ?authorResource  ?publicationResource "
-                + " WHERE {  ?authorResource <http://xmlns.com/foaf/0.1/publications> ?publicationResource}";
+                + " WHERE {  ?authorResource " + con.foaf("publications") + " ?publicationResource}";
     }
 
     @Override
     public String getPublicationPropertiesQuery() {
         return "SELECT DISTINCT ?publicationResource ?publicationProperties ?publicationPropertiesValue "
-                + " WHERE { ?authorResource <http://dblp.uni-trier.de/rdf/schema-2015-01-26#authorOf> ?publicationResource. ?publicationResource ?publicationProperties ?publicationPropertiesValue }";
+                + " WHERE { ?authorResource " + con.dblp("authorOf") + " ?publicationResource. ?publicationResource ?publicationProperties ?publicationPropertiesValue }";
 
     }
 
     @Override
     public String getPublicationMAPropertiesQuery() {
         return "SELECT DISTINCT ?publicationResource ?publicationProperties ?publicationPropertiesValue "
-                + " WHERE { ?authorResource <http://xmlns.com/foaf/0.1/publications> ?publicationResource. ?publicationResource ?publicationProperties ?publicationPropertiesValue }";
+                + " WHERE { ?authorResource " + con.foaf("publications") + " ?publicationResource. ?publicationResource ?publicationProperties ?publicationPropertiesValue }";
 
     }
 
@@ -389,8 +336,8 @@ public class Queries implements QueriesService {
         return "PREFIX mm: <http://marmotta.apache.org/vocabulary/sparql-functions#>"
                 + "SELECT DISTINCT  ?authorResource  ?pubproperty  ?publicationResource "
                 + "?title WHERE { "
-                + " graph   <" + varargs[0] + "> "
-                + " { <" + varargs[1] + "> <http://xmlns.com/foaf/0.1/publications> "
+                + con.getGraphString(varargs[0])
+                + " { <" + varargs[1] + "> " + con.foaf("publications")
                 + "?publicationResource.  ?publicationResource "
                 + "<" + varargs[2] + "> "
                 + "?title "
@@ -426,7 +373,7 @@ public class Queries implements QueriesService {
     public String getPublicationsTitleQuery(String providerGraph, String prefix) {
         return ""
                 + " SELECT DISTINCT ?authorResource ?pubproperty ?publicationResource ?title "
-                + "WHERE {  graph <" + providerGraph + ">  "
+                + "WHERE {" + con.getGraphString(providerGraph)
                 + "{   ?authorResource owl:sameAs   ?authorNative.  "
                 + "?authorNative ?pubproperty ?publicationResource.  "
                 + "?publicationResource <" + prefix + ">  ?title\n"
@@ -436,53 +383,49 @@ public class Queries implements QueriesService {
 
     @Override
     public String getPublicationsCount(String graph) {
-        return "SELECT  (COUNT(distinct ?publicationResource) AS ?total)WHERE { \n"
-                + "                 graph  <" + graph + "> \n"
-                + "                 {  \n"
-                + "                 ?authorResource owl:sameAs   ?authorNative. \n"
-                + "                 ?authorNative ?pubproperty ?publicationResource. \n"
-                + "                 \n"
+        return "SELECT  (COUNT(distinct ?publicationResource) AS ?total)WHERE {"
+                + con.getGraphString(graph)
+                + "                 {  "
+                + "                 ?authorResource owl:sameAs   ?authorNative. "
+                + "                 ?authorNative ?pubproperty ?publicationResource. "
                 + "                 }}";
     }
 
     @Override
     public String getPublicationsCountCentralGraph() {
-        return "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
-                + "               SELECT   (COUNT(distinct ?authorNative) as ?total) WHERE { \n"
-                + "                                 graph  <http://ucuenca.edu.ec/wkhuska> \n"
-                + "                                {  \n"
-                + "                                 ?authorResource foaf:publications  ?authorNative\n"
-                + "                                \n"
+        return con.PREFIX
+                + "               SELECT   (COUNT(distinct ?authorNative) as ?total) WHERE { "
+                + con.getGraphString(con.getWkhuskaGraph())
+                + "                                {  "
+                + "                                 ?authorResource foaf:publications  ?authorNative"
                 + "                                 }}";
     }
 
     @Override
     public String getTotalAuthorWithPublications(String graph) {
-
-        return "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
-                + "SELECT   (COUNT(distinct ?authorResource) as ?total) WHERE { \n"
-                + "                 graph  <http://ucuenca.edu.ec/wkhuska> \n"
-                + "                 {  \n"
-                + "                 ?authorResource foaf:publications  ?authorNative\n"
-                + "                 \n"
+        return con.PREFIX
+                + "SELECT   (COUNT(distinct ?authorResource) as ?total) WHERE { "
+                + con.getGraphString(con.getWkhuskaGraph())
+                + "                 { "
+                + "                 ?authorResource foaf:publications  ?authorNative "
                 + "                 }}";
     }
 
     @Override
     public String deleteDataGraph(String graph) {
-        return "DELETE  { \n"
-                + "   ?s ?p ?o } \n"
-                + "where\n"
-                + "{\n"
-                + "graph <" + graph + "> {\n"
-                + "  ?s ?p ?o }\n"
+        return "DELETE  { "
+                + "   ?s ?p ?o } "
+                + "where "
+                + "{"
+                + con.getGraphString(graph) 
+                + " {"
+                + "  ?s ?p ?o }"
                 + "}";
     }
-
+    
     @Override
     public String getTitlePublications(String graph) {
-        return "PREFIX dct: <http://purl.org/dc/terms/> "
-                + "PREFIX foaf: <" + FOAF.NAMESPACE + "> "
+        return con.PREFIX
                 + "SELECT *  WHERE { graph <" + graph + "> "
                 + "  {?authorResource foaf:publications  ?publicationResource.\n"
                 + "   ?publicationResource dct:title ?title\n"
@@ -514,10 +457,7 @@ public class Queries implements QueriesService {
 
     @Override
     public String getAuthorPublicationFilter(String graph, String fname, String lname) {
-        return "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
-                + "PREFIX dct: <http://purl.org/dc/terms/> "
-                + "PREFIX mm: <http://marmotta.apache.org/vocabulary/sparql-functions#> "
-                + "              "
+        return con.PREFIX
                 + "                SELECT distinct ?authorResource  ?publicationResource ?title  WHERE { "
                 + "graph <" + graph + ">\n"
                 + "                  { \n"
@@ -531,5 +471,4 @@ public class Queries implements QueriesService {
                 + "                   }}}";
 
     }
-
 }
