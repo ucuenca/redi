@@ -98,14 +98,14 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" style="padding-top: 1px;" href="#/"><img style="height: 50px" src='wkhome/images/logo_wk.png'  alt="Research Together :  Investiguemos Juntos"></a>
+                    <a ng-controller="translate" ng-click="refreshLang()" class="navbar-brand" style="padding-top: 1px;" href="#/{{lang}}/"><img style="height: 50px" src='wkhome/images/logo_wk.png'  alt="Research Together :  Investiguemos Juntos"></a>
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav" ng-controller="mainBar">
-                        <li ><a href="#/{{lang}}/">{{'home' | translate}}<span class="sr-only">(current)</span></a></li>
-                        <li><a href="#/{{lang}}/info/about">{{'about' | translate}}</a></li>
-                        <li><a href="#/{{lang}}/info/help">{{'help' | translate}}</a></li>
-                        <li><a href="#/{{lang}}/info/contact">{{'contact' | translate}}</a></li>
+                    <ul class="nav navbar-nav" ng-controller="translate">
+                        <li><a ng-click="refreshLang()" href="#/{{lang}}/">{{'home' | translate}}<span class="sr-only">(current)</span></a></li>
+                        <li><a ng-click="refreshLang()" href="#/{{lang}}/info/about">{{'about' | translate}}</a></li>
+                        <li><a ng-click="refreshLang()" href="#/{{lang}}/info/help">{{'help' | translate}}</a></li>
+                        <li><a ng-click="refreshLang()" href="#/{{lang}}/info/contact">{{'contact' | translate}}</a></li>
                         <!--     <li><a href="geo-views/sources.html">Map</a></li> -->
 
 

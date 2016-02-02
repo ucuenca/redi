@@ -1317,9 +1317,14 @@ wkhomeControllers.controller('translate', ['$translate','$routeParams', '$scope'
             $scope.lang = globalData.language;
             if($routeParams.lang === 'es' && value == 'en'){
                 $window.location.hash = $window.location.hash.replace('/es/', '/en/');
-            } else {
+            } 
+            if($routeParams.lang === 'en' && value == 'es'){
                 $window.location.hash = $window.location.hash.replace('/en/', '/es/');
             }
+        };
+        
+        $scope.refreshLang = function () {
+            $scope.lang = $routeParams.lang;
         };
         
 //        $scope.$watch('globalData.language', function () {
