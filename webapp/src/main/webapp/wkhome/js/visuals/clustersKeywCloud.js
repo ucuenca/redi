@@ -5,8 +5,8 @@ var clusterKeywCloud = angular.module('clusterKeywCloud', []);
 clusterKeywCloud.factory('d3', function () {
     return	d3;
 });
-clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery',
-    function (d3, globalData, sparqlQuery) {
+clusterKeywCloud.directive('clusterKeywCloud', ['$routeParams', "d3", 'globalData', 'sparqlQuery',
+    function ($routeParams, d3, globalData, sparqlQuery) {
 
         var chart, clear, click, collide, collisionPadding, connectEvents, data, force, gravity, hashchange, height, idValue, jitter, label, margin, maxRadius, minCollisionRadius, mouseout, mouseover, node, rScale, rValue, textValue, tick, transformData, update, updateActive, updateLabels, updateNodes, width;
         var scope;
@@ -96,7 +96,7 @@ clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery
             });
             node.exit().remove();
             return node.enter().append("a").attr("class", "gbubble-node").attr("xlink:href", function (d) {
-                return "#" + (encodeURIComponent(idValue(d)));
+                return "#/" + $routeParams.lang + "/w/clusters?" + (encodeURIComponent(idValue(d)));
             }).call(force.drag).call(connectEvents).append("circle").attr("id", "gcircle").attr("r", function (d) {
                 return rScale(rValue(d));
             });
@@ -108,7 +108,7 @@ clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery
             });
             label.exit().remove();
             labelEnter = label.enter().append("a").attr("class", "gbubble-label").attr("href", function (d) {
-                return "#" + (encodeURIComponent(idValue(d)));
+                return "#/" + $routeParams.lang + "/w/clusters?" + (encodeURIComponent(idValue(d)));
             }).call(force.drag).call(connectEvents);
             labelEnter.append("div").attr("class", "gbubble-label-name").text(function (d) {
                 return textValue(d);
@@ -197,7 +197,12 @@ clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery
                 headbar.find('title').text("ddddddtitletitle");
                 headbar.html('');
                 var div = $('<div>');
-                var label = $('<span class="label label-primary" style="font-size:35px">').text("AUTHORS OF CLUSTER " + d.label);
+                var label;
+                if ($routeParams.lang === "es"){
+                    label = $('<span class="label label-primary" style="font-size:35px">').text("AUTORES DEL CLUSTER " + d.label);
+                } else {
+                    label = $('<span class="label label-primary" style="font-size:35px">').text("AUTHORS OF CLUSTER " + d.label);
+                }
                 div.append(label);
                 div.append("</br>");
                 headbar.append(div);
@@ -369,7 +374,7 @@ clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery
                         //	Update	the	chart
 
                         var data = scope.data;
-                        if (data) {
+                        if (data && data.data !== null) {
                             var jsonld = data.data;
                             var schema = data.schema;
                             var fields = schema.fields;
