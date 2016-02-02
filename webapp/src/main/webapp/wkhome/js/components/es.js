@@ -26,7 +26,7 @@ myApp.labels_es = {
 "Group By Keyword": "Agrupar por Keyword",
 "Map View": "Mapa",
 "Clustering by Research Area": "Cluster de Areas de Investigacion",
-"Clusters by Keyword": "Cluster por Keyword",
+"Clusters by Keyword": "Clusters por Keyword",
 
 
 
@@ -49,6 +49,9 @@ myApp.labels_es = {
 "Grouping Publications": "Agrupando Publicaciones por Autores o Areas de Investigacion",
 "Group by":"Agrupar Por",
 "Select Research Area":"Seleccione el Area de Investigacion",
+//"All" - from cloud cluster view
+"Author":"Autor",
+"Source":"Fuente",
 
 // MAP VIEW
 "Research Area":"Area de Investigacion",
@@ -66,10 +69,15 @@ myApp.labels_es = {
 
 //CLOUD CLUSTER VIEW
 "Clustering Publications":"Clustering de Publicaciones",
+"All":"Todos",
+"Area":"Area",
 //"Group by" - from GROUP BY VIEW
 
 //KEYWORDS CLOUD VIEW
 "Total of Publications found" : "NUMERO DE PUBLICACIONES ENCONTRADAS",
+
+//CLUSTERS BY KEYWORD
+"Total of Authors found" : "Total de Autores encontrados"
 
 };
 }());

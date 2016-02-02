@@ -1174,6 +1174,11 @@ wkhomeControllers.controller('clusterTagsController', ['$scope', 'globalData', '
 wkhomeControllers.controller('kwCloudClusterController', ['$routeParams','$scope', '$window', 'sparqlQuery', 'searchData', 'globalData',
     function ($routeParams, $scope, $window, sparqlQuery, searchData, globalData) {
 
+        searchData.genericData = null;//Para que no aparezcan los datos anteriores y se grafique 2 veces
+        $('html,body').animate({
+            scrollTop: $("#scrollToTop").offset().top
+        }, "1");
+        
         $scope.ifClick = function (value)
         {
             searchData.genericData = value;
@@ -1310,8 +1315,13 @@ wkhomeControllers.controller('translate', ['$translate','$routeParams', '$scope'
         $scope.setLanguage = function (value) {
             globalData.language = value;
             $scope.lang = globalData.language;
+            if($routeParams.lang === 'es' && value == 'en'){
+                $window.location.hash = $window.location.hash.replace('/es/', '/en/');
+            } else {
+                $window.location.hash = $window.location.hash.replace('/en/', '/es/');
+            }
         };
-
+        
 //        $scope.$watch('globalData.language', function () {
 //            translateService.query({data: globalData.language}, function (data) {
 //                globalData.translateData = data;
