@@ -46,7 +46,7 @@ import java.util.regex.Pattern;
 public class DBLPResourceRawProvider extends AbstractHttpProvider {
 
 	public static final String NAME = "DBLP Resource Raw Provider";
-    public static final String PATTERN = "(http://dblp\\.org/rec/)(.*)";
+    public static final String PATTERN = "(http://dblp\\.dagstuhl\\.de\\.de/rec/)(.*)";
     public static final String LEGACY_PATTERN = "(http://dblp\\.uni\\-trier\\.de/rec/)(.*)";
 
     private static Logger log = LoggerFactory.getLogger(DBLPResourceRawProvider.class);
@@ -85,7 +85,7 @@ public class DBLPResourceRawProvider extends AbstractHttpProvider {
      */
     @Override
     public List<String> buildRequestUrl(String resource, Endpoint endpoint) {
-    	String uri = "http://dblp.org/rec/rdf/";
+    	String uri = "http://dblp.dagstuhl.de/rec/rdf/";
     	Matcher m = Pattern.compile(LEGACY_PATTERN).matcher(resource);
     	if(!m.find()) {
     		m = Pattern.compile(PATTERN).matcher(resource);

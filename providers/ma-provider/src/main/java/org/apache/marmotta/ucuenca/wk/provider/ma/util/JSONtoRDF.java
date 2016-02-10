@@ -110,7 +110,7 @@ public class JSONtoRDF {
         switch (key) {
             case "entity::property:uri":
                 model.add(factory.createStatement(factory.createURI(resource),
-                        factory.createURI(schema.get(key)), factory.createLiteral("http://academic.research.microsoft.com/Publication/" + json.get("id").getAsString() + "/")));
+                        factory.createURI(schema.get(key)), factory.createURI("http://academic.research.microsoft.com/Publication/" + json.get("id").getAsString() + "/")));
                 break;
             case "entity::property:quote":
                 JsonArray aux = json.get("keyWord").getAsJsonArray();

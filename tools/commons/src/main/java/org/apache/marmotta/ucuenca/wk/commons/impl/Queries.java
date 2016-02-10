@@ -117,17 +117,17 @@ public class Queries implements QueriesService {
     public String getEndpointDataQuery(String... arg) {
         String endpointsGraph = arg[0];
         String parameter = arg[1];
-        String newValue = arg[2]; 
+        String newValue = arg[2];
         String resourceHash = arg[3];
         String type = arg[4];
         boolean condition = "url".equals(parameter) || "graph".equals(parameter);
-        if (condition){
+        if (condition) {
             return con.INSERTDATA + con.getGraphString(endpointsGraph) + "{<" + con.ENDPOINTPREFIX + resourceHash + ">  <" + con.CENTRALGRAPHPREFIX + parameter + ">  <" + newValue + "> }}";
         } else {
             return con.INSERTDATA + con.getGraphString(endpointsGraph) + "{<" + con.ENDPOINTPREFIX + resourceHash + ">  <" + con.CENTRALGRAPHPREFIX + parameter + ">  '" + newValue + "'^^xsd:" + type + " }} ";
         }
     }
-    
+
     @Override
     public String getlisEndpointsQuery(String endpointsGraph) {
         String id = " ?id ";
@@ -355,7 +355,7 @@ public class Queries implements QueriesService {
                 + "owl:sameAs   ?authorNative.  ?authorNative ?pubproperty ?publicationResource.  "
                 + "?publicationResource <" + varargs[2] + ">  ?title\n"
                 + "\n"
-                + " { FILTER( query:fulltext-query(str(?title),\"" + varargs[3] + "\")) }                                                                                       }} ";
+                + "}} ";
     }
 
     @Override
@@ -417,12 +417,12 @@ public class Queries implements QueriesService {
                 + "   ?s ?p ?o } "
                 + "where "
                 + "{"
-                + con.getGraphString(graph) 
+                + con.getGraphString(graph)
                 + " {"
                 + "  ?s ?p ?o }"
                 + "}";
     }
-    
+
     @Override
     public String getTitlePublications(String graph) {
         return con.PREFIX

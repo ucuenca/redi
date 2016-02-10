@@ -145,7 +145,7 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
                         totalPublicationsProcess += 1;
                         String authorResource = pubresource.get("authorResource").stringValue();
                         String publicationResource = pubresource.get("publicationResource").stringValue();
-                        String publicationTitleCleaned = cleanPublicationTitle(pubresource.get("title").stringValue());
+                        String publicationTitleCleaned = cleanStringUri(pubresource.get("title").stringValue());
                         String publicationTitle = pubresource.get("title").stringValue();
                         String publicationProperty = pubVocabService.getPubProperty();
                         totalPublications += 1;
@@ -172,7 +172,7 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
                             String authorResourceBuilding = searchAuthorOfpublication(resultPublicationsAuthorOfProvider, authorResource, newUriAuthorCentral);
                             String authorResourceCentral = authorResourceBuilding == null ? newUriAuthorCentral : authorResourceBuilding;
                             for (Map<String, Value> publicacion : resultPublicationsAuthor) {
-                                if (compareTitlePublicationWithSimmetrics(publicationTitleCleaned, cleanPublicationTitle(publicacion.get("title").stringValue()))) {
+                                if (compareTitlePublicationWithSimmetrics(publicationTitleCleaned, cleanStringUri(publicacion.get("title").stringValue()))) {
                                     flagPublicationAlreadyExist = true;
                                     bufferTitle = publicacion.get("publicationResource").stringValue();
                                     String insertPublicationPropertyQuery = buildInsertQuery(wkhuskaGraph, bufferTitle, "http://purl.org/dc/terms/contributor", authorResourceCentral);
@@ -332,10 +332,56 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
         return similarity > 0.9; // 0.8131
     }
 
-    public String cleanPublicationTitle(String title) {
-        return title.replaceAll("\"", "").replaceAll(" ", "_").replaceAll("\\{", "").replaceAll("}", "")
-                .replaceAll("<", "").replaceAll(">", "").replaceAll("\\\\", "").replaceAll("\\^", "").replaceAll("\\|", "");
+    public String cleanStringUri(String uri) {
+        String titleUri = "";
+        String dash = "-";
+        for (String token : uri.split(" ")) {
+            Pattern pat = Pattern.compile("[a-zA-Z0-9-]{2,100}");
+            Matcher mat = pat.matcher(token);
+            if (mat.matches()) {
+                if (titleUri.length() > 1) {
+                    titleUri += dash;
+                }
+                titleUri += token.toLowerCase();
+            }
+        }
+//        return title.replaceAll("\"", "").replaceAll(" ", "_").replaceAll("\\{", "").replaceAll("}", "")
+//                .replaceAll("<", "").replaceAll(">", "").replaceAll("\\\\", "").replaceAll("\\^", "").replaceAll("\\|", "");
+        return titleUri;
+    }
 
+    public String cleanStringUriAuthor(String uri) {
+        String aux = stripAccents(uri);
+        uri = aux;
+        String authorUri = "";
+        String dash = "-";
+        for (String token : uri.replaceAll(dash, dash).split(" ")) {
+            Pattern pat = Pattern.compile("[a-zA-Z0-9-ÑñáéíóúÁÉÍÓÚ]{1,100}");
+            Matcher mat = pat.matcher(token);
+            if (mat.matches()) {
+                if (authorUri.length() > 1) {
+                    authorUri += dash;
+                }
+                authorUri += token.toLowerCase();
+            }
+        }
+        return authorUri;
+    }
+
+    public static String stripAccents(String str) {
+        String ORIGINAL = "";
+        String REPLACEMENT = "";
+        if (str == null) {
+            return null;
+        }
+        char[] array = str.toCharArray();
+        for (int index = 0; index < array.length; index++) {
+            int pos = ORIGINAL.indexOf(array[index]);
+            if (pos > -1) {
+                array[index] = REPLACEMENT.charAt(pos);
+            }
+        }
+        return new String(array);
     }
 
     public String searchAuthorOfpublication(List<Map<String, Value>> publications, String authorNativeResource, String newUriAuthorCentral) {
@@ -349,7 +395,7 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
 
                 for (Map<String, Value> publicacionParam : publications) {
                     if (compareTitlePublicationWithSimmetrics(publicacionParam.get("title").stringValue(), title)) {
-                        String sameAsInsertQuery = buildInsertQuery(wkhuskaGraph, authorNativeResource, OWL.SAME_AS, newUriAuthorCentral);
+                        String sameAsInsertQuery = buildInsertQuery(wkhuskaGraph, newUriAuthorCentral, OWL.SAME_AS, authorNativeResource);
                         sparqlService.update(QueryLanguage.SPARQL, sameAsInsertQuery);
                         //log.info("publication that coinside between authors: 1:" + publicationResource + "2: " + publicacionParam + ", author: " + authorResource);
 
@@ -377,7 +423,8 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
             for (Map<String, Value> publicacion : resultAuthorName) {
                 String fisrtName = publicacion.get("fname").stringValue();
                 String lastName = publicacion.get("lname").stringValue();
-                String newuri = uriNewAuthor + fisrtName.replace(" ", "_") + "_" + lastName.replace(" ", "_");
+
+                String newuri = uriNewAuthor + cleanStringUriAuthor((fisrtName + " " + lastName).replace(".", ""));
                 String askTripletQuery = queriesService.getAskQuery(wkhuskaGraph, newuri, RDF.TYPE, FOAF.NAMESPACE + "Person");
                 boolean askNewAuthor = sparqlService.ask(QueryLanguage.SPARQL, askTripletQuery);
                 if (!askNewAuthor) {
