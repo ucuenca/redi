@@ -5,8 +5,8 @@ var pieChart = angular.module('cloudTag', []);
 pieChart.factory('d3', function () {
     return	d3;
 });
-pieChart.directive('cloudTag', ["d3", 'globalData', 'sparqlQuery',
-    function (d3, globalData, sparqlQuery) {
+pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery',
+    function ($routeParams, d3, globalData, sparqlQuery) {
 
         var chart, clear, click, collide, collisionPadding, connectEvents, data, force, gravity, hashchange, height, idValue, jitter, label, margin, maxRadius, minCollisionRadius, mouseout, mouseover, node, rScale, rValue, textValue, tick, transformData, update, updateActive, updateLabels, updateNodes, width;
         var scope;
@@ -178,13 +178,13 @@ pieChart.directive('cloudTag', ["d3", 'globalData', 'sparqlQuery',
 
             //adding information about publications of THIS keyword into "tree-node-info"   DIV
             var infoBar = $('div.tree-node-info');
-            var model = {"dcterms:title": {label: "Title", containerType: "div"},
+            var model = {"dct:title": {label: "Title", containerType: "div"},
                 "bibo:uri": {label: "URL", containerType: "a"},
-                "dcterms:contributor": {label: "Contributor", containerType: "a"},
-                "dcterms:isPartOf": {label: "Is Part Of", containerType: "a"},
-                "dcterms:license": {label: "License", containerType: "a"},
-                "dcterms:provenance": {label: "Source", containerType: "div"},
-                "dcterms:publisher": {label: "Publisher", containerType: "div"},
+                "dct:contributor": {label: "Contributor", containerType: "a"},
+                "dct:isPartOf": {label: "Is Part Of", containerType: "a"},
+                "dct:license": {label: "License", containerType: "a"},
+                "dct:provenance": {label: "Source", containerType: "div"},
+                "dct:publisher": {label: "Publisher", containerType: "div"},
                 "bibo:numPages": {label: "Pages", containerType: "div"}
             };
             if (infoBar) {
@@ -193,7 +193,12 @@ pieChart.directive('cloudTag', ["d3", 'globalData', 'sparqlQuery',
                 headbar.find('title').text("ddddddtitletitle");
                 headbar.html('');
                 var div = $('<div>');
-                var label = $('<span class="label label-primary" style="font-size:35px">').text("PUBLICATIONS CONTAINING THE KEYWORD: " + keyword);
+                var label;
+                if ($routeParams.lang === "es") {
+                    label= $('<span class="label label-primary" style="font-size:35px">').text("PUBLICACIONES QUE CONTIENEN LA KEYWORD: " + keyword);
+                } else {
+                    label= $('<span class="label label-primary" style="font-size:35px">').text("PUBLICATIONS CONTAINING THE KEYWORD: " + keyword);
+                }
                 div.append(label);
                 div.append("</br>");
                 headbar.append(div);

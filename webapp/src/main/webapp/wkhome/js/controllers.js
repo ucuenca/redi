@@ -710,8 +710,8 @@ wkhomeControllers.controller('exploreresearchArea', ['$routeParams','$scope', '$
         }, true);
     }]); // end exploreresearchArea
 
-wkhomeControllers.controller('SearchController', ['$scope', '$window', 'globalData', 'sparqlQuery', 'searchData',
-    function ($scope, $window, globalData, sparqlQuery, searchData) {
+wkhomeControllers.controller('SearchController', ['$routeParams','$scope', '$window', 'globalData', 'sparqlQuery', 'searchData',
+    function ($routeParams, $scope, $window, globalData, sparqlQuery, searchData) {
         //$scope.sparqlQuery = sparqlQuery;
         String.format = function () {
             // The string containing the format items (e.g. "{0}")
@@ -763,7 +763,7 @@ wkhomeControllers.controller('SearchController', ['$scope', '$window', 'globalDa
                         if (compacted["@graph"])
                         {
                             searchData.authorSearch = compacted;
-                            $window.location.hash = "w/search?" + $scope.searchText;
+                            $window.location.hash = "/" + $routeParams.lang + "/w/search?" + $scope.searchText;
                         }
                         else
                         {
@@ -1174,6 +1174,11 @@ wkhomeControllers.controller('clusterTagsController', ['$scope', 'globalData', '
 wkhomeControllers.controller('kwCloudClusterController', ['$routeParams','$scope', '$window', 'sparqlQuery', 'searchData', 'globalData',
     function ($routeParams, $scope, $window, sparqlQuery, searchData, globalData) {
 
+        searchData.genericData = null;//Para que no aparezcan los datos anteriores y se grafique 2 veces
+        $('html,body').animate({
+            scrollTop: $("#scrollToTop").offset().top
+        }, "1");
+        
         $scope.ifClick = function (value)
         {
             searchData.genericData = value;
@@ -1229,8 +1234,8 @@ wkhomeControllers.controller('kwCloudClusterController', ['$routeParams','$scope
         } // end if if (!searchData.allkeywordsCloud)     
     }]);
 
-wkhomeControllers.controller('clustersWithKeywordCloudController', ['$scope', '$window', 'sparqlQuery', 'searchData', 'globalData',
-    function ($scope, $window, sparqlQuery, searchData, globalData) {
+wkhomeControllers.controller('clustersWithKeywordCloudController', ['$routeParams', '$scope', '$window', 'sparqlQuery', 'searchData', 'globalData',
+    function ($routeParams, $scope, $window, sparqlQuery, searchData, globalData) {
         $scope.todos = [];
         $scope.ctrlFn = function (value)
         {
@@ -1286,12 +1291,12 @@ wkhomeControllers.controller('clustersWithKeywordCloudController', ['$scope', '$
                     + ' } '
                     + '}';
 
-            sparqlQuery.querySrv({'@id': getAuthorDataQuery}, function (rdf) {
+            sparqlQuery.querySrv({query: getAuthorDataQuery}, function (rdf) {
                 jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                     $scope.$apply(function () {
                         searchData.authorSearch = compacted;
                         //alert(author);
-                        $window.location.hash = "w/search?" + author;
+                        $window.location.hash = "/" + $routeParams.lang + "/w/search?" + author;
 
                     });
                 });
@@ -1310,8 +1315,18 @@ wkhomeControllers.controller('translate', ['$translate','$routeParams', '$scope'
         $scope.setLanguage = function (value) {
             globalData.language = value;
             $scope.lang = globalData.language;
+            if($routeParams.lang === 'es' && value == 'en'){
+                $window.location.hash = $window.location.hash.replace('/es/', '/en/');
+            } 
+            if($routeParams.lang === 'en' && value == 'es'){
+                $window.location.hash = $window.location.hash.replace('/en/', '/es/');
+            }
         };
-
+        
+        $scope.refreshLang = function () {
+            $scope.lang = $routeParams.lang;
+        };
+        
 //        $scope.$watch('globalData.language', function () {
 //            translateService.query({data: globalData.language}, function (data) {
 //                globalData.translateData = data;

@@ -5,8 +5,8 @@ var keywClusters = angular.module('keywClusters', []);
 keywClusters.factory('d3', function () {
     return	d3;
 });
-keywClusters.directive('keywClusters', ["d3", 'globalData', 'sparqlQuery',
-    function (d3, globalData, sparqlQuery) {
+keywClusters.directive('keywClusters', ['$routeParams', "d3", 'globalData', 'sparqlQuery',
+    function ($routeParams, d3, globalData, sparqlQuery) {
 
         var chart, clear, click, collide, collisionPadding, connectEvents, data, force, gravity, hashchange, height, idValue, jitter, label, margin, maxRadius, minCollisionRadius, mouseout, mouseover, node, rScale, rValue, textValue, tick, transformData, update, updateActive, updateLabels, updateNodes, width;
         var scope;
@@ -96,7 +96,7 @@ keywClusters.directive('keywClusters', ["d3", 'globalData', 'sparqlQuery',
             });
             node.exit().remove();
             return node.enter().append("a").attr("class", "bubble-node").attr("xlink:href", function (d) {
-                return "#" + (encodeURIComponent(idValue(d)));
+                return "#/" + $routeParams.lang + "/w/clusters?" + (encodeURIComponent(idValue(d)));
             }).call(force.drag).call(connectEvents).append("circle").attr("id", "kcircle").attr("r", function (d) {
                 return rScale(rValue(d));
             });
@@ -108,7 +108,7 @@ keywClusters.directive('keywClusters', ["d3", 'globalData', 'sparqlQuery',
             });
             label.exit().remove();
             labelEnter = label.enter().append("a").attr("class", "bubble-label").attr("href", function (d) {
-                return "#" + (encodeURIComponent(idValue(d)));
+                return "#/" + $routeParams.lang + "/w/clusters?" + (encodeURIComponent(idValue(d)));
             }).call(force.drag).call(connectEvents);
             labelEnter.append("div").attr("class", "bubble-label-name").text(function (d) {
                 return textValue(d);
@@ -175,16 +175,21 @@ keywClusters.directive('keywClusters', ["d3", 'globalData', 'sparqlQuery',
             return location.replace("#");
         };
         click = function (d) {
-
-
-            /**/
+            var title;
+            if ($routeParams.lang === "es"){
+                title = '"Clusters que contienen la keyword \'' + d.label + '\'"';
+            } else {
+                title = '"Clusters that contain \'' + d.label + '\' Keyword"';
+            }
             
             var sparqlquery = globalData.PREFIX
 
             +' Construct {'
 
             +' uc:resultTitle a uc:pagetitle.'
-            +' uc:resultTitle uc:viewtitle "Clusters that contain \'' + d.label + '\' Keyword".'
+            +' uc:resultTitle uc:viewtitle '
+            + title
+            + '.'
             +'  ?cluster rdfs:label "keyword". ?cluster uc:total ?totalpub.'
             +'} '
             +'WHERE'
