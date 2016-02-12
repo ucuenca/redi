@@ -66,9 +66,9 @@ public class DBLPURIMapper extends XPathValueMapper {
     			selectedValue.matches(DBLPAuthorProvider.PATTERN)) {
     		uri = (Value)factory.createURI(selectedValue.replaceAll("/pers/", "/pers/xr/"));
     	} else if( selectedValue.matches(DBLPResourceProvider.LEGACY_PATTERN) ) {
-    		uri = (Value)factory.createURI(selectedValue.replaceAll("http://dblp.uni-trier.de/rec/", "http://dblp.org/rec/rdf/"));
+    		uri = (Value)factory.createURI(selectedValue.replaceAll("http://dblp.uni-trier.de/rec/", "http://dblp.dagstuhl.de/rec/rdf/conf/agile/"));
     	} else if( selectedValue.matches(DBLPResourceProvider.PATTERN) ) {
-    		uri = (Value)factory.createURI(selectedValue.replaceAll("/rec/", "/rec/rdf/"));
+    		uri = (Value)factory.createURI(selectedValue.replaceAll("/rec/", "/rec/rdf/conf/agile/"));
     	} else if(nsEntity != null) {
     		uri = (Value)factory.createURI(nsEntity + selectedValue);
     	} else {

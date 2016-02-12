@@ -70,7 +70,7 @@ public class DBLPAuthorProvider extends AbstractXMLDataProvider implements DataP
     
     private static ConcurrentMap<String,String> dblpNamespaces = new ConcurrentHashMap<String, String>();
     static {
-        dblpNamespaces.put("dblp","http://dblp.uni-trier.de/rdf/schema-2015-01-26#" );
+        dblpNamespaces.put("dblp","http://dblp.dagstuhl.de/rdf/schema-2015-01-26#" );
         dblpNamespaces.put("rdf","http://www.w3.org/1999/02/22-rdf-syntax-ns#");
         dblpNamespaces.put("owl","http://www.w3.org/2002/07/owl#");
         dblpNamespaces.put("dcterms","http://purl.org/dc/terms/");
@@ -126,7 +126,7 @@ public class DBLPAuthorProvider extends AbstractXMLDataProvider implements DataP
      */
     @Override
     public List<String> buildRequestUrl(String resource, Endpoint endpoint) {
-    	String uri = "http://dblp.org/pers/xr/";
+    	String uri = "http://dblp.dagstuhl.de/pers/xr/";
     	Matcher m = Pattern.compile(LEGACY_PATTERN).matcher(resource);
     	if(m.find()) {
     		uri += m.group(2);

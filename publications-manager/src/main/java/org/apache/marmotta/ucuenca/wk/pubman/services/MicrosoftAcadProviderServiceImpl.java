@@ -17,17 +17,12 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.services;
 
-import info.aduna.iteration.Iterations;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
 import org.slf4j.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -48,25 +43,14 @@ import org.apache.marmotta.ucuenca.wk.pubman.api.MicrosoftAcadProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
 
 import org.apache.marmotta.ucuenca.wk.pubman.exceptions.PubException;
-import org.apache.commons.lang.StringEscapeUtils;
-
-import org.openrdf.model.Model;
-import org.openrdf.model.Statement;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
-import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
 import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.RDFWriter;
-import org.openrdf.rio.Rio;
 import org.openrdf.model.Value;
 import org.openrdf.query.UpdateExecutionException;
-import org.openrdf.query.impl.TupleQueryResultImpl;
 
 /**
  * Default Implementation of {@link PubVocabService} Get Data From MICROSOFT
@@ -260,22 +244,20 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                             boolean dataretrievee = false;
                             if (nameToFind != "" && !existNativeAuthor) {
                                 waitTime = 30;
-                                do {
-                                    try {
-                                        response = ldClient.retrieveResource(URL_TO_FIND_Microsoft);
-                                        dataretrievee = true;
-                                    } catch (DataRetrievalException e) {
-                                        log.error("Data Retrieval Exception: " + e);
-                                        log.info("Wating: " + waitTime + " seconds for new Microsoft Academics Query");
-                                        dataretrievee = false;
+                                try {
+                                    response = ldClient.retrieveResource(URL_TO_FIND_Microsoft);
+                                    dataretrievee = true;
+                                } catch (DataRetrievalException e) {
+                                    log.error("Data Retrieval Exception: " + e);
+                                    log.info("Wating: " + waitTime + " seconds for new Microsoft Academics Query");
+                                    dataretrievee = false;
 //                                        try {
 //                                            Thread.sleep(waitTime * 1000);               //1000 milliseconds is one second.
 //                                        } catch (InterruptedException ex) {
 //                                            Thread.currentThread().interrupt();
 //                                        }
-                                        waitTime += 5;
-                                    }
-                                } while (!dataretrievee && waitTime < 31);
+                                    waitTime += 5;
+                                }
 
                             }//end  if  nameToFind != ""
 
@@ -318,13 +300,12 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                                 authorNativeResource = URL_TO_FIND_Microsoft;
                                 existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(providerGraph, authorNativeResource));
 
-                                if (allMembers == 1 && existNativeAuthor) {
-                                    //insert sameAs triplet    <http://190.15.141.102:8080/dspace/contribuidor/autor/SaquicelaGalarza_VictorHugo> owl:sameAs <http://dblp.org/pers/xr/s/Saquicela:Victor> 
+                                if (existNativeAuthor) {
                                     String sameAsInsertQuery = buildInsertQuery(providerGraph, authorResource, "http://www.w3.org/2002/07/owl#sameAs", authorNativeResource);
                                     updatePub(sameAsInsertQuery);
                                 }
 
-                                if (!existNativeAuthor) {
+                                if (existNativeAuthor) {
                                     //SPARQL obtain all publications of author
                                     priorityToFind = 5;
                                     String getPublicationsFromProviderQuery = queriesService.getPublicationFromMAProviderQuery();
@@ -384,40 +365,28 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
     }
 
     public String priorityFindQueryBuilding(int priority, String firstName, String lastName) {
-        String[] fnamelname = {"", "", "", "", ""};
-        /**
-         * fnamelname[0] is a firstName A, fnamelname[1] is a firstName B
-         * fnamelname[2] is a lastName A, fnamelname[3] is a lastName B
-         *
-         */
+        try {
+            switch (priority) {
 
-        for (int i = 0; i < firstName.split(" ").length; i++) {
-            fnamelname[i] = firstName.split(" ")[i];
-        }
-
-        for (int i = 0; i < lastName.split(" ").length; i++) {
-            fnamelname[i + 2] = lastName.split(" ")[i];
-        }
-
-        switch (priority) {
-//            case 5:
-//                return fnamelname[3];
-            case 1:
-                return fnamelname[0] + "_" + fnamelname[2];
-            case 3:
-                return fnamelname[1] + "_" + fnamelname[2] + "_" + fnamelname[3];
-            case 2:
-                return fnamelname[0] + "_" + fnamelname[2] + "_" + fnamelname[3];
-            case 4:
-                return fnamelname[0] + "_" + fnamelname[1] + "_" + fnamelname[2] + "_" + fnamelname[3];
+                case 1:
+                    return firstName.replace(" ", "_") + "_" + lastName.replace(" ", "_");
+                case 2:
+                    return firstName.replace(" ", "_") + "_" + lastName.split(" ")[0];
+                case 3:
+                    return firstName.split(" ")[0] + "_" + lastName.replace(" ", "_");
+                case 4:
+                    return firstName.split(" ")[0] + "_" + lastName.split(" ")[0];
+            }
+        } catch (Exception e) {
+            log.error("ERRRO WITH MANES: " + firstName + "_" + lastName);
         }
         return "";
     }
-
     /*
      *   UPDATE - with SPARQL MODULE, to load triplet in marmotta plataform
      *   
      */
+
     public String updatePub(String querytoUpdate) {
 
         try {
