@@ -171,6 +171,15 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
                             boolean flagPublicationAlreadyExist = false;
                             String authorResourceBuilding = searchAuthorOfpublication(resultPublicationsAuthorOfProvider, authorResource, newUriAuthorCentral);
                             String authorResourceCentral = authorResourceBuilding == null ? newUriAuthorCentral : authorResourceBuilding;
+                            String sameAsInsertQuery = buildInsertQuery(wkhuskaGraph, newUriAuthorCentral, OWL.SAME_AS, authorResource);
+                            try {
+                                sparqlService.update(QueryLanguage.SPARQL, sameAsInsertQuery);
+                            } catch (MalformedQueryException ex) {
+                                java.util.logging.Logger.getLogger(Data2GlobalGraphImpl.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (UpdateExecutionException ex) {
+                                java.util.logging.Logger.getLogger(Data2GlobalGraphImpl.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+
                             for (Map<String, Value> publicacion : resultPublicationsAuthor) {
                                 if (compareTitlePublicationWithSimmetrics(publicationTitleCleaned, cleanStringUri(publicacion.get("title").stringValue()))) {
                                     flagPublicationAlreadyExist = true;
@@ -395,8 +404,6 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
 
                 for (Map<String, Value> publicacionParam : publications) {
                     if (compareTitlePublicationWithSimmetrics(publicacionParam.get("title").stringValue(), title)) {
-                        String sameAsInsertQuery = buildInsertQuery(wkhuskaGraph, newUriAuthorCentral, OWL.SAME_AS, authorNativeResource);
-                        sparqlService.update(QueryLanguage.SPARQL, sameAsInsertQuery);
                         //log.info("publication that coinside between authors: 1:" + publicationResource + "2: " + publicacionParam + ", author: " + authorResource);
 
                         return authorResource;
@@ -407,10 +414,6 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
         } catch (MarmottaException ex) {
             java.util.logging.Logger.getLogger(Data2GlobalGraphImpl.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InvalidArgumentException ex) {
-            java.util.logging.Logger.getLogger(Data2GlobalGraphImpl.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (MalformedQueryException ex) {
-            java.util.logging.Logger.getLogger(Data2GlobalGraphImpl.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UpdateExecutionException ex) {
             java.util.logging.Logger.getLogger(Data2GlobalGraphImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;

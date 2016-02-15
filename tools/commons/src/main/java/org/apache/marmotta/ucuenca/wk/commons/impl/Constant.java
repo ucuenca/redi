@@ -67,7 +67,7 @@ public class Constant implements ConstantService{
     
     @Override
     public String dblp(String pred) {
-        return "<http://dblp.uni-trier.de/rdf/schema-2015-01-26#" + pred + ">";
+        return "<http://dblp.dagstuhl.de/rdf/schema-2015-01-26#" + pred + ">";
     }
     
     public FOAF foaf() {

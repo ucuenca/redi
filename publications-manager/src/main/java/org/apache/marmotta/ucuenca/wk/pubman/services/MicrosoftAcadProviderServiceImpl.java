@@ -305,7 +305,7 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                                     updatePub(sameAsInsertQuery);
                                 }
 
-                                if (existNativeAuthor) {
+                                if (!existNativeAuthor) {
                                     //SPARQL obtain all publications of author
                                     priorityToFind = 5;
                                     String getPublicationsFromProviderQuery = queriesService.getPublicationFromMAProviderQuery();
