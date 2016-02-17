@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.openrdf.model.vocabulary.FOAF;
+import org.openrdf.model.vocabulary.OWL;
 
 /**
  *
@@ -470,5 +471,11 @@ public class Queries implements QueriesService {
                 + "                                               && mm:fulltext-query(str(?lname), \"" + lname + "\"))\n"
                 + "                   }}}";
 
+    }
+
+    @Override
+    public String getAskProcessAlreadyAuthorProvider(String providerGraph, String authorResource) {
+        return con.PREFIX
+                + " ASK FROM <" + providerGraph + "> {  <" + authorResource + "> " + "<" + OWL.SAMEAS + ">" + "  ?o }";
     }
 }

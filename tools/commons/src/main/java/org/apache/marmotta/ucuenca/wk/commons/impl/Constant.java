@@ -12,7 +12,7 @@ import org.openrdf.model.vocabulary.FOAF;
  *
  * @author Satellite
  */
-public class Constant implements ConstantService{
+public class Constant implements ConstantService {
 
     @Override
     public String getPubProperty() {
@@ -21,15 +21,35 @@ public class Constant implements ConstantService{
 
     @Override
     public String getTittleProperty() {
-         return TITLEPROPERTY;
-    
+        return TITLEPROPERTY;
+
     }
-    
+
     @Override
     public String getWkhuskaGraph() {
         return "http://ucuenca.edu.ec/wkhuska";
     }
-    
+
+    @Override
+    public String getDBLPGraph() {
+        return "http://ucuenca.edu.ec/wkhuska/provider/DBLPRawProvider";
+    }
+
+    @Override
+    public String getScopusGraph() {
+        return "http://ucuenca.edu.ec/wkhuska/provider/Scopus";
+    }
+
+    @Override
+    public String getMAGraph() {
+        return "http://ucuenca.edu.ec/wkhuska/provider/MicrosoftAcademicsProvider";
+    }
+
+    @Override
+    public String getGSGraph() {
+        return "http://ucuenca.edu.ec/wkhuska/provider/GoogleScholarProvider";
+    }
+
     @Override
     public String getLimit(String limit) {
         return " Limit " + limit;
@@ -49,30 +69,29 @@ public class Constant implements ConstantService{
     public String getGraphString(String graph) {
         return " GRAPH <" + graph + "> ";
     }
-    
+
     @Override
-    public String uc(String pred){
+    public String uc(String pred) {
         return "<http://ucuenca.edu.ec/resource/" + pred + ">";
     }
-    
+
     @Override
-    public String foaf(String pred){
+    public String foaf(String pred) {
         return "<" + FOAF.NAMESPACE + pred + ">";
     }
-    
+
     @Override
     public String owl(String pred) {
         return "<http://www.w3.org/2002/07/owl#" + pred + ">";
     }
-    
+
     @Override
     public String dblp(String pred) {
         return "<http://dblp.dagstuhl.de/rdf/schema-2015-01-26#" + pred + ">";
     }
-    
+
     public FOAF foaf() {
         return new FOAF();
     }
-    
-    
+
 }

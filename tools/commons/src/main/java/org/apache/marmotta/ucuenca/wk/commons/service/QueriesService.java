@@ -131,4 +131,6 @@ public interface QueriesService {
     String getAuthorPublicationFilter(String graph, String fname, String lname);
 
     String getAskResourcePropertieQuery(String graph, String resource, String propertie);
+
+    String getAskProcessAlreadyAuthorProvider(String providerGraph, String authorResource);
 }

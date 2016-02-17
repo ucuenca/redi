@@ -24,15 +24,15 @@ public interface ConstantService {
     String PREFIX = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
             + " PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
             + " PREFIX owl: <http://www.w3.org/2002/07/owl#> "
-            + " PREFIX dct: <http://purl.org/dc/terms/> " 
+            + " PREFIX dct: <http://purl.org/dc/terms/> "
             + " PREFIX mm: <http://marmotta.apache.org/vocabulary/sparql-functions#> ";
 
     String getPubProperty();
 
     String getTittleProperty();
-    
+
     String getGraphString(String graph);
-    
+
     String getWkhuskaGraph();
 
     String getProvenanceProperty();
@@ -40,13 +40,21 @@ public interface ConstantService {
     String getLimit(String limit);
 
     String getOffset(String offset);
-    
+
     String uc(String pred);
-    
+
     String foaf(String pred);
-    
+
     String owl(String pred);
-    
+
     String dblp(String pred);
+
+    String getDBLPGraph();
+
+    String getScopusGraph();
+
+    String getMAGraph();
+
+    String getGSGraph();
 
 }
