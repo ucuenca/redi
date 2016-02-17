@@ -4,7 +4,7 @@ Ecuadorian Semantic Repository of Ecuadorian Academics that allows the discovery
 
 **Build status**
 
-[ ![Codeship Status for ecsemanticrep/Watiqay Khuska - Ecuadorian Semantic Repository for Researchers](https://codeship.com/projects/0d959b00-d4a7-0132-6a34-36f9dbaf1c0b/status?branch=master)](https://codeship.com/projects/77850)
+[ ![Codeship Status for santteegt/wkhuska](https://codeship.com/projects/26b04380-b7fa-0133-2ed7-6ef29f71ac4a/status?branch=master)](https://codeship.com/projects/134976)
 
 ### What is this repository for? ###
 
