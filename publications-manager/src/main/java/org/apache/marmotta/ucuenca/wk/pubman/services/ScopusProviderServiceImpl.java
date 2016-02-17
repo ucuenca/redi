@@ -18,9 +18,13 @@
 package org.apache.marmotta.ucuenca.wk.pubman.services;
 
 import com.google.gson.JsonArray;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
 import org.slf4j.Logger;
 
@@ -33,6 +37,7 @@ import org.apache.marmotta.ldclient.model.ClientResponse;
 import org.apache.marmotta.ldclient.services.ldclient.LDClient;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
+import org.apache.marmotta.ucuenca.wk.commons.impl.Constant;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 
@@ -52,6 +57,7 @@ import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.model.Value;
+import org.semarglproject.vocab.OWL;
 
 /**
  * Default Implementation of {@link PubVocabService}
@@ -77,12 +83,13 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
     private String authorGraph = namespaceGraph + "authors";
 
     private int processpercent = 0;
+    private final Constant con = new Constant();
 
     /* graphByProvider
      Graph to save publications data by provider
      Example: http://ucuenca.edu.ec/wkhuska/ScopusProvider
      */
-    private String graphByProviderNS = namespaceGraph +  "provider/";
+    private String graphByProviderNS = namespaceGraph + "provider/";
 
     private String URLSEARCHSCOPUS = "http://api.elsevier.com/content/search/author?query=authfirst%28FIRSTNAME%29authlast%28LASTNAME%29+AND+affil%28PAIS%29&apiKey=a3b64e9d82a8f7b14967b9b9ce8d513d&httpAccept=application/xml";
     @Inject
@@ -112,12 +119,53 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
 
             RepositoryConnection conUri = null;
             ClientResponse response = null;
+
+            Properties propiedades = new Properties();
+            InputStream entrada = null;
+            Map<String, String> mapping = new HashMap<String, String>();
+            try {
+                ClassLoader classLoader = getClass().getClassLoader();
+                entrada = classLoader.getResourceAsStream("updatePlatformProcessConfig.properties");
+                propiedades.load(entrada);
+                for (String source : propiedades.stringPropertyNames()) {
+                    String target = propiedades.getProperty(source);
+                    mapping.put(source, target);
+
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            } finally {
+                if (entrada != null) {
+                    try {
+                        entrada.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            boolean proccesAllAuthors = Boolean.parseBoolean(mapping.get("proccesAllAuthors").toString());
+
             for (Map<String, Value> map : resultAllAuthors) {
                 processedPersons++;
                 log.info("Autores procesados con Scopus: " + processedPersons + " de " + allPersons);
                 authorResource = map.get("subject").stringValue();
                 String firstName = map.get("fname").stringValue();
                 String lastName = map.get("lname").stringValue();
+                boolean ask = false;
+                if (!proccesAllAuthors) {
+                    String askTripletQuery = queriesService.getAskProcessAlreadyAuthorProvider(con.getDBLPGraph(), authorResource);
+                    try {
+
+                        ask = sparqlService.ask(QueryLanguage.SPARQL, askTripletQuery);
+                        if (ask) {
+                            continue;
+                        }
+                    } catch (Exception ex) {
+                        log.error("Marmotta Exception:  " + askTripletQuery);
+                    }
+                }
                 priorityToFind = 1;
                 try {
                     List<String> uri_search = new ArrayList<>();
@@ -133,11 +181,17 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                     try {
 
                         for (String uri_searchIterator : uri_search) {
+                            boolean existNativeAuthor = false;
                             nameToFind = uri_searchIterator;
 //                            nameToFind = URLSEARCHSCOPUS.replace("FIRSTNAME", "Mauricio").replace("LASTNAME", "Espinoza").replace("PAIS", "all");
                             membersSearchResult = 0;
-                            response = ldClient.retrieveResource(nameToFind);
 
+                            if (!proccesAllAuthors) {
+                                existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(con.getScopusGraph(), nameToFind));
+                            }
+                            if (nameToFind != "" && !existNativeAuthor) {
+                                response = ldClient.retrieveResource(nameToFind);
+                            }
                             String getMembersQuery = queriesService.getMembersQuery();
                             conUri = ModelCommons.asRepository(response.getData()).getConnection();
                             conUri.begin();
@@ -149,19 +203,19 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                             if (membersSearchResult == 1) {
                                 break;
                             }
+                            if (response.getHttpStatus() == 503 || membersSearchResult != 1) {
+                                log.error("ErrorCode: " + response.getHttpStatus());
+                                continue;
+                            }
                         }
                     } catch (DataRetrievalException e) {
                         log.error("Data Retrieval Exception: " + e);
                     }
-                    if (response.getHttpStatus() == 503) {
-                        log.error("ErrorCode: " + response.getHttpStatus());
-                        continue;
-                    } else if (membersSearchResult != 1) {
-                        continue;
-                    }
+
                     String nameEndpointofPublications = ldClient.getEndpoint(URLSEARCHSCOPUS + nameToFind).getName();
                     String providerGraph = graphByProviderNS + nameEndpointofPublications.replace(" ", "");
-
+                    String InsertQueryOneOf = buildInsertQuery(providerGraph, nameToFind, OWL.ONE_OF, authorResource);
+                    updatePub(InsertQueryOneOf);
                     if (membersSearchResult == 1) {
                         String getPublicationsFromProviderQuery = queriesService.getPublicationFromMAProviderQuery();
                         TupleQuery pubquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationsFromProviderQuery); //

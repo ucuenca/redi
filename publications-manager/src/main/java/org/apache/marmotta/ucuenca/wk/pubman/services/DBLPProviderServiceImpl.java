@@ -18,23 +18,14 @@
 package org.apache.marmotta.ucuenca.wk.pubman.services;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import info.aduna.iteration.Iterations;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.StringWriter;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
 import org.slf4j.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -51,13 +42,11 @@ import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 
-import org.apache.marmotta.ucuenca.wk.pubman.api.MicrosoftAcadProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
 
 import org.apache.marmotta.ucuenca.wk.pubman.exceptions.PubException;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.marmotta.ucuenca.wk.commons.impl.Constant;
 import org.apache.marmotta.ucuenca.wk.pubman.api.DBLPProviderService;
-import org.json.simple.JSONValue;
 
 import org.openrdf.model.Model;
 import org.openrdf.model.Statement;
@@ -79,7 +68,7 @@ import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
 import org.openrdf.model.Value;
 import org.openrdf.query.UpdateExecutionException;
-import org.openrdf.query.impl.TupleQueryResultImpl;
+import org.semarglproject.vocab.OWL;
 
 /**
  * Default Implementation of {@link PubVocabService}
@@ -102,6 +91,8 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
     private String namespaceGraph = "http://ucuenca.edu.ec/wkhuska/";
     private String authorGraph = namespaceGraph + "authors";
     private String externalAuthorGraph = namespaceGraph + "wkhuska/externalauthors";
+
+    private final Constant con = new Constant();
 
     private int processpercent = 0;
 
@@ -241,6 +232,34 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
             String NS_DBLP = "http://rdf.dblp.com/ns/search/";
             RepositoryConnection conUri = null;
             ClientResponse response = null;
+
+            Properties propiedades = new Properties();
+            InputStream entrada = null;
+            Map<String, String> mapping = new HashMap<String, String>();
+            try {
+                ClassLoader classLoader = getClass().getClassLoader();
+                entrada = classLoader.getResourceAsStream("updatePlatformProcessConfig.properties");
+                propiedades.load(entrada);
+                for (String source : propiedades.stringPropertyNames()) {
+                    String target = propiedades.getProperty(source);
+                    mapping.put(source, target);
+
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            } finally {
+                if (entrada != null) {
+                    try {
+                        entrada.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            boolean proccesAllAuthors = Boolean.parseBoolean(mapping.get("proccesAllAuthors").toString());
+
             for (Map<String, Value> map : resultAllAuthors) {
                 processedPersons++;
                 log.info("Autores procesados con DBLP: " + processedPersons + " de " + allPersons);
@@ -248,37 +267,61 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                 String firstName = map.get("fname").stringValue();
                 String lastName = map.get("lname").stringValue();
                 priorityToFind = 1;
+                boolean ask = false;
+                if (!proccesAllAuthors) {
+                    String askTripletQuery = queriesService.getAskProcessAlreadyAuthorProvider(con.getDBLPGraph(), authorResource);
+                    try {
+
+                        ask = sparqlService.ask(QueryLanguage.SPARQL, askTripletQuery);
+                        if (ask) {
+                            continue;
+                        }
+                    } catch (Exception ex) {
+                        log.error("Marmotta Exception:  " + askTripletQuery);
+                    }
+                }
                 do {
                     try {
-                        boolean existNativeAuthor = true;
+                        boolean existNativeAuthor = false;
                         allMembers = 0;
                         nameToFind = priorityFindQueryBuilding(priorityToFind, firstName, lastName);
 
-                        boolean dataretrievee = true;//( Data Retrieve Exception )
+                        boolean dataretrievee = false;//( Data Retrieve Exception )
                         int waitTime = 30;
-                        dataretrievee = true;
-                        try {
-                            response = ldClient.retrieveResource(NS_DBLP + nameToFind);
-                        } catch (DataRetrievalException e) {
-                            log.error("Data Retrieval Exception: " + e);
-                            log.info("Wating: " + waitTime + " seconds for new query");
-                            dataretrievee = false;
+
+                        if (!proccesAllAuthors) {
+                            existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(con.getDBLPGraph(), NS_DBLP + nameToFind));
+                        }
+                        if (!existNativeAuthor) {
+
+                            try {
+                                response = ldClient.retrieveResource(NS_DBLP + nameToFind);
+                                dataretrievee = true;
+                            } catch (DataRetrievalException e) {
+                                log.error("Data Retrieval Exception: " + e);
+                                log.info("Wating: " + waitTime + " seconds for new query");
+                                dataretrievee = false;
 //                                try {
 //                                    Thread.sleep(waitTime * 1000);               //1000 milliseconds is one second.
 //                                } catch (InterruptedException ex) {
 //                                    Thread.currentThread().interrupt();
 //                                }
-                            waitTime += 5;
-                        }
+                                waitTime += 5;
+                            }
 
-                        if (response.getHttpStatus() == 503) {
-                            log.error("ErrorCode: " + response.getHttpStatus());
+                            if (response.getHttpStatus() == 503) {
+                                log.error("ErrorCode: " + response.getHttpStatus());
+                            }
                         }
 
                         String nameEndpointofPublications = ldClient.getEndpoint(NS_DBLP + nameToFind).getName();
                         String providerGraph = graphByProviderNS + nameEndpointofPublications.replace(" ", "");
                         if (dataretrievee)//if the resource data were recovered
                         {
+                            //Save register of serach
+                            String InsertQueryOneOf = buildInsertQuery(providerGraph, NS_DBLP + nameToFind, OWL.ONE_OF, authorResource);
+                            updatePub(InsertQueryOneOf);
+
                             conUri = ModelCommons.asRepository(response.getData()).getConnection();
                             conUri.begin();
                             String authorNativeResource = null;
@@ -331,6 +374,7 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                                     String publicationPropertiesInsertQuery = buildInsertQuery(providerGraph, publicationResource, publicationProperties, publicationPropertiesValue);
                                     //load values publications to publications resource
                                     updatePub(publicationPropertiesInsertQuery);
+
                                 }
 
                             }//end if numMembers=1

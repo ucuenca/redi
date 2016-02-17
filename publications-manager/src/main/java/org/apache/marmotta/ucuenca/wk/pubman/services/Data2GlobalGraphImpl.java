@@ -105,7 +105,8 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
                 KiWiUriResource providerGraphResource = new KiWiUriResource(providerGraph);
 
                 if (providerGraph.contains("provider")) {
-                    String prefixTitle = "";
+                    String prefixTitleSource = "";
+                    String prefixTitleTarget = "";
 
                     Properties propiedades = new Properties();
                     InputStream entrada = null;
@@ -119,7 +120,9 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
                         for (String source : propiedades.stringPropertyNames()) {
                             String target = propiedades.getProperty(source);
                             if (target.contains("title")) {
-                                prefixTitle = source.replace("..", ":");
+                                prefixTitleSource = source.replace("..", ":");
+                                prefixTitleTarget = target.replace("..", ":");
+
                             }
                             mapping.put(source.replace("..", ":"), target.replace("..", ":"));
 
@@ -137,8 +140,8 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
                             }
                         }
                     }
-
-                    List<Map<String, Value>> resultPublications = sparqlService.query(QueryLanguage.SPARQL, queriesService.getPublicationsTitleQuery(providerGraph, prefixTitle));
+                    List<Map<String, Value>> auxPublications = sparqlService.query(QueryLanguage.SPARQL, queriesService.getPublicationsTitleQuery(providerGraph, prefixTitleSource));
+                    List<Map<String, Value>> resultPublications = auxPublications.isEmpty() ? sparqlService.query(QueryLanguage.SPARQL, queriesService.getPublicationsTitleQuery(providerGraph, prefixTitleTarget)) : auxPublications;
                     results.add(providerGraph + " :size :" + resultPublications.size());
                     totalPublicationsProcess = 0;
                     for (Map<String, Value> pubresource : resultPublications) {
@@ -149,6 +152,19 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
                         String publicationTitle = pubresource.get("title").stringValue();
                         String publicationProperty = pubVocabService.getPubProperty();
                         totalPublications += 1;
+
+                        // asint SameAs between newUri publication and Uri of provider graph 
+                        String insertPublicationPropertySameAs = buildInsertQuery(wkhuskaGraph, uriPublication + publicationTitleCleaned, OWL.SAME_AS, publicationResource);
+                        try {
+                            sparqlService.update(QueryLanguage.SPARQL, insertPublicationPropertySameAs);
+
+                        } catch (MalformedQueryException ex) {
+                            log.error("Malformed Query:  " + insertPublicationPropertySameAs);
+                        } catch (UpdateExecutionException ex) {
+                            log.error("Update Query:  " + insertPublicationPropertySameAs);
+                        } catch (MarmottaException ex) {
+                            log.error("Marmotta Exception:  " + insertPublicationPropertySameAs);
+                        }
 
                         //verificar existencia de la publicacion y su author sobre el grafo general
                         String newUriAuthorCentral = buildNewUri(authorResource);
@@ -167,10 +183,20 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
 
                         if (!ask) {
                             List<Map<String, Value>> resultPublicationsAuthor = sparqlService.query(QueryLanguage.SPARQL, queriesService.getAuthorPublicationsQuery(wkhuskaGraph, newUriAuthorCentral, "http://purl.org/dc/terms/title", getQuerySearchTextAuthor(publicationTitle)));
-                            List<Map<String, Value>> resultPublicationsAuthorOfProvider = sparqlService.query(QueryLanguage.SPARQL, queriesService.getAuthorPublicationsQueryFromProvider(providerGraph, authorResource, prefixTitle, getQuerySearchTextAuthor(publicationTitle)));
+                            List<Map<String, Value>> auxResultPublicationsAuthorOfProvider = sparqlService.query(QueryLanguage.SPARQL, queriesService.getAuthorPublicationsQueryFromProvider(providerGraph, authorResource, prefixTitleSource, getQuerySearchTextAuthor(publicationTitle)));
+                            List<Map<String, Value>> resultPublicationsAuthorOfProvider = auxResultPublicationsAuthorOfProvider.isEmpty() ? sparqlService.query(QueryLanguage.SPARQL, queriesService.getAuthorPublicationsQueryFromProvider(providerGraph, authorResource, prefixTitleTarget, getQuerySearchTextAuthor(publicationTitle))) : auxResultPublicationsAuthorOfProvider;
                             boolean flagPublicationAlreadyExist = false;
                             String authorResourceBuilding = searchAuthorOfpublication(resultPublicationsAuthorOfProvider, authorResource, newUriAuthorCentral);
                             String authorResourceCentral = authorResourceBuilding == null ? newUriAuthorCentral : authorResourceBuilding;
+                            String sameAsInsertQuery = buildInsertQuery(wkhuskaGraph, newUriAuthorCentral, OWL.SAME_AS, authorResource);
+                            try {
+                                sparqlService.update(QueryLanguage.SPARQL, sameAsInsertQuery);
+                            } catch (MalformedQueryException ex) {
+                                java.util.logging.Logger.getLogger(Data2GlobalGraphImpl.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (UpdateExecutionException ex) {
+                                java.util.logging.Logger.getLogger(Data2GlobalGraphImpl.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+
                             for (Map<String, Value> publicacion : resultPublicationsAuthor) {
                                 if (compareTitlePublicationWithSimmetrics(publicationTitleCleaned, cleanStringUri(publicacion.get("title").stringValue()))) {
                                     flagPublicationAlreadyExist = true;
@@ -395,8 +421,6 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
 
                 for (Map<String, Value> publicacionParam : publications) {
                     if (compareTitlePublicationWithSimmetrics(publicacionParam.get("title").stringValue(), title)) {
-                        String sameAsInsertQuery = buildInsertQuery(wkhuskaGraph, newUriAuthorCentral, OWL.SAME_AS, authorNativeResource);
-                        sparqlService.update(QueryLanguage.SPARQL, sameAsInsertQuery);
                         //log.info("publication that coinside between authors: 1:" + publicationResource + "2: " + publicacionParam + ", author: " + authorResource);
 
                         return authorResource;
@@ -407,10 +431,6 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
         } catch (MarmottaException ex) {
             java.util.logging.Logger.getLogger(Data2GlobalGraphImpl.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InvalidArgumentException ex) {
-            java.util.logging.Logger.getLogger(Data2GlobalGraphImpl.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (MalformedQueryException ex) {
-            java.util.logging.Logger.getLogger(Data2GlobalGraphImpl.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UpdateExecutionException ex) {
             java.util.logging.Logger.getLogger(Data2GlobalGraphImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
