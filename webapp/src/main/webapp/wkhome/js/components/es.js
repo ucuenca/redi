@@ -51,7 +51,7 @@ myApp.labels_es = {
 "Select Research Area":"Seleccione el Area de Investigacion",
 //"All" - from cloud cluster view
 "Author":"Autor",
-"Source":"Fuente",
+"Source":"Institucion",
 
 // MAP VIEW
 "Research Area":"Area de Investigacion",

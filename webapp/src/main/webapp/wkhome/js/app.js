@@ -135,7 +135,7 @@ wkhomeApp.config(['$routeProvider',
                 }).
                 when('/:lang/info/contact', {
                     templateUrl: '/wkhome/partials/contact.html'
-                }).
+                }).    
 //                .
                 /*when('/phones/:phoneId', {
                  templateUrl: 'partials/phone-detail.html',
