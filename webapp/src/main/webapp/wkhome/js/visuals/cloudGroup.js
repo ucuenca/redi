@@ -5,12 +5,12 @@ var cloudGroup = angular.module('cloudGroup', []);
 cloudGroup.factory('d3', function () {
     return	d3;
 });
-cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
-    function (d3, sparqlQuery) {
+cloudGroup.directive('cloudGroup', ["$routeParams", "d3", 'sparqlQuery', 'globalData',
+    function ($routeParams, d3, sparqlQuery, globalData) {
         var group = '';
         var size = '';
         var color = '';
-        function create(svgElement, dataToDraw, groupByOption) {
+        function create(svgElement, dataToDraw, groupByOption, scope) {
 
 
             var colors = {
@@ -55,11 +55,11 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
             var padding = 8;
             var maxRadius = d3.max(_.pluck(dataMapping, 'radius'));
 
-            var maximums = {
+            /*var maximums = {
                 volume: d3.max(_.pluck(dataMapping, 'volume')),
                 lasPrice: d3.max(_.pluck(dataMapping, 'lastPrice')),
                 standardDeviation: d3.max(_.pluck(dataMapping, 'standardDeviation'))
-            };
+            };*/
 
             var getCenters = function (vname, size) {
                 var centers, map;
@@ -95,7 +95,9 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
                     })
                     .on("mouseout", function (d) {
                         removePopovers();
-                    });
+                    })
+                    .on("click", click);
+                    ;
 
             function getDataMapping(dataM, vname) {
                 var max = d3.max(_.pluck(dataM, vname));
@@ -104,15 +106,15 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
                     newData[j].radius = (vname != '') ? radius * (dataM[j][vname] / max) : 8;
                     newData[j].x = dataM[j].x ? dataM[j].x : Math.random() * width;
                     newData[j].y = dataM[j].y ? dataM[j].y : Math.random() * height;
-                    newData[j].volumeCategory = getCategory('volume', dataM[j]);
+                    /*newData[j].volumeCategory = getCategory('volume', dataM[j]);
                     newData[j].lastPriceCategory = getCategory('lastPrice', dataM[j]);
-                    newData[j].standardDeviationCategory = getCategory('standardDeviation', dataM[j]);
+                    newData[j].standardDeviationCategory = getCategory('standardDeviation', dataM[j]);*/
                 }
 
                 return newData;
             }
 
-            function getCategory(type, d) {
+            /*function getCategory(type, d) {
                 var max = d3.max(_.pluck(dataMapping, type));
                 var val = d[type] / max;
 
@@ -122,7 +124,7 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
                     return 'Middle';
                 else
                     return 'Bottom';
-            }
+            }*/
 
 //        $('#board').change(function() {
 //          $('#chart').empty();
@@ -302,13 +304,89 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
                     });
                 };
             }
+            
+            function click(d) {
+                //adding information about publications of THIS keyword into "tree-node-info"   DIV
+                var infoBar = $('div.tree-node-info');
+                /*var model = {"dct:title": {label: "Title", containerType: "div"},
+                    "bibo:uri": {label: "URL", containerType: "a"},
+                    "dct:contributor": {label: "Contributor", containerType: "a"},
+                    "dct:isPartOf": {label: "Is Part Of", containerType: "a"},
+                    "dct:license": {label: "License", containerType: "a"},
+                    "dct:provenance": {label: "Source", containerType: "div"},
+                    "dct:publisher": {label: "Publisher", containerType: "div"},
+                    "bibo:numPages": {label: "Pages", containerType: "div"}
+                };*/
+                if (infoBar) {
+                    var key = d.publication;
+                    var headbar = $('div.head-info');
+                    headbar.find('title').text("ddddddtitletitle");
+                    headbar.html('');
+                    var div = $('<div>');
+                    var label;
+                    if ($routeParams.lang === "es") {
+                        label= $('<span class="label label-primary" style="font-size:35px">').text("PUBLICACION: " + d.title);
+                    } else {
+                        label= $('<span class="label label-primary" style="font-size:35px">').text("PUBLICATION: " + d.title);
+                    }
+                    div.append(label);
+                    div.append("</br>");
+                    headbar.append(div);
+
+                    var sparqlPublications = globalData.PREFIX
+                            + " CONSTRUCT { "
+                            + "<" + key + "> a bibo:Document. "
+                            + "<" + key + "> dct:title ?title. "
+                            + "<" + key + "> bibo:abstract ?abstract. "
+                            + "<" + key + "> bibo:uri ?uri. "
+                            + "<" + key + "> bibo:Quote ?keywords "
+                            + " } "
+                            + " WHERE { "
+                            + "  SELECT  ?title ?uri (group_concat(distinct ?abst;separator=\" \") as ?abstract) (group_concat(distinct ?key;separator=\", \") as ?keywords)"
+                            + "  WHERE"
+                            + "  {"
+                            + "     GRAPH <" + globalData.centralGraph + "> "
+                            + "     { "
+                            + "     <" + key + "> dct:title ?title . "
+                            + "     <" + key + "> bibo:uri  ?uri. "
+                            + "     OPTIONAL { <" + key + "> bibo:Quote ?key.}"
+                            + "     OPTIONAL { <" + key + "> bibo:abstract  ?abst  }"
+                            + "     }"
+                            + "  } GROUP BY ?title ?uri "
+                            + "}";
+
+                    waitingDialog.show("Searching the publication \"" + d.title + "\"");
+
+                    sparqlQuery.querySrv({query: sparqlPublications}, function (rdf) {
+                
+                        jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
+                                if (compacted)
+                                {
+                                    var entity = compacted["@graph"];
+                                    var final_entity = _.where(entity, {"@type": "bibo:Document"});
+                                    var values = final_entity.length ? final_entity : [final_entity];
+                                    //send data to the Controller
+                                    scope.ifClick({value: values});
+                                    waitingDialog.hide();
+
+                                } else
+                                {
+                                    waitingDialog.hide();
+                                }
+                                removePopovers();
+                            });
+                        });
+                }
+                return d3.event.preventDefault();
+            };
 
         }
 
         return {
             restrict: 'E',
             scope: {
-                data: '='
+                data: '=',
+                'ifClick': "&"
             },
             compile: function (element, attrs, transclude) {
                 //	Create	a	SVG	root	element
@@ -349,12 +427,12 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
                                 && !oldVal) {
                             var dataToDraw = scope.data[0]["value"];
                             var groupByOption = scope.data[0]["group"];
-                            create(svg, dataToDraw, groupByOption);
+                            create(svg, dataToDraw, groupByOption, scope);
                         }
                         else
 
                         if (scope.data && scope.data[0] && scope.data[0]["value"] && scope.data[0]["value"][0] &&
-                                (JSON.stringify(newVal[0]["value"][0]["title"] ? newVal[0]["value"][0]["title"] : newVal) != JSON.stringify(oldVal[0]["value"][0] ? oldVal[0]["value"][0]["title"] : oldVal))) {
+                                (JSON.stringify(newVal[0]["value"][0]["title"] ? newVal[0]["value"][0]["title"] : newVal) != (oldVal[0] && oldVal[0]["value"] ? (JSON.stringify(oldVal[0]["value"][0] ? oldVal[0]["value"][0]["title"] : oldVal)) : null) )) {
                             //var jsonld = data.data;
                             //var schema = data.schema;
                             //var fields = schema.fields;
@@ -364,7 +442,7 @@ cloudGroup.directive('cloudGroup', ["d3", 'sparqlQuery',
 //                            });
                             var dataToDraw = scope.data[0]["value"];
                             var groupByOption = scope.data[0]["group"];
-                            create(svg, dataToDraw, groupByOption);
+                            create(svg, dataToDraw, groupByOption, scope);
                         }
 
                     }, true);
