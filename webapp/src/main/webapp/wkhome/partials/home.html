@@ -80,7 +80,7 @@
             <div class="col-md-3 " >
             </div>
             <div class="col-md-8 " >
-                <form  role="search" ng-submit="submit()" ng-controller="SearchController">
+                <form  role="search" ng-submit="submit()" ng-controller="searchText">
                     <div class="col-xs-9" style="padding: 20px; text-align: center">
                         <input style="border-color: orange" name="searchText" ng-model="searchText" type="text" class="form-control input-lg " placeholder="{{'Search Author or Keyword' | translate}}..." >
                     </div>
@@ -95,19 +95,19 @@
 
     <div class="col-md-10" style='background-color: #FFFFFF; padding-left: 100px'>
 
-        <div class="col-md-4" ng-controller="totalPersonReg">
+        <div class="col-md-4" ng-controller="countAuthors">
             <div style="padding-top: 10px; padding-left: 20px; background-color: #CCCCCC; border-radius: 15px; ">
                 <h4  class="text-success" style="text-align: center">{{ 'Total Autores' | translate }}</h4>
                 <pie-chart data="data" pc-height="220" style="display:block" if-click="ifClick(value)" ng-model="value"></pie-chart>
             </div>
         </div>
-        <div class="col-md-4"  ng-controller="totalPublicationReg">
+        <div class="col-md-4"  ng-controller="countPublications">
             <div style="padding-top: 10px; padding-left: 10px; background-color: #CCCCCC; border-radius: 15px; ">
                 <h4 class="text-success" style='text-align: center'>{{ 'Total Publicaciones' | translate }}</h4>
                 <pie-chart data="data" pc-height="220" style="display:block"></pie-chart>
             </div>
         </div>
-        <div class="col-md-4" ng-controller="totalResearchAreas">
+        <div class="col-md-4" ng-controller="countResearchAreas">
             <div style="padding-top: 10px; padding-left: 20px; background-color: #CCCCCC; border-radius: 15px; ">
                 <h4 class="text-success"  style='text-align: center'>{{ 'Areas de Investigacion' | translate }}</h4>
                 <pie-chart data="data" pc-height="220" style="display:block" if-click="ifClick(value)" ng-model="value"></pie-chart>

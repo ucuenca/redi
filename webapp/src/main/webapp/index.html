@@ -10,13 +10,13 @@
         <link rel="stylesheet" href="wkhome/css/animations.css">
         <link rel="stylesheet" href="wkhome/css/visuals/pieChart.css">
         <link rel="stylesheet" href="wkhome/css/visuals/explorableTree.css">
-        <link rel="stylesheet" href="wkhome/css/visuals/cloudTag.css" >
+        <link rel="stylesheet" href="wkhome/css/visuals/keywordsCloud.css" >
         <link rel="stylesheet" href="wkhome/css/visuals/genericCloud.css" type="text/css" >
-        <link rel="stylesheet" href="wkhome/css/visuals/cloudGroup.css" type="text/css">
+        <link rel="stylesheet" href="wkhome/css/visuals/groupbyCloud.css" type="text/css">
         <link rel="stylesheet" href="wkhome/css/visuals/cloudCluster.css" type="text/css">
         <link rel="stylesheet" href="wkhome/css/visuals/chart.css">
         <link rel="stylesheet" href="wkhome/css/visuals/geoplain.css">
-        <link rel="stylesheet" href="wkhome/css/visuals/map-sources.css">
+        <link rel="stylesheet" href="wkhome/css/visuals/map.css">
         <link rel="stylesheet" href="wkhome/css/app.css">
 
         <script src="../bower_components/jquery/dist/jquery.js"></script>
@@ -44,12 +44,35 @@
         <script src="../custom_libs/angular-sanitize/angular-sanitize.js"></script>
 
 
+
+
+
         <script src="wkhome/js/app.js"></script>
         <script src="wkhome/js/animations.js"></script>
-        <script src="wkhome/js/controllers.js"></script>
+
+        <script src="wkhome/js/controllers/controllers.js"></script>
+        <script src="wkhome/js/controllers/mainBar.js"></script>
+        <script src="wkhome/js/controllers/countAuthors.js"></script>
+        <script src="wkhome/js/controllers/countPublications.js"></script>
+        <script src="wkhome/js/controllers/countResearhAreas.js"></script>
+        <script src="wkhome/js/controllers/explorableTree.js"></script>
+        <script src="wkhome/js/controllers/explorableResearchArea.js"></script>
+        <script src="wkhome/js/controllers/groupbyCloud.js"></script>
+        <script src="wkhome/js/controllers/keywordsCloud.js"></script>
+        <script src="wkhome/js/controllers/searchText.js"></script>
+        <script src="wkhome/js/controllers/genericCloud.js"></script>
+        <script src="wkhome/js/controllers/map.js"></script>
+        <script src="wkhome/js/controllers/clusterGroupByCloud.js"></script>
+        <script src="wkhome/js/controllers/clusterKeywordsCloud.js"></script>
+        <script src="wkhome/js/controllers/clustersCloud.js"></script>
+        <script src="wkhome/js/controllers/translate.js"></script>
+        <script src="wkhome/js/controllers/pubInfo.js"></script>
+        
+        
         <script src="wkhome/js/directives.js"></script>
         <script src="wkhome/js/filters.js"></script>
         <script src="wkhome/js/services.js"></script>
+
 
         <script src="wkhome/js/components/waitingDialog.js"></script>
         <script src="wkhome/js/components/en.js"></script>
@@ -58,15 +81,14 @@
 
         <script src="wkhome/js/visuals/pieChart.js"></script>
         <script src="wkhome/js/visuals/explorableTree.js"></script>
-        <script src="wkhome/js/visuals/cloudTag.js"></script>
-        <script src="wkhome/js/visuals/cloudGroup.js"></script>
-        <script src="wkhome/js/visuals/cloudCluster.js"></script>
-        <script src="wkhome/js/visuals/keywClusters.js"></script>
-        <script src="wkhome/js/visuals/clustersKeywCloud.js"></script>
-        <!--<script src="js/visuals/chart.js"></script>-->
+        <script src="wkhome/js/visuals/keywordsCloud.js"></script>
+        <script src="wkhome/js/visuals/groupbyCloud.js"></script>
+        <script src="wkhome/js/visuals/clusterGroupByCloud.js"></script>
+        <script src="wkhome/js/visuals/clusterKeywordsCloud.js"></script>
+        <script src="wkhome/js/visuals/clustersCloud.js"></script>
         <script src="wkhome/js/visuals/genericCloud.js"></script>
-        <script src="wkhome/js/visuals/maps-view.js"></script>
-        <script src="wkhome/js/visuals/colorCluster.js"></script>
+        <script src="wkhome/js/visuals/map.js"></script>
+
 
         <script type="text/javascript">
             <!--
@@ -102,10 +124,10 @@
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav" ng-controller="translate">
-                        <li><a ng-click="refreshLang()" href="#/{{lang}}/">{{'home' | translate}}<span class="sr-only">(current)</span></a></li>
-                        <li><a ng-click="refreshLang()" href="#/{{lang}}/info/about">{{'about' | translate}}</a></li>
-                        <li><a ng-click="refreshLang()" href="#/{{lang}}/info/help">{{'help' | translate}}</a></li>
-                        <li><a ng-click="refreshLang()" href="#/{{lang}}/info/contact">{{'contact' | translate}}</a></li>
+                        <li><a ng-click="refreshLang()" href="#/{{lang}}/">{{'home'| translate}}<span class="sr-only">(current)</span></a></li>
+                        <li><a ng-click="refreshLang()" href="#/{{lang}}/info/about">{{'about'| translate}}</a></li>
+                        <li><a ng-click="refreshLang()" href="#/{{lang}}/info/help">{{'help'| translate}}</a></li>
+                        <li><a ng-click="refreshLang()" href="#/{{lang}}/info/contact">{{'contact'| translate}}</a></li>
                         <!--     <li><a href="geo-views/sources.html">Map</a></li> -->
 
 
@@ -139,12 +161,12 @@
                         </li>
 
 
-                     
 
 
-                        <form class="navbar-form navbar-left" role="search" ng-submit="submit()" ng-controller="SearchController">
+                         
+                        <form class="navbar-form navbar-left" role="search" ng-submit="submit()" ng-controller="searchText">
                             <div class="form-group">
-                                <input name="searchText" ng-model="searchText" type="text" class="form-control input-md" placeholder="{{'Search'| translate}}...">
+                                <input name="searchText" ng-model="searchText" type="text" class="form-control input-md" placeholder="{{'Search'| translate}}..">
                             </div>
                         </form>
                     </ul>
