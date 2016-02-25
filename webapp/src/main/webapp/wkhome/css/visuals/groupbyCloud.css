@@ -6,10 +6,12 @@
         stroke: #5554;
         stroke-width: 2px;
         opacity: .8;
+        cursor: pointer;
       }
       circle:hover {
         stroke:#000;
-        opacity:1;
+        opacity:5;
+      
       }
       .btn-group {
         margin-left: 330px;

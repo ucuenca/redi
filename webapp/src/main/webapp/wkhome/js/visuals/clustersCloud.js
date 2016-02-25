@@ -1,17 +1,17 @@
 'use strict';
 
-var keywClusters = angular.module('keywClusters', []);
+var clusterKeywCloud = angular.module('clusterKeywCloud', []);
 //	D3	Factory
-keywClusters.factory('d3', function () {
+clusterKeywCloud.factory('d3', function () {
     return	d3;
 });
-keywClusters.directive('keywClusters', ['$routeParams', "d3", 'globalData', 'sparqlQuery',
-    function ($routeParams, d3, globalData, sparqlQuery) {
+clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery',
+    function (d3, globalData, sparqlQuery) {
 
         var chart, clear, click, collide, collisionPadding, connectEvents, data, force, gravity, hashchange, height, idValue, jitter, label, margin, maxRadius, minCollisionRadius, mouseout, mouseover, node, rScale, rValue, textValue, tick, transformData, update, updateActive, updateLabels, updateNodes, width;
         var scope;
         var attrs;
-
+        var pageTitle;
         width;// = 980;
         height;// = 510;
         data = [];
@@ -35,9 +35,9 @@ keywClusters.directive('keywClusters', ['$routeParams', "d3", 'globalData', 'spa
         textValue = function (d) {
             return d.label;
         };
-        collisionPadding = 1;
-        minCollisionRadius = 2;
-        jitter = 0.08;
+        collisionPadding = 10;
+        minCollisionRadius = 12;
+        jitter = 0.1;
         transformData = function (rawData) {
             rawData.forEach(function (d) {
                 d.value = parseInt(d.value);
@@ -46,7 +46,7 @@ keywClusters.directive('keywClusters', ['$routeParams', "d3", 'globalData', 'spa
         };
         tick = function (e) {
             var dampenedAlpha;
-            dampenedAlpha = e.alpha * 0.01;
+            dampenedAlpha = e.alpha * 0.1;
             node.each(gravity(dampenedAlpha)).each(collide(jitter)).attr("transform", function (d) {
                 return "translate(" + d.x + "," + d.y + ")";
             });
@@ -56,7 +56,7 @@ keywClusters.directive('keywClusters', ['$routeParams', "d3", 'globalData', 'spa
                  }*/      //POSITION OF LABEL
                 return (17 + (margin.left + d.x) - d.dx / 2) + "px";
             }).style("top", function (d) {
-                return (50 + (margin.top + d.y) - d.dy / 2) + "px";
+                return (140 + (margin.top + d.y) - d.dy / 2) + "px";
             });
         };
 
@@ -73,9 +73,9 @@ keywClusters.directive('keywClusters', ['$routeParams', "d3", 'globalData', 'spa
                 svgEnter = svg.enter().append("svg");
                 svg.attr("width", width + margin.left + margin.right);
                 svg.attr("height", height + margin.top + margin.bottom);
-                node = svgEnter.append("g").attr("id", "bubble-nodes").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-                node.append("rect").attr("id", "bubble-background").attr("width", width).attr("height", height).on("click", clear);
-                label = d3.select(this).selectAll("#bubble-labels").data([data]).enter().append("div").attr("id", "bubble-labels");
+                node = svgEnter.append("g").attr("id", "gbubble-nodes").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                node.append("rect").attr("id", "gbubble-background").attr("width", width).attr("height", height);
+                label = d3.select(this).selectAll("#gbubble-labels").data([data]).enter().append("div").attr("id", "gbubble-labels");
                 update();
                 /*hashchange();
                  return d3.select(window).on("hashchange", hashchange);*/
@@ -91,29 +91,33 @@ keywClusters.directive('keywClusters', ['$routeParams', "d3", 'globalData', 'spa
             return updateLabels();
         };
         updateNodes = function () {
-            node = node.selectAll(".bubble-node").data(data, function (d) {
+            node = node.selectAll(".gbubble-node").data(data, function (d) {
                 return idValue(d);
             });
             node.exit().remove();
-            return node.enter().append("a").attr("class", "bubble-node").attr("xlink:href", function (d) {
-                return "#/" + $routeParams.lang + "/w/clusters?" + (encodeURIComponent(idValue(d)));
-            }).call(force.drag).call(connectEvents).append("circle").attr("id", "kcircle").attr("r", function (d) {
+            return node.enter().append("a").attr("class", "gbubble-node")
+//            .attr("xlink:href", function (d) {
+//                return "#" + (encodeURIComponent(idValue(d)));
+//            })
+            .call(force.drag).call(connectEvents).append("circle").attr("id", "gcircle").attr("r", function (d) {
                 return rScale(rValue(d));
             });
         };
         updateLabels = function () {
             var labelEnter;
-            label = label.selectAll(".bubble-label").data(data, function (d) {
+            label = label.selectAll(".gbubble-label").data(data, function (d) {
                 return idValue(d);
             });
             label.exit().remove();
-            labelEnter = label.enter().append("a").attr("class", "bubble-label").attr("href", function (d) {
-                return "#/" + $routeParams.lang + "/w/clusters?" + (encodeURIComponent(idValue(d)));
-            }).call(force.drag).call(connectEvents);
-            labelEnter.append("div").attr("class", "bubble-label-name").text(function (d) {
+            labelEnter = label.enter().append("a").attr("class", "gbubble-label")
+//            .attr("href", function (d) {
+//                return "#" + (encodeURIComponent(idValue(d)));
+//            })
+            .call(force.drag).call(connectEvents);
+            labelEnter.append("div").attr("class", "gbubble-label-name").text(function (d) {
                 return textValue(d);
             });
-            labelEnter.append("div").attr("class", "bubble-label-value").text(function (d) {
+            labelEnter.append("div").attr("class", "gbubble-label-value").text(function (d) {
                 return rValue(d);
             });
             label.style("font-size", function (d) {
@@ -166,6 +170,7 @@ keywClusters.directive('keywClusters', ['$routeParams', "d3", 'globalData', 'spa
                 });
             };
         };
+       
         connectEvents = function (d) {
             d.on("click", click);
             d.on("mouseover", mouseover);
@@ -174,77 +179,92 @@ keywClusters.directive('keywClusters', ['$routeParams', "d3", 'globalData', 'spa
         clear = function () {
             return location.replace("#");
         };
+        
         click = function (d) {
-            var title;
-            if ($routeParams.lang === "es"){
-                title = '"Clusters que contienen la keyword \'' + d.label + '\'"';
-            } else {
-                title = '"Clusters that contain \'' + d.label + '\' Keyword"';
-            }
-            
-            var sparqlquery = globalData.PREFIX
+            //   location.replace("#" + encodeURIComponent(idValue(d)));
 
-            +' Construct {'
 
-            +' uc:resultTitle a uc:pagetitle.'
-            +' uc:resultTitle uc:viewtitle '
-            + title
-            + '.'
-            +'  ?cluster rdfs:label "keyword". ?cluster uc:total ?totalpub.'
-            +'} '
-            +'WHERE'
-            +'{'
-            +'{'
-            +'SELECT ?cluster (COUNT(?pubb) as ?totalpub)'
-            +'WHERE' 
-            +'{'
-            +'  graph <'+globalData.clustersGraph+'>'
-            +'        {'
-            +'          ?cluster uc:hasPerson ?subject.'
-            +'  		?subject foaf:publications ?pubb. '
-            +'          	{'
-            +'      			select  ?pubb ?title '
-            +'            		where'
-            +'            		{'
-            +'            			graph <'+globalData.centralGraph+'>'
-            +'            			{'      
-            +'            				?pubb bibo:Quote "' + d.label + '".'
-            +'                          	?pubb dct:title ?title.'
-            +'              			}'
-            +'          			}'
+            //adding information about publications of THIS keyword into "tree-node-info"   DIV
+            var infoBar = $('div.tree-node-info');
+            var model = {"dcterms:title": {label: "Title", containerType: "div"},
+                "bibo:uri": {label: "URL", containerType: "a"},
+                "dcterms:contributor": {label: "Contributor", containerType: "a"},
+                "dcterms:isPartOf": {label: "Is Part Of", containerType: "a"},
+                "dcterms:license": {label: "License", containerType: "a"},
+                "dcterms:provenance": {label: "Source", containerType: "div"},
+                "dcterms:publisher": {label: "Publisher", containerType: "div"},
+                "bibo:numPages": {label: "Pages", containerType: "div"}
+            };
+            if (infoBar) {
+                var key = d.label;
+                var headbar = $('div.head-info');
+                headbar.find('title').text("ddddddtitletitle");
+                headbar.html('');
+                var div = $('<div>');
+                var label = $('<span class="label label-primary" style="font-size:35px">').text("AUTHORS OF CLUSTER " + d.label);
+                div.append(label);
+                div.append("</br>");
+                headbar.append(div);
 
-            +'          	}'
-            +'          }'
-            +' }'
-            +'  group by ?cluster'
-            + '         }'
-            + ' Filter(?totalpub > 2)'
-            + '}';
+                var sparqlPublications = globalData.PREFIX
 
-            
-            waitingDialog.show("Loading Authors Related with " + d.label);
-            sparqlQuery.querySrv({query: sparqlquery}, function (rdf) {
-                jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
-                    if (compacted)
-                    {
-                        var entity = compacted["@graph"];
-                        //var final_entity = _.where(entity, {"@type": "bibo:Document"});
-                        var values = entity.length ? entity : [entity];
-                        //Change data
-                        for (var i = 0, len = compacted["@graph"].length; i < len; i++) {
-                            compacted["@graph"][i]["rdfs:label"] = compacted["@graph"][i]["@id"].toString().replace("uc:cluster","");
+                        + 'CONSTRUCT '
+                        + '{'
+                        + '     ?subject a foaf:Person. '
+                        + '	?subject foaf:name ?name. '
+                        
+                        + '	?subject bibo:Quote ?keywords. '
+                        + '} '
+                        + 'where'
+                        + '{'
+                        + ' SELECT DISTINCT ?subject ?name ?keywords'
+                        + ' WHERE '
+                        + ' {  '
+                        + '   graph <'+globalData.clustersGraph+'>        '
+                        + '   {          '
+                        + '     uc:cluster' + d.label + '  uc:hasPerson ?subject.'
+                        + '     {      			'
+                        + '       select  ?subject ?name (group_concat(distinct ?key;separator=", ") as ?keywords)            		'
+                        + '       where            		'
+                        + '                     {            	'
+                        + '                       graph <'+globalData.centralGraph+'>            			'
+                        + '                             {            				  '
+                        + '                               ?subject foaf:name ?name.'
+                        + '                               ?subject foaf:publications ?publicationUri. '
+                        + ' 							  ?publicationUri dct:title ?title .'
+                        + '                           ?publicationUri bibo:Quote ?key.'
+                        + '                         }          			'
+                        + '                 } group by ?subject ?name         	'
+                        + ' }           '
+                        + ' } '
+                        + ' } '
+                        + ' } ';
+                
+                        
+                waitingDialog.show("Searching Authors of the cluster " + key);
+
+                sparqlQuery.querySrv({query: sparqlPublications}, function (rdf) {
+
+                    jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
+                        if (compacted)
+                        {
+                            var entity = compacted["@graph"];
+                            //Each author is a person
+                            var final_entity = _.where(entity, {"@type": "foaf:Person"});
+                            var values = final_entity.length ? final_entity : [final_entity];
+                            //send data to the controller
+                            scope.ctrlFn({value: values});
+                            waitingDialog.hide();
+
                         }
-                        //send data to getKeywordTag Controller
-                        scope.ifClick({value: compacted});
-                        waitingDialog.hide();
-                    } else
-                    {
-                        waitingDialog.hide();
-                    }
+                        else
+                        {
+                            waitingDialog.hide();
+                        }
+                    });
                 });
-            });   // end  sparqlQuery.querySrv(...
-
-            
+            }
+            return d3.event.preventDefault();
         };
         hashchange = function () {
             var id;
@@ -252,7 +272,7 @@ keywClusters.directive('keywClusters', ['$routeParams', "d3", 'globalData', 'spa
             return updateActive(id);
         };
         updateActive = function (id) {
-            node.classed("bubble-selected", function (d) {
+            node.classed("gbubble-selected", function (d) {
                 return id === idValue(d);
             });
             if (id.length > 0) {
@@ -262,12 +282,12 @@ keywClusters.directive('keywClusters', ['$routeParams', "d3", 'globalData', 'spa
             }
         };
         mouseover = function (d) {
-            return node.classed("bubble-hover", function (p) {
+            return node.classed("gbubble-hover", function (p) {
                 return p === d;
             });
         };
         mouseout = function (d) {
-            return node.classed("bubble-hover", false);
+            return node.classed("gbubble-hover", false);
         };
         chart.jitter = function (_) {
             if (!arguments.length) {
@@ -299,12 +319,13 @@ keywClusters.directive('keywClusters', ['$routeParams', "d3", 'globalData', 'spa
             return chart;
         };
 
-        var draw = function draw(element, widthEl, heightEl, data, scopeEl, attrsEl) {
+        var draw = function draw(element, widthEl, heightEl, data, scopeEl, attrsEl, pageTitleEl) {
             width = widthEl;
             height = heightEl;
             scope = scopeEl;
             attrs = attrsEl;
-
+            pageTitle = pageTitleEl;
+            d3.select('div.head-pagetitle').text(pageTitle);
             force = d3.layout.force().gravity(0).charge(0).size([width, height]).on("tick", tick);
             element.datum(data).call(chart);
 
@@ -313,11 +334,15 @@ keywClusters.directive('keywClusters', ['$routeParams', "d3", 'globalData', 'spa
         return {
             restrict: 'E',
             scope: {
-                //'ctrlFn': "&",
-                'ifClick': "&",
+                'ctrlFn': "&",
                 data: '='
             },
             compile: function (element, attrs, transclude) {
+                //	Create	a	SVG	root	element
+                /*var	svg	=	d3.select(element[0]).append('svg');
+                 svg.append('g').attr('class', 'data');
+                 svg.append('g').attr('class', 'x-axis axis');
+                 svg.append('g').attr('class', 'y-axis axis');*/
                 //	Define	the	dimensions	for	the	chart
                 //var width = 960, height = 500;
                 var elementWidth = parseInt(element.css('width'));
@@ -325,29 +350,61 @@ keywClusters.directive('keywClusters', ['$routeParams', "d3", 'globalData', 'spa
                 var width = attrs.ctWidth ? attrs.ctWidth : elementWidth;
                 var height = attrs.ctHeight ? attrs.ctHeight : elementHeight;
 
-                //	Create	a	SVG	root	element
+
+
                 var svg = d3.select(element[0]);
 
                 //	Return	the	link	function
                 return	function (scope, element, attrs) {
                     //	Watch	the	data	attribute	of	the	scope
+                    /*scope.$watch('$parent.logs', function(newVal, oldVal, scope) {
+                     //	Update	the	chart
+                     var data = scope.$parent.logs.map(function(d) {
+                     return {
+                     x: d.time,
+                     y: d.visitors
+                     }
+                     
+                     });
+                     
+                     draw(svg, width, height, data);
+                     },	true);*/
                     scope.$watch('data', function (newVal, oldVal, scope) {
                         //	Update	the	chart
+
                         var data = scope.data;
                         if (data) {
                             var jsonld = data.data;
                             var schema = data.schema;
                             var fields = schema.fields;
                             var mappedData = [];
+                            
                             _.each(jsonld['@graph'], function (keyword, idx) {
-                                mappedData.push({label: keyword[fields[0]], value: keyword[fields[1]]["@value"]});
+                                if (keyword["rdfs:label"])
+                                {
+                                    var field1 = fields[1].replace("uc:","http://ucuenca.edu.ec/resource/");
+                                    var val = "";
+                                    if (keyword[fields[1]] || keyword[field1]) {
+                                        val = keyword[fields[1]] ? keyword[fields[1]]["@value"] : keyword[field1]["@value"];
+                                    }
+                                    if (keyword[fields[0]] != 'uc:resultTitle' && keyword[fields[0]] != 'http://ucuenca.edu.ec/wkhuska/resource/resultTitle'){
+                                    	mappedData.push({label: keyword[fields[0]], value: val});
+				    }
+
+                                }
                             });
-                            draw(svg, width, height, mappedData, scope, attrs);
+                            var pageTitle = "";
+                            try {
+                                pageTitle = _.findWhere(jsonld['@graph'],{"@type": "uc:pagetitle"})["uc:viewtitle"];
+                            }
+                            catch(err) {
+                                pageTitle = _.findWhere(jsonld['@graph'],{"@type": "http://ucuenca.edu.ec/resource/pagetitle"})["http://ucuenca.edu.ec/resource/viewtitle"];
+                            }
+                            draw(svg, width, height, mappedData, scope, attrs, pageTitle);
                         }
                     }, true);
+
                 };
             }
         };
     }]);
-
-

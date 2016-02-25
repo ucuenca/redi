@@ -8,13 +8,8 @@ var wkhomeApp = angular.module('wkhomeApp', [
     'ui.router',
     'swipe',
     'snapscroll',
-    /*'phonecatAnimations',*/
-    /*'bootstrap',*/
-    // 'myChart',   //aqui
-    // 'geoPlain',   //aqui
     'wkhomeControllers',
     'commonDirectives',
-    /*'phonecatFilters',*/
     'wkhomeServices',
 ]);
 
@@ -26,11 +21,12 @@ wkhomeApp.service('searchData', function () {
     this.genericData = null;
     this.researchArea = "Semantic Web";
     this.globalauthor = null;
+    
 });
 
 wkhomeApp.service('globalData', function () {
     this.language = "es";
-    this.centralGraph = "http://ucuenca.edu.ec/wkhuska";
+    this.centralGraph = "http://ucuenca.edu.ec/wkhuska2";
     this.clustersGraph = "http://ucuenca.edu.ec/wkhuska/clusters";
     this.authorsGraph = "http://ucuenca.edu.ec/wkhuska/authors";
     this.endpointsGraph = "http://ucuenca.edu.ec/wkhuska/endpoints";
@@ -40,92 +36,70 @@ wkhomeApp.service('globalData', function () {
             + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>  '
             + ' PREFIX dct: <http://purl.org/dc/terms/> '
             + ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> '
-            + ' PREFIX uc: <http://ucuenca.edu.ec/resource/>  '
+            + ' PREFIX uc: <http://ucuenca.edu.ec/ontology#>  '
             + ' PREFIX mm: <http://marmotta.apache.org/vocabulary/sparql-functions#> '
             ;
     this.CONTEXT = {
-        "uc": "http://ucuenca.edu.ec/resource/",
+        "uc": "http://ucuenca.edu.ec/ontology#",
         "foaf": "http://xmlns.com/foaf/0.1/",
         "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
         "bibo": "http://purl.org/ontology/bibo/",
         "dc": "http://purl.org/dc/elements/1.1/",
         "dct": "http://purl.org/dc/terms/",
     };
+    
+    this.urltofindinGOOGLE = 'https://scholar.google.com/scholar?q={0}';
+    this.urltofindinDBLP = 'http://dblp.uni-trier.de/search?q={0}';
+    this.urltofindinSCOPUS = 'http://www.scopus.com/results/results.uri?numberOfFields=0&src=s&clickedLink=&edit=&editSaveSearch=&origin=searchbasic&authorTab=&affiliationTab=&advancedTab=&scint=1&menu=search&tablin=&searchterm1={0}&field1=TITLE&dateType=Publication_Date_Type&yearFrom=Before+1960&yearTo=Present&loadDate=7&documenttype=All&subjects=LFSC&_subjects=on&subjects=HLSC&_subjects=on&subjects=PHSC&_subjects=on&subjects=SOSC&_subjects=on&st1={1}&st2=&sot=b&sdt=b&sl=91&s=TITLE%28{2}%29'
 });
 
 wkhomeApp.config(['$routeProvider',
     function ($routeProvider) {
-//        $stateProvider
-//                .state("mystate", {
-//                    url: '/mystate',
-//                    views: {
-//                        '': {templateUrl: '/wkhome/partials/home.html'},
-//                        'menu@mystate': {templateUrl: 'mainmenu.html'}
-//                    }
-//                })
-//                .state("groupby", {
-//                    url: '/cloud/group-by',
-//                    views: {
-//                        '': {templateUrl: '/wkhome/partials/cloudgroup.html'}
-//                      
-//                    }
-//                });
 
         $routeProvider.
                 when('/:lang/', {
                     templateUrl: '/wkhome/partials/home.html',
-                  
-//        controller: 'indexInformation'
                 }).
                 when('/:lang/:section', {
                     templateUrl: '/wkhome/partials/home.html',
-//        controller: 'showSection'
                 }).
                 when('/:lang/w/search?:text', {//when user search an author in textbox
                     templateUrl: '/wkhome/partials/search.html',
                     //      controller: 'ExploreController'
                 }).
+                when('/:lang/w/author/:text', {//when user search an author in textbox
+                    templateUrl: '/wkhome/partials/search.html',
+                }).
                 when('/:lang/w/cloud?:text', {
-                    templateUrl: '/wkhome/partials/genericcloud.html',
-//        controller: 'ExploreController'
+                    templateUrl: '/wkhome/partials/genericCloud.html',
                 }).
                 when('/:lang/w/clusters?:text', {
-                    templateUrl: '/wkhome/partials/clusterskeywcloud.html',
-//        controller: 'ExploreController'
+                    templateUrl: '/wkhome/partials/clustersCloud.html',
                 }).
                 when('/:lang/a/a', {
                     templateUrl: '/wkhome/partials/d3.html',
-                    controller: 'MainCtrl'
                 }).
                 when('/:lang/b/', {
                     templateUrl: '/wkhome/partials/geoplain.html',
                     controller: 'worldPath'
                 }).
                 when('/:lang/tags/cloud', {
-                    templateUrl: '/wkhome/partials/tags.html',
-                    //       controller: 'getKeywordsTag'
-                }).
-                when('/:lang/tags/cloud/clusters', {
-                    templateUrl: '/wkhome/partials/colorcluster.html',
-                    //       controller: 'getKeywordsTag'
+                    templateUrl: '/wkhome/partials/keywordsCloud.html',
                 }).
                 when('/:lang/d3/:geoId.json', {
                     templateUrl: '/wkhome/partials/phone-detail.html',
-                    //       controller: 'ExploreController'
                 }).
                 when('/:lang/cloud/group-by', {
-                    templateUrl: '/wkhome/partials/cloudgroup.html',
-                    //      controller: 'ExploreController'
+                    templateUrl: '/wkhome/partials/groupbyCloud.html',
                 }).
                 when('/:lang/geo-views/sources', {
-                    templateUrl: '/wkhome/partials/map-sources.html',
-                    //      controller: 'ExploreController'
+                    templateUrl: '/wkhome/partials/map.html',
                 }).
                 when('/:lang/cloud/clusters', {
-                    templateUrl: '/wkhome/partials/cloudcluster.html',
+                    templateUrl: '/wkhome/partials/clusterGroupByCloud.html',
                 }).
                 when('/:lang/cloud/keywords', {
-                    templateUrl: '/wkhome/partials/kwcloudcluster.html',
+                    templateUrl: '/wkhome/partials/clusterKeywordsCloud.html',
                 }).
                 when('/:lang/info/about', {
                     templateUrl: '/wkhome/partials/about.html'
@@ -135,7 +109,7 @@ wkhomeApp.config(['$routeProvider',
                 }).
                 when('/:lang/info/contact', {
                     templateUrl: '/wkhome/partials/contact.html'
-                }).    
+                }).
 //                .
                 /*when('/phones/:phoneId', {
                  templateUrl: 'partials/phone-detail.html',

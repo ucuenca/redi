@@ -115,7 +115,7 @@ cloudGroup.directive('mapView', ["d3", 'globalData', 'sparqlQuery',
                                     + '                     {  '
                                     + '                         SELECT * WHERE { '
                                     + '                             GRAPH <'+globalData.endpointsGraph+'>  { '
-                                    + '                                 ?provenance uc:name "' + d.name + '"^^xsd:string  '
+                                    + '                                 ?provenance uc:name "' + d.name + '"'
                                     + '                             } '
                                     + '                         } '
                                     + '                     } '

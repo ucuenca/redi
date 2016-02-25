@@ -10,15 +10,15 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                 + ' CONSTRUCT {  <http://ucuenca.edu.ec/wkhuska/resultTitle> a uc:pagetitle. <http://ucuenca.edu.ec/wkhuska/resultTitle> uc:viewtitle "Authors Related With {0}"  .         ?subject rdfs:label ?name.         ?subject uc:total ?totalPub   }   WHERE {   { '
                 + ' SELECT DISTINCT  ?subject ?name (count(?pub) as ?totalPub)'
                 + ' WHERE { '
-                + '   GRAPH <'+globalData.clustersGraph+'> '
+                + '   GRAPH <' + globalData.clustersGraph + '> '
                 + '         { '
-                + ' ?cluster <http://ucuenca.edu.ec/resource/hasPerson> <{1}> .'
-                + ' ?cluster <http://ucuenca.edu.ec/resource/hasPerson> ?subject.'
+                + ' ?cluster uc:hasPerson <{1}> .'
+                + ' ?cluster uc:hasPerson ?subject.'
                 + '           ?subject foaf:publications ?pub'
                 + '          {'
                 + ' SELECT ?name'
                 + ' {'
-                + '      graph <'+globalData.centralGraph+'>'
+                + '      graph <' + globalData.centralGraph + '>'
                 + '            {'
                 + '        	?subject foaf:name ?name.'
                 + '            }'
@@ -39,7 +39,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                 + '  { '
                 + '     SELECT ?subject (count(?pub) as ?totalPub) ?name '
                 + '         WHERE { '
-                + '             GRAPH <'+globalData.centralGraph+'> { '
+                + '             GRAPH <' + globalData.centralGraph + '> { '
                 + '             <{1}> foaf:publications ?pub.  '
                 + '            ?subject foaf:publications ?pub. '
                 + '            ?subject foaf:name ?name.  } '
@@ -97,6 +97,13 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
             }
             function executeRelatedAuthors(querytoExecute, divtoload) {
                 var sparqlquery = querytoExecute;
+                var context = {
+                    "foaf": "http://xmlns.com/foaf/0.1/",
+                    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+                    "bibo": "http://purl.org/ontology/bibo/",
+                    "dc": "http://purl.org/dc/elements/1.1/",
+                    "dct": "http://purl.org/dc/terms/"
+                };
                 sparqlQuery.querySrv({query: sparqlquery}, function (rdf) {
                     jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                         if (compacted)
@@ -110,15 +117,16 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                                 var div = $('<div>');
                                 authorInfo.append(div);
                                 _.map(values, function (value) {
-                                    var datastring = JSON.stringify(value);
-                                    //var anchor = $("<a class='relatedauthors' target='blank' >").attr('href', value).text("");
-                                    var anchor = $("<a class='relatedauthors' target='blank' onclick = 'return clickonRelatedauthor(\"" + value["@id"] + "\")'  >").text("");
-                                    anchor.append('<img src="/wkhome/images/author-ec.png" class="img-rounded" alt="Logo Cedia" width="20" height="20"        >');
+                                    if (value["rdfs:label"] && value["uc:total"]["@value"])
+                                    {
+                                        var anchor = $("<a class='relatedauthors' target='blank' onclick = 'return clickonRelatedauthor(\"" + value["@id"] + "\")'  >").text("");
+                                        anchor.append('<img src="/wkhome/images/author-ec.png" class="img-rounded" alt="Logo Cedia" width="20" height="20"        >');
+                                        anchor.append(value["rdfs:label"] + "(" + value["uc:total"]["@value"] + ")");
+                                        div.append(anchor);
+                                        div.append("</br>");
+                                        return anchor;
+                                    }
 
-                                    anchor.append(value["rdfs:label"]);
-                                    div.append(anchor);
-                                    div.append("</br>");
-                                    return anchor;
                                 });
                             }
                             waitingDialog.hide();
@@ -159,8 +167,6 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
             }
             //second parameter "if click right event"
             function setChildrenAndUpdateForAuthor(node, right) {
-
-
                 if (right)
                 {
                     var id = node.author["@id"];
@@ -170,7 +176,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                         var sparqlquery = String.format(getRelatedAuthorsByClustersQuery, author["foaf:name"], id);
                         waitingDialog.show("Loading Authors Related with " + author["foaf:name"]);
                         sparqlQuery.querySrv({query: sparqlquery}, function (rdf) {
-                            
+
                             jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                                 if (compacted)
                                 {
@@ -207,7 +213,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                         var anchor = $("<a target='blank'>").attr('href', id.replace('/xr/', '/')) //SOLO DBLP & MICROSOFT ACADEMICS
                                 .text("Click here for more info...");
                         // 
-                        
+
                         var authorToFind = author["@id"];
                         waitingDialog.show("Searching publications of the external author");
 
@@ -218,7 +224,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                                 + '    } '
                                 + 'WHERE'
                                 + '{'
-                                + 'graph <'+globalData.externalAuthorsGraph+'>'
+                                + 'graph <' + globalData.externalAuthorsGraph + '>'
                                 + '        {'
                                 + '<' + authorToFind + '> ?propaut ?obbaut.'
                                 + '?obbaut ?propub ?objpub.'
@@ -290,7 +296,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                                     + ' ?pub dct:isPartOf ?isPartOf. '
                                     + ' ?pub bibo:numPages ?numPages. '
                                     + ' } '
-                                    + ' WHERE { graph <'+globalData.centralGraph+'> {  '
+                                    + ' WHERE { graph <' + globalData.centralGraph + '> {  '
                                     + ' <' + nodeId + '> foaf:publications ?pub . '
                                     + '?pub dct:title ?title '
                                     + ' OPTIONAL {?pub bibo:abstract ?abstract. } '
@@ -300,6 +306,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                                     + ' OPTIONAL {?pub bibo:Quote ?keyword. } '
                                     + ' OPTIONAL {?pub dct:isPartOf ?isPartOf. } '
                                     + ' OPTIONAL {?pub bibo:numPages ?numPages. } '
+                                    + ' FILTER (!regex(?contributor, ":node")) '
                                     + ' } }';
                             sparqlQuery.querySrv({query: queryPublications}, function (rdf) {
 
@@ -348,42 +355,58 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
             function setChildrenAndUpdateForPub(node) {
 
                 var infoBar = $('div.tree-node-info');
-                var model = {"dct:title": {label: "Title", containerType: "div"},
-                    "bibo:uri": {label: "URL", containerType: "a"},
-                    "dct:contributor": {label: "Contributor", containerType: "a"},
-                    "dct:isPartOf": {label: "Is Part Of", containerType: "a"},
-                    "dct:license": {label: "License", containerType: "a"},
-                    "dct:provenance": {label: "Source", containerType: "div"},
-                    "dct:publisher": {label: "Publisher", containerType: "div"},
-                    "bibo:numPages": {label: "Pages", containerType: "div"}
-                };
                 if (infoBar) {
                     var id = node.publication["@id"];
                     //var sparqlDescribe = "DESCRIBE <" + id + ">";
 
                     //view data in infoBar
                     var entity = _.findWhere(node.publication.jsonld["@graph"], {"@id": id, "@type": "bibo:Document"});
-                    var model = {"dct:title": {label: "Title", containerType: "div"},
-                        "bibo:uri": {label: "URL", containerType: "a"},
-                        "dct:contributor": {label: "Contributor", containerType: "a"},
-                        "dct:isPartOf": {label: "Is Part Of", containerType: "a"},
-                        "dct:license": {label: "License", containerType: "a"},
-                        "dct:provenance": {label: "Source", containerType: "div"},
-                        "dct:publisher": {label: "Publisher", containerType: "div"},
-                        "bibo:numPages": {label: "Pages", containerType: "div"},
-                        "bibo:abstract": {label: "Abstract", containerType: "div"},
-                        "bibo:Quote": {label: "Keywords", containerType: "div"}
+                    var model = {"dct:title": {label: "Titulo", containerType: "div"},
+                        "bibo:uri": {label: "URL: Link Externo", containerType: "a"},
+                        "dct:contributor": {label: "CO-Autores - Links Externos: ", containerType: "a"},
+                        "dct:isPartOf": {label: "Es parte de: ", containerType: "a"},
+                        "dct:license": {label: "Licencia: ", containerType: "a"},
+                        "dct:provenance": {label: "Fuente: ", containerType: "div"},
+                        "dct:publisher": {label: "Publisher: ", containerType: "div"},
+                        "bibo:numPages": {label: "Paginas: ", containerType: "div"},
+                        "bibo:abstract": {label: "Abstract: ", containerType: "div"},
+                        "bibo:Quote": {label: "Keywords: ", containerType: "div"}
                     };
-                    infoBar.find('h4').text("Publication Info");
-                    infoBar.find('div#title').text("Title: " + entity["dct:title"]);
-                    infoBar.find('a').attr('href', "http://190.15.141.85:8080/marmottatest/meta/text/html?uri=" + entity["@id"])
-                            .text("More Info...");
+
+
+                    var linkExternalGoogle = $('div.try-external-search .external-search-google');
+                    linkExternalGoogle.html('');
+                    var divscholar = $('<div>');
+                    var scholar = $("<a target='blank'>").attr('href', String.format(globalData.urltofindinGOOGLE, entity["dct:title"])).text('GOOGLE SCHOLAR');
+                    divscholar.append(scholar);
+                    linkExternalGoogle.append(divscholar);
+
+                    var linkExternalDblp = $('div.try-external-search .external-search-dblp');
+                    linkExternalDblp.html('');
+                    var divdblp = $('<div>');
+                    var dblp = $("<a target='blank'>").attr('href', String.format(globalData.urltofindinDBLP, entity["dct:title"])).text('DBLP');
+                    divdblp.append(dblp);
+                    linkExternalDblp.append(divdblp);
+
+                    var linkExternalScopus = $('div.try-external-search .external-search-scopus');
+                    linkExternalScopus.html('');
+                    var divscopus = $('<div>');
+                    var scopus = $("<a target='blank'>").attr('href', String.format(globalData.urltofindinSCOPUS, entity["dct:title"], entity["dct:title"], entity["dct:title"])).text('SCOPUS');
+                    divscopus.append(scopus);
+                    linkExternalScopus.append(divscopus);
+
+                    infoBar.find('h4').text("Información del Articulo");
+
                     var pubInfo = $('div.tree-node-info .entityInfo');
                     pubInfo.html('');
+
+
+
+
                     _.each(_.keys(model), function (key, idx) {
 
                         if (entity[key]) {
-                            if (model[key].containerType == 'a') {
+                            if (model[key].containerType === 'a') {
                                 var values = entity[key].length ?
                                         _.pluck(entity[key], '@id') : [entity[key]["@id"]];
                                 var div = $('<div>');
@@ -418,6 +441,10 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                         }
 
                     });
+                    pubInfo.append("<hr>");
+                    var anchor = $("<a target='blank'>").attr('href', "http://190.15.141.85:8080/marmottatest/meta/text/html?uri=" + entity["@id"]).text("Mas Información");
+                    pubInfo.append(anchor);
+
                 }
 
                 var model;
@@ -427,14 +454,51 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                     setChildrenAndUpdate('author', node, model, {"@type": "foaf:Person"}, globalData.CONTEXT, exploredArtistIds);
                 } else {
                     var nodeId = node.publication['@id'];
-                    var coAuthors = [];
+                    var externalCoAuthors = [];
+                    var localCoAuthors = [];
                     //**** GETTING EXTERNAL CONTRIBUTORS OF PUBLICATION ***/
+                    //*** This funcion is within of GETTING LOCAL CONTRIBUTORS because this service is asynchronous
+                    //*** and we need get first LOCAL Authors.
                     var contributors = node.publication.jsonld["@graph"][0]["dct:contributor"];
-                    _.map(contributors, function (val) {
-                        coAuthors.push({'@id': val["@id"], '@type': 'foaf:Person'});
-                    });
 
-                    //****  GETTING LOCAL CONTRIBUTOR OF PUBLICATION ***** //    
+                    _.map(contributors, function (val) {
+                        /**
+                         * Quering External Author NAME
+                         */
+                        var externalnamesparql = globalData.PREFIX
+                                + ' Construct { '
+                                + '<' + val["@id"] + '> foaf:name ?name'
+                                + ' } '
+                                + 'WHERE { '
+                                + '	<' + val["@id"] + '> '
+                                + '<http://www.elsevier.com/xml/svapi/rdf/dtd/givenName> ?externalfname; '
+                                + '<http://www.elsevier.com/xml/svapi/rdf/dtd/surname> ?externallname.   '
+                                + 'BIND (CONCAT(?externallname,", ", ?externalfname) as ?name)'
+                                + ' }';
+
+                        sparqlQuery.querySrv({query: externalnamesparql}, function (rdf) {
+
+                            jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
+
+                                if (compacted["@graph"] && compacted["@graph"][0]["foaf:name"])
+                                {
+                                    var name = compacted["@graph"][0]["foaf:name"];
+                                    externalCoAuthors.push({'@id': val["@id"], '@type': 'foaf:Person', 'foaf:name': name});
+
+                                }
+                                else
+                                {
+                                    externalCoAuthors.push({'@id': val["@id"], '@type': 'foaf:Person'});
+                                }
+                            });
+                        });
+
+                    });
+                    //**** END GETTING EXTERNAL CONTRIBUTORS OF PUBLICATION ***/
+
+                    //****
+                    //  GETTING LOCAL CONTRIBUTOR OF PUBLICATION
+                    //***** //
                     var getLocalcoAuthorsSparqlQuery = globalData.PREFIX
                             + ' CONSTRUCT { '
                             + ' <' + node.publication['@id'] + '> dct:contributors ?subject. '
@@ -442,32 +506,58 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                             + ' ?subject a foaf:Person. '
                             + ' } '
                             + ' WHERE { '
-                            + ' GRAPH <'+globalData.centralGraph+'> '
+                            + ' GRAPH <' + globalData.centralGraph + '> '
                             + ' { '
                             + ' ?subject foaf:publications  <' + node.publication['@id'] + '>. '
                             + ' ?subject foaf:name ?name. '
                             + ' }}';
 
-//                    sparqlQuery.querySrv({query: getLocalcoAuthorsSparqlQuery}, function (rdf) {
-//
-//                        jsonld.compact(rdf, context, function (err, compacted) {
-//                            if (compacted)
-//                            {
-//                                var localcontributors = _.where(compacted["@graph"], {"@type": "foaf:Person"});
-//                                _.map(localcontributors, function (val) {
+                    sparqlQuery.querySrv({query: getLocalcoAuthorsSparqlQuery}, function (rdf) {
+
+                        jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
+                            if (compacted)
+                            {
+                                var localcontributors = _.where(compacted["@graph"], {"@type": "foaf:Person"});
+                                _.map(localcontributors, function (val) {
 //                                    if (val["@id"] !== rootAuthor)
 //                                    {
-//                                        coAuthors.push({'@id': val["@id"], '@type': 'foaf:Person', 'foaf:name': val["foaf:name"]});
+                                        localCoAuthors.push({'@id': val["@id"], '@type': 'foaf:Person', 'foaf:name': val["foaf:name"]});
 //                                    }
-//                                });
-//                            }
-//                            var contributorsjsonld = {"@graph": coAuthors};
-//                            setChildrenAndUpdate('author', node, contributorsjsonld, 'foaf:Person', context, exploredArtistIds);
-//                        });
-//                    });
-                    //**** END GETTING EXTERNAL CONTRIBUTORS OF PUBLICATION ***/
-                    var contributorsjsonld = {"@graph": coAuthors};
-                    setChildrenAndUpdate('author', node, contributorsjsonld, 'foaf:Person', globalData.CONTEXT, exploredArtistIds);
+                                });
+
+                            }
+                            _.map(externalCoAuthors, function (coAuthor) {
+                                if (coAuthor["foaf:name"])
+                                {
+                                    //searching name of externalcoauthors in localcoauthors
+                                    var name = coAuthor["foaf:name"].toString();
+                                    var sameName = _.findWhere(localCoAuthors, {'foaf:name': name});
+                                    
+                                    //searching lastname of externalcoauthors in localauthors
+                                    var lastname = name.substring(0, name.indexOf(','));
+                                    var sameLastName = _.find(localCoAuthors,function(localauthor){ return localauthor['foaf:name'].indexOf(lastname) >-1; });
+                                   
+                                    if (!sameName && !sameLastName)//if author of externalCoAuthors exist (comparing names) in localCoAuthors, then not added external author
+                                    {
+                                        localCoAuthors.push(coAuthor);
+                                    }
+                                }
+                                else
+                                {
+                                    localCoAuthors.push(coAuthor);
+                                }
+
+                            });
+                            var contributorsjsonld = {"@graph": localCoAuthors};
+                            setChildrenAndUpdate('author', node, contributorsjsonld, 'foaf:Person', globalData.CONTEXT, exploredArtistIds);
+                        });
+                    });
+                    //**** END  GETTING LOCAL CONTRIBUTOR OF PUBLICATION ***** //   
+
+
+
+//                    var contributorsjsonld = {"@graph": coAuthors};
+//                    setChildrenAndUpdate('author', node, contributorsjsonld, 'foaf:Person', globalData.CONTEXT, exploredArtistIds);
 
                 }
             }
@@ -703,7 +793,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
 //                        .offset([0, 3]);
 
                 // Enter any new nodes at the parent's previous position.
-                
+
                 var nodeEnter = node.enter().append("g")
                         // .call(dragListener)
                         .call(expand ? tip : function () {
@@ -722,9 +812,9 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                                 //AE.getInfo(d.author);
                             } else if ('author' in d)
                             {
-                                var id = d.author["@id"];
-                                tip.html(id);
-                                tip.show(d);
+//                                var id = d.author["@id"];
+//                                tip.html(id);
+//                                tip.show(d);
                             }
                         })
                         .on("mouseout", function (d) {
@@ -737,7 +827,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                                 //AE.getInfoCancel();
                             }
                         })
-                        .on('contextmenu', d3.contextMenu(menu,  function (d) {
+                        .on('contextmenu', d3.contextMenu(menu, function (d) {
                             console.log('Quick! Before the menu appears!');//function (d) {
                             if (!('author' in d))
                             {
@@ -745,7 +835,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                             }
                         }
 
-                        )) 
+                        ))
                         .on('click', click);
                 nodeEnter.append("circle")
                         .attr("r", 32)
@@ -772,7 +862,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                 nodeEnter.append("image")
                         .attr("xlink:href", function (d) {
                             if (isAuthor(d)) {
-                                if (d.author.jsonld["@graph"][0]["foaf:name"])
+                                if (d.author.jsonld["@graph"][0]["foaf:name"] && (d.author.jsonld["@graph"][0]["@id"].indexOf('ucuenca') > 0))
                                 {
                                     return 'wkhome/images/author-ec.png';
                                 }

@@ -101,18 +101,6 @@ table { empty-cells: show; }
     background-color: khaki;
 }
 
-.a > link {
-    color: #2a3439;
-}
-
-a:link, a:visited {
-    color: #2a3439;
-    text-decoration: none;
-}
-
-a:hover {
-    color: white;
-}
 
 .stats > div {
     height: 60vh;

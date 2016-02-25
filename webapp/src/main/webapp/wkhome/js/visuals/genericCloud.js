@@ -24,7 +24,7 @@ genericCloud.directive('genericCloud', ["d3", 'globalData','sparqlQuery',
             bottom: 0,
             left: 0
         };
-        maxRadius = 35;
+        maxRadius = 60;
         rScale = d3.scale.sqrt().range([0, maxRadius]);
         rValue = function (d) {
             return parseInt(d.value);
@@ -117,7 +117,7 @@ genericCloud.directive('genericCloud', ["d3", 'globalData','sparqlQuery',
                 return rValue(d);
             });
             label.style("font-size", function (d) {
-                return Math.max(8, rScale(rValue(d) / 5)) + "px";
+                return Math.max(8, rScale(rValue(d) / 3)) + "px";
             }).style("width", function (d) {
                 return 0.1 * rScale(rValue(d)) + "px";
             });
@@ -182,13 +182,13 @@ genericCloud.directive('genericCloud', ["d3", 'globalData','sparqlQuery',
 
             //adding information about publications of THIS keyword into "tree-node-info"   DIV
             var infoBar = $('div.tree-node-info');
-            var model = {"dct:title": {label: "Title", containerType: "div"},
+            var model = {"dcterms:title": {label: "Title", containerType: "div"},
                 "bibo:uri": {label: "URL", containerType: "a"},
-                "dct:contributor": {label: "Contributor", containerType: "a"},
-                "dct:isPartOf": {label: "Is Part Of", containerType: "a"},
-                "dct:license": {label: "License", containerType: "a"},
-                "dct:provenance": {label: "Source", containerType: "div"},
-                "dct:publisher": {label: "Publisher", containerType: "div"},
+                "dcterms:contributor": {label: "Contributor", containerType: "a"},
+                "dcterms:isPartOf": {label: "Is Part Of", containerType: "a"},
+                "dcterms:license": {label: "License", containerType: "a"},
+                "dcterms:provenance": {label: "Source", containerType: "div"},
+                "dcterms:publisher": {label: "Publisher", containerType: "div"},
                 "bibo:numPages": {label: "Pages", containerType: "div"}
             };
             if (infoBar) {
@@ -213,7 +213,8 @@ genericCloud.directive('genericCloud', ["d3", 'globalData','sparqlQuery',
                         + " WHERE {"
                         + " GRAPH <"+globalData.centralGraph+">"
                         + " {"
-                        + " ?subject foaf:name \""+key+"\"^^xsd:string ."
+                       + " ?subject foaf:name ?name"
+                        + " FILTER (mm:fulltext-search(str(?name),'"+key+"'))"
                         + " ?subject foaf:publications ?publicationUri. "
                         + " ?publicationUri dct:title ?title .  "
                         + " OPTIONAL { ?publicationUri bibo:abstract  ?abstract.  } "

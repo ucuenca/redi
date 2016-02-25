@@ -10,69 +10,50 @@ pieChart.directive('pieChart', ["d3", "globalData", "sparqlQuery",
 
         //	we	will	soon	implement	this	function
         var draw = function draw(svg, width, height, entityName, data, scope) {
-            var outerRadius = height / 2 - 20,
-                    innerRadius = outerRadius / 3,
+            var outerRadius = height / 1.7,
+                    innerRadius = outerRadius/10,
                     cornerRadius = 10;
 
             var pie = d3.layout.pie()
-                    .padAngle(.02)
+                    .padAngle(.05)
                     //.sort(null)
                     .value(function (d) {
                         return d.value;
                     });
 
-            var arc = d3.svg.arc()
+
+            var radius = Math.min(width, height) / 4.0;
+            var arcWidget = d3.svg.arc()
                     .padRadius(outerRadius)
                     .innerRadius(innerRadius);
 
-            var radius = Math.min(width, height) / 2;
+            var arc = d3.svg.arc()
+                    .outerRadius(radius * 0.8)
+                    .innerRadius(radius * 0.4);
             var outerArc = d3.svg.arc()
                     .innerRadius(radius * 0.9)
                     .outerRadius(radius * 0.9);
+            //textos externos
+            var outerLabelArc = d3.svg.arc()
+                    .innerRadius(radius * 1.5)
+                    .outerRadius(radius * 1.5);
+            
+            //para textos directos sobre cada porcion de pie
+            var labelArc = d3.svg.arc()
+                    .outerRadius(radius + 20)
+                    .innerRadius(radius + 20);
+       
 
-
-            var color = d3.scale.category10();
-            /*
-             svg
-             .attr("width", width)
-             .attr("height", height);
-             
-             var g = svg
-             .append("g")
-             
-             .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-             g.selectAll("path")
-             
-             .data(pie(data))
-             .enter().append("path")
-             
-             
-             .each(function(d) { d.outerRadius = outerRadius - 20; })
-             
-             attr("d", arc)
-             //.on("mouseover", arcTween(outerRadius, 0))
-             on("mouseover", function (d) {
-             d3.select('#tooltip p strong')
-             .text(Math.random());
-             d3.select("#tooltip")
-             .style("left", d3.event.pageX + "px")
-             .style("top", d3.event.pageY + "px")
-             .style("opacity", 1)
-             .select("#value")
-             .text(d.value);
-             
-             
-             })
-             //.on("mouseout", arcTween(outerRadius - 20, 150));
-             .on("mouseout", function () {
-             // Hide the tooltip
-             d3.select("#tooltip")
-             .style("opacity", 0);
-             
-             });*/
+            var color = d3.scale.ordinal()
+                    //        .range(["#F7FC63","#F7B9CB","#609FF7", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+                    .range(["#B4BFE1", "#94A2CF", "#7888BF", "#5E71AF", "#465BA1", "#324997", "#203A90", "#112E8D", "#022189"]);
+            function midAngle(d) {
+                return d.startAngle + (d.endAngle - d.startAngle) / 2;
+            }
+          
             svg
-                    .attr("width", width- 30)
-                    .attr("height", height - 50);
+                    .attr("width", width  )
+                    .attr("height", height);
 
 
             var g = svg.append("g");
@@ -83,27 +64,30 @@ pieChart.directive('pieChart', ["d3", "globalData", "sparqlQuery",
                     .attr("class", "labels");
             g.append("g")
                     .attr("class", "lines");
-            g.attr("transform", "translate(" + (width - 30) / 2 + "," + (height - 50) / 2 + ")");
+            g.attr("transform", "translate(" + (width  ) / 2 + "," + (height ) / 2 + ")");
+
 
             var key = function (d) {
                 return d.data.label;
             };
 
-            var slice = g.select(".slices").selectAll("path.slice")
-                    //g.selectAll("path")
-                    .data(pie(data), key);
+
+            var slice = g.select(".slices").selectAll("path.slice").data(pie(data), key);
+            
+
             slice
                     .enter().append("path")
-                    //.enter().insert("path")
+              
                     .style("fill", function (d) {
-                        return d.data.color;
+                        return color(d.data.label);
                     })
+
                     .attr("class", "slice")
 
                     .each(function (d) {
-                        d.outerRadius = outerRadius - 20;
+                        d.outerRadius = outerRadius - 40;
                     })
-                    .attr("d", arc)
+                    .attr("d", arcWidget)
                     .on("mouseover", function (d) {
                         d3.select('#tooltip p strong')
                                 .text(d.data.label);
@@ -132,29 +116,30 @@ pieChart.directive('pieChart', ["d3", "globalData", "sparqlQuery",
                             var sparqlquery = globalData.PREFIX
                                     + ' CONSTRUCT { '
                                     + ' uc:resultTitle a uc:pagetitle. '
-                                    + ' uc:resultTitle uc:viewtitle "Authors from ' + key + ' "  .  '  
-                                    + ' ?subject rdfs:label ?name. '  
+                                    + ' uc:resultTitle uc:viewtitle "Authors from ' + key + ' "  .  '
+                                    + ' ?subject rdfs:label ?name. '
                                     + ' ?subject uc:total ?totalPub }   '
                                     + ' WHERE {  '
                                     + ' {       '
                                     + ' SELECT ?subject ?name (COUNT(?pub) AS ?totalPub)  '
                                     + ' WHERE { '
-                                    + ' GRAPH <'+globalData.centralGraph+'> {'
+                                    + ' GRAPH <' + globalData.centralGraph + '> {'
                                     + ' 	?subject foaf:publications  ?pub . '
+                                    + ' 	?pub dct:title ?title . '
                                     + ' 	?subject foaf:name       ?name.        '
                                     + ' 	?subject dct:provenance ?provenance. '
                                     + '     { '
                                     + '         SELECT * '
                                     + '         WHERE { '
-                                    + '         GRAPH <'+globalData.endpointsGraph+'> { '
-                                    + '             ?provenance uc:name "' + key + '"^^xsd:string } '
+                                    + '         GRAPH <' + globalData.endpointsGraph + '> { '
+                                    + '             ?provenance uc:name "' + key + '" } '
                                     + '         } '
                                     + '     } '
                                     + ' } } '
                                     + ' GROUP BY ?subject ?name '
-                                    + ' HAVING( ?totalPub > 50 && ?totalPub < 100) '
+                                    + ' HAVING( ?totalPub > 0 && ?totalPub < 20) '
                                     + '} '
-                                    + '}';
+                                    + '} limit 100';
                             waitingDialog.show("Loading All Authors of Selected Source");
 
                             sparqlQuery.querySrv({query: sparqlquery}, function (rdf) {
@@ -178,6 +163,78 @@ pieChart.directive('pieChart', ["d3", "globalData", "sparqlQuery",
                         }//end if entityName === Articles
                         return d3.event.preventDefault();
                     });
+            slice.enter().append("text")
+                    .attr("transform", function (d) {
+                        return "translate(" + labelArc.centroid(d) + ")";
+                    })
+                    .attr("dy", ".35em")
+                    .text(function (d) {
+                        return d.data.value;
+                    });
+/*
+            var polyline = svg.select(".lines").selectAll("polyline")
+                    .data(pie(data), key);
+
+            polyline.enter()
+                    .append("polyline");
+
+            polyline.transition().duration(1000)
+                    .attrTween("points", function (d) {
+                        this._current = this._current || d;
+                        var interpolate = d3.interpolate(this._current, d);
+                        this._current = interpolate(0);
+                        return function (t) {
+                            var d2 = interpolate(t);
+                            var pos = outerLabelArc.centroid(d2) ;
+                            pos[0] = radius * 0.95 * (midAngle(d2) < Math.PI ? 1 : -1)   ;
+                            return [arc.centroid(d2) + 80, outerArc.centroid(d2) , pos];
+                        };
+                    });
+
+            polyline.exit()
+                    .remove();
+
+            /* ------- TEXT LABELS -------*/
+/*
+            var text = svg.select(".labels").selectAll("text")
+                    .data(pie(data), key);
+
+            text.enter()
+                    .append("text")
+                    .attr("dy", ".35em")
+                    .text(function (d) {
+                        return d.data.value > 150 ? d.data.label + "(" + d.data.value +")" : "";
+                    });
+
+            function midAngle(d) {
+                return d.startAngle + (d.endAngle - d.startAngle) / 3;
+            }
+
+            text.transition().duration(1000)
+                    .attrTween("transform", function (d) {
+                        this._current = this._current || d;
+                        var interpolate = d3.interpolate(this._current, d);
+                        this._current = interpolate(0);
+                        return function (t) {
+                            var d2 = interpolate(t);
+                            var pos = outerLabelArc.centroid(d2);
+                            pos[0] = radius * (midAngle(d2) < Math.PI ? 1 : -1);
+                            return "translate(" + pos + ")";
+                        };
+                    })
+                    .styleTween("text-anchor", function (d) {
+                        this._current = this._current || d;
+                        var interpolate = d3.interpolate(this._current, d);
+                        this._current = interpolate(0);
+                        return function (t) {
+                            var d2 = interpolate(t);
+                            return midAngle(d2) < Math.PI ? "start" : "end";
+                        };
+                    });
+
+            text.exit()
+                    .remove();
+*/
 
             function arcTween(outerRadius, delay) {
                 return function () {
