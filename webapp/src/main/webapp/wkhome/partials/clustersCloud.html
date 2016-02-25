@@ -1,23 +1,18 @@
- 
-<div id="scrollToTop">
-</div> 
+
 <hr>
 <hr>
 <div class='col-md-2' ng-include="'/wkhome/partials/mainmenu.html'"/> 
 
 <div class="col-md-10">
 
-    <center>
-        <div class="page-header" style="margin: 20px 0 10px" >
-            <h2 class="text-success">{{'Keywords Cloud' | translate }}</h2>
-        </div>
-    </center>
-
     <div class="row subject-cloud">
+        <div class="col-md-12" ng-controller="clustersCloud" >
+            <hr>
+            <div class="head-pagetitle text-success" style="font-size: 30px">
+                <div id="title"  class="text-success"></div>
+            </div>
 
-        <div class="col-md-12" ng-controller="getKeywordsTag" >
-
-            <cloud-tag data="data" style="display: block; height: 90%" ctrl-fn="ctrlFn(value)" ng-model="value"></cloud-tag> 
+            <cluster-keyw-cloud data="data" style="display: block; height: 90%" ctrl-fn="ctrlFn(value)" ng-model="value"></cluster-keyw-cloud> 
             <div id="scrollToHere">
             </div> 
             <hr>
@@ -26,7 +21,6 @@
             </div>
             <div class="col-md-12 head-info">
                 <div id="title" style="font-size:50pt">
-
 
                 </div>
 
@@ -43,7 +37,7 @@
 
 
                 <h3></h3>
-                <h4 style="padding: 20px" class="text-success"> {{'Total of Publications found' | translate }}: {{todos.length}} </h4>
+                <h4 style="padding: 20px" class="text-success"> {{'Total of Authors found' | translate }}: {{todos.length}} </h4>
 
 
                 <ul>
@@ -54,12 +48,12 @@
                         <a href="{{todo.uri}}" >
                             <div class="panel panel-info">
                                 <div class="panel-heading">
-                                    <h2 class="panel-title"><a href="{{todo.uri}}" target='_blank'>{{todo.title}}</a></h2>
+                                    <h2 class="panel-title"><a ng-click="searchAuthor(todo.uri)" >{{todo.name}}</a></h2>
                                 </div>
                                 <div class="panel-body">
-                                    Abstract: {{todo.abstract}}
+                                    <strong>Keywords:</strong> {{todo.keywords}}
                                     </br>
-                                    <a href="{{todo.uri}}" target='_blank'>{{todo.uri}}</a>
+                                    <a ng-click="searchAuthor(todo.uri)">{{todo.uri}}</a>
                                 </div>
                             </div>
                         </a>
@@ -76,5 +70,6 @@
                 </center>
             </div>
         </div>
+
     </div>
 </div>
