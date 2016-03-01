@@ -221,7 +221,7 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
         };
         function executeRelatedAuthors(querytoExecute, divtoload) {
             var sparqlquery = querytoExecute;
-           
+
             sparqlQuery.querySrv({query: sparqlquery}, function (rdf) {
                 jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                     if (compacted)
@@ -300,6 +300,9 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
                 //var sparqlDescribe = "DESCRIBE <" + id + ">";
                 var sparqlPublications = globalData.PREFIX
                         + " CONSTRUCT { ?keyword uc:publication ?publicationUri. "
+                        + " ?publicationUri dct:contributors ?subject . "
+                        + " ?subject foaf:name ?name . "
+                        + " ?subject a foaf:Person . "
                         + " ?publicationUri a bibo:Document. "
                         + " ?publicationUri dct:title ?title. "
                         + " ?publicationUri bibo:abstract ?abstract. "
@@ -308,9 +311,11 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
                         + " WHERE {"
                         + " GRAPH <" + globalData.centralGraph + ">"
                         + " {"
+                        + " ?subject foaf:publications ?publicationUri ."
+                        + " ?subject foaf:name ?name ."
                         + " ?publicationUri dct:title ?title . "
-                        + " optional {?publicationUri bibo:abstract  ?abstract.} "
-                        + " optional {?publicationUri bibo:uri  ?uri.} "
+                        + " OPTIONAL{ ?publicationUri bibo:abstract  ?abstract. } "
+                        + " OPTIONAL{ ?publicationUri bibo:uri  ?uri. } "
                         + " ?publicationUri bibo:Quote \"" + keyword + "\" ."
                         + "  BIND(REPLACE( \"" + keyword + "\", \" \", \"_\", \"i\") AS ?key) ."
                         + "  BIND(IRI(?key) as ?keyword)"
@@ -324,10 +329,11 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
                         if (compacted)
                         {
                             var entity = compacted["@graph"];
-                            var final_entity = _.where(entity, {"@type": "bibo:Document"});
+                            //var final_entity = _.where(entity, {"@type": "bibo:Document"});
+                            var final_entity = entity;
                             var values = final_entity.length ? final_entity : [final_entity];
                             //send data to getKeywordTag Controller
-                            scope.ctrlFn({value: values});
+                            scope.ctrlFn({value: entity});
                             waitingDialog.hide();
 
                         }

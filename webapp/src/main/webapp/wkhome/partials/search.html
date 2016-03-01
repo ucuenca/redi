@@ -24,13 +24,13 @@
     </div>
 
 </div>
-<div id="scrollToHere" class="col-md-10">
+<div id="scrollToHere" class="col-md-7">
     <div class="container-fluid" style="padding-top: 50px;" ng-controller="exploreAuthor"> 
         <div class="row">
-            <div class="col-md-9">
+            <div class="col-md-12">
 
-                <div class="col-md-9 try-external-search" style="height:10vh">
-                    <h4>Intentar buscar en: </h4>
+                <div class="col-md-9 try-external-search" style="height:15vh">
+                    <h4>Intentar Buscar el Articulo En: </h4>
                     <div class="col-md-3 external-search-google" style="text-align: center">
                         <a href="" target="_blank"></a>
                     </div>
@@ -45,8 +45,8 @@
                 </div>
 
             </div>
-            <div class="col-md-9">
-                <explorable-tree data="data" class="tree-main-container" style="display:block; height:120vh"  ifright-Click="ifrightClick(value)"  clickon-Relatedauthor="clickonRelatedauthor(value)" ng-model="value"></explorable-tree>
+            <div class="col-md-12">
+                <explorable-tree data="data" class="tree-main-container" style="display:block; height:120vh; background-color: #F7F8E0"  ifright-Click="ifrightClick(value)"  clickon-Relatedauthor="clickonRelatedauthor(value)" ng-model="value"></explorable-tree>
             </div>
             <div class="col-md-3 tree-node-info" style="height:100vh">
                   
@@ -129,5 +129,15 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+    <hr>
+    <hr>
+<div class="col-md-3 tree-node-info" style="height:100vh; background-color: #F7F8E0">
+    <h4>Información del Articulo</h4>
+    <div class="entityInfo">
+        <!-- <span style="font-weigth:bold">Title: </span> -->
+        <div id="title" style="font-size:50pt"></div>
+        <a href="" target="_blank"></a>
     </div>
 </div>

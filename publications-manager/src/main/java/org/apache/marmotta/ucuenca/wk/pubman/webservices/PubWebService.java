@@ -128,7 +128,7 @@ public class PubWebService {
     @Path(GET_AUTHOR_DATA)
     @Produces("application/ld+json")
     public Response searchAuthor(@FormParam("resource") String uri, @Context HttpServletRequest request) {
-        JsonArray resultjson = commonService.searchAuthor(uri);
+            JsonArray resultjson = commonService.searchAuthor(uri);
         String result = resultjson.toString();
         return Response.ok().entity(result).build();
     }

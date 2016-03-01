@@ -5,7 +5,7 @@ wkhomeControllers.controller('keywordsCloud', ['$routeParams', '$scope', 'global
             scrollTop: $("#scrollToTop").offset().top
         }, "slow");
 
-        if (!searchData.allkeywords) {
+        if (!searchData.allkeywords2) {
             $scope.themes = [];
             var queryKeywords = globalData.PREFIX
                     + ' CONSTRUCT { ?keyword rdfs:label ?key } '
@@ -13,7 +13,8 @@ wkhomeControllers.controller('keywordsCloud', ['$routeParams', '$scope', 'global
                     + ' WHERE { '
                     + '     SELECT  (count(?key) as ?k) ?key '
                     + '         WHERE { '
-                    + '             ?subject bibo:Quote ?key. '
+                    + '             ?subject foaf:publications ?pub. '
+                    + '             ?pub bibo:Quote ?key. '
                     + '             BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
                     + '             BIND(IRI(?unickey) as ?keyword) '
                     + '         } '
@@ -32,15 +33,15 @@ wkhomeControllers.controller('keywordsCloud', ['$routeParams', '$scope', 'global
                         $scope.themes.push({tag: model["tag"]});
                     });
                     $scope.$apply(function () {
-                        searchData.allkeywords = $scope.themes;
-                        $scope.relatedthemes = searchData.allkeywords;
+                        searchData.allkeywords2 = $scope.themes;
+                        $scope.relatedthemes = searchData.allkeywords2;
                         $scope.selectedItem = "";
                     });
 
                 });
             });
         } else {
-            $scope.relatedthemes = searchData.allkeywords;
+            $scope.relatedthemes = searchData.allkeywords2;
             $scope.selectedItem = "";
         }
 
@@ -73,18 +74,32 @@ wkhomeControllers.controller('keywordsCloud', ['$routeParams', '$scope', 'global
         $scope.todos = [];
         $scope.ctrlFn = function (value)
         {
+            var publicaciones = _.where(value, {"@type": "bibo:Document"});
+            var autores = _.where(value, {"@type": "foaf:Person"});
+            
             $scope.todos = [];
+            $scope.autores = [];
             var model = {};
-            _.map(value, function (pub) {
+            _.map(publicaciones, function (pub) {
                 //var keys = Object.keys(author);
 
                 model["id"] = pub["@id"];
                 model["title"] = pub["dct:title"];
-                model["abstract"] = pub["bibo:abstract"];
-                model["uri"] = pub["bibo:uri"] ? pub["bibo:uri"]["@id"] : "";
-                if (model["title"] && model["abstract"])
+                
+                model["author"] = pub["dct:contributor"] ? pub["dct:contributor"]  : [] ;
+                model["abstract"] = pub["bibo:abstract"] ? pub["bibo:abstract"] : "Sorry, still not found abstract for this publication."  ;
+                model["uri"] = pub["bibo:uri"]? (pub["bibo:uri"]["@id"] ? pub["bibo:uri"]["@id"] : "" ) : "";
+                
+                $scope.autores = [];
+                _.map(pub["dct:contributors"], function(authorid){
+                    
+                    var authorresource = authorid["@id"] ? ( _.findWhere(autores, {"@id": authorid["@id"]})) : ( _.findWhere(autores, {"@id": authorid}));
+                    $scope.autores.push({id: authorresource["@id"], name: authorresource["foaf:name"]});
+                });
+                
+                if (model["title"])
                 {
-                    $scope.todos.push({id: model["id"], title: model["title"], abstract: model["abstract"], uri: model["uri"]});
+                    $scope.todos.push({id: model["id"], title: model["title"], abstract: model["abstract"], uri: model["uri"], author: $scope.autores});
                 }
             });
             $('html,body').animate({

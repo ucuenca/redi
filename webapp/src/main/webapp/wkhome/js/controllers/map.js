@@ -1,5 +1,5 @@
 
-wkhomeControllers.controller('map', ['$routeParams','$scope', '$window', 'globalData', 'sparqlQuery', 'searchData',
+wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globalData', 'sparqlQuery', 'searchData',
     function ($routeParams, $scope, $window, globalData, sparqlQuery, searchData) {
 
         //if click in pie-chart
@@ -18,12 +18,13 @@ wkhomeControllers.controller('map', ['$routeParams','$scope', '$window', 'global
                     + ' WHERE { '
                     + '     SELECT  (count(?key) as ?k) ?key '
                     + '     WHERE { '
-                    + '         ?subject bibo:Quote ?key. '
+                    + '         ?subject foaf:publications ?pubs. '
+                    + '         ?subject dct:subject ?key. '
                     + '         BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
                     + '         BIND(IRI(?unickey) as ?keyword) '
                     + '     } '
                     + '     GROUP BY ?keyword  ?key '
-                    + '     HAVING(?k > 10) '
+                    //             + '     HAVING(?k > 10) '
                     + '}';
             sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
                 jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
@@ -35,7 +36,7 @@ wkhomeControllers.controller('map', ['$routeParams','$scope', '$window', 'global
                     });
                     $scope.$apply(function () {
                         $scope.relatedtags = $scope.themes;
-                        $scope.selectedTagItem = 'Semantic Web';
+                        $scope.selectedTagItem = 'SEMANTIC WEB';
                         searchData.allkeywords = $scope.themes;
                     });
                     waitingDialog.hide();
@@ -45,7 +46,7 @@ wkhomeControllers.controller('map', ['$routeParams','$scope', '$window', 'global
         else
         {
             $scope.relatedtags = searchData.allkeywords;
-            $scope.selectedTagItem = 'Semantic Web';
+            $scope.selectedTagItem = 'SEMANTIC WEB';
         }
 
 
@@ -53,6 +54,7 @@ wkhomeControllers.controller('map', ['$routeParams','$scope', '$window', 'global
         //default selectedTagItem =  Semantic Web  - > see in app.js
         $scope.$watch('selectedTagItem', function () {
             //alert($scope.selectedItem);
+            waitingDialog.show("Consultando Ubicacion de Autores Relacionados con:  \"" + $scope.selectedTagItem + "\"");
             var queryBySource = globalData.PREFIX
                     + ' CONSTRUCT { '
                     + '         ?urikeyword bibo:Quote "' + $scope.selectedTagItem + '". '
@@ -65,11 +67,13 @@ wkhomeControllers.controller('map', ['$routeParams','$scope', '$window', 'global
                     + '         ?urikeyword uc:fullname ?fullname. '
                     + ' } '
                     + 'WHERE {'
-                    + '     SELECT (count(?object) as ?cont) ?provenance  ?urikeyword ?provenance ?sourcename ?lat ?long ?province ?city ?fullname '
+                    + '     SELECT (COUNT( DISTINCT ?object) as ?cont) ?provenance  ?urikeyword ?provenance ?sourcename ?lat ?long ?province ?city ?fullname '
                     + '     WHERE {'
                     + '         GRAPH <' + globalData.centralGraph + '>  {'
                     + '             ?subject foaf:publications ?object.'
-                    + '             ?object bibo:Quote "' + $scope.selectedTagItem + '".'
+                    //+ '             ?object bibo:Quote "' + $scope.selectedTagItem + '".'
+                    + '             ?subject dct:subject ?key.'
+                    + '             FILTER (regex(?key, "' + $scope.selectedTagItem + '")) .'
                     + '             ?subject dct:provenance ?provenance.'
                     + '             { '
                     + '                 SELECT DISTINCT ?sourcename ?lat ?long ?province ?city ?fullname '
@@ -94,29 +98,37 @@ wkhomeControllers.controller('map', ['$routeParams','$scope', '$window', 'global
             sparqlQuery.querySrv({query: queryBySource},
             function (rdf) {
                 jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
-                    var sd;
-                    var model = [];
-                    _.map(compacted["@graph"], function (resource) {
-                        //var keys = Object.keys(author);
-                        var model = {};
-                        model["id"] = resource["@id"];
-                        model["name"] = resource["uc:name"];
-                        model["fullname"] = resource["uc:fullname"];
-                        model["total"] = resource["uc:totalpublications"]["@value"];
-                        model["lat"] = resource["uc:lat"];
-                        model["long"] = resource["uc:long"];
-                        model["keyword"] = resource["bibo:Quote"];
-                        model["city"] = resource["uc:city"];
-                        model["province"] = resource["uc:province"];
-                        if (model["id"])
-                        {
-                            $scope.publicationsBySource.push({id: model["id"], name: model["name"], fullname: model["fullname"], total: model["total"], latitude: model["lat"]
-                                , longitude: model["long"], city: model["city"], province: model["province"], keyword: model["keyword"]});
-                        }
-                    });
-                    $scope.$apply(function () {
-                        $scope.data = $scope.publicationsBySource;
-                    });
+                    if (compacted["@graph"])
+                    {
+                        waitingDialog.hide();
+                        var model = [];
+                        _.map(compacted["@graph"], function (resource) {
+                            var model = {};
+                            model["id"] = resource["@id"];
+                            model["name"] = resource["uc:name"];
+                            model["fullname"] = resource["uc:fullname"];
+                            model["total"] = resource["uc:totalpublications"]["@value"];
+                            model["lat"] = resource["uc:lat"];
+                            model["long"] = resource["uc:long"];
+                            model["keyword"] = resource["bibo:Quote"];
+                            model["city"] = resource["uc:city"];
+                            model["province"] = resource["uc:province"];
+                            if (model["id"])
+                            {
+                                $scope.publicationsBySource.push({id: model["id"], name: model["name"], fullname: model["fullname"], total: model["total"], latitude: model["lat"]
+                                    , longitude: model["long"], city: model["city"], province: model["province"], keyword: model["keyword"]});
+                            }
+                        });
+                        $scope.$apply(function () {
+                            $scope.data = $scope.publicationsBySource;
+                        });
+                    }
+                    else
+                    {
+                        alert("Informacion no encontrada");
+                        waitingDialog.hide();
+
+                    }
                 });
             });
         });

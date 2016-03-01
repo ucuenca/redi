@@ -7,17 +7,20 @@
     <hr>
 
     <div class="tree-node-author-info" style="height:100vh">
-        <h4>RELATED AUTHORS</h4>
-        <h4>By Clustering</h4>
-        <div class="authorsByClusters">
-            <div id="title" style="font-size:50pt"></div>
-            <a href="" target="_blank"></a>
-        </div>
-        <h4>By Publications</h4>
+        <hr>
+        <h4>CO-AUTORES</h4>
         <div class="authorsByPublications">
             <div id="title" style="font-size:50pt"></div>
             <a href="" target="_blank"></a>
         </div>
+        <hr>
+        <h4>Autores Relacionados por Clustering</h4>
+        <div class="authorsByClusters">
+            <div id="title" style="font-size:50pt"></div>
+            <a href="" target="_blank"></a>
+        </div>
+        <hr>
+        
     </div>
 
 </div> 
@@ -43,9 +46,9 @@
         <div class="col-md-3">
             <h3 class="text-success" style="text-align: left">{{'Group by'| translate}}:</h3>
             <select   class="form-control" name="group" id="group" ng-model="gbselectedItem" >
-                <option value="all">{{'All'| translate}}</option>
-                <option value="author">{{'Author'| translate}}</option>
-                <option value="source">{{'Source'| translate}}</option>
+                <option value="Todos">{{'All'| translate}}</option>
+                <option value="organization">{{'Source'| translate}}</option>
+    <!--            <option value="name">Autor</option> -->
             </select>
         </div>
 
@@ -91,7 +94,7 @@
                             <h4 class="modal-title" id="myModalLabel">Search Results</h4>
                         </div>
 
-                        <div class="modal-body">
+                        <div class="modal-body" id="author-select">
                             <table class="table table-striped ">
                                 <thead>
                                     <tr>
@@ -150,7 +153,7 @@
                                         </br>
                                         <strong>Keywords:</strong> {{todo.keywords}}
                                         </br>
-                                        <strong>URI:</strong> <a href="{{todo.uri}}" target='_blank'>{{todo.uri}}</a>
+                                        <strong>URL:</strong> <a href="{{todo.uri}}" target='_blank'>{{todo.uri}}</a>
                                     </div>
                                 </div>
                             </a>
