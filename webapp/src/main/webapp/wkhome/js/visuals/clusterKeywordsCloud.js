@@ -35,8 +35,8 @@ keywClusters.directive('keywClusters', ["d3", '$routeParams','globalData', 'spar
         textValue = function (d) {
             return d.label;
         };
-        collisionPadding = 1;
-        minCollisionRadius = 2;
+        collisionPadding = 2;
+        minCollisionRadius = 3;
         jitter = 0.08;
         transformData = function (rawData) {
             rawData.forEach(function (d) {
@@ -68,6 +68,9 @@ keywClusters.directive('keywClusters', ["d3", '$routeParams','globalData', 'spar
                 maxDomainValue = d3.max(data, function (d) {
                     return rValue(d);
                 });
+                if (maxDomainValue>80) {		
+                    maxDomainValue -= 80;		
+                }
                 rScale.domain([0, maxDomainValue]);
                 svg = d3.select(this).selectAll("svg").data([data]);
                 svgEnter = svg.enter().append("svg");
@@ -123,7 +126,7 @@ keywClusters.directive('keywClusters', ["d3", '$routeParams','globalData', 'spar
                 return rValue(d);
             });
             label.style("font-size", function (d) {
-                return Math.max(8, rScale(rValue(d) / 5)) + "px";
+                return Math.max(9, rScale(rValue(d) / 5)) + "px";
             }).style("width", function (d) {
                 return 0.1 * rScale(rValue(d)) + "px";
             });
@@ -136,7 +139,7 @@ keywClusters.directive('keywClusters', ["d3", '$routeParams','globalData', 'spar
                 return d.dx + "px";
             });
             return label.each(function (d) {
-                return d.dy = this.getBoundingClientRect().height;
+                return d.dy = (Number(this.getBoundingClientRect().height) -10).toString();
             });
         };
         gravity = function (alpha) {
@@ -180,6 +183,12 @@ keywClusters.directive('keywClusters', ["d3", '$routeParams','globalData', 'spar
       
         click = function (d) {
 
+            var title = '';
+            if ($routeParams.lang === "es") {
+                title = '"Clusters que contienen \'' + d.label + '\' Keyword"';
+            } else {
+                title = '"Clusters that contain \'' + d.label + '\' Keyword"';
+            }
 
             /**/
             
@@ -188,21 +197,22 @@ keywClusters.directive('keywClusters', ["d3", '$routeParams','globalData', 'spar
             +' Construct {'
 
             +' uc:resultTitle a uc:pagetitle.'
-            +' uc:resultTitle uc:viewtitle "Clusters that contain \'' + d.label + '\' Keyword".'
-            +'  ?cluster rdfs:label "keyword". ?cluster uc:total ?totalpub.'
+            +' uc:resultTitle uc:viewtitle ' + title + '.'
+            +'  ?cluster rdfs:label ?name. ?cluster uc:total ?totalperson.'
             +'} '
             +'WHERE'
             +'{'
             +'{'
-            +'SELECT ?cluster (COUNT(?pubb) as ?totalpub)'
+            +'SELECT DISTINCT ?cluster ?name (COUNT(DISTINCT ?subject) as ?totalperson)'
             +'WHERE' 
             +'{'
             +'  graph <'+globalData.clustersGraph+'>'
             +'        {'
-            +'          ?cluster uc:hasPerson ?subject.'
+            +'          ?cluster uc:hasPerson ?subject. '
+            + '          ?cluster rdfs:label ?name. '
             +'  		?subject foaf:publications ?pubb. '
             +'          	{'
-            +'      			select  ?pubb ?title '
+            +'      			select DISTINCT ?pubb ?title '
             +'            		where'
             +'            		{'
             +'            			graph <'+globalData.centralGraph+'>'
@@ -215,9 +225,9 @@ keywClusters.directive('keywClusters', ["d3", '$routeParams','globalData', 'spar
             +'          	}'
             +'          }'
             +' }'
-            +'  group by ?cluster'
+            +'  group by ?cluster ?name'
             + '         }'
-            + ' Filter(?totalpub > 2)'
+            + ' Filter(?totalperson > 1)'
             + '}';
 
             
@@ -230,9 +240,11 @@ keywClusters.directive('keywClusters', ["d3", '$routeParams','globalData', 'spar
                         //var final_entity = _.where(entity, {"@type": "bibo:Document"});
                         var values = entity.length ? entity : [entity];
                         //Change data
-                        for (var i = 0, len = compacted["@graph"].length; i < len; i++) {
-                            compacted["@graph"][i]["rdfs:label"] = compacted["@graph"][i]["@id"].toString().replace("uc:cluster","");
-                        }
+//                        for (var i = 0, len = compacted["@graph"].length; i < len; i++) {
+//                            //var labelCluster = compacted["@graph"][i]["@id"].toString().replace("http://ucuenca.edu.ec/resource/cluster","");
+//                            var labelCluster = compacted["@graph"][i]["rdfs:name"];
+//                            compacted["@graph"][i]["rdfs:label"] = labelCluster; //? labelCluster[0].toUpperCase() + labelCluster.slice(1) : compacted["@graph"][i]["@id"].toString();
+//                        }
                         //send data to getKeywordTag Controller
                         scope.ifClick({value: compacted});
                         waitingDialog.hide();

@@ -5,8 +5,8 @@ var pieChart = angular.module('cloudTag', []);
 pieChart.factory('d3', function () {
     return	d3;
 });
-pieChart.directive('cloudTag', ["d3", 'globalData', 'sparqlQuery',
-    function (d3, globalData, sparqlQuery) {
+pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery',
+    function ($routeParams, d3, globalData, sparqlQuery) {
 
         var getRelatedAuthorsByClustersQuery = globalData.PREFIX
                 + ' CONSTRUCT {  <http://ucuenca.edu.ec/wkhuska/resultTitle> a uc:pagetitle. <http://ucuenca.edu.ec/wkhuska/resultTitle> uc:viewtitle "Authors Related With {0}"  .         ?subject rdfs:label ?name.         ?subject uc:total ?totalPub   }   WHERE {   { '
@@ -78,8 +78,8 @@ pieChart.directive('cloudTag', ["d3", 'globalData', 'sparqlQuery',
         textValue = function (d) {
             return d.label;
         };
-        collisionPadding = 1;
-        minCollisionRadius = 2;
+        collisionPadding = 2;
+        minCollisionRadius = 3;
         jitter = 0.08;
         transformData = function (rawData) {
             rawData.forEach(function (d) {
@@ -162,7 +162,7 @@ pieChart.directive('cloudTag', ["d3", 'globalData', 'sparqlQuery',
                 return rValue(d);
             });
             label.style("font-size", function (d) {
-                return Math.max(8, rScale(rValue(d) / 5)) + "px";
+                return Math.max(9, rScale(rValue(d) / 5)) + "px";
             }).style("width", function (d) {
                 return 0.1 * rScale(rValue(d)) + "px";
             });
@@ -175,7 +175,7 @@ pieChart.directive('cloudTag', ["d3", 'globalData', 'sparqlQuery',
                 return d.dx + "px";
             });
             return label.each(function (d) {
-                return d.dy = this.getBoundingClientRect().height;
+                return d.dy = (Number(this.getBoundingClientRect().height) -110).toString();
             });
         };
         gravity = function (alpha) {
@@ -287,7 +287,12 @@ pieChart.directive('cloudTag', ["d3", 'globalData', 'sparqlQuery',
                 headbar.find('title').text("ddddddtitletitle");
                 headbar.html('');
                 var div = $('<div>');
-                var label = $('<span class="label label-primary" style="font-size:35px">').text("PUBLICATIONS CONTAINING THE KEYWORD: " + keyword);
+                var label;
+                if ($routeParams.lang === "es") {
+                    label= $('<span class="label label-primary" style="font-size:35px">').text("PUBLICACIONES QUE CONTIENEN LA KEYWORD: " + keyword);
+                } else {
+                    label= $('<span class="label label-primary" style="font-size:35px">').text("PUBLICATIONS CONTAINING THE KEYWORD: " + keyword);
+                }
                 div.append(label);
                 div.append("</br>");
                 headbar.append(div);
@@ -304,8 +309,8 @@ pieChart.directive('cloudTag', ["d3", 'globalData', 'sparqlQuery',
                         + " GRAPH <" + globalData.centralGraph + ">"
                         + " {"
                         + " ?publicationUri dct:title ?title . "
-                        + " ?publicationUri bibo:abstract  ?abstract. "
-                        + " ?publicationUri bibo:uri  ?uri. "
+                        + " optional {?publicationUri bibo:abstract  ?abstract.} "
+                        + " optional {?publicationUri bibo:uri  ?uri.} "
                         + " ?publicationUri bibo:Quote \"" + keyword + "\" ."
                         + "  BIND(REPLACE( \"" + keyword + "\", \" \", \"_\", \"i\") AS ?key) ."
                         + "  BIND(IRI(?key) as ?keyword)"
@@ -389,6 +394,8 @@ pieChart.directive('cloudTag', ["d3", 'globalData', 'sparqlQuery',
         };
 
         var draw = function draw(element, widthEl, heightEl, data, scopeEl, attrsEl) {
+            var pubInfo = element;		
+            pubInfo.html('');
             width = widthEl;
             height = heightEl;
             scope = scopeEl;

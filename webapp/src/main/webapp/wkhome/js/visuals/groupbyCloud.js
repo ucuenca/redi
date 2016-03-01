@@ -348,7 +348,7 @@ cloudGroup.directive('cloudGroup', ["$routeParams", "d3", 'sparqlQuery', 'global
                             + "     GRAPH <" + globalData.centralGraph + "> "
                             + "     { "
                             + "     <" + key + "> dct:title ?title . "
-                            + "     <" + key + "> bibo:uri  ?uri. "
+                            + "     OPTIONAL { <" + key + "> bibo:uri  ?uri.} "
                             + "     OPTIONAL { <" + key + "> bibo:Quote ?key.}"
                             + "     OPTIONAL { <" + key + "> bibo:abstract  ?abst  }"
                             + "     }"

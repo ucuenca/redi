@@ -5,6 +5,45 @@ wkhomeControllers.controller('keywordsCloud', ['$routeParams', '$scope', 'global
             scrollTop: $("#scrollToTop").offset().top
         }, "slow");
 
+        if (!searchData.allkeywords) {
+            $scope.themes = [];
+            var queryKeywords = globalData.PREFIX
+                    + ' CONSTRUCT { ?keyword rdfs:label ?key } '
+                    + '	FROM <' + globalData.centralGraph + '> '
+                    + ' WHERE { '
+                    + '     SELECT  (count(?key) as ?k) ?key '
+                    + '         WHERE { '
+                    + '             ?subject bibo:Quote ?key. '
+                    + '             BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
+                    + '             BIND(IRI(?unickey) as ?keyword) '
+                    + '         } '
+                    + '     GROUP BY ?keyword  ?key '
+                    + '     HAVING(?k > 10) '
+                    + '}';
+            sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
+                var context = {
+                    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+                };
+                jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
+                    _.map(compacted["@graph"], function (pub) {
+                        var model = {};
+                        model["id"] = pub["@id"];
+                        model["tag"] = pub["rdfs:label"];
+                        $scope.themes.push({tag: model["tag"]});
+                    });
+                    $scope.$apply(function () {
+                        searchData.allkeywords = $scope.themes;
+                        $scope.relatedthemes = searchData.allkeywords;
+                        $scope.selectedItem = "";
+                    });
+
+                });
+            });
+        } else {
+            $scope.relatedthemes = searchData.allkeywords;
+            $scope.selectedItem = "";
+        }
+
         clickonRelatedauthor = function (id_author)
         {
             var getAuthorDataQuery = globalData.PREFIX
@@ -42,7 +81,7 @@ wkhomeControllers.controller('keywordsCloud', ['$routeParams', '$scope', 'global
                 model["id"] = pub["@id"];
                 model["title"] = pub["dct:title"];
                 model["abstract"] = pub["bibo:abstract"];
-                model["uri"] = pub["bibo:uri"]["@id"];
+                model["uri"] = pub["bibo:uri"] ? pub["bibo:uri"]["@id"] : "";
                 if (model["title"] && model["abstract"])
                 {
                     $scope.todos.push({id: model["id"], title: model["title"], abstract: model["abstract"], uri: model["uri"]});
@@ -82,8 +121,9 @@ wkhomeControllers.controller('keywordsCloud', ['$routeParams', '$scope', 'global
                     + '         BIND(IRI(?k) AS ?keyword) . '
                     + '     } '
                     + '     GROUP BY ?keyword ?k '
-                    + '     HAVING(?totalPub > 2 && ?totalPub < 25) '
-                    + ' LIMIT 150'
+                    + '     HAVING(?totalPub > 2 && ?totalPub < 180) '
+                    + '     ORDER BY DESC(?totalPub) '
+                    + ' LIMIT 145'
                     //+'ORDER BY DESC(?totalPub) '
                     + '}';
             sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
@@ -101,6 +141,49 @@ wkhomeControllers.controller('keywordsCloud', ['$routeParams', '$scope', 'global
             $scope.data = searchData.allkeywordsCloud;
         } // end if if (!searchData.allkeywordsCloud) 
 
-
+        $scope.$watch('selectedItem', function (newValue, oldValue, scope) {
+            if (newValue && newValue != ""){
+                waitingDialog.show();
+                var queryKeywords = globalData.PREFIX
+                        + ' CONSTRUCT { '
+                        + ' ?keyword rdfs:label ?key1; '
+                        + ' uc:total ?totalPub '
+                        + ' } '
+                        + ' WHERE ' 
+                        + ' { '
+                        + ' SELECT ?key1 ?keyword (COUNT(DISTINCT(?publications)) AS ?totalPub)'
+                        + ' WHERE' 
+                        + ' {'
+                        + '     graph <' + globalData.centralGraph + '>    '
+                        + '     {'      
+                        + '         ?publications bibo:Quote ?key1.'
+                        + '         {'        
+                        + '             SELECT DISTINCT ?key1 ?publications ?keyword '       
+                        + '             WHERE '         
+                        + '             { '            
+                        + '                 ?pub bibo:Quote "' + $scope.selectedItem + '" . '           
+                        + '                 ?pub bibo:Quote ?key1. '           
+                        + '                 ?publications bibo:Quote ?key1. '           
+                        + '                 BIND(IRI(?key1) AS ?keyword) '       
+                        + '             }'      
+                        + '         }'     
+                        + '     } '  
+                        + ' } '
+                        + ' GROUP BY ?key1 ?keyword   '
+                        + ' HAVING(?totalPub > 2 && ?totalPub < 100)   '
+                        + ' ORDER BY DESC(?totalPub)   '
+                        + ' LIMIT 145' 
+                        + ' }';
+                sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
+                    jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
+                        $scope.$apply(function () {
+                            $scope.data = {schema: {"context": globalData.CONTEXT, fields: ["rdfs:label", "uc:total"]}, data: compacted};
+                            //searchData.allkeywordsCloud = {schema: {"context": globalData.CONTEXT, fields: ["rdfs:label", "uc:total"]}, data: compacted};
+                            waitingDialog.hide();
+                        });
+                    });
+                });
+            }
+        });
 
     }]);

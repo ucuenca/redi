@@ -26,7 +26,7 @@ wkhomeApp.service('searchData', function () {
 
 wkhomeApp.service('globalData', function () {
     this.language = "es";
-    this.centralGraph = "http://ucuenca.edu.ec/wkhuska2";
+    this.centralGraph = "http://ucuenca.edu.ec/wkhuska";
     this.clustersGraph = "http://ucuenca.edu.ec/wkhuska/clusters";
     this.authorsGraph = "http://ucuenca.edu.ec/wkhuska/authors";
     this.endpointsGraph = "http://ucuenca.edu.ec/wkhuska/endpoints";
@@ -119,4 +119,8 @@ wkhomeApp.config(['$routeProvider',
                     redirectTo: '/es/'
                 })
                 ;
+    }]);
+
+    wkhomeApp.config(['$compileProvider', function ($compileProvider) {
+        $compileProvider.debugInfoEnabled(false);
     }]);

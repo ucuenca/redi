@@ -41,12 +41,14 @@ wkhomeControllers.controller('countAuthors', ['$translate', '$routeParams', '$sc
                 //$scope.data = compacted;
                 var endpoints = compacted['@graph'];
                 var data = []
-                endpoints.forEach(function (endpoint) {
-                    data.push({label: endpoint['uc:name'], value: endpoint['uc:total']['@value']});
-                });
-                $scope.$apply(function () {
-                    $scope.data = {'entityName': 'Authors', 'data': data};
-                });
+                if (endpoints) {
+                    endpoints.forEach(function (endpoint) {
+                        data.push({label: endpoint['uc:name'], value: endpoint['uc:total']['@value']});
+                    });
+                    $scope.$apply(function () {
+                        $scope.data = {'entityName': 'Authors', 'data': data};
+                    });
+                }
             });
         });// End sparqlQuery.querySrv ...
         /*************************************************************/
@@ -92,7 +94,7 @@ wkhomeControllers.controller('countAuthors', ['$translate', '$routeParams', '$sc
 
 
         /*********************************************/
-        /* LOAD DATA TO KEYWORDS CLUD */
+        /* LOAD DATA TO KEYWORDS CLOUD */
         /*********************************************/
 
         var queryKeywords = globalData.PREFIX
@@ -108,8 +110,9 @@ wkhomeControllers.controller('countAuthors', ['$translate', '$routeParams', '$sc
                 + '         BIND(IRI(?k) AS ?keyword) . '
                 + '     } '
                 + '     GROUP BY ?keyword ?k '
-                + '     HAVING(?totalPub > 0 && ?totalPub < 100) '
-                + '     LIMIT 150'
+                + '     HAVING(?totalPub > 2 && ?totalPub < 180) '
+                + '     ORDER BY DESC(?totalPub) '
+                + '     LIMIT 145'
                 + ' } ';
         sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
           
