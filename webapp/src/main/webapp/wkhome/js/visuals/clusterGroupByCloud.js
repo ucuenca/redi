@@ -15,8 +15,8 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
         function create(svgElement, dataToDraw, groupByOption) {
             
             var radius = 350;
-            var width = Math.max(document.documentElement.clientWidth * (1- 16.7 / 83.3), window.innerWidth * (1- 16.7 / 83.3) || 0);
-            var height = Math.max(document.documentElement.clientHeight + dataToDraw.length * 1 - 350, window.innerHeight + dataToDraw.length * 1 - 350 || 0);
+            var width = Math.max(document.documentElement.clientWidth * 0.8, window.innerWidth * 0.8);
+            var height = Math.max(document.documentElement.clientHeight * 0.8, window.innerHeight * 0.8);
             
             
             var svg = svgElement.append("svg")
@@ -46,7 +46,7 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
                             }
                             i++;
                         }
-                    }
+                    } 
                     return {name: d, value: 1, keyword: keyw};
                 });
 
@@ -146,7 +146,17 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
             draw(groupByOption);
 
             function draw(varname) {
-
+                
+                if (varname == 'cluster') {
+                    width = Math.max(document.documentElement.clientWidth * (1- 16.7 / 83.3), window.innerWidth * (1- 16.7 / 83.3) || 0);
+                    height = Math.max(document.documentElement.clientHeight + dataToDraw.length * 1 - 350, window.innerHeight + dataToDraw.length * 1 - 350 || 0);
+                    svg.attr("width", width).attr("height", height);
+                } else {
+                    width = Math.max(document.documentElement.clientWidth * 0.8);
+                    height = Math.max(document.documentElement.clientHeight * 0.8);
+                    svg.attr("width", width).attr("height", height);
+                }
+                
                 var centers = getCenters(varname, [width, height]);
                 force.on("tick", tick(centers, varname));
                 labels(centers)

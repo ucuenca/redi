@@ -11,7 +11,7 @@ clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery
         var chart, clear, click, collide, collisionPadding, connectEvents, data, force, gravity, hashchange, height, idValue, jitter, label, margin, maxRadius, minCollisionRadius, mouseout, mouseover, node, rScale, rValue, textValue, tick, transformData, update, updateActive, updateLabels, updateNodes, width;
         var scope;
         var attrs;
-        var pageTitle;
+        var pageTitle = "";
         width;// = 980;
         height;// = 510;
         data = [];
@@ -197,6 +197,7 @@ clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery
             };
             if (infoBar) {
                 var key = d.label;
+                
                 var headbar = $('div.head-info');
                 headbar.find('title').text("ddddddtitletitle");
                 headbar.html('');
@@ -222,9 +223,9 @@ clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery
                         + ' {  '
                         + '   graph <'+globalData.clustersGraph+'>        '
                         + '   {          '
-                        + '     uc:cluster' + d.label + '  uc:hasPerson ?subject.'
+                        + '     <'+d.id+'>  ' + 'uc:hasPerson  ?subject.'
                         + '     {      			'
-                        + '       select  ?subject ?name (group_concat(distinct ?key;separator=", ") as ?keywords)            		'
+                        + '       select DISTINCT ?subject ?name (group_concat(distinct ?key;separator=", ") as ?keywords)            		'
                         + '       where            		'
                         + '                     {            	'
                         + '                       graph <'+globalData.centralGraph+'>            			'
@@ -281,12 +282,44 @@ clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery
                 return d3.select("#status").html("<h3>No word is active</h3>");
             }
         };
+        function removePopovers() {
+            $('.popover').each(function () {
+                $(this).remove();
+            });
+        }
+        function showPopover(d) {
+            $(this).popover({
+                placement: 'auto top',
+                container: 'body',
+                trigger: 'manual',
+                html: true,
+                content: function () {
+                    if(d.abstract != null && (d.abstract.constructor === Array || d.abstract instanceof Array))
+                            d.abstract = d.abstract[0];
+                    return "<strong>Cluster:</strong> " + d.label + "<br />" + "<strong>Authors</strong> in this cluster with publications that contain " 
+                            + pageTitle.toString().replace('Clusters that contain ', '').replace(' Keyword".', '').replace('Clusters que contienen ', '') 
+                            /*"Abstract: " + d.abstract.substring(0, 50) + "<br />" +
+                            "Author: " + d.author + "<br />"
+                    "Author Source: " + d.source + "<br />"*/
+
+//                        "Country: " + d.country + "<br />" +
+//                        "SIC Sector: " + d.sicSector + "<br />" +
+//                        "Last: " + d.lastPrice + " (" + d.pricePercentChange + "%)<br />" +
+//                        "Volume: " + d.volume + "<br />" +
+//                        "Standard Deviation: " + d.standardDeviation
+                            ;
+                }
+            });
+            $(this).popover('show')
+        }
         mouseover = function (d) {
+            showPopover.call(this, d);
             return node.classed("gbubble-hover", function (p) {
                 return p === d;
             });
         };
         mouseout = function (d) {
+            removePopovers();
             return node.classed("gbubble-hover", false);
         };
         chart.jitter = function (_) {
@@ -382,18 +415,19 @@ clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery
                             _.each(jsonld['@graph'], function (keyword, idx) {
                                 if (keyword["rdfs:label"])
                                 {
+                                    var id = keyword["@id"];
                                     var field1 = fields[1].replace("uc:","http://ucuenca.edu.ec/resource/");
                                     var val = "";
                                     if (keyword[fields[1]] || keyword[field1]) {
                                         val = keyword[fields[1]] ? keyword[fields[1]]["@value"] : keyword[field1]["@value"];
                                     }
-                                    if (keyword[fields[0]] != 'uc:resultTitle' && keyword[fields[0]] != 'http://ucuenca.edu.ec/wkhuska/resource/resultTitle'){
-                                    	mappedData.push({label: keyword[fields[0]], value: val});
+                                    if (keyword[fields[0]].toString().toLowerCase() != 'uc:resulttitle' && keyword[fields[0]] != 'http://ucuenca.edu.ec/wkhuska/resource/resultTitle'){
+                                    	mappedData.push({id: id, label: keyword[fields[0]], value: val});
 				    }
 
                                 }
                             });
-                            var pageTitle = "";
+                            
                             try {
                                 pageTitle = _.findWhere(jsonld['@graph'],{"@type": "uc:pagetitle"})["uc:viewtitle"];
                             }

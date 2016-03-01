@@ -48,7 +48,7 @@ myApp.labels_es = {
 //   GROUP BY  VIEW
 "Grouping Publications": "Agrupando Autores por Area y por Institucion",
 "Group by":"Agrupar Por",
-"Select Research Area":"Seleccione el Area de Investigacion",
+"Select Research Area":"Area de Investigacion",
 //"All" - from cloud cluster view
 "Author":"Autor",
 "Source":"Institucion",

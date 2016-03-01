@@ -41,8 +41,9 @@ wkhomeControllers.controller('clusterKeywordsCloud', ['$routeParams','$scope', '
                     + ' ?subject bibo:Quote ?k . '
                     + ' BIND(IRI(?k) AS ?keyword) . } '
                     + ' GROUP BY ?keyword ?k '
-                    + ' HAVING(?totalPub > 25 && ?totalPub < 200) '
-                    + ' LIMIT 150'
+                    + ' HAVING(?totalPub > 2 && ?totalPub < 180) '
+                    + ' ORDER BY DESC(?totalPub) '
+                    + ' LIMIT 145 '
                     //+'ORDER BY DESC(?totalPub) '
                     + '}';
             sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
