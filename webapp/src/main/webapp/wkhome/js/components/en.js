@@ -41,7 +41,7 @@ myApp.labels_en = {
 "Location by Research Area":"Location by Research Area",
 
 //   GROUP BY  VIEW
-"Grouping Publications": "Grouping Publications",
+"Grouping Publications": "Grouping Authors",
 "Group by":"Group by",
 "Select Research Area:":"Select Research Area:",
 //"All" - from cloud cluster view

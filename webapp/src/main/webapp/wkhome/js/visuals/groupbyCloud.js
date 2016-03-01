@@ -56,10 +56,10 @@ cloudGroup.directive('cloudGroup', ["$routeParams", "d3", 'sparqlQuery', 'global
             var maxRadius = d3.max(_.pluck(dataMapping, 'radius'));
 
             /*var maximums = {
-                volume: d3.max(_.pluck(dataMapping, 'volume')),
-                lasPrice: d3.max(_.pluck(dataMapping, 'lastPrice')),
-                standardDeviation: d3.max(_.pluck(dataMapping, 'standardDeviation'))
-            };*/
+             volume: d3.max(_.pluck(dataMapping, 'volume')),
+             lasPrice: d3.max(_.pluck(dataMapping, 'lastPrice')),
+             standardDeviation: d3.max(_.pluck(dataMapping, 'standardDeviation'))
+             };*/
 
             var getCenters = function (vname, size) {
                 var centers, map;
@@ -97,7 +97,7 @@ cloudGroup.directive('cloudGroup', ["$routeParams", "d3", 'sparqlQuery', 'global
                         removePopovers();
                     })
                     .on("click", click);
-                    ;
+            ;
 
             function getDataMapping(dataM, vname) {
                 var max = d3.max(_.pluck(dataM, vname));
@@ -107,24 +107,24 @@ cloudGroup.directive('cloudGroup', ["$routeParams", "d3", 'sparqlQuery', 'global
                     newData[j].x = dataM[j].x ? dataM[j].x : Math.random() * width;
                     newData[j].y = dataM[j].y ? dataM[j].y : Math.random() * height;
                     /*newData[j].volumeCategory = getCategory('volume', dataM[j]);
-                    newData[j].lastPriceCategory = getCategory('lastPrice', dataM[j]);
-                    newData[j].standardDeviationCategory = getCategory('standardDeviation', dataM[j]);*/
+                     newData[j].lastPriceCategory = getCategory('lastPrice', dataM[j]);
+                     newData[j].standardDeviationCategory = getCategory('standardDeviation', dataM[j]);*/
                 }
 
                 return newData;
             }
 
             /*function getCategory(type, d) {
-                var max = d3.max(_.pluck(dataMapping, type));
-                var val = d[type] / max;
-
-                if (val > 0.4)
-                    return 'Top';
-                else if (val > 0.1)
-                    return 'Middle';
-                else
-                    return 'Bottom';
-            }*/
+             var max = d3.max(_.pluck(dataMapping, type));
+             var val = d[type] / max;
+             
+             if (val > 0.4)
+             return 'Top';
+             else if (val > 0.1)
+             return 'Middle';
+             else
+             return 'Bottom';
+             }*/
 
 //        $('#board').change(function() {
 //          $('#chart').empty();
@@ -228,7 +228,7 @@ cloudGroup.directive('cloudGroup', ["$routeParams", "d3", 'sparqlQuery', 'global
                         .attr("class", "label")
                         .attr("fill", "red")
                         .text(function (d) {
-                            if(d.name != null && (d.name.constructor === Array || d.name instanceof Array))
+                            if (d.name != null && (d.name.constructor === Array || d.name instanceof Array))
                                 d.name = d.name[0];
                             if (d.name != null && (typeof d.name === 'string' || d.name instanceof String)) {
                                 var names = d.name.split(",");
@@ -260,12 +260,12 @@ cloudGroup.directive('cloudGroup', ["$routeParams", "d3", 'sparqlQuery', 'global
                     trigger: 'manual',
                     html: true,
                     content: function () {
-                        if(d.abstract != null && (d.abstract.constructor === Array || d.abstract instanceof Array))
-                                d.abstract = d.abstract[0];
-                        return "Title: " + d.title + "<br />" +
-                                "Abstract: " + d.abstract.substring(0, 50) + "<br />" +
-                                "Author: " + d.author + "<br />"
-                        "Author Source: " + d.source + "<br />"
+                        if (d.name != null && (d.name.constructor === Array || d.name instanceof Array))
+                            d.name = d.name[0];
+                        return "Nombre: " + d.name + "<br />" +
+                                "Institucion: " + d.organization + "<br />"
+//                                "Author: " + d.author + "<br />"
+//                        "Author Source: " + d.source + "<br />"
 
 //                        "Country: " + d.country + "<br />" +
 //                        "SIC Sector: " + d.sicSector + "<br />" +
@@ -304,30 +304,38 @@ cloudGroup.directive('cloudGroup', ["$routeParams", "d3", 'sparqlQuery', 'global
                     });
                 };
             }
-            
+
             function click(d) {
                 //adding information about publications of THIS keyword into "tree-node-info"   DIV
                 var infoBar = $('div.tree-node-info');
+                var authorInfoc = $('div.tree-node-author-info .authorsByClusters');
+                authorInfoc.html('');
+                var authorInfop = $('div.tree-node-author-info .authorsByPublications');
+                authorInfop.html('');
+//                    var title = $('div#scrollToHere.col-md-12 div.col-md-12.head-info');
+//                    title.html('');
                 /*var model = {"dct:title": {label: "Title", containerType: "div"},
-                    "bibo:uri": {label: "URL", containerType: "a"},
-                    "dct:contributor": {label: "Contributor", containerType: "a"},
-                    "dct:isPartOf": {label: "Is Part Of", containerType: "a"},
-                    "dct:license": {label: "License", containerType: "a"},
-                    "dct:provenance": {label: "Source", containerType: "div"},
-                    "dct:publisher": {label: "Publisher", containerType: "div"},
-                    "bibo:numPages": {label: "Pages", containerType: "div"}
-                };*/
+                 "bibo:uri": {label: "URL", containerType: "a"},
+                 "dct:contributor": {label: "Contributor", containerType: "a"},
+                 "dct:isPartOf": {label: "Is Part Of", containerType: "a"},
+                 "dct:license": {label: "License", containerType: "a"},
+                 "dct:provenance": {label: "Source", containerType: "div"},
+                 "dct:publisher": {label: "Publisher", containerType: "div"},
+                 "bibo:numPages": {label: "Pages", containerType: "div"}
+                 };*/
                 if (infoBar) {
-                    var key = d.publication;
+
+
+                    var key = d.id;
                     var headbar = $('div.head-info');
                     headbar.find('title').text("ddddddtitletitle");
                     headbar.html('');
                     var div = $('<div>');
                     var label;
                     if ($routeParams.lang === "es") {
-                        label= $('<span class="label label-primary" style="font-size:35px">').text("PUBLICACION: " + d.title);
+                        label = $('<span class="label label-primary" style="font-size:35px">').text("PUBLICACIONES DE: " + d.name);
                     } else {
-                        label= $('<span class="label label-primary" style="font-size:35px">').text("PUBLICATION: " + d.title);
+                        label = $('<span class="label label-primary" style="font-size:35px">').text("PUBLICATIONES DE: " + d.name);
                     }
                     div.append(label);
                     div.append("</br>");
@@ -335,50 +343,52 @@ cloudGroup.directive('cloudGroup', ["$routeParams", "d3", 'sparqlQuery', 'global
 
                     var sparqlPublications = globalData.PREFIX
                             + " CONSTRUCT { "
-                            + "<" + key + "> a bibo:Document. "
-                            + "<" + key + "> dct:title ?title. "
-                            + "<" + key + "> bibo:abstract ?abstract. "
-                            + "<" + key + "> bibo:uri ?uri. "
-                            + "<" + key + "> bibo:Quote ?keywords "
+                            + " ?publications a bibo:Document. "
+                            + " ?publications dct:title ?title. "
+                            + " ?publications bibo:abstract ?abstract. "
+                            + " ?publications bibo:uri ?uri. "
+                            + " ?publications bibo:Quote ?keywords "
                             + " } "
                             + " WHERE { "
-                            + "  SELECT  ?title ?uri (group_concat(distinct ?abst;separator=\" \") as ?abstract) (group_concat(distinct ?key;separator=\", \") as ?keywords)"
+                            + "  SELECT ?publications ?title ?uri (group_concat(distinct ?abst;separator=\" \") as ?abstract) (group_concat(distinct ?key;separator=\", \") as ?keywords)"
                             + "  WHERE"
                             + "  {"
                             + "     GRAPH <" + globalData.centralGraph + "> "
                             + "     { "
-                            + "     <" + key + "> dct:title ?title . "
-                            + "     <" + key + "> bibo:uri  ?uri. "
-                            + "     OPTIONAL { <" + key + "> bibo:Quote ?key.}"
-                            + "     OPTIONAL { <" + key + "> bibo:abstract  ?abst  }"
+                            + "     <" + key + "> foaf:publications ?publications. "
+                            + "     ?publications dct:title ?title . "
+                            + "     OPTIONAL { ?publications bibo:uri  ?uri. }"
+                            + "     OPTIONAL { ?publications bibo:Quote ?key.}"
+                            + "     OPTIONAL { ?publications bibo:abstract  ?abst  }"
                             + "     }"
-                            + "  } GROUP BY ?title ?uri "
+                            + "  } GROUP BY ?publications ?title ?uri "
                             + "}";
 
-                    waitingDialog.show("Searching the publication \"" + d.title + "\"");
+                    waitingDialog.show("Buscando publicaciones de:  \"" + d.name + "\"");
 
                     sparqlQuery.querySrv({query: sparqlPublications}, function (rdf) {
-                
-                        jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
-                                if (compacted)
-                                {
-                                    var entity = compacted["@graph"];
-                                    var final_entity = _.where(entity, {"@type": "bibo:Document"});
-                                    var values = final_entity.length ? final_entity : [final_entity];
-                                    //send data to the Controller
-                                    scope.ifClick({value: values});
-                                    waitingDialog.hide();
 
-                                } else
-                                {
-                                    waitingDialog.hide();
-                                }
-                                removePopovers();
-                            });
+                        jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
+                            if (compacted)
+                            {
+                                var entity = compacted["@graph"];
+                                var final_entity = _.where(entity, {"@type": "bibo:Document"});
+                                var values = final_entity.length ? final_entity : [final_entity];
+                                //send data to the Controller
+                                scope.ifClick({value: values});
+                                waitingDialog.hide();
+
+                            } else
+                            {
+                                waitingDialog.hide();
+                            }
+                            removePopovers();
                         });
+                    });
                 }
                 return d3.event.preventDefault();
-            };
+            }
+            ;
 
         }
 
@@ -432,7 +442,7 @@ cloudGroup.directive('cloudGroup', ["$routeParams", "d3", 'sparqlQuery', 'global
                         else
 
                         if (scope.data && scope.data[0] && scope.data[0]["value"] && scope.data[0]["value"][0] &&
-                                (JSON.stringify(newVal[0]["value"][0]["title"] ? newVal[0]["value"][0]["title"] : newVal) != (oldVal[0] && oldVal[0]["value"] ? (JSON.stringify(oldVal[0]["value"][0] ? oldVal[0]["value"][0]["title"] : oldVal)) : null) )) {
+                                (JSON.stringify(newVal[0]["value"][0]["name"] ? newVal[0]["value"][0]["name"] : newVal) != (oldVal[0] && oldVal[0]["value"] ? (JSON.stringify(oldVal[0]["value"][0] ? oldVal[0]["value"][0]["name"] : oldVal)) : null))) {
                             //var jsonld = data.data;
                             //var schema = data.schema;
                             //var fields = schema.fields;

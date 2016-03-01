@@ -86,7 +86,7 @@ cloudGroup.directive('mapView', ["d3", 'globalData', 'sparqlQuery',
                             d3.select("h3.longitude").text(d.longitude);
                             d3.select(this).transition()
                                     .duration(750)
-                                    .attr("r", Math.sqrt(d.total * 3) + 16);
+                                    .attr("r", Math.sqrt(d.total * 4) + 16);
 
                             tip.html("<h2>" + d.keyword + "</h2> <br>  <h3>" + d.name + "</h3> <br>Click to See Authors Within This Research Area");
                             tip.show(d);
@@ -104,9 +104,11 @@ cloudGroup.directive('mapView', ["d3", 'globalData', 'sparqlQuery',
                                     + '     SELECT ?subject ?totalPub ?name '
                                     + '     WHERE { '
                                     + '         ?subject foaf:publications ?pubb. '
-                                    + '         ?pubb bibo:Quote "' + d.keyword + '". '
+                                    //+ '         ?subject bibo:Quote "' + d.keyword + '". '
+                                    + '         ?subject dct:subject ?key . '
+                                    + '         FILTER (regex(?key,"'+d.keyword+'")). '
                                     + '         { '
-                                    + '         SELECT ?subject ?name (COUNT(?pub) AS ?totalPub)  '
+                                    + '         SELECT ?subject ?name (COUNT( DISTINCT ?pub) AS ?totalPub)  '
                                     + '             WHERE { '
                                     + '                 GRAPH <'+globalData.centralGraph+'>  { '
                                     + '                     ?subject foaf:publications  ?pub . '

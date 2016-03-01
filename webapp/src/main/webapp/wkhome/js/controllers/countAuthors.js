@@ -19,14 +19,26 @@ wkhomeControllers.controller('countAuthors', ['$translate', '$routeParams', '$sc
                 + '         ?provenance uc:name ?name . '
                 + '         ?provenance uc:total ?total  } '
                 + 'WHERE { '
+                + ' graph <' + globalData.centralGraph + '> '
+                + '       { '
                 + '         SELECT ?provenance ?name (COUNT(DISTINCT(?s)) AS ?total) '
-                + '             WHERE { '
+                + '             WHERE '
+                + '             { '
                 + '                 ?s a foaf:Person. '
                 + '                 ?s foaf:publications ?pub . '
                 + '                 ?s dct:provenance ?provenance . '
                 + '                 ?pub dct:title ?title . '
-                + '                 ?provenance uc:name ?name . } '
-                + ' GROUP BY ?provenance ?name '
+                + '                 { '
+                + '                     SELECT ?name '
+                + '                     WHERE { '
+                + '                         GRAPH <' + globalData.endpointsGraph + '> { '
+                + '                             ?provenance uc:name ?name . '
+                + '                         }'
+                + '                     }'
+                + '                 }'
+                + '             }'
+                + '         GROUP BY ?provenance ?name '
+                + '     } '
                 + ' } ';
 
         //for parliament triplestore test
@@ -62,15 +74,16 @@ wkhomeControllers.controller('countAuthors', ['$translate', '$routeParams', '$sc
                     + ' WHERE { '
                     + '     SELECT  (count(?key) as ?k) ?key '
                     + '         WHERE { '
-                    + '             ?subject bibo:Quote ?key. '
+                    + '              ?subject foaf:publications ?pubs. '
+                    + '              ?subject dct:subject ?key. '
                     + '             BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
                     + '             BIND(IRI(?unickey) as ?keyword) '
                     + '         } '
                     + '     GROUP BY ?keyword  ?key '
-                    + '     HAVING(?k > 10) '
+                    //            + '     HAVING(?k > 1) '
                     + '}';
             sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
-           
+
                 jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                     _.map(compacted["@graph"], function (pub) {
                         var model = {};
@@ -112,7 +125,7 @@ wkhomeControllers.controller('countAuthors', ['$translate', '$routeParams', '$sc
                 + '     LIMIT 150'
                 + ' } ';
         sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
-          
+
             jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                 $scope.$apply(function () {
                     //$scope.data = {schema: {"context": context, fields: ["rdfs:label", "uc:total"]}, data: compacted};

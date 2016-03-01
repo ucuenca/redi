@@ -9,11 +9,10 @@ wkhomeControllers.controller('genericCloud', ['$scope', '$window', 'globalData',
                 //var keys = Object.keys(author);
                 model["id"] = pub["@id"];
                 model["title"] = pub["dct:title"];
-                model["abstract"] = pub["bibo:abstract"];
-                if (pub["bibo:uri"]) {
-                    model["uri"] = pub["bibo:uri"]["@id"];
-                }
-                if (model["title"] && model["abstract"])
+                model["abstract"] = pub["bibo:abstract"] ? pub["bibo:abstract"] : "";
+                model["uri"] = pub["bibo:uri"] ? pub["bibo:uri"]["@id"] : "";
+
+                if (model["title"])
                 {
                     $scope.todos.push({id: model["id"], title: model["title"], abstract: model["abstract"], uri: model["uri"]});
                 }

@@ -90,7 +90,7 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
 
     private String namespaceGraph = "http://ucuenca.edu.ec/wkhuska/";
     private String authorGraph = namespaceGraph + "authors";
-    private String externalAuthorGraph = namespaceGraph + "wkhuska/externalauthors";
+    private String externalAuthorGraph = namespaceGraph + "externalauthors";
 
     private final Constant con = new Constant();
 
@@ -403,16 +403,25 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
     public JsonArray SearchAuthorTaskImpl(String uri
     ) {
         JsonParser parser = new JsonParser();
-
+        String scopusconcat = "?apiKey=a3b64e9d82a8f7b14967b9b9ce8d513d&view=ENHANCED&httpAccept=application/rdf%2Bxml";
         try {
 //new AuthorVersioningJob(log).proveSomething();
             ClientConfiguration conf = new ClientConfiguration();
             //conf.addEndpoint(new DBLPEndpoint());
             LDClient ldClient = new LDClient(conf);
+            String nativeauthor = uri;
             //ClientResponse response = ldClient.retrieveResource("http://rdf.dblp.com/ns/m.0wqhskn");
 
-            String AuthorTofind = uri;
-            String providerName = ldClient.getEndpoint(AuthorTofind).getName();
+            if (uri.contains("elsevier")) // SCOPUS CASE
+            {
+                uri = uri.concat(scopusconcat);
+            }
+            else
+            {//DBLP CASE
+            uri = uri.replace("\"", "");
+            }
+         
+            String providerName = ldClient.getEndpoint(uri).getName();
             Properties propiedades = new Properties();
             InputStream entrada = null;
             Map<String, String> mapping = new HashMap<String, String>();
@@ -429,9 +438,9 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
             ClientResponse response = null;
             log.info("Buscando Informacion de: " + uri);
             try {
-                AuthorTofind = uri.replace("\"", "");
+                
                 try {
-                    response = ldClient.retrieveResource(AuthorTofind);
+                    response = ldClient.retrieveResource(uri);
                 } catch (DataRetrievalException e) {
                     log.error("Data Retrieval Exception: " + e);
                 }
@@ -445,7 +454,7 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                         + " PREFIX dct: <http://purl.org/dc/terms/> "
                         + " PREFIX bibo: <http://purl.org/ontology/bibo/> "
                         + " PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
-                        + " CONSTRUCT  { <" + AuthorTofind + "> foaf:publications ?uripub. "
+                        + " CONSTRUCT  { <" + nativeauthor + "> foaf:publications ?uripub. "
                         + " ?uripub  a bibo:Document. ?uripub bibo:uri ?uri. "
                         + " ?uripub  bibo:abstract ?abstract. ?uripub bibo:Quote ?keyword. "
                         + " ?uripub dct:title ?title. ?uripub dct:contributor ?coauthor. "
@@ -453,7 +462,7 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                         + " } "
                         + " WHERE "
                         + " { "
-                        + " <" + AuthorTofind + ">  <" + mapping.get("publicationProperty") + "> ?publication. "
+                        + " <" + nativeauthor + ">  <" + mapping.get("publicationProperty") + "> ?publication. "
                         + " ?publication <" + mapping.get("title") + "> ?title. "
                         + " OPTIONAL { ?publication <" + mapping.get("uri") + "> ?uri. } "
                         + " OPTIONAL { ?publication <" + mapping.get("abstract") + ">  ?abstract. }"
