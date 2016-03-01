@@ -19,14 +19,14 @@ wkhomeApp.service('searchData', function () {
     this.authorSearch = null;
     this.areaSearch = null;
     this.genericData = null;
-    this.researchArea = "Semantic Web";
+    this.researchArea = "SEMANTICWEB";
     this.globalauthor = null;
     
 });
 
 wkhomeApp.service('globalData', function () {
     this.language = "es";
-    this.centralGraph = "http://ucuenca.edu.ec/wkhuska2";
+    this.centralGraph = "http://ucuenca.edu.ec/wkhuska";
     this.clustersGraph = "http://ucuenca.edu.ec/wkhuska/clusters";
     this.authorsGraph = "http://ucuenca.edu.ec/wkhuska/authors";
     this.endpointsGraph = "http://ucuenca.edu.ec/wkhuska/endpoints";

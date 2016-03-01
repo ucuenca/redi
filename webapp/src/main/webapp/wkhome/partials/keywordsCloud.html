@@ -62,18 +62,23 @@
                         <!--  <h3> <a href="{{todo.id}}" target='_blank'>{{todo.title}}</a> </h3>
                           </br> Abstract: {{todo.abstract}} </br>
                         -->
-                        <a href="{{todo.uri}}" >
-                            <div class="panel panel-info">
-                                <div class="panel-heading">
-                                    <h2 class="panel-title"><a href="{{todo.uri}}" target='_blank'>{{todo.title}}</a></h2>
-                                </div>
-                                <div class="panel-body">
-                                    Abstract: {{todo.abstract}}
-                                    </br>
-                                    <a href="{{todo.uri}}" target='_blank'>{{todo.uri}}</a>
-                                </div>
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h2 class="panel-title"><a href="{{todo.uri}}" target='_blank'>{{todo.title}}</a></h2>
                             </div>
-                        </a>
+                            <div class="panel-body">
+                                Abstract: {{todo.abstract}}
+                                <br>
+                                Autores:
+                                <ul>
+                                    <li ng-repeat="author in todo.author">
+                                        <a href="{{author.id}}" target='_blank'>{{author.name}}</a>
+                                    </li>
+                                </ul>
+                                <br>
+                                URL: <a href="{{todo.uri}}" target='_blank'>{{todo.uri}}</a>
+                            </div>
+                        </div>
 
                     </li>
                 </ul>
