@@ -220,7 +220,7 @@ genericCloud.directive('genericCloud', ["d3", 'globalData','sparqlQuery',
                         + " OPTIONAL { ?publicationUri bibo:abstract  ?abstract.  } "
                         + " OPTIONAL { ?publicationUri bibo:uri  ?uri.  } "
                         + " }"
-                        + "}";
+                        + "}  ORDER BY ?abstract";
                 waitingDialog.show("Searching Publications of: " + key);
 
                 sparqlQuery.querySrv({query: sparqlPublications}, function (rdf) {
@@ -229,6 +229,7 @@ genericCloud.directive('genericCloud', ["d3", 'globalData','sparqlQuery',
                         if (compacted)
                         {
                             var entity = compacted["@graph"];
+                            entity.sort(function(a, b){return a-b});
                             //     infoBar.find('h4').text("Publication Info");
 
 //                        infoBar.find('div#title').text("Title: " + entity["dcterms:title"]);

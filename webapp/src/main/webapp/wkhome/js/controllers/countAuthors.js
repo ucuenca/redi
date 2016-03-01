@@ -22,7 +22,7 @@ wkhomeControllers.controller('countAuthors', ['$translate', '$routeParams', '$sc
                 + ' graph <' + globalData.centralGraph + '> '
                 + '       { '
                 + '         SELECT ?provenance ?name (COUNT(DISTINCT(?s)) AS ?total) '
-                + '             WHERE ' 
+                + '             WHERE '
                 + '             { '
                 + '                 ?s a foaf:Person. '
                 + '                 ?s foaf:publications ?pub . '
@@ -31,7 +31,7 @@ wkhomeControllers.controller('countAuthors', ['$translate', '$routeParams', '$sc
                 + '                 { '
                 + '                     SELECT ?name '
                 + '                     WHERE { '
-                + '                         GRAPH <'+globalData.endpointsGraph+'> { '
+                + '                         GRAPH <' + globalData.endpointsGraph + '> { '
                 + '                             ?provenance uc:name ?name . '
                 + '                         }'
                 + '                     }'
@@ -74,12 +74,13 @@ wkhomeControllers.controller('countAuthors', ['$translate', '$routeParams', '$sc
                     + ' WHERE { '
                     + '     SELECT  (count(?key) as ?k) ?key '
                     + '         WHERE { '
-                    + '             ?subject bibo:Quote ?key. '
+                    + '              ?subject foaf:publications ?pubs. '
+                    + '              ?subject dct:subject ?key. '
                     + '             BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
                     + '             BIND(IRI(?unickey) as ?keyword) '
                     + '         } '
                     + '     GROUP BY ?keyword  ?key '
-                    + '     HAVING(?k > 1) '
+                    //            + '     HAVING(?k > 1) '
                     + '}';
             sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
 

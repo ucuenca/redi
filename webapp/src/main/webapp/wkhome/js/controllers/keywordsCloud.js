@@ -48,7 +48,7 @@ wkhomeControllers.controller('keywordsCloud', ['$routeParams', '$scope', 'global
                 
                 model["author"] = pub["dct:contributor"] ? pub["dct:contributor"]  : [] ;
                 model["abstract"] = pub["bibo:abstract"] ? pub["bibo:abstract"] : "Sorry, still not found abstract for this publication."  ;
-                model["uri"] = pub["bibo:uri"]["@id"] ? pub["bibo:uri"]["@id"] : "" ;
+                model["uri"] = pub["bibo:uri"]? (pub["bibo:uri"]["@id"] ? pub["bibo:uri"]["@id"] : "" ) : "";
                 
                 $scope.autores = [];
                 _.map(pub["dct:contributors"], function(authorid){
