@@ -198,6 +198,8 @@ wkhomeControllers.controller('keywordsCloud', ['$routeParams', '$scope', 'global
                         });
                     });
                 });
+            } else {
+                $scope.data = searchData.allkeywordsCloud;
             }
         });
 
