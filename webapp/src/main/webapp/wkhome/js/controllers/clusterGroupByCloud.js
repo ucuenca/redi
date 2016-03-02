@@ -111,9 +111,9 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$scope', 'globalData', 'sp
                 for (i = 0, len = data.length; i < len; i++) {
                     myArray[data[i].cluster.toString()] = myArray[data[i].cluster.toString()] == null ? 1 : myArray[data[i].cluster.toString()] + 1;
                 }
-                for (i = 0, len = data.length; i < len; i++) {
-                    var numCluster = Number(data[i].cluster.toString().trim());
-                    if (numCluster < 500 && myArray[data[i].cluster.toString()] > 4) {
+                var cont = 1;
+                for (i = 0, len = data.length; i < len && cont < 600; i++) {
+                    if (myArray[data[i].cluster.toString()] > 4) {
                         var model = {};
                         model["Cluster"] = data[i].cluster;
                         model["Author"] = data[i].author;
@@ -122,6 +122,7 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$scope', 'globalData', 'sp
                         model["URI"] = data[i].uri;
                         $scope.$apply(function () {
                             $scope.publicationsByKeyword.push({cluster: model["Cluster"], author: model["Author"], keyword: model["Keyword"], title: model["Title"], uri: model["URI"]});
+                            cont+=1;
                         });
                     }
                 }
