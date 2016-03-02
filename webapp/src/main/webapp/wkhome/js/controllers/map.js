@@ -76,7 +76,7 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
                     + '             ?subject foaf:publications ?object.'
                     //+ '             ?object bibo:Quote "' + $scope.selectedTagItem + '".'
                     + '             ?subject dct:subject ?key.'
-                    + '             FILTER (regex(?key, "' + $scope.selectedTagItem + '")) .'
+                    + '             FILTER (contains(?key, "' + $scope.selectedTagItem + '")) .'
                     + '             ?subject dct:provenance ?provenance.'
                     + '             { '
                     + '                 SELECT DISTINCT ?sourcename ?lat ?long ?province ?city ?fullname '
