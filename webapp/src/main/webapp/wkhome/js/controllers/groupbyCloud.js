@@ -74,17 +74,18 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
 
                 //only keywords that appear in more than 2 articles
                 var queryKeywords = globalData.PREFIX
-                        + ' CONSTRUCT { ?keyword rdfs:label ?key } '
+                        + ' CONSTRUCT { ?keywordp rdfs:label ?keyp } '
                         + '	FROM <' + globalData.centralGraph + '> '
                         + ' WHERE { '
-                        + ' SELECT DISTINCT (count(?key) as ?k) ?key '
+                        + ' SELECT DISTINCT (count(?key) as ?k) (SAMPLE(?keyword) as ?keywordp) (SAMPLE(?key) as ?keyp) '
                         + ' WHERE { '
                         + '         ?subject foaf:publications ?pubs. '
                         + '         ?subject dct:subject ?key. '
                         + '         BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
                         + '         BIND(IRI(?unickey) as ?keyword) '
                         + ' }'
-                        + ' group by ?keyword  ?key '
+                        //+ ' group by ?keyword  ?key '
+                        + ' group by ?subject'
                         // + ' HAVING(?k > 1) '
                         + '}';
                 sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
@@ -123,6 +124,7 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
             groupByResources($scope.dataaux, $scope.gbselectedItem);
         });
         $scope.$watch('selectedItem', function () {//Funcion para cuando se selecciona la Research Area
+            $scope.selectedItem = $scope.selectedItem ? $scope.selectedItem : "SEMANTICWEB";
             waitingDialog.show("Consultando Autores Relacionados con:  \"" + $scope.selectedItem + "\"");
             $scope.todos = [];
             $scope.filteredTodos = [];
@@ -171,7 +173,7 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
                     + '                 } '
                     + '          } '
                     + '    }'
-                    + '    } group by ?subject ?nameauthor ?sourcename'
+                    + '    } group by ?subject ?nameauthor ?sourcename LIMIT 200'
                     + ' } ';
             $scope.authorsByKeyword = [];
             sparqlQuery.querySrv({query: queryRelatedPublications}, function (rdf) {

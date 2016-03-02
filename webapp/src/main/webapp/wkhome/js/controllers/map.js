@@ -13,17 +13,19 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
         {
             waitingDialog.show("Loading Research Areas");
             var queryKeywords = globalData.PREFIX
-                    + ' CONSTRUCT { ?keyword rdfs:label ?key } '
+                    + ' CONSTRUCT { ?keywordp rdfs:label ?keyp } '
                     + '	FROM <' + globalData.centralGraph + '> '
                     + ' WHERE { '
-                    + '     SELECT  (count(?key) as ?k) ?key '
+                    + '     SELECT  (count(?key) as ?k) (SAMPLE(?keyword) as ?keywordp) (SAMPLE(?key) as ?keyp)  '
                     + '     WHERE { '
                     + '         ?subject foaf:publications ?pubs. '
                     + '         ?subject dct:subject ?key. '
                     + '         BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
                     + '         BIND(IRI(?unickey) as ?keyword) '
                     + '     } '
-                    + '     GROUP BY ?keyword  ?key '
+                    //+ '     GROUP BY ?keyword  ?key '
+                    + '     GROUP BY ?subject'
+                    
                     //             + '     HAVING(?k > 10) '
                     + '}';
             sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
@@ -46,7 +48,7 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
         else
         {
             $scope.relatedtags = searchData.allkeywords;
-            $scope.selectedTagItem = 'SEMANTIC WEB';
+            $scope.selectedTagItem = 'SEMANTICWEB';
         }
 
 
@@ -54,6 +56,7 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
         //default selectedTagItem =  Semantic Web  - > see in app.js
         $scope.$watch('selectedTagItem', function () {
             //alert($scope.selectedItem);
+            $scope.selectedTagItem = $scope.selectedTagItem ? $scope.selectedTagItem : "SEMANTICWEB";
             waitingDialog.show("Consultando Ubicacion de Autores Relacionados con:  \"" + $scope.selectedTagItem + "\"");
             var queryBySource = globalData.PREFIX
                     + ' CONSTRUCT { '

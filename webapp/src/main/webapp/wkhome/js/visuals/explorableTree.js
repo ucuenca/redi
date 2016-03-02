@@ -78,7 +78,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
             var lastExpandedNode;
             // size of the diagram
             var viewerWidth = width;
-            var viewerHeight = height + 200;
+            var viewerHeight = height + 100;
             var tree = d3.layout.tree()
                     .size([height, width]);
             var diagonal = d3.svg.diagonal()

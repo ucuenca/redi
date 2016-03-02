@@ -69,17 +69,17 @@ wkhomeControllers.controller('countAuthors', ['$translate', '$routeParams', '$sc
         $scope.themes = [];
         function loadAllKeyword() {
             var queryKeywords = globalData.PREFIX
-                    + ' CONSTRUCT { ?keyword rdfs:label ?key } '
+                    + ' CONSTRUCT { ?keywordp rdfs:label ?keyp } '
                     + '	FROM <' + globalData.centralGraph + '> '
                     + ' WHERE { '
-                    + '     SELECT  (count(?key) as ?k) ?key '
+                    + '     SELECT  (count(?key) as ?k) (SAMPLE(?keyword) as ?keywordp) (SAMPLE(?key) as ?keyp) '
                     + '         WHERE { '
                     + '              ?subject foaf:publications ?pubs. '
                     + '              ?subject dct:subject ?key. '
                     + '             BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
                     + '             BIND(IRI(?unickey) as ?keyword) '
                     + '         } '
-                    + '     GROUP BY ?keyword  ?key '
+                    + '     GROUP BY ?subject '
                     //            + '     HAVING(?k > 1) '
                     + '}';
             sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
