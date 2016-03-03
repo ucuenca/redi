@@ -57,7 +57,7 @@ wkhomeControllers.controller('searchText', ['$routeParams','$scope', '$window', 
                         }
                         else
                         {
-                            waitingDialog.show();
+                           
                             var queryAuthors = globalData.PREFIX
                                     + " CONSTRUCT { ?keywordduri rdfs:label ?k } "
                                     + " WHERE { "
@@ -66,7 +66,8 @@ wkhomeControllers.controller('searchText', ['$routeParams','$scope', '$window', 
                                     + "     WHERE { "
                                     + '         GRAPH <' + globalData.centralGraph + '> {'
                                     + "         ?s foaf:publications ?pub. "
-                                    + "         ?pub bibo:Quote ?k."
+                                    + "         ?s dct:subject ?k. "
+                                    //+ "         ?pub bibo:Quote ?k."
                                     + "         BIND(IRI(?k) AS ?keyword) . "
                                     // + "         {0}"
                                     + '         FILTER(mm:fulltext-search(str(?k), "' + $scope.searchText + '")).'

@@ -40,7 +40,7 @@ myApp.labels_es = {
 "Author Search":"Busqueda de Autores",
 "Tag Cloud":"Nube de Keywords",
 "Authors Group":"Autores por Area de Investigacion",
-"Ecuadorian Semantic Repository":"Repositorio Semantico de Autores Ecuatorianos",
+"Ecuadorian Semantic Repository":"Repositorio Semantico de Investigadores Ecuatorianos",
 "Location by Research Area":"Localizacion de Areas de Investigacion",
 
 
