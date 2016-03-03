@@ -18,7 +18,7 @@ wkhomeControllers.controller('searchText', ['$routeParams','$scope', '$window', 
         $scope.submit = function () {
             if ($scope.searchText) {
                 console.log($scope.searchText);
-                waitingDialog.show();
+               // waitingDialog.show();
                 var queryAuthors = globalData.PREFIX
                         + " CONSTRUCT { "
                         + " ?subject a foaf:Person. "
@@ -58,7 +58,7 @@ wkhomeControllers.controller('searchText', ['$routeParams','$scope', '$window', 
                         else
                         {
                            
-                            var queryAuthors = globalData.PREFIX
+                            var querySearchKeyword = globalData.PREFIX
                                     + " CONSTRUCT { ?keywordduri rdfs:label ?k } "
                                     + " WHERE { "
                                     + " { "
@@ -85,7 +85,9 @@ wkhomeControllers.controller('searchText', ['$routeParams','$scope', '$window', 
 //                                }
 //                            });
                             //queryAuthors = String.format(queryAuthors, filterContainer);
-                            sparqlQuery.querySrv({query: queryAuthors},
+                            
+                            
+                            sparqlQuery.querySrv({query: querySearchKeyword},
                             function (rdf) {
                                 jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                                     if (compacted["@graph"])
@@ -102,6 +104,8 @@ wkhomeControllers.controller('searchText', ['$routeParams','$scope', '$window', 
                                     }
                                 });
                             }); // end of  sparqlQuery.querySrv({...
+                              //          alert("Information not found");
+
                         }
                     });
                 }); // end of  sparqlQuery.querySrv({...
