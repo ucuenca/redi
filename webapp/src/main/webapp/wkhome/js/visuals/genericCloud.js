@@ -24,7 +24,7 @@ genericCloud.directive('genericCloud', ["d3", 'globalData','sparqlQuery',
             bottom: 0,
             left: 0
         };
-        maxRadius = 60;
+        maxRadius = 50;
         rScale = d3.scale.sqrt().range([0, maxRadius]);
         rValue = function (d) {
             return parseInt(d.value);
@@ -117,7 +117,7 @@ genericCloud.directive('genericCloud', ["d3", 'globalData','sparqlQuery',
                 return rValue(d);
             });
             label.style("font-size", function (d) {
-                return Math.max(8, rScale(rValue(d) / 3)) + "px";
+                return Math.max(8, rScale(rValue(d) / 3.5)) + "px";
             }).style("width", function (d) {
                 return 0.1 * rScale(rValue(d)) + "px";
             });

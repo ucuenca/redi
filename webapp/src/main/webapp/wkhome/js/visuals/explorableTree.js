@@ -478,14 +478,14 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                     pubInfo.append(anchor);
                     
                     pubInfo.append("<hr>"); pubInfo.append("<h3>Exportar Datos Estructurados</h3>");
-                    anchor = $("<a target='blank'>").attr('href', location + "/marmottatest/resource?uri=" + entity["@id"] + "&format=application/rdf%2Bjson").text("RDF+JSON");
-                    pubInfo.append("<br>"); pubInfo.append(anchor);
+//                    anchor = $("<a target='blank'>").attr('href', location + "/marmottatest/resource?uri=" + entity["@id"] + "&format=application/rdf%2Bjson").text("RDF+JSON");
+//                    pubInfo.append("<br>"); pubInfo.append(anchor);
                     anchor = $("<a target='blank'>").attr('href', location + "/marmottatest/resource?uri=" + entity["@id"] + "&format=application/rdf%2Bjson").text("RDF+XML");
                     pubInfo.append("<br>"); pubInfo.append(anchor);
                     anchor = $("<a target='blank'>").attr('href', location + "/marmottatest/resource?uri=" + entity["@id"] + "&format=text/turtle").text("Turtle");
                     pubInfo.append("<br>"); pubInfo.append(anchor);
-                    anchor = $("<a target='blank'>").attr('href', location + "/marmottatest/resource?uri=" + entity["@id"] + "&format=text/rdf%2Bn3").text("RDF+N3");
-                    pubInfo.append("<br>"); pubInfo.append(anchor);
+//                    anchor = $("<a target='blank'>").attr('href', location + "/marmottatest/resource?uri=" + entity["@id"] + "&format=text/rdf%2Bn3").text("RDF+N3");
+//                    pubInfo.append("<br>"); pubInfo.append(anchor);
                     anchor = $("<a target='blank'>").attr('href', location + "/marmottatest/resource?uri=" + entity["@id"] + "&format=application/ld%2Bjson").text("JSON-LD");
                     pubInfo.append("<br>"); pubInfo.append(anchor);
                 }
@@ -601,7 +601,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
 //                                        }
 //                                        else
 //                                            return null;
-                                        if (levenshtein_distance(name, localauthor['foaf:name']) < 10)
+                                        if (levenshtein_distance(name, localauthor['foaf:name']) < 12)
                                         {
                                             similarity = true;
                                         }
