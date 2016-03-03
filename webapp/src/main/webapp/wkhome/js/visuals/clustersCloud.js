@@ -99,7 +99,7 @@ clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery
 //            .attr("xlink:href", function (d) {
 //                return "#" + (encodeURIComponent(idValue(d)));
 //            })
-            .call(force.drag).call(connectEvents).append("circle").attr("id", "gcircle").attr("r", function (d) {
+                    .call(force.drag).call(connectEvents).append("circle").attr("id", "gcircle").attr("r", function (d) {
                 return rScale(rValue(d));
             });
         };
@@ -113,7 +113,7 @@ clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery
 //            .attr("href", function (d) {
 //                return "#" + (encodeURIComponent(idValue(d)));
 //            })
-            .call(force.drag).call(connectEvents);
+                    .call(force.drag).call(connectEvents);
             labelEnter.append("div").attr("class", "gbubble-label-name").text(function (d) {
                 return textValue(d);
             });
@@ -170,7 +170,7 @@ clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery
                 });
             };
         };
-       
+
         connectEvents = function (d) {
             d.on("click", click);
             d.on("mouseover", mouseover);
@@ -179,7 +179,7 @@ clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery
         clear = function () {
             return location.replace("#");
         };
-        
+
         click = function (d) {
             //   location.replace("#" + encodeURIComponent(idValue(d)));
 
@@ -197,7 +197,7 @@ clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery
             };
             if (infoBar) {
                 var key = d.label;
-                
+
                 var headbar = $('div.head-info');
                 headbar.find('title').text("ddddddtitletitle");
                 headbar.html('');
@@ -213,7 +213,7 @@ clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery
                         + '{'
                         + '     ?subject a foaf:Person. '
                         + '	?subject foaf:name ?name. '
-                        
+
                         + '	?subject bibo:Quote ?keywords. '
                         + '} '
                         + 'where'
@@ -221,27 +221,27 @@ clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery
                         + ' SELECT DISTINCT ?subject ?name ?keywords'
                         + ' WHERE '
                         + ' {  '
-                        + '   graph <'+globalData.clustersGraph+'>        '
+                        + '   graph <' + globalData.clustersGraph + '>        '
                         + '   {          '
-                        + '     <'+d.id+'>  ' + 'uc:hasPerson  ?subject.'
+                        + '     <' + d.id + '>  ' + 'uc:hasPerson  ?subject.'
                         + '     {      			'
-                        + '       select DISTINCT ?subject ?name (group_concat(distinct ?key;separator=", ") as ?keywords)            		'
+                        + '       select DISTINCT ?subject ?name ?keywords            		'
                         + '       where            		'
                         + '                     {            	'
-                        + '                       graph <'+globalData.centralGraph+'>            			'
+                        + '                       graph <' + globalData.centralGraph + '>            			'
                         + '                             {            				  '
                         + '                               ?subject foaf:name ?name.'
                         + '                               ?subject foaf:publications ?publicationUri. '
                         + ' 							  ?publicationUri dct:title ?title .'
-                        + '                           ?publicationUri bibo:Quote ?key.'
+                        + '                           ?publicationUri bibo:Quote ?keywords.'
                         + '                         }          			'
-                        + '                 } group by ?subject ?name         	'
+                        + '                 } group by ?subject ?name ?keywords         	'
                         + ' }           '
                         + ' } '
                         + ' } '
                         + ' } ';
-                
-                        
+
+
                 waitingDialog.show("Searching Authors of the cluster " + key);
 
                 sparqlQuery.querySrv({query: sparqlPublications}, function (rdf) {
@@ -249,7 +249,20 @@ clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery
                     jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                         if (compacted)
                         {
-                            var entity = compacted["@graph"];
+                            var newdata = [];
+                            _.map(compacted["@graph"], function (keyword) {
+                                var mykeywords;
+                                for (var i = 0; i < 20 && i < keyword["bibo:Quote"].length; i++)
+                                {
+
+                                    mykeywords = mykeywords + ( mykeywords?  ", " : "" ) + keyword["bibo:Quote"][i];
+
+                                }
+                                newdata.push({"@id": keyword["@id"], "@type": keyword["@type"], "bibo:Quote": mykeywords, "foaf:name": keyword["foaf:name"]});
+
+
+                            })
+                            var entity = newdata;
                             //Each author is a person
                             var final_entity = _.where(entity, {"@type": "foaf:Person"});
                             var values = final_entity.length ? final_entity : [final_entity];
@@ -294,13 +307,13 @@ clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery
                 trigger: 'manual',
                 html: true,
                 content: function () {
-                    if(d.abstract != null && (d.abstract.constructor === Array || d.abstract instanceof Array))
-                            d.abstract = d.abstract[0];
-                    return "<strong>Cluster:</strong> " + d.label + "<br />" + "<strong>Authors</strong> in this cluster with publications that contain " 
-                            + pageTitle.toString().replace('Clusters that contain ', '').replace(' Keyword".', '').replace('Clusters que contienen ', '') 
+                    if (d.abstract != null && (d.abstract.constructor === Array || d.abstract instanceof Array))
+                        d.abstract = d.abstract[0];
+                    return "<strong>Cluster:</strong> " + d.label + "<br />" + "<strong>Authors</strong> in this cluster with publications that contain "
+                            + pageTitle.toString().replace('Clusters that contain ', '').replace(' Keyword".', '').replace('Clusters que contienen ', '')
                             /*"Abstract: " + d.abstract.substring(0, 50) + "<br />" +
-                            "Author: " + d.author + "<br />"
-                    "Author Source: " + d.source + "<br />"*/
+                             "Author: " + d.author + "<br />"
+                             "Author Source: " + d.source + "<br />"*/
 
 //                        "Country: " + d.country + "<br />" +
 //                        "SIC Sector: " + d.sicSector + "<br />" +
@@ -411,28 +424,28 @@ clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery
                             var schema = data.schema;
                             var fields = schema.fields;
                             var mappedData = [];
-                            
+
                             _.each(jsonld['@graph'], function (keyword, idx) {
                                 if (keyword["rdfs:label"])
                                 {
                                     var id = keyword["@id"];
-                                    var field1 = fields[1].replace("uc:","http://ucuenca.edu.ec/resource/");
+                                    var field1 = fields[1].replace("uc:", "http://ucuenca.edu.ec/resource/");
                                     var val = "";
                                     if (keyword[fields[1]] || keyword[field1]) {
                                         val = keyword[fields[1]] ? keyword[fields[1]]["@value"] : keyword[field1]["@value"];
                                     }
-                                    if (keyword[fields[0]].toString().toLowerCase() != 'uc:resulttitle' && keyword[fields[0]] != 'http://ucuenca.edu.ec/wkhuska/resource/resultTitle'){
-                                    	mappedData.push({id: id, label: keyword[fields[0]], value: val});
-				    }
+                                    if (keyword[fields[0]].toString().toLowerCase() != 'uc:resulttitle' && keyword[fields[0]] != 'http://ucuenca.edu.ec/wkhuska/resource/resultTitle') {
+                                        mappedData.push({id: id, label: keyword[fields[0]], value: val});
+                                    }
 
                                 }
                             });
-                            
+
                             try {
-                                pageTitle = _.findWhere(jsonld['@graph'],{"@type": "uc:pagetitle"})["uc:viewtitle"];
+                                pageTitle = _.findWhere(jsonld['@graph'], {"@type": "uc:pagetitle"})["uc:viewtitle"];
                             }
-                            catch(err) {
-                                pageTitle = _.findWhere(jsonld['@graph'],{"@type": "http://ucuenca.edu.ec/resource/pagetitle"})["http://ucuenca.edu.ec/resource/viewtitle"];
+                            catch (err) {
+                                pageTitle = _.findWhere(jsonld['@graph'], {"@type": "http://ucuenca.edu.ec/resource/pagetitle"})["http://ucuenca.edu.ec/resource/viewtitle"];
                             }
                             draw(svg, width, height, mappedData, scope, attrs, pageTitle);
                         }
