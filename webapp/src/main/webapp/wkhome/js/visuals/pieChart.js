@@ -137,9 +137,9 @@ pieChart.directive('pieChart', ["d3", "globalData", "sparqlQuery",
                                     + '     } '
                                     + ' } } '
                                     + ' GROUP BY ?subject ?name '
-                                    + ' HAVING( ?totalPub > 0 && ?totalPub < 20) '
+                                    + ' HAVING( ?totalPub > 1 && ?totalPub < 40) '
                                     + '} '
-                                    + '} limit 100';
+                                    + '} limit 150';
                             waitingDialog.show("Loading All Authors of Selected Source");
 
                             sparqlQuery.querySrv({query: sparqlquery}, function (rdf) {
