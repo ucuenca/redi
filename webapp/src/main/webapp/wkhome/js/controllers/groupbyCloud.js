@@ -68,7 +68,7 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
         if (!searchData.allkeywords)
         {
             $scope.themes = [];
-            waitingDialog.show();
+            //waitingDialog.show();
             executeGroupTags();
             function executeGroupTags() {
 
@@ -89,7 +89,7 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
                         // + ' HAVING(?k > 1) '
                         + '}';
                 sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
-                    waitingDialog.show();
+                 //   waitingDialog.show();
                     jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
 
                         _.map(compacted["@graph"], function (pub) {
@@ -125,7 +125,7 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
         });
         $scope.$watch('selectedItem', function () {//Funcion para cuando se selecciona la Research Area
             $scope.selectedItem = $scope.selectedItem ? $scope.selectedItem : "SEMANTICWEB";
-            waitingDialog.show("Consultando Autores Relacionados con:  \"" + $scope.selectedItem + "\"");
+         //   waitingDialog.show("Consultando Autores Relacionados con:  \"" + $scope.selectedItem + "\"");
             $scope.todos = [];
             $scope.filteredTodos = [];
             loadResources($scope.selectedItem, $scope.gbselectedItem); //query and load resource related with selected theme
