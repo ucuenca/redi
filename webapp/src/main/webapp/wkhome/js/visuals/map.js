@@ -12,7 +12,7 @@ cloudGroup.directive('mapView', ["d3", 'globalData', 'sparqlQuery',
             var pubInfo = element;
             pubInfo.html('');
             var w = 450,
-                h = 600;
+                    h = 600;
             var projection = d3.geo.azimuthal()
                     //  .mode("equidistant")
                     .origin([-84, -1])//lat long origin
@@ -21,9 +21,41 @@ cloudGroup.directive('mapView', ["d3", 'globalData', 'sparqlQuery',
             var path = d3.geo.path()
                     .projection(projection);
             //var svg = d3.select("#map").insert("svg:svg", "h2")
+
+            // Define the zoom function for the zoomable map
+
+            function clicked(d) {
+                var x, y, k;
+
+                if (d && centered !== d) {
+                    var centroid = path.centroid(d);
+                    x = centroid[0];
+                    y = centroid[1];
+                    k = 4;
+                    centered = d;
+                } else {
+                    x = width / 2;
+                    y = height / 2;
+                    k = 1;
+                    centered = null;
+                }
+
+                g.selectAll("path")
+                        .classed("active", centered && function (d) {
+                            return d === centered;
+                        });
+
+                g.transition()
+                        .duration(750)
+                        .attr("transform", "translate(" + w / 2 + "," + h / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
+                        .style("stroke-width", 1.5 / k + "px");
+            }
+
+
             var svg = element.insert("svg:svg", "h2")
                     .attr("width", w)
-                    .attr("height", h);
+                    .attr("height", h)
+                    .on("click", clicked);
             var states = svg.append("svg:g")
                     .attr("id", "states");
             var circles = svg.append("svg:g")
@@ -52,10 +84,13 @@ cloudGroup.directive('mapView', ["d3", 'globalData', 'sparqlQuery',
                     //            }
                 });
                 // Compute the Voronoi diagram of airports' projected positions.
+
+
                 var polygons = d3.geom.voronoi(positions);
                 var g = cells.selectAll("g")
                         .data(cities)
                         .enter().append("svg:g");
+
                 var tip = d3.tip()
                         .attr('class', 'tree-d3-tip')
                         .html(function (d) {
@@ -73,7 +108,7 @@ cloudGroup.directive('mapView', ["d3", 'globalData', 'sparqlQuery',
                             return positions[i][1];
                         })
                         .attr("r", function (d, i) {
-                            return Math.sqrt(d.total * 3);
+                            return Math.sqrt(d.total * 10);
                         })
                         .on("mouseover", function (d, i) {
                             d3.select("h3.tag").text(d.keyword);
@@ -86,7 +121,7 @@ cloudGroup.directive('mapView', ["d3", 'globalData', 'sparqlQuery',
                             d3.select("h3.longitude").text(d.longitude);
                             d3.select(this).transition()
                                     .duration(750)
-                                    .attr("r", Math.sqrt(d.total * 4) + 16);
+                                    .attr("r", Math.sqrt(d.total * 2) + 16);
 
                             tip.html("<h2>" + d.keyword + "</h2> <br>  <h3>" + d.name + "</h3> <br>Click to See Authors Within This Research Area");
                             tip.show(d);
@@ -106,17 +141,17 @@ cloudGroup.directive('mapView', ["d3", 'globalData', 'sparqlQuery',
                                     + '         ?subject foaf:publications ?pubb. '
                                     //+ '         ?subject bibo:Quote "' + d.keyword + '". '
                                     + '         ?subject dct:subject ?key . '
-                                    + '         FILTER (regex(?key,"'+d.keyword+'")). '
+                                    + '         FILTER (regex(?key,"' + d.keyword + '")). '
                                     + '         { '
                                     + '         SELECT ?subject ?name (COUNT( DISTINCT ?pub) AS ?totalPub)  '
                                     + '             WHERE { '
-                                    + '                 GRAPH <'+globalData.centralGraph+'>  { '
+                                    + '                 GRAPH <' + globalData.centralGraph + '>  { '
                                     + '                     ?subject foaf:publications  ?pub . '
                                     + '                     ?subject foaf:name       ?name.        '
                                     + '                     ?subject dct:provenance ?provenance. '
                                     + '                     {  '
                                     + '                         SELECT * WHERE { '
-                                    + '                             GRAPH <'+globalData.endpointsGraph+'>  { '
+                                    + '                             GRAPH <' + globalData.endpointsGraph + '>  { '
                                     + '                                 ?provenance uc:name "' + d.name + '"'
                                     + '                             } '
                                     + '                         } '

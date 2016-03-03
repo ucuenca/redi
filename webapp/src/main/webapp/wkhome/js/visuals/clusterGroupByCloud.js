@@ -15,12 +15,12 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
         function create(svgElement, dataToDraw, groupByOption) {
             
             var radius = 350;
-            var width = Math.max(document.documentElement.clientWidth * 0.8, window.innerWidth * 0.8);
+            var width = Math.max(document.documentElement.clientWidth * 0.8, window.innerWidth * 0.8) ;
             var height = Math.max(document.documentElement.clientHeight * 0.8, window.innerHeight * 0.8);
             
             
             var svg = svgElement.append("svg")
-                    .attr("width", width)
+                    .attr("width", width )
                     .attr("height", height);
 
 

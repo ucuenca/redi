@@ -74,17 +74,18 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
 
                 //only keywords that appear in more than 2 articles
                 var queryKeywords = globalData.PREFIX
-                        + ' CONSTRUCT { ?keyword rdfs:label ?key } '
+                        + ' CONSTRUCT { ?keywordp rdfs:label ?keyp } '
                         + '	FROM <' + globalData.centralGraph + '> '
                         + ' WHERE { '
-                        + ' SELECT DISTINCT (count(?key) as ?k) ?key '
+                        + ' SELECT DISTINCT (count(?key) as ?k) (SAMPLE(?keyword) as ?keywordp) (SAMPLE(?key) as ?keyp) '
                         + ' WHERE { '
                         + '         ?subject foaf:publications ?pubs. '
                         + '         ?subject dct:subject ?key. '
                         + '         BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
                         + '         BIND(IRI(?unickey) as ?keyword) '
                         + ' }'
-                        + ' group by ?keyword  ?key '
+                        //+ ' group by ?keyword  ?key '
+                        + ' group by ?subject'
                         // + ' HAVING(?k > 1) '
                         + '}';
                 sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
@@ -123,6 +124,7 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
             groupByResources($scope.dataaux, $scope.gbselectedItem);
         });
         $scope.$watch('selectedItem', function () {//Funcion para cuando se selecciona la Research Area
+            $scope.selectedItem = $scope.selectedItem ? $scope.selectedItem : "SEMANTICWEB";
             waitingDialog.show("Consultando Autores Relacionados con:  \"" + $scope.selectedItem + "\"");
             $scope.todos = [];
             $scope.filteredTodos = [];
@@ -143,36 +145,40 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
         function loadResources(value, groupby)//load resources related with selected keyword
         {
 
+
+
             var queryRelatedPublications = globalData.PREFIX
                     + ' CONSTRUCT {      '
                     + ' ?subject foaf:name  ?nameauthor . '
                     + ' ?subject  dct:provenance ?sourcename . } '
-                    + ' WHERE {'
-                    + '   SELECT ?subject ?nameauthor ?sourcename'
-                    + '       WHERE {'
-                    + '            graph <' + globalData.centralGraph + '> {'
-
-                    + '         ?subject foaf:publications ?pubs .'
-                    + '         ?subject foaf:name  ?nameauthor .'
-                    + '         ?subject dct:subject ?keyword.    '
-                    + '         ?subject dct:provenance ?provenance .'
-
-                    + '         ?subject2 dct:subject ?keyfilter.    '
-                    + '         ?subject2 dct:subject ?keyword.    '
-                    + '         FILTER (regex(UCASE(?keyfilter), "' + value + '"))'
-                    + '         { '
-                    + '              select * '
-                    + '                 WHERE '
-                    + '                 { '
-                    + '                     graph <http://ucuenca.edu.ec/wkhuska/endpoints> '
-                    + '                     { '
-                    + '                         ?provenance uc:name ?sourcename  '
-                    + '                     } '
-                    + '                 } '
-                    + '          } '
-                    + '    }'
-                    + '    } group by ?subject ?nameauthor ?sourcename'
-                    + ' } ';
+                    + ' WHERE { '
+                    + '   ?subject foaf:publications ?pubs . '
+                    + '   ?subject foaf:name  ?nameauthor . '
+                    + '   ?subject dct:subject ?keyword. '
+                    + '   ?subject dct:provenance ?provenance  '
+                   + '                   FILTER (contains(?keyword, "'+value+'")) '
+//          
+//                    + '   { '
+//                    + ' 	SELECT * '
+//                    + '         WHERE { '
+//                    + '               graph <' + globalData.centralGraph + '> { '
+//                    + '                   ?subject2 dct:subject ?keyfilter. '
+//                    + '                   ?subject2 dct:subject ?keyword '
+//                    + '                   FILTER (contains(?keyfilter, "'+value+'")) '
+//                    + '              } '
+//                    + '        } '
+//                    + '    } '
+                    + '    { '
+                    + '         select * '
+                    + '            WHERE '
+                    + '            { '
+                    + '                graph <' + globalData.endpointsGraph + '> '
+                    + '                { '
+                    + '                     ?provenance uc:name ?sourcename '
+                    + '                } '
+                    + '            } '
+                    + '    }                                                            '
+                    + '} LIMIT 200 ';
             $scope.authorsByKeyword = [];
             sparqlQuery.querySrv({query: queryRelatedPublications}, function (rdf) {
                 jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {

@@ -39,7 +39,7 @@ cloudGroup.directive('cloudGroup', ["$routeParams", "d3", 'sparqlQuery', 'global
             };
 
             var radius = 350;
-            var width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+            var width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0) - 300;
             var height = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
             var fill = d3.scale.ordinal().range(['#FF00CC', '#FF00CC', '#00FF00', '#00FF00', '#FFFF00', '#FF0000', '#FF0000', '#FF0000', '#FF0000', '#7F0000']);
             //var svg = d3.select("#chart").append("svg")

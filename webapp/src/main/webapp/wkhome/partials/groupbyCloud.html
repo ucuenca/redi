@@ -7,6 +7,11 @@
     <hr>
 
     <div class="tree-node-author-info" style="height:100vh">
+
+        <hr>
+        <div style="height: 480px">
+
+        </div>
         <hr>
         <h4>CO-AUTORES</h4>
         <div class="authorsByPublications">
@@ -20,7 +25,7 @@
             <a href="" target="_blank"></a>
         </div>
         <hr>
-        
+
     </div>
 
 </div> 
@@ -28,16 +33,16 @@
 <div class="col-md-10">
 
     <div class="col-md-12">
-        
+
         <center>
             <div class="page-header">
-                <h2 class="text-success">{{'Grouping Publications' | translate}}</h2>
+                <h2 class="text-success">{{'Grouping Publications'| translate}}</h2>
             </div>
         </center>
     </div>
     <div class="col-md-12" ng-controller="groupbyCloud">
         <div class="col-md-3">
-            <h3 class="text-success" style="text-align: left">{{'Select Research Area' | translate}}:</h3>
+            <h3 class="text-success" style="text-align: left">{{'Select Research Area'| translate}}:</h3>
             <select class="form-control" name="board" id="board" ng-model="selectedItem"  ng-options="key.tag as key.tag for key  in relatedthemes">
                 <option value="">Select Theme</option>
             </select>
@@ -48,12 +53,12 @@
             <select   class="form-control" name="group" id="group" ng-model="gbselectedItem" >
                 <option value="Todos">{{'All'| translate}}</option>
                 <option value="organization">{{'Source'| translate}}</option>
-    <!--            <option value="name">Autor</option> -->
+                <!--            <option value="name">Autor</option> -->
             </select>
         </div>
 
 
-        <cloud-group data="data" style="display: block; height: 90%" if-click="ifClick(value)" ng-model="value"></cloud-group> 
+        <cloud-group data="data" style="display: block; height: 90% ; width: 80%" if-click="ifClick(value)" ng-model="value"></cloud-group> 
         <!--
             <div class="col-md-3">
                 Size By:
@@ -120,10 +125,10 @@
 
 
 
-    
-    
-    <div class="row subject-cloud">
-        <div id="scrollToHere" class="col-md-12" >
+
+
+        <div class="row subject-cloud">
+            <div id="scrollToHere" class="col-md-12" >
                 <div >
                 </div>
                 <div id="blackspace">
@@ -135,7 +140,7 @@
                 <div  class="col-md-12 tree-node-info" style="height:100vh" >
 
                     <h3></h3>
-                    <h4 style="padding: 20px" class="text-success"> {{'Total of Publications found' | translate }}: {{todos.length}} </h4>
+                    <h4 style="padding: 20px" class="text-success"> {{'Total of Publications found'| translate }}: {{todos.length}} </h4>
 
 
                     <ul>
