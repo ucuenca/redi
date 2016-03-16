@@ -37,7 +37,8 @@ myApp.labels_en = {
 "Author Search":"Author Search",
 "Tag Cloud":"Tag Cloud",
 "Authors Group":"Authors by Research Area",
-"Ecuadorian Semantic Repository":"Ecuadorian Semantic Repository",
+"Ecuadorian Semantic Repository":"Ecuadorian Repository of Researchers",
+"Search related researchers":"Find related Researchers",
 "Location by Research Area":"Location by Research Area",
 
 //   GROUP BY  VIEW
