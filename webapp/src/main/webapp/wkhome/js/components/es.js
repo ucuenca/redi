@@ -18,6 +18,9 @@ myApp.labels_es = {
 "contact":"Contacto",
 "Search":"Buscar",
 
+//HELP PAGE
+"Descargar Manual": "Descargar el manual de usuario para REDI",
+
 
 // MAIN MENU
 "Home":"Inicio",

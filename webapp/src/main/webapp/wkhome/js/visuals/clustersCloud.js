@@ -255,7 +255,7 @@ clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery
                                 for (var i = 0; i < 20 && i < keyword["bibo:Quote"].length; i++)
                                 {
 
-                                    mykeywords = mykeywords + ( mykeywords?  ", " : "" ) + keyword["bibo:Quote"][i];
+                                    mykeywords = ( mykeywords ? mykeywords + ", " : "" ) + keyword["bibo:Quote"][i];
 
                                 }
                                 newdata.push({"@id": keyword["@id"], "@type": keyword["@type"], "bibo:Quote": mykeywords, "foaf:name": keyword["foaf:name"]});
