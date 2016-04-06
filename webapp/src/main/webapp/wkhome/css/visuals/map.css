@@ -127,3 +127,13 @@ circle {
 #cells g:hover path.arc {
     display: inherit;
 }
+
+/*#uk {
+    fill: #E5F5F9;
+    stroke: #2CA25F;
+    stroke-width: 0.5;
+}
+*/#axes {
+    stroke: #BDBDBD;
+    stroke-width: 0.5;
+}

@@ -11,105 +11,130 @@ cloudGroup.directive('mapView', ["d3", 'globalData', 'sparqlQuery',
         {
             var pubInfo = element;
             pubInfo.html('');
-            var w = 450,
-                    h = 600;
-            var projection = d3.geo.azimuthal()
-                    //  .mode("equidistant")
-                    .origin([-84, -1])//lat long origin
-                    .scale(4500)
-                    .translate([-250, 230]);
-            var path = d3.geo.path()
-                    .projection(projection);
-            //var svg = d3.select("#map").insert("svg:svg", "h2")
+            var cities = data;
 
-            // Define the zoom function for the zoomable map
+            var w = 500;
+            var h = 600;
+            var proj = d3.geo.mercator().scale(28500).translate([6400, 110]);
+            var path = d3.geo.path().projection(proj);
+            var t = proj.translate(); // the projection's default translation
+            var s = proj.scale(); // the projection's default scale
+//                    .origin([-84, -1])//lat long origin
+//                    .scale(4500)
+//                    .translate([-250, 230]);
 
-            function clicked(d) {
-                var x, y, k;
+            var positions = [];
+            cities = cities.filter(function (city) {
+                //             if (countByAirport[city.id]) {
+                var location = [+city.longitude, +city.latitude];
+                //          locationByAirport[city.id] = location;
+                positions.push(proj(location));
+                return true;
+                //            }
+            });
 
-                if (d && centered !== d) {
-                    var centroid = path.centroid(d);
-                    x = centroid[0];
-                    y = centroid[1];
-                    k = 4;
-                    centered = d;
-                } else {
-                    x = width / 2;
-                    y = height / 2;
-                    k = 1;
-                    centered = null;
-                }
+            var tip = d3.tip()
+                    .attr('class', 'tree-d3-tip')
+                    .html(function (d) {
+                        return ' ';
+                    });
 
-                g.selectAll("path")
-                        .classed("active", centered && function (d) {
-                            return d === centered;
-                        });
-
-                g.transition()
-                        .duration(750)
-                        .attr("transform", "translate(" + w / 2 + "," + h / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
-                        .style("stroke-width", 1.5 / k + "px");
-            }
-
-
-            var svg = element.insert("svg:svg", "h2")
+            var map = element.append("svg:svg")
                     .attr("width", w)
                     .attr("height", h)
-                    .on("click", clicked);
-            var states = svg.append("svg:g")
-                    .attr("id", "states");
-            var circles = svg.append("svg:g")
+                    .call(d3.behavior.zoom().on("zoom", redraw));
+
+            var axes = map.append("svg:g").attr("id", "axes");
+
+            var xAxis = axes.append("svg:line")
+                    .attr("x1", t[0])
+                    .attr("y1", 0)
+                    .attr("x2", t[0])
+                    .attr("y2", h);
+
+            var yAxis = axes.append("svg:line")
+                    .attr("x1", 0)
+                    .attr("y1", t[1])
+                    .attr("x2", w)
+                    .attr("y2", t[1]);
+
+            var states = map.append("svg:g").attr("id", "states");
+
+            var circles = map.append("svg:g")
                     .attr("id", "circles");
-            var cells = svg.append("svg:g")
+            circles.selectAll("circle")
+                    .data(cities)
+                    .enter().append("svg:circle")
+                    .call(cities ? tip : function () {
+                    })
+                    .attr("cx", function (d, i) {
+                        return positions[i][0];
+                    })
+                    .attr("cy", function (d, i) {
+                        return positions[i][1];
+                    })
+                    .attr("r", function (d, i) {
+                        return Math.sqrt(d.total * 10);
+                    })
+
+
+            var cells = map.append("svg:g")
                     .attr("id", "cells");
+
             d3.select("input[type=checkbox]").on("change", function () {
                 cells.classed("voronoi", this.checked);
             });
-            d3.json("../resources/ec-states.geojson", function (collection) {
+
+
+            d3.json("../resources/ec-states.geojson", function (json) {
                 states.selectAll("path")
-                        .data(collection.features)
+                        .data(json.features)
                         .enter().append("svg:path")
                         .attr("d", path);
             });
 
+            function redraw() {
+                // d3.event.translate (an array) stores the current translation from the parent SVG element
+                // t (an array) stores the projection's default translation
+                // we add the x and y vales in each array to determine the projection's new translation
+                var tx = t[0] * d3.event.scale + d3.event.translate[0];
+                var ty = t[1] * d3.event.scale + d3.event.translate[1];
+
+                proj.translate([tx, ty]);
+
+                // now we determine the projection's new scale, but there's a problem:
+                // the map doesn't 'zoom onto the mouse point'
+                proj.scale(s * d3.event.scale);
+
+                // redraw the map
+                states.selectAll("path").attr("d", path);
+
+                // redraw the points 
+                circles.selectAll("circle")
+                        .attr("cx", function (d, i) {
+                            return t[0] + d3.event.translate[0] + (positions[i][0] * d3.event.scale) - 6400;
+                        })
+                        .attr("cy", function (d, i) {
+                            return t[1] + d3.event.translate[1] + (positions[i][1] * d3.event.scale) - 110;
+                        });
+
+                // redraw the x axis
+                xAxis.attr("x1", tx).attr("x2", tx);
+
+                // redraw the y axis
+                yAxis.attr("y1", ty).attr("y2", ty);
+            }
+
+
+
+
             draw(data);
             function draw(cities) {
-                var positions = [];
-                cities = cities.filter(function (city) {
-                    //             if (countByAirport[city.id]) {
-                    var location = [+city.longitude, +city.latitude];
-                    //          locationByAirport[city.id] = location;
-                    positions.push(projection(location));
-                    return true;
-                    //            }
-                });
-                // Compute the Voronoi diagram of airports' projected positions.
 
-
-                var polygons = d3.geom.voronoi(positions);
                 var g = cells.selectAll("g")
                         .data(cities)
                         .enter().append("svg:g");
-
-                var tip = d3.tip()
-                        .attr('class', 'tree-d3-tip')
-                        .html(function (d) {
-                            return ' ';
-                        });
                 circles.selectAll("circle")
-                        .data(cities)
-                        .enter().append("svg:circle")
-                        .call(cities ? tip : function () {
-                        })
-                        .attr("cx", function (d, i) {
-                            return positions[i][0];
-                        })
-                        .attr("cy", function (d, i) {
-                            return positions[i][1];
-                        })
-                        .attr("r", function (d, i) {
-                            return Math.sqrt(d.total * 10);
-                        })
                         .on("mouseover", function (d, i) {
                             d3.select("h3.tag").text(d.keyword);
                             d3.select("h3.name").text(d.name);
@@ -129,7 +154,7 @@ cloudGroup.directive('mapView', ["d3", 'globalData', 'sparqlQuery',
                         .on("mouseout", function (d, i) {
                             d3.select(this).transition()
                                     .duration(750)
-                                    .attr("r", Math.sqrt(d.total * 3));
+                                    .attr("r", Math.sqrt(d.total * 10));
                             tip.hide(d);
                         })
                         .on("click", function (d, i) {
