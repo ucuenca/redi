@@ -88,11 +88,11 @@ pieChart.directive('pieChart', ["d3", "globalData", "sparqlQuery",
                         d.outerRadius = outerRadius - 40;
                     })
                     .attr("d", arcWidget)
-                    .on("mouseover", function (d) {
+                    .on("mouseover", function (d) { 
                         d3.select('#tooltip p strong')
                                 .text(d.data.label);
                         d3.select("#tooltip")
-                                .style("left", d3.event.pageX + "px")
+                                .style("left", d3.event.pageX + "px" )
                                 .style("top", d3.event.pageY + "px")
                                 .style("opacity", 1)
                                 .select("#value")

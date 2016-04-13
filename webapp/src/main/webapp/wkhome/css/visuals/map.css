@@ -43,7 +43,7 @@ h1, h2, h3 {
 }
 
 h2, h3 {
-    text-align: right;
+   // text-align: right;
     font-size: inherit;
     //  position: absolute;
     //  bottom: 0;

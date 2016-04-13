@@ -2,35 +2,9 @@
 </div> 
 <hr>
 <hr>
-<div class="col-md-2">
-    <div ng-include="'/wkhome/partials/mainmenu.html'"/>
-    <hr>
 
-    <div class="tree-node-author-info" style="height:100vh">
 
-        <hr>
-        <div style="height: 480px">
-
-        </div>
-        <hr>
-        <h4>CO-AUTORES</h4>
-        <div class="authorsByPublications">
-            <div id="title" style="font-size:50pt"></div>
-            <a href="" target="_blank"></a>
-        </div>
-        <hr>
-        <h4>Autores Relacionados por Clustering</h4>
-        <div class="authorsByClusters">
-            <div id="title" style="font-size:50pt"></div>
-            <a href="" target="_blank"></a>
-        </div>
-        <hr>
-
-    </div>
-
-</div> 
-
-<div class="col-md-10">
+<div ng-controller="groupbyCloud">
 
     <div class="col-md-12">
 
@@ -40,7 +14,7 @@
             </div>
         </center>
     </div>
-    <div class="col-md-12" ng-controller="groupbyCloud">
+    <div class="col-md-12" >
         <div class="col-md-3">
             <h3 class="text-success" style="text-align: left">{{'Select Research Area'| translate}}:</h3>
             <select class="form-control" name="board" id="board" ng-model="selectedItem"  ng-options="key.tag as key.tag for key  in relatedthemes">
@@ -123,10 +97,11 @@
             </div>
         </div>   
 
+    </div>
 
 
 
-
+<div class="col-md-10">
         <div class="row subject-cloud">
             <div id="scrollToHere" class="col-md-12" >
                 <div >
@@ -177,5 +152,30 @@
             </div>
         </div>
     </div>
-</div>
 
+<div class="col-md-2">
+   <!-- <div ng-include="'/wkhome/partials/mainmenu.html'"></div>-->
+    <hr>
+
+    <div class="tree-node-author-info" style="height:100vh">
+
+        
+        <div style="height: 100px"></div>
+       
+        <h4>CO-AUTORES</h4>
+        <div class="authorsByPublications">
+            <div id="title" style="font-size:50pt"></div>
+            <a href="" target="_blank"></a>
+        </div>
+        <hr>
+        <h4>Autores Relacionados por Clustering</h4>
+        <div class="authorsByClusters">
+            <div id="title" style="font-size:50pt"></div>
+            <a href="" target="_blank"></a>
+        </div>
+        <hr>
+
+    </div>
+
+</div> 
+</div>
