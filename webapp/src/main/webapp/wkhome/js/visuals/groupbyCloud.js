@@ -103,7 +103,7 @@ cloudGroup.directive('cloudGroup', ["$routeParams", "d3", 'sparqlQuery', 'global
                 var max = d3.max(_.pluck(dataM, vname));
                 var newData = dataM;
                 for (var j = 0; j < dataM.length; j++) {
-                    newData[j].radius = (vname != '') ? radius * (dataM[j][vname] / max) : 8;
+                    newData[j].radius = (vname != '') ? radius * (dataM[j][vname] / max) : 20;
                     newData[j].x = dataM[j].x ? dataM[j].x : Math.random() * width;
                     newData[j].y = dataM[j].y ? dataM[j].y : Math.random() * height;
                     /*newData[j].volumeCategory = getCategory('volume', dataM[j]);
@@ -225,7 +225,7 @@ cloudGroup.directive('cloudGroup', ["$routeParams", "d3", 'sparqlQuery', 'global
 
                 svg.selectAll(".label")
                         .data(centers).enter().append("text")
-                        .attr("class", "label")
+                        .attr("class", "label-groupby")
                         .attr("fill", "red")
                         .text(function (d) {
                             if (d.name != null && (d.name.constructor === Array || d.name instanceof Array))
