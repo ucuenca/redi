@@ -18,6 +18,9 @@ myApp.labels_es = {
 "contact":"Contacto",
 "Search":"Buscar",
 
+//HELP PAGE
+"Descargar Manual": "Descargar el manual de usuario para REDI",
+
 
 // MAIN MENU
 "Home":"Inicio",
@@ -40,7 +43,8 @@ myApp.labels_es = {
 "Author Search":"Busqueda de Autores",
 "Tag Cloud":"Nube de Keywords",
 "Authors Group":"Autores por Area de Investigacion",
-"Ecuadorian Semantic Repository":"Repositorio Semantico de Investigadores Ecuatorianos",
+"Ecuadorian Semantic Repository":"Repositorio Ecuatoriano De Investigadores",
+"Search related researchers":"Encuentra Investigadores relacionados",
 "Location by Research Area":"Localizacion de Areas de Investigacion",
 
 
