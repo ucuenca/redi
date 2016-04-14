@@ -1,19 +1,24 @@
-wkhomeControllers.controller('exploreAuthor', ['$routeParams','$scope', '$rootScope', 'globalData', 'searchData', '$window', 'sparqlQuery',
+wkhomeControllers.controller('exploreAuthor', ['$routeParams', '$scope', '$rootScope', 'globalData', 'searchData', '$window', 'sparqlQuery',
     function ($routeParams, $scope, $rootScope, globalData, searchData, $window, sparqlQuery) {
+        $('html,body').animate({
+            scrollTop: $("#scrollToTop").offset().top
+        }, "slow");
+
+
 
         $scope.author = '';
-         $rootScope.$on("CallParentMethod", function (author) {
+        $rootScope.$on("CallParentMethod", function (author) {
             $scope.clickonRelatedauthor(author);
         });
 
         $scope.data = '';
 
-        $('html,body').animate({
-            scrollTop: $("#scrollToHere").offset().top
-        }, "slow");
+
 
         clickonRelatedauthor = function (author)
         {
+
+
             var getAuthorDataQuery = globalData.PREFIX
                     + ' CONSTRUCT {   <' + author + '> foaf:name ?name; a foaf:Person  '
                     + ' }   '
@@ -33,6 +38,8 @@ wkhomeControllers.controller('exploreAuthor', ['$routeParams','$scope', '$rootSc
 
 
         };
+
+
         $scope.ifrightClick = function (value)
         {
             searchData.genericData = value;
@@ -47,21 +54,21 @@ wkhomeControllers.controller('exploreAuthor', ['$routeParams','$scope', '$rootSc
         searchAuthorInfo = function (author)
         {
             var getAuthorDataQuery = globalData.PREFIX
-            + ' CONSTRUCT {   <' + author + '> foaf:name ?name; '
-            + ' a foaf:Person;  '
-            + ' foaf:publications  ?publications. '
-            + ' ?publications ?predicate ?object. '
-            + ' ?publications uc:contributor ?authorsName '
-            + ' }   '
-            + ' WHERE '
-            + ' {'
-            + '     <' + author + '> foaf:name ?name.'
-            + '     <' + author + '> foaf:publications  ?publications.'
-            + '     ?publications ?predicate ?object. '
-            + '     ?authors foaf:publications ?publications. '
-            + '     ?authors foaf:name ?authorsName.         '
-            //+ '     FILTER (?authorsName != ?name). '
-            + ' } ';
+                    + ' CONSTRUCT {   <' + author + '> foaf:name ?name; '
+                    + ' a foaf:Person;  '
+                    + ' foaf:publications  ?publications. '
+                    + ' ?publications ?predicate ?object. '
+                    + ' ?publications uc:contributor ?authorsName '
+                    + ' }   '
+                    + ' WHERE '
+                    + ' {'
+                    + '     <' + author + '> foaf:name ?name.'
+                    + '     <' + author + '> foaf:publications  ?publications.'
+                    + '     ?publications ?predicate ?object. '
+                    + '     ?authors foaf:publications ?publications. '
+                    + '     ?authors foaf:name ?authorsName.         '
+                    //+ '     FILTER (?authorsName != ?name). '
+                    + ' } ';
 
             sparqlQuery.querySrv({query: getAuthorDataQuery}, function (rdf) {
                 jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
@@ -71,13 +78,13 @@ wkhomeControllers.controller('exploreAuthor', ['$routeParams','$scope', '$rootSc
                 });
             });
         };
-        
-        $scope.numeroPub = function(publications)
-        {   
-            if(publications != null && (publications.constructor === Array || publications instanceof Array))
-               return publications.length;
+
+        $scope.numeroPub = function (publications)
+        {
+            if (publications != null && (publications.constructor === Array || publications instanceof Array))
+                return publications.length;
             else
-               return 1;
+                return 1;
         }
 
         $scope.$watch('searchData.authorSearch', function (newValue, oldValue, scope) {
@@ -126,4 +133,5 @@ wkhomeControllers.controller('exploreAuthor', ['$routeParams','$scope', '$rootSc
                 }
             }
         }, true);
+
     }]); // end exploreAuthor

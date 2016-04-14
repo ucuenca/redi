@@ -28,21 +28,9 @@
     height: auto;
     background-color: #F6F6F6;
 }
-a:hover{  
-    color: #0000FF;
-    cursor: pointer;
-    font-size: 15px;
-    
-}
-a:visited{
-    color: #66afe9;
-    
-}
 
-.relatedauthors{
-    cursor:pointer;
-    font-size: x-small;
-}
+
+
 
 /* d3-context-menu styles */
 
@@ -91,3 +79,28 @@ a:visited{
     overflow-y: auto;
 }
 
+.search.subtitulo{
+    color: #003cb3;
+    font-family: inherit;
+    opacity: 1;
+}
+
+
+.search.left.col-md-2{
+    
+    border-right-color: #F6F6F6;
+    border-right-width: 2px;
+   border-right-style: ridge; 
+   
+}
+
+h4.search{
+    color: #0077b3;
+    font-style: inherit;
+}
+
+.explorableTree.pubinfo
+{
+    text-align: justify;
+    text-justify: inter-word;
+}

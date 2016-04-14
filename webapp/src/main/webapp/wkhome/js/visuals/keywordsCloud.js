@@ -238,7 +238,7 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
                                 if (value["rdfs:label"] && value["uc:total"]["@value"])
                                 {
                                     var anchor = $("<a class='relatedauthors' target='blank' onclick = 'return clickonRelatedauthor(\"" + value["@id"] + "\")'  >").text("");
-                                    anchor.append('<img src="/wkhome/images/author-ec.png" class="img-rounded" alt="Logo Cedia" width="20" height="20"        >');
+                                    //anchor.append('<img src="/wkhome/images/author-ec.png" class="img-rounded" alt="Logo Cedia" width="20" height="20"        >');
                                     anchor.append(value["rdfs:label"] + "(" + value["uc:total"]["@value"] + ")");
                                     div.append(anchor);
                                     div.append("</br>");
