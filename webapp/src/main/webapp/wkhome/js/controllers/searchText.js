@@ -96,7 +96,7 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
                                                 + "         ?s dct:subject ?k. "
                                                 //+ "         ?pub bibo:Quote ?k."
                                                 + "         BIND(IRI(?k) AS ?keyword) . "
-                                                + '         FILTER(mm:fulltext-query(str(?k), "' + $scope.searchText + '")).'
+                                                + '         FILTER(mm:fulltext-search(str(?k), "' + $scope.searchText + '")).'
                                                 + "     } } "
                                                 + "     GROUP BY ?k "
                                                 + "  } "

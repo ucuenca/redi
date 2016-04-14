@@ -131,7 +131,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                                     if (value["rdfs:label"] && value["uc:total"]["@value"])
                                     {
                                         var anchor = $("<a class='relatedauthors' target='blank' onclick = 'return clickonRelatedauthor(\"" + value["@id"] + "\")'  >").text("");
-                                        anchor.append('<img src="/wkhome/images/author-ec.png" class="img-rounded" alt="Logo Cedia" width="20" height="20"        >');
+                                        //anchor.append('<img src="/wkhome/images/author-ec.png" class="img-rounded" alt="Logo Cedia" width="20" height="20"        >');
                                         anchor.append(value["rdfs:label"] + "(" + value["uc:total"]["@value"] + ")");
                                         div.append(anchor);
                                         div.append("</br>");
@@ -452,7 +452,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                                     return anchor;
                                 });
                             } else { //append into a div container
-                                var div = $('<div style="background-color: #F7F8E0">');
+                                var div = $('<div class="explorableTree pubinfo"  style="background-color: #F7F8E0">');
                                 var label = $('<span class="label label-primary">').text(model[key].label)
                                 div.append(label);
                                 div.append("</br>");
@@ -850,7 +850,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                     }
                 };
                 childCount(0, root);
-                var newHeight = d3.max(levelWidth) * 100;
+                var newHeight = d3.max(levelWidth) * 110;
                 tree = tree.size([newHeight, viewerWidth]);
                 // Compute the new tree layout.
                 var nodes = tree.nodes(root).reverse();
@@ -891,6 +891,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                                 var title = _.findWhere(node.publication.jsonld["@graph"], {"@id": id, "@type": "bibo:Document"})["dct:title"];
                                 tip.html(title);
                                 tip.show(d);
+                                
                                 //AE.getInfo(d.author);
                             } else if ('author' in d)
                             {
@@ -1034,7 +1035,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                 var nodeExit = node.exit().transition()
                         .duration(duration)
                         .attr("transform", function (d) {
-                            return "translate(" + source.y + "," + source.x + ")";
+                            return "translate(" + (source.y) + "," + source.x + ")";
                         })
                         .remove();
                 nodeExit.select("circle")

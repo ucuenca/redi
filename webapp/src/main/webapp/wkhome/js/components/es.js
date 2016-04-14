@@ -37,7 +37,7 @@ myApp.labels_es = {
 "Areas de Investigacion":"Areas de Investigacion",
 "Total Autores":"Total de Autores",
 "Total Publicaciones": "Total de Publicaciones",
-"Search Author or Keyword":"Buscar Autor o Palabra Clave",
+"Search Author or Keyword":"Buscar",
 "Authors Sources":"Fuentes de Autores",
 "Publications Data Source":"Fuentes de Publicaciones",
 "Author Search":"Busqueda de Autores",
