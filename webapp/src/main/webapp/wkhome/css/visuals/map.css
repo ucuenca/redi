@@ -7,10 +7,6 @@ body {
     // width: 960px;
 }
 
-a:link, a:visited {
-    color: #777;
-    text-decoration: none;
-}
 
 
 blockquote {
@@ -43,7 +39,7 @@ h1, h2, h3 {
 }
 
 h2, h3 {
-    text-align: right;
+   // text-align: right;
     font-size: inherit;
     //  position: absolute;
     //  bottom: 0;
@@ -126,4 +122,14 @@ circle {
 
 #cells g:hover path.arc {
     display: inherit;
+}
+
+/*#uk {
+    fill: #E5F5F9;
+    stroke: #2CA25F;
+    stroke-width: 0.5;
+}
+*/#axes {
+    stroke: #BDBDBD;
+    stroke-width: 0.5;
 }

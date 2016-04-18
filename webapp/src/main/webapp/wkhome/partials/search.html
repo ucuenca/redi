@@ -1,139 +1,147 @@
 
 <div class="col-md-12" ng-controller="exploreAuthor" style="padding: 0px;margin: 0px;" >
-<div class="col-md-2">
-    <hr>
-    <hr>
-    <div ng-include="'/wkhome/partials/mainmenu.html'"/> 
-    <hr>
-    
-    <div class="tree-node-author-info" style="height:100vh">
-        <h4>CO-Autores</h4>
-        <div class="authorsByPublications">
-            <!-- <span style="font-weigth:bold">Title: </span> -->
-            <div id="title" style="font-size:50pt"></div>
-            <a href="" target="_blank"></a>
-        </div>
-        <hr>
-        <h4>Autores Relacionados por Clustering</h4>
-        <div class="authorsByClusters">
-            <!-- <span style="font-weigth:bold">Title: </span> -->
-            <div id="title" style="font-size:50pt"></div>
-            <a href="" target="_blank"></a>
+
+    <div id="scrollToTop"></div>
+    <br/>
+    <br/>
+    <br/>
+    <div  class="search left col-md-2">
+        <br/>
+
+        <div  class="tree-node-author-info" style="height:100vh">
+            <h4 class="search subtitulo" >CO-Autores</h4>
+            <div class="authorsByPublications">
+                <!-- <span style="font-weigth:bold">Title: </span> -->
+                <div id="title" style="font-size:50pt"></div>
+                <a href="" target="_blank"></a>
+            </div>
+            <hr>
+            <h4 class="search subtitulo">Autores Relacionados por Clustering</h4>
+            <div class="authorsByClusters">
+                <!-- <span style="font-weigth:bold">Title: </span> -->
+                <div id="title" style="font-size:50pt"></div>
+                <a href="" target="_blank"></a>
+            </div>
+
         </div>
 
     </div>
+    <div  class="col-md-7">
+        <div class="container-fluid"  > 
+            <div class="row">
+                <div class="col-md-12">
 
-</div>
-<div id="scrollToHere" class="col-md-7">
-    <div class="container-fluid" style="padding-top: 50px;" > 
-        <div class="row">
-            <div class="col-md-12">
-
-                <div class="col-md-9 try-external-search" style="height:15vh">
-                    <h4>Intentar Buscar el Articulo En: </h4>
-                    <div class="col-md-3 external-search-google" style="text-align: center">
-                        <a href="" target="_blank"></a>
-                    </div>
-                    <div class="col-md-3 external-search-dblp" style="text-align: center">
-                        <a href="" target="_blank"></a>
-                    </div>
-                    <div class="col-md-3 external-search-scopus" style="text-align: center">
-                        <a href="" target="_blank"></a>
-                    </div>
 
 
                 </div>
+                <div class="col-md-12">
+                    <explorable-tree data="data" class="tree-main-container" style="display:block; height:120vh; background-color: #F7F8E0"  ifright-Click="ifrightClick(value)"  clickon-Relatedauthor="clickonRelatedauthor(value)" ng-model="value"></explorable-tree>
+                </div>
 
             </div>
-            <div class="col-md-12">
-                <explorable-tree data="data" class="tree-main-container" style="display:block; height:120vh; background-color: #F7F8E0"  ifright-Click="ifrightClick(value)"  clickon-Relatedauthor="clickonRelatedauthor(value)" ng-model="value"></explorable-tree>
-            </div>
-            
-        </div>
 
-        <div class="modal fade" id="searchResults" tabindex="-1" role="dialog" aria-labelledby="Search Results" aria-hidden="true">
-            <div class="modal-dialog  modal-md">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Search Results</h4>
-                    </div>
+            <div class="modal fade" id="searchResults" tabindex="-1" role="dialog" aria-labelledby="Search Results" aria-hidden="true">
+                <div class="modal-dialog  modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Search Results</h4>
+                        </div>
 
-                    <div class="modal-body" id="author-select">
-                        <table class="table table-striped ">
-                            <thead>
-                                <tr>
-                                    <th>Author</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr ng-repeat="author in candidates">
-                                    <td><a class="candidate" ng-click="selectedAuthor($event, author.id)" href="">{{author.name}}</a></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="modal-body" id="author-select">
+                            <table class="table table-striped ">
+                                <thead>
+                                    <tr>
+                                        <th>Author</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="author in candidates">
+                                        <td><a class="candidate" ng-click="selectedAuthor($event, author.id)" href="">{{author.name}}</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                        -->
                     </div>
-                    <!--
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    </div>
-                    -->
                 </div>
             </div>
         </div>
     </div>
-</div>
-    <hr>
-    <hr>
-<div class="col-md-3 tree-node-info" style="height:100vh; background-color: #F7F8E0" >
-    
-    <div ng-controller="exportController" style="padding: 0px;">
-        <button ng-click="exportData('xls', author)">Excel Info Author</button>
-        <button ng-click="exportData('pdf', author)">Pdf Info Author</button>
 
-        <br />
-        <div id="exportable" ng-hide="true">
-            <table width="100%" border='1'>
-                <tbody>
-                    <tr>
-                        <td>Autor:</td>
-                        <td>{{author[0]["foaf:name"]}}</td>
-                    </tr>
-                    <tr>
-                        <td>Numero de Publicaciones:</td>
-                        <td>{{numeroPub(author[0]["foaf:publications"])}}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <p>Lista de Publicaciones:</p>
-            <table width="100%" border='1'>    
-                <thead>
-                    <tr>
-                        <th>Numero</th>
-                        <th>Titulo</th>
-                        <th>Abstract</th>
-                        <th>Autores</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="item in author.slice(1)">
-                        <td>{{$index + 1}}</td>
-                        <td>{{item["dct:title"]}}</td>
-                        <td>{{item["bibo:abstract"]}}</td>
-                        <td>{{item["uc:contributor"]}}</td>
-                    </tr>
-                </tbody>
+    <div class="col-md-3 tree-node-info" style="height:200vh; background-color: #F7F8E0" >
+        <center><h4 class="search">Información del Articulo</h4></center>
+        <br/>
+        <div class="try-external-search" style="height:15vh">
+            <h3 style="padding: 1%">Intentar Buscar En: </h3>
+            <div class="col-md-3 external-search-google" style="text-align: center">
+                <a href="" target="_blank"></a>
+            </div>
+            <div class="col-md-3 external-search-dblp" style="text-align: center">
+                <a href="" target="_blank"></a>
+            </div>
+            <div class="col-md-3 external-search-scopus" style="text-align: center">
+                <a href="" target="_blank"></a>
+            </div>
 
 
-            </table>
+        </div>
+
+
+
+
+
+        <div class="entityInfo">
+            <!-- <span style="font-weigth:bold">Title: </span> -->
+            <div id="title" style="font-size:50pt"></div>
+            <a href="" target="_blank"></a>
+        </div>
+        <h3 style="padding: 3%">Exportar Autor y Publicaciones</h3>
+
+        <div ng-controller="exportController" style="padding: 0px;">
+            <button ng-click="exportData('xls', author)">Excel Info Author</button>
+            <button ng-click="exportData('pdf', author)">Pdf Info Author</button>
+
+            <br />
+            <div id="exportable" ng-hide="true">
+                <table width="100%" border='1'>
+                    <tbody>
+                        <tr>
+                            <td>Autor:</td>
+                            <td>{{author[0]["foaf:name"]}}</td>
+                        </tr>
+                        <tr>
+                            <td>Numero de Publicaciones:</td>
+                            <td>{{numeroPub(author[0]["foaf:publications"])}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>Lista de Publicaciones:</p>
+                <table width="100%" border='1'>    
+                    <thead>
+                        <tr>
+                            <th>Numero</th>
+                            <th>Titulo</th>
+                            <th>Abstract</th>
+                            <th>Autores</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in author.slice(1)">
+                            <td>{{$index + 1}}</td>
+                            <td>{{item["dct:title"]}}</td>
+                            <td>{{item["bibo:abstract"]}}</td>
+                            <td>{{item["uc:contributor"]}}</td>
+                        </tr>
+                    </tbody>
+
+
+                </table>
+            </div>
         </div>
     </div>
-    
-    <h4>Información del Articulo</h4>
-    <div class="entityInfo">
-        <!-- <span style="font-weigth:bold">Title: </span> -->
-        <div id="title" style="font-size:50pt"></div>
-        <a href="" target="_blank"></a>
-    </div>
-</div>
 </div>

@@ -277,47 +277,7 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
 
         $scope.loadRelatedAuthors = function (author) {
 
-            var getRelatedAuthorsByClustersQuery = globalData.PREFIX
-                    + ' CONSTRUCT {  <http://ucuenca.edu.ec/wkhuska/resultTitle> a uc:pagetitle. <http://ucuenca.edu.ec/wkhuska/resultTitle> uc:viewtitle "Authors Related With {0}"  .         ?subject rdfs:label ?name.         ?subject uc:total ?totalPub   }   WHERE {   { '
-                    + ' SELECT DISTINCT  ?subject ?name (count(?pub) as ?totalPub)'
-                    + ' WHERE { '
-                    + '   GRAPH <' + globalData.clustersGraph + '> '
-                    + '         { '
-                    + ' ?cluster uc:hasPerson <{1}> .'
-                    + ' ?cluster uc:hasPerson ?subject.'
-                    + '           ?subject foaf:publications ?pub'
-                    + '          {'
-                    + ' SELECT ?name'
-                    + ' {'
-                    + '      graph <' + globalData.centralGraph + '>'
-                    + '            {'
-                    + '        	?subject foaf:name ?name.'
-                    + '            }'
-                    + ' }'
-                    + '  }'
-                    + '              } '
-                    + '     } group by ?subject ?name '
-                    + '          }}    ';
-
-
-            var getRelatedAuthorsByPublicationsQuery = globalData.PREFIX
-                    + '  CONSTRUCT { '
-                    + ' <http://ucuenca.edu.ec/wkhuska/resultTitle> a uc:pagetitle. <http://ucuenca.edu.ec/wkhuska/resultTitle> uc:viewtitle "Authors Related With {0}" . '
-                    + '        ?subject rdfs:label ?name. '
-                    + '        ?subject uc:total ?totalPub '
-                    + '  } '
-                    + '  WHERE { '
-                    + '  { '
-                    + '     SELECT ?subject (count(?pub) as ?totalPub) ?name '
-                    + '         WHERE { '
-                    + '             GRAPH <' + globalData.centralGraph + '> { '
-                    + '             <{1}> foaf:publications ?pub.  '
-                    + '            ?subject foaf:publications ?pub. '
-                    + '            ?subject foaf:name ?name.  } '
-                    + '             } '
-                    + '         GROUP BY ?subject ?name '
-                    + '  } '
-                    + ' }';
+      
 
             clickonRelatedauthor = function (author)
             {
@@ -341,52 +301,9 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
 
             };
 
-            function executeRelatedAuthors(querytoExecute, divtoload) {
-                var sparqlquery = querytoExecute;
-                sparqlQuery.querySrv({query: sparqlquery}, function (rdf) {
-                    jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
-                        if (compacted)
-                        {
-                            var entity = compacted["@graph"];
-                            if (entity)
-                            {
-                                var authorInfo = $('div.tree-node-author-info .' + divtoload);
-                                authorInfo.html('');
-                                var values = entity.length ? entity : [entity];
-                                var div = $('<div>');
-                                authorInfo.append(div);
-                                _.map(values, function (value) {
-                                    var datastring = JSON.stringify(value);
-                                    var anchor = $("<a class='relatedauthors' target='blank' onclick = 'return clickonRelatedauthor(\"" + value["@id"] + "\")'  >").text("");
-                                    anchor.append('<img src="/wkhome/images/author-ec.png" class="img-rounded" alt="Logo Cedia" width="20" height="20"        >');
-
-                                    anchor.append(value["rdfs:label"]);
-                                    div.append(anchor);
-                                    div.append("</br>");
-                                    return anchor;
-                                });
-                            }
-                        }
-                    });
-                }); // end  sparqlQuery.querySrv(...
-            }
-            ;
-
-            function relatedAuthors(author) {
-                var id = author["@id"];
-                //var author = _.findWhere(root.author.jsonld["@graph"], {"@id": id, "@type": "foaf:Person"});
-                if (author["foaf:name"])
-                {
-                    //********** AUTORES RELACIONADOS - POR CLUSTERING *********//
-                    var query = String.format(getRelatedAuthorsByClustersQuery, author["foaf:name"], id);
-                    executeRelatedAuthors(query, "authorsByClusters");
-                    //********** AUTORES RELACIONADOS - POR PUBLICACION *********//
-                    var query = String.format(getRelatedAuthorsByPublicationsQuery, author["foaf:name"], id);
-                    executeRelatedAuthors(query, "authorsByPublications");
-                }//end if author["foaf:name"]
-            }
-            ;
-            relatedAuthors(author["@graph"][0]);
+           
+         
+           
         };
 
 

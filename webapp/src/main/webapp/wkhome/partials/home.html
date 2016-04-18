@@ -1,9 +1,9 @@
 
 
 <div id="tooltip" class="" style="opacity:0;">
-    <p><strong>Important Label Heading</strong>
+    <p><strong></strong>
     </p>
-    <p><span id="value">100</span></p>
+    <p><span id="value"></span></p>
 </div>
 
 
@@ -24,9 +24,9 @@
                         <div class="item active">
                             <center> 
                                 <img src="wkhome/images/title.png" style="padding-top: 30px;" width="330">
-                            <div class="carousel-caption">
-                                <h2 style="color: #3c763d; text-align: center;">{{'Ecuadorian Semantic Repository' | translate}}</h2>
-                            </div>
+                                <div class="carousel-caption">
+                                    <h2 style="color: #3c763d; text-align: center;">{{'Ecuadorian Semantic Repository'| translate}}</h2>
+                                </div>
                             </center>
                         </div>
                         <div class="item">
@@ -42,7 +42,7 @@
                             <center>
                                 <img src="wkhome/images/network.png" style=" width: 37%;height: 10%; padding-top: 1%" class="img-rounded"/>
                                 <div class="carousel-caption">
-                                    <h3 class='carousel-caption-text'>{{'Search related researchers' | translate}}</h3>
+                                    <h3 class='carousel-caption-text'>{{'Search related researchers'| translate}}</h3>
                                     <!--p>Encuentra tu equipo de trabajo de manera fácil</p-->
                                 </div>
                             </center>
@@ -51,7 +51,7 @@
                         <div class="item">
                             <center>
                                 <img src="wkhome/images/search_ec.png" style="width: 50%;">
-                               
+
                             </center>
                         </div>
                     </div>
@@ -76,24 +76,34 @@
 
 
 <div class="col-md-12" style="background-color: ">
-        <div class="col-md-12 " >
-            <div class="col-md-3 " >
-            </div>
-            <div class="col-md-8 " >
-                <form  role="search" ng-submit="submit()" ng-controller="searchText">
-                    <div class="col-xs-9" style="padding: 20px; text-align: center">
-                        <input style="border-color: orange" name="searchText" ng-model="searchText" type="text" class="form-control input-lg " placeholder="{{'Search Author or Keyword' | translate}}..." >
-                    </div>
-                </form>
-            </div>
-            <div class="col-md-1 " >
-            </div>
+    <div class="col-md-12 " >
+        <div class="col-md-2 " >
         </div>
-   
-        
-         <div class='col-md-2' ng-include="'/wkhome/partials/mainmenu.html'"/> 
+        <div class="buscador col-md-8 " >
+            <form   role="search" ng-submit="submit()" ng-controller="searchText">
+                <div  style="text-align: center">
+                    <ul>
+                        <li class="li-buscador col-md-11">
+                            <input style=" border-color: #000080" name="searchText" ng-model="searchText" type="text" class="form-control input-lg " placeholder="{{'Search Author or Keyword'| translate}}..." >
+                        </li>
+                        <li class="li-buscador col-md-1">
+                            <input type="image"  src="wkhome/images/search_logo.png"  style="background-color: #F5F5F5; border-color: #000080" alt="Buscar" class="imagesubmit"/>
+                        </li>
+                    </ul>
+                    
+                    
+                </div>
 
-    <div class="col-md-10" style='background-color: #FFFFFF; padding-left: 100px'>
+            </form>
+        </div>
+        <div class="col-md-2 " >
+        </div>
+    </div>
+
+
+    <!--   <div class='col-md-2' ng-include="'/wkhome/partials/mainmenu.html'"/> -->
+
+    <div class="col-md-12" style='background-color: #FFFFFF; padding-left: 100px'>
 
         <div class="col-md-4" ng-controller="countAuthors">
             <div style="padding-top: 10px; padding-left: 20px; background-color: #CCCCCC; border-radius: 15px; ">
@@ -118,14 +128,14 @@
 <hr>
 <hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr>
 <div class="row3" style="height: 50px">
- 
-    </div>
+
+</div>
 <hr>
 <img src="wkhome/images/separator-line.png" style="width: 100%; height: 30px">
 <div class="middlecontainer col-md-12" style="height: 550px;  background-color: #D8DFEF;">
     <div class="col-md-2" style="padding: 0px; padding-top: 2%; ">
         <div style="background-color: #FFFFFF; border-radius: 15px; "> 
-            <h3 class="text-success" style="text-align: center; padding-top: 5% ">{{'Authors Sources' | translate}}</h3>
+            <h3 class="text-success" style="text-align: center; padding-top: 5% ">{{'Authors Sources'| translate}}</h3>
             <ul class="nav-pills nav-stacked" style="list-style-type:none; padding-left: 15px;padding-top: 10px;">
                 <li style="padding-bottom: 4px;"><a target='blank' href="http://ucuenca.edu.ec/">UCuenca</a></li>
                 <li style="padding-bottom: 4px;"><a target='blank' href="http://www.utpl.edu.ec/">UTPL</a></li>
@@ -141,8 +151,8 @@
         </div>
 
         <hr>
-        
-         <div style="background-color: #FFFFFF; border-radius: 15px; "> 
+
+        <div style="background-color: #FFFFFF; border-radius: 15px; "> 
             <h3 class="text-success" style="text-align: center; padding-top: 5%">{{'Publications Data Source'| translate}}</h3>
             <ul class="nav-pills nav-stacked" style="list-style-type:none;padding-left: 15px;padding-top: 10px;">
                 <li style="padding-bottom: 6px;"><a target='blank' href="http://dblp.uni-trier.de/">DBLP</a></li>
@@ -165,7 +175,7 @@
             <center><img src="wkhome/images/search_results.png" style="width: 65%;" class="img-rounded"></center>
         </div>
         <div class="col-md-6" >
-            <h4 style='color: #5882FA; text-align: center'>{{'Location by Research Area' | translate}}</h4>
+            <h4 style='color: #5882FA; text-align: center'>{{'Location by Research Area'| translate}}</h4>
             <center><a href="#/geo-views/sources"><img src="wkhome/images/location.png" style="width: 65%;" class="img-rounded"></a></center>
         </div>
     </div>
@@ -184,158 +194,57 @@
     </div>
     <!--Fin Jose Luis-->
 </div>
+ <div class="credito col-md-12" style="padding-top: 30px; background-color: #F5F5F5">
+            <center>
+                <a target='blank' href="http://cedia.org.ec"><img src="../resources/logo_cedia.png" class="img-rounded" alt="Logo Cedia" width="380" height="100"></a>
+            </center>
+            <h6>
+                <p class="text-primary" style="text-align: center; padding: 20px">
+                    Calle La Condamine 12-109 "Casa Rivera" <br>
+                    Telf. (+593) 7 4051000 Ext. 4220/4223 <br>
+                    info@cedia.org.ec <br>
+                    Cuenca- Ecuador
+                </p>
+            </h6>
+            <hr>
+            <div class="col-md-2">
+                <p class="text-primary" style="font-size: 13px; text-align: center; padding: 5px">
+                    <strong>Con la colaboraci&oacute;n de:</strong>
+                </p>
+            </div>
+            <div class="col-md-1">
+                <center>
+                    <a target='blank' href="http://ucuenca.edu.ec"><img src="../resources/logo_u.png" class="img-rounded" alt="Logo Ucuenca" width="75" height="50"></a>
+                </center>
+            </div>
+            <div class="col-md-4">
+                <h6>
+                    <p class="text-primary" style="font-size: 10px;padding: 0px">Universidad de Cuenca</p>
+                    <p class="text-primary" style="font-size: 9px; text-align: left; padding: 2px">
+                        Av. 12 de Abril y Agustín Cueva - Ciudadela Universitaria<br>
+                        Teléfono: 593-7 405 1000 Fax: 593-7 405 1005 Casilla Postal: 01.01.168 <br>
+                        centro.info@ucuenca.edu.ec <br>
+                        Cuenca Ecuador <br>
+                    </p>
+                </h6>
+            </div>
+            <div class="col-md-1">
+                <center>
+                    <a target="blank" href="http://ucuenca.edu.ec/la-oferta-academica/oferta-de-grado/facultad-de-ingenieria/dptos/dcc"><img src="../resources/logo_dcc.png" class="img-rounded" alt="Logo DCC" width="75" height="50"></a>
+                </center>
+            </div>
+            <div class="col-md-4">
+                <h6>
+                    <p class="text-primary" style="font-size: 10px;padding: 0px">Departamento de Ciencias de la Computaci&oacute;n - UC</p>
+                    <p class="text-primary" style="font-size: 9px; text-align: left; padding: 2px">
+                        Av. 12 de Abril y Agustín Cueva - Edificio de Laboratorios Tecnologicos 4to Piso.<br>
+                        Teléfono: 593-7 405 1000 <br>
+                        centro.info@ucuenca.edu.ec <br>
+                        Cuenca Ecuador
+                    </p>
+                </h6>
+            </div>
+            <hr>
+            <p class="text-primary" style="text-align: right;font-size: 11px;">Este sitio recomienda <strong>Firefox 3.6, Google Chrome 17 ó superiores</strong> para su correcto funcionamiento.<p>
+        </div>
 
-<div class="col-md-12" style="padding-top: 30px; background-color: #F5F5F5">
-    <center>
-        <a target='blank' href="http://cedia.org.ec"><img src="../resources/logo_cedia.png" class="img-rounded" alt="Logo Cedia" width="380" height="100"></a>
-    </center>
-    <h6>
-        <p class="text-primary" style="text-align: center; padding: 20px">
-            Calle La Condamine 12-109 "Casa Rivera" <br>
-            Telf. (+593) 7 4051000 Ext. 4220/4223 <br>
-            info@cedia.org.ec <br>
-            Cuenca- Ecuador
-        </p>
-    </h6>
-    <hr>
-    <div class="col-md-2">
-        <p class="text-primary" style="font-size: 13px; text-align: center; padding: 5px">
-                <strong>Con la colaboraci&oacute;n de:</strong>
-        </p>
-    </div>
-    <div class="col-md-1">
-        <center>
-            <a target='blank' href="http://ucuenca.edu.ec"><img src="../resources/logo_u.png" class="img-rounded" alt="Logo Ucuenca" width="75" height="50"></a>
-        </center>
-    </div>
-    <div class="col-md-4">
-        <h6>
-            <p class="text-primary" style="font-size: 10px;padding: 0px">Universidad de Cuenca</p>
-            <p class="text-primary" style="font-size: 9px; text-align: left; padding: 2px">
-                Av. 12 de Abril y Agustín Cueva - Ciudadela Universitaria<br>
-                Teléfono: 593-7 405 1000 Fax: 593-7 405 1005 Casilla Postal: 01.01.168 <br>
-                centro.info@ucuenca.edu.ec <br>
-                Cuenca Ecuador <br>
-            </p>
-        </h6>
-    </div>
-    <div class="col-md-1">
-        <center>
-            <a target="blank" href="http://ucuenca.edu.ec/la-oferta-academica/oferta-de-grado/facultad-de-ingenieria/dptos/dcc"><img src="../resources/logo_dcc.png" class="img-rounded" alt="Logo DCC" width="75" height="50"></a>
-        </center>
-    </div>
-    <div class="col-md-4">
-        <h6>
-            <p class="text-primary" style="font-size: 10px;padding: 0px">Departamento de Ciencias de la Computaci&oacute;n - UC</p>
-            <p class="text-primary" style="font-size: 9px; text-align: left; padding: 2px">
-                Av. 12 de Abril y Agustín Cueva - Edificio de Laboratorios Tecnologicos 4to Piso.<br>
-                Teléfono: 593-7 405 1000 <br>
-                centro.info@ucuenca.edu.ec <br>
-                Cuenca Ecuador
-            </p>
-        </h6>
-    </div>
-    <hr>
-    <p class="text-primary" style="text-align: right;font-size: 11px;">Este sitio recomienda <strong>Firefox 3.6, Google Chrome 17 ó superiores</strong> para su correcto funcionamiento.<p>
-</div>
-
-
-<!--
-<div>
-  <h1>angular-snapscroll</h1>
-  <p>angular-snapscroll adds vertical scroll-and-snap functionality to angular.</p>
-  <ol>
-    <li>JS-only implementation</li>
-    <li>Requires only angular core</li>
-    <li>5.7kB when minified, 2.1kB when gzipped</li>
-  </ol>
-  <p>This is a suite of snapscroll examples that demonstrantes:</p>
-  <ul>
-    <li>full-page snapscroll (fit-window-height attribute)</li>
-    <li>keyboard navigation (try pressing the up and down arrow keys)</li>
-    <li>resetting current snap position after a manual scroll (try to scroll by dragging the scrollbar)</li>
-    <li>snapIndex binding (the pagination showing on the right)</li>
-    <li>persisting snapIndex on page reload (using window.location.hash)</li>
-    <li>touch support (using <a href="https://github.com/marmorkuchen-net/angular-swipe">angular-swipe</a> module)</li>
-    <li><a href="#" ng-click="snapIndex=1">nested snapscrolls</a></li>
-    <li><a href="#" ng-click="snapIndex=2">before and after callbacks</a></li>
-  </ul>
-</div>
--->
-<!--
-<div>
-  <h3>Nested snapscrolls</h3>
-  <p>Instances can be nested, side by side etc and won't interfere with each other. The first nested snapscroll below also demostrates how to keep vertical swipe gestures localized to a nested snapscroll instance.</p>
-  <div ng-controller="NestedSnapscrollController">
-    <div class="nested" snapscroll snap-index="nestedSnapIndex" ng-swipe-up="swipeUp($event)" ng-swipe-down="swipeDown($event)">
-      <div><span>1</span></div>
-      <div><span>2</span></div>
-      <div><span>3</span></div>
-      <div><span>4</span></div>
-      <div><span>5</span></div>
-    </div>
-  </div>
-  <div class="clearfix">
-    <div class="nested" snapscroll>
-      <div><span>1</span></div>
-      <div><span>2</span></div>
-      <div><span>3</span></div>
-      <div><span>4</span></div>
-      <div><span>5</span></div>
-    </div>
-    <div class="nested" snapscroll>
-      <div><span>1</span></div>
-      <div><span>2</span></div>
-      <div><span>3</span></div>
-      <div><span>4</span></div>
-      <div><span>5</span></div>
-    </div>
-  </div>
-</div>
--->
-<!--      <div>
-<!--
-<div class="row subject-cloud">
-  <div class="col-md-12" ng-controller="getKeywordsTag">
-    <h4>Subject Tag Cloud</h4>
-    <cloud-tag data="data" style="display: block; height: 100%"></cloud-tag> 
-  </div>
-</div>
--->
-<!--
-<div class="container-fluid" style="padding: 0;">
-    <div class="row">
-      <div class="col-md-12" ng-controller="exploreAuthor">
-        <explorable-tree data="data" style="display:block; height:100vh"></explorable-tree>
-      </div>
-    </div>
-</div>
--->
-<!--   </div> -->
-<!---    <div>
-    </div>  -->
-<!-- </div> -->
-<!--
-<code class="html">
-  &lt;div class="main"&gt;<br>
-    &lt;section&gt;...&lt;/section&gt;<br>
-    &lt;section&gt;...&lt;/section&gt;<br>
-    ...<br>
-  &lt;/div&gt;
-</code>
-
-<code class="js">
-  $(".main").onepage_scroll();
-</code> -->
-
-
-
-<!--<ul class="indicators">
-    <li><a href="#/" onclick="return false;" ng-click="snapIndex = 0"><span ng-class="{active: snapIndex == 0}"></span></a></li>
-    <li><a href="#/" onclick="return false;" ng-click="snapIndex = 1"><span ng-class="{active: snapIndex == 1}"></span></a></li>
-    <li><a href="#/" onclick="return false;" ng-click="snapIndex = 2"><span ng-class="{active: snapIndex == 2}"></span></a></li>
-    <li><a href="#/" ng-click="snapIndex = 3"><span ng-class="{active: snapIndex == 3}"></span></a></li>
-    <li><a href="#/" ng-click="snapIndex = 4"><span ng-class="{active: snapIndex == 4}"></span></a></li>
-</ul>
-
-<!-- </div> -->

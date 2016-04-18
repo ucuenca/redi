@@ -1,7 +1,7 @@
 
-wkhomeControllers.controller('searchText', ['$routeParams','$scope', '$window', 'globalData', 'sparqlQuery', 'searchData',
+wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window', 'globalData', 'sparqlQuery', 'searchData',
     function ($routeParams, $scope, $window, globalData, sparqlQuery, searchData) {
-   //$scope.sparqlQuery = sparqlQuery;
+        //$scope.sparqlQuery = sparqlQuery;
         String.format = function () {
             // The string containing the format items (e.g. "{0}")
             // will and always has to be the first argument.
@@ -15,100 +15,115 @@ wkhomeControllers.controller('searchText', ['$routeParams','$scope', '$window', 
             }
             return theString;
         };
+
+        var queryAuthors = globalData.PREFIX
+                + " CONSTRUCT { "
+                + " ?subject a foaf:Person. "
+                + " ?subject foaf:name ?name } "
+                + " WHERE { "
+                + " { "
+                + "     SELECT DISTINCT (sample(?s) AS ?subject) ?name "
+                + "     WHERE { "
+                + '         GRAPH <' + globalData.centralGraph + '> {'
+                + "             ?s a foaf:Person. "
+                + "             ?s foaf:name ?name."
+                + "             ?s foaf:publications ?pub. "
+                + "             ?pub dct:title ?title. "
+                + "             {0}"
+                + "     } } "
+                + "     GROUP BY ?name "
+                + "  } "
+                + " }";
+
         $scope.submit = function () {
             if ($scope.searchText) {
                 console.log($scope.searchText);
-               // waitingDialog.show();
-                var queryAuthors = globalData.PREFIX
-                        + " CONSTRUCT { "
-                        + " ?subject a foaf:Person. "
-                        + " ?subject foaf:name ?name } "
-                        + " WHERE { "
-                        + " { "
-                        + "     SELECT DISTINCT (sample(?s) AS ?subject) ?name "
-                        + "     WHERE { "
-                        + '         GRAPH <' + globalData.centralGraph + '> {'
-                        + "             ?s a foaf:Person. "
-                        + "             ?s foaf:name ?name."
-                        + "             ?s foaf:publications ?pub. "
-                        + "             ?pub dct:title ?title. "
-                        + '             FILTER(mm:fulltext-search(str(?name), "' + $scope.searchText + '")).'
-                        + "     } } "
-                        + "     GROUP BY ?name "
-                        + "  } "
-                        + " }";
-//                var filterPath = 'FILTER(CONTAINS(UCASE(?name), "{0}" )) . ';
-//                var searchTextt = $scope.searchText.trim();
-//                var keywords = searchTextt.split(" ");
-//                var filterContainer = "";
-//                keywords.forEach(function (val) {
-//                    if (val.length > 0) {
-//                        filterContainer += String.format(filterPath, val.toUpperCase());
-//                    }
-//                });
-//                queryAuthors = String.format(queryAuthors, filterContainer);
-                sparqlQuery.querySrv({query: queryAuthors},
+                waitingDialog.show();
+
+                /**
+                 * Firts Attempt, search text using fulltext function of marmotta
+                 */
+                var fulltextFilter = ' FILTER(mm:fulltext-search(str(?name), "' + $scope.searchText + '")).'
+                var fulltextqueryAuthors = String.format(queryAuthors, fulltextFilter);
+                sparqlQuery.querySrv({query: fulltextqueryAuthors},
                 function (rdf) {
                     jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                         if (compacted["@graph"])
                         {
+                            waitingDialog.hide();
                             searchData.authorSearch = compacted;
                             $window.location.hash = "/" + $routeParams.lang + "/w/search?" + $scope.searchText;
                         }
                         else
                         {
-                           
-                            var querySearchKeyword = globalData.PREFIX
-                                    + " CONSTRUCT { ?keywordduri rdfs:label ?k } "
-                                    + " WHERE { "
-                                    + " { "
-                                    + "     SELECT DISTINCT (sample(?keyword) AS ?keywordduri) ?k "
-                                    + "     WHERE { "
-                                    + '         GRAPH <' + globalData.centralGraph + '> {'
-                                    + "         ?s foaf:publications ?pub. "
-                                    + "         ?s dct:subject ?k. "
-                                    //+ "         ?pub bibo:Quote ?k."
-                                    + "         BIND(IRI(?k) AS ?keyword) . "
-                                    // + "         {0}"
-                                    + '         FILTER(mm:fulltext-search(str(?k), "' + $scope.searchText + '")).'
-                                    + "     } } "
-                                    + "     GROUP BY ?k "
-                                    + "  } "
-                                    + " }";
-//                            var filterPath = 'FILTER(CONTAINS(UCASE(?k), "{0}" )) . ';
-//                            var searchTextt = $scope.searchText.trim();
-//                            var keywords = searchTextt.split(" ");
-//                            var filterContainer = "";
-//                            keywords.forEach(function (val) {
-//                                if (val.length > 0) {
-//                                    filterContainer += String.format(filterPath, val.toUpperCase());
-//                                }
-//                            });
-                            //queryAuthors = String.format(queryAuthors, filterContainer);
-                            
-                            
-                            sparqlQuery.querySrv({query: querySearchKeyword},
+                            /**
+                             * Second Attempt: search text using CONTAINS function of SPARQL 
+                             */
+                            var filterPath = 'FILTER(CONTAINS(UCASE(?name), "{0}" )) . ';
+                            var searchTextt = $scope.searchText.trim();
+                            var keywords = searchTextt.split(" ");
+                            var filterContainer = "";
+                            keywords.forEach(function (val) {
+                                if (val.length > 0) {
+                                    filterContainer += String.format(filterPath, val.toUpperCase());
+                                }
+                            });
+
+                            var containerqueryAuthors = String.format(queryAuthors, filterContainer);
+                            sparqlQuery.querySrv({query: containerqueryAuthors},
                             function (rdf) {
                                 jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                                     if (compacted["@graph"])
                                     {
-                                        searchData.areaSearch = compacted;
                                         waitingDialog.hide();
-                                        //   $window.location.hash = "w/research-area?" + $scope.searchText;
-                                        $window.location.hash = "/" + $routeParams.lang + "/cloud/group-by";
+                                        searchData.authorSearch = compacted;
+                                        $window.location.hash = "/" + $routeParams.lang + "/w/search?" + $scope.searchText;
                                     }
                                     else
                                     {
-                                        alert("Information not found");
-                                        waitingDialog.hide();
-                                    }
-                                });
-                            }); // end of  sparqlQuery.querySrv({...
-                              //          alert("Information not found");
+                                        /**
+                                         * As a last attempt, the text will look for dct:SUBJECT
+                                         *  using fulltext
+                                         */
+                                        var querySearchKeyword = globalData.PREFIX
+                                                + " CONSTRUCT { ?keywordduri rdfs:label ?k } "
+                                                + " WHERE { "
+                                                + " { "
+                                                + "     SELECT DISTINCT (sample(?keyword) AS ?keywordduri) ?k "
+                                                + "     WHERE { "
+                                                + '         GRAPH <' + globalData.centralGraph + '> {'
+                                                + "         ?s foaf:publications ?pub. "
+                                                + "         ?s dct:subject ?k. "
+                                                //+ "         ?pub bibo:Quote ?k."
+                                                + "         BIND(IRI(?k) AS ?keyword) . "
+                                                + '         FILTER(mm:fulltext-search(str(?k), "' + $scope.searchText + '")).'
+                                                + "     } } "
+                                                + "     GROUP BY ?k "
+                                                + "  } "
+                                                + " }";
 
-                        }
+                                        sparqlQuery.querySrv({query: querySearchKeyword},
+                                        function (rdf) {
+                                            jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
+                                                if (compacted["@graph"])
+                                                {
+                                                    waitingDialog.hide();
+                                                    searchData.areaSearch = compacted;
+                                                    $window.location.hash = "/" + $routeParams.lang + "/cloud/group-by";
+                                                }
+                                                else
+                                                {
+                                                    alert("Information not found");
+                                                    waitingDialog.hide();
+                                                }
+                                            });
+                                        }); // end of  sparqlQuery.querySrv({...}) last Attempt                                       
+                                    } // end else of last attempt
+                                });
+                            }); // end of  sparqlQuery.querySrv({...}) of second Attempt   
+                        }//end else of second attempt
                     });
-                }); // end of  sparqlQuery.querySrv({...
-            }
-        };
+                }); // end of  sparqlQuery.querySrv({...}) of firts attempt
+            }// end   if ($scope.searchText) {
+        };//end $scope.submit = function () {
     }]);

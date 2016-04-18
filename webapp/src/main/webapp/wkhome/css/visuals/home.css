@@ -1,0 +1,20 @@
+
+
+.imagesubmit {
+    width: 45px;
+height: 45px;
+}
+
+.buscador{
+    padding-bottom:  1%;
+    padding-top: 1%;
+}
+.li-buscador{
+    padding: 0;
+}
+li.li-buscador.col-md-1{
+padding: 0px;
+width: 45px;
+height: 45px;
+}
+
