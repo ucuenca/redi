@@ -21,10 +21,19 @@ path.slice{
         cursor:pointer;
 }
 
-text {
+.piechart-text{
     font-family: sans-serif;
     font-size: 9px;
     fill: white;
+    cursor:pointer; 
+    
+}
+
+.piechart-text:hover{
+
+
+  transition-delay: 0;
+    cursor:pointer; 
 }
 #tooltip {
     position: absolute;

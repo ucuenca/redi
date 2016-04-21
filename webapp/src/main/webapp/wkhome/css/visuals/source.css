@@ -1,0 +1,51 @@
+
+
+.authorssources{
+    padding-left: 15%;
+    padding-right: 15%;
+    padding-top: 5%;
+}
+
+p.source {
+    text-align: justify;
+    font-size: larger;
+    font-family: cursive;
+}
+
+h3.source.text-success {
+    text-align: center;
+}
+
+.publicationssources{
+    padding-left: 15%;
+    padding-right: 15%;
+    padding-top: 5%;
+}
+
+.source.authors th {
+    
+   text-align: center;
+   background-color: #DDD;
+    
+}
+
+.source.authors td {
+    
+   
+    padding: 10px;
+    
+    
+}
+
+.source.text-primary.principal{
+    text-align: center; 
+    padding: 20px;
+    font-family: none;
+}
+
+.source.text-primary.secundario{
+    font-size: 9px;
+    text-align: left;
+    padding: 2px;
+    font-family: none;
+}
