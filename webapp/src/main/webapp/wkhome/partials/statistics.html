@@ -1,0 +1,71 @@
+
+
+<div class="col-md-12" style="padding-top: 100px; padding-left: 10%; padding-right: 10%">
+
+    <div class="title" style="text-align: center">
+        <h2 class="text-primary">Repositorio Ecuatoriano de Investigadores</h2>
+    </div>
+    <p>
+
+    </p>
+
+
+    <br/>
+    <br/>
+    <br/>
+
+    <div class="col-md-12 container-fluid" style='background-color: #FFFFFF;'>
+
+        <div class="col-md-4" ng-controller="countAuthors">
+            <div style="padding-top: 10px; padding-left: 20px; background-color: #CCCCCC; border-radius: 15px; ">
+                <h4  class="text-success" style="text-align: center">{{ 'Total Autores' | translate }}</h4>
+                <pie-chart data="data" pc-height="220" style="display:block" if-click="ifClick(value)" ng-model="value"></pie-chart>
+            </div>
+        </div>
+        <div class="col-md-4"  ng-controller="countPublications">
+            <div style="padding-top: 10px; padding-left: 10px; background-color: #CCCCCC; border-radius: 15px; ">
+                <h4 class="text-success" style='text-align: center'>{{ 'Total Publicaciones' | translate }}</h4>
+                <pie-chart data="data" pc-height="220" style="display:block"></pie-chart>
+            </div>
+        </div>
+        <div class="col-md-4" ng-controller="countResearchAreas">
+            <div style="padding-top: 10px; padding-left: 20px; background-color: #CCCCCC; border-radius: 15px; ">
+                <h4 class="text-success"  style='text-align: center'>{{ 'Areas de Investigacion' | translate }}</h4>
+                <pie-chart data="data" pc-height="220" style="display:block" if-click="ifClick(value)" ng-model="value"></pie-chart>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="statistics variantpie col-md-12" style="padding-left: 10%; padding-right: 10%; padding-top: 5%">
+
+
+
+
+
+
+    <div style="text-align: center" >
+
+
+        <div  ng-controller="barChart" style="background-color: #CCCCCC; border-radius: 15px; padding: 2%">
+            <h2 class="text-success">Total de Recursos en el Repositorio</h2>
+            <bar-chart data="data"></bar-chart>
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<div class='col-md-12' ng-include="'/wkhome/partials/footnote.html'"/>
+
+
+<div id="tooltip" class="" style="opacity:0; ">
+    <p><strong></strong>
+    </p>
+    <p><span id="value"></span></p>
+</div>
