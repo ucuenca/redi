@@ -1,0 +1,68 @@
+
+<hr>
+<hr>
+<!--<div class='col-md-2' ng-include="'/wkhome/partials/mainmenu.html'"/> -->
+
+<div class="col-md-12">
+
+    <div class="row">
+
+        <div ng-controller="map">
+            <div class="col-md-5">
+
+
+
+                <h2 class="text-success ">
+                    {{'Location by Research Area'| translate}}  <br>
+
+                </h2>
+                <hr>
+
+                <h3 class="text-primary">{{'Research Area'| translate }}</h3><h3 class="tag" style="color: #B18904">Semantic Web</h3>
+                <br>
+                <h3 class="text-primary">{{'Total Publicaciones'| translate }}</h3><h3 class="total" style="color: #B18904"></h3>
+                <hr>
+                <h3 class="text-primary">{{'Institute'| translate}}</h3><h3 class="name" style="color: #B18904"></h3>
+                <br>
+                <h3 class="text-primary">{{'Full Name'| translate}}</h3><h3 class="fullname" style="color: #B18904"></h3>
+                <br>
+                <h3 class="text-primary">{{'City'| translate }}</h3><h3 class="city" style="color: #B18904"></h3>
+                <br>
+                <h3 class="text-primary">{{'Province'| translate }}</h3><h3 class="province" style="color: #B18904"></h3>
+                <br>
+                <h3 class="text-primary">{{'Latitude'| translate}}</h3><h3 class="latitude" style="color: #B18904"></h3>
+                <br>
+                <h3 class="text-primary">{{'Longitude'| translate}}</h3><h3 class="longitude" style="color: #B18904"></h3>
+
+            </div>
+
+
+
+            <div class="col-md-2">
+                <h3 class="text-success">{{'Select Research Area'| translate}}:</h3>
+                <select class="form-control" name="board" id="board" ng-model="selectedTagItem"  ng-options="key.tag as key.tag for key  in relatedtags">
+                    <option value="">Select Theme</option>
+                </select>
+            </div>
+
+            <br/>
+            <div class="col-md-5" >
+                <map-view data="data" style="display: block; height: 90%" if-click="ifClick(value)" ng-model="value"></map-view> 
+            </div>
+
+            <!--    <div class="col-md-8" id="map">
+        
+        
+                    <h2></h2>
+        
+                </div>
+            -->
+        </div> 
+        <!--  <div style="position:absolute;bottom:0;font-size:18px;">
+          <input type="checkbox" id="voronoi"> <label for="voronoi">show Voronoi</label>   
+         </div>
+        -->
+
+
+    </div>
+</div>

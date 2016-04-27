@@ -20,7 +20,7 @@
 }
 
 .tree-overlay{
-    /*background-color:#FFFFFF;*/
+    background-color:#FFFFFF;
 }
 
 .tree-main-container {
@@ -29,10 +29,8 @@
     background-color: #F6F6F6;
 }
 
-.relatedauthors{
 
-    font-size: x-small;
-}
+
 
 /* d3-context-menu styles */
 
@@ -68,4 +66,54 @@
 .d3-context-menu ul li:hover {
     background-color: #4677f8;
     color: #fefefe;
+}
+
+
+
+/* Important part */
+.modal-dialog{
+    overflow-y: initial !important
+}
+#author-select{
+    height: 300px;
+    overflow-y: auto;
+}
+
+.search.subtitulo{
+    color: #003cb3;
+    font-family: inherit;
+    opacity: 1;
+}
+
+
+.search.left.col-md-2{
+    
+    border-right-color: #F6F6F6;
+    border-right-width: 2px;
+   border-right-style: ridge; 
+   
+}
+
+h4.search{
+    color: #0077b3;
+    font-style: inherit;
+}
+
+.explorableTree.pubinfo
+{
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+span.label-author{
+      font-family: monospace;
+      text-decoration-color: #4677f8;
+      text-align: left;
+      font-weight: bold;
+      
+}
+
+
+.panelderecho{
+    
 }

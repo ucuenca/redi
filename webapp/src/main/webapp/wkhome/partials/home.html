@@ -1,57 +1,58 @@
 
 
 <div id="tooltip" class="" style="opacity:0;">
-    <p><strong>Important Label Heading</strong>
+    <p><strong></strong>
     </p>
-    <p><span id="value">100</span></p>
+    <p><span id="value"></span></p>
 </div>
 
 
-<div>
-    <div class="container-fluid" >
-        <div class="row presentation">
-
+<div ng-controller="translate">
+    <div class="container-fluid" style=" background-color: #F2F2F2" >
+        <div class="row presentation" >
             <div class="col-md-12">
-
-                <div id="carousel" class="carousel slide" data-ride="carousel" style="padding-top:50px; height:100%">
+                <div id="carousel" class="carousel slide" data-ride="carousel" style="padding-top:50px; height:80%">
                     <ol class="carousel-indicators">
                         <li data-target="#carousel" data-slide-to="0" class="active"></li>
                         <li data-target="#carousel" data-slide-to="1"></li>
                         <li data-target="#carousel" data-slide-to="2"></li>
-                        <li data-target="#carousel" data-slide-to="3"></li>
                     </ol>
                     <div class="carousel-inner" role="listbox">
                         <div class="item active">
                             <center> 
-                            <img src="wkhome/images/title.png" style="padding-top: 30px; width: 50%">
-                            <div class="carousel-caption">
-                                <h2 style="color: #3c763d; text-align: center;">{{'Ecuadorian Semantic Repository' | translate}}</h2>
-                            </div>
+                                <img src="wkhome/images/title2.png" style="padding-top: 30px;" width="330">
+                                <div class="carousel-caption">
+                                    <h2 style="color: #ffffff; text-align: center;">{{'Ecuadorian Semantic Repository'| translate}}</h2>
+                                </div>
                             </center>
                         </div>
+                        <!--   <div class="item">
+                               <center>
+                                   <img src="wkhome/images/logo_cedia.png" style="padding-top: 30px; width: 50%;">
+                        <!--<div class="carousel-caption">
+                            <h3 style="text-align: center">Repositorio Semántico de Investigadores del Ecuador</h3>
+                            <p style="text-align: center">Plataforma de descubrimiento de autores, publicaciones y identificación de áreas comunes de trabajo.
+                        </div>-->
+                        <!--       </center>
+                           </div> -->
                         <div class="item">
                             <center>
-                                <img src="wkhome/images/logo_cedia.png" style="padding-top: 30px; width: 50%;">
-                                <!--<div class="carousel-caption">
-                                    <h3 style="text-align: center">Repositorio Semántico de Investigadores del Ecuador</h3>
-                                    <p style="text-align: center">Plataforma de descubrimiento de autores, publicaciones y identificación de áreas comunes de trabajo.
-                                </div>-->
-                            </center>
-                        </div>
-                        <div class="item">
-                            <center>
-                                <img src="wkhome/images/dcc-background.jpg" style="width: 50%; padding-top: 1%" class="img-rounded"/>
-                                <!--<div class="carousel-caption">
-                                    <h3 class='carousel-caption-text'>Búsqueda Autores y Publicaciones en una sola plataforma</h3>
-                                    <p>Encuentra tu equipo de trabajo de manera fácil</p>
-                                </div>-->
+                                <img src="wkhome/images/network.png" style=" width: 37%;height: 10%; padding-top: 1%" class="img-rounded"/>
+                                <div class="carousel-caption">
+                                    <h3 style="color: #ffffff; text-align: center;" class='carousel-caption-text'>{{'Search related researchers'| translate}}</h3>
+                                    <!--p>Encuentra tu equipo de trabajo de manera fácil</p-->
+                                </div>
                             </center>
 
                         </div>
                         <div class="item">
                             <center>
-                                <img src="wkhome/images/search_ec.png" style="width: 50%;">
-                               
+                                <img src="wkhome/images/search_ec2.png" style="width: 20%;">
+                                <div class="carousel-caption">
+                                    <h3 style="color: #ffffff; text-align: center;" class='carousel-caption-text'>{{'Search publications'| translate}}</h3>
+                                    <!--p>Encuentra tu equipo de trabajo de manera fácil</p-->
+                                </div>
+
                             </center>
                         </div>
                     </div>
@@ -65,259 +66,92 @@
                          <span class="sr-only">Next</span>
                      </a>-->
                 </div>
-            </div>
-        </div>
-
-
-
-    </div>
-</div>
-
-
-
-<div class="col-md-12" style="background-color: ">
-        <div class="col-md-12 " >
-            <div class="col-md-3 " >
-            </div>
-            <div class="col-md-8 " >
-                <form  role="search" ng-submit="submit()" ng-controller="SearchController">
-                    <div class="col-xs-9" style="padding: 20px; text-align: center">
-                        <input style="border-color: orange" name="searchText" ng-model="searchText" type="text" class="form-control input-lg " placeholder="{{'Search Author or Keyword' | translate}}..." >
+                <div class="col-md-12 " style="">
+                    <div class="col-md-2 " >
                     </div>
-                </form>
-            </div>
-            <div class="col-md-1 " >
-            </div>
+                    <div class="buscador col-md-8 " >
+                        <form   role="search" ng-submit="submit()" ng-controller="searchText">
+                            <div  style="text-align: center">
+                                <ul>
+                                    <li class="li-buscador col-md-11">
+                                        <input style=" border-color: #0000FF" name="searchText" ng-model="searchText" type="text" class="form-control input-lg " placeholder="{{'Search Author or Keyword'| translate}}..." >
+                                    </li>
+                                    <li class="li-buscador col-md-1">
+                                        <input type="image"  src="wkhome/images/search_logo2.png"  style="background-color: #004D77; border-color: #FFFFFF; border-width: 10px;" alt="Buscar" class="imagesubmit"/>
+                                    </li>
+                                </ul>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-2 " >
+                    </div>
+                </div>
         </div>
-   
+            </div>
+        <!--
+                <div style="padding-top: 2%">
         
-         <div class='col-md-2' ng-include="'/wkhome/partials/mainmenu.html'"/> 
-
-    <div class="col-md-10" style='background-color: #FFFFFF; padding-left: 100px'>
-
-        <div class="col-md-4" ng-controller="totalPersonReg">
-            <div style="padding-top: 10px; padding-left: 20px; background-color: #CCCCCC; border-radius: 15px; ">
-                <h4  class="text-success" style="text-align: center">{{ 'Total Autores' | translate }}</h4>
-                <pie-chart data="data" pc-height="220" style="display:block" if-click="ifClick(value)" ng-model="value"></pie-chart>
-            </div>
-        </div>
-        <div class="col-md-4"  ng-controller="totalPublicationReg">
-            <div style="padding-top: 10px; padding-left: 10px; background-color: #CCCCCC; border-radius: 15px; ">
-                <h4 class="text-success" style='text-align: center'>{{ 'Total Publicaciones' | translate }}</h4>
-                <pie-chart data="data" pc-height="220" style="display:block"></pie-chart>
-            </div>
-        </div>
-        <div class="col-md-4" ng-controller="totalResearchAreas">
-            <div style="padding-top: 10px; padding-left: 20px; background-color: #CCCCCC; border-radius: 15px; ">
-                <h4 class="text-success"  style='text-align: center'>{{ 'Areas de Investigacion' | translate }}</h4>
-                <pie-chart data="data" pc-height="220" style="display:block" if-click="ifClick(value)" ng-model="value"></pie-chart>
-            </div>
-        </div>
+                    <div class="col-md-4" style="text-align: center">
+                        <h4>Investigadores</h4>
+                        <img src="wkhome/images/group.png" style="height: 90px">
+                    </div>
+                    <div class="col-md-4" style="text-align: center" >
+                        <h4>Publicaciones</h4>
+                        <img src="wkhome/images/publicationsgroup.png" style="height: 90px">
+                    </div>
+                    <div class="col-md-4" style="text-align: center" >
+                        <h4>Sobre Nosotros</h4>
+                    </div>
+                </div>
+        
+        -->
     </div>
-</div>
-<hr>
-<hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr>
-<div class="row3" style="height: 50px">
- 
-    </div>
-<hr>
+
+    <!--   INICIO DOCUMENTACION
 <img src="wkhome/images/separator-line.png" style="width: 100%; height: 30px">
 <div class="middlecontainer col-md-12" style="height: 550px;  background-color: #D8DFEF;">
-    <div class="col-md-2" style="padding: 0px; padding-top: 2%; ">
-        <div style="background-color: #FFFFFF; border-radius: 15px; "> 
-            <h3 class="text-success" style="text-align: center; padding-top: 5% ">{{'Authors Sources' | translate}}</h3>
-            <ul class="nav nav-pills nav-stacked">
-                <li><a target='blank' href="http://ucuenca.edu.ec/">UCuenca</a></li>
-                <li><a target='blank' href="http://www.utpl.edu.ec/">UTPL</a></li>
-                <li><a target='blank' href="http://www.espe.edu.ec/">ESPE</a></li>
-            </ul>
-        </div>
-
-        <hr>
-        
-         <div style="background-color: #FFFFFF; border-radius: 15px; "> 
-            <h3 class="text-success" style="text-align: center; padding-top: 5%">{{'Publications Data Source'| translate}}</h3>
-            <ul class="nav nav-pills nav-stacked">
-                <li><a target='blank' href="http://dblp.uni-trier.de/">DBLP</a></li>
-                <li><a target='blank' href="http://academic.research.microsoft.com/">Microsoft Academics</a></li>
-                <li><a target='blank' href="http://www.scopus.com/">SCOPUS</a></li>
-                <li><a target='blank' href="https://scholar.google.com.ec/">Google Scholar</a></li>
-
-            </ul>
-        </div>
-        <hr>
-    </div>
+    
 
     <!--Jose Luis-->
-    <div class="col-md-10">
 
-        <br/>
-        <br/>
-        <div class="col-md-6" >
-            <h4 style='color: #5882FA; text-align: center'>{{'Author Search'| translate}}</h4>
-            <center><img src="wkhome/images/search_results.png" style="width: 65%;" class="img-rounded"></center>
-        </div>
-        <div class="col-md-6" >
-            <h4 style='color: #5882FA; text-align: center'>{{'Location by Research Area' | translate}}</h4>
-            <center><a href="#/geo-views/sources"><img src="wkhome/images/location.png" style="width: 65%;" class="img-rounded"></a></center>
-        </div>
-    </div>
-
-    <div class="col-md-10">
-        <hr>
-        <div class="col-md-6" >
-            <h4 style='color: #5882FA; text-align: center'>{{'Tag Cloud'| translate}}</h4>
-            <center><a href="#/tags/cloud"><img src="wkhome/images/tag_cloud.png" style="width: 65%;" align="middle" class="img-rounded"></a></center>
-
-        </div>
-        <div class="col-md-6" >
-            <h4 style='color: #5882FA; text-align: center'>{{'Authors Group'| translate}}</h4>
-            <center><a href="#/cloud/group-by"><img src="wkhome/images/pub_author_cloud.png" style="width: 65%;" class="img-rounded"></a></center>
-        </div>
-    </div>
+    <!-- 
+     <div class="col-md-10">
+ 
+         <br/>
+         <br/>
+         <div class="col-md-6" >
+             <h4 style='color: #5882FA; text-align: center'>{{'Author Search'| translate}}</h4>
+             <center><img src="wkhome/images/search_results.png" style="width: 65%;" class="img-rounded"></center>
+         </div>
+         <div class="col-md-6" >
+             <h4 style='color: #5882FA; text-align: center'>{{'Location by Research Area'| translate}}</h4>
+             <center><a href="#/geo-views/sources"><img src="wkhome/images/location.png" style="width: 65%;" class="img-rounded"></a></center>
+         </div>
+     </div>
+ 
+     <div class="col-md-10">
+         <hr>
+         <div class="col-md-6" >
+             <h4 style='color: #5882FA; text-align: center'>{{'Tag Cloud'| translate}}</h4>
+             <center><a href="#/tags/cloud"><img src="wkhome/images/tag_cloud.png" style="width: 65%;" align="middle" class="img-rounded"></a></center>
+ 
+         </div>
+         <div class="col-md-6" >
+             <h4 style='color: #5882FA; text-align: center'>{{'Authors Group'| translate}}</h4>
+             <center><a href="#/cloud/group-by"><img src="wkhome/images/pub_author_cloud.png" style="width: 65%;" class="img-rounded"></a></center>
+         </div>
+     </div>
     <!--Fin Jose Luis-->
+    <!--
+    </div>
+    
+    FIN DOCUMENTACION
+    -->
+
+    <div class="home transition" >
+    </div>
+
+    <div class='col-md-12' ng-include="'/wkhome/partials/footnote.html'"/>
+
 </div>
-
-<div class="col-md-12" style="padding-top: 30px; background-color: #F5F5F5">
-    <div class="col-md-4" >
-        <center>
-            <a target='blank' href="http://cedia.org.ec"><img src="../resources/logo_cedia.png" class="img-rounded" alt="Logo Cedia" width="200" height="100"></a>
-        </center>
-        <h6>
-            <p class="text-primary" style="text-align: center; padding: 20px">
-                Calle La Condamine 12-109 "Casa Rivera" <br>
-                Telf. (+593) 7 4051000 Ext. 4220/4223 <br>
-                info@cedia.org.ec <br>
-                Cuenca- Ecuador
-            </p>
-        </h6>
-    </div>
-    <div class="col-md-4">
-        <center>
-            <a target="blank" href="http://ucuenca.edu.ec/la-oferta-academica/oferta-de-grado/facultad-de-ingenieria/dptos/dcc"><img src="../resources/logo_dcc.png" class="img-rounded" alt="Logo DCC" width="150" height="100"></a>
-        </center>
-        <h6>
-            <p class="text-primary" style="text-align: center; padding: 20px">
-                Av. 12 de Abril y Agustín Cueva - Ciudadela Universitaria <br>   
-                Edificio de Laboratorios Tecnologicos 4to Piso.<br>
-                Teléfono: 593-7 405 1000 <br>
-                centro.info@ucuenca.edu.ec <br>
-                Cuenca Ecuador
-            </p>
-        </h6>
-    </div>
-    <div class="col-md-4">
-        <center>
-            <a target='blank' href="http://ucuenca.edu.ec"><img src="../resources/logo_u.png" class="img-rounded" alt="Logo Ucuenca" width="150" height="100"></a>
-        </center>
-        <h6>
-            <p class="text-primary" style="text-align: center; padding: 20px">
-                Av. 12 de Abril y Agustín Cueva <br>
-                Teléfono: 593-7 405 1000 Fax: 593-7 405 1005 Casilla Postal: 01.01.168 <br>
-                centro.info@ucuenca.edu.ec <br>
-                Cuenca Ecuador <br>
-            </p>
-        </h6>
-    </div>
 </div>
-
-
-<!--
-<div>
-  <h1>angular-snapscroll</h1>
-  <p>angular-snapscroll adds vertical scroll-and-snap functionality to angular.</p>
-  <ol>
-    <li>JS-only implementation</li>
-    <li>Requires only angular core</li>
-    <li>5.7kB when minified, 2.1kB when gzipped</li>
-  </ol>
-  <p>This is a suite of snapscroll examples that demonstrantes:</p>
-  <ul>
-    <li>full-page snapscroll (fit-window-height attribute)</li>
-    <li>keyboard navigation (try pressing the up and down arrow keys)</li>
-    <li>resetting current snap position after a manual scroll (try to scroll by dragging the scrollbar)</li>
-    <li>snapIndex binding (the pagination showing on the right)</li>
-    <li>persisting snapIndex on page reload (using window.location.hash)</li>
-    <li>touch support (using <a href="https://github.com/marmorkuchen-net/angular-swipe">angular-swipe</a> module)</li>
-    <li><a href="#" ng-click="snapIndex=1">nested snapscrolls</a></li>
-    <li><a href="#" ng-click="snapIndex=2">before and after callbacks</a></li>
-  </ul>
-</div>
--->
-<!--
-<div>
-  <h3>Nested snapscrolls</h3>
-  <p>Instances can be nested, side by side etc and won't interfere with each other. The first nested snapscroll below also demostrates how to keep vertical swipe gestures localized to a nested snapscroll instance.</p>
-  <div ng-controller="NestedSnapscrollController">
-    <div class="nested" snapscroll snap-index="nestedSnapIndex" ng-swipe-up="swipeUp($event)" ng-swipe-down="swipeDown($event)">
-      <div><span>1</span></div>
-      <div><span>2</span></div>
-      <div><span>3</span></div>
-      <div><span>4</span></div>
-      <div><span>5</span></div>
-    </div>
-  </div>
-  <div class="clearfix">
-    <div class="nested" snapscroll>
-      <div><span>1</span></div>
-      <div><span>2</span></div>
-      <div><span>3</span></div>
-      <div><span>4</span></div>
-      <div><span>5</span></div>
-    </div>
-    <div class="nested" snapscroll>
-      <div><span>1</span></div>
-      <div><span>2</span></div>
-      <div><span>3</span></div>
-      <div><span>4</span></div>
-      <div><span>5</span></div>
-    </div>
-  </div>
-</div>
--->
-<!--      <div>
-<!--
-<div class="row subject-cloud">
-  <div class="col-md-12" ng-controller="getKeywordsTag">
-    <h4>Subject Tag Cloud</h4>
-    <cloud-tag data="data" style="display: block; height: 100%"></cloud-tag> 
-  </div>
-</div>
--->
-<!--
-<div class="container-fluid" style="padding: 0;">
-    <div class="row">
-      <div class="col-md-12" ng-controller="exploreAuthor">
-        <explorable-tree data="data" style="display:block; height:100vh"></explorable-tree>
-      </div>
-    </div>
-</div>
--->
-<!--   </div> -->
-<!---    <div>
-    </div>  -->
-<!-- </div> -->
-<!--
-<code class="html">
-  &lt;div class="main"&gt;<br>
-    &lt;section&gt;...&lt;/section&gt;<br>
-    &lt;section&gt;...&lt;/section&gt;<br>
-    ...<br>
-  &lt;/div&gt;
-</code>
-
-<code class="js">
-  $(".main").onepage_scroll();
-</code> -->
-
-
-
-<!--<ul class="indicators">
-    <li><a href="#/" onclick="return false;" ng-click="snapIndex = 0"><span ng-class="{active: snapIndex == 0}"></span></a></li>
-    <li><a href="#/" onclick="return false;" ng-click="snapIndex = 1"><span ng-class="{active: snapIndex == 1}"></span></a></li>
-    <li><a href="#/" onclick="return false;" ng-click="snapIndex = 2"><span ng-class="{active: snapIndex == 2}"></span></a></li>
-    <li><a href="#/" ng-click="snapIndex = 3"><span ng-class="{active: snapIndex == 3}"></span></a></li>
-    <li><a href="#/" ng-click="snapIndex = 4"><span ng-class="{active: snapIndex == 4}"></span></a></li>
-</ul>
-
-<!-- </div> -->

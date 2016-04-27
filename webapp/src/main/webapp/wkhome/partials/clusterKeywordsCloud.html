@@ -1,0 +1,70 @@
+ 
+<div id="scrollToTop">
+</div> 
+<hr>
+<hr>
+<!--<div class='col-md-2' ng-include="'/wkhome/partials/mainmenu.html'"/> -->
+
+<div class="col-md-12">
+
+    <center>
+        <div class="page-header" style="margin: 20px 0 10px" >
+            <h2 class="text-success">{{'Clusters by Keyword' | translate }}</h2>
+        </div>
+    </center>    
+
+    <div class="row subject-cloud" >
+
+        <div class="col-md-12" ng-controller="clusterKeywordsCloud" >
+
+            <keyw-clusters data="data" style="display: block; height: 90%" if-click="ifClick(value)" ng-model="value"></keyw-clusters>  
+            <!--keyw-clusters data="data" style="display: block; height: 90%" ctrl-fn="ctrlFn(value)" ng-model="value"></keyw-clusters--> 
+            <!--if-click="ifClick(value)"-->
+            <hr>
+            <hr>
+            <div id="blackspace">
+            </div>
+            <div class="col-md-12 head-info">
+                <div id="title" style="font-size:50pt">
+
+
+                </div>
+
+
+            </div>
+            <!--div  class="col-md-12 tree-node-info" style="height:100vh" >
+
+                <h3></h3>
+                <h4 style="padding: 20px" class="text-success"> Total of Authors found: {{todos.length}} </h4>
+
+
+                <ul>
+                    <li  ng-repeat="todo in filteredTodos">
+                        
+                        <a href="{{todo.uri}}" >
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h2 class="panel-title"><a href="{{todo.uri}}" target='_blank'>{{todo.title}}</a></h2>
+                                </div>
+                                <div class="panel-body">
+                                    Abstract: {{todo.abstract}}
+                                    </br>
+                                    <a href="{{todo.uri}}" target='_blank'>{{todo.uri}}</a>
+                                </div>
+                            </div>
+                        </a>
+
+                    </li>
+                </ul>
+                <center>
+                    <pagination 
+                        ng-model="currentPage"
+                        total-items="todos.length"
+                        max-size="maxSize"  
+                        boundary-links="true">
+                    </pagination>
+                </center>
+            </div-->
+        </div>
+    </div>
+</div>

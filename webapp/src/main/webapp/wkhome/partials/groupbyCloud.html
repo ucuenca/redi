@@ -1,0 +1,181 @@
+<div id="scrollToTop">
+</div> 
+<hr>
+<hr>
+
+
+<div ng-controller="groupbyCloud">
+
+    <div class="col-md-12">
+
+        <center>
+            <div class="page-header">
+                <h2 class="text-success">{{'Grouping Publications'| translate}}</h2>
+            </div>
+        </center>
+    </div>
+    <div class="col-md-12" >
+        <div class="col-md-3">
+            <h3 class="text-success" style="text-align: left">{{'Select Research Area'| translate}}:</h3>
+            <select class="form-control" name="board" id="board" ng-model="selectedItem"  ng-options="key.tag as key.tag for key  in relatedthemes">
+                <option value="">Select Theme</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <h3 class="text-success" style="text-align: left">{{'Group by'| translate}}:</h3>
+            <select   class="form-control" name="group" id="group" ng-model="gbselectedItem" >
+                <option value="Todos">{{'All'| translate}}</option>
+                <option value="organization">{{'Source'| translate}}</option>
+                <!--            <option value="name">Autor</option> -->
+            </select>
+        </div>
+
+
+        <cloud-group data="data" style="display: block; height: 90% ; width: 80%" if-click="ifClick(value)" ng-model="value"></cloud-group> 
+        <!--
+            <div class="col-md-3">
+                Size By:
+                <select class="form-control" name="size" id="size">
+                    <option value=""></option>
+                    <option value="volume">Volume</option>
+                    <option value="lastPrice">Last Price</option>
+                    <option value="standardDeviation">Standard Deviation</option>
+                </select>
+            </div>
+        -->
+        <!--
+            <div class="col-md-3">
+                Color By:
+                <select class="form-control" name="color" id="color">
+                    <option value=""></option>
+                    <option value="exchange">Exchange</option>
+                    <option value="volumeCategory">Volume</option>
+                    <option value="lastPriceCategory">Last Price</option>
+                    <option value="standardDeviationCategory">Standard Deviation</option>
+                </select>
+            </div>
+        -->
+        <!--  <div class="col">
+              Colors:
+              <div class="row">
+                  <div class="colors" style="height:34px;">
+                  </div>
+              </div>
+          </div>    -->
+
+        <div class="col-md-6">
+            <div class="modal fade" id="searchResults" tabindex="-1" role="dialog" aria-labelledby="Search Results" aria-hidden="false">
+                <div class="modal-dialog  modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Search Results</h4>
+                        </div>
+
+                        <div class="modal-body" id="author-select">
+                            <table class="table table-striped ">
+                                <thead>
+                                    <tr>
+                                        <th>Research Area</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="area in candidates">
+                                        <td><a class="candidate" ng-click="selectedAuthor($event, area.label)" href="">{{area.label}}</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                        -->
+                    </div>
+                </div>
+            </div>
+        </div>   
+
+    </div>
+
+
+
+<div class="col-md-10">
+        <div class="row subject-cloud">
+            <div id="scrollToHere" class="col-md-12" >
+                <div >
+                </div>
+                <div id="blackspace">
+                </div>
+                <div class="col-md-12 head-info">
+                    <div id="title" style="font-size:40pt">
+                    </div>
+                </div>
+                <div  class="col-md-12 tree-node-info" style="height:100vh" >
+
+                    <h3></h3>
+                    <h4 style="padding: 20px" class="text-success"> {{'Total of Publications found'| translate }}: {{todos.length}} </h4>
+
+
+                    <ul>
+                        <li  ng-repeat="todo in filteredTodos">
+                            <!--  <h3> <a href="{{todo.id}}" target='_blank'>{{todo.title}}</a> </h3>
+                              </br> Abstract: {{todo.abstract}} </br>
+                            -->
+                            <a href="{{todo.uri}}" >
+                                <div class="panel panel-info">
+                                    <div class="panel-heading">
+                                        <h2 class="panel-title"><a href="{{todo.uri}}" target='_blank'>{{todo.title}}</a></h2>
+                                    </div>
+                                    <div class="panel-body">
+                                        <strong>Abstract:</strong> {{todo.abstract}}
+                                        </br>
+                                        <strong>Keywords:</strong> {{todo.keywords}}
+                                        </br>
+                                        <strong>URL:</strong> <a href="{{todo.uri}}" target='_blank'>{{todo.uri}}</a>
+                                    </div>
+                                </div>
+                            </a>
+
+                        </li>
+                    </ul>
+                    <center>
+                        <pagination 
+                            ng-model="currentPage"
+                            total-items="todos.length"
+                            max-size="maxSize"  
+                            boundary-links="true">
+                        </pagination>
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div class="col-md-2">
+   <!-- <div ng-include="'/wkhome/partials/mainmenu.html'"></div>-->
+    <hr>
+
+    <div class="tree-node-author-info" style="height:100vh">
+
+        
+        <div style="height: 100px"></div>
+       
+        <h4>CO-AUTORES</h4>
+        <div class="authorsByPublications">
+            <div id="title" style="font-size:50pt"></div>
+            <a href="" target="_blank"></a>
+        </div>
+        <hr>
+        <h4>Autores Relacionados por Clustering</h4>
+        <div class="authorsByClusters">
+            <div id="title" style="font-size:50pt"></div>
+            <a href="" target="_blank"></a>
+        </div>
+        <hr>
+
+    </div>
+
+</div> 
+</div>

@@ -1,0 +1,75 @@
+
+<hr>
+<hr>
+<!--<div class='col-md-2' ng-include="'/wkhome/partials/mainmenu.html'"/> -->
+
+<div class="col-md-12">
+
+    <div class="row subject-cloud">
+        <div class="col-md-12" ng-controller="clustersCloud" >
+            <hr>
+            <div class="head-pagetitle text-success" style="font-size: 30px">
+                <div id="title"  class="text-success"></div>
+            </div>
+
+            <cluster-keyw-cloud data="data" style="display: block; height: 90%" ctrl-fn="ctrlFn(value)" ng-model="value"></cluster-keyw-cloud> 
+            <div id="scrollToHere">
+            </div> 
+            <hr>
+            <hr>
+            <div id="blackspace">
+            </div>
+            <div class="col-md-12 head-info">
+                <div id="title" style="font-size:50pt">
+
+                </div>
+
+
+            </div>
+            <div  class="col-md-12 tree-node-info" style="height:100vh" >
+
+                <!--      <div class="entityInfo">
+                          <span style="font-weigth:bold"> </span> 
+                          <div id="title"></div>
+                          <a href="" target="_blank"></a>
+                      </div>         
+                -->
+
+
+                <h3></h3>
+                <h4 style="padding: 20px" class="text-success"> {{'Total of Authors found' | translate }}: {{todos.length}} </h4>
+
+
+                <ul>
+                    <li  ng-repeat="todo in filteredTodos">
+                        <!--  <h3> <a href="{{todo.id}}" target='_blank'>{{todo.title}}</a> </h3>
+                          </br> Abstract: {{todo.abstract}} </br>
+                        -->
+                        <a href="{{todo.uri}}" >
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h2 class="panel-title"><a ng-click="searchAuthor(todo.uri)" >{{todo.name}}</a></h2>
+                                </div>
+                                <div class="panel-body">
+                                    <strong>Keywords:</strong> {{todo.keywords}}
+                                    </br>
+                                    <a ng-click="searchAuthor(todo.uri)">{{todo.uri}}</a>
+                                </div>
+                            </div>
+                        </a>
+
+                    </li>
+                </ul>
+                <center>
+                    <pagination 
+                        ng-model="currentPage"
+                        total-items="todos.length"
+                        max-size="maxSize"  
+                        boundary-links="true">
+                    </pagination>
+                </center>
+            </div>
+        </div>
+
+    </div>
+</div>

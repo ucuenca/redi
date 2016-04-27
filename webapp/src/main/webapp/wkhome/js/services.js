@@ -6,7 +6,7 @@ var wkhomeServices = angular.module('wkhomeServices', ['ngResource']);
 
 //For testing purposes
 //wkhomeServices.serverInstance = 'http://190.15.141.85:8080/marmottatest';
-//wkhomeServices.serverInstance = 'http://190.15.141.85:80';
+wkhomeServices.serverInstance = 'http://190.15.141.85:80';
 
 //for parliament triplestore test
 //wkhomeServices.serverInstance = 'http://localhost:8080/parliament';
@@ -35,7 +35,7 @@ wkhomeServices.factory('authorRestQuery', ['$resource', '$http', '$window',
                 //'http://' + $window.location.hostname + ($window.location.port ? ':8080' : '') + '/marmotta';
                 'http://' + $window.location.hostname + ($window.location.port ? ':8080' : '') + '';
         return $resource(serverInstance + '/pubman/pubsearch', {}, {
-            query: {method: 'POST', isArray: true, transformRequest: transform}
+            query: {method: 'POST', isArray: true, transformRequest: transform, headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}}
         });
     }]);
 
@@ -51,15 +51,10 @@ wkhomeServices.factory('sparqlQuery', ['$resource', '$http', '$window',
                 //'http://' + $window.location.hostname + ($window.location.port ? ':8080' : '') + '/marmotta';
                 'http://' + $window.location.hostname + ($window.location.port ? ':8080' : '') + '';
         return $resource(serverInstance + '/sparql/select', {}, {
-            querySrv: {method: 'POST', isArray: true, transformRequest: transform}
-        });
+           querySrv: {method: 'POST', isArray: true, transformRequest: transform, headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}}
+         });
     }]);
 
-/*
- wkhomeServices.factory('searchData', function(){
- this.authorSearch = [];
- });
- */
 wkhomeServices.factory('d3JSON', ['$resource',
     function ($resource) {
         return $resource('d3/:geoId.json', {}, {

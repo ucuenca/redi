@@ -1,22 +1,27 @@
 <!doctype html>
 <html lang="en" ng-app="wkhomeApp">
     <head>
+
         <link rel="shortcut icon" href="wkhome/images/favicon.ico">
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-        <title>Watiqai Khuska Platform - Home</title>
+        <title>Ecuadorian Semantic Repository</title>
         <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css"> 
 
         <link rel="stylesheet" href="wkhome/css/animations.css">
+        <link rel="stylesheet" href="wkhome/css/visuals/general.css"> 
+        <link rel="stylesheet" href="wkhome/css/visuals/home.css">
         <link rel="stylesheet" href="wkhome/css/visuals/pieChart.css">
+        <link rel="stylesheet" href="wkhome/css/visuals/barChart.css">
         <link rel="stylesheet" href="wkhome/css/visuals/explorableTree.css">
-        <link rel="stylesheet" href="wkhome/css/visuals/cloudTag.css" >
+        <link rel="stylesheet" href="wkhome/css/visuals/keywordsCloud.css" >
         <link rel="stylesheet" href="wkhome/css/visuals/genericCloud.css" type="text/css" >
-        <link rel="stylesheet" href="wkhome/css/visuals/cloudGroup.css" type="text/css">
+        <link rel="stylesheet" href="wkhome/css/visuals/groupbyCloud.css" type="text/css">
         <link rel="stylesheet" href="wkhome/css/visuals/cloudCluster.css" type="text/css">
         <link rel="stylesheet" href="wkhome/css/visuals/chart.css">
         <link rel="stylesheet" href="wkhome/css/visuals/geoplain.css">
-        <link rel="stylesheet" href="wkhome/css/visuals/map-sources.css">
+        <link rel="stylesheet" href="wkhome/css/visuals/map.css">
+        <link rel="stylesheet" href="wkhome/css/visuals/source.css">
         <link rel="stylesheet" href="wkhome/css/app.css">
 
         <script src="../bower_components/jquery/dist/jquery.js"></script>
@@ -44,29 +49,58 @@
         <script src="../custom_libs/angular-sanitize/angular-sanitize.js"></script>
 
 
+
+
+
         <script src="wkhome/js/app.js"></script>
         <script src="wkhome/js/animations.js"></script>
-        <script src="wkhome/js/controllers.js"></script>
+
+        <script src="wkhome/js/controllers/controllers.js"></script>
+        <script src="wkhome/js/controllers/mainBar.js"></script>
+        <script src="wkhome/js/controllers/countAuthors.js"></script>
+        <script src="wkhome/js/controllers/countPublications.js"></script>
+        <script src="wkhome/js/controllers/countResearhAreas.js"></script>
+        <script src="wkhome/js/controllers/explorableTree.js"></script>
+        <script src="wkhome/js/controllers/explorableResearchArea.js"></script>
+        <script src="wkhome/js/controllers/exportController.js"></script>
+        <script src="wkhome/js/controllers/groupbyCloud.js"></script>
+        <script src="wkhome/js/controllers/keywordsCloud.js"></script>
+        <script src="wkhome/js/controllers/searchText.js"></script>
+        <script src="wkhome/js/controllers/genericCloud.js"></script>
+        <script src="wkhome/js/controllers/map.js"></script>
+        <script src="wkhome/js/controllers/clusterGroupByCloud.js"></script>
+        <script src="wkhome/js/controllers/clusterKeywordsCloud.js"></script>
+        <script src="wkhome/js/controllers/clustersCloud.js"></script>
+        <script src="wkhome/js/controllers/translate.js"></script>
+        <script src="wkhome/js/controllers/pubInfo.js"></script>
+        <script src="wkhome/js/controllers/barChart.js"></script>
+
+
         <script src="wkhome/js/directives.js"></script>
         <script src="wkhome/js/filters.js"></script>
         <script src="wkhome/js/services.js"></script>
+
 
         <script src="wkhome/js/components/waitingDialog.js"></script>
         <script src="wkhome/js/components/en.js"></script>
         <script src="wkhome/js/components/es.js"></script>
         <script src="wkhome/js/components/translation.js"></script>
+        <script src="wkhome/js/components/FileSaver.js"></script>
+        <script src="wkhome/js/components/stringsDistance.js"></script>
+        <script src="wkhome/js/components/jspdf.min.js"></script>
+
 
         <script src="wkhome/js/visuals/pieChart.js"></script>
+        <script src="wkhome/js/visuals/barChart.js"></script>
         <script src="wkhome/js/visuals/explorableTree.js"></script>
-        <script src="wkhome/js/visuals/cloudTag.js"></script>
-        <script src="wkhome/js/visuals/cloudGroup.js"></script>
-        <script src="wkhome/js/visuals/cloudCluster.js"></script>
-        <script src="wkhome/js/visuals/keywClusters.js"></script>
-        <script src="wkhome/js/visuals/clustersKeywCloud.js"></script>
-        <!--<script src="js/visuals/chart.js"></script>-->
+        <script src="wkhome/js/visuals/keywordsCloud.js"></script>
+        <script src="wkhome/js/visuals/groupbyCloud.js"></script>
+        <script src="wkhome/js/visuals/clusterGroupByCloud.js"></script>
+        <script src="wkhome/js/visuals/clusterKeywordsCloud.js"></script>
+        <script src="wkhome/js/visuals/clustersCloud.js"></script>
         <script src="wkhome/js/visuals/genericCloud.js"></script>
-        <script src="wkhome/js/visuals/maps-view.js"></script>
-        <script src="wkhome/js/visuals/colorCluster.js"></script>
+        <script src="wkhome/js/visuals/map.js"></script>
+
 
         <script type="text/javascript">
             <!--
@@ -84,93 +118,94 @@
 
     </head>
     <body>
-        <div ng-view class="container-fluid">
+        <div  ng-view class="container-fluid">
 
         </div>
 
+ 
         <!-- <div class="view-container"> -->
         <nav class="navbar navbar-inverse navbar-fixed-top" style="opacity:1; margin-bottom:0; border:0; z-index: 0;">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a ng-controller="translate" ng-click="refreshLang()" class="navbar-brand" style="padding-top: 1px;" href="#/{{lang}}/"><img style="height: 50px" src='wkhome/images/logo_wk.png'  alt="Research Together :  Investiguemos Juntos"></a>
-                </div>
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav" ng-controller="translate">
-                        <li><a ng-click="refreshLang()" href="#/{{lang}}/">{{'home' | translate}}<span class="sr-only">(current)</span></a></li>
-                        <li><a ng-click="refreshLang()" href="#/{{lang}}/info/about">{{'about' | translate}}</a></li>
-                        <li><a ng-click="refreshLang()" href="#/{{lang}}/info/help">{{'help' | translate}}</a></li>
-                        <li><a ng-click="refreshLang()" href="#/{{lang}}/info/contact">{{'contact' | translate}}</a></li>
-                        <!--     <li><a href="geo-views/sources.html">Map</a></li> -->
+           
 
-
-                        <!-- <li><img src="images/cedia-logo.png"></li> -->
-                        <!--
-                        <li class="dropdown">
-                          <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-                          <ul class="dropdown-menu">
-                            <li><a href="#/">Action</a></li>
-                            <li><a href="#/">Another action</a></li>
-                            <li><a href="#/">Something else here</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="#/">Separated link</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="#/">One more separated link</a></li>
-                          </ul>
-                        </li>
-                        -->
-                    </ul>
-
-                    <ul class="nav navbar-nav navbar-right" style="padding-right:0px">
-                        <li ng-controller="translate"> 
-                            <a style="padding-top: 10px;" ng-click="setLanguage('es')" >
-                                <img style="height: 15px" src='wkhome/images/es-icon.gif'>
-                            </a>
-                        </li>
-                        <li ng-controller="translate">
-                            <a style="padding-top: 10px;" ng-click="setLanguage('en')" ng-controller="translate">
-                                <img style="height:15px" src='wkhome/images/en-icon.gif'>
-                            </a>
-                        </li>
-
-
-                     
-
-
-                        <form class="navbar-form navbar-left" role="search" ng-submit="submit()" ng-controller="SearchController">
-                            <div class="form-group">
-                                <input name="searchText" ng-model="searchText" type="text" class="form-control input-md" placeholder="{{'Search'| translate}}...">
-                            </div>
-                        </form>
-                    </ul>
-                </div><!-- /.navbar-collapse -->
-                <!--
-                <div class="col-md-12">
-                  
-                  <div class="header">
-                    <h1>
-                        <div>Watiqai Khuska - Ecuadorian Semantic Repository</div>
-                        
-                    </h1>
-        
-                  </div>
-                  
-        
-                </div>
-              </div>
-                -->
-
+            <!-- MENU DESPLEGABLE -->
+            <div id="headerdesplegable">
+                <!--<nav> <!-- Aqui estamos iniciando la nueva etiqueta nav -->
+                <ul class="nav desplegable">
+                    <li><img style="height: 50px" src='wkhome/images/logo_wk.png'  alt="REDI"><img style="width: 17px" src='wkhome/images/icono_menu.png'  alt="REDI"> 
+                        <ul ng-controller="translate">
+                            <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/">{{'Home'| translate}}</a></li>
+                            <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/tags/cloud">{{'Keywords Cloud'| translate}}</a></li>
+                            <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/cloud/group-by">{{'Group By Keyword'| translate}}</a></li>
+                            <li><a class="opcion"  ng-click="refreshLang()" href="#/{{lang}}/geo-views/sources">{{'Map View'| translate}}</a></li>
+                            <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/cloud/clusters">{{'Clustering by Research Area'| translate}}</a></li>
+                            <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/cloud/keywords">{{'Clusters by Keyword'| translate}}</a></li>
+                            <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/data/statistics">{{'Statistics'| translate}}</a></li>
+                        </ul>
+                    </li>                     
+                </ul>
+                <!--</nav><!-- Aqui estamos cerrando la nueva etiqueta nav -->
             </div>
 
-        </nav>
-        <!--<div style="position: absolute;right: 5px;top: 15px;"><img src="images/Marmotta_Head.png"></div>-->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav" ng-controller="translate">
 
 
-        <!-- <div ng-view class="view-frame"></div> -->
-    </body>
+
+
+                    <li><a ng-click="refreshLang()" href="#/{{lang}}/">{{'home'| translate}}<span class="sr-only">(current)</span></a></li>
+                    <li><a ng-click="refreshLang()" href="#/{{lang}}/info/about">{{'about'| translate}}</a></li>
+                    <li><a ng-click="refreshLang()" href="#/{{lang}}/info/help">{{'help'| translate}}</a></li>
+                    <li><a ng-click="refreshLang()" href="#/{{lang}}/info/contact">{{'contact'| translate}}</a></li>
+                    <li><a ng-click="refreshLang()" href="#/{{lang}}/info/sources">{{'sources'| translate}}</a></li>
+                 
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right" style="padding-right:0px" ng-controller="translate">
+                    <li>
+                        <a style="padding-top: 10px;" ng-click="setLanguage('en')">
+                            <img style="height:15px" src='wkhome/images/en-icon.gif'>
+                        </a>
+                    </li>
+                    <li> 
+                        <a style="padding-top: 10px;" ng-click="setLanguage('es')" >
+                            <img style="height: 15px" src='wkhome/images/es-icon.gif'>
+                        </a>
+                    </li>
+                    
+
+
+
+
+
+                    <form class="navbar-form navbar-left" role="search" ng-submit="submit()" ng-controller="searchText" style="padding-right: 30px; ">
+                        <div class="form-group">
+                            <input  name="searchText" ng-model="searchText" type="text" class="form-control input-md" placeholder="{{'Search'| translate}}..">
+                        </div>
+                    </form>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+            <!--
+            <div class="col-md-12">
+              
+              <div class="header">
+                <h1>
+                    <div>Watiqai Khuska - Ecuadorian Semantic Repository</div>
+                    
+                </h1>
+    
+              </div>
+              
+    
+            </div>
+          </div>
+            -->
+
+        
+
+    </nav>
+    <!--<div style="position: absolute;right: 5px;top: 15px;"><img src="images/Marmotta_Head.png"></div>-->
+
+
+    <!-- <div ng-view class="view-frame"></div> -->
+</body>
 </html>

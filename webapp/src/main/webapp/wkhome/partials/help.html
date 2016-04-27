@@ -1,12 +1,14 @@
-<div ng-controller="translate">
+<div ng-controller="translate" style=" padding: 15%; padding-top: 5%">
     <br/>
     <br/>
     <br/>
     <h2 style='text-align: center;'>{{'help' | translate}}</h2>
     
-    <h3 style='text-align: left;'>Descripción de Watiqay Khuska</h3>
+    <a href="/wkhome/resources/Manual_Usuario_REDI.pdf" target="_blank">{{ 'Descargar Manual' | translate }}</a>
     <hr>
-    <p>Watiqay Khuska (Quechua: "Investiguemos juntos") es un sistema que permite identificar áreas comunes de investigación entre una lista de autores y publicaciones de las diferentes universidades del Ecuador. Para lograr este objetivo, se ha definido una serie de paquetes que permitan: </p> 
+    <h3 style='text-align: left;'>Descripción de REDI</h3>
+    <hr>
+    <p>REDI (Repositorio Ecuatoriano De Investigadores) es un sistema que permite identificar áreas comunes de investigación entre una lista de autores y publicaciones de las diferentes universidades del Ecuador. Para lograr este objetivo, se ha definido una serie de paquetes que permitan: </p> 
     <ol>
         <li>La extracción de los autores por la invocación automática de los servicios que utilizan el estándar OAI-PMH1</li>
         <li>La extracción de las publicaciones de los autores de diferentes fuentes de datos</li>
@@ -14,7 +16,7 @@
         <li>La aplicación de técnicas de minería de datos (clustering) para detectar áreas comunes a través de las palabras clave, título y resumen presentes en las publicaciones.</li>
     </ol> 
     <p>En este sistema combinamos las ideas de varias iniciativas, y proponemos un nuevo sistema centrado en la identificación de áreas de investigación comunes.</p>
-    <img src="wkhome/images/wkhuska.png" height="200" width="600">
+    <img src="wkhome/images/logo_wk.png" height="80" width="280">
     
     <br/>
     <br/>
@@ -26,7 +28,7 @@
     
     <h3 style='text-align: left;'>Funcionalidad</h3>
     <br/>
-    <p>Entre las funcionalidades que Watiqay Khuska ofrece tenemos: </p> 
+    <p>Entre las funcionalidades que REDI ofrece se encuentran: </p> 
     <ol>
         <li>Búsqueda de autores</li>
         <li>Navegación a través de las publicaciones del autor</li>
@@ -37,5 +39,5 @@
     <hr>
     <br/>
     <br/>
-    
+   <div class='col-md-12' ng-include="'/wkhome/partials/footnote.html'"/> 
 </div>

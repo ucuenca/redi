@@ -61,9 +61,9 @@ height: 100%
 }
 
 .presentation > div {
-    height: 50vh;
+    height: 70vh;
     /*padding: 0;*/
-    background-image: url('../images/fondo2.jpg'); //grey_book2.png*/
+    background-image: url('../images/background.png'); //grey_book2.png*/
     background-color: white;
     /*opacity: 1;*/
 }
@@ -101,18 +101,6 @@ table { empty-cells: show; }
     background-color: khaki;
 }
 
-.a > link {
-    color: #2a3439;
-}
-
-a:link, a:visited {
-    color: #2a3439;
-    text-decoration: none;
-}
-
-a:hover {
-    color: white;
-}
 
 .stats > div {
     height: 60vh;
