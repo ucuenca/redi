@@ -37,6 +37,12 @@
                 var configurator = new Configurator(options);
                 $('#endpointsManager').endpointsManager({host: _SERVER_URL});
             });
+
+            var host = _SERVER_URL;
+            function runutpl()
+            {
+                runGetAuthorsFromUTPL(host);
+            }
         </script>
 
         <!--###END_HEAD###-->
@@ -75,6 +81,7 @@
                             <tr>
                                 <td>GRAPH URI:</td>
                                 <td><input  id="txtgraphuri"  width="200" size="50" type="text" value="http://190.15.141.66:8899/ucuenca/"/></td>
+                            </tr>
                             <tr>
                                 <td>FULL NAME:</td>
                                 <td><input  id="txtfullname"  width="200" size="50" type="text" value="UNIVERSIDAD DE CUENCA"/></td>
@@ -107,6 +114,36 @@
 
                 <div id="endpointsManager">
                 </div>
+
+
+                <div>
+                    <h2>UTPL Sparql Endpoint</h2>
+                    <p>
+                        In this section, the SPARQL endpoint, provided by the UTPL is configured. 
+                        In this unique sparql endpoint is information from several universities. 
+                        The goal of this service is to separate information by universities in 
+                        different graphs, and then use them as different endpoints by the authors module.
+                    </p>
+                    <form> 
+                        <table>
+                            <tr>
+                                <td>ENDPOINT URL:</td>
+                                <td><input  id="txtendpointutpl" width="200" size="50" type="text" value="http://data.utpl.edu.ec/serendipity/oar/sparql"/></td>
+                            </tr>
+                            <tr>
+                                <td>GRAPH URI:</td>
+                                <td><input  id="txtgraphuriutpl"  width="200" size="50" type="text" value="http://data.utpl.edu.ec/serendipity/oar"/></td>
+                            </tr>
+
+                        </table>
+                        <button type="button"  onclick="runutpl()"  value="Activar Función">Get Authors</button>
+                        <div id="imgloading" style="visibility: hidden">
+                            <img src="img/ajax-loader-big.gif" alt="Loading Authors" height="120" width="120">
+                            <p> Please wait until the reply message</p>
+                        </div>
+                    </form>
+                </div>
+
                 <!--###END_CONTENT###-->
             </div>
         </div>
