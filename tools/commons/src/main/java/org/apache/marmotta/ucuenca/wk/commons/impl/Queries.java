@@ -291,7 +291,7 @@ public class Queries implements QueriesService {
         return "SELECT DISTINCT ?authorResource ?publicationProperty  ?publicationResource "
                 + " WHERE {  ?authorResource " + OWLSAMEAS + " ?authorOtherResource. "
                 + " ?authorOtherResource " + con.dblp("authorOf") + " ?publicationResource. "
-                + " ?authorOtherResource ?publicationPropertauthorOfy ?publicationResource. }";
+                + " ?authorOtherResource ?publicationProperty ?publicationResource. }";
     }
 
     @Override
