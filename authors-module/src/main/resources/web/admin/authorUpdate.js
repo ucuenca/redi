@@ -28,7 +28,7 @@ function runUpdateAuthor(options) {
     var graphuri = "http://example/data";
     var settings = {
         host: options
-    }
+    };
     var dataT = {
         "Endpoint": endpoint,
         "GraphUri": graphuri

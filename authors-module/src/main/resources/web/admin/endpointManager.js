@@ -109,7 +109,7 @@
             });
         }
         function activateProgram(b, active) {
-            var url = settings.host + "authors-module/endpoint/updatestatus?id=" + b.attr('data-id')+"&oldstatus="+b.attr('data-oldstatus')+"&newstatus="+b.attr('data-newstatus');
+            var url = settings.host + "authors-module/endpoint/updatestatus?id=" + b.attr('data-id') + "&oldstatus=" + b.attr('data-oldstatus') + "&newstatus=" + b.attr('data-newstatus');
             $.ajax({
                 type: "POST",
                 url: url,
@@ -452,3 +452,39 @@
         });
     };
 })(jQuery);
+
+
+
+function runGetAuthorsFromUTPL(host) {
+
+    document.getElementById("imgloading").style.visibility = "visible";
+
+    var endpoint = document.getElementById('txtendpointutpl').value;
+    var graphuri = document.getElementById('txtgraphuriutpl').value;
+
+    var settings = {
+        host: host
+    };
+
+
+    $.ajax({
+        type: "POST",
+        dataType: "text", //result data type
+        contentType: "application/json", // send data type
+        url: settings.host + "authors-module/split?endpointuri="+endpoint+"&graphuri="+graphuri+"",
+        //    url:  "http://localhost:8079/marmotta/authors-module/update",
+        success: function (Result) {
+            document.getElementById("imgloading").style.visibility = "hidden";
+            alert("Correcto: " + Result);
+        },
+        error: function (data) {
+            document.getElementById("imgloading").style.visibility = "hidden";
+            alert("Error" + data.responseText);
+        }
+    });
+
+
+}
+
+
+
