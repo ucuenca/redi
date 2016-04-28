@@ -61,9 +61,9 @@ height: 100%
 }
 
 .presentation > div {
-    height: 50vh;
+    height: 70vh;
     /*padding: 0;*/
-    background-image: url('../images/fondo2.jpg'); //grey_book2.png*/
+    background-image: url('../images/background.png'); //grey_book2.png*/
     background-color: white;
     /*opacity: 1;*/
 }
