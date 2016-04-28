@@ -31,6 +31,11 @@ public class Constant implements ConstantService {
     public String getWkhuskaGraph() {
         return "http://ucuenca.edu.ec/wkhuska";
     }
+    
+    @Override
+    public String getClusterGraph() {
+        return "http://ucuenca.edu.ec/wkhuska/clusters";
+    }
 
     @Override
     public String getDBLPGraph() {

@@ -110,47 +110,13 @@
             </div>
             <h3 style="padding: 3%">{{'Export pub'| translate }}</h3>
 
-            <div ng-controller="exportController" style="padding: 0px;">
-                <button ng-click="exportData('xls', author)">Excel Info Author</button>
-                <button ng-click="exportData('pdf', author)">Pdf Info Author</button>
+        <div ng-controller="exportController" style="padding: 0px;">
+            <button ng-click="exportData('xls', 'ReportAuthor', authorId)">Excel Info Author</button>
+            <button ng-click="exportData('pdf', 'ReportAuthor', authorId)">Pdf Info Author</button>
 
-                <br />
-                <div id="exportable" ng-hide="true">
-                    <table width="100%" border='1'>
-                        <tbody>
-                            <tr>
-                                <td>Autor:</td>
-                                <td>{{author[0]["foaf:name"]}}</td>
-                            </tr>
-                            <tr>
-                                <td>Numero de Publicaciones:</td>
-                                <td>{{numeroPub(author[0]["foaf:publications"])}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <p>Lista de Publicaciones:</p>
-                    <table width="100%" border='1'>    
-                        <thead>
-                            <tr>
-                                <th>Numero</th>
-                                <th>Titulo</th>
-                                <th>Abstract</th>
-                                <th>Autores</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="item in author.slice(1)">
-                                <td>{{$index + 1}}</td>
-                                <td>{{item["dct:title"]}}</td>
-                                <td>{{item["bibo:abstract"]}}</td>
-                                <td>{{item["uc:contributor"]}}</td>
-                            </tr>
-                        </tbody>
-
-
-                    </table>
-                </div>
-            </div>
+            <br />
+            
         </div>
+    </div>
     </div>
 </div>

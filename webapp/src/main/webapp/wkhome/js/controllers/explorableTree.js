@@ -7,6 +7,7 @@ wkhomeControllers.controller('exploreAuthor', ['$routeParams', '$scope', '$rootS
 
 
         $scope.author = '';
+        $scope.authorId = '';
         $rootScope.$on("CallParentMethod", function (author) {
             $scope.clickonRelatedauthor(author);
         });
@@ -74,6 +75,7 @@ wkhomeControllers.controller('exploreAuthor', ['$routeParams', '$scope', '$rootS
                 jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                     $scope.$apply(function () {
                         $scope.author = compacted["@graph"];
+                        $scope.authorId = compacted["@graph"][0]['@id'];
                     });
                 });
             });
