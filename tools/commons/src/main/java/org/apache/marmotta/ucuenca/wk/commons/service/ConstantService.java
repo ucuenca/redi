@@ -25,7 +25,10 @@ public interface ConstantService {
             + " PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
             + " PREFIX owl: <http://www.w3.org/2002/07/owl#> "
             + " PREFIX dct: <http://purl.org/dc/terms/> "
-            + " PREFIX mm: <http://marmotta.apache.org/vocabulary/sparql-functions#> ";
+            + " PREFIX mm: <http://marmotta.apache.org/vocabulary/sparql-functions#> "
+            + " PREFIX uc: <http://ucuenca.edu.ec/ontology#> "
+            + " PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
+            + " PREFIX bibo: <http://purl.org/ontology/bibo/> ";
 
     String getPubProperty();
 
@@ -56,5 +59,7 @@ public interface ConstantService {
     String getMAGraph();
 
     String getGSGraph();
+    
+    String getClusterGraph();
 
 }

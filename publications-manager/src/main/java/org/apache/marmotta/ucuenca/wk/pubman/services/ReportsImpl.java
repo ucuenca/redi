@@ -86,6 +86,7 @@ public class ReportsImpl implements ReportsService {
 
     protected static final String TEMP_PATH = "./../research_webapps/ROOT/tmp";
     protected static final String REPORTS_FOLDER = "./../research_webapps/ROOT/reports/";
+    protected Constant constant = new Constant();
 
     @Override
     public String createReport(String hostname, String name, String type, List<String> params) {
@@ -107,13 +108,23 @@ public class ReportsImpl implements ReportsService {
             JsonDataSource dataSource = null;
             // Parameters for report
             Map<String, Object> parameters = new HashMap<String, Object>();
+            InputStream stream;
 
             //Parameters for each report
             switch (name) {
                 case "ReportAuthor":
                     // Get the Json with the list of publications, the name of the researcher and the number of publications.
                     json = getJSONAuthor(params.get(0), hostname);
-                    InputStream stream = new ByteArrayInputStream(json[0].getBytes("UTF-8"));
+                    stream = new ByteArrayInputStream(json[0].getBytes("UTF-8"));
+                    dataSource = new JsonDataSource(stream);
+
+                    parameters.put("name", json[1]);
+                    parameters.put("numero", json[2]);
+                    break;
+                case "ReportAuthorCluster":
+                    // Get the Json with the list of publications, the name of the researcher and the number of publications.
+                    json = getJSONAuthorsCluster(params.get(0), hostname);
+                    stream = new ByteArrayInputStream(json[0].getBytes("UTF-8"));
                     dataSource = new JsonDataSource(stream);
 
                     parameters.put("name", json[1]);
@@ -153,7 +164,13 @@ public class ReportsImpl implements ReportsService {
 
         return "";
     }
-
+    
+    /**
+     * Extract Json with publications of an author
+     * @param author Author id
+     * @param hostname
+     * @return 
+     */
     public String[] getJSONAuthor(String author, String hostname) {
         String getQuery = "";
         try {
@@ -161,12 +178,7 @@ public class ReportsImpl implements ReportsService {
             String name = "";
             Integer cont = 0;
             //Query
-            getQuery = " PREFIX bibo: <http://purl.org/ontology/bibo/>"
-                    + " PREFIX foaf: <http://xmlns.com/foaf/0.1/>  "
-                    + " PREFIX dct: <http://purl.org/dc/terms/> "
-                    + " PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
-                    + " PREFIX uc: <http://ucuenca.edu.ec/ontology#>  "
-                    + " PREFIX mm: <http://marmotta.apache.org/vocabulary/sparql-functions#> "
+            getQuery = Constant.PREFIX
                     + " SELECT DISTINCT ?name ?title ?abstract ?authorsName WHERE { "
                     + "  <" + author + "> foaf:name ?name. "
                     + "  <" + author + "> foaf:publications  ?publications. "
@@ -194,11 +206,11 @@ public class ReportsImpl implements ReportsService {
                     BindingSet binding = resulta.next();
                     name = String.valueOf(binding.getValue("name")).replace("\"", "").replace("^^", "").split("<")[0];
                     //authorJson.put("name", name);
-                    cont++;
                     String pubTitle = String.valueOf(binding.getValue("title")).replace("\"", "").replace("^^", "").split("<")[0];
                     if (!pubMap.containsKey(pubTitle)) {
                         pubMap.put(pubTitle, new JSONObject());
                         pubMap.get(pubTitle).put("title", pubTitle);
+                        cont++;
                         if (binding.getValue("abstract") != null) {
                             pubMap.get(pubTitle).put("abstract", String.valueOf(binding.getValue("abstract")).replace("\"", ""));
                         }
@@ -231,5 +243,95 @@ public class ReportsImpl implements ReportsService {
         }
         return new String[]{"", ""};
     }
+    
+    /**
+     * Extract Json with authors related through a cluster
+     * @param clusterId Id of the cluster
+     * @param hostname Hostname
+     * @return Array of strings
+     */
+    public String[] getJSONAuthorsCluster(String clusterId, String hostname) {
+        String getQuery = "";
+        try {
+            //Variables to return with name and number of publications
+            String name = "";
+            Integer cont = 0;
+            //Query
+            getQuery = Constant.PREFIX
+                    + " SELECT DISTINCT ?cluster ?author ?keywords "
+                    + "WHERE "
+                    + "{ "
+                    + "  graph <" + constant.getClusterGraph() + "> "
+                    + "  { "
+                    + "    <" + clusterId + "> uc:hasPerson ?subject. "
+                    + "    <" + clusterId + "> rdfs:label ?cluster. "
+                    + "    { "
+                    + "    	select DISTINCT ?subject ?author ?keywords "
+                    + "        where "
+                    + "        { "
+                    + "        	graph <" + constant.getWkhuskaGraph() + "> "
+                    + "            { "
+                    + "                 ?subject foaf:name ?author. "
+                    + "                 ?subject foaf:publications ?publicationUri. "
+                    + "                 ?publicationUri dct:title ?title. "
+                    + "                 ?publicationUri bibo:Quote ?keywords. "
+                    + "             } "
+                    + "        } group by ?subject ?author ?keywords "
+                    + "    }"
+                    + "  }" 
+                    + "}";
 
+            
+            Repository repo = new SPARQLRepository(hostname + "/sparql/select");
+            repo.initialize();
+            RepositoryConnection con = repo.getConnection();
+            try {
+                // perform operations on the connection
+                TupleQueryResult resulta = con.prepareTupleQuery(QueryLanguage.SPARQL, getQuery).evaluate();
+
+                //JSONObject authorJson = new JSONObject();
+                Map<String, JSONObject> autMap = new HashMap<String, JSONObject>();
+                Map<String, JSONArray> keyMap = new HashMap<String, JSONArray>();
+                JSONArray authors = new JSONArray();
+
+                JSONObject coauthors = new JSONObject();
+                while (resulta.hasNext()) {
+                    BindingSet binding = resulta.next();
+                    name = String.valueOf(binding.getValue("cluster")).replace("\"", "").replace("^^", "").split("<")[0];
+                    String authorName = String.valueOf(binding.getValue("author")).replace("\"", "").replace("^^", "").split("<")[0];
+                    if (!autMap.containsKey(authorName)) {
+                        autMap.put(authorName, new JSONObject());
+                        autMap.get(authorName).put("author", authorName);
+                        if (binding.getValue("keywords") != null) {
+                            autMap.get(authorName).put("keywords", String.valueOf(binding.getValue("keywords")).replace("\"", ""));
+                        }
+                        //Keywords
+                        keyMap.put(authorName, new JSONArray());
+                        keyMap.get(authorName).add(String.valueOf(binding.getValue("keywords")).replace("\"", "").replace("^^", ""));
+                    } else {
+                        keyMap.get(authorName).add(String.valueOf(binding.getValue("keywords")).replace("\"", "").replace("^^", ""));
+                    }
+                }
+
+                for (Map.Entry<String, JSONObject> aut: autMap.entrySet()) {
+                    aut.getValue().put("keywords", keyMap.get(aut.getKey()));
+                    authors.add(aut.getValue());
+                }
+                con.close();
+                //Number of authors
+                cont = autMap.size();
+                return new String[]{authors.toString(), name, cont.toString()};
+            } catch (RepositoryException ex) {
+                java.util.logging.Logger.getLogger(ReportsImpl.class.getName()).log(Level.SEVERE, null, ex);
+                con.close();
+            }
+
+            return new String[]{"", ""};
+        } catch (MalformedQueryException | QueryEvaluationException | RepositoryException ex) {
+            java.util.logging.Logger.getLogger(ReportsImpl.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
+        }
+        return new String[]{"", ""};
+    }
+    
 }
