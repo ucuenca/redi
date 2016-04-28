@@ -78,9 +78,9 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
         textValue = function (d) {
             return d.label;
         };
-        collisionPadding = 2;
+        collisionPadding = 10;
         minCollisionRadius = 3;
-        jitter = 0.08;
+        jitter = 0.01;
         transformData = function (rawData) {
             rawData.forEach(function (d) {
                 d.value = parseInt(d.value);

@@ -30,6 +30,8 @@ public interface ConstantService {
             + " PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
             + " PREFIX bibo: <http://purl.org/ontology/bibo/> ";
 
+    String getPrefixes();
+    
     String getPubProperty();
 
     String getTittleProperty();

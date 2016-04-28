@@ -19,7 +19,7 @@ wkhomeApp.service('searchData', function () {
     this.authorSearch = null;
     this.areaSearch = null;
     this.genericData = null;
-    this.researchArea = "SEMANTICWEB";
+    this.researchArea = "SALUD";
     this.globalauthor = null;
     
 });
@@ -76,8 +76,8 @@ wkhomeApp.config(['$routeProvider',
                 when('/:lang/w/clusters?:text', {
                     templateUrl: '/wkhome/partials/clustersCloud.html',
                 }).
-                when('/:lang/a/a', {
-                    templateUrl: '/wkhome/partials/d3.html',
+                when('/:lang/data/statistics', {
+                    templateUrl: '/wkhome/partials/statistics.html',
                 }).
                 when('/:lang/b/', {
                     templateUrl: '/wkhome/partials/geoplain.html',
@@ -109,6 +109,9 @@ wkhomeApp.config(['$routeProvider',
                 }).
                 when('/:lang/info/contact', {
                     templateUrl: '/wkhome/partials/contact.html'
+                }).
+                when('/:lang/info/sources', {
+                    templateUrl: '/wkhome/partials/sources.html'
                 }).
 //                .
                 /*when('/phones/:phoneId', {

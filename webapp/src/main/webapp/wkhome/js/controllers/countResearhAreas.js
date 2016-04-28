@@ -17,7 +17,7 @@ wkhomeControllers.controller('countResearchAreas', ['$routeParams','$scope', 'gl
                 + '     SELECT  ?keyword (IRI(REPLACE(?keyword, " ", "_", "i")) as ?uriArea) ?total '
                 + '     WHERE { '
                 + '         { '
-                + '             SELECT DISTINCT ?keyword (COUNT(?publications) AS ?total) '
+                + '             SELECT DISTINCT ?keyword (COUNT(DISTINCT ?s) AS ?total) '
                 + '             WHERE { '
                 + '                 GRAPH <' + globalData.centralGraph + '> { '
                 + '                     ?s foaf:publications ?publications. '
@@ -25,10 +25,10 @@ wkhomeControllers.controller('countResearchAreas', ['$routeParams','$scope', 'gl
                 + '                 } '
                 + '              } '
                 + '              GROUP BY ?keyword '
-                + '              HAVING (?total < 200 )'
                 + '              ORDER BY DESC(?total) '
-                + '              LIMIT 15 '
+                + '              LIMIT 24 '
                 + '         } '
+                + '         FILTER(!REGEX(?keyword,"TESIS")) '
                 + '     }'
                 + ' }';
         sparqlQuery.querySrv({query: queryTotalAreas}, function (rdf) {
@@ -37,10 +37,12 @@ wkhomeControllers.controller('countResearchAreas', ['$routeParams','$scope', 'gl
                 var endpoints = compacted['@graph'];
                 var data = []
                 endpoints.forEach(function (endpoint) {
-                    data.push({label: endpoint['uc:name'], value: endpoint['uc:total']['@value']});
+                    var label = endpoint['uc:name'];
+                    var value = endpoint['uc:total'].length > 1 ? endpoint['uc:total'][0]['@value'] : endpoint['uc:total']['@value'];
+                    data.push({label: label, value: value});
                 });
                 $scope.$apply(function () {
-                    $scope.data = {'entityName': 'Articles', 'data': data};
+                    $scope.data = {'entityName': 'Researchers', 'data': data};
                 });
             });
         });

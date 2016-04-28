@@ -100,8 +100,19 @@ wkhomeControllers.controller('exploreAuthor', ['$routeParams', '$scope', '$rootS
                             //var keys = Object.keys(author);
                             model["id"] = author["@id"];
                             model["name"] = author["foaf:name"];
+                            model["keyword"] = "";
+
+                            author["dct:subject"] instanceof Array ?
+                                    _.map(author["dct:subject"], function (eachsubject, idx) {
+                                        if (idx < 5) {
+                                            model["keyword"] = model["keyword"] + eachsubject + ", ";
+                                        }
+
+                                    }) : model["keyword"] = author["dct:subject"];
                             return model;
                         });
+
+
                         $scope.candidates = candidates;
 
                         /*if (searchData.authorSearch["@graph"].length === 1)
