@@ -27,7 +27,6 @@ public class Queries implements QueriesService {
 
     private final static String ENDPOINTPREFIX = "http://ucuenca.edu.ec/wkhuska/endpoint/";
 
-    private final static String CENTRALGRAPHPREFIX = "http://ucuenca.edu.ec/resource/";
 
     @Override
     public String getAuthorsQuery(String datagraph) {
@@ -107,9 +106,9 @@ public class Queries implements QueriesService {
         String type = arg[4];
         boolean condition = "url".equals(parameter) || "graph".equals(parameter);
         if (condition) {
-            return INSERTDATA + getGraphString(endpointsGraph) + "{<" + ENDPOINTPREFIX + resourceHash + ">  <" + CENTRALGRAPHPREFIX + parameter + ">  <" + newValue + "> }}";
+            return INSERTDATA + getGraphString(endpointsGraph) + "{<" + ENDPOINTPREFIX + resourceHash + ">  "+ con.uc(parameter)+"  <" + newValue + "> }}";
         } else {
-            return INSERTDATA + getGraphString(endpointsGraph) + "{<" + ENDPOINTPREFIX + resourceHash + ">  <" + CENTRALGRAPHPREFIX + parameter + ">  '" + newValue + "'^^xsd:" + type + " }} ";
+            return INSERTDATA + getGraphString(endpointsGraph) + "{<" + ENDPOINTPREFIX + resourceHash + ">  "+ con.uc(parameter)+"   '" + newValue + "'^^xsd:" + type + " }} ";
         }
     }
 
@@ -292,7 +291,7 @@ public class Queries implements QueriesService {
         return "SELECT DISTINCT ?authorResource ?publicationProperty  ?publicationResource "
                 + " WHERE {  ?authorResource " + OWLSAMEAS + " ?authorOtherResource. "
                 + " ?authorOtherResource " + con.dblp("authorOf") + " ?publicationResource. "
-                + " ?authorOtherResource ?publicationProperty ?publicationResource. }";
+                + " ?authorOtherResource ?publicationPropertauthorOfy ?publicationResource. }";
     }
 
     @Override
