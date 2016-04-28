@@ -79,7 +79,7 @@ public class Constant implements ConstantService {
 
     @Override
     public String uc(String pred) {
-        return "<http://ucuenca.edu.ec/resource/" + pred + ">";
+        return "<http://ucuenca.edu.ec/ontology#" + pred + ">";
     }
 
     @Override

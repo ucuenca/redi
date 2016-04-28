@@ -19,7 +19,7 @@ public interface ConstantService {
 
     String ENDPOINTPREFIX = "http://ucuenca.edu.ec/wkhuska/endpoint/";
 
-    String CENTRALGRAPHPREFIX = "http://ucuenca.edu.ec/resource/";
+    String UCPREFIX = "http://ucuenca.edu.ec/ontology#";
 
     String PREFIX = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
             + " PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
