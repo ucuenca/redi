@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.servlet.ServletContext;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -169,9 +170,12 @@ public class PubWebService {
     @POST
     @Path(GET_REPORT)
     public Response createReport(@FormParam("hostname") String host, @FormParam("report") String report, @FormParam("type") String type, @FormParam("param1") List<String> param1, @Context HttpServletRequest request) {
+        ServletContext context = request.getServletContext();
+        String realContextPath = context.getRealPath(request.getContextPath());
+        
         String params = report;
         log.debug("Report Task");
-        String result = commonService.createReport(host, report, type, param1);
+        String result = commonService.createReport(host, realContextPath, report, type, param1);
         return Response.ok().entity(result).build();
     }
 }

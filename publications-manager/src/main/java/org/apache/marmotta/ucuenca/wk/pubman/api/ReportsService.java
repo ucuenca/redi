@@ -16,6 +16,6 @@ import java.util.List;
  */
 public interface ReportsService {
     
-     String createReport(String hostname, String name, String type, List<String> params); 
+     String createReport(String hostname, String realPath, String name, String type, List<String> params); 
     
 }

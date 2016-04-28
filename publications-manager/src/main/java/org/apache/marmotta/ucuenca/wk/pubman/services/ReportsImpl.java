@@ -84,13 +84,15 @@ public class ReportsImpl implements ReportsService {
     @Inject
     private SparqlService sparqlService;
 
-    protected static final String TEMP_PATH = "./../research_webapps/ROOT/tmp";
-    protected static final String REPORTS_FOLDER = "./../research_webapps/ROOT/reports/";
+    protected String TEMP_PATH = "./../research_webapps/ROOT/tmp";
+    protected String REPORTS_FOLDER = "./../research_webapps/ROOT/reports/";
     protected Constant constant = new Constant();
 
     @Override
-    public String createReport(String hostname, String name, String type, List<String> params) {
-
+    public String createReport(String hostname, String realPath, String name, String type, List<String> params) {
+        
+        TEMP_PATH = realPath + "/tmp";
+        REPORTS_FOLDER = realPath + "/reports/";
         // Make sure the output directory exists.
         File outDir = new File(TEMP_PATH);
         outDir.mkdirs();

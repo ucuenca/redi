@@ -102,7 +102,7 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public String createReport(String hostname, String name, String type, List<String> params) {
-        return reportService.createReport(hostname, name, type, params);
+    public String createReport(String hostname, String realPath, String name, String type, List<String> params) {
+        return reportService.createReport(hostname, realPath, name, type, params);
     }
 }
