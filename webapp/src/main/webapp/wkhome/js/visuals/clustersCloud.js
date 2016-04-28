@@ -431,7 +431,7 @@ clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery
                                 if (keyword["rdfs:label"])
                                 {
                                     var id = keyword["@id"];
-                                    var field1 = fields[1].replace("uc:", "http://ucuenca.edu.ec/resource/");
+                                    var field1 = fields[1].replace("uc:", "http://ucuenca.edu.ec/ontology#");
                                     var val = "";
                                     if (keyword[fields[1]] || keyword[field1]) {
                                         val = keyword[fields[1]] ? keyword[fields[1]]["@value"] : keyword[field1]["@value"];
