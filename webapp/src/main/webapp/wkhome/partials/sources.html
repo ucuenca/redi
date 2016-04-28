@@ -1,0 +1,109 @@
+<div class="col-md-12" ng-controller="translate" style="padding-top: 5%">
+    <div class="authorssources">
+        <h3 class="source text-success">{{'Authors Sources'| translate}}</h3>
+        <br/>
+        <p class="source">
+            Los datos de los autores provienen de la plataforma DSPACE de cada una de las Universidades
+            miembros de CEDIA. En un proceso previo, el grupo de repositorios con el proyecto "Aplicación 
+            de Linked Open Data a Repositorios CEDIA", realizó el trabajo de transformar la información
+            de DSPACE a formato RDF siguiendo las normas y principios de Linked Data. Uno de
+            los resultados de este proyecto fue la generacion de repositorios RDF de cada una de las
+            fuentes analizadas. En este proyecto, para extraer la información de autores, se accede a
+            los repositorios RDF antes mencionados a través del servicio SPARQL ENDPOINT de cada una de las fuentes.
+        </p>
+
+        <br/>
+        <table class="source authors">
+            <thead>
+                <tr>
+                    <th>IES</th>
+                    <th>NOMBRE</th>
+                    <th>URL</th>
+                    <th>DESCRIPCION</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr >
+                    <td><a target='blank' href="http://ucuenca.edu.ec/">UCuenca</a></td>
+                    <td>Universidad de Cuenca</td>
+                    <td><a target='blank' href="http://ucuenca.edu.ec/">http://ucuenca.edu.ec/</a></td>
+                </tr>
+                <tr>
+                    <td><a target='blank' href="http://www.utpl.edu.ec/">UTPL</a></td>
+                    <td>Universidad Técnica Particular de Loja</td>
+                    <td><a target='blank' href="http://www.utpl.edu.ec/">http://www.utpl.edu.ec/</a></td>
+                </tr>
+                <tr>
+                    <td><a target='blank' href="http://www.espe.edu.ec/">ESPE</a></td>
+                    <td>Escuela Superior Politecnica del Ejercito</td>
+                    <td><a target='blank' href="http://www.espe.edu.ec/">http://www.espe.edu.ec/</a></td>
+                </tr>
+                <tr>
+                    <td><a target='blank' href="http://www.uce.edu.ec/">UCE</a></td>
+                    <td>Universidad Central del Ecuador</td>
+                    <td><a target='blank' href="http://www.uce.edu.ec/">http://www.uce.edu.ec/</a></td>
+                </tr>
+                <tr>
+                    <td><a target='blank' href="http://www.puce.edu.ec">PUCE</a></td>
+                    <td>Pontificia Universidad Católica del Ecuador</td>
+                    <td><a target='blank' href="http://www.puce.edu.ec">http://www.puce.edu.ec</a></td>
+                </tr>
+                <tr>
+                    <td><a target='blank' href="http://www.pucesi.edu.ec/">PUCESI</a></td>
+                    <td>Pontificia Universidad Católica del Ecuador Sede Ibarra</td>
+                    <td><a target='blank' href="http://www.pucesi.edu.ec/">http://www.pucesi.edu.ec/</a></td>
+                </tr>
+                <tr>
+                    <td><a target='blank' href="http://uide.edu.ec">UIDE</a></td>
+                    <td>Universidad Internacional Del Ecuador</td>    
+                    <td><a target='blank' href="http://uide.edu.ec">http://uide.edu.ec</a></td>
+                </tr>
+
+                <tr>
+                    <td><a target='blank' href="http://www.unemi.edu.ec">UNEMI</a></td>
+                    <td>Universidad Estatal de Milagro</td>
+                    <td><a target='blank' href="http://www.unemi.edu.ec">http://www.unemi.edu.ec</a></td>
+                </tr>
+                <tr>
+                    <td><a target='blank' href="http://www.espoch.edu.ec/">ESPOCH</a></td>
+                    <td>Escuela Superior Politécnica de Chimborazo</td>
+                    <td><a target='blank' href="http://www.espoch.edu.ec/">http://www.espoch.edu.ec/</a></td>
+                </tr>
+                <tr>
+                    <td><a target='blank' href="http://www.espol.edu.ec/">ESPOL</a></td>
+                    <td>Escuela Superior Politécnica del Litoral</td>
+                    <td><a target='blank' href="http://www.espol.edu.ec/">http://www.espol.edu.ec/</a></td>
+                </tr>
+
+
+            </tbody>
+        </table>
+
+
+
+    </div>
+
+    <hr>
+
+    <div class="publicationssources"> 
+        <h3 class="source text-success" >{{'Publications Data Source'| translate}}</h3>
+
+
+        <br/>
+        <p class="source">
+            La información de las publicaciones de los autores se extrae desde diferentes fuentes
+            de datos. Una fuente de datos de publicaciones es una interfaz que expone datos acerca de
+            artículos (incluyendo los autores, abstracts, keywords, citas, etc.) indexada en dicha fuente. 
+
+        </p>
+
+        <br/>
+        
+
+    </div>
+<hr>
+</div>
+
+<hr>
+
+<div class='col-md-12' ng-include="'/wkhome/partials/footnote.html'"/>

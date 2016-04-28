@@ -17,6 +17,7 @@ myApp.labels_en = {
 "help":"Help",
 "contact":"Contact",
 "Search":"Search",
+"sources": "Data Sources",
 
 //HELP PAGE
 "Descargar Manual": "Download User Manual for REDI",
@@ -29,20 +30,26 @@ myApp.labels_en = {
 "Map View": "Map View",
 "Clustering by Research Area": "Clustering by Research Area",
 "Clusters by Keyword": "Clusters by Keyword",
+"Statistics": "Statistics",
 
 // HOME VIEW
 "Areas de Investigacion":"Research Areas",
-"Total Autores":"Authors",
-"Total Publicaciones": "Publications",
+"Total Autores":"Authors by University",
+"Total Publicaciones": "Publications by University",
 "Search Author or Keyword":"Search",
-"Authors Sources":"Authors Sources",
-"Publications Data Source":"Publications Data Source",
 "Author Search":"Author Search",
 "Tag Cloud":"Tag Cloud",
 "Authors Group":"Authors by Research Area",
 "Ecuadorian Semantic Repository":"Ecuadorian Repository of Researchers",
 "Search related researchers":"Find related Researchers",
 "Location by Research Area":"Location by Research Area",
+"Search publications": "Find Authors and Publications",
+
+//EXPLORABLE TREE VIEW
+"Research Info": "Researcher Information",
+"Article Info": "Publication Information",
+"Try to Find": "Try to Find in",
+"Export pub": "Export Researcher Publications",
 
 //   GROUP BY  VIEW
 "Grouping Publications": "Grouping Authors",
@@ -78,5 +85,8 @@ myApp.labels_en = {
 //CLUSTERS BY KEYWORD
 "Total of Authors found" : "Total of Authors found",
 
+//SOURCE HTML
+"Authors Sources":"Authors Data Sources",
+"Publications Data Source":"Publications Data Sources",
 };
 }());

@@ -27,6 +27,8 @@ public interface ConstantService {
             + " PREFIX dct: <http://purl.org/dc/terms/> "
             + " PREFIX mm: <http://marmotta.apache.org/vocabulary/sparql-functions#> ";
 
+    String getPrefixes();
+    
     String getPubProperty();
 
     String getTittleProperty();

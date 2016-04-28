@@ -12,6 +12,7 @@
         <link rel="stylesheet" href="wkhome/css/visuals/general.css"> 
         <link rel="stylesheet" href="wkhome/css/visuals/home.css">
         <link rel="stylesheet" href="wkhome/css/visuals/pieChart.css">
+        <link rel="stylesheet" href="wkhome/css/visuals/barChart.css">
         <link rel="stylesheet" href="wkhome/css/visuals/explorableTree.css">
         <link rel="stylesheet" href="wkhome/css/visuals/keywordsCloud.css" >
         <link rel="stylesheet" href="wkhome/css/visuals/genericCloud.css" type="text/css" >
@@ -20,6 +21,7 @@
         <link rel="stylesheet" href="wkhome/css/visuals/chart.css">
         <link rel="stylesheet" href="wkhome/css/visuals/geoplain.css">
         <link rel="stylesheet" href="wkhome/css/visuals/map.css">
+        <link rel="stylesheet" href="wkhome/css/visuals/source.css">
         <link rel="stylesheet" href="wkhome/css/app.css">
 
         <script src="../bower_components/jquery/dist/jquery.js"></script>
@@ -71,6 +73,7 @@
         <script src="wkhome/js/controllers/clustersCloud.js"></script>
         <script src="wkhome/js/controllers/translate.js"></script>
         <script src="wkhome/js/controllers/pubInfo.js"></script>
+        <script src="wkhome/js/controllers/barChart.js"></script>
 
 
         <script src="wkhome/js/directives.js"></script>
@@ -88,6 +91,7 @@
 
 
         <script src="wkhome/js/visuals/pieChart.js"></script>
+        <script src="wkhome/js/visuals/barChart.js"></script>
         <script src="wkhome/js/visuals/explorableTree.js"></script>
         <script src="wkhome/js/visuals/keywordsCloud.js"></script>
         <script src="wkhome/js/visuals/groupbyCloud.js"></script>
@@ -127,7 +131,7 @@
             <div id="headerdesplegable">
                 <!--<nav> <!-- Aqui estamos iniciando la nueva etiqueta nav -->
                 <ul class="nav desplegable">
-                    <li><img style="height: 50px" src='wkhome/images/logo_wk.png'  alt="REDI"><img style="width: 20px" src='wkhome/images/icono_menu.png'  alt="REDI"> 
+                    <li><img style="height: 50px" src='wkhome/images/logo_wk.png'  alt="REDI"><img style="width: 17px" src='wkhome/images/icono_menu.png'  alt="REDI"> 
                         <ul ng-controller="translate">
                             <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/">{{'Home'| translate}}</a></li>
                             <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/tags/cloud">{{'Keywords Cloud'| translate}}</a></li>
@@ -135,6 +139,7 @@
                             <li><a class="opcion"  ng-click="refreshLang()" href="#/{{lang}}/geo-views/sources">{{'Map View'| translate}}</a></li>
                             <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/cloud/clusters">{{'Clustering by Research Area'| translate}}</a></li>
                             <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/cloud/keywords">{{'Clusters by Keyword'| translate}}</a></li>
+                            <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/data/statistics">{{'Statistics'| translate}}</a></li>
                         </ul>
                     </li>                     
                 </ul>
@@ -151,28 +156,30 @@
                     <li><a ng-click="refreshLang()" href="#/{{lang}}/info/about">{{'about'| translate}}</a></li>
                     <li><a ng-click="refreshLang()" href="#/{{lang}}/info/help">{{'help'| translate}}</a></li>
                     <li><a ng-click="refreshLang()" href="#/{{lang}}/info/contact">{{'contact'| translate}}</a></li>
+                    <li><a ng-click="refreshLang()" href="#/{{lang}}/info/sources">{{'sources'| translate}}</a></li>
                  
                 </ul>
 
-                <ul class="nav navbar-nav navbar-right" style="padding-right:0px">
-                    <li ng-controller="translate"> 
+                <ul class="nav navbar-nav navbar-right" style="padding-right:0px" ng-controller="translate">
+                    <li>
+                        <a style="padding-top: 10px;" ng-click="setLanguage('en')">
+                            <img style="height:15px" src='wkhome/images/en-icon.gif'>
+                        </a>
+                    </li>
+                    <li> 
                         <a style="padding-top: 10px;" ng-click="setLanguage('es')" >
                             <img style="height: 15px" src='wkhome/images/es-icon.gif'>
                         </a>
                     </li>
-                    <li ng-controller="translate">
-                        <a style="padding-top: 10px;" ng-click="setLanguage('en')" ng-controller="translate">
-                            <img style="height:15px" src='wkhome/images/en-icon.gif'>
-                        </a>
-                    </li>
+                    
 
 
 
 
 
-                    <form class="navbar-form navbar-left" role="search" ng-submit="submit()" ng-controller="searchText">
+                    <form class="navbar-form navbar-left" role="search" ng-submit="submit()" ng-controller="searchText" style="padding-right: 30px; ">
                         <div class="form-group">
-                            <input name="searchText" ng-model="searchText" type="text" class="form-control input-md" placeholder="{{'Search'| translate}}..">
+                            <input  name="searchText" ng-model="searchText" type="text" class="form-control input-md" placeholder="{{'Search'| translate}}..">
                         </div>
                     </form>
                 </ul>
@@ -193,7 +200,7 @@
           </div>
             -->
 
-        </div>
+        
 
     </nav>
     <!--<div style="position: absolute;right: 5px;top: 15px;"><img src="images/Marmotta_Head.png"></div>-->

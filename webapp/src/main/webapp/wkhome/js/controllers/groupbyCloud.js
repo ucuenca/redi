@@ -124,7 +124,7 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
             groupByResources($scope.dataaux, $scope.gbselectedItem);
         });
         $scope.$watch('selectedItem', function () {//Funcion para cuando se selecciona la Research Area
-            $scope.selectedItem = $scope.selectedItem ? $scope.selectedItem : "SEMANTICWEB";
+            $scope.selectedItem = $scope.selectedItem ? $scope.selectedItem : "SALUD";
          //   waitingDialog.show("Consultando Autores Relacionados con:  \"" + $scope.selectedItem + "\"");
             $scope.todos = [];
             $scope.filteredTodos = [];

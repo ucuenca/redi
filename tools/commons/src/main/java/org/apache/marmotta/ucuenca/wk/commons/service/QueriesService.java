@@ -15,6 +15,20 @@ public interface QueriesService {
 
     String getCountPersonQuery(String graph);
 
+    String getLimit(String limit);
+
+    String getOffset(String offset);
+
+    String getProvenanceProperty();
+
+    /**
+     * return query to obtain all subject ( keywords ) of an author , using
+     * dct:subject property
+     *
+     * @return
+     */
+    String getRetrieveKeysQuery();
+
     /**
      * return a query to obtain all resource related with Authors
      *
@@ -133,4 +147,22 @@ public interface QueriesService {
     String getAskResourcePropertieQuery(String graph, String resource, String propertie);
 
     String getAskProcessAlreadyAuthorProvider(String providerGraph, String authorResource);
+    
+    /**
+     * Get All Data sources from UTPL ENDPOINT
+     * @param graph
+     * @return 
+     */
+    String getSourcesfromUniqueEndpoit(String graph);
+    
+    /**
+     * Get All documents from UTPL ENDPOINT
+     * @param repository
+     * @return 
+     */
+    String getDocumentsAuthors(String repository, String graph);
+    
+    
+    String removeAccents(String value);
+   
 }

@@ -104,3 +104,16 @@ h4.search{
     text-align: justify;
     text-justify: inter-word;
 }
+
+span.label-author{
+      font-family: monospace;
+      text-decoration-color: #4677f8;
+      text-align: left;
+      font-weight: bold;
+      
+}
+
+
+.panelderecho{
+    
+}

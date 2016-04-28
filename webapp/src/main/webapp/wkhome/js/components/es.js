@@ -17,6 +17,7 @@ myApp.labels_es = {
 "help":"Ayuda",
 "contact":"Contacto",
 "Search":"Buscar",
+"sources": "Fuentes de Informacion",
 
 //HELP PAGE
 "Descargar Manual": "Descargar el manual de usuario para REDI",
@@ -30,24 +31,28 @@ myApp.labels_es = {
 "Map View": "Mapa",
 "Clustering by Research Area": "Cluster de Areas de Investigacion",
 "Clusters by Keyword": "Clusters por Keyword",
+"Statistics": "Estadisticas",
 
 
 
 // HOME VIEW
 "Areas de Investigacion":"Areas de Investigacion",
-"Total Autores":"Total de Autores",
-"Total Publicaciones": "Total de Publicaciones",
+"Total Autores":"Total de Autores por Universidad",
+"Total Publicaciones": "Total de Publicaciones por Universidad",
 "Search Author or Keyword":"Buscar",
-"Authors Sources":"Fuentes de Autores",
-"Publications Data Source":"Fuentes de Publicaciones",
 "Author Search":"Busqueda de Autores",
 "Tag Cloud":"Nube de Keywords",
 "Authors Group":"Autores por Area de Investigacion",
 "Ecuadorian Semantic Repository":"Repositorio Ecuatoriano De Investigadores",
 "Search related researchers":"Encuentra Investigadores relacionados",
 "Location by Research Area":"Localizacion de Areas de Investigacion",
+"Search publications": "Encuentra Autores y Publicaciones",
 
-
+//EXPLORABLE TREE VIEW
+"Research Info": "Informacion del Investigador",
+"Article Info": "Informacion de la Publicacion",
+"Try to Find": "Intentar buscar en",
+"Export pub": "Exportar Investigador y Publicaciones",
 
 //   GROUP BY  VIEW
 "Grouping Publications": "Agrupando Autores por Area y por Institucion",
@@ -81,7 +86,11 @@ myApp.labels_es = {
 "Total of Publications found" : "NUMERO DE PUBLICACIONES ENCONTRADAS",
 
 //CLUSTERS BY KEYWORD
-"Total of Authors found" : "Total de Autores encontrados"
+"Total of Authors found" : "Total de Autores encontrados",
 
+
+//SOURCE HTML
+"Authors Sources":"Fuentes de Datos de Autores",
+"Publications Data Source":"Fuentes de Datos de Publicaciones"
 };
 }());

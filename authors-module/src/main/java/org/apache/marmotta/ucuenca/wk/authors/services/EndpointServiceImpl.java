@@ -178,7 +178,7 @@ public class EndpointServiceImpl implements EndpointService {
     public String updateEndpoint(String resourceid, String oldstatus, String newstatus ) {
          try {
             sparqlService.update(QueryLanguage.SPARQL, queriesService.getEndpointUpdateStatusQuery(endpointsGraph, resourceid, oldstatus, newstatus));
-            return "Endpoint was DELETE";
+            return "Endpoint was UPDATE";
         } catch (MarmottaException | InvalidArgumentException | MalformedQueryException | UpdateExecutionException ex) {
             Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
