@@ -5,7 +5,7 @@
 
 <div class="col-md-12">
 
-    <div class="row subject-cloud">
+    <div class="row subject-cloud" ng-controller="exportController">
         <div class="col-md-12" ng-controller="clustersCloud" >
             <hr>
             <div class="head-pagetitle text-success" style="font-size: 30px">
@@ -37,6 +37,12 @@
 
 
                 <h3></h3>
+                <br>
+                <br>
+                <div ng-show="showRepButtons">
+                    <button ng-click="exportData('xls', 'ReportAuthorCluster', clusterId)">Excel Listado</button> 
+                    <button ng-click="exportData('pdf', 'ReportAuthorCluster', clusterId)">Pdf Listado</button>
+                </div>
                 <h4 style="padding: 20px" class="text-success"> {{'Total of Authors found' | translate }}: {{todos.length}} </h4>
 
 

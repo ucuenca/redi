@@ -6,11 +6,14 @@
 package org.apache.marmotta.ucuenca.wk.pubman.services;
 
 import com.google.gson.JsonArray;
+import java.util.List;
 import javax.inject.Inject;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.DBLPProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.GoogleScholarProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.ScopusProviderService;
+import org.apache.marmotta.ucuenca.wk.pubman.api.ReportsService;
+import org.apache.marmotta.ucuenca.wk.pubman.services.ReportsImpl;
 
 /**
  *
@@ -42,7 +45,14 @@ public class CommonServiceImpl implements CommonService {
 //
     @Inject
     DBLPProviderService dblpProviderServiceInt;
-
+    
+    @Inject
+    ReportsService reportService;
+    
+    @Inject
+    ReportsImpl reportsImpl;
+    
+    
     @Override
     public String GetDataFromProvidersService() {
 
@@ -89,5 +99,10 @@ public class CommonServiceImpl implements CommonService {
     public JsonArray searchAuthor(String uri) {
 
         return dblpProviderServiceInt.SearchAuthorTaskImpl(uri);
+    }
+
+    @Override
+    public String createReport(String hostname, String realPath, String name, String type, List<String> params) {
+        return reportService.createReport(hostname, realPath, name, type, params);
     }
 }

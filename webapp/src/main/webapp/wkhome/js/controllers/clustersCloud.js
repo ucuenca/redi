@@ -66,7 +66,12 @@ wkhomeControllers.controller('clustersCloud', ['$routeParams', '$scope', '$windo
                     });
                 });
             });
-
-
         };
+        
+        //Function that displays the buttons to export the report
+        $scope.exportReport = function (id) {
+            $scope.clusterId = id;
+            $scope.showRepButtons = true;
+        };
+        
     }]); //end clusterscloudController

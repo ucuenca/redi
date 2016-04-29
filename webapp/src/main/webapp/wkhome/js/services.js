@@ -81,5 +81,18 @@ wkhomeServices.factory('translateService', ['$resource', '$http', '$window', 'gl
     
     }]);
 
-
+wkhomeServices.factory('reportService', ['$resource', '$http', '$window',
+    function ($resource, $http, $window) {
+        $http.defaults.headers.common['content-type'] = 'application/x-www-form-urlencoded';
+        $http.defaults.headers.common['Accept'] = 'application/ld+json';
+        var transform = function (data) {
+            return $.param(data);
+        }
+        var serverInstance = 'http://' + $window.location.hostname
+                + ($window.location.port ? ':8080' : '') + '';
+        return $resource(
+                serverInstance + '/pubman/report', {}, {
+            querySrv: {method: 'POST', isArray: false, transformRequest: transform, headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}}
+        });
+    }]);
 
