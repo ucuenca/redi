@@ -9,6 +9,7 @@ wkhomeControllers.controller('exportController', ['$scope', 'reportService', '$w
                 switch (type1) {
                     case 'xls':
                     case 'pdf':
+                        $scope.loading = true;
                         var params = {hostname: $window.location.origin, report: reportName, type: type1, param1: data};
                         reportService.querySrv(params, function (response) {
                             var res = '';
@@ -20,6 +21,7 @@ wkhomeControllers.controller('exportController', ['$scope', 'reportService', '$w
                             } else {
                                 alert("Error. Por favor, espere un momento y vuelva a intentarlo.");
                             }
+                            $scope.loading = false;
                         });
                         break;
                 }
