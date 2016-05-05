@@ -56,6 +56,11 @@ public class Constant implements ConstantService {
     public String getGSGraph() {
         return "http://ucuenca.edu.ec/wkhuska/provider/GoogleScholarProvider";
     }
+    
+    @Override
+    public String getEndpointGraph() {
+        return "http://ucuenca.edu.ec/wkhuska/endpoints";
+    }
 
     @Override
     public String getLimit(String limit) {

@@ -39,6 +39,8 @@ public interface ConstantService {
     String getGraphString(String graph);
 
     String getWkhuskaGraph();
+    
+    String getEndpointGraph();
 
     String getProvenanceProperty();
 
