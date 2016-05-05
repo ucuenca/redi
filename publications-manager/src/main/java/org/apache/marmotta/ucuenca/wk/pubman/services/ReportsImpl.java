@@ -132,6 +132,13 @@ public class ReportsImpl implements ReportsService {
                     parameters.put("name", json[1]);
                     parameters.put("numero", json[2]);
                     break;
+                case "ReportStatistics":
+                    // Get the Json with the list of publications, the name of the researcher and the number of publications.
+                    json = getJSONStatistics(hostname);
+                    stream = new ByteArrayInputStream(json[0].getBytes("UTF-8"));
+                    dataSource = new JsonDataSource(stream);
+                    
+                    break;
             }
 
             if (dataSource != null) {
@@ -323,6 +330,76 @@ public class ReportsImpl implements ReportsService {
                 //Number of authors
                 cont = autMap.size();
                 return new String[]{authors.toString(), name, cont.toString()};
+            } catch (RepositoryException ex) {
+                java.util.logging.Logger.getLogger(ReportsImpl.class.getName()).log(Level.SEVERE, null, ex);
+                con.close();
+            }
+
+            return new String[]{"", ""};
+        } catch (MalformedQueryException | QueryEvaluationException | RepositoryException ex) {
+            java.util.logging.Logger.getLogger(ReportsImpl.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
+        }
+        return new String[]{"", ""};
+    }
+    
+    /**
+     * Retrieve Json with statistics about universities, their authors and publications
+     * @param hostname Hostname
+     * @return Array of strings
+     */
+    public String[] getJSONStatistics(String hostname) {
+        String getQuery = "";
+        try {
+            
+            //Query
+            getQuery = Constant.PREFIX +
+                " SELECT ?provenance ?name (COUNT(DISTINCT(?s)) AS ?total) (count(DISTINCT ?pub) as ?totalp) " +
+                " WHERE " +
+                "    { " +
+                "    	GRAPH <" + constant.getWkhuskaGraph() + "> { " +
+                "          ?s a foaf:Person. " +
+                "          ?s foaf:publications ?pub . " +
+                "          ?s dct:provenance ?provenance . " +
+                "          { " +
+                "              SELECT ?name " +
+                "              WHERE { " +
+                "                  GRAPH <" + constant.getEndpointGraph() + "> 									{ \n" +
+                "                       ?provenance uc:fullName ?name . " +
+                "                  } " +
+                "              } " +
+                "          } " +
+                "    	} " +
+                "  	} GROUP BY ?provenance ?name ";
+
+            
+            Repository repo = new SPARQLRepository(hostname + "/sparql/select");
+            repo.initialize();
+            RepositoryConnection con = repo.getConnection();
+            try {
+                // perform operations on the connection
+                TupleQueryResult resulta = con.prepareTupleQuery(QueryLanguage.SPARQL, getQuery).evaluate();
+                
+                JSONObject uni;
+                Map<String, JSONArray> keyMap = new HashMap<String, JSONArray>();
+                JSONArray universities = new JSONArray();
+            
+                while (resulta.hasNext()) {
+                    BindingSet binding = resulta.next();
+                    uni = new JSONObject();
+                    String uniName = String.valueOf(binding.getValue("name")).replace("\"", "").replace("^^", "").split("<")[0];
+                    String totalAuthors = String.valueOf(binding.getValue("total")).replace("\"", "").replace("^^", "").split("<")[0];
+                    String totalPubs = String.valueOf(binding.getValue("totalp")).replace("\"", "").replace("^^", "").split("<")[0];
+                    uni.put("university", uniName);
+                    uni.put("authors", totalAuthors);
+                    uni.put("pubs", totalPubs);
+                    
+                    universities.add(uni);
+                }
+                
+                con.close();
+                
+                return new String[]{universities.toString()};
             } catch (RepositoryException ex) {
                 java.util.logging.Logger.getLogger(ReportsImpl.class.getName()).log(Level.SEVERE, null, ex);
                 con.close();
