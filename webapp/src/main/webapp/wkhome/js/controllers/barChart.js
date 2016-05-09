@@ -2,6 +2,9 @@ wkhomeControllers.controller('barChart', ['$scope', 'globalData', 'sparqlQuery',
     function ($scope, globalData, sparqlQuery, clustersQuery, searchData, $window) {
 
         var dataToSend = [];
+        /**
+         * Getting source and count publications
+         */
         var sparqlquery = globalData.PREFIX
                 + ' CONSTRUCT '
                 + ' {  '
@@ -31,9 +34,7 @@ wkhomeControllers.controller('barChart', ['$scope', 'globalData', 'sparqlQuery',
                 + '         }group by ?provenance '
                 + ' } '
                 + ' }';
-        /**
-         * Getting source and count publications
-         */
+
         sparqlQuery.query({query: sparqlquery}, function (result) {
             jsonld.compact(result, globalData.CONTEXT, function (err, compacted) {
                 var sources = compacted["@graph"];
@@ -44,7 +45,7 @@ wkhomeControllers.controller('barChart', ['$scope', 'globalData', 'sparqlQuery',
                         var sourcename = source["uc:name"];
                         var totalPubBySource = source["uc:total"]["@value"];
                         /**
-                         * Getting the first 10 keywords that most publications have of each source
+                         * count authors of each source
                          */
                         var sparqlCountKeywords = globalData.PREFIX
                                 + ' CONSTRUCT '
@@ -67,32 +68,24 @@ wkhomeControllers.controller('barChart', ['$scope', 'globalData', 'sparqlQuery',
                                 var totalAutBySource = source["uc:total"]["@value"];
                                 var id = source["@id"];
                                 dataToSend.push({Source: sourcename, freq: {Autores: totalAutBySource, Publicaciones: totalPubBySource, Salud: 0}});
-
+                                $scope.$apply(function () {
+                                    $scope.data = dataToSend;
+                                });
                             });
                         }); // end sparqlQuery of  Getting the first 10 keywords that most publications have of each source
 
                     });
-                    drawing(dataToSend);
+                    // drawing(dataToSend);
                 }
 
             });
         }); // end sparqlQuery of Getting source and count publications
-        drawing = function (value) {
-            $scope.data = value;
 
-        };
-        var freqData = [
-            {State: 'ESPE', freq: {Autores: 4786, Publicaciones: 1319, Salud: 249}}
-            , {State: 'UCUENCA', freq: {Autores: 1101, Agua: 412, Salud: 674}}
-            , {State: 'ESPOL', freq: {Autores: 932, Agua: 2149, Salud: 418}}
-            , {State: 'DE', freq: {Autores: 832, Agua: 1152, Salud: 1862}}
-            , {State: 'FL', freq: {Autores: 4481, Agua: 3304, Salud: 948}}
-            , {State: 'GA', freq: {Autores: 1619, Agua: 167, Salud: 1063}}
-            , {State: 'IA', freq: {Autores: 1819, Agua: 247, Salud: 1203}}
-            , {State: 'IL', freq: {Autores: 4498, Agua: 3852, Salud: 942}}
-            , {State: 'IN', freq: {Autores: 797, Agua: 1849, Salud: 1534}}
-            , {State: 'KS', freq: {Autores: 162, Agua: 379, Salud: 471}}
-        ];
+//        drawing = function (value) {
+//            $scope.data = value;
+//
+//        };
+
 
 
         //$scope.data = dataToSend;

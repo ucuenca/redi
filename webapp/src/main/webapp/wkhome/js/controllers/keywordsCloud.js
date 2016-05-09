@@ -5,7 +5,7 @@ wkhomeControllers.controller('keywordsCloud', ['$routeParams', '$scope', 'global
             scrollTop: $("#scrollToTop").offset().top
         }, "slow");
 
-        if (!searchData.allkeywords2) {
+        if (!searchData.allkeywordsList) {
             $scope.themes = [];
             var queryKeywords = globalData.PREFIX
                     + ' CONSTRUCT { ?keyword rdfs:label ?key } '
@@ -19,7 +19,7 @@ wkhomeControllers.controller('keywordsCloud', ['$routeParams', '$scope', 'global
                     + '             BIND(IRI(?unickey) as ?keyword) '
                     + '         } '
                     + '     GROUP BY ?keyword  ?key '
-                    + '     HAVING(?k > 10) '
+                    + '     HAVING(?k > 1) '
                     + '}';
             sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
                 var context = {
@@ -33,15 +33,15 @@ wkhomeControllers.controller('keywordsCloud', ['$routeParams', '$scope', 'global
                         $scope.themes.push({tag: model["tag"]});
                     });
                     $scope.$apply(function () {
-                        searchData.allkeywords2 = $scope.themes;
-                        $scope.relatedthemes = searchData.allkeywords2;
+                        searchData.allkeywordsList = $scope.themes;
+                        $scope.relatedthemes = searchData.allkeywordsList;
                         $scope.selectedItem = "";
                     });
 
                 });
             });
         } else {
-            $scope.relatedthemes = searchData.allkeywords2;
+            $scope.relatedthemes = searchData.allkeywordsList;
             $scope.selectedItem = "";
         }
 
@@ -176,7 +176,8 @@ wkhomeControllers.controller('keywordsCloud', ['$routeParams', '$scope', 'global
                         + '             SELECT DISTINCT ?key1 ?publications ?keyword '       
                         + '             WHERE '         
                         + '             { '            
-                        + '                 ?pub bibo:Quote "' + $scope.selectedItem + '" . '           
+                        + '                 ?pub bibo:Quote ?quote . '  
+                        + '                 FILTER (mm:fulltext-search(?quote, "'+$scope.selectedItem+'")).'
                         + '                 ?pub bibo:Quote ?key1. '           
                         + '                 ?publications bibo:Quote ?key1. '           
                         + '                 BIND(IRI(?key1) AS ?keyword) '       
@@ -185,7 +186,7 @@ wkhomeControllers.controller('keywordsCloud', ['$routeParams', '$scope', 'global
                         + '     } '  
                         + ' } '
                         + ' GROUP BY ?key1 ?keyword   '
-                        + ' HAVING(?totalPub > 2 && ?totalPub < 100)   '
+                        + ' HAVING(?totalPub > 0 && ?totalPub < 100)   '
                         + ' ORDER BY DESC(?totalPub)   '
                         + ' LIMIT 145' 
                         + ' }';

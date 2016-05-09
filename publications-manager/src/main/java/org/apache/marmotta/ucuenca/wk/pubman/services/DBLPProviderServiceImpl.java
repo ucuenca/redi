@@ -19,6 +19,7 @@ package org.apache.marmotta.ucuenca.wk.pubman.services;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -46,6 +47,7 @@ import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
 
 import org.apache.marmotta.ucuenca.wk.pubman.exceptions.PubException;
 import org.apache.marmotta.ucuenca.wk.commons.impl.Constant;
+import org.apache.marmotta.ucuenca.wk.commons.service.ComparisonNames;
 import org.apache.marmotta.ucuenca.wk.pubman.api.DBLPProviderService;
 
 import org.openrdf.model.Model;
@@ -88,8 +90,12 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
     @Inject
     private SparqlFunctionsService sparqlFunctionsService;
 
+    @Inject
+    private ComparisonNames comparisonNames;
+
     private String namespaceGraph = "http://ucuenca.edu.ec/wkhuska/";
     private String authorGraph = namespaceGraph + "authors";
+    private String endpointsGraph = namespaceGraph + "endpoints";
     private String externalAuthorGraph = namespaceGraph + "externalauthors";
 
     private final Constant con = new Constant();
@@ -217,7 +223,7 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
             LDClient ldClient = new LDClient(conf);
 
             int allMembers = 0;
-            String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(authorGraph);
+            String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(authorGraph, endpointsGraph);
 
             // TupleQueryResult result = sparqlService.query(QueryLanguage.SPARQL, getAuthors);
             String nameToFind = "";
@@ -318,6 +324,18 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                         String providerGraph = graphByProviderNS + nameEndpointofPublications.replace(" ", "");
                         if (dataretrievee)//if the resource data were recovered
                         {
+//                            Model model = response.getData();
+//                            FileOutputStream out = new FileOutputStream("C:\\Users\\Satellite\\Desktop\\" + nameToFind.replace("?", "_") + "_test.ttl");
+//                            RDFWriter writer = Rio.createWriter(RDFFormat.TURTLE, out);
+//                            try {
+//                                writer.startRDF();
+//                                for (Statement st : model) {
+//                                    writer.handleStatement(st);
+//                                }
+//                                writer.endRDF();
+//                            } catch (RDFHandlerException e) {
+//                                // oh no, do something!
+//                            }
                             //Save register of serach
                             String InsertQueryOneOf = buildInsertQuery(providerGraph, NS_DBLP + nameToFind, OWL.ONE_OF, authorResource);
                             updatePub(InsertQueryOneOf);
@@ -341,12 +359,17 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                                 String sameAsInsertQuery = buildInsertQuery(providerGraph, authorResource, "http://www.w3.org/2002/07/owl#sameAs", authorNativeResource);
                                 updatePub(sameAsInsertQuery);
                             }
-                            if (allMembers == 1 && !existNativeAuthor) {
+                            String dblpfullname = authorNativeResource.substring(authorNativeResource.lastIndexOf('/') + 1);
+                            String localfullname = lastName + ":" + firstName;
+
+                            if (allMembers == 1 && !existNativeAuthor
+                                    && comparisonNames.syntacticComparison("local", localfullname, "dblp", dblpfullname)) {
                                 priorityToFind = 5;
                                 //SPARQL obtain all publications of author
                                 String getPublicationsFromProviderQuery = queriesService.getPublicationFromProviderQuery();
                                 TupleQuery pubquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationsFromProviderQuery); //
                                 TupleQueryResult tripletasResult = pubquery.evaluate();
+
                                 while (tripletasResult.hasNext()) {
                                     BindingSet tripletsResource = tripletasResult.next();
                                     authorNativeResource = tripletsResource.getValue("authorResource").toString();
@@ -415,12 +438,10 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
             if (uri.contains("elsevier")) // SCOPUS CASE
             {
                 uri = uri.concat(scopusconcat);
+            } else {//DBLP CASE
+                uri = uri.replace("\"", "");
             }
-            else
-            {//DBLP CASE
-            uri = uri.replace("\"", "");
-            }
-         
+
             String providerName = ldClient.getEndpoint(uri).getName();
             Properties propiedades = new Properties();
             InputStream entrada = null;
@@ -438,7 +459,7 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
             ClientResponse response = null;
             log.info("Buscando Informacion de: " + uri);
             try {
-                
+
                 try {
                     response = ldClient.retrieveResource(uri);
                 } catch (DataRetrievalException e) {
@@ -508,6 +529,16 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
         }
         return parser.parse(" [{\"Fail\":\"Any Data\"}]").getAsJsonArray();
     }
+
+    /**
+     * Syntactic Disambiguation by FUll NAME
+     *
+     */
+//    public boolean syntacticDisambiguation(String source, String target)
+//    {
+//        
+//        return 
+//    }
 
     public String priorityFindQueryBuilding(int priority, String firstName, String lastName) {
         String[] fnamelname = {"", "", "", "", ""};

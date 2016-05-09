@@ -14,19 +14,19 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
                 + ' WHERE { '
                 + '   GRAPH <' + globalData.clustersGraph + '> '
                 + '         { '
-                + ' ?cluster <http://ucuenca.edu.ec/resource/hasPerson> <{1}> .'
-                + ' ?cluster <http://ucuenca.edu.ec/resource/hasPerson> ?subject.'
-                + '           ?subject foaf:publications ?pub'
-                + '          {'
-                + ' SELECT ?name'
-                + ' {'
-                + '      graph <' + globalData.centralGraph + '>'
-                + '            {'
-                + '        	?subject foaf:name ?name.'
-                + '            }'
-                + ' }'
-                + '  }'
-                + '              } '
+                + '                 ?cluster <http://ucuenca.edu.ec/resource/hasPerson> <{1}> .'
+                + '                 ?cluster <http://ucuenca.edu.ec/resource/hasPerson> ?subject.'
+                + '                 ?subject foaf:publications ?pub'
+                + '                 {'
+                + '                     SELECT ?name'
+                + '                     {'
+                + '                         graph <' + globalData.centralGraph + '>'
+                + '                         {'
+                + '                             ?subject foaf:name ?name.'
+                + '                         }'
+                + '                     }'
+                + '             }'
+                + '         } '
                 + '     } group by ?subject ?name '
                 + '          }}    ';
 
@@ -43,7 +43,8 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
                 + '         WHERE { '
                 + '             GRAPH <' + globalData.centralGraph + '> { '
                 + '             ?subject foaf:publications ?publicationUri. '
-                + '             ?publicationUri bibo:Quote "{1}" .'
+                + '             ?publicationUri bibo:Quote ?quote .'
+                + '             FILTER (mm:fulltext-search(?quote, "{1}" )) .'
                 + '             ?subject foaf:name ?name.  } '
                 + '             } '
                 + '         GROUP BY ?subject ?name '
@@ -299,28 +300,29 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
 
                 //var sparqlDescribe = "DESCRIBE <" + id + ">";
                 var sparqlPublications = globalData.PREFIX
-                        + " CONSTRUCT { ?keyword uc:publication ?publicationUri. "
-                        + " ?publicationUri dct:contributors ?subject . "
-                        + " ?subject foaf:name ?name . "
-                        + " ?subject a foaf:Person . "
-                        + " ?publicationUri a bibo:Document. "
-                        + " ?publicationUri dct:title ?title. "
-                        + " ?publicationUri bibo:abstract ?abstract. "
-                        + " ?publicationUri bibo:uri ?uri. "
-                        + " } "
-                        + " WHERE {"
-                        + " GRAPH <" + globalData.centralGraph + ">"
-                        + " {"
-                        + " ?subject foaf:publications ?publicationUri ."
-                        + " ?subject foaf:name ?name ."
-                        + " ?publicationUri dct:title ?title . "
-                        + " OPTIONAL{ ?publicationUri bibo:abstract  ?abstract. } "
-                        + " OPTIONAL{ ?publicationUri bibo:uri  ?uri. } "
-                        + " ?publicationUri bibo:Quote \"" + keyword + "\" ."
-                        + "  BIND(REPLACE( \"" + keyword + "\", \" \", \"_\", \"i\") AS ?key) ."
-                        + "  BIND(IRI(?key) as ?keyword)"
-                        + " }"
-                        + "}";
+                        + ' CONSTRUCT { ?keyword uc:publication ?publicationUri. '
+                        + ' ?publicationUri dct:contributors ?subject . '
+                        + ' ?subject foaf:name ?name . '
+                        + ' ?subject a foaf:Person . '
+                        + ' ?publicationUri a bibo:Document. '
+                        + ' ?publicationUri dct:title ?title. '
+                        + ' ?publicationUri bibo:abstract ?abstract. '
+                        + ' ?publicationUri bibo:uri ?uri. '
+                        + ' } '
+                        + ' WHERE {'
+                        + ' GRAPH <' + globalData.centralGraph + '>'
+                        + ' {'
+                        + ' ?subject foaf:publications ?publicationUri .'
+                        + ' ?subject foaf:name ?name .'
+                        + ' ?publicationUri dct:title ?title . '
+                        + ' OPTIONAL{ ?publicationUri bibo:abstract  ?abstract. } '
+                        + ' OPTIONAL{ ?publicationUri bibo:uri  ?uri. } '
+                        + ' ?publicationUri bibo:Quote ?quote. '
+                        + ' FILTER (mm:fulltext-search(?quote, "' + keyword+ '" )) .'
+                        + '  BIND(REPLACE( "' + keyword + '", " ", "_", "i") AS ?key) .'
+                        + '  BIND(IRI(?key) as ?keyword)'
+                        + ' }'
+                        + '}';
                 waitingDialog.show("Searching publications with the keyword: " + keyword);
 
                 sparqlQuery.querySrv({query: sparqlPublications}, function (rdf) {
