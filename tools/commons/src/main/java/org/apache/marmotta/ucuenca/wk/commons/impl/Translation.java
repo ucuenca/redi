@@ -70,8 +70,8 @@ public class Translation implements TranslationService {
                     return ""; // Return a blank string. There was a persistant error.
                 } else {
                     try {
-                        //We will set random between 0 and 23100 milliseconds
-                        Thread.sleep(rand.nextInt(23100));//1000 milliseconds is one second.
+                        //We will set random between 0 and 5100 milliseconds
+                        Thread.sleep(rand.nextInt(5100));//1000 milliseconds is one second.
                     } catch (InterruptedException ex) {
                         Thread.currentThread().interrupt();
                     }
