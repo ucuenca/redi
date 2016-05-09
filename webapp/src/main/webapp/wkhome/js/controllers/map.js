@@ -38,7 +38,7 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
                     });
                     $scope.$apply(function () {
                         $scope.relatedtags = $scope.themes;
-                        $scope.selectedTagItem = 'SEMANTIC WEB';
+                        $scope.selectedTagItem = 'SALUD';
                         searchData.allkeywords = $scope.themes;
                     });
                     waitingDialog.hide();
@@ -48,7 +48,7 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
         else
         {
             $scope.relatedtags = searchData.allkeywords;
-            $scope.selectedTagItem = 'SEMANTICWEB';
+            $scope.selectedTagItem = 'SALUD';
         }
 
 
@@ -56,7 +56,7 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
         //default selectedTagItem =  Semantic Web  - > see in app.js
         $scope.$watch('selectedTagItem', function () {
             //alert($scope.selectedItem);
-            $scope.selectedTagItem = $scope.selectedTagItem ? $scope.selectedTagItem : "SEMANTICWEB";
+            $scope.selectedTagItem = $scope.selectedTagItem ? $scope.selectedTagItem : "SALUD";
             waitingDialog.show("Consultando Ubicacion de Autores Relacionados con:  \"" + $scope.selectedTagItem + "\"");
             var queryBySource = globalData.PREFIX
                     + ' CONSTRUCT { '
@@ -76,7 +76,7 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
                     + '             ?subject foaf:publications ?object.'
                     //+ '             ?object bibo:Quote "' + $scope.selectedTagItem + '".'
                     + '             ?subject dct:subject ?key.'
-                    + '             FILTER (contains(?key, "' + $scope.selectedTagItem + '")) .'
+                    + '             FILTER (mm:fulltext-search(?key, "' + $scope.selectedTagItem + '")) .'
                     + '             ?subject dct:provenance ?provenance.'
                     + '             { '
                     + '                 SELECT DISTINCT ?sourcename ?lat ?long ?province ?city ?fullname '
