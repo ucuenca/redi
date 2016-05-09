@@ -136,12 +136,14 @@ pieChart.directive('pieChart', ["d3", "globalData", "sparqlQuery",
                                     + '         SELECT * '
                                     + '         WHERE { '
                                     + '         GRAPH <' + globalData.endpointsGraph + '> { '
-                                    + '             ?provenance uc:name "' + key + '" } '
+                                    + '           ?provenance uc:name ?sourcename. '
+                                    + '           FILTER(mm:fulltext-search(?sourcename,"'+key+'"))' 
+                                    + '             }'
                                     + '         } '
                                     + '     } '
                                     + ' } } '
                                     + ' GROUP BY ?subject ?name '
-                                    + ' HAVING( ?totalPub > 1 && ?totalPub < 40) '
+                                    + ' HAVING( ?totalPub > 10 && ?totalPub < 50) '
                                     + '} '
                                     + '} limit 150';
                             waitingDialog.show("Loading All Authors of Selected Source");

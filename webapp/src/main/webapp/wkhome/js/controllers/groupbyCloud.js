@@ -156,7 +156,7 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
                     + '   ?subject foaf:name  ?nameauthor . '
                     + '   ?subject dct:subject ?keyword. '
                     + '   ?subject dct:provenance ?provenance  '
-                   + '                   FILTER (contains(?keyword, "'+value+'")) '
+                   + '    FILTER (mm:fulltext-search(?keyword, "'+value+'")) '
 //          
 //                    + '   { '
 //                    + ' 	SELECT * '

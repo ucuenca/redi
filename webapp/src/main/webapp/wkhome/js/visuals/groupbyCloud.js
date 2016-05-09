@@ -312,7 +312,7 @@ cloudGroup.directive('cloudGroup', ["$routeParams", "d3", 'sparqlQuery', 'global
                 authorInfoc.html('');
                 var authorInfop = $('div.tree-node-author-info .authorsByPublications');
                 authorInfop.html('');
-                 relatedAuthors(d);
+                relatedAuthors(d);
 //                    var title = $('div#scrollToHere.col-md-12 div.col-md-12.head-info');
 //                    title.html('');
                 /*var model = {"dct:title": {label: "Title", containerType: "div"},
@@ -388,9 +388,10 @@ cloudGroup.directive('cloudGroup', ["$routeParams", "d3", 'sparqlQuery', 'global
                     });
                 }
                 return d3.event.preventDefault();
-            };
-            
-                  var getRelatedAuthorsByClustersQuery = globalData.PREFIX
+            }
+            ;
+
+            var getRelatedAuthorsByClustersQuery = globalData.PREFIX
                     + ' CONSTRUCT {  <http://ucuenca.edu.ec/wkhuska/resultTitle> a uc:pagetitle. <http://ucuenca.edu.ec/wkhuska/resultTitle> uc:viewtitle "Authors Related With {0}"  .         ?subject rdfs:label ?name.         ?subject uc:total ?totalPub   }   WHERE {   { '
                     + ' SELECT DISTINCT  ?subject ?name (count(?pub) as ?totalPub)'
                     + ' WHERE { '
@@ -444,7 +445,8 @@ cloudGroup.directive('cloudGroup', ["$routeParams", "d3", 'sparqlQuery', 'global
                     var query = String.format(getRelatedAuthorsByPublicationsQuery, author["name"], id);
                     executeRelatedAuthors(query, "authorsByPublications");
                 }//end if author["foaf:name"]
-            };
+            }
+            ;
 
 
             function executeRelatedAuthors(querytoExecute, divtoload) {

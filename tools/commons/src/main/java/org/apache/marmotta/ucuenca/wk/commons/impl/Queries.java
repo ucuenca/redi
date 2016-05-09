@@ -21,12 +21,11 @@ public class Queries implements QueriesService {
             + " PREFIX mm: <http://marmotta.apache.org/vocabulary/sparql-functions#> "
             + " PREFIX dcat: <http://www.w3.org/ns/dcat#>";
 
-    private final static String OWLSAMEAS = "<http://www.w3.org/2002/07/owl#:sameAs>";
+    private final static String OWLSAMEAS = "<http://www.w3.org/2002/07/owl#sameAs>";
 
     private final static String INSERTDATA = "INSERT DATA { ";
 
     private final static String ENDPOINTPREFIX = "http://ucuenca.edu.ec/wkhuska/endpoint/";
-
 
     @Override
     public String getAuthorsQuery(String datagraph) {
@@ -106,9 +105,9 @@ public class Queries implements QueriesService {
         String type = arg[4];
         boolean condition = "url".equals(parameter) || "graph".equals(parameter);
         if (condition) {
-            return INSERTDATA + getGraphString(endpointsGraph) + "{<" + ENDPOINTPREFIX + resourceHash + ">  "+ con.uc(parameter)+"  <" + newValue + "> }}";
+            return INSERTDATA + getGraphString(endpointsGraph) + "{<" + ENDPOINTPREFIX + resourceHash + ">  " + con.uc(parameter) + "  <" + newValue + "> }}";
         } else {
-            return INSERTDATA + getGraphString(endpointsGraph) + "{<" + ENDPOINTPREFIX + resourceHash + ">  "+ con.uc(parameter)+"   '" + newValue + "'^^xsd:" + type + " }} ";
+            return INSERTDATA + getGraphString(endpointsGraph) + "{<" + ENDPOINTPREFIX + resourceHash + ">  " + con.uc(parameter) + "   '" + newValue + "'^^xsd:" + type + " }} ";
         }
     }
 
@@ -155,9 +154,8 @@ public class Queries implements QueriesService {
         return "DELETE { ?id ?p ?o } "
                 + "WHERE { "
                 + con.getGraphString(endpointsGraph)
-                + " { "
-                + " ?id ?p ?o . "
-                + " FILTER(?id = <" + id + ">) "
+                + " {   ?id ?p ?o . "
+                + "     FILTER(?id = <" + id + ">) "
                 + " } "
                 + " }";
     }
@@ -168,16 +166,15 @@ public class Queries implements QueriesService {
         return " DELETE { " + getGraphString(args[0]) + " { "
                 + "     <" + args[1] + "> " + status + " ?status "
                 + " }} "
-                + " INSERT "
-                + " {    " + getGraphString(args[0]) + "  {"
-                + "         <" + args[1] + "> " + status + " '" + args[3] + "'^^xsd:boolean"
-                + " }    } "
-                + "WHERE"
-                + "  { "
-                + "   " + getGraphString(args[0]) + "  { "
-                + "         <" + args[1] + "> " + status + " ?status"
-                + "     FILTER (regex(?status,'" + args[2] + "')) "
-                + " } } ";
+                + " INSERT  { "
+                + getGraphString(args[0]) + "  {"
+                + "             <" + args[1] + "> " + status + " '" + args[3] + "'^^xsd:boolean"
+                + " }       } "
+                + "WHERE { "
+                + getGraphString(args[0]) + "  { "
+                + "             <" + args[1] + "> " + status + " ?status"
+                + "             FILTER (regex(?status,'" + args[2] + "')) "
+                + " }   } ";
     }
 
     @Override
@@ -208,7 +205,7 @@ public class Queries implements QueriesService {
     }
 
     @Override
-    public String getAuthorsDataQuery(String graph) {
+    public String getAuthorsDataQuery(String graph, String endpointsgraph) {
         return PREFIXES
                 + " SELECT * "
                 + " WHERE { " + getGraphString(graph) + " { "
@@ -216,11 +213,11 @@ public class Queries implements QueriesService {
                 + " ?subject foaf:name ?name."
                 + " ?subject foaf:firstName ?fname. "
                 + " ?subject foaf:lastName ?lname. "
-                + " ?subject dct:provenance ?pro. "
-                + " { select ?resource where "
-                + " { graph <http://ucuenca.edu.ec/wkhuska/endpoints> {"
-                + " ?pro <http://ucuenca.edu.ec/resource/status> ?resource "
-                + " }}} filter (regex(?resource,\"true\")) "
+                + " ?subject dct:provenance ?provenance. "
+                + " { select ?status "
+                + "     where { " + getGraphString(endpointsgraph) + " {"
+                + "     ?provenance <http://ucuenca.edu.ec/ontology#status> ?status "
+                + " }}} filter (regex(?status,\"true\")) "
                 + "                }} "
                 + " ";
     }
@@ -280,6 +277,11 @@ public class Queries implements QueriesService {
                 + "ORDER BY DESC(?publicationProperties) ";
     }
 
+    /**
+     * For get Members from DBLP
+     *
+     * @return
+     */
     @Override
     public String getMembersQuery() {
         return "SELECT DISTINCT ?members"
