@@ -36,7 +36,7 @@ myApp.labels_en = {
 "Areas de Investigacion":"Research Areas",
 "Total Autores":"Authors by University",
 "Total Publicaciones": "Publications by University",
-"Search Author or Keyword":"Search",
+"Search Author or Keyword":"Search Author, Research Area or Keyword",
 "Author Search":"Author Search",
 "Tag Cloud":"Tag Cloud",
 "Authors Group":"Authors by Research Area",
