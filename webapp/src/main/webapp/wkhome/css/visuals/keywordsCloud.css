@@ -13,12 +13,12 @@
    stroke: #555;
     stroke-width: 1px;
     opacity: .4;
-    fill: #6FD10C;
+    fill: #003769;
  
 }
 #kcircle:hover {
     stroke:#000;
-    opacity:1;
+    fill: #D9EDF7;
 
 }
 
@@ -51,4 +51,10 @@ a.bubble-label {
 .bubble-label .bubble-label-value {
   font: 11px sans-serif;
   white-space: nowrap;
+}
+
+
+h2.panel-title {
+    color: #003769;
+    
 }

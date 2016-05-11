@@ -1,7 +1,7 @@
 
 wkhomeControllers.controller('keywordsCloud', ['$routeParams', '$scope', 'globalData', 'sparqlQuery', 'searchData', '$window',
     function ($routeParams, $scope, globalData, sparqlQuery, searchData, $window) {
-       $('html,body').animate({
+        $('html,body').animate({
             scrollTop: $("#scrollToTop").offset().top
         }, "slow");
 
@@ -45,6 +45,13 @@ wkhomeControllers.controller('keywordsCloud', ['$routeParams', '$scope', 'global
             $scope.selectedItem = "";
         }
 
+
+
+        $scope.clickonAuthor = function (id_author)
+        {
+            clickonRelatedauthor(id_author);
+        }; //end clickonAuthor
+
         clickonRelatedauthor = function (id_author)
         {
             var getAuthorDataQuery = globalData.PREFIX
@@ -58,7 +65,7 @@ wkhomeControllers.controller('keywordsCloud', ['$routeParams', '$scope', 'global
                     + '     <' + id_author + '> foaf:name ?name'
                     + ' } '
                     + '}';
-          
+
             sparqlQuery.querySrv({query: getAuthorDataQuery}, function (rdf) {
                 jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                     $scope.$apply(function () {
@@ -70,13 +77,12 @@ wkhomeControllers.controller('keywordsCloud', ['$routeParams', '$scope', 'global
             });
         }; //end clickonRelatedauthor
 
-
         $scope.todos = [];
         $scope.ctrlFn = function (value)
         {
             var publicaciones = _.where(value, {"@type": "bibo:Document"});
             var autores = _.where(value, {"@type": "foaf:Person"});
-            
+
             $scope.todos = [];
             $scope.autores = [];
             var model = {};
@@ -85,18 +91,19 @@ wkhomeControllers.controller('keywordsCloud', ['$routeParams', '$scope', 'global
 
                 model["id"] = pub["@id"];
                 model["title"] = pub["dct:title"];
-                
-                model["author"] = pub["dct:contributor"] ? pub["dct:contributor"]  : [] ;
-                model["abstract"] = pub["bibo:abstract"] ? pub["bibo:abstract"] : "Sorry, still not found abstract for this publication."  ;
-                model["uri"] = pub["bibo:uri"]? (pub["bibo:uri"]["@id"] ? pub["bibo:uri"]["@id"] : "" ) : "";
-                
+
+                model["author"] = pub["dct:contributor"] ? pub["dct:contributor"] : [];
+                model["abstract"] = pub["bibo:abstract"] ? pub["bibo:abstract"] : "Sorry, still not found abstract for this publication.";
+                model["uri"] = pub["bibo:uri"] ? (pub["bibo:uri"]["@id"] ? pub["bibo:uri"]["@id"] : "") : "";
+
                 $scope.autores = [];
-                _.map(pub["dct:contributors"], function(authorid){
-                    
-                    var authorresource = authorid["@id"] ? ( _.findWhere(autores, {"@id": authorid["@id"]})) : ( _.findWhere(autores, {"@id": authorid}));
+                var cont = 0;
+                _.map(pub["dct:contributors"], function (authorid) {
+                    cont = cont + 1;
+                    var authorresource = authorid["@id"] ? (_.findWhere(autores, {"@id": authorid["@id"]})) : (_.findWhere(autores, {"@id": authorid}));
                     $scope.autores.push({id: authorresource["@id"], name: authorresource["foaf:name"]});
                 });
-                
+
                 if (model["title"])
                 {
                     $scope.todos.push({id: model["id"], title: model["title"], abstract: model["abstract"], uri: model["uri"], author: $scope.autores});
@@ -157,38 +164,38 @@ wkhomeControllers.controller('keywordsCloud', ['$routeParams', '$scope', 'global
         } // end if if (!searchData.allkeywordsCloud) 
 
         $scope.$watch('selectedItem', function (newValue, oldValue, scope) {
-            if (newValue && newValue != ""){
+            if (newValue && newValue != "") {
                 waitingDialog.show();
                 var queryKeywords = globalData.PREFIX
                         + ' CONSTRUCT { '
                         + ' ?keyword rdfs:label ?key1; '
                         + ' uc:total ?totalPub '
                         + ' } '
-                        + ' WHERE ' 
+                        + ' WHERE '
                         + ' { '
                         + ' SELECT ?key1 ?keyword (COUNT(DISTINCT(?publications)) AS ?totalPub)'
-                        + ' WHERE' 
+                        + ' WHERE'
                         + ' {'
                         + '     graph <' + globalData.centralGraph + '>    '
-                        + '     {'      
+                        + '     {'
                         + '         ?publications bibo:Quote ?key1.'
-                        + '         {'        
-                        + '             SELECT DISTINCT ?key1 ?publications ?keyword '       
-                        + '             WHERE '         
-                        + '             { '            
-                        + '                 ?pub bibo:Quote ?quote . '  
-                        + '                 FILTER (mm:fulltext-search(?quote, "'+$scope.selectedItem+'")).'
-                        + '                 ?pub bibo:Quote ?key1. '           
-                        + '                 ?publications bibo:Quote ?key1. '           
-                        + '                 BIND(IRI(?key1) AS ?keyword) '       
-                        + '             }'      
-                        + '         }'     
-                        + '     } '  
+                        + '         {'
+                        + '             SELECT DISTINCT ?key1 ?publications ?keyword '
+                        + '             WHERE '
+                        + '             { '
+                        + '                 ?pub bibo:Quote ?quote . '
+                        + '                 FILTER (mm:fulltext-search(?quote, "' + $scope.selectedItem + '")).'
+                        + '                 ?pub bibo:Quote ?key1. '
+                        + '                 ?publications bibo:Quote ?key1. '
+                        + '                 BIND(IRI(?key1) AS ?keyword) '
+                        + '             }'
+                        + '         }'
+                        + '     } '
                         + ' } '
                         + ' GROUP BY ?key1 ?keyword   '
                         + ' HAVING(?totalPub > 0 && ?totalPub < 100)   '
                         + ' ORDER BY DESC(?totalPub)   '
-                        + ' LIMIT 145' 
+                        + ' LIMIT 145'
                         + ' }';
                 sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
                     jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
