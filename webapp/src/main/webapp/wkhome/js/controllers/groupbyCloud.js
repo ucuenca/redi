@@ -294,7 +294,7 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
                         $scope.$apply(function () {
                             //$scope.data = compacted;
                             searchData.authorSearch = compacted;
-                            $window.location.hash = "/" + $routeParams.lang + "/w/search?" + compacted['@graph'][0]['foaf:name'].replace(',', '-').replace(' ', '_');
+                            $window.location.hash = "/" + $routeParams.lang + "/w/search?" + author;
                         });
                     });
                 });

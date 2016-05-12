@@ -24,20 +24,21 @@
                 <hr>
                 <div id="blackspace">
                 </div>
-                <div class="col-md-12 head-info">
-                    <div id="title" style="font-size:50pt">
 
-
-                    </div>
-
-
-                </div>
 
             </div>
         </div>
     </div>
 
-    <div  class="col-md-10 tree-node-info" style="height:100vh" >
+    <center>
+        <div class="col-md-12 head-info">
+            <div id="title" style="font-size:50pt; text-align: center; alignment-adjust: central;">
+            </div>
+        </div>
+    </center>
+
+    <div  class="col-md-9 tree-node-info" style="height:100vh" >
+        <div style="padding-top: 30px; font-size: 20pt; color: #003769; padding-left: 30%; font-style: italic">PUBLICACIONES</div>
 
         <!--      <div class="entityInfo">
                   <span style="font-weigth:bold"> </span> 
@@ -58,15 +59,19 @@
                 -->
                 <div class="panel panel-info">
                     <div class="panel-heading">
-                        <h2 class="panel-title"><a href="{{todo.uri}}" target='_blank'>{{todo.title}}</a></h2>
+                        <h2 class="panel-title">{{todo.title}}</h2>
                     </div>
                     <div class="panel-body">
                         Abstract: {{todo.abstract}}
                         <br>
-                        Autores:
+                        Autores:  
                         <ul>
+                   
                             <li ng-repeat="author in todo.author">
-                                <a href="{{author.id}}" target='_blank'>{{author.name}}</a>
+
+                                <a href="" ng-click="clickonAuthor(author.id)" ng-model="value">{{author.name}}</a>
+
+
                             </li>
                         </ul>
                         <br>
@@ -86,15 +91,10 @@
         </center>
     </div>
 
-    <div class='col-md-2'>
-        <!-- <div  ng-include="'/wkhome/partials/mainmenu.html'"></div>  -->
-        
-        <div style="height: 30px">
+    <div class='col-md-3'>
 
-        </div>
-
-        <div class="tree-node-author-info" style="height:100vh">
-            <h4>AUTORES</h4>
+        <div style="padding-top: 30px; font-size: 20pt; color: #003769; padding-left: 1%; font-style: italic">AUTORES</div>
+        <div class="tree-node-author-info" style="height:100vh">   
             <div class="authorsByPublications">
                 <!-- <span style="font-weigth:bold">Title: </span> -->
                 <div id="title" style="font-size:50pt"></div>
