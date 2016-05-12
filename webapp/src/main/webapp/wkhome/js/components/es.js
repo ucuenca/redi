@@ -39,7 +39,7 @@ myApp.labels_es = {
 "Areas de Investigacion":"Areas de Investigacion",
 "Total Autores":"Total de Autores por Universidad",
 "Total Publicaciones": "Total de Publicaciones por Universidad",
-"Search Author or Keyword":"Buscar",
+"Search Author or Keyword":"Buscar Autor, Area de Investigacion o Palabra Clave",
 "Author Search":"Busqueda de Autores",
 "Tag Cloud":"Nube de Keywords",
 "Authors Group":"Autores por Area de Investigacion",
@@ -83,7 +83,7 @@ myApp.labels_es = {
 //"Group by" - from GROUP BY VIEW
 
 //KEYWORDS CLOUD VIEW
-"Total of Publications found" : "NUMERO DE PUBLICACIONES ENCONTRADAS",
+"Total of Publications found" : "Publicaciones Encontradas",
 
 //CLUSTERS BY KEYWORD
 "Total of Authors found" : "Total de Autores encontrados",
