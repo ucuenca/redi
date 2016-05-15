@@ -20,6 +20,8 @@ package org.apache.marmotta.ucuenca.wk.pubman.webservices;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import java.util.AbstractList;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +29,7 @@ import org.slf4j.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.servlet.ServletContext;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -38,6 +41,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
+import org.apache.marmotta.ucuenca.wk.pubman.services.ReportsImpl;
 
 @Path("/pubman")
 @ApplicationScoped
@@ -56,6 +60,7 @@ public class PubWebService {
     public static final String GET_PUBLICATIONS_MA = "/publications_ma";
     public static final String LOAD_PUBLICATIONS = "/publications_provider_graph";
     public static final String GET_AUTHOR_DATA = "/pubsearch";
+    public static final String GET_REPORT = "/report";
 
     /*
      * Get Publications Data from Source and Load into Provider Graph
@@ -153,5 +158,22 @@ public class PubWebService {
         String result = commonService.CountPublications();
         return Response.ok().entity(result).build();
     }
-
+    
+    /**
+     * @Author Jose Luis Cullcay. Service used to create reports
+     * @param report Name of the report
+     * @param param Type of the report
+     * @param param1 Parameter
+     * @param request
+     * @return Address to the new report created
+     */
+    @POST
+    @Path(GET_REPORT)
+    public Response createReport(@FormParam("hostname") String host, @FormParam("report") String report, @FormParam("type") String type, @FormParam("param1") List<String> param1, @Context HttpServletRequest request) {
+        ServletContext context = request.getServletContext();
+        String realContextPath = context.getRealPath(request.getContextPath());        
+        log.debug("Report Task");
+        String result = commonService.createReport(host, realContextPath, report, type, param1);
+        return Response.ok().entity(result).build();
+    }
 }

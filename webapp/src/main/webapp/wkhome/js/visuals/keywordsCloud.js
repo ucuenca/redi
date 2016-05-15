@@ -14,19 +14,19 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
                 + ' WHERE { '
                 + '   GRAPH <' + globalData.clustersGraph + '> '
                 + '         { '
-                + ' ?cluster <http://ucuenca.edu.ec/resource/hasPerson> <{1}> .'
-                + ' ?cluster <http://ucuenca.edu.ec/resource/hasPerson> ?subject.'
-                + '           ?subject foaf:publications ?pub'
-                + '          {'
-                + ' SELECT ?name'
-                + ' {'
-                + '      graph <' + globalData.centralGraph + '>'
-                + '            {'
-                + '        	?subject foaf:name ?name.'
-                + '            }'
-                + ' }'
-                + '  }'
-                + '              } '
+                + '                 ?cluster <http://ucuenca.edu.ec/resource/hasPerson> <{1}> .'
+                + '                 ?cluster <http://ucuenca.edu.ec/resource/hasPerson> ?subject.'
+                + '                 ?subject foaf:publications ?pub'
+                + '                 {'
+                + '                     SELECT ?name'
+                + '                     {'
+                + '                         graph <' + globalData.centralGraph + '>'
+                + '                         {'
+                + '                             ?subject foaf:name ?name.'
+                + '                         }'
+                + '                     }'
+                + '             }'
+                + '         } '
                 + '     } group by ?subject ?name '
                 + '          }}    ';
 
@@ -43,7 +43,8 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
                 + '         WHERE { '
                 + '             GRAPH <' + globalData.centralGraph + '> { '
                 + '             ?subject foaf:publications ?publicationUri. '
-                + '             ?publicationUri bibo:Quote "{1}" .'
+                + '             ?publicationUri bibo:Quote ?quote .'
+                + '             FILTER (mm:fulltext-search(?quote, "{1}" )) .'
                 + '             ?subject foaf:name ?name.  } '
                 + '             } '
                 + '         GROUP BY ?subject ?name '
@@ -232,12 +233,15 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
                             var authorInfo = $('div.tree-node-author-info .' + divtoload);
                             authorInfo.html('');
                             var values = entity.length ? entity : [entity];
+                            authorInfo.append('<h4 style="padding: 20px" class="totalauthors text-success"> Autores: ' + ( values.length -1 ) + '</h4>');
                             var div = $('<div>');
+                           
+
                             authorInfo.append(div);
                             _.map(values, function (value) {
                                 if (value["rdfs:label"] && value["uc:total"]["@value"])
                                 {
-                                    var anchor = $("<a class='relatedauthors' target='blank' onclick = 'return clickonRelatedauthor(\"" + value["@id"] + "\")'  >").text("");
+                                    var anchor = $("<a class='relatedauthors' target='blank' onclick = 'clickonRelatedauthor(\"" + value["@id"] + "\")'  >").text("");
                                     //anchor.append('<img src="/wkhome/images/author-ec.png" class="img-rounded" alt="Logo Cedia" width="20" height="20"        >');
                                     anchor.append(value["rdfs:label"] + "(" + value["uc:total"]["@value"] + ")");
                                     div.append(anchor);
@@ -289,9 +293,9 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
                 var div = $('<div>');
                 var label;
                 if ($routeParams.lang === "es") {
-                    label= $('<span class="label label-primary" style="font-size:35px">').text("PUBLICACIONES QUE CONTIENEN LA KEYWORD: " + keyword);
+                    label= $('<span class="label label-primary" style="font-size:35px; background-color: #003769; opacity: 0.8;">').text("PUBLICACIONES Y AUTORES RELACIONADOS CON: " + keyword);
                 } else {
-                    label= $('<span class="label label-primary" style="font-size:35px">').text("PUBLICATIONS CONTAINING THE KEYWORD: " + keyword);
+                    label= $('<span class="label label-primary" style="font-size:35px; background-color: #003769; opacity: 0.8;">').text("PUBLICATIONS AND AUTHORS RELATED WITH: " + keyword);
                 }
                 div.append(label);
                 div.append("</br>");
@@ -299,28 +303,29 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
 
                 //var sparqlDescribe = "DESCRIBE <" + id + ">";
                 var sparqlPublications = globalData.PREFIX
-                        + " CONSTRUCT { ?keyword uc:publication ?publicationUri. "
-                        + " ?publicationUri dct:contributors ?subject . "
-                        + " ?subject foaf:name ?name . "
-                        + " ?subject a foaf:Person . "
-                        + " ?publicationUri a bibo:Document. "
-                        + " ?publicationUri dct:title ?title. "
-                        + " ?publicationUri bibo:abstract ?abstract. "
-                        + " ?publicationUri bibo:uri ?uri. "
-                        + " } "
-                        + " WHERE {"
-                        + " GRAPH <" + globalData.centralGraph + ">"
-                        + " {"
-                        + " ?subject foaf:publications ?publicationUri ."
-                        + " ?subject foaf:name ?name ."
-                        + " ?publicationUri dct:title ?title . "
-                        + " OPTIONAL{ ?publicationUri bibo:abstract  ?abstract. } "
-                        + " OPTIONAL{ ?publicationUri bibo:uri  ?uri. } "
-                        + " ?publicationUri bibo:Quote \"" + keyword + "\" ."
-                        + "  BIND(REPLACE( \"" + keyword + "\", \" \", \"_\", \"i\") AS ?key) ."
-                        + "  BIND(IRI(?key) as ?keyword)"
-                        + " }"
-                        + "}";
+                        + ' CONSTRUCT { ?keyword uc:publication ?publicationUri. '
+                        + ' ?publicationUri dct:contributors ?subject . '
+                        + ' ?subject foaf:name ?name . '
+                        + ' ?subject a foaf:Person . '
+                        + ' ?publicationUri a bibo:Document. '
+                        + ' ?publicationUri dct:title ?title. '
+                        + ' ?publicationUri bibo:abstract ?abstract. '
+                        + ' ?publicationUri bibo:uri ?uri. '
+                        + ' } '
+                        + ' WHERE {'
+                        + ' GRAPH <' + globalData.centralGraph + '>'
+                        + ' {'
+                        + ' ?subject foaf:publications ?publicationUri .'
+                        + ' ?subject foaf:name ?name .'
+                        + ' ?publicationUri dct:title ?title . '
+                        + ' OPTIONAL{ ?publicationUri bibo:abstract  ?abstract. } '
+                        + ' OPTIONAL{ ?publicationUri bibo:uri  ?uri. } '
+                        + ' ?publicationUri bibo:Quote ?quote. '
+                        + ' FILTER (mm:fulltext-search(?quote, "' + keyword+ '" )) .'
+                        + '  BIND(REPLACE( "' + keyword + '", " ", "_", "i") AS ?key) .'
+                        + '  BIND(IRI(?key) as ?keyword)'
+                        + ' }'
+                        + '}';
                 waitingDialog.show("Searching publications with the keyword: " + keyword);
 
                 sparqlQuery.querySrv({query: sparqlPublications}, function (rdf) {

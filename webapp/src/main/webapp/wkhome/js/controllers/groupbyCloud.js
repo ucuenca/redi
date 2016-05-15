@@ -156,7 +156,7 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
                     + '   ?subject foaf:name  ?nameauthor . '
                     + '   ?subject dct:subject ?keyword. '
                     + '   ?subject dct:provenance ?provenance  '
-                   + '                   FILTER (contains(?keyword, "'+value+'")) '
+                   + '    FILTER (mm:fulltext-search(?keyword, "'+value+'")) '
 //          
 //                    + '   { '
 //                    + ' 	SELECT * '
@@ -294,7 +294,7 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
                         $scope.$apply(function () {
                             //$scope.data = compacted;
                             searchData.authorSearch = compacted;
-                            $window.location.hash = "/" + $routeParams.lang + "/w/search?" + compacted['@graph'][0]['foaf:name'].replace(',', '-').replace(' ', '_');
+                            $window.location.hash = "/" + $routeParams.lang + "/w/search?" + author;
                         });
                     });
                 });

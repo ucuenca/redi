@@ -21,9 +21,9 @@ ul, ol {
     color: 000;
 }
 .nav.desplegable {
-    width:200px; /*Le establecemos un ancho*/
+    width:190px; /*Le establecemos un ancho*/
     float: left;
-    padding-left: 1%;
+    padding-left: 0.5%;
     position: relative;
     z-index: 0;
 }

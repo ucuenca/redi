@@ -18,6 +18,7 @@
 package org.apache.marmotta.ucuenca.wk.pubman.services;
 
 import com.google.gson.JsonArray;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ import org.apache.marmotta.ldclient.services.ldclient.LDClient;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.impl.Constant;
+import org.apache.marmotta.ucuenca.wk.commons.service.ComparisonNames;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 
@@ -45,6 +47,8 @@ import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
 
 import org.apache.marmotta.ucuenca.wk.pubman.exceptions.PubException;
 import org.apache.marmotta.ucuenca.wk.pubman.api.ScopusProviderService;
+import org.openrdf.model.Model;
+import org.openrdf.model.Statement;
 
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
@@ -57,6 +61,10 @@ import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.model.Value;
+import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFHandlerException;
+import org.openrdf.rio.RDFWriter;
+import org.openrdf.rio.Rio;
 import org.semarglproject.vocab.OWL;
 
 /**
@@ -77,11 +85,14 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
     private ConstantService pubVocabService;
 
     @Inject
+    private ComparisonNames comparisonNames;
+
+    @Inject
     private SparqlFunctionsService sparqlFunctionsService;
 
     private String namespaceGraph = "http://ucuenca.edu.ec/wkhuska/";
     private String authorGraph = namespaceGraph + "authors";
-
+    private String endpointsGraph = namespaceGraph + "endpoints";
     private int processpercent = 0;
     private final Constant con = new Constant();
 
@@ -107,7 +118,7 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
             ClientConfiguration conf = new ClientConfiguration();
             LDClient ldClient = new LDClient(conf);
             int membersSearchResult = 0;
-            String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(authorGraph);
+            String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(authorGraph, endpointsGraph);
             String nameToFind = "";
             String authorResource = "";
             int priorityToFind = 0;
@@ -177,7 +188,9 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                     uri_search.add(URLSEARCHSCOPUS.replace("FIRSTNAME", firstNameSearch.length() > 0 ? firstNameSearch : firstName).replace("LASTNAME", lastNameSearch.length() > 0 ? lastNameSearch : lastName).replace("PAIS", "Ecuador"));
                     uri_search.add(URLSEARCHSCOPUS.replace("FIRSTNAME", firstNameSearch.length() > 0 ? firstNameSearch : firstName).replace("LASTNAME", lastNameSearch.length() > 1 ? lastNameSearch + " " + lastNameSearch2 : lastName).replace("PAIS", "all"));
                     uri_search.add(URLSEARCHSCOPUS.replace("FIRSTNAME", firstNameSearch.length() > 0 ? firstNameSearch : firstName).replace("LASTNAME", lastNameSearch.length() > 0 ? lastNameSearch : lastName).replace("PAIS", "all"));
-
+                    String scopusfirstName = "";
+                    String scopuslastName = "";
+                    String scopusAuthorUri = "";
                     try {
 
                         for (String uri_searchIterator : uri_search) {
@@ -187,7 +200,7 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                             membersSearchResult = 0;
 
                             if (!proccesAllAuthors) {
-                                existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(con.getScopusGraph(), nameToFind));
+                                existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(con.getScopusGraph(), nameToFind.replace(" ", "")));
                             }
                             if (nameToFind != "" && !existNativeAuthor) {
                                 response = ldClient.retrieveResource(nameToFind);
@@ -196,11 +209,27 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                             conUri = ModelCommons.asRepository(response.getData()).getConnection();
                             conUri.begin();
                             TupleQueryResult membersResult = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getMembersQuery).evaluate();
+
                             while (membersResult.hasNext()) {
-                                membersResult.next();
+                                BindingSet bindingname = membersResult.next();
+                                scopusAuthorUri = bindingname.getValue("members").toString();
                                 membersSearchResult++;
                             }
                             if (membersSearchResult == 1) {
+                                /**
+                                 * Getting contributor name to compare using comparisonNames.syntacticComparison function  - move this query to Queries Service
+                                 */
+                                String getScopusAuthorName = "SELECT ?firstName ?lastName " 
+                                        + " WHERE { "
+                                        + " <"+scopusAuthorUri+">  <http://www.elsevier.com/xml/svapi/rdf/dtd/givenName> ?firstName. "
+                                        + " <"+scopusAuthorUri+">  <http://www.elsevier.com/xml/svapi/rdf/dtd/surname> ?lastName. "
+                                        + " }";
+                                TupleQueryResult nameResult = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getScopusAuthorName).evaluate();
+                                while (nameResult.hasNext()) {
+                                    BindingSet binding = nameResult.next();
+                                    scopusfirstName = binding.getValue("firstName").stringValue();
+                                    scopuslastName = binding.getValue("lastName").stringValue();
+                                }
                                 break;
                             }
                             if (response.getHttpStatus() == 503 || membersSearchResult != 1) {
@@ -214,9 +243,18 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
 
                     String nameEndpointofPublications = ldClient.getEndpoint(URLSEARCHSCOPUS + nameToFind).getName();
                     String providerGraph = graphByProviderNS + nameEndpointofPublications.replace(" ", "");
-                    String InsertQueryOneOf = buildInsertQuery(providerGraph, nameToFind, OWL.ONE_OF, authorResource);
+                    String InsertQueryOneOf = buildInsertQuery(providerGraph, nameToFind.replace(" ", ""), OWL.ONE_OF, authorResource);
                     updatePub(InsertQueryOneOf);
-                    if (membersSearchResult == 1) {
+                    String scopusfullname = scopuslastName+":"+scopusfirstName;
+                    String localfullname = lastName + ":" + firstName;
+                    
+                    if (localfullname.toUpperCase().contains("PIEDRA"))
+                    {
+                        localfullname = localfullname.replace(".", "");
+                    }
+
+                    if (membersSearchResult == 1 && comparisonNames.syntacticComparison("local", localfullname, "scopus", scopusfullname)) {
+
                         String getPublicationsFromProviderQuery = queriesService.getPublicationFromMAProviderQuery();
                         TupleQuery pubquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationsFromProviderQuery); //
                         TupleQueryResult tripletasResult = pubquery.evaluate();

@@ -8,6 +8,7 @@ package org.apache.marmotta.ucuenca.wk.pubman.api;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import java.util.List;
 
 /**
  *
@@ -26,4 +27,7 @@ public interface CommonService {
     String GetDataFromProvidersServiceMicrosoftAcademics();
 
     JsonArray searchAuthor(String uri);
+    
+    String createReport(String hostname, String realPath, String name, String type, List<String> params);
+    
 }

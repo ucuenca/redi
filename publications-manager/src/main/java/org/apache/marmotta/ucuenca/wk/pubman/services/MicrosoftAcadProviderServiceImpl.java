@@ -78,7 +78,7 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
 
     private String namespaceGraph = "http://ucuenca.edu.ec/wkhuska/";
     private String authorGraph = namespaceGraph + "authors";
-
+    private String endpointsGraph = namespaceGraph + "endpoints";
     private int processpercent = 0;
 
     /* graphByProvider
@@ -205,7 +205,7 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
 
             int allMembers = 0;
             String nameProviderGraph = "http://ucuenca.edu.ec/wkhuska/provider/MicrosoftAcademicsProvider";
-            String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(authorGraph);
+            String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(authorGraph, endpointsGraph);
 
             // TupleQueryResult result = sparqlService.query(QueryLanguage.SPARQL, getAuthors);
             String nameToFind = "";

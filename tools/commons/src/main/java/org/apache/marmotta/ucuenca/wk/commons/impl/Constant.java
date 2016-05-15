@@ -6,7 +6,6 @@
 package org.apache.marmotta.ucuenca.wk.commons.impl;
 
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
-import org.openrdf.model.vocabulary.FOAF;
 
 /**
  *
@@ -14,6 +13,9 @@ import org.openrdf.model.vocabulary.FOAF;
  */
 public class Constant implements ConstantService {
 
+    private final static String  FOAFNS = "http://xmlns.com/foaf/0.1/";
+    private final static String OWLNS = "http://www.w3.org/2002/07/owl#";
+    
     @Override
     public String getPubProperty() {
         return PUBPROPERTY;
@@ -28,6 +30,11 @@ public class Constant implements ConstantService {
     @Override
     public String getWkhuskaGraph() {
         return "http://ucuenca.edu.ec/wkhuska";
+    }
+    
+    @Override
+    public String getClusterGraph() {
+        return "http://ucuenca.edu.ec/wkhuska/clusters";
     }
 
     @Override
@@ -48,6 +55,11 @@ public class Constant implements ConstantService {
     @Override
     public String getGSGraph() {
         return "http://ucuenca.edu.ec/wkhuska/provider/GoogleScholarProvider";
+    }
+    
+    @Override
+    public String getEndpointGraph() {
+        return "http://ucuenca.edu.ec/wkhuska/endpoints";
     }
 
     @Override
@@ -72,17 +84,17 @@ public class Constant implements ConstantService {
 
     @Override
     public String uc(String pred) {
-        return "<http://ucuenca.edu.ec/resource/" + pred + ">";
+        return "<http://ucuenca.edu.ec/ontology#" + pred + ">";
     }
 
     @Override
     public String foaf(String pred) {
-        return "<" + FOAF.NAMESPACE + pred + ">";
+        return "<" + FOAFNS + pred + ">";
     }
 
     @Override
     public String owl(String pred) {
-        return "<http://www.w3.org/2002/07/owl#" + pred + ">";
+        return "<" + OWLNS + pred + ">";
     }
 
     @Override
@@ -90,8 +102,10 @@ public class Constant implements ConstantService {
         return "<http://dblp.dagstuhl.de/rdf/schema-2015-01-26#" + pred + ">";
     }
 
-    public FOAF foaf() {
-        return new FOAF();
+    @Override
+    public String getPrefixes() {
+     return PREFIX;
     }
+
 
 }
