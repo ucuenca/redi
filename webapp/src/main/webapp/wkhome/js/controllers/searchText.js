@@ -63,6 +63,17 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
                             var filterPath = 'FILTER(CONTAINS(UCASE(?name), "{0}" )) . ';
                             var searchTextt = $scope.searchText.trim();
                             var keywords = searchTextt.split(" ");
+                            /*
+                            var middle = Math.ceil((keywords.length)/2);
+                            var words = '"' + keywords[0];
+                            for (i = 1; i < keywords.length; i++) {
+                                if (i < middle) {
+                                    words = words + " " + keywords[i] + ((i+1) == middle? '" "': '');
+                                } else {
+                                    words = keywords[i];
+                                }
+                            }
+                            */
                             var filterContainer = "";
                             keywords.forEach(function (val) {
                                 if (val.length > 0) {
