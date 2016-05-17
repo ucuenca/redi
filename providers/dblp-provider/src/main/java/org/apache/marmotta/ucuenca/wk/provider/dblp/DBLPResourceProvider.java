@@ -49,7 +49,7 @@ public class DBLPResourceProvider extends AbstractXMLDataProvider implements Dat
 
     private static final String NS_DOCUMENT = "http://purl.org/ontology/bibo/";
     public static final String NAME = "DBLP Resource Provider";
-    public static final String PATTERN = "http://dblp\\.org\\/rec/(.*)";
+    public static final String PATTERN = "http://dblp\\.(org|dagstuhl\\.de)\\/rec/(.*)";
     public static final String LEGACY_PATTERN = "(http://dblp\\.uni\\-trier\\.de/rec/)(.*)";
 
     private static ConcurrentMap<String, String> dblpNamespaces = new ConcurrentHashMap<String, String>();
@@ -117,7 +117,7 @@ public class DBLPResourceProvider extends AbstractXMLDataProvider implements Dat
      */
     @Override
     public List<String> buildRequestUrl(String resource, Endpoint endpoint) {
-        String uri = "http://dblp.dagstuhl.de/rec";
+        String uri = "http://dblp.dagstuhl.de/rec/";
         Matcher m = Pattern.compile(LEGACY_PATTERN).matcher(resource);
         if (m.find()) {
             uri += m.group(2);
