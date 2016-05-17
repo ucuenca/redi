@@ -276,15 +276,20 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                 boolean ask = false;
                 if (!proccesAllAuthors) {
                     String askTripletQuery = queriesService.getAskProcessAlreadyAuthorProvider(con.getDBLPGraph(), authorResource);
-                    try {
 
+                    try {
                         ask = sparqlService.ask(QueryLanguage.SPARQL, askTripletQuery);
                         if (ask) {
                             continue;
                         }
-                    } catch (Exception ex) {
-                        log.error("Marmotta Exception:  " + askTripletQuery);
+                    } catch (MarmottaException ex) {
+                        log.info("Marmotta Exception: Characters special in ask to author resource: " + askTripletQuery);
+
+                    } catch (Exception e) {
+                        log.info("Characters special in ask to author resource: " + askTripletQuery);
+
                     }
+
                 }
                 do {
                     try {
@@ -539,7 +544,6 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
 //        
 //        return 
 //    }
-
     public String priorityFindQueryBuilding(int priority, String firstName, String lastName) {
         String[] fnamelname = {"", "", "", "", ""};
         /**
