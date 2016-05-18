@@ -36,5 +36,11 @@ public interface MicrosoftAcadProviderService {
      * @return 
      */
     String runPublicationsTaskImpl(String param);
+ 
+    /**
+     * Get publication properties by title from MA
+     * @return 
+     */
+    String runTitleProviderTaskImpl();
     
 }

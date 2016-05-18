@@ -51,7 +51,9 @@ import org.openrdf.query.TupleQuery;
 import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.model.Value;
+import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.UpdateExecutionException;
+import org.openrdf.repository.RepositoryException;
 import org.semarglproject.vocab.OWL;
 
 /**
@@ -76,6 +78,7 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
     @Inject
     private SparqlFunctionsService sparqlFunctionsService;
 
+    
     private String namespaceGraph = "http://ucuenca.edu.ec/wkhuska/";
     private String authorGraph = namespaceGraph + "authors";
     private String endpointsGraph = namespaceGraph + "endpoints";
@@ -411,6 +414,164 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
         return "fail";
     }
 
+    @Override
+    public String runTitleProviderTaskImpl() {
+        try {
+
+            //new AuthorVersioningJob(log).proveSomething();
+            ClientConfiguration conf = new ClientConfiguration();
+            //conf.addEndpoint(new DBLPEndpoint());
+            LDClient ldClient = new LDClient(conf);
+
+            int allMembers = 0;
+            String getAllTitlesDataQuery = queriesService.getAllTitlesDataQuery(con.getWkhuskaGraph());
+
+            String titleLiteral = "";
+            String publicationResource = "";
+            List<Map<String, Value>> resultAllTitles = sparqlService.query(QueryLanguage.SPARQL, getAllTitlesDataQuery);
+
+            /*To Obtain Processed Percent*/
+            int allTitles = resultAllTitles.size();
+            int processedTitles = 0;
+
+            RepositoryConnection conUri = null;
+            ClientResponse response = null;
+
+            Properties propiedades = new Properties();
+            InputStream entrada = null;
+            Map<String, String> mapping = new HashMap<String, String>();
+            try {
+                ClassLoader classLoader = getClass().getClassLoader();
+                entrada = classLoader.getResourceAsStream("updatePlatformProcessConfig.properties");
+                propiedades.load(entrada);
+                for (String source : propiedades.stringPropertyNames()) {
+                    String target = propiedades.getProperty(source);
+                    mapping.put(source, target);
+
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            } finally {
+                if (entrada != null) {
+                    try {
+                        entrada.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            boolean proccesAllTitles = Boolean.parseBoolean(mapping.get("proccesAllAuthors").toString());
+
+            for (Map<String, Value> map : resultAllTitles) {
+                processedTitles++;
+                log.info("Titulos procesados con Microsoft Academics: " + processedTitles + " de " + allTitles);
+                publicationResource = map.get("publications").stringValue();
+                titleLiteral = map.get("title").stringValue();
+                boolean ask = false;
+                if (!proccesAllTitles) {
+                    String askTripletQuery = queriesService.getAskResourcePropertieQuery(con.getWkhuskaGraph(), publicationResource,"bibo:abstract");
+
+                    try {
+                        ask = sparqlService.ask(QueryLanguage.SPARQL, askTripletQuery);
+                        if (ask) {
+                            continue;
+                        }
+                    } catch (MarmottaException ex) {
+                        log.info("Marmotta Exception: While execute ask query: " + askTripletQuery);
+
+                    } catch (Exception e) {
+                        log.info("While execute ask query: " + askTripletQuery);
+
+                    }
+
+                }
+
+                try {
+
+                    String titleToFind = titleLiteral;
+                    String URL_TO_FIND_Microsoft = "http://academic.research.microsoft.com/json.svc/search?AppId=d4d1924a-5da9-4e8b-a515-093e8a2d1748&TitleQuery=" + titleToFind.replace(" ", "%20") + "&ResultObjects=Publication&PublicationContent=AllInfo&StartIdx=1&EndIdx=100";
+
+                    allMembers = 0;
+                    
+                    boolean dataretrievee = false;//( Data Retrieve Exception )
+
+                    try {
+                        response = ldClient.retrieveResource(URL_TO_FIND_Microsoft);
+                        dataretrievee = true;
+                    } catch (DataRetrievalException e) {
+                        log.error("Title Retrieval Exception: " + e);
+                        dataretrievee = false;
+//                               
+                    }
+
+                    if (dataretrievee)
+                    {    
+                        conUri = ModelCommons.asRepository(response.getData()).getConnection();
+                        conUri.begin();
+                        String publicationNativeResource = null;
+                        //verifying the number of publications retrieved. if it has recovered more than one publications  then not continue,
+                        String getMembersQuery = queriesService.getMembersByTitleQuery();
+                        TupleQueryResult membersResult = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getMembersQuery).evaluate();
+                        //  allMembers = Iterations.asList(membersResult).size();
+                        while (membersResult.hasNext()) {
+                            allMembers++;
+                            BindingSet bindingCount = membersResult.next();
+                            publicationNativeResource = bindingCount.getValue("members").toString();
+                        }
+                       
+                        /**
+                         * Exception if problems in tripletasResult
+                         * null.
+                         */
+                        try {
+                            if (allMembers == 1) {
+                                //SPARQL to Retrieve and Insert the abstract from MA
+                                String getAbstractQuery = queriesService.getAbstractQuery(publicationNativeResource);
+                                TupleQuery pubquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getAbstractQuery); //
+                                TupleQueryResult tripletasResult = pubquery.evaluate();
+
+                                while (tripletasResult.hasNext()) {
+                                    BindingSet tripletsResource = tripletasResult.next();
+                                    String abstractLiteral = tripletsResource.getValue("abstract").toString();
+                                    // insert sparql query, 
+                                    String abstractInsertQuery = buildInsertQuery(con.getWkhuskaGraph(), publicationResource, "bibo:abstract", abstractLiteral);
+                                    updatePub(abstractInsertQuery);
+                                }
+                                // SPARQL to Retrieve and Insert keywords ( bibo:Quote) from MA
+                                String getKeywordsQuery = queriesService.getKeywordsQuery(publicationNativeResource);
+                                TupleQuery keywordsquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getKeywordsQuery); //
+                                TupleQueryResult keywordsResult = keywordsquery.evaluate();
+                                while (keywordsResult.hasNext()) {
+                                  BindingSet keywordsBs = keywordsResult.next();
+                                    String keywordLiteral = keywordsBs.getValue("keyword").toString();
+                                    // insert sparql query, 
+                                    String keywordInsertQuery = buildInsertQuery(con.getWkhuskaGraph(), publicationResource, "bibo:Quote", keywordLiteral);
+                                    updatePub(keywordInsertQuery);
+                                }
+                            }//end if numMembers=1
+                        } catch (Exception e) {
+                            log.info("ERROR in full name:" + publicationNativeResource);
+                        } finally {
+                            conUri.commit();
+                            conUri.close();
+                        }
+                    }
+                } catch (QueryEvaluationException | MalformedQueryException | RepositoryException ex) {
+                    log.error("Evaluation Exception: " + ex);
+                } catch (Exception e) {
+                    log.error("ioexception " + e.toString());
+                }
+                printPercentProcess(processedTitles, allTitles, "Microsoft Academics");
+            }
+            return "True for enrichment with Microsoft Academics";
+        } catch (MarmottaException ex) {
+            log.error("Marmotta Exception: " + ex);
+        }
+        return "fail";
+    }
+
     public String priorityFindQueryBuilding(int priority, String firstName, String lastName) {
         try {
             switch (priority) {
@@ -471,7 +632,8 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
 
     @Override
     public void run() {
-        runPublicationsProviderTaskImpl("uri");
+        runTitleProviderTaskImpl();
+        //runPublicationsProviderTaskImpl("uri");
     }
 
 }
