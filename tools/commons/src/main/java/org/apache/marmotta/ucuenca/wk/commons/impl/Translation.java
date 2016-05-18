@@ -5,6 +5,8 @@
  */
 package org.apache.marmotta.ucuenca.wk.commons.impl;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.memetix.mst.language.Language;
 import com.memetix.mst.translate.Translate;
 import java.util.Random;
@@ -16,21 +18,23 @@ import org.apache.marmotta.ucuenca.wk.commons.service.TranslationService;
  * @author Jose Luis Cullcay
  */
 public class Translation implements TranslationService {
-    
+
     /**
      * Function to translate a text in any language to English
+     *
      * @param text The string to be translated
-     * @return The string translated. If there was an error, it returns a blank string "".
+     * @return The string translated. If there was an error, it returns a blank
+     * string "".
      */
     @Override
-    public String translate(String text) {
-        
+    public JsonObject translate(String text) {
+        JsonParser parser = new JsonParser();
         int count = 0;
         int maxTries = 360;
         Random rand = new Random();
         boolean val = true;
         int client;
-        while(val) {
+        while (val) {
             String id;
             String secret;
             try {
@@ -51,23 +55,24 @@ public class Translation implements TranslationService {
                 //if (rand.nextInt(4) == 0) {
                 //    Translate.getToken(id, secret);
                 //}
-                
+
                 // Translate an string to English (we can define a different language)
                 String translation = Translate.execute(text, Language.SPANISH, Language.ENGLISH);
                 /*try {
-                    //We will set random between 0 and 1000 milliseconds
-                    Thread.sleep(rand.nextInt(1000));//1000 milliseconds is one second.
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                }*/
+                 //We will set random between 0 and 1000 milliseconds
+                 Thread.sleep(rand.nextInt(1000));//1000 milliseconds is one second.
+                 } catch (InterruptedException ex) {
+                 Thread.currentThread().interrupt();
+                 }*/
                 //return the translation
-                return translation;
+
+                return parser.parse("{\"result\": \"" + translation + "\"}").getAsJsonObject();
                 // break out of loop, or return, on success
             } catch (Exception e) {
                 // handle exception
                 count++;
                 if (count == maxTries) {
-                    return ""; // Return a blank string. There was a persistant error.
+                    return  parser.parse("{\"result\": \" No Result \"}").getAsJsonObject(); // Return a blank string. There was a persistant error.
                 } else {
                     try {
                         //We will set random between 0 and 5100 milliseconds
@@ -78,7 +83,7 @@ public class Translation implements TranslationService {
                 }
             }
         }
-        return "";
+        return parser.parse("{\"result\": \" No Result \"}").getAsJsonObject();
     }
-    
+
 }

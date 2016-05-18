@@ -5,12 +5,13 @@
  */
 package org.apache.marmotta.ucuenca.wk.commons.service;
 
+import com.google.gson.JsonObject;
 /**
  *
  * @author Jose Luis Cullcay
  */
 public interface TranslationService {
 
-    String translate(String text);
+    JsonObject translate(String text);
 
 }

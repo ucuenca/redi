@@ -19,7 +19,8 @@ public class Queries implements QueriesService {
             + " PREFIX owl: <http://www.w3.org/2002/07/owl#> "
             + " PREFIX dct: <http://purl.org/dc/terms/> "
             + " PREFIX mm: <http://marmotta.apache.org/vocabulary/sparql-functions#> "
-            + " PREFIX dcat: <http://www.w3.org/ns/dcat#>";
+            + " PREFIX dcat: <http://www.w3.org/ns/dcat#>"
+            + " PREFIX bibo: <http://purl.org/ontology/bibo/>";
 
     private final static String OWLSAMEAS = "<http://www.w3.org/2002/07/owl#sameAs>";
 
@@ -51,7 +52,12 @@ public class Queries implements QueriesService {
         } else {
             object = "\"" + StringEscapeUtils.escapeJava(varargs[3].substring(1, varargs[3].length() - 1)) + "\"" + (varargs.length > 4 ? varargs[4] != null ? "^^xsd:" + varargs[4] : "^^xsd:string" : "^^xsd:string");
         }
-        return INSERTDATA + graphSentence + "  { " + subjectSentence + " <" + varargs[2] + "> " + object + " }}";
+
+        if (isURI(varargs[2])) {
+            return INSERTDATA + graphSentence + "  { " + subjectSentence + " <" + varargs[2] + "> " + object + " }}";
+        } else {
+            return PREFIXES + INSERTDATA + graphSentence + "  { " + subjectSentence + " " + varargs[2] + " " + object + " }}";
+        }
     }
 
     /**
@@ -61,7 +67,11 @@ public class Queries implements QueriesService {
     public String getInsertDataUriQuery(String... varargs) {
         String graphSentence = getGraphString(varargs[0]);
         String subjectSentence = "<" + varargs[1] + ">";
-        return INSERTDATA + graphSentence + " " + "{ " + subjectSentence + " <" + varargs[2] + "> <" + varargs[3] + "> }}";
+        if (isURI(varargs[2])) {
+            return INSERTDATA + graphSentence + " " + "{ " + subjectSentence + " <" + varargs[2] + "> <" + varargs[3] + "> }}";
+        } else {
+            return PREFIXES + INSERTDATA + graphSentence + " " + "{ " + subjectSentence + " " + varargs[2] + " <" + varargs[3] + "> }}";
+        }
     }
 
     /**
@@ -85,15 +95,19 @@ public class Queries implements QueriesService {
      */
     @Override
     public String getAskResourceQuery(String graph, String resource) {
-        return "ASK FROM <" + graph + "> {  <" + resource + "> ?p ?o }";
+        return "ASK FROM <" + graph + "> { <" + resource + "> ?p ?o }";
     }
 
     /**
      * Return ASK property query for a resource
      */
     @Override
-    public String getAskResourcePropertieQuery(String graph, String resource, String propertie) {
-        return "ASK FROM <" + graph + "> {  <" + resource + ">    <" + propertie + "> ?o }";
+    public String getAskResourcePropertieQuery(String graph, String resource, String property) {
+        if (isURI(property)) {
+            return "ASK FROM <" + graph + "> {  <" + resource + ">    <" + property + "> ?o }";
+        } else {
+            return PREFIXES + "ASK FROM <" + graph + "> {  <" + resource + "> " + property + " ?o }";
+        }
     }
 
     @Override
@@ -207,19 +221,46 @@ public class Queries implements QueriesService {
     @Override
     public String getAuthorsDataQuery(String graph, String endpointsgraph) {
         return PREFIXES
-                + " SELECT * "
+                + " SELECT *"
                 + " WHERE { " + getGraphString(graph) + " { "
+                //+ " WHERE { graph <http://ucuenca.edu.ec/wkhuska/authorsaux> {"
                 + " ?subject a foaf:Person. "
                 + " ?subject foaf:name ?name."
                 + " ?subject foaf:firstName ?fname. "
                 + " ?subject foaf:lastName ?lname. "
                 + " ?subject dct:provenance ?provenance. "
+                //                + ""
+                //                + "{"
+                //                + " filter (regex(UCASE(?subject), \"SAQUICELA\"))"
+                //                + "filter (regex(UCASE(?subject), \"GALARZA\"))  "
+                //                + "    }"
+                //                + "UNION "
+                //                + "{"
+                //                + "filter (regex(UCASE(?subject), \"ESPINOZA\")) "
+                //                + "filter (regex(UCASE(?subject), \"MAURICIO\")) "
+                //                + "}"
+                //                + "UNION {"
+                //                + "filter (regex(UCASE(?subject), \"CARVALLO\"))  "
+                //                + "filter (regex(UCASE(?subject), \"JUAN\"))     "
+                //                + "}"
+                //                + " UNION {"
+                //                + " filter (regex(UCASE(?subject), \"FELIPE\"))  "
+                //                + "filter (regex(UCASE(?subject), \"CISNEROS\"))   "
+                //                + "  } UNION"
+                //                + " {"
+                //                + "  filter (regex(UCASE(?subject), \"NELSON\"))  "
+                //                + "  filter (regex(UCASE(?subject), \"PIEDRA\"))   "
+                //                + " } UNION"
+                //                + " {"
+                //                + " filter (regex(UCASE(?subject), \"LIZANDRO\"))  "
+                //                + "  filter (regex(UCASE(?subject), \"SOLANO\"))     "
+                //                + "} "
                 + " { select ?status "
                 + "     where { " + getGraphString(endpointsgraph) + " {"
                 + "     ?provenance <http://ucuenca.edu.ec/ontology#status> ?status "
                 + " }}} filter (regex(?status,\"true\")) "
-                + "                }} "
-                + " ";
+                + "                }} ";
+
     }
 
     /**
@@ -278,7 +319,7 @@ public class Queries implements QueriesService {
     }
 
     /**
-     * For get Members from DBLP
+     * To get Members from DBLP
      *
      * @return
      */
@@ -286,6 +327,17 @@ public class Queries implements QueriesService {
     public String getMembersQuery() {
         return "SELECT DISTINCT ?members"
                 + " WHERE { ?x " + con.foaf("member") + " ?members. } ";
+    }
+
+    /**
+     * To get Publications Members from MA
+     *
+     * @return
+     */
+    @Override
+    public String getMembersByTitleQuery() {
+        return "SELECT DISTINCT ?members"
+                + " WHERE { ?x " + con.foaf("publications") + " ?members. } ";
     }
 
     @Override
@@ -319,6 +371,26 @@ public class Queries implements QueriesService {
     public String getPublicationMAPropertiesQuery() {
         return "SELECT DISTINCT ?publicationResource ?publicationProperties ?publicationPropertiesValue "
                 + " WHERE { ?authorResource <http://xmlns.com/foaf/0.1/publications> ?publicationResource. ?publicationResource ?publicationProperties ?publicationPropertiesValue }";
+    }
+
+    @Override
+    public String getAllTitlesDataQuery(String graph) {
+
+        return PREFIXES + "SELECT DISTINCT  ?publications ?title "
+                + "FROM <" + graph + "> "
+                + " WHERE { ?publications dct:title ?title  } ";
+    }
+
+    @Override
+    public String getAbstractQuery(String resource) {
+        return PREFIXES + " SELECT DISTINCT ?abstract "
+                + " WHERE {  <" + resource + "> bibo:abstract  ?abstract } ";
+    }
+
+    @Override
+    public String getKeywordsQuery(String resource) {
+        return PREFIXES + " SELECT DISTINCT ?keyword "
+                + " WHERE {  <" + resource + "> bibo:Quote ?keyword. } ";
     }
 
     @Override
