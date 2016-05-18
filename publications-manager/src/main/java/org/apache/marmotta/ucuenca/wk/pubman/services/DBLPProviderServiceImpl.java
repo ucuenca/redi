@@ -300,7 +300,12 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                         boolean dataretrievee = false;//( Data Retrieve Exception )
 
                         if (!proccesAllAuthors) {
-                            existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(con.getDBLPGraph(), NS_DBLP + nameToFind));
+                            try {
+                                existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(con.getDBLPGraph(), NS_DBLP + nameToFind));
+                            } catch (Exception e) {
+                                log.info("ERROR line 305" + con.getDBLPGraph() + NS_DBLP + nameToFind + "Exception" + e.getMessage());
+                                log.info("ERROR line 305" + existNativeAuthor);
+                            }
                         }
                         if (!existNativeAuthor) {
 
@@ -407,12 +412,15 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                                     }
 
                                 }//end if numMembers=1
+                                conUri.commit();
+
                             } catch (Exception e) {
                                 log.info("ERROR in full name:" + authorNativeResource);
                             } finally {
+                                if (conUri != null) {
 
-                                conUri.commit();
-                                conUri.close();
+                                    conUri.close();
+                                }
                             }
                         }
                     } catch (QueryEvaluationException | MalformedQueryException | RepositoryException ex) {
