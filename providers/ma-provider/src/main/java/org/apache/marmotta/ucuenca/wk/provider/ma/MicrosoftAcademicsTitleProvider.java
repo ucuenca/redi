@@ -50,16 +50,14 @@ import org.json.simple.parser.ParseException;
  * <p/>
  * Author: Santiago Gonzalez
  */
-public class MicrosoftAcademicsProvider extends AbstractHttpProvider {
+public class MicrosoftAcademicsTitleProvider extends AbstractHttpProvider {
 
-    public static final String NAME = "Microsoft Academics Provider";
+    public static final String NAME = "Microsoft Academics Title Provider";
     public static final String API = "http://academic.research.microsoft.com/";
-    public static final String PATTERN2 = "http(s?)://scholar\\.google\\.com/scholar\\?start\\=0\\&q=(.*)\\+article(.*)\\&hl=en\\&as_sdt\\=1%2C15\\&as_vis\\=1(.*)$";
-    public static final String PATTERN = "http://academic\\.research\\.microsoft\\.com/json\\.svc/search\\?AppId\\=(.*)\\&AuthorQuery\\=(.*)\\&ResultObjects\\=Publication\\&PublicationContent\\=AllInfo\\&StartIdx\\=1\\&EndIdx\\=1(.*)$";
-    public static final String PATTERN3 = "http(s?):.*";
+    public static final String PATTERN = "http://academic\\.research\\.microsoft\\.com/json\\.svc/search\\?AppId\\=(.*)\\&TitleQuery\\=(.*)\\&ResultObjects\\=Publication\\&PublicationContent\\=AllInfo\\&StartIdx\\=1\\&EndIdx\\=1(.*)$";
 
     private static String nsUcuenca = "https://www.cedia.org.ec/";
-    private static Logger log = LoggerFactory.getLogger(MicrosoftAcademicsProvider.class);
+    private static Logger log = LoggerFactory.getLogger(MicrosoftAcademicsTitleProvider.class);
     public String stringSearch = null, authorSearch = null, advancedSearch = null, appId = null;
     public static final ConcurrentMap<String, String> MAPPINGSCHEMA = new ConcurrentHashMap<String, String>();
     private MapPublications mapPublications = new MapPublications();
@@ -82,7 +80,6 @@ public class MicrosoftAcademicsProvider extends AbstractHttpProvider {
         MAPPINGSCHEMA.put("entity::property:citationCount", nsUcuenca + "citationCount");
         MAPPINGSCHEMA.put("entity::property:contributor", "http://purl.org/dc/terms/contributor");
         MAPPINGSCHEMA.put("entity::property:fullversionurl", nsUcuenca + "FullVersionURL");
-        
 
     }
 
@@ -149,8 +146,8 @@ public class MicrosoftAcademicsProvider extends AbstractHttpProvider {
             BufferedReader streamReader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
             StringBuilder responseStrBuilder = new StringBuilder();
 
-            String inputStr=streamReader.readLine();
-            while (inputStr  != null) {
+            String inputStr = streamReader.readLine();
+            while (inputStr != null) {
                 responseStrBuilder.append(inputStr);
                 inputStr = streamReader.readLine();
             }
@@ -174,7 +171,7 @@ public class MicrosoftAcademicsProvider extends AbstractHttpProvider {
         } catch (IOException e) {
             //e.printStackTrace();
         } catch (ParseException ex) {
-            java.util.logging.Logger.getLogger(MicrosoftAcademicsProvider.class.getName()).log(Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MicrosoftAcademicsTitleProvider.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return Collections.emptyList();
