@@ -116,6 +116,14 @@ public interface QueriesService {
 
     String getPublicationMAPropertiesQuery();
 
+    String getAllTitlesDataQuery(String graph);
+    
+    String getMembersByTitleQuery();
+    
+    String getAbstractQuery(String resource);
+    
+    String getKeywordsQuery(String resource);
+    
     //Google Scholar
     //String getPublicationFromGSProviderQuery();
     String getAuthorPublicationsQuery(String... varargs);

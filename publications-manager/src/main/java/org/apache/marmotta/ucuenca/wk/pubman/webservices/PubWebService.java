@@ -42,6 +42,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
 import org.apache.marmotta.ucuenca.wk.pubman.services.ReportsImpl;
+import org.apache.marmotta.ucuenca.wk.commons.service.TranslationService;
 
 @Path("/pubman")
 @ApplicationScoped
@@ -53,6 +54,9 @@ public class PubWebService {
     @Inject
     private CommonService commonService;
 
+    @Inject
+    private TranslationService traslateService;
+
     private static final int MAX_TURNS = 100;
     private static final int MIN_TURNS = 0;
     public static final String GET_PUBLICATIONS = "/publications";
@@ -61,10 +65,11 @@ public class PubWebService {
     public static final String LOAD_PUBLICATIONS = "/publications_provider_graph";
     public static final String GET_AUTHOR_DATA = "/pubsearch";
     public static final String GET_REPORT = "/report";
-
+    public static final String TRANSLATE = "/translate";
     /*
      * Get Publications Data from Source and Load into Provider Graph
      */
+
     @POST
     @Path(GET_PUBLICATIONS)
     public Response readPublicationsPost(@QueryParam("Endpoint") String resultType) {
@@ -133,7 +138,7 @@ public class PubWebService {
     @Path(GET_AUTHOR_DATA)
     @Produces("application/ld+json")
     public Response searchAuthor(@FormParam("resource") String uri, @Context HttpServletRequest request) {
-            JsonArray resultjson = commonService.searchAuthor(uri);
+        JsonArray resultjson = commonService.searchAuthor(uri);
         String result = resultjson.toString();
         return Response.ok().entity(result).build();
     }
@@ -158,7 +163,7 @@ public class PubWebService {
         String result = commonService.CountPublications();
         return Response.ok().entity(result).build();
     }
-    
+
     /**
      * @Author Jose Luis Cullcay. Service used to create reports
      * @param report Name of the report
@@ -171,9 +176,21 @@ public class PubWebService {
     @Path(GET_REPORT)
     public Response createReport(@FormParam("hostname") String host, @FormParam("report") String report, @FormParam("type") String type, @FormParam("param1") List<String> param1, @Context HttpServletRequest request) {
         ServletContext context = request.getServletContext();
-        String realContextPath = context.getRealPath(request.getContextPath());        
+        String realContextPath = context.getRealPath(request.getContextPath());
         log.debug("Report Task");
         String result = commonService.createReport(host, realContextPath, report, type, param1);
         return Response.ok().entity(result).build();
     }
+
+    /**
+     *
+     */
+    @POST
+    @Path(TRANSLATE) 
+    @Produces("application/ld+json")
+    public Response translate(@QueryParam("totranslate") String totranslate) {
+        String result = traslateService.translate(totranslate).toString();
+        return Response.ok().entity(result).build();
+    }
+
 }

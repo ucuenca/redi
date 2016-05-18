@@ -283,10 +283,10 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                             continue;
                         }
                     } catch (MarmottaException ex) {
-                        log.info("Marmotta Exception: Characters special in ask to author resource: " + askTripletQuery);
+                        log.info("Marmotta Exception: Special Characters while ask triplet: " + askTripletQuery);
 
                     } catch (Exception e) {
-                        log.info("Characters special in ask to author resource: " + askTripletQuery);
+                        log.info("Special Characters while ask triplet: " + askTripletQuery);
 
                     }
 
@@ -301,7 +301,7 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
 
                         if (!proccesAllAuthors) {
                             try {
-                                existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(con.getDBLPGraph(), NS_DBLP + nameToFind));
+                                existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskQuery(con.getDBLPGraph(), NS_DBLP + nameToFind, "http://www.w3.org/2002/07/owl#oneOf", authorResource));
                             } catch (Exception e) {
                                 log.info("ERROR line 305" + con.getDBLPGraph() + NS_DBLP + nameToFind + "Exception" + e.getMessage());
                                 log.info("ERROR line 305" + existNativeAuthor);
@@ -315,14 +315,11 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                             } catch (DataRetrievalException e) {
                                 log.error("Data Retrieval Exception: " + e);
                                 dataretrievee = false;
-//                               
                             }
-
                             if (response.getHttpStatus() == 503) {
                                 log.error("ErrorCode: " + response.getHttpStatus());
                             }
                         }
-
                         String nameEndpointofPublications = ldClient.getEndpoint(NS_DBLP + nameToFind).getName();
                         String providerGraph = graphByProviderNS + nameEndpointofPublications.replace(" ", "");
                         if (dataretrievee)//if the resource data were recovered
@@ -364,12 +361,8 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                             }
                             /**
                              * Exception to avoid authorNativeResource equal to
-                             * null.
-                             *
-                             *
                              */
                             try {
-
                                 String dblpfullname = authorNativeResource.substring(authorNativeResource.lastIndexOf('/') + 1);
                                 String localfullname = lastName + ":" + firstName;
 
@@ -437,7 +430,6 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
         } catch (MarmottaException ex) {
             log.error("Marmotta Exception: " + ex);
         }
-
         return "fail";
     }
 
@@ -549,15 +541,6 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
         return parser.parse(" [{\"Fail\":\"Any Data\"}]").getAsJsonArray();
     }
 
-    /**
-     * Syntactic Disambiguation by FUll NAME
-     *
-     */
-//    public boolean syntacticDisambiguation(String source, String target)
-//    {
-//        
-//        return 
-//    }
     public String priorityFindQueryBuilding(int priority, String firstName, String lastName) {
         String[] fnamelname = {"", "", "", "", ""};
         /**
