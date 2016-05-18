@@ -1,2 +1,3 @@
 org.apache.marmotta.ucuenca.wk.provider.ma.MicrosoftAcademicsProvider
 org.apache.marmotta.ucuenca.wk.provider.ma.MicrosoftAcademicsAuthorProvider
+org.apache.marmotta.ucuenca.wk.provider.ma.MicrosoftAcademicsTitleProvider
