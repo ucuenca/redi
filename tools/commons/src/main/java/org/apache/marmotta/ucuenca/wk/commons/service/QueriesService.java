@@ -118,6 +118,8 @@ public interface QueriesService {
 
     String getAllTitlesDataQuery(String graph);
     
+    String getAllTitlesDataQuery();
+    
     String getMembersByTitleQuery();
     
     String getAbstractQuery(String resource);
