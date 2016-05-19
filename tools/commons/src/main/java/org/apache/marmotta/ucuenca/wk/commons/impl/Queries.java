@@ -375,12 +375,18 @@ public class Queries implements QueriesService {
 
     @Override
     public String getAllTitlesDataQuery(String graph) {
-
+        
         return PREFIXES + "SELECT DISTINCT  ?publications ?title "
                 + "FROM <" + graph + "> "
                 + " WHERE { ?publications dct:title ?title  } ";
     }
-
+    
+    @Override
+    public String getAllTitlesDataQuery() {
+        
+        return PREFIXES + "SELECT DISTINCT  ?publications ?title "
+                + " WHERE { ?publications dct:title ?title  } ";
+    }
     @Override
     public String getAbstractQuery(String resource) {
         return PREFIXES + " SELECT DISTINCT ?abstract "
@@ -392,6 +398,8 @@ public class Queries implements QueriesService {
         return PREFIXES + " SELECT DISTINCT ?keyword "
                 + " WHERE {  <" + resource + "> bibo:Quote ?keyword. } ";
     }
+    
+    
 
     @Override
     public String getPublicationPropertiesAsResourcesQuery() {

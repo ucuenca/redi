@@ -78,7 +78,6 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
     @Inject
     private SparqlFunctionsService sparqlFunctionsService;
 
-    
     private String namespaceGraph = "http://ucuenca.edu.ec/wkhuska/";
     private String authorGraph = namespaceGraph + "authors";
     private String endpointsGraph = namespaceGraph + "endpoints";
@@ -471,7 +470,7 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                 titleLiteral = map.get("title").stringValue();
                 boolean ask = false;
                 if (!proccesAllTitles) {
-                    String askTripletQuery = queriesService.getAskResourcePropertieQuery(con.getWkhuskaGraph(), publicationResource,"bibo:abstract");
+                    String askTripletQuery = queriesService.getAskResourcePropertieQuery(con.getWkhuskaGraph(), publicationResource, "bibo:abstract");
 
                     try {
                         ask = sparqlService.ask(QueryLanguage.SPARQL, askTripletQuery);
@@ -494,7 +493,7 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                     String URL_TO_FIND_Microsoft = "http://academic.research.microsoft.com/json.svc/search?AppId=d4d1924a-5da9-4e8b-a515-093e8a2d1748&TitleQuery=" + titleToFind.replace(" ", "%20") + "&ResultObjects=Publication&PublicationContent=AllInfo&StartIdx=1&EndIdx=100";
 
                     allMembers = 0;
-                    
+
                     boolean dataretrievee = false;//( Data Retrieve Exception )
 
                     try {
@@ -506,8 +505,7 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
 //                               
                     }
 
-                    if (dataretrievee)
-                    {    
+                    if (dataretrievee) {
                         conUri = ModelCommons.asRepository(response.getData()).getConnection();
                         conUri.begin();
                         String publicationNativeResource = null;
@@ -520,10 +518,9 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                             BindingSet bindingCount = membersResult.next();
                             publicationNativeResource = bindingCount.getValue("members").toString();
                         }
-                       
+
                         /**
-                         * Exception if problems in tripletasResult
-                         * null.
+                         * Exception if problems in tripletasResult null.
                          */
                         try {
                             if (allMembers == 1) {
@@ -544,13 +541,54 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                                 TupleQuery keywordsquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getKeywordsQuery); //
                                 TupleQueryResult keywordsResult = keywordsquery.evaluate();
                                 while (keywordsResult.hasNext()) {
-                                  BindingSet keywordsBs = keywordsResult.next();
+                                    BindingSet keywordsBs = keywordsResult.next();
                                     String keywordLiteral = keywordsBs.getValue("keyword").toString();
                                     // insert sparql query, 
                                     String keywordInsertQuery = buildInsertQuery(con.getWkhuskaGraph(), publicationResource, "bibo:Quote", keywordLiteral);
                                     updatePub(keywordInsertQuery);
                                 }
                             }//end if numMembers=1
+                            else if (allMembers > 1 ) {
+                                //SPARQL to Retrieve all publications and titles from MA
+                                String getTitlesQuery = queriesService.getAllTitlesDataQuery();
+                                TupleQuery titlesquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getTitlesQuery); //
+                                TupleQueryResult titlesResult = titlesquery.evaluate();
+
+                                while (titlesResult.hasNext()) {
+                                    BindingSet titleResource = titlesResult.next();
+                                    String titlefromMA = titleResource.getBinding("title").getValue().stringValue();;
+                                    publicationNativeResource = titleResource.getValue("publications").toString();
+                                    titlefromMA=titlefromMA.replace(".","").replace("-","");
+                                    titleToFind = titleToFind.replace(".","").replace("-",""); 
+                                    
+                                    if (titleToFind.compareTo(titlefromMA) == 0) {
+                                        //SPARQL to Retrieve and Insert the abstract from MA
+                                        String getAbstractQuery = queriesService.getAbstractQuery(publicationNativeResource);
+                                        TupleQuery pubquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getAbstractQuery); //
+                                        TupleQueryResult tripletasResult = pubquery.evaluate();
+
+                                        while (tripletasResult.hasNext()) {
+                                            BindingSet tripletsResource = tripletasResult.next();
+                                            String abstractLiteral = tripletsResource.getValue("abstract").toString();
+                                            // insert sparql query, 
+                                            String abstractInsertQuery = buildInsertQuery(con.getWkhuskaGraph(), publicationResource, "bibo:abstract", abstractLiteral);
+                                            updatePub(abstractInsertQuery);
+                                        }
+                                        // SPARQL to Retrieve and Insert keywords ( bibo:Quote) from MA
+                                        String getKeywordsQuery = queriesService.getKeywordsQuery(publicationNativeResource);
+                                        TupleQuery keywordsquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getKeywordsQuery); //
+                                        TupleQueryResult keywordsResult = keywordsquery.evaluate();
+                                        while (keywordsResult.hasNext()) {
+                                            BindingSet keywordsBs = keywordsResult.next();
+                                            String keywordLiteral = keywordsBs.getValue("keyword").toString();
+                                            // insert sparql query, 
+                                            String keywordInsertQuery = buildInsertQuery(con.getWkhuskaGraph(), publicationResource, "bibo:Quote", keywordLiteral);
+                                            updatePub(keywordInsertQuery);
+                                        }
+                                        break;
+                                    }
+                                }// end title.compareto==0
+                            }// end else if (allMembers > 1 ) {
                         } catch (Exception e) {
                             log.info("ERROR in full name:" + publicationNativeResource);
                         } finally {
