@@ -27,10 +27,10 @@ myApp.labels_es = {
 "Home":"Inicio",
 "Browse":"Navegar",
 "Keywords Cloud": "Nube de Keywords",
-"Group By Keyword": "Agrupar por Keyword",
+"Group By Keyword": "Agrupar por Instituto",
 "Map View": "Mapa",
-"Clustering by Research Area": "Cluster de Areas de Investigacion",
-"Clusters by Keyword": "Clusters por Keyword",
+"Clustering by Research Area": "Agrupar por Area de Investigacion",
+"Clusters by Keyword": "Agrupar por Keyword",
 "Statistics": "Estadisticas",
 
 

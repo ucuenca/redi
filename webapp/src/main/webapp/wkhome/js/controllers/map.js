@@ -13,20 +13,22 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
         {
             waitingDialog.show("Loading Research Areas");
             var queryKeywords = globalData.PREFIX
-                    + ' CONSTRUCT { ?keywordp rdfs:label ?keyp } '
-                    + '	FROM <' + globalData.centralGraph + '> '
+                    + ' CONSTRUCT { ?keyword rdfs:label ?key } '
                     + ' WHERE { '
-                    + '     SELECT  (count(?key) as ?k) (SAMPLE(?keyword) as ?keywordp) (SAMPLE(?key) as ?keyp)  '
+                    + '     SELECT  (count(?pubs) as ?total) ' //(SAMPLE(?keyword) as ?keywordp) (SAMPLE(?key) as ?keyp)  '
                     + '     WHERE { '
-                    + '         ?subject foaf:publications ?pubs. '
-                    + '         ?subject dct:subject ?key. '
-                    + '         BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
-                    + '         BIND(IRI(?unickey) as ?keyword) '
+                    + '         graph <'+globalData.centralGraph+'> {'
+                    + '             ?subject foaf:publications ?pubs. '
+                    //+ '           ?subject dct:subject ?key. '
+                    + '             ?pubs bibo:Quote ?key. '
+                    + '             BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
+                    + '             BIND(IRI(?unickey) as ?keyword) '
+                    + '         }'
                     + '     } '
-                    //+ '     GROUP BY ?keyword  ?key '
-                    + '     GROUP BY ?subject'
+                    + '     GROUP BY ?keyword  ?key '
+                    //+ '     GROUP BY ?subject'
                     
-                    //             + '     HAVING(?k > 10) '
+                    + '     HAVING(?total > 5) ' //si la keyword aparece en mas de 5 publicaciones
                     + '}';
             sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
                 jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
@@ -38,7 +40,7 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
                     });
                     $scope.$apply(function () {
                         $scope.relatedtags = $scope.themes;
-                        $scope.selectedTagItem = 'SALUD';
+                        $scope.selectedTagItem = 'Semantic Web';
                         searchData.allkeywords = $scope.themes;
                     });
                     waitingDialog.hide();
@@ -48,7 +50,7 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
         else
         {
             $scope.relatedtags = searchData.allkeywords;
-            $scope.selectedTagItem = 'SALUD';
+            $scope.selectedTagItem = 'Semantic Web';
         }
 
 
@@ -56,7 +58,7 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
         //default selectedTagItem =  Semantic Web  - > see in app.js
         $scope.$watch('selectedTagItem', function () {
             //alert($scope.selectedItem);
-            $scope.selectedTagItem = $scope.selectedTagItem ? $scope.selectedTagItem : "SALUD";
+            $scope.selectedTagItem = $scope.selectedTagItem ? $scope.selectedTagItem : "Semantic Web";
             waitingDialog.show("Consultando Ubicacion de Autores Relacionados con:  \"" + $scope.selectedTagItem + "\"");
             var queryBySource = globalData.PREFIX
                     + ' CONSTRUCT { '
@@ -75,7 +77,8 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
                     + '         GRAPH <' + globalData.centralGraph + '>  {'
                     + '             ?subject foaf:publications ?object.'
                     //+ '             ?object bibo:Quote "' + $scope.selectedTagItem + '".'
-                    + '             ?subject dct:subject ?key.'
+                    //+ '             ?subject dct:subject ?key.'
+                    + '             ?object bibo:Quote ?key.'
                     + '             FILTER (mm:fulltext-search(?key, "' + $scope.selectedTagItem + '")) .'
                     + '             ?subject dct:provenance ?provenance.'
                     + '             { '

@@ -73,21 +73,24 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
             function executeGroupTags() {
 
                 //only keywords that appear in more than 2 articles
-                var queryKeywords = globalData.PREFIX
-                        + ' CONSTRUCT { ?keywordp rdfs:label ?keyp } '
-                        + '	FROM <' + globalData.centralGraph + '> '
-                        + ' WHERE { '
-                        + ' SELECT DISTINCT (count(?key) as ?k) (SAMPLE(?keyword) as ?keywordp) (SAMPLE(?key) as ?keyp) '
-                        + ' WHERE { '
-                        + '         ?subject foaf:publications ?pubs. '
-                        + '         ?subject dct:subject ?key. '
-                        + '         BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
-                        + '         BIND(IRI(?unickey) as ?keyword) '
-                        + ' }'
-                        //+ ' group by ?keyword  ?key '
-                        + ' group by ?subject'
-                        // + ' HAVING(?k > 1) '
-                        + '}';
+              var queryKeywords = globalData.PREFIX
+                    + ' CONSTRUCT { ?keyword rdfs:label ?key } '
+                    + ' WHERE { '
+                    + '     SELECT  (count(?pubs) as ?total) ' //(SAMPLE(?keyword) as ?keywordp) (SAMPLE(?key) as ?keyp)  '
+                    + '     WHERE { '
+                    + '         graph <'+globalData.centralGraph+'> {'
+                    + '             ?subject foaf:publications ?pubs. '
+                    //+ '           ?subject dct:subject ?key. '
+                    + '             ?pubs bibo:Quote ?key. '
+                    + '             BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
+                    + '             BIND(IRI(?unickey) as ?keyword) '
+                    + '         }'
+                    + '     } '
+                    + '     GROUP BY ?keyword  ?key '
+                    //+ '     GROUP BY ?subject'
+                    
+                    + '     HAVING(?total > 5) ' //si la keyword aparece en mas de 5 publicaciones
+                    + '}';
                 sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
                  //   waitingDialog.show();
                     jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
@@ -124,7 +127,7 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
             groupByResources($scope.dataaux, $scope.gbselectedItem);
         });
         $scope.$watch('selectedItem', function () {//Funcion para cuando se selecciona la Research Area
-            $scope.selectedItem = $scope.selectedItem ? $scope.selectedItem : "SALUD";
+            $scope.selectedItem = $scope.selectedItem ? $scope.selectedItem : "Semantic Web";
          //   waitingDialog.show("Consultando Autores Relacionados con:  \"" + $scope.selectedItem + "\"");
             $scope.todos = [];
             $scope.filteredTodos = [];
@@ -154,7 +157,8 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
                     + ' WHERE { '
                     + '   ?subject foaf:publications ?pubs . '
                     + '   ?subject foaf:name  ?nameauthor . '
-                    + '   ?subject dct:subject ?keyword. '
+                    //+ '   ?subject dct:subject ?keyword. '
+                    + '   ?pubs bibo:Quote ?keyword . '
                     + '   ?subject dct:provenance ?provenance  '
                    + '    FILTER (mm:fulltext-search(?keyword, "'+value+'")) '
 //          
