@@ -143,7 +143,7 @@ pieChart.directive('pieChart', ["d3", "globalData", "sparqlQuery",
                                     + '     } '
                                     + ' } } '
                                     + ' GROUP BY ?subject ?name '
-                                    + ' HAVING( ?totalPub > 10 && ?totalPub < 50) '
+                                    + ' HAVING( ?totalPub > 2 && ?totalPub < 50) '
                                     + '} '
                                     + '} limit 150';
                             waitingDialog.show("Loading All Authors of Selected Source");

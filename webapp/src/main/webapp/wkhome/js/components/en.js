@@ -26,10 +26,10 @@ myApp.labels_en = {
 "Home":"Home",
 "Browse":"Browse",
 "Keywords Cloud": "Keywords Cloud",
-"Group By Keyword": "Group By Keyword",
+"Group By Keyword": "Group By Institute",
 "Map View": "Map View",
-"Clustering by Research Area": "Clustering by Research Area",
-"Clusters by Keyword": "Clusters by Keyword",
+"Clustering by Research Area": "Grouping by Research Area",
+"Clusters by Keyword": "Group By Keyword",
 "Statistics": "Statistics",
 
 // HOME VIEW
