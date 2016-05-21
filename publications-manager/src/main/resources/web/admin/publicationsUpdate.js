@@ -93,6 +93,40 @@ function runUpdatePublication(options) {
 
 }
 
+function runUpdatePublicationGOOGLE(options) {
+
+    document.getElementById("imgloading").style.visibility = "visible";
+
+    var endpoint = "http://example";
+    var graphuri = "http://example/data";
+    var settings = {
+        host: options
+    }
+    var dataT = {
+        "Endpoint": endpoint,
+        "GraphUri": graphuri
+    };
+
+    $.ajax({
+        type: "POST",
+        data: JSON.stringify(dataT),
+        dataType: "text", //result data type
+        contentType: "application/json", // send data type
+        url: settings.host + "pubman/publications_google",
+        //    url:  "http://localhost:8079/marmotta/authors-module/update",
+        success: function (Result) {
+            document.getElementById("imgloading").style.visibility = "hidden";
+            alert(Result);
+        },
+        error: function (data) {
+            document.getElementById("imgloading").style.visibility = "hidden";
+            alert("Error" + data.responseText);
+        }
+    });
+
+}
+
+
 function runUpdatePublicationDBLP(options) {
 
     document.getElementById("imgloading").style.visibility = "visible";

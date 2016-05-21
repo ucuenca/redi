@@ -33,6 +33,7 @@ public class CommonServiceImpl implements CommonService {
 
     @Inject
     GoogleScholarProviderService googleService;
+    
     @Inject
     ScopusProviderServiceImpl providerServiceScopus;
 
@@ -80,6 +81,14 @@ public class CommonServiceImpl implements CommonService {
         MicrosofProvider.start();
         return "Data Provider MICROSOFT ACEDEMICS are extracted in background.   Please review main.log file for details";
     }
+    
+    @Override
+    public String GetDataFromProvidersServiceGoogleScholar() {
+        Thread GoogleProvider = new Thread(googleProviderService);
+        GoogleProvider.start();
+        return "Data Provider Google Scholar are extracted in background.   Please review main.log file for details";
+    }
+    
 
     @Override
     public String Data2GlobalGraph() {
