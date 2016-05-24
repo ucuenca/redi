@@ -13,5 +13,5 @@ import com.google.gson.JsonObject;
 public interface TranslationService {
 
     JsonObject translate(String text);
-
+  
 }
