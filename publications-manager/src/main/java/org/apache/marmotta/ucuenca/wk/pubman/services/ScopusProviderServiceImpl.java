@@ -38,10 +38,11 @@ import org.apache.marmotta.ldclient.model.ClientResponse;
 import org.apache.marmotta.ldclient.services.ldclient.LDClient;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
-import org.apache.marmotta.ucuenca.wk.commons.impl.Constant;
-import org.apache.marmotta.ucuenca.wk.commons.service.ComparisonNames;
+import org.apache.marmotta.ucuenca.wk.commons.impl.ConstantServiceImpl;
+import org.apache.marmotta.ucuenca.wk.commons.service.DistanceService;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
+import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 
 import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
 
@@ -83,9 +84,12 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
 
     @Inject
     private ConstantService pubVocabService;
+    
+    @Inject
+    private CommonsServices commonsServices;
 
     @Inject
-    private ComparisonNames comparisonNames;
+    private DistanceService distance;
 
     @Inject
     private SparqlFunctionsService sparqlFunctionsService;
@@ -94,7 +98,7 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
     private String authorGraph = namespaceGraph + "authors";
     private String endpointsGraph = namespaceGraph + "endpoints";
     private int processpercent = 0;
-    private final Constant con = new Constant();
+    private final ConstantServiceImpl con = new ConstantServiceImpl();
 
     /* graphByProvider
      Graph to save publications data by provider
@@ -205,14 +209,14 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                             if (nameToFind != "" && !existNativeAuthor) {
                                 response = ldClient.retrieveResource(nameToFind);
                             }
-                            String getMembersQuery = queriesService.getMembersQuery();
+                            String getMembersQuery = queriesService.getObjectByPropertyQuery("foaf:member");
                             conUri = ModelCommons.asRepository(response.getData()).getConnection();
                             conUri.begin();
                             TupleQueryResult membersResult = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getMembersQuery).evaluate();
 
                             while (membersResult.hasNext()) {
                                 BindingSet bindingname = membersResult.next();
-                                scopusAuthorUri = bindingname.getValue("members").toString();
+                                scopusAuthorUri = bindingname.getValue("object").toString();
                                 membersSearchResult++;
                             }
                             if (membersSearchResult == 1) {
@@ -253,15 +257,15 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                         localfullname = localfullname.replace(".", "");
                     }
 
-                    if (membersSearchResult == 1 && comparisonNames.syntacticComparison("local", localfullname, "scopus", scopusfullname)) {
+                    if (membersSearchResult == 1 && distance.syntacticComparisonNames("local", localfullname, "scopus", scopusfullname)) {
 
-                        String getPublicationsFromProviderQuery = queriesService.getPublicationFromMAProviderQuery();
+                        String getPublicationsFromProviderQuery = queriesService.getSubjectAndObjectByPropertyQuery("foaf:publications");
                         TupleQuery pubquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationsFromProviderQuery); //
                         TupleQueryResult tripletasResult = pubquery.evaluate();
                         while (tripletasResult.hasNext()) {
                             BindingSet tripletsResource = tripletasResult.next();
-                            authorNativeResource = tripletsResource.getValue("authorResource").toString();
-                            String publicationResource = tripletsResource.getValue("publicationResource").toString();
+                            authorNativeResource = tripletsResource.getValue("subject").toString();
+                            String publicationResource = tripletsResource.getValue("object").toString();
 //                            String publicationProperty = tripletsResource.getValue("publicationProperty").toString();
                             String publicationInsertQuery = buildInsertQuery(providerGraph, authorNativeResource, "http://xmlns.com/foaf/0.1/publications", publicationResource);
                             updatePub(publicationInsertQuery);
@@ -270,7 +274,7 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                             updatePub(sameAsInsertQuery);
                         }
                         // SPARQL to obtain all data of a publication
-                        String getPublicationPropertiesQuery = queriesService.getPublicationMAPropertiesQuery();
+                        String getPublicationPropertiesQuery = queriesService.getPublicationPropertiesQuery("foaf:publications");
                         TupleQuery resourcequery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationPropertiesQuery); //
                         tripletasResult = resourcequery.evaluate();
                         while (tripletasResult.hasNext()) {
@@ -341,7 +345,7 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
 
     //construyendo sparql query insert 
     public String buildInsertQuery(String grapfhProv, String sujeto, String predicado, String objeto) {
-        if (queriesService.isURI(objeto)) {
+        if (commonsServices.isURI(objeto)) {
             return queriesService.getInsertDataUriQuery(grapfhProv, sujeto, predicado, objeto);
         } else {
             return queriesService.getInsertDataLiteralQuery(grapfhProv, sujeto, predicado, objeto);
