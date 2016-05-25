@@ -18,5 +18,9 @@ public interface KeywordsService {
     List<String>  getKeywords(String abstracttext, String titletext)throws IOException, ClassNotFoundException ;
 
     List<String>  getKeywords(String abstracttext)throws IOException, ClassNotFoundException ;
+    
+     List<String>  getKeywordsOfAuthor(String uri);
 
+    boolean isConstant(String text) ;
+    
 }

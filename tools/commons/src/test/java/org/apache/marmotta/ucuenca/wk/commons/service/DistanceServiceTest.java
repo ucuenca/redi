@@ -43,20 +43,6 @@ public class DistanceServiceTest {
     public void testSemanticDistance() {
         System.out.println("getAuthorsQuery");
         DistanceService instance = new DistanceServiceImpl();
-        List<String> lista1 = new ArrayList<>();
-        lista1.add("semantic");
-        lista1.add("ontology");
-        lista1.add("internet");
-
-        List<String> lista2 = new ArrayList<>();
-        lista2.add("linked data");
-        lista2.add("web");
-        lista2.add("ontologia");
-
-        List<String> lista3 = new ArrayList<>();
-        lista3.add("filosofia");
-        lista3.add("ontologia");
-        lista3.add("derechos");
 
         List<String> lista4 = new ArrayList<>();
         lista4.add("plantas");
@@ -67,11 +53,60 @@ public class DistanceServiceTest {
         lista5.add("biology");
         lista5.add("pluricelular");
 
-        Assert.assertTrue(instance.semanticComparison(lista1, lista2));
+        List<String> lista1 = new ArrayList<>();
+        lista1.add("Arginine");
+        lista1.add("vasopressin");
+        lista1.add("mediates");
+        lista1.add("cardiovascular");
+        lista1.add("responses");
+        lista1.add("hypoxenia");
+        lista1.add("sheen");
 
-        Assert.assertFalse(instance.semanticComparison(lista1, lista3));
+        List<String> lista2 = new ArrayList<>();
+        lista2.add("ETAPA");
+        lista2.add("PROGRAMA EN COMPUTACION");
+        lista2.add("RED TELEFONICA");
+        lista2.add("SISTEMA DE INFORMACION GEOGRAFICA");
+        lista2.add("TESIS EN INFORMATICA");
+        lista2.add("TRES CAPAS");
+//Arginine vasopressin mediates cardiovascular responses to hypoxemia in fetal sheep
+//Role of endogenous opioids in the cardiovascular responses to asphyxia in fetal shee        
+
+        List<String> lista3 = new ArrayList<>();
+        lista3.add("Role");
+        lista3.add("endogeneous");
+        lista3.add("opioids");
+        lista3.add("cardiovascular");
+        lista3.add("responses");
+        lista3.add("fetal");
+        lista3.add("shee");
+
+        List<String> lista6 = new ArrayList<>();
+        lista6.add("MOTRICIDAD");
+        lista6.add("BRONFRENBRENNER");
+        lista6.add("EDAD DE DESARROLLO");
+        lista6.add("MUSICA");
+        lista6.add("COCIENTE DE DESARROLLO");
+        lista6.add("PLAN DE INTERVENCION");
+
+        List<String> lista7 = new ArrayList<>();
+        lista7.add("Parallel");
+        lista7.add("tempering");
+        lista7.add("compact");
+        lista7.add("asynchronous");
+        lista7.add("multispin");
+        lista7.add("coding");
+
+//Parallel tempering simulation of the three-dimensional Edwards-Anderson model with compact asynchronous multispin coding on GPU.
+// ETAPA, PROGRAMA DE COMPUTACION, RED TELEFONICA, SISTEMA DE INFORMACION GEOGRAFICA, 
+        //TESIS EN INFORMATICA, TRES CAPAS
+        Assert.assertFalse(instance.semanticComparison(lista1, lista2));
+
+        Assert.assertTrue(instance.semanticComparison(lista1, lista3));
+
+        Assert.assertFalse(instance.semanticComparison(lista2, lista3));
         
-        Assert.assertTrue(instance.semanticComparison(lista4, lista5));
+        Assert.assertFalse(instance.semanticComparison(lista6, lista7));
 
     }
 

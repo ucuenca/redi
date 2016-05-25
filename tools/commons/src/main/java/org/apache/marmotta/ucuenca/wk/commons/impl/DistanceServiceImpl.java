@@ -28,8 +28,8 @@ public class DistanceServiceImpl implements DistanceService {
     public boolean semanticComparison(List<String> listA, List<String> listB) {
         try {
             SemanticDistance dist = new SemanticDistance();
-            double value = dist.semanticKeywordsDistance(listA, listB)/2;
-            double semthreshold = 0.52;
+            double value = dist.semanticKeywordsDistance(listA, listB);
+            double semthreshold = 1;
             if (value < semthreshold) {
                 return true;
             }
