@@ -72,7 +72,7 @@ wkhomeApp.config(['$routeProvider',
                     templateUrl: '/wkhome/partials/search.html',
                 }).
                 when('/:lang/w/cloud?:text', {
-                    templateUrl: '/wkhome/partials/genericCloud.html',
+                    templateUrl: '/wkhome/partials/genericPageCloud.html',
                 }).
                 when('/:lang/w/clusters?:text', {
                     templateUrl: '/wkhome/partials/clustersCloud.html',

@@ -63,7 +63,8 @@ public class TestMA {
             //res = ldclient.retrieveResource("http://academic.research.microsoft.com/json.svc/search?AppId=d4d1924a-5da9-4e8b-a515-093e8a2d1748&AuthorID=34038376&ResultObjects=Publication&PublicationContent=AllInfo&StartIdx=1&EndIdx=100");
             //Test seach by author QUERY
             //res = ldclient.retrieveResource("http://academic.research.microsoft.com/json.svc/search?AppId=d4d1924a-5da9-4e8b-a515-093e8a2d1748&AuthorQuery=saquicela&ResultObjects=Publication&PublicationContent=AllInfo&StartIdx=1&EndIdx=100");
-            res = ldclient.retrieveResource("http://academic.research.microsoft.com/json.svc/search?AppId=d4d1924a-5da9-4e8b-a515-093e8a2d1748&TitleQuery=GeoLinked%20data%20and%20INSPIRE%20through%20an%20application%20case&ResultObjects=Publication&PublicationContent=AllInfo&StartIdx=1&EndIdx=100");
+            String TitleToFind = "Geographical Linked Data: a Spanish Use Case";
+            res = ldclient.retrieveResource("http://academic.research.microsoft.com/json.svc/search?AppId=d4d1924a-5da9-4e8b-a515-093e8a2d1748&TitleQuery="+TitleToFind.replace(" ", "%20")+"&ResultObjects=Publication&PublicationContent=AllInfo&StartIdx=1&EndIdx=100");
             RDFHandler handler = new RDFXMLPrettyWriter(System.out);
             try {
                 res.getTriples().getConnection().export(handler);

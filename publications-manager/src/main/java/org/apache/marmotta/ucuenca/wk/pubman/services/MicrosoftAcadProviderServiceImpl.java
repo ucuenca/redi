@@ -36,9 +36,10 @@ import org.apache.marmotta.ldclient.services.ldclient.LDClient;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
-import org.apache.marmotta.ucuenca.wk.commons.impl.Constant;
+import org.apache.marmotta.ucuenca.wk.commons.impl.ConstantServiceImpl;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
+import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 
 import org.apache.marmotta.ucuenca.wk.pubman.api.MicrosoftAcadProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
@@ -71,6 +72,9 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
 
     @Inject
     private QueriesService queriesService;
+    
+    @Inject 
+    private CommonsServices commonsServices;
 
     @Inject
     private ConstantService pubVocabService;
@@ -91,108 +95,108 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
 
     @Inject
     private SparqlService sparqlService;
-    private final Constant con = new Constant();
+    private final ConstantServiceImpl con = new ConstantServiceImpl();
 
     //for Microsoft Academics
     @Override
     public String runPublicationsTaskImpl(String param) {
-
-        try {
-
-            String providerGraph = "";
-            //String getAuthorsQuery = queriesService.getAuthorsQuery();
-            String getGraphsListQuery = queriesService.getGraphsQuery();
-            List<Map<String, Value>> resultGraph = sparqlService.query(QueryLanguage.SPARQL, getGraphsListQuery);
-            /* FOR EACH GRAPH*/
-
-            for (Map<String, Value> map : resultGraph) {
-                providerGraph = map.get("grafo").toString();
-                KiWiUriResource providerGraphResource = new KiWiUriResource(providerGraph);
-
-                if (providerGraph.contains("provider")) {
-
-                    Properties propiedades = new Properties();
-                    InputStream entrada = null;
-                    Map<String, String> mapping = new HashMap<String, String>();
-                    try {
-                        ClassLoader classLoader = getClass().getClassLoader();
-                        //File file = new File(classLoader.getResource("DBLPProvider.properties").getFile());
-
-                        entrada = classLoader.getResourceAsStream(providerGraphResource.getLocalName() + ".properties");
-                        // mappings file loaded
-                        propiedades.load(entrada);
-
-                        for (String source : propiedades.stringPropertyNames()) {
-                            String target = propiedades.getProperty(source);
-                            mapping.put(source.replace("..", ":"), target.replace("..", ":"));
-                        }
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    } finally {
-                        if (entrada != null) {
-                            try {
-                                entrada.close();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-
-                    List<Map<String, Value>> resultPublications = sparqlService.query(QueryLanguage.SPARQL, queriesService.getPublicationsMAQuery(providerGraph));
-                    for (Map<String, Value> pubresource : resultPublications) {
-                        String authorResource = pubresource.get("authorResource").toString();
-                        String publicationResource = pubresource.get("publicationResource").toString();
-                        String publicationProperty = pubVocabService.getPubProperty();
-
-                        //verificar existencia de la publicacion y su author sobre el grafo general
-                        String askTripletQuery = queriesService.getAskQuery(authorGraph, authorResource, publicationProperty, publicationResource);
-                        if (!sparqlService.ask(QueryLanguage.SPARQL, askTripletQuery)) {
-                            String insertPubQuery = buildInsertQuery(authorGraph, authorResource, publicationProperty, publicationResource);
-                            try {
-                                sparqlService.update(QueryLanguage.SPARQL, insertPubQuery);
-                            } catch (MalformedQueryException ex) {
-                            } catch (UpdateExecutionException ex) {
-                                log.error("Update Query :  " + insertPubQuery);
-                            } catch (MarmottaException ex) {
-                                log.error("Marmotta Exception:  " + insertPubQuery);
-                            }
-                        }
-
-                        List<Map<String, Value>> resultPubProperties = sparqlService.query(QueryLanguage.SPARQL, queriesService.getPublicationsPropertiesQuery(providerGraph, publicationResource));
-                        for (Map<String, Value> pubproperty : resultPubProperties) {
-                            String nativeProperty = pubproperty.get("publicationProperties").toString();
-                            if (mapping.get(nativeProperty) != null) {
-
-                                String newPublicationProperty = mapping.get(nativeProperty);
-                                String publicacionPropertyValue = pubproperty.get("publicationPropertyValue").toString();
-                                String insertPublicationPropertyQuery = buildInsertQuery(authorGraph, publicationResource, newPublicationProperty, publicacionPropertyValue);
-
-                                try {
-                                    sparqlService.update(QueryLanguage.SPARQL, insertPublicationPropertyQuery);
-                                } catch (MalformedQueryException ex) {
-                                    log.error("Malformed Query:  " + insertPublicationPropertyQuery);
-                                } catch (UpdateExecutionException ex) {
-                                    log.error("Update Query:  " + insertPublicationPropertyQuery);
-                                } catch (MarmottaException ex) {
-                                    log.error("Marmotta Exception:  " + insertPublicationPropertyQuery);
-                                }
-                            }
-                        }
-                        //compare properties with the mapping and insert new properties
-                        //mapping.get(map)
-                    }
-                }
-
-                //in this part, for each graph
-            }
-            return "Los datos de las publicaciones se han cargado exitosamente.";
-        } catch (InvalidArgumentException ex) {
-            return "error:  " + ex;
-        } catch (MarmottaException ex) {
-            return "error:  " + ex;
-        }
+        return "";
+//        try {
+//
+//            String providerGraph = "";
+//            //String getAuthorsQuery = queriesService.getAuthorsQuery();
+//            String getGraphsListQuery = queriesService.getGraphsQuery();
+//            List<Map<String, Value>> resultGraph = sparqlService.query(QueryLanguage.SPARQL, getGraphsListQuery);
+//            /* FOR EACH GRAPH*/
+//
+//            for (Map<String, Value> map : resultGraph) {
+//                providerGraph = map.get("grafo").toString();
+//                KiWiUriResource providerGraphResource = new KiWiUriResource(providerGraph);
+//
+//                if (providerGraph.contains("provider")) {
+//
+//                    Properties propiedades = new Properties();
+//                    InputStream entrada = null;
+//                    Map<String, String> mapping = new HashMap<String, String>();
+//                    try {
+//                        ClassLoader classLoader = getClass().getClassLoader();
+//                        //File file = new File(classLoader.getResource("DBLPProvider.properties").getFile());
+//
+//                        entrada = classLoader.getResourceAsStream(providerGraphResource.getLocalName() + ".properties");
+//                        // mappings file loaded
+//                        propiedades.load(entrada);
+//
+//                        for (String source : propiedades.stringPropertyNames()) {
+//                            String target = propiedades.getProperty(source);
+//                            mapping.put(source.replace("..", ":"), target.replace("..", ":"));
+//                        }
+//                    } catch (IOException ex) {
+//                        ex.printStackTrace();
+//                    } catch (Exception ex) {
+//                        ex.printStackTrace();
+//                    } finally {
+//                        if (entrada != null) {
+//                            try {
+//                                entrada.close();
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    }
+//
+//                    List<Map<String, Value>> resultPublications = sparqlService.query(QueryLanguage.SPARQL, queriesService.getPublicationsMAQuery(providerGraph));
+//                    for (Map<String, Value> pubresource : resultPublications) {
+//                        String authorResource = pubresource.get("authorResource").toString();
+//                        String publicationResource = pubresource.get("publicationResource").toString();
+//                        String publicationProperty = pubVocabService.getPubProperty();
+//
+//                        //verificar existencia de la publicacion y su author sobre el grafo general
+//                        String askTripletQuery = queriesService.getAskQuery(authorGraph, authorResource, publicationProperty, publicationResource);
+//                        if (!sparqlService.ask(QueryLanguage.SPARQL, askTripletQuery)) {
+//                            String insertPubQuery = buildInsertQuery(authorGraph, authorResource, publicationProperty, publicationResource);
+//                            try {
+//                                sparqlService.update(QueryLanguage.SPARQL, insertPubQuery);
+//                            } catch (MalformedQueryException ex) {
+//                            } catch (UpdateExecutionException ex) {
+//                                log.error("Update Query :  " + insertPubQuery);
+//                            } catch (MarmottaException ex) {
+//                                log.error("Marmotta Exception:  " + insertPubQuery);
+//                            }
+//                        }
+//
+//                        List<Map<String, Value>> resultPubProperties = sparqlService.query(QueryLanguage.SPARQL, queriesService.getPublicationsPropertiesQuery(providerGraph, publicationResource));
+//                        for (Map<String, Value> pubproperty : resultPubProperties) {
+//                            String nativeProperty = pubproperty.get("publicationProperties").toString();
+//                            if (mapping.get(nativeProperty) != null) {
+//
+//                                String newPublicationProperty = mapping.get(nativeProperty);
+//                                String publicacionPropertyValue = pubproperty.get("publicationPropertyValue").toString();
+//                                String insertPublicationPropertyQuery = buildInsertQuery(authorGraph, publicationResource, newPublicationProperty, publicacionPropertyValue);
+//
+//                                try {
+//                                    sparqlService.update(QueryLanguage.SPARQL, insertPublicationPropertyQuery);
+//                                } catch (MalformedQueryException ex) {
+//                                    log.error("Malformed Query:  " + insertPublicationPropertyQuery);
+//                                } catch (UpdateExecutionException ex) {
+//                                    log.error("Update Query:  " + insertPublicationPropertyQuery);
+//                                } catch (MarmottaException ex) {
+//                                    log.error("Marmotta Exception:  " + insertPublicationPropertyQuery);
+//                                }
+//                            }
+//                        }
+//                        //compare properties with the mapping and insert new properties
+//                        //mapping.get(map)
+//                    }
+//                }
+//
+//                //in this part, for each graph
+//            }
+//            return "Los datos de las publicaciones se han cargado exitosamente.";
+//        } catch (InvalidArgumentException ex) {
+//            return "error:  " + ex;
+//        } catch (MarmottaException ex) {
+//            return "error:  " + ex;
+//        }
     }
 
     @Override
@@ -358,15 +362,15 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                             if (!existNativeAuthor) {
                                 //SPARQL obtain all publications of author
                                 priorityToFind = 5;
-                                String getPublicationsFromProviderQuery = queriesService.getPublicationFromMAProviderQuery();
+                                String getPublicationsFromProviderQuery = queriesService.getSubjectAndObjectByPropertyQuery("foaf:publications");
                                 TupleQuery pubquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationsFromProviderQuery); //
                                 TupleQueryResult tripletasResult = pubquery.evaluate();
                                 while (tripletasResult.hasNext()) {
                                     AuthorDataisLoad = true;
 
                                     BindingSet tripletsResource = tripletasResult.next();
-                                    authorNativeResource = tripletsResource.getValue("authorResource").toString();
-                                    String publicationResource = tripletsResource.getValue("publicationResource").toString();
+                                    authorNativeResource = tripletsResource.getValue("subject").toString();
+                                    String publicationResource = tripletsResource.getValue("object").toString();
                                     //String publicationProperty = tripletsResource.getValue("publicationProperty").toString();
                                     ///insert sparql query, 
                                     String publicationInsertQuery = buildInsertQuery(providerGraph, authorNativeResource, "http://xmlns.com/foaf/0.1/publications", publicationResource);
@@ -379,7 +383,7 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                                 }
 
                                 // SPARQL to obtain all data of a publication
-                                String getPublicationPropertiesQuery = queriesService.getPublicationMAPropertiesQuery();
+                                String getPublicationPropertiesQuery = queriesService.getPublicationPropertiesQuery("foaf:publications");
                                 TupleQuery resourcequery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationPropertiesQuery); //
                                 tripletasResult = resourcequery.evaluate();
                                 while (tripletasResult.hasNext()) {
@@ -510,13 +514,13 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                         conUri.begin();
                         String publicationNativeResource = null;
                         //verifying the number of publications retrieved. if it has recovered more than one publications  then not continue,
-                        String getMembersQuery = queriesService.getMembersByTitleQuery();
+                        String getMembersQuery = queriesService.getObjectByPropertyQuery("foaf:publications");
                         TupleQueryResult membersResult = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getMembersQuery).evaluate();
                         //  allMembers = Iterations.asList(membersResult).size();
                         while (membersResult.hasNext()) {
                             allMembers++;
                             BindingSet bindingCount = membersResult.next();
-                            publicationNativeResource = bindingCount.getValue("members").toString();
+                            publicationNativeResource = bindingCount.getValue("object").toString();
                         }
 
                         /**
@@ -525,24 +529,24 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                         try {
                             if (allMembers == 1) {
                                 //SPARQL to Retrieve and Insert the abstract from MA
-                                String getAbstractQuery = queriesService.getAbstractQuery(publicationNativeResource);
+                                String getAbstractQuery = queriesService.getObjectByPropertyQuery(publicationNativeResource, "bibo:abstract");
                                 TupleQuery pubquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getAbstractQuery); //
                                 TupleQueryResult tripletasResult = pubquery.evaluate();
 
                                 while (tripletasResult.hasNext()) {
                                     BindingSet tripletsResource = tripletasResult.next();
-                                    String abstractLiteral = tripletsResource.getValue("abstract").toString();
+                                    String abstractLiteral = tripletsResource.getValue("object").toString();
                                     // insert sparql query, 
                                     String abstractInsertQuery = buildInsertQuery(con.getWkhuskaGraph(), publicationResource, "bibo:abstract", abstractLiteral);
                                     updatePub(abstractInsertQuery);
                                 }
                                 // SPARQL to Retrieve and Insert keywords ( bibo:Quote) from MA
-                                String getKeywordsQuery = queriesService.getKeywordsQuery(publicationNativeResource);
+                                String getKeywordsQuery = queriesService.getObjectByPropertyQuery(publicationNativeResource,"bibo:Quote");
                                 TupleQuery keywordsquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getKeywordsQuery); //
                                 TupleQueryResult keywordsResult = keywordsquery.evaluate();
                                 while (keywordsResult.hasNext()) {
                                     BindingSet keywordsBs = keywordsResult.next();
-                                    String keywordLiteral = keywordsBs.getValue("keyword").toString();
+                                    String keywordLiteral = keywordsBs.getValue("object").toString();
                                     // insert sparql query, 
                                     String keywordInsertQuery = buildInsertQuery(con.getWkhuskaGraph(), publicationResource, "bibo:Quote", keywordLiteral);
                                     updatePub(keywordInsertQuery);
@@ -550,37 +554,37 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                             }//end if numMembers=1
                             else if (allMembers > 1 ) {
                                 //SPARQL to Retrieve all publications and titles from MA
-                                String getTitlesQuery = queriesService.getAllTitlesDataQuery();
+                                String getTitlesQuery = queriesService.getSubjectAndObjectByPropertyQuery("dct:title");
                                 TupleQuery titlesquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getTitlesQuery); //
                                 TupleQueryResult titlesResult = titlesquery.evaluate();
 
                                 while (titlesResult.hasNext()) {
                                     BindingSet titleResource = titlesResult.next();
-                                    String titlefromMA = titleResource.getBinding("title").getValue().stringValue();;
-                                    publicationNativeResource = titleResource.getValue("publications").toString();
+                                    String titlefromMA = titleResource.getBinding("object").getValue().stringValue();;
+                                    publicationNativeResource = titleResource.getValue("subject").toString();
                                     titlefromMA=titlefromMA.replace(".","").replace("-","");
                                     titleToFind = titleToFind.replace(".","").replace("-",""); 
                                     
                                     if (titleToFind.compareTo(titlefromMA) == 0) {
                                         //SPARQL to Retrieve and Insert the abstract from MA
-                                        String getAbstractQuery = queriesService.getAbstractQuery(publicationNativeResource);
+                                        String getAbstractQuery = queriesService.getObjectByPropertyQuery(publicationNativeResource, "bibo:abstract");
                                         TupleQuery pubquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getAbstractQuery); //
                                         TupleQueryResult tripletasResult = pubquery.evaluate();
 
                                         while (tripletasResult.hasNext()) {
                                             BindingSet tripletsResource = tripletasResult.next();
-                                            String abstractLiteral = tripletsResource.getValue("abstract").toString();
+                                            String abstractLiteral = tripletsResource.getValue("object").toString();
                                             // insert sparql query, 
                                             String abstractInsertQuery = buildInsertQuery(con.getWkhuskaGraph(), publicationResource, "bibo:abstract", abstractLiteral);
                                             updatePub(abstractInsertQuery);
                                         }
                                         // SPARQL to Retrieve and Insert keywords ( bibo:Quote) from MA
-                                        String getKeywordsQuery = queriesService.getKeywordsQuery(publicationNativeResource);
+                                        String getKeywordsQuery = queriesService.getObjectByPropertyQuery(publicationNativeResource,"bibo:Quote");
                                         TupleQuery keywordsquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getKeywordsQuery); //
                                         TupleQueryResult keywordsResult = keywordsquery.evaluate();
                                         while (keywordsResult.hasNext()) {
                                             BindingSet keywordsBs = keywordsResult.next();
-                                            String keywordLiteral = keywordsBs.getValue("keyword").toString();
+                                            String keywordLiteral = keywordsBs.getValue("object").toString();
                                             // insert sparql query, 
                                             String keywordInsertQuery = buildInsertQuery(con.getWkhuskaGraph(), publicationResource, "bibo:Quote", keywordLiteral);
                                             updatePub(keywordInsertQuery);
@@ -661,7 +665,7 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
 
     //construyendo sparql query insert 
     public String buildInsertQuery(String grapfhProv, String sujeto, String predicado, String objeto) {
-        if (queriesService.isURI(objeto)) {
+        if (commonsServices.isURI(objeto)) {
             return queriesService.getInsertDataUriQuery(grapfhProv, sujeto, predicado, objeto);
         } else {
             return queriesService.getInsertDataLiteralQuery(grapfhProv, sujeto, predicado, objeto);

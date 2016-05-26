@@ -60,6 +60,7 @@ public class PubWebService {
     private static final int MAX_TURNS = 100;
     private static final int MIN_TURNS = 0;
     public static final String GET_PUBLICATIONS = "/publications";
+    public static final String GET_PUBLICATIONS_GOOGLE = "/publications_google";
     public static final String GET_PUBLICATIONS_DBLP = "/publications_dblp";
     public static final String GET_PUBLICATIONS_MA = "/publications_ma";
     public static final String LOAD_PUBLICATIONS = "/publications_provider_graph";
@@ -78,7 +79,18 @@ public class PubWebService {
         return runPublicationsProviderTask(params);
     }
 
-
+  /*
+     * Get Publications Data from Source and Load into Provider Graph
+     */
+    @POST
+    @Path(GET_PUBLICATIONS_GOOGLE)
+    public Response readPublicationsPostGoogle(@QueryParam("Endpoint") String resultType) {
+        String params = resultType;
+        log.debug("Publications Task", params);
+        String result = commonService.GetDataFromProvidersServiceGoogleScholar();
+        return Response.ok().entity(result).build();
+    }
+    
     /*
      * Get Publications Data from Source and Load into Provider Graph
      */
