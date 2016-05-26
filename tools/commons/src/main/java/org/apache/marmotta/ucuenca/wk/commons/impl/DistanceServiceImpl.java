@@ -9,6 +9,7 @@ import org.apache.marmotta.ucuenca.wk.commons.function.SyntacticDistance;
 import org.apache.marmotta.ucuenca.wk.commons.function.SemanticDistance;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,6 +31,25 @@ public class DistanceServiceImpl implements DistanceService {
             SemanticDistance dist = new SemanticDistance();
             double value = dist.semanticKeywordsDistance(listA, listB);
             double semthreshold = 1;
+            if (value < semthreshold) {
+                return true;
+            }
+        } catch (IOException | ClassNotFoundException | SQLException ex) {
+            log.error("ERROR IN SemanticDistance:" + ex);
+   //         Logger.getLogger(DistanceServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
+     @Override
+    public boolean semanticComparison(String word, List<String> listB) {
+        try {
+            List<String> listA = new ArrayList<>();
+            listA.add(word);
+            SemanticDistance dist = new SemanticDistance();
+            
+            double value = dist.semanticKeywordsDistance(listA, listB);
+            double semthreshold = 0.8;
             if (value < semthreshold) {
                 return true;
             }

@@ -25,4 +25,6 @@ public interface DistanceService {
     
     
     boolean semanticComparison(List<String> listA, List<String> listB);
+    
+    boolean semanticComparison(String word, List<String> listB);
 }

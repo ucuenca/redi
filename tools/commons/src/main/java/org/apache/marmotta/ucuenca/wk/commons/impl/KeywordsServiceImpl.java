@@ -16,6 +16,7 @@ import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.ucuenca.wk.commons.service.KeywordsService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
+import org.apache.marmotta.ucuenca.wk.commons.service.DistanceService;
 import org.openrdf.model.Value;
 import org.openrdf.query.QueryLanguage;
 
@@ -25,8 +26,8 @@ import org.openrdf.query.QueryLanguage;
  */
 public class KeywordsServiceImpl implements KeywordsService {
 
-    @Inject
-    private QueriesService queriesService;
+    //@Inject
+    private QueriesService queriesService = new QueriesServiceImpl();
 
     @Inject
     private SparqlService sparqlService;
@@ -82,30 +83,58 @@ public class KeywordsServiceImpl implements KeywordsService {
 
     @Override
     public List<String> getKeywordsOfAuthor(String authorUri) {
-        List<String> keywords = new ArrayList<String>();
+        List<String> keywords = new ArrayList<>();
         try {
             String getAllKeywordsQuery = queriesService.getAuthorsKeywordsQuery(authorUri);
             List<Map<String, Value>> resultKeywords = sparqlService.query(QueryLanguage.SPARQL, getAllKeywordsQuery);
             int i = 0;
             for (Map<String, Value> key : resultKeywords) {
                 String keyword = key.get("keyword").stringValue();
+                keyword = cleaningText(keyword);
                 if (!isConstant(keyword)) {
                     keywords.add(keyword);
                 }
+            }
+            DistanceService distance = new DistanceServiceImpl();
+            String analizedKeyword = keywords.get(0);
+            List<String> keywordsG1 = new ArrayList<>();
+            List<String> keywordsG2 = new ArrayList<>();
+            int sumG1 = 0;
+            int sumG2 = 0;
+            for (String key : keywords) {
+
+                List<String> onlyKeyword2 = new ArrayList<>();
+                onlyKeyword2.add(key);
+                if (distance.semanticComparison(analizedKeyword, onlyKeyword2)) {
+                    keywordsG1.add(keywords.get(i));
+                    sumG1++;
+                } else {
+                    keywordsG2.add(keywords.get(i));
+                    sumG2++;
+
+                }
                 i++;
                 if (i == MAXKEYWORDS) {
-                    return keywords;
+                    if (sumG1 == 0) {
+                        return keywordsG2;
+                    }
+                    if (sumG2 == 0) {
+                        return keywordsG1;
+                    }
+                    return keywordsG1;
                 }
             }
+            return keywordsG1;
         } catch (MarmottaException ex) {
             Logger.getLogger(KeywordsServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return keywords;
     }
 
+
     public boolean isConstant(String text) {
         //estas palabras deben ir en recursos en el archivo de configuracion de este modulo 
-        String[] articlesEs = {"al", "a", "modelo", "cuanto", "porque", "cuales", "cuando", "debe", "donde", "del", "lo", "mayor", "menor", "nueva", "nuevo", "otros", "otras", "objeto", "por", "problema", "resumen", "todo", "tanto", "su", "se", "ve", "mas", "vez", "de", "el", "la", "los", "en", "con", "por", "que", "sin", "ellos", "aquellos", "las", "cuenca", "ecuador", "promas", "quito", "guayaquil", "paute", "cajas", ""};
+        String[] articlesEs = {"promas","tesis","etapa","al", "a", "modelo", "cuanto", "porque", "cuales", "cuando", "debe", "donde", "del", "lo", "mayor", "menor", "nueva", "nuevo", "otros", "otras", "objeto", "por", "problema", "resumen", "todo", "tanto", "su", "se", "ve", "mas", "vez", "de", "el", "la", "los", "en", "con", "por", "que", "sin", "ellos", "aquellos", "las", "cuenca", "ecuador", "promas", "quito", "guayaquil", "paute", "cajas", ""};
         for (String word : articlesEs) {
             if (word.contains("-") || word.contains("_")) {
                 return true;
@@ -114,7 +143,7 @@ public class KeywordsServiceImpl implements KeywordsService {
                 return true;
             }
         }
-        String[] articlesEn = {"a", "are", "an", "abstract", "been", "by", "change", "chapter", "challenging", "for", "has", "into", "model", "moreover", "lower", "hight", "of", "object", "problems", "related", "that", "the", "we", "when", "where", "with", "for", "the", "in", "a", "an", "with", "is", "to", "and", "of", "high", "to", "any", "on", "cuenca", "ecuador"};
+        String[] articlesEn = {"a", "are", "an", "abstract", "been", "by", "change", "chapter", "challenging", "do", "dont", "don't", "for", "has", "into", "model", "moreover", "lower", "hight", "of", "object", "problems", "related", "they", "that", "the", "we", "what", "when", "where", "with", "for", "the", "in", "a", "an", "with", "is", "to", "and", "of", "high", "to", "any", "on", "cuenca", "ecuador"};
         for (String article : articlesEn) {
             if (text.toLowerCase().compareTo(article) == 0) {
                 return true;
@@ -134,6 +163,13 @@ public class KeywordsServiceImpl implements KeywordsService {
         text = text.replace("^", "");
         text = text.replace("%", "");
         text = text.replace("#", "");
+        text = text.replace("TESIS DE MAESTRIA EN", "");
+        text = text.replace("TESIS DE", "");
+        text = text.replace("TESIS EN", "");
+        text = text.replace("TESIS", "");
+        text = text.replace("MAESTRIA", "");
+        text = text.replace("FACULTAD", "");
+        text = text.replace("PUBLICA", "");
 
         text = commonsservices.removeAccents(text);
         return text;

@@ -239,10 +239,10 @@ public class QueriesServiceImpl implements QueriesService {
 //                                + " filter (regex(UCASE(?subject), \"LIZANDRO\"))  "
 //                                + "  filter (regex(UCASE(?subject), \"SOLANO\"))     "
 //                                + "} "
-//                + " { select ?status "
-//                + "     where { " + getGraphString(endpointsgraph) + " {"
-//                + "     ?provenance <http://ucuenca.edu.ec/ontology#status> ?status "
-//                + " }}} filter (regex(?status,\"true\")) "
+                + " { select ?status "
+                + "     where { " + getGraphString(endpointsgraph) + " {"
+                + "     ?provenance <http://ucuenca.edu.ec/ontology#status> ?status "
+                + " }}} filter (regex(?status,\"true\")) "
                 + "                }} ";
 
     }
@@ -372,7 +372,7 @@ public class QueriesServiceImpl implements QueriesService {
     @Override
     public String getAuthorsKeywordsQuery(String resource) {
         return PREFIXES + " SELECT DISTINCT ?keyword FROM <http://ucuenca.edu.ec/wkhuska/authors> "
-                + " WHERE { <" + resource + "> dct:subject ?keyword. } ";
+                + " WHERE { <" + resource + "> dct:subject ?keyword. } limit 50";
     }
     
 

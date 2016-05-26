@@ -100,13 +100,24 @@ public class DistanceServiceTest {
 //Parallel tempering simulation of the three-dimensional Edwards-Anderson model with compact asynchronous multispin coding on GPU.
 // ETAPA, PROGRAMA DE COMPUTACION, RED TELEFONICA, SISTEMA DE INFORMACION GEOGRAFICA, 
         //TESIS EN INFORMATICA, TRES CAPAS
-        Assert.assertFalse(instance.semanticComparison(lista1, lista2));
+    //    Assert.assertFalse(instance.semanticComparison(lista1, lista2));
 
-        Assert.assertTrue(instance.semanticComparison(lista1, lista3));
+   //     Assert.assertTrue(instance.semanticComparison(lista1, lista3));
 
-        Assert.assertFalse(instance.semanticComparison(lista2, lista3));
+     //   Assert.assertFalse(instance.semanticComparison(lista2, lista3));
         
-        Assert.assertFalse(instance.semanticComparison(lista6, lista7));
+    //    Assert.assertFalse(instance.semanticComparison(lista6, lista7));
+        
+        
+        List<String> lista9 = new ArrayList<>();
+        lista9.add("SOFTWARE");
+        lista9.add("MACHINE LEARNING");
+        
+        List<String> lista10 = new ArrayList<>();
+        lista10.add("MEDIO AMBIENTE");
+        lista10.add("CLIMA");
+        
+        Assert.assertFalse(instance.semanticComparison(lista9, lista10));
 
     }
 
