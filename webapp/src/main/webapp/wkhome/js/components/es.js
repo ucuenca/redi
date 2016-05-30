@@ -29,23 +29,23 @@ myApp.labels_es = {
 "Keywords Cloud": "Nube de Keywords",
 "Group By Keyword": "Agrupar por Instituto",
 "Map View": "Mapa",
-"Clustering by Research Area": "Agrupar por Area de Investigacion",
+"Clustering by Research Area": "Agrupar por Area de Conocimiento",
 "Clusters by Keyword": "Agrupar por Keyword",
 "Statistics": "Estadisticas",
 
 
 
 // HOME VIEW
-"Areas de Investigacion":"Areas de Investigacion",
+"Areas de Investigacion":"Areas de Conocimiento",
 "Total Autores":"Total de Autores por Universidad",
 "Total Publicaciones": "Total de Publicaciones por Universidad",
-"Search Author or Keyword":"Buscar Autor, Area de Investigacion o Palabra Clave",
+"Search Author or Keyword":"Buscar Autor, Area de Conocimiento o Palabra Clave",
 "Author Search":"Busqueda de Autores",
 "Tag Cloud":"Nube de Keywords",
-"Authors Group":"Autores por Area de Investigacion",
+"Authors Group":"Autores por Area de Conocimiento",
 "Ecuadorian Semantic Repository":"Repositorio Ecuatoriano De Investigadores",
 "Search related researchers":"Encuentra Investigadores relacionados",
-"Location by Research Area":"Localizacion de Areas de Investigacion",
+"Location by Research Area":"Localizacion de Areas de Conocimiento",
 "Search publications": "Encuentra Autores y Publicaciones",
 
 //EXPLORABLE TREE VIEW
@@ -57,13 +57,13 @@ myApp.labels_es = {
 //   GROUP BY  VIEW
 "Grouping Publications": "Agrupando Autores por Area y por Institucion",
 "Group by":"Agrupar Por",
-"Select Research Area":"Area de Investigacion",
+"Select Research Area":"Area de Conocimiento",
 //"All" - from cloud cluster view
 "Author":"Autor",
 "Source":"Institucion",
 
 // MAP VIEW
-"Research Area":"Area de Investigacion",
+"Research Area":"Area de Conocimiento",
 "Institute":"Institucion",
 "Full Name":"Nombre de la Institucion",
 "City": "Ciudad",
