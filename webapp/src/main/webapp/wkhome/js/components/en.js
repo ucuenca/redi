@@ -39,7 +39,7 @@ myApp.labels_en = {
 "Search Author or Keyword":"Search Author, knowledge Area or Keyword",
 "Author Search":"Author Search",
 "Tag Cloud":"Tag Cloud",
-"Authors Group":"Authors by Research Area",
+"Authors Group":"Authors by knowledge Area",
 "Ecuadorian Semantic Repository":"Ecuadorian Repository of Researchers",
 "Search related researchers":"Find related Researchers",
 "Location by Research Area":"Location by knowledge Area",

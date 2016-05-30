@@ -39,7 +39,7 @@ myApp.labels_es = {
 "Areas de Investigacion":"Areas de Conocimiento",
 "Total Autores":"Total de Autores por Universidad",
 "Total Publicaciones": "Total de Publicaciones por Universidad",
-"Search Author or Keyword":"Buscar Autor, Area de Investigacion o Palabra Clave",
+"Search Author or Keyword":"Buscar Autor, Area de Conocimiento o Palabra Clave",
 "Author Search":"Busqueda de Autores",
 "Tag Cloud":"Nube de Keywords",
 "Authors Group":"Autores por Area de Conocimiento",
