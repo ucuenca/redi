@@ -106,16 +106,16 @@ pieChart.directive('pieChart', ["d3", "globalData", "sparqlQuery",
 
                     .on("click", function (d) {
                         var key = d.data.label;
-                        if (entityName === 'Articles')
-                        {
-                           
-                        }
-                        else
+//                        if (entityName === 'Articles')
+//                        {
+//                           
+//                        }
+//                        else
                         if (entityName === 'Researchers')
                         {
                             scope.ifClick({value: key});
                         }
-                        else
+                        else  if (entityName === 'Articles' || entityName === 'Authors')
                         {
                             var sparqlquery = globalData.PREFIX
                                     + ' CONSTRUCT { '
@@ -143,7 +143,7 @@ pieChart.directive('pieChart', ["d3", "globalData", "sparqlQuery",
                                     + '     } '
                                     + ' } } '
                                     + ' GROUP BY ?subject ?name '
-                                    + ' HAVING( ?totalPub > 2 && ?totalPub < 50) '
+                                    + ' HAVING( ?totalPub > 2 && ?totalPub < 500) '
                                     + '} '
                                     + '} limit 150';
                             waitingDialog.show("Loading All Authors of Selected Source");
@@ -154,8 +154,6 @@ pieChart.directive('pieChart', ["d3", "globalData", "sparqlQuery",
                                     if (compacted)
                                     {
                                         var entity = compacted["@graph"];
-                                        //var final_entity = _.where(entity, {"@type": "bibo:Document"});
-                                        var values = entity.length ? entity : [entity];
                                         //send data to getKeywordTag Controller
                                         scope.ifClick({value: compacted});
                                         waitingDialog.hide();

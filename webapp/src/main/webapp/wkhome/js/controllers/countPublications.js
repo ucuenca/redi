@@ -1,6 +1,14 @@
 
-wkhomeControllers.controller('countPublications', ['$scope', 'globalData', 'sparqlQuery',
-    function ($scope, globalData, sparqlQuery) {
+wkhomeControllers.controller('countPublications', ['$window','$routeParams','$scope','searchData', 'globalData', 'sparqlQuery',
+    function ($window, $routeParams,$scope,searchData, globalData, sparqlQuery) {
+        
+           //if click in pie-chart (Authors)
+        $scope.ifClick = function (value)
+        {
+            searchData.genericData = value;
+            $window.location.hash = "/" + $routeParams.lang + "/w/cloud?" + "datacloud";
+        };
+        
         var queryTotalAuthors =   globalData.PREFIX
                 + ' CONSTRUCT '
                 + ' {  '

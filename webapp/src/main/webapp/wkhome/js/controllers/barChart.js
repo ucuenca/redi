@@ -19,6 +19,7 @@ wkhomeControllers.controller('barChart', ['$scope', 'globalData', 'sparqlQuery',
                 + '                 ?s a foaf:Person.'
                 + '                 ?s foaf:name ?name.'
                 + '                 ?s foaf:publications ?pub.'
+                + '                 ?pub dct:title ?title.'
                 + '                 ?s dct:provenance ?provenance.     '
                 + '                 { '
                 + '                     SELECT * '

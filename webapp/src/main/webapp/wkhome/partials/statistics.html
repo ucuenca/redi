@@ -34,7 +34,7 @@
         <div class="col-md-4"  ng-controller="countPublications">
             <div style="padding-top: 10px; padding-left: 10px; background-color: #CCCCCC; border-radius: 15px; ">
                 <h4 class="text-success" style='text-align: center'>{{ 'Total Publicaciones' | translate }}</h4>
-                <pie-chart data="data" pc-height="220" style="display:block"></pie-chart>
+                <pie-chart data="data" pc-height="220" style="display:block" if-click="ifClick(value)" ng-model="value"></pie-chart>
             </div>
         </div>
         <div class="col-md-4" ng-controller="countResearchAreas">
