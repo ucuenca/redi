@@ -195,4 +195,14 @@ div.body-snap h4 {
       
       .text-success {
           color: #678C03;
-      }      
+      }
+
+
+.button {
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+}      

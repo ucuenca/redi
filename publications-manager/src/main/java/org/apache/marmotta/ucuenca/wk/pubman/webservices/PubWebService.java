@@ -52,7 +52,7 @@ public class PubWebService {
 
     @Inject
     private CommonService commonService;
-
+        
     private static final int MAX_TURNS = 100;
     private static final int MIN_TURNS = 0;
     public static final String GET_PUBLICATIONS = "/publications";
