@@ -20,7 +20,8 @@ barChart.directive('barChart', ["d3", "globalData", "sparqlQuery",
             // compute total for each source.
             fData.forEach(function (d) {
                 d.total = 0;
-                d.total = parseInt(d.freq.Autores) + parseInt(d.freq.Publicaciones) + parseInt(d.freq.Salud);
+                //d.total = parseInt(d.freq.Autores) + parseInt(d.freq.Publicaciones) + parseInt(d.freq.Salud);
+                d.total = parseInt(d.freq.Publicaciones);
             });
 
             // function to handle histogram.

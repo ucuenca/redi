@@ -7,7 +7,7 @@ var wkhomeServices = angular.module('wkhomeServices', ['ngResource']);
 //For testing purposes
 //wkhomeServices.serverInstance = 'http://190.15.141.85:8080/marmottatest';
 //wkhomeServices.serverInstance = 'http://190.15.141.85:80';
-wkhomeServices.serverInstance = 'http://localhost:8080/marmotta';
+//wkhomeServices.serverInstance = 'http://localhost:8080/marmotta';
 //for parliament triplestore test
 //wkhomeServices.serverInstance = 'http://localhost:8080/parliament';
 

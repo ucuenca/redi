@@ -30,7 +30,7 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
                 + "             ?s foaf:name ?name."
                 + "             ?s foaf:publications ?pub. "
                 + "             ?pub dct:title ?title. "
-                + "             ?s dct:subject ?key"
+                + "             optional { ?s dct:subject ?key }"
                 + "             {0}"
                 + "     } } "
                 + "  } "
