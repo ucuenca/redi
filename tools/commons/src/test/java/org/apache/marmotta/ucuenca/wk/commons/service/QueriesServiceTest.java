@@ -6,7 +6,8 @@
 package org.apache.marmotta.ucuenca.wk.commons.service;
 
 import javax.inject.Inject;
-import org.apache.marmotta.ucuenca.wk.commons.impl.Queries;
+import org.apache.marmotta.ucuenca.wk.commons.impl.CommonsServicesImpl;
+import org.apache.marmotta.ucuenca.wk.commons.impl.QueriesServiceImpl;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -46,13 +47,13 @@ public class QueriesServiceTest {
     }
 
     /**
-     * Test of getAuthorsQuery method, of class QueriesService.
+     * Test of getAuthorsQuery method, of class QueriesServiceImplService.
      */
     @Test
     @Ignore
     public void testGetAuthorsQuery() {
         System.out.println("getAuthorsQuery");
-        QueriesService instance = new Queries();
+        QueriesService instance = new QueriesServiceImpl();
         String wkhuskagraph = "http://ucuenca.edu.ec/wkhuska";
         String expResult = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> PREFIX owl: <http://www.w3.org/2002/07/owl#> SELECT DISTINCT ?s WHERE { GRAPH <"+wkhuskagraph+"> { ?s rdf:type foaf:Person }}";
         String result = instance.getAuthorsQuery(wkhuskagraph);
@@ -60,12 +61,12 @@ public class QueriesServiceTest {
     }
 
     /**
-     * Test of getRetrieveResourceQuery method, of class QueriesService.
+     * Test of getRetrieveResourceQuery method, of class QueriesServiceImplService.
      */
     @Test
     public void testGetRetrieveResourceQuery() {
         System.out.println("getRetrieveResourceQuery");
-        QueriesService instance = new Queries();
+        QueriesService instance = new QueriesServiceImpl();
 
         String expResult = "SELECT ?x ?y ?z WHERE { ?x ?y ?z }";
         String result = instance.getRetrieveResourceQuery();
@@ -73,7 +74,7 @@ public class QueriesServiceTest {
     }
 
     /**
-     * Test of getInsertDataLiteralQuery method, of class QueriesService.
+     * Test of getInsertDataLiteralQuery method, of class QueriesServiceImplService.
      */
     // @Test
     public void testGetInsertDataLiteralQuery() {
@@ -89,7 +90,7 @@ public class QueriesServiceTest {
         args[2]=p;
         args[3]=o;
         
-        QueriesService instance = new Queries();
+        QueriesService instance = new QueriesServiceImpl();
         String expResult = "";
         String result = instance.getInsertDataLiteralQuery(args);
         assertEquals(expResult, result);
@@ -98,7 +99,7 @@ public class QueriesServiceTest {
     }
 
     /**
-     * Test of getInsertDataUriQuery method, of class QueriesService.
+     * Test of getInsertDataUriQuery method, of class QueriesServiceImplService.
      */
     @Test
     public void testGetInsertDataUriQuery() {
@@ -107,35 +108,35 @@ public class QueriesServiceTest {
         String predicate = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
         String object = "http://xmlns.com/foaf/0.1/Person";
         String wkhuskaGraph = "http://ucuenca.edu.ec/wkhuska";
-        QueriesService instance = new Queries();
+        QueriesService instance = new QueriesServiceImpl();
         String expResult = "INSERT DATA {  GRAPH <http://ucuenca.edu.ec/wkhuska>  { <" + subject + "> <" + predicate + "> <" + object + "> }}";
         String result = instance.getInsertDataUriQuery(wkhuskaGraph, subject, predicate, object);
         Assert.assertEquals(expResult, result);
     }
 
     /**
-     * Test of isURI method, of class QueriesService.
+     * Test of isURI method, of class QueriesServiceImplService.
      */
     @Test
     public void testIsURI() {
+        CommonsServices commonsservices = new CommonsServicesImpl();
         System.out.println("isURI");
         String object = "http://cedia.example.org";
         String objectNoUri = "Cedia";
-        QueriesService instance = new Queries();
-        Assert.assertTrue(instance.isURI(object));
-        Assert.assertFalse(instance.isURI(objectNoUri));
+        Assert.assertTrue(commonsservices.isURI(object));
+        Assert.assertFalse(commonsservices.isURI(objectNoUri));
     }
 
     /**
-     * Test of getAskQuery method, of class QueriesService.
+     * Test of getAskQuery method, of class QueriesServiceImplService.
      */
     @Test
     public void testGetAskResourceQuery() {
         System.out.println("getAskQuery");
         String resource = "http://example.test";
         String graph = "http://ucuenca.edu.ec/wkhuska";
-        QueriesService instance = new Queries();
-        String expResult = "ASK FROM <http://ucuenca.edu.ec/wkhuska> {  <http://example.test> ?p ?o }";
+        QueriesService instance = new QueriesServiceImpl();
+        String expResult = "ASK FROM <http://ucuenca.edu.ec/wkhuska> { <http://example.test> ?p ?o }";
         String result = instance.getAskResourceQuery(graph ,resource);
         Assert.assertEquals(expResult, result);
     }

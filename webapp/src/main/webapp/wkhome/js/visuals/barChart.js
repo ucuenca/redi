@@ -20,20 +20,21 @@ barChart.directive('barChart', ["d3", "globalData", "sparqlQuery",
             // compute total for each source.
             fData.forEach(function (d) {
                 d.total = 0;
-                d.total = parseInt(d.freq.Autores) + parseInt(d.freq.Publicaciones) + parseInt(d.freq.Salud);
+                //d.total = parseInt(d.freq.Autores) + parseInt(d.freq.Publicaciones) + parseInt(d.freq.Salud);
+                d.total = parseInt(d.freq.Publicaciones);
             });
 
             // function to handle histogram.
             function histoGram(fD) {
                 var hG = {}, hGDim = {t: 60, r: 0, b: 30, l: 0};
-                hGDim.w = 500 - hGDim.l - hGDim.r,
+                hGDim.w = 700 - hGDim.l - hGDim.r,
                         hGDim.h = 300 - hGDim.t - hGDim.b;
 
                 //create svg for histogram.
                 var hGsvg = id.append("svg")
                         .attr("width", hGDim.w + hGDim.l + hGDim.r)
-                        .attr("height", hGDim.h + hGDim.t + hGDim.b + 200).append("g")
-                        .attr("transform", "translate(" + hGDim.l + "," + (hGDim.t + 200 ) + ")");
+                        .attr("height", hGDim.h + hGDim.t + hGDim.b).append("g")
+                        .attr("transform", "translate(" + hGDim.l + "," + (hGDim.t) + ")");
 
                 // create function for x-axis mapping.
                 var x = d3.scale.ordinal().rangeRoundBands([0, hGDim.w], 0.1)
@@ -85,6 +86,8 @@ barChart.directive('barChart', ["d3", "globalData", "sparqlQuery",
                         .attr("text-anchor", "middle");
 
                 function mouseover(d) {  // utility function to be called on mouseover.
+                    $("h2.selected").text("");
+                    $("h2.selected").text(d[0]);
                     // filter for selected source.
                     var st = fData.filter(function (s) {
                         return s.Source == d[0];
@@ -100,6 +103,8 @@ barChart.directive('barChart', ["d3", "globalData", "sparqlQuery",
 
                 function mouseout(d) {    // utility function to be called on mouseout.
                     // reset the pie-chart and legend.    
+                    $("h2.selected").text("");
+                    $("h2.selected").text("Todas las Universidades");
                     pC.update(tF);
                     leg.update(tF);
                 }
@@ -155,7 +160,7 @@ barChart.directive('barChart', ["d3", "globalData", "sparqlQuery",
                 });
 
                 // Draw the pie slices.
-                piesvg.selectAll("path").data(pie(pD)).enter().append("path").attr("d", arc).attr("class","barchart")
+                piesvg.selectAll("path").data(pie(pD)).enter().append("path").attr("d", arc).attr("class", "barchart")
                         .each(function (d) {
                             this._current = d;
                         })
@@ -173,7 +178,8 @@ barChart.directive('barChart', ["d3", "globalData", "sparqlQuery",
                 function mouseover(d) {
                     // call the update function of histogram with new data.
                     hG.update(fData.map(function (v) {
-                        return [v.Source, v.freq[d.data.type]];
+                        //Esta funcion permita que las barras sean dinamicas segun lo que se seleccione en el pie
+                        //documentado por FB            return [v.Source, v.freq[d.data.type]];
                     }), segColor(d.data.type));
                 }
                 //Utility function to be called on mouseout a pie slice.
@@ -288,9 +294,9 @@ barChart.directive('barChart', ["d3", "globalData", "sparqlQuery",
                     scope.$watch('data', function (newVal, oldVal, scope) {
                         //	Update	the	chart
                         var data = scope.data;
-                        
-                        if (data) {         
-                            draw(svg, data);            
+
+                        if (data) {
+                            draw(svg, data);
                         }
                     }, true);
 

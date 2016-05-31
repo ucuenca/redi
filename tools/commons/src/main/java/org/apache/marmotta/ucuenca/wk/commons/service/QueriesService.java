@@ -19,7 +19,6 @@ public interface QueriesService {
 
     String getOffset(String offset);
 
-    String getProvenanceProperty();
 
     /**
      * return query to obtain all subject ( keywords ) of an author , using
@@ -61,13 +60,6 @@ public interface QueriesService {
      */
     String getInsertDataUriQuery(String... args);
 
-    /**
-     * Return true or false if object is a URI
-     *
-     * @param object
-     * @return
-     */
-    Boolean isURI(String object);
 
     /**
      *
@@ -101,22 +93,40 @@ public interface QueriesService {
 
     String getPublicationsPropertiesQuery(String providerGraph, String publicationResource);
 
-    String getMembersQuery();
+    String getPublicationsPropertiesQuery(String publicationResource);
+
+    //String getMembersQuery();
 
     String getPublicationFromProviderQuery();
 
     String getPublicationForExternalAuthorFromProviderQuery(String property);
 
-    String getPublicationPropertiesQuery();
+    String getPublicationPropertiesQuery(String property);
 
     //Microsoft Academics
-    String getPublicationsMAQuery(String providerGraph);
+//    String getPublicationsMAQuery(String providerGraph);
 
-    String getPublicationFromMAProviderQuery();
+  //  String getPublicationFromMAProviderQuery();
 
-    String getPublicationMAPropertiesQuery();
+  //  String getPublicationMAPropertiesQuery();
 
+    String getAllTitlesDataQuery(String graph);
+    
+   // String getAllTitlesDataQuery();
+    
+    //String getMembersByTitleQuery();
+    
+    String getObjectByPropertyQuery(String subject, String property);
+    
+    String getObjectByPropertyQuery(String property);
+   
+    String getAbstractAndTitleQuery(String resource);
+    
+    
+    String getSubjectAndObjectByPropertyQuery(String property);
     //Google Scholar
+    
+   // String getAllCreatorsDataQuery();
     //String getPublicationFromGSProviderQuery();
     String getAuthorPublicationsQuery(String... varargs);
 
@@ -148,6 +158,8 @@ public interface QueriesService {
 
     String getAskProcessAlreadyAuthorProvider(String providerGraph, String authorResource);
     
+    String getAuthorsKeywordsQuery(String resource);
+    
     /**
      * Get All Data sources from UTPL ENDPOINT
      * @param graph
@@ -162,7 +174,5 @@ public interface QueriesService {
      */
     String getDocumentsAuthors(String repository, String graph);
     
-    
-    String removeAccents(String value);
    
 }

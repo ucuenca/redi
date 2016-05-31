@@ -48,7 +48,7 @@ import org.apache.marmotta.ucuenca.wk.authors.exceptions.UpdateException;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.authors.api.EndpointService;
 import org.apache.marmotta.ucuenca.wk.authors.api.SparqlEndpoint;
-
+import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
@@ -77,6 +77,9 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Inject
     private QueriesService queriesService;
+    
+      @Inject
+    private CommonsServices commonsService;
 
     @Inject
     private EndpointService authorsendpointService;
@@ -87,8 +90,12 @@ public class AuthorServiceImpl implements AuthorService {
     private int limit = 5000;
 
     private int processpercent = 0;
-
-    private String authorDocumentProperty = "http://rdaregistry.info/Elements/a/P50161";
+/**
+ * authorDocumentProperty : http://rdaregistry.info/Elements/a/P50161   |  http://rdaregistry.info/Elements/a/P50195
+ */
+    private String authorDocumentProperty = "http://rdaregistry.info";
+    
+                                            
 
     private boolean provenanceinsert = false; //variable to know if the provenance of an author was already inserted
 
@@ -237,7 +244,7 @@ public class AuthorServiceImpl implements AuthorService {
                 String keyword = tripletskeysResource.getValue("z").toString();
                 ///insert sparql query,
                 //only insert Literal Subjects
-                if (!queriesService.isURI(keyword)) {
+                if (!commonsService.isURI(keyword)) {
                     executeInsertQuery(author, subjectproperty, keyword, endpoint, provenanceinsert);
                 }
             }
@@ -261,7 +268,7 @@ public class AuthorServiceImpl implements AuthorService {
         if (!predicado.contains(authorDocumentProperty)) {
             //insert provenance triplet query
             if (!provenanceinsert) {
-                String provenanceQueryInsert = buildInsertQuery(wkhuskaGraph, sujeto, queriesService.getProvenanceProperty(), endpoint.getResourceId());
+                String provenanceQueryInsert = buildInsertQuery(wkhuskaGraph, sujeto, "http://purl.org/dc/terms/provenance", endpoint.getResourceId());
                 updateAuthor(provenanceQueryInsert);
                 provenanceinsert = true;
             }
@@ -343,7 +350,7 @@ public class AuthorServiceImpl implements AuthorService {
         String sujeto = args[1];
         String predicado = args[2];
         String objeto = args[3];
-        if (queriesService.isURI(objeto)) {
+        if (commonsService.isURI(objeto)) {
             return queriesService.getInsertDataUriQuery(graph, sujeto, predicado, objeto);
         } else {
             return queriesService.getInsertDataLiteralQuery(graph, sujeto, predicado, objeto);
@@ -416,7 +423,7 @@ public class AuthorServiceImpl implements AuthorService {
     private String getGraphName(String nameu) {
          String namesource =  nameu.replace("@es", "");
         String namegraph = nameu.substring(1, namesource.length()-1);
-        return "http://data.utpl.edu.ec/" + queriesService.removeAccents(namegraph);
+        return "http://data.utpl.edu.ec/" + commonsService.removeAccents(namegraph);
     }
 
     @Override

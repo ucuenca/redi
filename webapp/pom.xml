@@ -593,6 +593,7 @@
             <artifactId>postgresql</artifactId>
             <version>${postgresql.version}</version>
         </dependency>
+        
         <!-- enable for MySQL support; note that the MySQL driver is GPL licensed -->
         <!--
         <dependency>

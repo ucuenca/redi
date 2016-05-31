@@ -22,6 +22,7 @@ import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CountPublicationsService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
+import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.openrdf.model.Value;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryLanguage;
@@ -45,6 +46,9 @@ public class CountPublicationsServiceImpl implements CountPublicationsService, R
 
     @Inject
     private ConstantService pubVocabService;
+    
+    @Inject
+    private CommonsServices commonsServices;
 
     @Inject
     private SparqlFunctionsService sparqlFunctionsService;
@@ -151,7 +155,7 @@ public class CountPublicationsServiceImpl implements CountPublicationsService, R
 
     //construyendo sparql query insert 
     public String buildInsertQuery(String grapfhProv, String sujeto, String predicado, String objeto, String type) {
-        if (queriesService.isURI(objeto)) {
+        if (commonsServices.isURI(objeto)) {
             return queriesService.getInsertDataUriQuery(grapfhProv, sujeto, predicado, objeto);
         } else {
             return queriesService.getInsertDataLiteralQuery(grapfhProv, sujeto, predicado, objeto, type);
