@@ -105,11 +105,12 @@ public class ReportsImpl implements ReportsService {
             JasperReport jasperReport = JasperCompileManager
                     .compileReport(REPORTS_FOLDER + name + ".jrxml");
             //String array with the json string and other parameters required for the report
-            String[] json;
+            String[] json = null;
             //Datasource
             JsonDataSource dataSource = null;
             // Parameters for report
             Map<String, Object> parameters = new HashMap<String, Object>();
+            parameters.put("rutalogo", pubVocabService.getLogoPath());
             InputStream stream;
 
             //Parameters for each report
@@ -117,29 +118,33 @@ public class ReportsImpl implements ReportsService {
                 case "ReportAuthor":
                     // Get the Json with the list of publications, the name of the researcher and the number of publications.
                     json = getJSONAuthor(params.get(0), hostname);
-                    stream = new ByteArrayInputStream(json[0].getBytes("UTF-8"));
-                    dataSource = new JsonDataSource(stream);
-
+                    
                     parameters.put("name", json[1]);
                     parameters.put("numero", json[2]);
                     break;
                 case "ReportAuthorCluster":
                     // Get the Json with the list of publications, the name of the researcher and the number of publications.
                     json = getJSONAuthorsCluster(params.get(0), hostname);
-                    stream = new ByteArrayInputStream(json[0].getBytes("UTF-8"));
-                    dataSource = new JsonDataSource(stream);
-
+                    
                     parameters.put("name", json[1]);
                     parameters.put("numero", json[2]);
                     break;
                 case "ReportStatistics":
-                    // Get the Json with the list of publications, the name of the researcher and the number of publications.
-                    json = getJSONStatistics(hostname);
-                    stream = new ByteArrayInputStream(json[0].getBytes("UTF-8"));
-                    dataSource = new JsonDataSource(stream);
+                case "ReportStatisticsPub":
+                case "ReportStatisticsRes":    
+                    // Get the Json with the list of publications, the number of researchers and the number of publications.
+                    json = getJSONStatistics(hostname);                    
+                    break;
+                case "ReportStatisticsTopResU":
+                    // Get the Json with the top researchers per university (considering the number of publications).
+                    json = getJSONTopResearchersUnis(hostname);
                     
                     break;
+                    
             }
+            //Always the first element of the array has the json stream
+            stream = new ByteArrayInputStream(json[0].getBytes("UTF-8"));
+            dataSource = new JsonDataSource(stream);
 
             if (dataSource != null) {
                 JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
@@ -381,7 +386,6 @@ public class ReportsImpl implements ReportsService {
                 TupleQueryResult resulta = con.prepareTupleQuery(QueryLanguage.SPARQL, getQuery).evaluate();
                 
                 JSONObject uni;
-                Map<String, JSONArray> keyMap = new HashMap<String, JSONArray>();
                 JSONArray universities = new JSONArray();
             
                 while (resulta.hasNext()) {
@@ -410,6 +414,128 @@ public class ReportsImpl implements ReportsService {
             java.util.logging.Logger.getLogger(ReportsImpl.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
         }
+        return new String[]{"", ""};
+    }
+    
+    public String[] getJSONTopResearchersUnis(String hostname) {
+        String query1, query2 = "";
+        
+        try {
+            //Query
+            /*query1 = Constant.PREFIX
+                    + " SELECT ?provenance ?name (COUNT(DISTINCT(?s)) AS ?total) (count(DISTINCT ?pub) as ?totalp) "
+                    + " WHERE "
+                    + "    { "
+                    + "    	GRAPH <" + constant.getWkhuskaGraph() + "> { "
+                    + "          ?s a foaf:Person. "
+                    + "          ?s foaf:publications ?pub . "
+                    + "          ?s dct:provenance ?provenance . "
+                    + "          { "
+                    + "              SELECT ?name "
+                    + "              WHERE { "
+                    + "                  GRAPH <" + constant.getEndpointGraph() + "> 									{ \n"
+                    + "                       ?provenance uc:fullName ?name . "
+                    + "                  } "
+                    + "              } "
+                    + "          } "
+                    + "    	} "
+                    + "  	} GROUP BY ?provenance ?name ";*/
+
+            query1 = ConstantServiceImpl.PREFIX
+                    + "SELECT ?provenance ?uni "
+                    + "WHERE "
+                    + "{ "
+                    + "  GRAPH <" + constant.getEndpointGraph() + "> "
+                    + "  { "
+                    + "    ?provenance uc:fullName ?uni . "
+                    + "  }"
+                    + "} ORDER BY ?uni";
+
+            Repository repo = new SPARQLRepository(hostname + "/sparql/select");
+            repo.initialize();
+            RepositoryConnection con = repo.getConnection();
+
+            try {
+                // perform operations on the connection
+                TupleQueryResult resultUnis = con.prepareTupleQuery(QueryLanguage.SPARQL, query1).evaluate();
+                JSONArray authors = new JSONArray();
+                //Check authors of each university
+                while (resultUnis.hasNext()) {
+                    BindingSet binding = resultUnis.next();
+                    String uniId = String.valueOf(binding.getValue("provenance")).replace("\"", "").replace("^^", "").split("<")[0];
+                    String uniName = String.valueOf(binding.getValue("uni")).replace("\"", "").replace("^^", "").split("<")[0];
+                    
+                    
+                    query2 = ConstantServiceImpl.PREFIX + 
+                        "SELECT ?researcher (count(DISTINCT ?pub) as ?totalp) " +
+                        "WHERE " +
+                        "{ " +
+                        "  GRAPH <" + constant.getWkhuskaGraph() + "> " +
+                        "        { " +
+                        "          ?s a foaf:Person. " +
+                        "          ?s foaf:name ?researcher. " +
+                        "          ?s foaf:publications ?pub . " +
+                        "          ?s dct:provenance <" + uniId + "> " +
+                        "        } " +
+                        "} GROUP BY ?researcher ORDER BY DESC(?totalp) LIMIT 5";
+                    
+                    JSONObject author;
+                    // CONSULTA PARA OBTENER LOS CINCO INVESTIGADORES DE CADA U
+                    TupleQueryResult resultAuthors = con.prepareTupleQuery(QueryLanguage.SPARQL, query2).evaluate();
+                    Integer contPub = 0;
+                    while (resultAuthors.hasNext()) {
+                        BindingSet bind2 = resultAuthors.next();
+                        contPub++;
+                        //Form the Json object
+                        author = new JSONObject();
+                        String researcherName = String.valueOf(bind2.getValue("researcher")).replace("\"", "").replace("^^", "").split("<")[0];
+                        String totalPubs = String.valueOf(bind2.getValue("totalp")).replace("\"", "").replace("^^", "").split("<")[0];
+                        author.put("universityName", uniName);
+                        author.put("numberResearcher", contPub);
+                        author.put("name", researcherName);
+                        author.put("numberPublications", totalPubs);
+
+                        authors.add(author);
+                    }
+                    
+                }
+                
+                con.close();
+
+                return new String[]{authors.toString()};
+
+            } catch (RepositoryException ex) {
+                java.util.logging.Logger.getLogger(ReportsImpl.class.getName()).log(Level.SEVERE, null, ex);
+                con.close();
+            }
+
+            return new String[]{"", ""};
+
+        } catch (MalformedQueryException | QueryEvaluationException | RepositoryException ex) {
+            java.util.logging.Logger.getLogger(ReportsImpl.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
+        }
+        
+        /*String jason = "[{"
+                + "	\"universityName\": \"Alfreds Futterkiste\","
+                + "	\"numberPublications\": 89,
+                         "numberResearcher
+                + "	\"name\": \"Reims, France\""
+                + "}, {"
+                + "	\"universityName\": \"Alfreds Futterkiste\","
+                + "	\"numberPublications\": 54,"
+                + "	\"name\": \"Albuquerque, USA\""
+                + "}, {"
+                + "	\"universityName\": \"Wolski  Zajazd\","
+                + "	\"numberPublications\": 79,"
+                + "	\"name\": \"London, UK\""
+                + "}, {"
+                + "	\"universityName\": \"Wolski  Zajazd\","
+                + "	\"numberPublications\": 31,"
+                + "	\"name\": \"Vienna, Austria\""
+                + "}]";
+        
+        return new String[]{jason};*/
         return new String[]{"", ""};
     }
     
