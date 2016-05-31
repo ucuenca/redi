@@ -1,25 +1,27 @@
 package org.apache.marmotta.ucuenca.wk.commons.impl;
 
-import java.net.URL;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
+import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
+
 
 /**
  * @author Fernando Baculima
  */
-public class Queries implements QueriesService {
+public class QueriesServiceImpl implements QueriesService {
 
-    private final ConstantService con = new Constant();
+    private final ConstantService con = new ConstantServiceImpl();
+    
+    private final CommonsServices commonsServices = new CommonsServicesImpl();
 
     private final static String PREFIXES = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
-            + " PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
+            + " PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
             + " PREFIX owl: <http://www.w3.org/2002/07/owl#> "
             + " PREFIX dct: <http://purl.org/dc/terms/> "
             + " PREFIX mm: <http://marmotta.apache.org/vocabulary/sparql-functions#> "
-            + " PREFIX dcat: <http://www.w3.org/ns/dcat#>";
+            + " PREFIX dcat: <http://www.w3.org/ns/dcat#> "
+            + " PREFIX bibo: <http://purl.org/ontology/bibo/> PREFIX dc: <http://purl.org/dc/elements/1.1/> ";
 
     private final static String OWLSAMEAS = "<http://www.w3.org/2002/07/owl#sameAs>";
 
@@ -51,9 +53,17 @@ public class Queries implements QueriesService {
         } else {
             object = "\"" + StringEscapeUtils.escapeJava(varargs[3].substring(1, varargs[3].length() - 1)) + "\"" + (varargs.length > 4 ? varargs[4] != null ? "^^xsd:" + varargs[4] : "^^xsd:string" : "^^xsd:string");
         }
-        return INSERTDATA + graphSentence + "  { " + subjectSentence + " <" + varargs[2] + "> " + object + " }}";
+
+        if (isURI(varargs[2])) {
+            return INSERTDATA + graphSentence + "  { " + subjectSentence + " <" + varargs[2] + "> " + object + " }}";
+        } else {
+            return PREFIXES + INSERTDATA + graphSentence + "  { " + subjectSentence + " " + varargs[2] + " " + object + " }}";
+        }
     }
 
+    private boolean isURI(String value){
+        return commonsServices.isURI(value);
+    }
     /**
      * Return a INSERT QUERY when object is a URI
      */
@@ -61,39 +71,33 @@ public class Queries implements QueriesService {
     public String getInsertDataUriQuery(String... varargs) {
         String graphSentence = getGraphString(varargs[0]);
         String subjectSentence = "<" + varargs[1] + ">";
-        return INSERTDATA + graphSentence + " " + "{ " + subjectSentence + " <" + varargs[2] + "> <" + varargs[3] + "> }}";
+        if (isURI(varargs[2])) {
+            return INSERTDATA + graphSentence + " " + "{ " + subjectSentence + " <" + varargs[2] + "> <" + varargs[3] + "> }}";
+        } else {
+            return PREFIXES + INSERTDATA + graphSentence + " " + "{ " + subjectSentence + " " + varargs[2] + " <" + varargs[3] + "> }}";
+        }
     }
 
-    /**
-     * Return true or false if object is a URI
-     */
-    @Override
-    public Boolean isURI(String object) {
-        URL url = null;
-        try {
-            url = new URL(object);
-        } catch (Exception e1) {
-            return false;
-        }
-        Pattern pat = Pattern.compile("^[hH]ttp(s?)");
-        Matcher mat = pat.matcher(url.getProtocol());
-        return mat.matches(); // return "http".equals(url.getProtocol()) || "https".equals(url.getProtocol()) ;
-    }
+  
 
     /**
      * Return ASK query for a resource
      */
     @Override
     public String getAskResourceQuery(String graph, String resource) {
-        return "ASK FROM <" + graph + "> {  <" + resource + "> ?p ?o }";
+        return "ASK FROM <" + graph + "> { <" + resource + "> ?p ?o }";
     }
 
     /**
      * Return ASK property query for a resource
      */
     @Override
-    public String getAskResourcePropertieQuery(String graph, String resource, String propertie) {
-        return "ASK FROM <" + graph + "> {  <" + resource + ">    <" + propertie + "> ?o }";
+    public String getAskResourcePropertieQuery(String graph, String resource, String property) {
+        if (isURI(property)) {
+            return "ASK FROM <" + graph + "> {  <" + resource + ">    <" + property + "> ?o }";
+        } else {
+            return PREFIXES + "ASK FROM <" + graph + "> {  <" + resource + "> " + property + " ?o }";
+        }
     }
 
     @Override
@@ -194,11 +198,6 @@ public class Queries implements QueriesService {
     }
 
     @Override
-    public String getProvenanceProperty() {
-        return "http://purl.org/dc/terms/provenance";
-    }
-
-    @Override
     public String getRetrieveKeysQuery() {
         return " PREFIX dct: <http://purl.org/dc/terms/>  "
                 + " SELECT ?x ?y ?z WHERE { ?x dct:subject ?z. ?x ?y ?z. }";
@@ -207,19 +206,45 @@ public class Queries implements QueriesService {
     @Override
     public String getAuthorsDataQuery(String graph, String endpointsgraph) {
         return PREFIXES
-                + " SELECT * "
+                + " SELECT *"
                 + " WHERE { " + getGraphString(graph) + " { "
+                //+ " WHERE { graph <http://ucuenca.edu.ec/wkhuska/authorsaux> {"
                 + " ?subject a foaf:Person. "
                 + " ?subject foaf:name ?name."
                 + " ?subject foaf:firstName ?fname. "
                 + " ?subject foaf:lastName ?lname. "
                 + " ?subject dct:provenance ?provenance. "
+//                                + "{"
+//                                + " filter (regex(UCASE(?subject), \"SAQUICELA\"))"
+//                                + "filter (regex(UCASE(?subject), \"GALARZA\"))  "
+//                                + "    }"
+//                                + "UNION "
+//                                + "{"
+//                                + "filter (regex(UCASE(?subject), \"ESPINOZA\")) "
+//                                + "filter (regex(UCASE(?subject), \"MAURICIO\")) "
+//                                + "}"
+//                                + "UNION {"
+//                                + "filter (regex(UCASE(?subject), \"CARVALLO\"))  "
+//                                + "filter (regex(UCASE(?subject), \"JUAN\"))     "
+//                                + "}"
+//                                + " UNION {"
+//                                + " filter (regex(UCASE(?subject), \"FELIPE\"))  "
+//                                + "filter (regex(UCASE(?subject), \"CISNEROS\"))   "
+//                                + "  } UNION"
+//                                + " {"
+//                                + "  filter (regex(UCASE(?subject), \"NELSON\"))  "
+//                                + "  filter (regex(UCASE(?subject), \"PIEDRA\"))   "
+//                                + " } UNION"
+//                                + " {"
+//                                + " filter (regex(UCASE(?subject), \"LIZANDRO\"))  "
+//                                + "  filter (regex(UCASE(?subject), \"SOLANO\"))     "
+//                                + "} "
                 + " { select ?status "
                 + "     where { " + getGraphString(endpointsgraph) + " {"
                 + "     ?provenance <http://ucuenca.edu.ec/ontology#status> ?status "
                 + " }}} filter (regex(?status,\"true\")) "
-                + "                }} "
-                + " ";
+                + "                }} ";
+
     }
 
     /**
@@ -231,7 +256,7 @@ public class Queries implements QueriesService {
                 + " graph ?grafo {?x ?y ?z } "
                 + " } ";
     }
-
+    
     /**
      * Return ASK query for triplet
      */
@@ -254,38 +279,35 @@ public class Queries implements QueriesService {
                 + " }}";
     }
 
-    @Override
-    public String getPublicationsMAQuery(String providerGraph) {
-        return " SELECT DISTINCT ?authorResource ?pubproperty ?publicationResource WHERE { "
-                + getGraphString(providerGraph)
-                + " {  "
-                + " ?authorResource owl:sameAs   ?authorNative. "
-                + " ?authorNative ?pubproperty ?publicationResource. "
-                + " filter (regex(?pubproperty,\"pub\")) "
-                + " }  "
-                + " }  ";
-    }
+//    @Override
+//    public String getPublicationsMAQuery(String providerGraph) {
+//        return " SELECT DISTINCT ?authorResource ?pubproperty ?publicationResource WHERE { "
+//                + getGraphString(providerGraph)
+//                + " {  "
+//                + " ?authorResource owl:sameAs   ?authorNative. "
+//                + " ?authorNative ?pubproperty ?publicationResource. "
+//                + " filter (regex(?pubproperty,\"pub\")) "
+//                + " }  "
+//                + " }  ";
+//    }
 
     @Override
     public String getPublicationsPropertiesQuery(String providerGraph, String publicationResource) {
-        return PREFIXES
-                + " SELECT DISTINCT ?publicationProperties ?publicationPropertyValue WHERE { "
+        return 
+                 " SELECT DISTINCT ?publicationProperties ?publicationPropertyValue WHERE { "
                 + getGraphString(providerGraph)
                 + " {"
                 + " <" + publicationResource + ">  ?publicationProperties ?publicationPropertyValue. "
                 + " } }"
                 + "ORDER BY DESC(?publicationProperties) ";
     }
-
-    /**
-     * For get Members from DBLP
-     *
-     * @return
-     */
+    
     @Override
-    public String getMembersQuery() {
-        return "SELECT DISTINCT ?members"
-                + " WHERE { ?x " + con.foaf("member") + " ?members. } ";
+    public String getPublicationsPropertiesQuery(String publicationResource) {
+        return 
+                 " SELECT DISTINCT ?property ?value WHERE { "
+                + " <" + publicationResource + ">  ?property ?value. "
+                + " }";
     }
 
     @Override
@@ -304,22 +326,55 @@ public class Queries implements QueriesService {
     }
 
     @Override
-    public String getPublicationFromMAProviderQuery() {
-        return "SELECT DISTINCT ?authorResource  ?publicationResource "
-                + " WHERE {  ?authorResource <http://xmlns.com/foaf/0.1/publications> ?publicationResource}";
+    public String getPublicationPropertiesQuery(String property) {
+        return "SELECT DISTINCT ?publicationResource ?publicationProperties ?publicationPropertiesValue "
+                + " WHERE { ?authorResource "+(isURI(property)? "<" + property + ">" : property) + " ?publicationResource. ?publicationResource ?publicationProperties ?publicationPropertiesValue }";
     }
 
-    @Override
-    public String getPublicationPropertiesQuery() {
-        return "SELECT DISTINCT ?publicationResource ?publicationProperties ?publicationPropertiesValue "
-                + " WHERE { ?authorResource " + con.dblp("authorOf") + " ?publicationResource. ?publicationResource ?publicationProperties ?publicationPropertiesValue }";
-    }
 
     @Override
-    public String getPublicationMAPropertiesQuery() {
-        return "SELECT DISTINCT ?publicationResource ?publicationProperties ?publicationPropertiesValue "
-                + " WHERE { ?authorResource <http://xmlns.com/foaf/0.1/publications> ?publicationResource. ?publicationResource ?publicationProperties ?publicationPropertiesValue }";
+    public String getAllTitlesDataQuery(String graph) {
+        
+        return PREFIXES + "SELECT DISTINCT  ?publications ?title "
+                + " FROM <" + graph + "> "
+                + " WHERE { ?publications dct:title ?title  } ";
     }
+    
+    @Override
+    public String getSubjectAndObjectByPropertyQuery(String property){
+      return PREFIXES + "SELECT DISTINCT  ?subject ?object "
+//                + " WHERE { ?subject "+(commonsServices.isURI(property)? "<" + property + ">" : property) + " ?object  } ";
+              + " WHERE { ?subject "+  property + " ?object  } ";
+}
+            
+    @Override
+    public String getObjectByPropertyQuery(String subject, String property) {
+        return PREFIXES + " SELECT DISTINCT ?object "
+      //          + "  WHERE { <" + subject + "> "+(commonsServices.isURI(property)? "<" + property + ">" : property) + "  ?object } ";
+            + "  WHERE { <" + subject + "> "+ property  + "  ?object } ";
+
+   }
+    
+    @Override
+    public String getObjectByPropertyQuery(String property) {
+        return PREFIXES + " SELECT DISTINCT ?object "
+            //    + "  WHERE {  ?s "+(commonsServices.isURI(property)? "<" + property + ">" : property) + "  ?object } ";
+                    + "  WHERE {  ?s "+ property + "  ?object } ";
+    
+                }
+    
+     @Override
+    public String getAbstractAndTitleQuery(String resource) {
+        return PREFIXES + " SELECT DISTINCT ?abstract ?title "
+                + "  WHERE {   <" + resource + "> dct:title ?title. OPTIONAL {  <" + resource + "> bibo:abstract  ?abstract  } } ";
+    }
+ 
+    @Override
+    public String getAuthorsKeywordsQuery(String resource) {
+        return PREFIXES + " SELECT DISTINCT ?keyword FROM <http://ucuenca.edu.ec/wkhuska/authors> "
+                + " WHERE { <" + resource + "> dct:subject ?keyword. } limit 50";
+    }
+    
 
     @Override
     public String getPublicationPropertiesAsResourcesQuery() {
@@ -501,23 +556,4 @@ public class Queries implements QueriesService {
                 + " }";
     }
 
-    /**
-     * Función que elimina acentos y caracteres especiales
-     *
-     * @param value
-     * @return cadena de texto limpia de acentos y caracteres especiales.
-     */
-    @Override
-    public String removeAccents(String value) {
-        // Cadena de caracteres original a sustituir.
-        String original = "áàäéèëíìïóòöúùuñÁÀÄÉÈËÍÌÏÓÒÖÚÙÜÑçÇ";
-        // Cadena de caracteres ASCII que reemplazarán los originales.
-        String ascii = "aaaeeeiiiooouuunAAAEEEIIIOOOUUUNcC";
-        String output = value;
-        for (int i = 0; i < original.length(); i++) {
-            // Reemplazamos los caracteres especiales.
-            output = output.replace(original.charAt(i), ascii.charAt(i));
-        }//end for i
-        return output;
-    }//removeAccents
 }

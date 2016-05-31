@@ -9,7 +9,7 @@ var wkhomeApp = angular.module('wkhomeApp', [
     'swipe',
     'snapscroll',
     'wkhomeControllers',
-    'commonDirectives',
+    //'commonDirectives',
     'wkhomeServices',
 ]);
 
@@ -19,7 +19,8 @@ wkhomeApp.service('searchData', function () {
     this.authorSearch = null;
     this.areaSearch = null;
     this.genericData = null;
-    this.researchArea = "SALUD";
+    this.researchArea = "Semantic Web";
+    this.selectedTagItem = "Semantic Web";
     this.globalauthor = null;
     
 });
@@ -71,7 +72,7 @@ wkhomeApp.config(['$routeProvider',
                     templateUrl: '/wkhome/partials/search.html',
                 }).
                 when('/:lang/w/cloud?:text', {
-                    templateUrl: '/wkhome/partials/genericCloud.html',
+                    templateUrl: '/wkhome/partials/genericPageCloud.html',
                 }).
                 when('/:lang/w/clusters?:text', {
                     templateUrl: '/wkhome/partials/clustersCloud.html',

@@ -236,7 +236,6 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
                             authorInfo.append('<h4 style="padding: 20px" class="totalauthors text-success"> Autores: ' + ( values.length -1 ) + '</h4>');
                             var div = $('<div>');
                            
-
                             authorInfo.append(div);
                             _.map(values, function (value) {
                                 if (value["rdfs:label"] && value["uc:total"]["@value"])
@@ -248,7 +247,6 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
                                     div.append("</br>");
                                     return anchor;
                                 }
-
                             });
                         }
                         waitingDialog.hide();

@@ -26,6 +26,7 @@ import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.Data2GlobalGraph;
 import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
+import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.openrdf.model.Value;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryLanguage;
@@ -55,6 +56,9 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
 
     @Inject
     private ConstantService pubVocabService;
+    
+    @Inject
+    private CommonsServices commonsServices;
 
     @Inject
     private SparqlFunctionsService sparqlFunctionsService;
@@ -302,7 +306,7 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
 
     //construyendo sparql query insert 
     public String buildInsertQuery(String grapfhProv, String sujeto, String predicado, String objeto) {
-        if (queriesService.isURI(objeto)) {
+        if (commonsServices.isURI(objeto)) {
             return queriesService.getInsertDataUriQuery(grapfhProv, sujeto, predicado, objeto);
         } else {
             return queriesService.getInsertDataLiteralQuery(grapfhProv, sujeto, predicado, objeto);
@@ -452,7 +456,7 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
 
                     List<Map<String, Value>> resultAuthorProperties = sparqlService.query(QueryLanguage.SPARQL, queriesService.authorDetailsOfProvenance(authorsGraph, authorResource));
                     for (Map<String, Value> property : resultAuthorProperties) {
-                        String insertPubQuery = buildInsertQuery(wkhuskaGraph, newuri, property.get("property").stringValue(), queriesService.isURI(property.get("hasValue").stringValue()) ? property.get("hasValue").stringValue() : " " + property.get("hasValue").stringValue() + " ");
+                        String insertPubQuery = buildInsertQuery(wkhuskaGraph, newuri, property.get("property").stringValue(), commonsServices.isURI(property.get("hasValue").stringValue()) ? property.get("hasValue").stringValue() : " " + property.get("hasValue").stringValue() + " ");
                         try {
                             sparqlService.update(QueryLanguage.SPARQL, insertPubQuery);
                         } catch (MalformedQueryException ex) {

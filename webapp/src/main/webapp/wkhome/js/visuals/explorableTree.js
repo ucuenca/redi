@@ -191,7 +191,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                         + '     GRAPH <' + globalData.centralGraph + '> { '
                         + '         <' + id + '> foaf:name ?name; '
                         + '         dct:provenance ?provenance; '
-                        + '         dct:subject ?subjects. '
+                        + '         OPTIONAL {  <' + id + '> dct:subject ?subjects. }'
                         + '         { '
                         + '             SELECT DISTINCT * '
                         + '             WHERE'
@@ -385,7 +385,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                                     + ' OPTIONAL {?pub dct:isPartOf ?isPartOf. } '
                                     + ' OPTIONAL {?pub bibo:numPages ?numPages. } '
                                     + ' FILTER (!regex(?contributor, ":node")) '
-                                    + ' } } LIMIT 100';
+                                    + ' } } limit 100';
                             sparqlQuery.querySrv({query: queryPublications}, function (rdf) {
 
                                 jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {

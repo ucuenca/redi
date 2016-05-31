@@ -84,7 +84,7 @@ genericCloud.directive('genericCloud', ["d3", 'globalData','sparqlQuery',
         };
         update = function () {
             data.forEach(function (d, i) {
-                return d.forceR = Math.max(minCollisionRadius, rScale(rValue(d)));
+                return d.forceR = Math.max(minCollisionRadius, rScale(rValue(d>50? 50 : d)));
             });
             force.nodes(data).start();
             updateNodes();
@@ -98,7 +98,7 @@ genericCloud.directive('genericCloud', ["d3", 'globalData','sparqlQuery',
             return node.enter().append("a").attr("class", "gbubble-node").attr("xlink:href", function (d) {
                 return "#" + (encodeURIComponent(idValue(d)));
             }).call(force.drag).call(connectEvents).append("circle").attr("id", "gcircle").attr("r", function (d) {
-                return rScale(rValue(d));
+                return rScale(rValue(d>50? 50 : d));
             });
         };
         updateLabels = function () {
@@ -117,7 +117,7 @@ genericCloud.directive('genericCloud', ["d3", 'globalData','sparqlQuery',
                 return rValue(d);
             });
             label.style("font-size", function (d) {
-                return Math.max(8, rScale(rValue(d) / 3.5)) + "px";
+                return Math.max(8, rScale(rValue(d>50? 50 : d) / 3.5)) + "px";
             }).style("width", function (d) {
                 return 0.1 * rScale(rValue(d)) + "px";
             });
@@ -220,7 +220,7 @@ genericCloud.directive('genericCloud', ["d3", 'globalData','sparqlQuery',
                         + " OPTIONAL { ?publicationUri bibo:abstract  ?abstract.  } "
                         + " OPTIONAL { ?publicationUri bibo:uri  ?uri.  } "
                         + " }"
-                        + "}  ORDER BY ?abstract";
+                        + "}  ORDER BY DESC(?abstract)";
                 waitingDialog.show("Searching Publications of: " + key);
 
                 sparqlQuery.querySrv({query: sparqlPublications}, function (rdf) {
@@ -367,7 +367,8 @@ genericCloud.directive('genericCloud', ["d3", 'globalData','sparqlQuery',
                             _.each(jsonld['@graph'], function (keyword, idx) {
                                 if (keyword["rdfs:label"])
                                 {
-                                    mappedData.push({label: keyword[fields[0]], value: keyword[fields[1]]["@value"]});
+                                  var pubsvalue =  keyword[fields[1]]["@value"] > 50 ?  "+50" : keyword[fields[1]]["@value"];
+                                    mappedData.push({label: keyword[fields[0]], value: pubsvalue});
                                 }
                             });
                             var pageTitle = "";                           

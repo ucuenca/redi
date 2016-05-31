@@ -48,7 +48,7 @@ import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 
 import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
 
-import org.apache.marmotta.ucuenca.wk.commons.impl.Constant;
+import org.apache.marmotta.ucuenca.wk.commons.impl.ConstantServiceImpl;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -86,7 +86,7 @@ public class ReportsImpl implements ReportsService {
 
     protected String TEMP_PATH = "./../research_webapps/ROOT/tmp";
     protected String REPORTS_FOLDER = "./../research_webapps/ROOT/reports/";
-    protected Constant constant = new Constant();
+    protected ConstantServiceImpl constant = new ConstantServiceImpl();
 
     @Override
     public String createReport(String hostname, String realPath, String name, String type, List<String> params) {
@@ -192,7 +192,7 @@ public class ReportsImpl implements ReportsService {
             String name = "";
             Integer cont = 0;
             //Query
-            getQuery = Constant.PREFIX
+            getQuery = ConstantServiceImpl.PREFIX
                     + " SELECT DISTINCT ?name ?title ?abstract ?authorsName WHERE { "
                     + "  <" + author + "> foaf:name ?name. "
                     + "  <" + author + "> foaf:publications  ?publications. "
@@ -271,7 +271,7 @@ public class ReportsImpl implements ReportsService {
             String name = "";
             Integer cont = 0;
             //Query
-            getQuery = Constant.PREFIX
+            getQuery = ConstantServiceImpl.PREFIX
                     + " SELECT DISTINCT ?cluster ?author ?keywords "
                     + "WHERE "
                     + "{ "
@@ -358,7 +358,7 @@ public class ReportsImpl implements ReportsService {
         try {
             
             //Query
-            getQuery = Constant.PREFIX +
+            getQuery = ConstantServiceImpl.PREFIX +
                 " SELECT ?provenance ?name (COUNT(DISTINCT(?s)) AS ?total) (count(DISTINCT ?pub) as ?totalp) " +
                 " WHERE " +
                 "    { " +
@@ -441,7 +441,7 @@ public class ReportsImpl implements ReportsService {
                     + "    	} "
                     + "  	} GROUP BY ?provenance ?name ";*/
 
-            query1 = Constant.PREFIX
+            query1 = ConstantServiceImpl.PREFIX
                     + "SELECT ?provenance ?uni "
                     + "WHERE "
                     + "{ "
@@ -466,7 +466,7 @@ public class ReportsImpl implements ReportsService {
                     String uniName = String.valueOf(binding.getValue("uni")).replace("\"", "").replace("^^", "").split("<")[0];
                     
                     
-                    query2 = Constant.PREFIX + 
+                    query2 = ConstantServiceImpl.PREFIX + 
                         "SELECT ?researcher (count(DISTINCT ?pub) as ?totalp) " +
                         "WHERE " +
                         "{ " +

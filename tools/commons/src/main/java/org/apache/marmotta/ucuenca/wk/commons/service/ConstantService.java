@@ -67,5 +67,7 @@ public interface ConstantService {
     String getClusterGraph();
     
     String getLogoPath();
+    
+    String getAuthorsGraph();
 
 }

@@ -26,6 +26,8 @@ public interface CommonService {
 
     String GetDataFromProvidersServiceMicrosoftAcademics();
 
+    String GetDataFromProvidersServiceGoogleScholar();
+    
     JsonArray searchAuthor(String uri);
     
     String createReport(String hostname, String realPath, String name, String type, List<String> params);

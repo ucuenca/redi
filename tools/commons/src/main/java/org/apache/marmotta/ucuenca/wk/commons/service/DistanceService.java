@@ -5,11 +5,13 @@
  */
 package org.apache.marmotta.ucuenca.wk.commons.service;
 
+import java.util.List;
+
 /**
  *
  * @author Satellite
  */
-public interface ComparisonNames {
+public interface DistanceService {
  
      /**
      * Full Name formats FROM DBLP: Avila=Gonzales:Carlos_Andres FROM SCOPUS:
@@ -19,6 +21,10 @@ public interface ComparisonNames {
      * source of full name B, args[3] full name B
      * @return
      */
-    boolean syntacticComparison(String... args);
+    boolean syntacticComparisonNames(String... args);
     
+    
+    boolean semanticComparison(List<String> listA, List<String> listB);
+    
+    boolean semanticComparison(String word, List<String> listB);
 }
