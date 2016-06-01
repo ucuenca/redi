@@ -11,6 +11,6 @@ myApp.config(["$translateProvider", function ($translateProvider) {
 $translateProvider.translations("en", myApp.labels_en);
 $translateProvider.translations("es", myApp.labels_es);
 $translateProvider.preferredLanguage("en");
-$translateProvider.useSanitizeValueStrategy('sanitize');
+//$translateProvider.useSanitizeValueStrategy('sanitize');
 }]);
 }());
