@@ -1,4 +1,4 @@
-wkhomeControllers.controller('translate', ['sparqlQuery','searchData','$translate','$routeParams', '$scope', '$window', 'translateService', 'globalData',
+wkhomeControllers.controller('translate', ['sparqlQuery', 'searchData', '$translate', '$routeParams', '$scope', '$window', 'translateService', 'globalData',
     function (sparqlQuery, searchData, $translate, $routeParams, $scope, $window, translateService, globalData) {
         $translate.use($routeParams.lang);
 
@@ -7,46 +7,50 @@ wkhomeControllers.controller('translate', ['sparqlQuery','searchData','$translat
         $scope.setLanguage = function (value) {
             globalData.language = value;
             $scope.lang = globalData.language;
-            if($routeParams.lang === 'es' && value == 'en'){
+            if ($routeParams.lang === 'es' && value == 'en') {
                 $window.location.hash = $window.location.hash.replace('/es/', '/en/');
-            } 
-            if($routeParams.lang === 'en' && value == 'es'){
+            }
+            if ($routeParams.lang === 'en' && value == 'es') {
                 $window.location.hash = $window.location.hash.replace('/en/', '/es/');
             }
         };
-        
+
         $scope.refreshLang = function () {
             $scope.lang = $routeParams.lang;
         };
-        
-        
-        
-        
-    
-             
+
+
+
+
+
+
         /**
          * Loading DATA in Memory
          */
-           /*************************************************************/
+        /*************************************************************/
         /*query to get the keywords in memory */
         /*************************************************************/
         loadAllKeyword();
         $scope.themes = [];
         function loadAllKeyword() {
+            //only keywords that appear in more than 2 articles
             var queryKeywords = globalData.PREFIX
-                    + ' CONSTRUCT { ?keywordp rdfs:label ?keyp } '
-                    + '	FROM <' + globalData.centralGraph + '> '
+                    + ' CONSTRUCT { ?keyword rdfs:label ?key } '
                     + ' WHERE { '
-                    + '     SELECT  (count(?key) as ?k) (SAMPLE(?keyword) as ?keywordp) (SAMPLE(?key) as ?keyp) '
-                    + '         WHERE { '
-                    + '              ?subject foaf:publications ?pubs. '
-                    //+ '              ?subject dct:subject ?key. '
+                    + '     SELECT  (count(?pubs) as ?total) ' //(SAMPLE(?keyword) as ?keywordp) (SAMPLE(?key) as ?keyp)  '
+                    + '     WHERE { '
+                    + '         graph <' + globalData.centralGraph + '> {'
+                    + '             ?subject foaf:publications ?pubs. '
+                    //+ '           ?subject dct:subject ?key. '
                     + '             ?pubs bibo:Quote ?key. '
                     + '             BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
                     + '             BIND(IRI(?unickey) as ?keyword) '
-                    + '         } '
-                    + '     GROUP BY ?subject '
-                    //            + '     HAVING(?k > 1) '
+                    + '         }'
+                    + '     } '
+                    + '     GROUP BY ?keyword  ?key '
+                    //+ '     GROUP BY ?subject'
+
+                    + '     HAVING(?total > 4) ' //si la keyword aparece en mas de 5 publicaciones
                     + '}';
             sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
 
@@ -102,7 +106,7 @@ wkhomeControllers.controller('translate', ['sparqlQuery','searchData','$translat
             });
         });
         //***************************************************//
-        
-        
-   
+
+
+
     }]); //end translate controller
