@@ -5,12 +5,12 @@
 	<property name="ireport.zoom" value="1.3310000000000004"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<parameter name="rutalogo" class="java.lang.String"/>
 	<parameter name="name" class="java.lang.String"/>
 	<parameter name="numero" class="java.lang.String"/>
 	<queryString language="json">
 		<![CDATA[publications]]>
 	</queryString>
-	<field name="rutalogo" class="java.lang.String"/>
 	<field name="title1" class="java.lang.String">
 		<fieldDescription><![CDATA[publications.title]]></fieldDescription>
 	</field>
@@ -25,6 +25,10 @@
 			<rectangle>
 				<reportElement x="0" y="100" width="555" height="40" forecolor="#A9A9A9" uuid="c7e62162-2b3e-4f38-829c-9759a6cc1657"/>
 			</rectangle>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement x="0" y="17" width="553" height="30" uuid="50d984f6-e61f-404e-bd15-4d3b6a518f0a"/>
+				<imageExpression><![CDATA[$P{rutalogo}]]></imageExpression>
+			</image>
 			<textField pattern="dd-MM-yyyy HH:mm:ss">
 				<reportElement x="437" y="76" width="118" height="20" uuid="226a8556-2972-4c90-8e83-89b4d4bb266d"/>
 				<textElement>

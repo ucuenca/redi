@@ -15,6 +15,7 @@ public class ConstantServiceImpl implements ConstantService {
 
     private final static String  FOAFNS = "http://xmlns.com/foaf/0.1/";
     private final static String OWLNS = "http://www.w3.org/2002/07/owl#";
+    private final static String LOGO_PATH = "./../wkhuska_webapps/ROOT/wkhome/images/logo_wk.png";
     
     @Override
     public String getPubProperty() {
@@ -112,5 +113,9 @@ public class ConstantServiceImpl implements ConstantService {
      return PREFIX;
     }
 
+    @Override
+    public String getLogoPath() {
+        return LOGO_PATH;
+    }
 
 }
