@@ -226,7 +226,7 @@ public class ReportsImpl implements ReportsService {
                         pubMap.get(pubTitle).put("title", pubTitle);
                         cont++;
                         if (binding.getValue("abstract") != null) {
-                            pubMap.get(pubTitle).put("abstract", String.valueOf(binding.getValue("abstract")).replace("\"", ""));
+                            pubMap.get(pubTitle).put("abstract", String.valueOf(binding.getValue("abstract")).replace("\"", "").replace("^^", "").split("<")[0]);
                         }
                         //Coauthors
                         coautMap.put(pubTitle, new JSONArray());
@@ -369,7 +369,7 @@ public class ReportsImpl implements ReportsService {
                 "          { " +
                 "              SELECT ?name " +
                 "              WHERE { " +
-                "                  GRAPH <" + constant.getEndpointGraph() + "> 									{ \n" +
+                "                  GRAPH <" + constant.getEndpointGraph() + "> { " +
                 "                       ?provenance uc:fullName ?name . " +
                 "                  } " +
                 "              } " +
@@ -421,26 +421,6 @@ public class ReportsImpl implements ReportsService {
         String query1, query2 = "";
         
         try {
-            //Query
-            /*query1 = Constant.PREFIX
-                    + " SELECT ?provenance ?name (COUNT(DISTINCT(?s)) AS ?total) (count(DISTINCT ?pub) as ?totalp) "
-                    + " WHERE "
-                    + "    { "
-                    + "    	GRAPH <" + constant.getWkhuskaGraph() + "> { "
-                    + "          ?s a foaf:Person. "
-                    + "          ?s foaf:publications ?pub . "
-                    + "          ?s dct:provenance ?provenance . "
-                    + "          { "
-                    + "              SELECT ?name "
-                    + "              WHERE { "
-                    + "                  GRAPH <" + constant.getEndpointGraph() + "> 									{ \n"
-                    + "                       ?provenance uc:fullName ?name . "
-                    + "                  } "
-                    + "              } "
-                    + "          } "
-                    + "    	} "
-                    + "  	} GROUP BY ?provenance ?name ";*/
-
             query1 = ConstantServiceImpl.PREFIX
                     + "SELECT ?provenance ?uni "
                     + "WHERE "
@@ -515,27 +495,6 @@ public class ReportsImpl implements ReportsService {
             java.util.logging.Logger.getLogger(ReportsImpl.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
         }
-        
-        /*String jason = "[{"
-                + "	\"universityName\": \"Alfreds Futterkiste\","
-                + "	\"numberPublications\": 89,
-                         "numberResearcher
-                + "	\"name\": \"Reims, France\""
-                + "}, {"
-                + "	\"universityName\": \"Alfreds Futterkiste\","
-                + "	\"numberPublications\": 54,"
-                + "	\"name\": \"Albuquerque, USA\""
-                + "}, {"
-                + "	\"universityName\": \"Wolski  Zajazd\","
-                + "	\"numberPublications\": 79,"
-                + "	\"name\": \"London, UK\""
-                + "}, {"
-                + "	\"universityName\": \"Wolski  Zajazd\","
-                + "	\"numberPublications\": 31,"
-                + "	\"name\": \"Vienna, Austria\""
-                + "}]";
-        
-        return new String[]{jason};*/
         return new String[]{"", ""};
     }
     

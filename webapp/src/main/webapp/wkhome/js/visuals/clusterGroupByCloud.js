@@ -14,9 +14,9 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
         arrayColors['default'] = '#5882FA';
         function create(svgElement, dataToDraw, groupByOption) {
             
-            var radius = 350;
-            var width = Math.max(document.documentElement.clientWidth * 0.8, window.innerWidth * 0.8) ;
-            var height = Math.max(document.documentElement.clientHeight * 0.8, window.innerHeight * 0.8);
+            var radius = 400;
+            var width = Math.max(document.documentElement.clientWidth * 1, window.innerWidth * 1) ;
+            var height = Math.max(document.documentElement.clientHeight * 1, window.innerHeight * 1);
             
             
             var svg = svgElement.append("svg")
@@ -148,11 +148,11 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
             function draw(varname) {
                 
                 if (varname == 'cluster') {
-                    width = Math.max(document.documentElement.clientWidth * (1- 16.7 / 83.3), window.innerWidth * (1- 16.7 / 83.3) || 0);
+                    width = Math.max(document.documentElement.clientWidth * (0.95), window.innerWidth * (0.95) || 0);
                     height = Math.max(document.documentElement.clientHeight + dataToDraw.length * 1 - 350, window.innerHeight + dataToDraw.length * 1 - 350 || 0);
                     svg.attr("width", width).attr("height", height);
                 } else {
-                    width = Math.max(document.documentElement.clientWidth * 0.8);
+                    width = Math.max(document.documentElement.clientWidth * 0.95);
                     height = Math.max(document.documentElement.clientHeight * 0.8);
                     svg.attr("width", width).attr("height", height);
                 }
@@ -198,7 +198,7 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
                             //    d.keyword = d.keyword[0];
                             if (d.keyword != null && (typeof d.keyword === 'string' || d.keyword instanceof String)) {
                                 var keyArray = d.keyword.toString().split(",");
-                                var keyword = keyArray.length > 0 ? (keyArray[0].length > 1 ? keyArray[0].trim().replace("\"", "").substring(0, 20):'') : '';
+                                var keyword = keyArray.length > 0 ? (keyArray[0].length > 1 ? keyArray[0].trim().replace("\"", "").substring(0, 22):'') : '';
                                 return keyword;
                             }
                             return d.name;
