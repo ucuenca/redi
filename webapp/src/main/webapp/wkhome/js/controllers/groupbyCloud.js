@@ -89,7 +89,7 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
                     + '     GROUP BY ?keyword  ?key '
                     //+ '     GROUP BY ?subject'
                     
-                    + '     HAVING(?total > 5) ' //si la keyword aparece en mas de 5 publicaciones
+                    + '     HAVING(?total > 4) ' //si la keyword aparece en mas de 5 publicaciones
                     + '}';
                 sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
                  //   waitingDialog.show();

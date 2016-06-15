@@ -28,7 +28,7 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
                     + '     GROUP BY ?keyword  ?key '
                     //+ '     GROUP BY ?subject'
                     
-                    + '     HAVING(?total > 5) ' //si la keyword aparece en mas de 5 publicaciones
+                    + '     HAVING(?total > 4) ' //si la keyword aparece en mas de 5 publicaciones
                     + '}';
             sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
                 jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
