@@ -1,9 +1,12 @@
-wkhomeControllers.controller('clusterGroupByCloud', ['$scope', 'globalData', 'sparqlQuery', 'clustersQuery', 'searchData', '$route', '$window',
-    function ($scope, globalData, sparqlQuery, clustersQuery, searchData, $window) {
+wkhomeControllers.controller('clusterGroupByCloud', ['$timeout', '$scope', 'globalData', 'sparqlQuery', 'clustersQuery', 'searchData', '$route', '$window',
+    function ($timeout, $scope, globalData, sparqlQuery, clustersQuery, searchData, $route, $window) {
 
         $('html,body').animate({
             scrollTop: $("#scrollToTop").offset().top
         }, "slow");
+        
+        $scope.gbselectedItem = 'cluster';
+        
         $scope.$watch('searchData.areaSearch', function (newValue, oldValue, scope) {
 
             if (searchData.areaSearch) {
@@ -109,25 +112,31 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$scope', 'globalData', 'sp
                 $scope.clusters = data;
                 var myArray = new Array();
                 for (i = 0, len = data.length; i < len; i++) {
-                    myArray[data[i].cluster.toString()] = myArray[data[i].cluster.toString()] == null ? 1 : myArray[data[i].cluster.toString()] + 1;
+                    if (myArray[data[i].cluster.toString()] == null) {
+                        myArray[data[i].cluster.toString()] = new Array();
+                        myArray[data[i].cluster.toString()][0] = 1;
+                        myArray[data[i].cluster.toString()][1] = 0;
+                    }
+                    myArray[data[i].cluster.toString()][0] = myArray[data[i].cluster.toString()][0] + 1;
                 }
                 var cont = 1;
-                for (i = 0, len = data.length; i < len && cont < 600; i++) {
-                    if (myArray[data[i].cluster.toString()] > 4) {
+                for (i = 0, len = data.length; i < len ; i++) { //&& cont < 600
+                    if (myArray[data[i].cluster.toString()][0] > 4 && myArray[data[i].cluster.toString()][1] < 95) {
                         var model = {};
                         model["Cluster"] = data[i].cluster;
                         model["Author"] = data[i].author;
                         model["Keyword"] = data[i].kw;
                         model["Title"] = data[i].title.toString();
-                        model["URI"] = data[i].uri;
-                        $scope.$apply(function () {
+                        model["URI"] = data[i].uriPublication;
+                        //$timeout(function () {
                             $scope.publicationsByKeyword.push({cluster: model["Cluster"], author: model["Author"], keyword: model["Keyword"], title: model["Title"], uri: model["URI"]});
                             cont+=1;
-                        });
+                        //});
+                        myArray[data[i].cluster.toString()][1] += 1;
                     }
                 }
 
-                executeDraw($scope.publicationsByKeyword, groupby);
+                $timeout(executeDraw($scope.publicationsByKeyword, groupby));
                 searchData.areaSearch = null;
 
             });
@@ -136,7 +145,7 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$scope', 'globalData', 'sp
 
         function executeDraw(dataToDraw, groupby)
         {
-            $scope.$apply(function () {
+            $timeout(function () {
                 $scope.data = [{value: dataToDraw, group: groupby}];
                 $scope.dataaux = dataToDraw;
             });
