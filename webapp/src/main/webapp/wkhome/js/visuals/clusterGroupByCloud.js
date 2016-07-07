@@ -7,6 +7,7 @@ cloudCluster.factory('d3', function () {
 });
 cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
     function (d3, sparqlQuery) {
+        var scopeEI;
         var group = '';
         var size = '';
         var color = '';
@@ -14,9 +15,9 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
         arrayColors['default'] = '#5882FA';
         function create(svgElement, dataToDraw, groupByOption) {
             
-            var radius = 350;
-            var width = Math.max(document.documentElement.clientWidth * 0.8, window.innerWidth * 0.8) ;
-            var height = Math.max(document.documentElement.clientHeight * 0.8, window.innerHeight * 0.8);
+            var radius = 400;
+            var width = Math.max(document.documentElement.clientWidth * 1, window.innerWidth * 1) ;
+            var height = Math.max(document.documentElement.clientHeight * 1, window.innerHeight * 1);
             
             
             var svg = svgElement.append("svg")
@@ -29,11 +30,76 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
             var padding = 8;
             var maxRadius = d3.max(_.pluck(dataMapping, 'radius'));
 
+
+            var click = function (d) {
+                removePopovers();
+                scopeEI.$parent.clickonAuthor(d.idAuthor);
+                
+                /*var title = '';
+                if ($routeParams.lang === "es") {
+                    title = '"Clusters que contienen \'' + d.label + '\' Keyword"';
+                } else {
+                    title = '"Clusters that contain \'' + d.label + '\' Keyword"';
+                }
+
+                var sparqlquery = globalData.PREFIX
+                        + ' Construct {'
+                        + ' uc:resultTitle a uc:pagetitle.'
+                        + ' uc:resultTitle uc:viewtitle ' + title + '.'
+                        + '  ?cluster rdfs:label ?name. ?cluster uc:total ?totalperson.'
+                        + '} '
+                        + 'WHERE'
+                        + '{'
+                        + '{'
+                        + 'SELECT DISTINCT ?cluster ?name (COUNT(DISTINCT ?subject) as ?totalperson)'
+                        + 'WHERE'
+                        + '{'
+                        + '  graph <' + globalData.clustersGraph + '>'
+                        + '        {'
+                        + '          ?cluster uc:hasPerson ?subject. '
+                        + '          ?cluster rdfs:label ?name. '
+                        + '  		?subject foaf:publications ?pubb. '
+                        + '          	{'
+                        + '      			select DISTINCT ?pubb ?title '
+                        + '            		where'
+                        + '            		{'
+                        + '            			graph <' + globalData.centralGraph + '>'
+                        + '            			{'
+                        + '            				?pubb bibo:Quote "' + d.label + '".'
+                        + '                          	?pubb dct:title ?title.'
+                        + '              			}'
+                        + '          			}'
+                        + '          	}'
+                        + '          }'
+                        + ' }'
+                        + '  group by ?cluster ?name'
+                        + '         }'
+                        + ' Filter(?totalperson > 1)'
+                        + '}';
+
+                waitingDialog.show("Loading Authors Related with " + d.label);
+                sparqlQuery.querySrv({query: sparqlquery}, function (rdf) {
+                    jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
+                        if (compacted["@graph"])
+                        {
+                            var entity = compacted["@graph"];
+                            var values = entity.length ? entity : [entity];
+                            //send data to the Controller
+                            scopeEI.ifClick({value: compacted});
+                            waitingDialog.hide();
+                        } else
+                        {
+                            waitingDialog.hide();
+                        }
+                    });
+                });   // end  sparqlQuery.querySrv(...*/
+            };
             
             var getCenters = function (vname, size) {
                 var centers, map;
                 centers = _.uniq(_.pluck(dataMapping, vname)).map(function (d) {
                     var keyw = '';
+                    var idAuthor = '';
                     if (vname == 'cluster') {
                         var cont = 0;
                         var i = 0;
@@ -41,13 +107,17 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
                         while (d != null && cont == 0 && dataMapping[i] != null) {
                             if (dataMapping[i].cluster == d){
                                 keyw = dataMapping[i].keyword;
+                                if (keyw == null || keyw == "") {
+                                    keyw = dataMapping[i].clusterName;
+                                }
                                 arrayColors[d] = '#' + Math.floor(Math.random() * 16777215).toString(16);
                                 cont++;
                             }
+                            idAuthor = dataMapping[i].idAuthor;
                             i++;
                         }
-                    } 
-                    return {name: d, value: 1, keyword: keyw};
+                    }
+                    return {name: d, value: 1, keyword: keyw, id: idAuthor};
                 });
 
                 map = d3.layout.treemap().size(size).ratio(1 / 1);
@@ -78,7 +148,8 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
                     })
                     .on("mouseout", function (d) {
                         removePopovers();
-                    });
+                    })
+                    .on("click", click);
 
             function getDataMapping(dataM, vname) {
                 var max = d3.max(_.pluck(dataM, vname));
@@ -148,11 +219,11 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
             function draw(varname) {
                 
                 if (varname == 'cluster') {
-                    width = Math.max(document.documentElement.clientWidth * (1- 16.7 / 83.3), window.innerWidth * (1- 16.7 / 83.3) || 0);
+                    width = Math.max(document.documentElement.clientWidth * (0.95), window.innerWidth * (0.95) || 0);
                     height = Math.max(document.documentElement.clientHeight + dataToDraw.length * 1 - 350, window.innerHeight + dataToDraw.length * 1 - 350 || 0);
                     svg.attr("width", width).attr("height", height);
                 } else {
-                    width = Math.max(document.documentElement.clientWidth * 0.8);
+                    width = Math.max(document.documentElement.clientWidth * 0.95);
                     height = Math.max(document.documentElement.clientHeight * 0.8);
                     svg.attr("width", width).attr("height", height);
                 }
@@ -196,9 +267,9 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
                         .text(function (d) {
                             //if(d.keyword != null && (d.keyword.constructor === Array || d.keyword instanceof Array))
                             //    d.keyword = d.keyword[0];
-                            if (d.keyword != null && (typeof d.keyword === 'string' || d.keyword instanceof String)) {
+                            if (d.keyword != null && (typeof d.keyword === 'string' || d.keyword instanceof String) && d.keyword.toString().trim() != null && d.keyword.toString().trim() != "" ) {
                                 var keyArray = d.keyword.toString().split(",");
-                                var keyword = keyArray.length > 0 ? (keyArray[0].length > 1 ? keyArray[0].trim().replace("\"", "").substring(0, 20):'') : '';
+                                var keyword = keyArray.length > 0 ? (keyArray[0].length > 1 ? keyArray[0].trim().replace("\"", "").substring(0, 22):'') : '';
                                 return keyword;
                             }
                             return d.name;
@@ -221,10 +292,10 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
                     trigger: 'manual',
                     html: true,
                     content: function () {
-                        return  "<b>Title:</b> " + d.title + "<br />" +
+                        return  "<b>Author:</b> " + d.author + "<br />" +
                                 "<b>Keywords:</b> " + d.keyword + "<br />" +
-                                "<b>Author:</b> " + d.author + "<br />" +
-                                "<b>Cluster:</b> " + d.cluster + "<br />";
+                                //"<b>Title:</b> " + d.title + "<br />" +
+                                "<b>Cluster:</b> " + d.clusterName + "<br />";
                     }
                 });
                 $(this).popover('show')
@@ -296,7 +367,7 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
                      draw(svg, width, height, data);
                      },	true);*/
                     scope.$watch('data', function (newVal, oldVal, scope) {
-                        //	Update	the	chart
+                        scopeEI = scope;                        //	Update	the	chart
                         if (scope.data && scope.data[0] && scope.data[0]["value"] && scope.data[0]["value"][0]
                                 && !oldVal) {
                             var dataToDraw = scope.data[0]["value"];
