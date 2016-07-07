@@ -10,14 +10,14 @@ wkhomeControllers.controller('exportController', ['$scope', 'reportService', '$w
                     case 'xls':
                     case 'pdf':
                         $scope.loading = true;
-                        var params = {hostname: $window.location.origin, report: reportName, type: type1, param1: data};
+                        var params = {hostname: '', report: reportName, type: type1, param1: data};
                         reportService.querySrv(params, function (response) {
                             var res = '';
                             for (var i = 0; i < Object.keys(response).length - 2; i++) {
                                 res += response[i];
                             }
                             if (res && res!=='') {
-                                $window.open($sce.trustAsResourceUrl(res));
+                                $window.open($sce.trustAsResourceUrl($window.location.origin + res));
                             } else {
                                 alert("Error. Por favor, espere un momento y vuelva a intentarlo.");
                             }

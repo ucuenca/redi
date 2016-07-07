@@ -110,7 +110,7 @@ public class ReportsImpl implements ReportsService {
             JsonDataSource dataSource = null;
             // Parameters for report
             Map<String, Object> parameters = new HashMap<String, Object>();
-            parameters.put("rutalogo", pubVocabService.getLogoPath());
+            parameters.put("rutalogo", realPath + "/wkhome/images/logo_wk.png");
             InputStream stream;
 
             //Parameters for each report
@@ -169,7 +169,7 @@ public class ReportsImpl implements ReportsService {
 
                 }
                 // Return the relative online path for the report
-                return hostname + "/tmp/" + nameFile + "." + type;
+                return "/tmp/" + nameFile + "." + type;
             }
         } catch (Exception e) {
             e.printStackTrace();
