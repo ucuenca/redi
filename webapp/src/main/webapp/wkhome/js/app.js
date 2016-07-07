@@ -22,7 +22,8 @@ wkhomeApp.service('searchData', function () {
     this.researchArea = "Semantic Web";
     this.selectedTagItem = "Semantic Web";
     this.globalauthor = null;
-    
+    this.clustersAuthors = null;
+    this.dataRequested = false;
 });
 
 wkhomeApp.service('globalData', function () {

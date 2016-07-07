@@ -86,6 +86,8 @@ wkhomeServices.factory('reportService', ['$resource', '$http', '$window',
         $http.defaults.headers.common['content-type'] = 'application/x-www-form-urlencoded';
         $http.defaults.headers.common['Accept'] = 'application/ld+json';
         var transform = function (data) {
+            data.hostname = wkhomeServices.serverInstance ? wkhomeServices.serverInstance : ('http://' + $window.location.hostname
+                + ($window.location.port ? ':8080' : '') + '');
             return $.param(data);
         }
         var serverInstance = 'http://' + $window.location.hostname
