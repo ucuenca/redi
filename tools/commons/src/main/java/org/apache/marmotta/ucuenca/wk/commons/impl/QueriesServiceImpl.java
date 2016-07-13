@@ -111,7 +111,7 @@ public class QueriesServiceImpl implements QueriesService {
         if (condition) {
             return INSERTDATA + getGraphString(endpointsGraph) + "{<" + ENDPOINTPREFIX + resourceHash + ">  " + con.uc(parameter) + "  <" + newValue + "> }}";
         } else {
-            return INSERTDATA + getGraphString(endpointsGraph) + "{<" + ENDPOINTPREFIX + resourceHash + ">  " + con.uc(parameter) + "   '" + newValue + "'^^xsd:" + type + " }} ";
+            return INSERTDATA + getGraphString(endpointsGraph) + "{<" + ENDPOINTPREFIX + resourceHash + ">  " + con.uc(parameter) + "   '" + newValue + "'^^xsd:" + type + " }}  ";
         }
     }
 
@@ -365,8 +365,10 @@ public class QueriesServiceImpl implements QueriesService {
     
      @Override
     public String getAbstractAndTitleQuery(String resource) {
-        return PREFIXES + " SELECT DISTINCT ?abstract ?title "
-                + "  WHERE {   <" + resource + "> dct:title ?title. OPTIONAL {  <" + resource + "> bibo:abstract  ?abstract  } } ";
+        return PREFIXES + " SELECT DISTINCT  ?title ?abstract ?description "
+                + "  WHERE {   <" + resource + "> dct:title ?title. "
+                + "OPTIONAL {  <" + resource + "> bibo:abstract  ?abstract  }"
+                + "OPTIONAL {  <" + resource + "> dct:description  ?description  } } ";
     }
  
     @Override
@@ -426,9 +428,20 @@ public class QueriesServiceImpl implements QueriesService {
                 + "WHERE {" + getGraphString(providerGraph)
                 + "{   ?authorResource " + OWLSAMEAS + "   ?authorNative.  "
                 + "?authorNative ?pubproperty ?publicationResource.  "
-                + "?publicationResource <" + prefix + ">  ?title\n"
-                + "\n" + "{ FILTER (regex(?pubproperty,\"authorOf\")) }  "
-                + "UNION { FILTER (regex(?pubproperty,\"pub\")) }                                                                                        }} ";
+                + "?publicationResource <" + prefix + ">  ?title "
+                + " { FILTER (regex(?pubproperty,\"authorOf\")) }  "
+                + "UNION { FILTER (regex(?pubproperty,\"pub\")) }  }} ";
+    }
+    
+     @Override
+    public String getPublicationsTitleScopusQuery(String providerGraph, String prefix) {
+        return PREFIXES 
+                + " SELECT DISTINCT ?authorResource ?publicationResource ?title "
+                + " WHERE {" + getGraphString(providerGraph)
+                + "{   ?authorResource " + OWLSAMEAS + "   ?authorNative. "
+                + " ?publicationResource dct:contributor ?authorNative. "
+                + " ?publicationResource <" + prefix + ">  ?title "
+               + " }} ";
     }
 
     @Override
