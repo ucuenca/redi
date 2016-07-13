@@ -230,12 +230,11 @@ public class AuthorServiceImpl implements AuthorService {
         return "Carga Finalizada. Revise Archivo Log Para mas detalles";
     }
 
-    public void insertKeywordsAndAbstractValues(String publication, String author, SparqlEndpoint endpoint) throws DataRetrievalException, QueryEvaluationException {
+    public void insertKeywordsAndAbstractValues(String publication, String author, SparqlEndpoint endpoint) throws DataRetrievalException, QueryEvaluationException, RepositoryException, MalformedQueryException, IOException, ClassNotFoundException {
         ClientConfiguration config = new ClientConfiguration();
         config.addEndpoint(new SPARQLEndpoint(endpoint.getName(), endpoint.getEndpointUrl(), "^" + "http://" + ".*"));
         LDClientService ldClientEndpoint = new LDClient(config);
         String getRetrieveKeysQuery = "";
-        try {
             ClientResponse respPub = ldClientEndpoint.retrieveResource(utf8DecodeQuery(publication));
             RepositoryConnection conUriPub = ModelCommons.asRepository(respPub.getData()).getConnection();
             conUriPub.begin();
@@ -248,14 +247,13 @@ public class AuthorServiceImpl implements AuthorService {
                 String subjectproperty = tripletskeysResource.getValue("y").toString();
                 String keyword = tripletskeysResource.getValue("z").toString();
                //only insert Literal Subjects
-                if (!commonsService.isURI(keyword)) {
-                    executeInsertQuery(author, subjectproperty, keyword, endpoint, provenanceinsert);
+                if ((!commonsService.isURI(keyword)) && (kservice.isValidKeyword(keyword))) {
+                    executeInsertQuery(author, subjectproperty, kservice.cleaningText(keyword).toUpperCase(), endpoint, provenanceinsert);
                 }
             }
             String getAbstractAndTitleQuery = queriesService.getAbstractAndTitleQuery(publication);
             TupleQuery abstractTitlequery = conUriPub.prepareTupleQuery(QueryLanguage.SPARQL, getAbstractAndTitleQuery); //
             TupleQueryResult tripletasATResult = abstractTitlequery.evaluate();
-            provenanceinsert = false;
             while (tripletasATResult.hasNext()) {
                 BindingSet tripletsATResource = tripletasATResult.next();
                 StringBuilder textAnalized = new StringBuilder();
@@ -268,7 +266,7 @@ public class AuthorServiceImpl implements AuthorService {
                     executeInsertQuery(author, "dct:description", abstractvalue, endpoint, provenanceinsert);
                     textAnalized.append(abstractvalue);
                 }
-                else if (tripletsATResource.getValue("description") != null)
+                if (tripletsATResource.getValue("description") != null)
                 {
                     String abstractvalue = tripletsATResource.getValue("description").toString();
                     executeInsertQuery(author, "dct:description", abstractvalue, endpoint, provenanceinsert);
@@ -281,9 +279,7 @@ public class AuthorServiceImpl implements AuthorService {
             }
             conUriPub.commit();
             conUriPub.close();
-        }  catch (RepositoryException | MalformedQueryException | IOException | ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
     }
 
     public int executeInsertQuery(String sujeto, String predicado, String objeto, SparqlEndpoint endpoint, boolean provenanceinsert) throws DataRetrievalException, QueryEvaluationException {
@@ -300,7 +296,11 @@ public class AuthorServiceImpl implements AuthorService {
             updateAuthor(queryAuthorInsert);
             return 1;
         } else {
-            insertKeywordsAndAbstractValues(objeto, sujeto, endpoint);
+            try {
+                insertKeywordsAndAbstractValues(objeto, sujeto, endpoint);
+            } catch (RepositoryException | MalformedQueryException | IOException | ClassNotFoundException ex) {
+                java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return 0;
     }
