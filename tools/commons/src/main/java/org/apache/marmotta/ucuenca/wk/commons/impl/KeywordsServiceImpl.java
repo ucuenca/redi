@@ -180,13 +180,13 @@ public class KeywordsServiceImpl implements KeywordsService {
             //a
             "adecuada", "adecuacion", "adaptativo", "adaptacion", "alto", "articulo", "anomalias", "abierta", "aplicación", "aplicados", "aplicadas", "adaptabilidad", "aptos", "aptas", "apto", "acción", "anticipo", "afecta", "aumento", "afectan", "apertura", "alcance", "análisis", "analisis", "aplicando", "aplicar", "aquellos", "al", "a",
             //b
-            "bajo", "brecha", "buenas", "buenos", "bueno", "base",
+            "basado","basada","bajo", "brecha", "buenas", "buenos", "bueno", "base",
             //c
             "correcion", "criterios", "convertir", "calidad", "clasificacion", "crear", "cambio", "competitividad", "contenido", "campana", "campaña", "comportamiento", "comparación", "comparativo", "comparar", "como", "control", "conceptos", "creación", "casos", "cabo", "contra", "cuanto", "cuales", "cuando", "con",
             //d
             "descriptivo", "desestimacion", "disminucion", "dosis", "demanda", "difusion", "diagnostico", "determinacion", "diseño", "distribución", "diferentes", "diferente", "directa", "directo", "debe", "donde", "del", "de", "diseno",
             //e
-            "ensayo", "extraccion", "estandar", "evaluacion", "efecto", "estatal", "externo", "externa", "empresas", "empresa", "estado", "estados", "experimental", "evaluación", "eficiencia", "emitida", "estilo", "estudio", "entre", "está", "esta", "etapa", "ellos", "el", "en",
+            "estrategia","ensayo", "extraccion", "estandar", "evaluacion", "efecto", "estatal", "externo", "externa", "empresas", "empresa", "estado", "estados", "experimental", "evaluación", "eficiencia", "emitida", "estilo", "estudio", "entre", "está", "esta", "etapa", "ellos", "el", "en",
             //f
             "formula", "fijo", "fija", "forma", "flexible", "factores", "fuerza", "futuros", "futuro",
             //g
@@ -202,7 +202,7 @@ public class KeywordsServiceImpl implements KeywordsService {
             //o
             "objetivo", "oferta", "organo", "optimización", "otros", "otras", "objeto",
             //p
-            "pruebas", "procedimiento", "proyectos", "presencia", "propuesta", "post", "previo", "procesos", "protección", "proyecto", "portafolio", "proteccion", "pago", "por", "para", "porque", "por", "problema", "plan", "para", "pequeño", "pequeños", "posible", "primero", "primeros", "perfil", "preliminar", "proceso", "principio", "peso",
+            "pruebas", "procedimiento", "proyectos", "presencia", "propuesta", "post", "previo", "procesos", "proteccion", "proyecto", "portafolio", "pago", "por", "para", "porque", "por", "problema", "plan", "para", "pequeño", "pequeños", "posible", "primero", "primeros", "perfil", "preliminar", "proceso", "principio", "peso",
             //q
             "que",
             //r
