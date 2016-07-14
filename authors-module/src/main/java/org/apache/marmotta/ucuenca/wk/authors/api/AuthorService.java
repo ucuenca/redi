@@ -19,9 +19,7 @@ package org.apache.marmotta.ucuenca.wk.authors.api;
 
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.DaoException;
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.UpdateException;
-import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.repository.RepositoryException;
 
 public interface AuthorService {
 
@@ -37,6 +35,5 @@ public interface AuthorService {
     String runAuthorsUpdateMultipleEP(String sparqlEndpoint, String graphUri) throws DaoException, UpdateException, QueryEvaluationException;
     
     
-    String runAuthorsSplit(String sparqlEndpoint, String graphUri)  throws DaoException, UpdateException, RepositoryException, MalformedQueryException, QueryEvaluationException;
-  
+    
 }

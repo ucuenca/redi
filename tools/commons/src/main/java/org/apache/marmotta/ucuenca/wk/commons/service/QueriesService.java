@@ -135,7 +135,9 @@ public interface QueriesService {
     String getPublicationDetails(String publicationResource);
 
     String getPublicationsTitleQuery(String providerGraph, String prefix);
-
+    
+    String getPublicationsTitleScopusQuery(String providerGraph, String prefix);
+    
     String getPublicationsCount(String graph);
 
     String getTotalAuthorWithPublications(String graph);
