@@ -30,7 +30,7 @@ public class DistanceServiceImpl implements DistanceService {
         try {
             SemanticDistance dist = new SemanticDistance();
             double value = dist.semanticKeywordsDistance(listA, listB);
-            double semthreshold = 1;
+            double semthreshold = 0.8;
             if (value < semthreshold) {
                 return true;
             }

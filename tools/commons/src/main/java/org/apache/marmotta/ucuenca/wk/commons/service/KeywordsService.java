@@ -20,7 +20,12 @@ public interface KeywordsService {
 
     List<String> getKeywordsOfAuthor(String uri);
 
+    String cleaningText(String text);
 
     boolean isConstant(String text);
+
+    boolean isNumber(String text);
+    
+    boolean isValidKeyword(String keyword);
 
 }

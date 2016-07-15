@@ -42,6 +42,7 @@ import javax.ws.rs.Produces;
 import org.apache.marmotta.ucuenca.wk.authors.api.AuthorService;
 import org.apache.marmotta.ucuenca.wk.authors.api.EndpointService;
 import org.apache.marmotta.ucuenca.wk.authors.api.SparqlEndpoint;
+import org.apache.marmotta.ucuenca.wk.authors.api.UTPLAuthorService;
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.DaoException;
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.UpdateException;
 import org.openrdf.query.MalformedQueryException;
@@ -58,6 +59,9 @@ public class AuthorWebService {
 
     @Inject
     private AuthorService authorService;
+   
+    @Inject
+    private UTPLAuthorService utplAuthorService;
 
     @Inject
     private EndpointService endpointService;
@@ -137,7 +141,7 @@ public class AuthorWebService {
         resultMap.put("province", endpoint.getProvince());
         resultMap.put("latitude", endpoint.getLatitude());
         resultMap.put("longitude", endpoint.getLongitude());
- //       resultMap.put("active", endpoint.isActive());
+        //       resultMap.put("active", endpoint.isActive());
 
         return resultMap;
     }
@@ -240,18 +244,17 @@ public class AuthorWebService {
         if (StringUtils.isBlank(endpoint)) {
             return Response.status(Response.Status.NOT_ACCEPTABLE).entity("Required Endpoint and GraphURI").build();
         } else {
-            
+
             try {
-                String result = authorService.runAuthorsSplit(endpoint, graph);
+                String result = utplAuthorService.runAuthorsSplit(endpoint, graph);
                 return Response.ok().entity(result).build();
             } catch (DaoException | RepositoryException | MalformedQueryException | QueryEvaluationException ex) {
                 java.util.logging.Logger.getLogger(AuthorWebService.class.getName()).log(Level.SEVERE, null, ex);
                 log.error("Error: Getting Sources List");
             }
-            
 
         }
-     return null;
+        return null;
     }
 
 }
