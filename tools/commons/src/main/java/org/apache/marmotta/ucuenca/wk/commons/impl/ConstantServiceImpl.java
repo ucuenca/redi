@@ -50,7 +50,7 @@ public class ConstantServiceImpl implements ConstantService {
 
     @Override
     public String getScopusGraph() {
-        return "http://ucuenca.edu.ec/wkhuska/provider/Scopus";
+        return "http://ucuenca.edu.ec/wkhuska/provider/ScopusProvider";
     }
 
     @Override
