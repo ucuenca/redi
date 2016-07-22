@@ -174,7 +174,7 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                 String lastName = map.get("lname").stringValue();
                 boolean ask = false;
                 if (!proccesAllAuthors) {
-                    String askTripletQuery = queriesService.getAskProcessAlreadyAuthorProvider(con.getDBLPGraph(), authorResource);
+                    String askTripletQuery = queriesService.getAskProcessAlreadyAuthorProvider(con.getScopusGraph(), authorResource);
                     try {
 
                         ask = sparqlService.ask(QueryLanguage.SPARQL, askTripletQuery);
@@ -194,7 +194,7 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                     String lastNameSearch = lastName.split(" ").length > 1 ? lastName.split(" ")[0] : lastName;
                     String lastNameSearch2 = lastName.split(" ").length > 1 ? lastName.split(" ")[1] : "";
                     uri_search.add(URLSEARCHSCOPUS.replace("FIRSTNAME", firstNameSearch.length() > 0 ? firstNameSearch : firstName).replace("LASTNAME", lastNameSearch.length() > 0 ? lastNameSearch : lastName).replace("PAIS", "Ecuador"));
-                    uri_search.add(URLSEARCHSCOPUS.replace("FIRSTNAME", firstNameSearch.length() > 0 ? firstNameSearch : firstName).replace("LASTNAME", lastNameSearch.length() > 1 ? lastNameSearch + " " + lastNameSearch2 : lastName).replace("PAIS", "all"));
+                    uri_search.add(URLSEARCHSCOPUS.replace("FIRSTNAME", firstNameSearch.length() > 0 ? firstNameSearch : firstName).replace("LASTNAME", lastNameSearch.length() > 1 ? lastNameSearch + "%20" + lastNameSearch2 : lastName).replace("PAIS", "all"));
                     uri_search.add(URLSEARCHSCOPUS.replace("FIRSTNAME", firstNameSearch.length() > 0 ? firstNameSearch : firstName).replace("LASTNAME", lastNameSearch.length() > 0 ? lastNameSearch : lastName).replace("PAIS", "all"));
                     String scopusfirstName = "";
                     String scopuslastName = "";
@@ -243,7 +243,7 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                                 break;
                             }
                             if (response.getHttpStatus() == 503 || membersSearchResult != 1) {
-                                log.error("ErrorCode: " + response.getHttpStatus());
+                                log.error("Error de getStatus o Error de mas de un author como resultado de " + nameToFind);
                                 continue;
                             }
                         }
@@ -258,9 +258,9 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                     String scopusfullname = scopuslastName + ":" + scopusfirstName;
                     String localfullname = lastName + ":" + firstName;
 
-                    if (localfullname.toUpperCase().contains("PIEDRA")) {
-                        localfullname = localfullname.replace(".", "");
-                    }
+//                    if (localfullname.toUpperCase().contains("PIEDRA")) {
+//                        localfullname = localfullname.replace(".", "");
+//                    }
 
                     if (membersSearchResult == 1 && distance.syntacticComparisonNames("local", localfullname, "scopus", scopusfullname)) {
 
@@ -295,11 +295,11 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                                         updatePub(publicationInsertQuery);
 
                                         // insert dct:contributor      <> dct:contributor <http://dblp.org/pers/xr/s/Saquicela:Victor> 
-                                        String contributorInsertQuery = buildInsertQuery(providerGraph, publication, "http://purl.org/dc/terms/contributor", authorNativeResource);
+                                        String contributorInsertQuery = buildInsertQuery(providerGraph, publication, "http://purl.org/dc/terms/contributor", scopusAuthorUri);
                                         updatePub(contributorInsertQuery);
 
                                         // sameAs triplet    <http://190.15.141.102:8080/dspace/contribuidor/autor/SaquicelaGalarza_VictorHugo> owl:sameAs <http://dblp.org/pers/xr/s/Saquicela:Victor> 
-                                        String sameAsInsertQuery = buildInsertQuery(providerGraph, authorResource, "http://www.w3.org/2002/07/owl#sameAs", authorNativeResource);
+                                        String sameAsInsertQuery = buildInsertQuery(providerGraph, authorResource, "http://www.w3.org/2002/07/owl#sameAs", scopusAuthorUri);
                                         updatePub(sameAsInsertQuery);
 
                                         //if value is an uri then search and insert values of this value
