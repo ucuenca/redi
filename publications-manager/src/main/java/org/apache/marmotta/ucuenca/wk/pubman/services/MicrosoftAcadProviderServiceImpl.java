@@ -674,8 +674,8 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
 
     @Override
     public void run() {
-        runTitleProviderTaskImpl();
-        //runPublicationsProviderTaskImpl("uri");
+      runTitleProviderTaskImpl();
+      // runPublicationsProviderTaskImpl("uri");
     }
 
 }

@@ -18,6 +18,8 @@
 package org.apache.marmotta.ucuenca.wk.pubman.services;
 
 import com.google.gson.JsonArray;
+import java.io.BufferedReader;
+import java.io.FileReader;
 //import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,6 +46,7 @@ import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.KeywordsService;
+import org.apache.marmotta.ucuenca.wk.commons.service.GetAuthorsGraphData;
 
 import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
 
@@ -93,6 +96,9 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
     private CommonsServices commonsServices;
 
     @Inject
+    private GetAuthorsGraphData getauthorsData;
+
+    @Inject
     private DistanceService distance;
 
     @Inject
@@ -126,11 +132,11 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
             ClientConfiguration conf = new ClientConfiguration();
             LDClient ldClient = new LDClient(conf);
             int membersSearchResult = 0;
-            String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(authorGraph, endpointsGraph);
             String nameToFind = "";
             String authorResource = "";
             int priorityToFind = 0;
-            List<Map<String, Value>> resultAllAuthors = sparqlService.query(QueryLanguage.SPARQL, getAllAuthorsDataQuery);
+
+            List<Map<String, Value>> resultAllAuthors = getauthorsData.getListOfAuthors();
 
             /*To Obtain Processed Percent*/
             int allPersons = resultAllAuthors.size();
@@ -164,6 +170,7 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                     }
                 }
             }
+
             boolean proccesAllAuthors = Boolean.parseBoolean(mapping.get("proccesAllAuthors").toString());
 
             for (Map<String, Value> map : resultAllAuthors) {
@@ -174,7 +181,7 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                 String lastName = map.get("lname").stringValue();
                 boolean ask = false;
                 if (!proccesAllAuthors) {
-                    String askTripletQuery = queriesService.getAskProcessAlreadyAuthorProvider(con.getDBLPGraph(), authorResource);
+                    String askTripletQuery = queriesService.getAskProcessAlreadyAuthorProvider(con.getScopusGraph(), authorResource);
                     try {
 
                         ask = sparqlService.ask(QueryLanguage.SPARQL, askTripletQuery);
@@ -194,11 +201,12 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                     String lastNameSearch = lastName.split(" ").length > 1 ? lastName.split(" ")[0] : lastName;
                     String lastNameSearch2 = lastName.split(" ").length > 1 ? lastName.split(" ")[1] : "";
                     uri_search.add(URLSEARCHSCOPUS.replace("FIRSTNAME", firstNameSearch.length() > 0 ? firstNameSearch : firstName).replace("LASTNAME", lastNameSearch.length() > 0 ? lastNameSearch : lastName).replace("PAIS", "Ecuador"));
-                    uri_search.add(URLSEARCHSCOPUS.replace("FIRSTNAME", firstNameSearch.length() > 0 ? firstNameSearch : firstName).replace("LASTNAME", lastNameSearch.length() > 1 ? lastNameSearch + " " + lastNameSearch2 : lastName).replace("PAIS", "all"));
+                    uri_search.add(URLSEARCHSCOPUS.replace("FIRSTNAME", firstNameSearch.length() > 0 ? firstNameSearch : firstName).replace("LASTNAME", lastNameSearch.length() > 1 ? lastNameSearch + "%20" + lastNameSearch2 : lastName).replace("PAIS", "all"));
                     uri_search.add(URLSEARCHSCOPUS.replace("FIRSTNAME", firstNameSearch.length() > 0 ? firstNameSearch : firstName).replace("LASTNAME", lastNameSearch.length() > 0 ? lastNameSearch : lastName).replace("PAIS", "all"));
                     String scopusfirstName = "";
                     String scopuslastName = "";
                     String scopusAuthorUri = "";
+                    String providerGraph = "";
                     try {
 
                         for (String uri_searchIterator : uri_search) {
@@ -210,8 +218,22 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                             if (!proccesAllAuthors) {
                                 existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(con.getScopusGraph(), nameToFind.replace(" ", "")));
                             }
-                            if (nameToFind != "" && !existNativeAuthor) {
+                            if ((nameToFind.compareTo("") != 0) && !existNativeAuthor) {
                                 response = ldClient.retrieveResource(nameToFind);
+
+                                /**
+                                 * Se inserta la tripleta que muestra el intento
+                                 * de búsqueda (Esta tripleta NO ofrece sentido
+                                 * semantico). Aqui porque el intento debe ser
+                                 * plasmado cuando el proveedor no de error al
+                                 * buscar el recurso.
+                                 */
+                                String nameEndpointofPublications = ldClient.getEndpoint(URLSEARCHSCOPUS + nameToFind).getName();
+                                providerGraph = graphByProviderNS + nameEndpointofPublications.replace(" ", "");
+                                String InsertQueryOneOf = buildInsertQuery(providerGraph, nameToFind.replace(" ", ""), OWL.ONE_OF, authorResource);
+                                updatePub(InsertQueryOneOf);
+                            } else {
+                                continue;
                             }
                             String getMembersQuery = queriesService.getObjectByPropertyQuery("foaf:member");
                             conUri = ModelCommons.asRepository(response.getData()).getConnection();
@@ -243,7 +265,7 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                                 break;
                             }
                             if (response.getHttpStatus() == 503 || membersSearchResult != 1) {
-                                log.error("ErrorCode: " + response.getHttpStatus());
+                                log.error("Error de getStatus o Error de mas de un author como resultado de " + nameToFind);
                                 continue;
                             }
                         }
@@ -251,17 +273,12 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                         log.error("Data Retrieval Exception: " + e);
                     }
 
-                    String nameEndpointofPublications = ldClient.getEndpoint(URLSEARCHSCOPUS + nameToFind).getName();
-                    String providerGraph = graphByProviderNS + nameEndpointofPublications.replace(" ", "");
-                    String InsertQueryOneOf = buildInsertQuery(providerGraph, nameToFind.replace(" ", ""), OWL.ONE_OF, authorResource);
-                    updatePub(InsertQueryOneOf);
                     String scopusfullname = scopuslastName + ":" + scopusfirstName;
                     String localfullname = lastName + ":" + firstName;
 
-                    if (localfullname.toUpperCase().contains("PIEDRA")) {
-                        localfullname = localfullname.replace(".", "");
-                    }
-
+//                    if (localfullname.toUpperCase().contains("PIEDRA")) {
+//                        localfullname = localfullname.replace(".", "");
+//                    }
                     if (membersSearchResult == 1 && distance.syntacticComparisonNames("local", localfullname, "scopus", scopusfullname)) {
 
                         List<String> listA = kservice.getKeywordsOfAuthor(authorResource);//dspace
@@ -295,11 +312,11 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                                         updatePub(publicationInsertQuery);
 
                                         // insert dct:contributor      <> dct:contributor <http://dblp.org/pers/xr/s/Saquicela:Victor> 
-                                        String contributorInsertQuery = buildInsertQuery(providerGraph, publication, "http://purl.org/dc/terms/contributor", authorNativeResource);
+                                        String contributorInsertQuery = buildInsertQuery(providerGraph, publication, "http://purl.org/dc/terms/contributor", scopusAuthorUri);
                                         updatePub(contributorInsertQuery);
 
                                         // sameAs triplet    <http://190.15.141.102:8080/dspace/contribuidor/autor/SaquicelaGalarza_VictorHugo> owl:sameAs <http://dblp.org/pers/xr/s/Saquicela:Victor> 
-                                        String sameAsInsertQuery = buildInsertQuery(providerGraph, authorResource, "http://www.w3.org/2002/07/owl#sameAs", authorNativeResource);
+                                        String sameAsInsertQuery = buildInsertQuery(providerGraph, authorResource, "http://www.w3.org/2002/07/owl#sameAs", scopusAuthorUri);
                                         updatePub(sameAsInsertQuery);
 
                                         //if value is an uri then search and insert values of this value
@@ -340,8 +357,8 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                 printPercentProcess(processedPersons, allPersons, "SCOPUS");
             }
             return "True for publications";
-        } catch (MarmottaException ex) {
-            log.error("Marmotta Exception: " + ex);
+        } catch (Exception ex) {
+            log.error("Exception: " + ex);
         }
 
         return "fail";
@@ -410,9 +427,11 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                 String publicationPropertiesInsertQuery = buildInsertQuery(providerGraph, publicationResource, publicationProperties, publicationPropertiesValue);
                 //load values publications to publications resource
                 updatePub(publicationPropertiesInsertQuery);
+
             }
         } catch (RepositoryException | MalformedQueryException | QueryEvaluationException ex) {
-            java.util.logging.Logger.getLogger(ScopusProviderServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ScopusProviderServiceImpl.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
