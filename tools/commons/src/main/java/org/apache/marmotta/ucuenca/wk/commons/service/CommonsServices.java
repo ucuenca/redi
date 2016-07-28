@@ -20,5 +20,7 @@ public interface CommonsServices {
     Boolean isURI(String object);
 
     String getMD5(String input);
+    
+    String getReadPropertyFromFile(String file,String property);
 
 }

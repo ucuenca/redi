@@ -40,7 +40,7 @@ public interface ConstantService {
 
     String getWkhuskaGraph();
     
-    String getEndpointGraph();
+    String getEndpointsGraph();
 
     String getProvenanceProperty();
 

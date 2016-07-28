@@ -145,8 +145,8 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
                             }
                         }
                     }
-                    List<Map<String, Value>> auxPublications = sparqlService.query(QueryLanguage.SPARQL, queriesService.getPublicationsTitleQuery(providerGraph, prefixTitleSource));
-                    List<Map<String, Value>> resultPublications = auxPublications.isEmpty() ? sparqlService.query(QueryLanguage.SPARQL, queriesService.getPublicationsTitleQuery(providerGraph, prefixTitleTarget)) : auxPublications;
+                    List<Map<String, Value>> auxPublications = sparqlService.query(QueryLanguage.SPARQL, queriesService.getPublicationsTitleScopusQuery(providerGraph, prefixTitleSource));
+                    List<Map<String, Value>> resultPublications = auxPublications.isEmpty() ? sparqlService.query(QueryLanguage.SPARQL, queriesService.getPublicationsTitleScopusQuery(providerGraph, prefixTitleTarget)) : auxPublications;
                     results.add(providerGraph + " :size :" + resultPublications.size());
                     totalPublicationsProcess = 0;
                     for (Map<String, Value> pubresource : resultPublications) {
