@@ -369,7 +369,7 @@ public class ReportsImpl implements ReportsService {
                 "          { " +
                 "              SELECT ?name " +
                 "              WHERE { " +
-                "                  GRAPH <" + constant.getEndpointGraph() + "> { " +
+                "                  GRAPH <" + constant.getEndpointsGraph() + "> { " +
                 "                       ?provenance uc:fullName ?name . " +
                 "                  } " +
                 "              } " +
@@ -425,7 +425,7 @@ public class ReportsImpl implements ReportsService {
                     + "SELECT ?provenance ?uni "
                     + "WHERE "
                     + "{ "
-                    + "  GRAPH <" + constant.getEndpointGraph() + "> "
+                    + "  GRAPH <" + constant.getEndpointsGraph() + "> "
                     + "  { "
                     + "    ?provenance uc:fullName ?uni . "
                     + "  }"

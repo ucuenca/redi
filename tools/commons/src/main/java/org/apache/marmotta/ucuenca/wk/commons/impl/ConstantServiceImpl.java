@@ -5,6 +5,7 @@
  */
 package org.apache.marmotta.ucuenca.wk.commons.impl;
 
+import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 
 /**
@@ -13,10 +14,12 @@ import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
  */
 public class ConstantServiceImpl implements ConstantService {
 
-    private final static String  FOAFNS = "http://xmlns.com/foaf/0.1/";
+    private final static String FOAFNS = "http://xmlns.com/foaf/0.1/";
     private final static String OWLNS = "http://www.w3.org/2002/07/owl#";
     private final static String LOGO_PATH = "./../wkhuska_webapps/ROOT/wkhome/images/logo_wk.png";
-    
+
+    private CommonsServices commonService = new CommonsServicesImpl();
+
     @Override
     public String getPubProperty() {
         return PUBPROPERTY;
@@ -28,16 +31,27 @@ public class ConstantServiceImpl implements ConstantService {
 
     }
 
+    /**
+     * Wkhuska Graph = http://ucuenca.edu.ec/wkhuska
+     *
+     * @return
+     */
     @Override
     public String getWkhuskaGraph() {
-        return "http://ucuenca.edu.ec/wkhuska";
+        return getSelectedGraph("wkhuska");
     }
-    
-     @Override
+
+    /**
+     * Wkhuska Graph = http://ucuenca.edu.ec/wkhuska , authors = /authors. Then
+     * Authors Graph = "http://ucuenca.edu.ec/wkhuska/authors"
+     *
+     * @return
+     */
+    @Override
     public String getAuthorsGraph() {
-        return "http://ucuenca.edu.ec/wkhuska/authors";
+        return getWkhuskaGraph() + getSelectedGraph("authors");
     }
-    
+
     @Override
     public String getClusterGraph() {
         return "http://ucuenca.edu.ec/wkhuska/clusters";
@@ -50,7 +64,7 @@ public class ConstantServiceImpl implements ConstantService {
 
     @Override
     public String getScopusGraph() {
-        return "http://ucuenca.edu.ec/wkhuska/provider/Scopus";
+        return "http://ucuenca.edu.ec/wkhuska/provider/ScopusProvider";
     }
 
     @Override
@@ -62,9 +76,9 @@ public class ConstantServiceImpl implements ConstantService {
     public String getGSGraph() {
         return "http://ucuenca.edu.ec/wkhuska/provider/GoogleScholarProvider";
     }
-    
+
     @Override
-    public String getEndpointGraph() {
+    public String getEndpointsGraph() {
         return "http://ucuenca.edu.ec/wkhuska/endpoints";
     }
 
@@ -110,12 +124,16 @@ public class ConstantServiceImpl implements ConstantService {
 
     @Override
     public String getPrefixes() {
-     return PREFIX;
+        return PREFIX;
     }
 
     @Override
     public String getLogoPath() {
         return LOGO_PATH;
+    }
+
+    public String getSelectedGraph(String type) {
+        return commonService.getReadPropertyFromFile("parameters.properties", type);
     }
 
 }

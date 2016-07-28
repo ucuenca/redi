@@ -61,7 +61,7 @@ public class TranslateForSemanticDistance {
         InputStream resourceAsStream = this.getClass().getResourceAsStream("/config.cnf");
         //String readFile = readFile("./config.cnf", Charset.defaultCharset());
         String theString = IOUtils.toString(resourceAsStream, Charset.defaultCharset().toString());
-        
+
         config = parser.parse(theString).getAsJsonObject();
         dburl = dburl + config.get("dbServer").getAsString() + "/" + config.get("dbSchema").getAsString();
         user = config.get("dbUser").getAsString();
@@ -74,7 +74,7 @@ public class TranslateForSemanticDistance {
     }
 
     public List<String> traductor(List<String> join) throws SQLException, IOException, ClassNotFoundException {
-       Class.forName("org.postgresql.Driver");
+        Class.forName("org.postgresql.Driver");
         conn = DriverManager.getConnection(dburl, user, pass);
         boolean truevalue = true;
         List<String> ls = new ArrayList();
@@ -98,8 +98,14 @@ public class TranslateForSemanticDistance {
         mp.put("text", palabras);
         mp.put("options", "1");
         boolean c = true;
+        int i = 0;
+        int maxqueries = 10;
         do {
             try {
+                i++;
+                if (i == maxqueries) {
+                    c = false;
+                }
                 String http = http2(url, mp);
                 String res = http;
                 JsonParser parser = new JsonParser();
