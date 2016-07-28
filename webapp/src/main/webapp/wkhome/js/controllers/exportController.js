@@ -16,10 +16,10 @@ wkhomeControllers.controller('exportController', ['$scope', 'reportService', '$w
                             for (var i = 0; i < Object.keys(response).length - 2; i++) {
                                 res += response[i];
                             }
-                            if (res && res!=='') {
+                            if (res && res!=='' && res!=='undefinedundefinedundefinedundefined') {
                                 $window.open($sce.trustAsResourceUrl($window.location.origin + res));
                             } else {
-                                alert("Error. Por favor, espere un momento y vuelva a intentarlo.");
+                                alert("Error al procesar el reporte. Por favor, espere un momento y vuelva a intentarlo. Si el error persiste, consulte al administrador del sistema.");
                             }
                             $scope.loading = false;
                         });
