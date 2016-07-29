@@ -196,6 +196,8 @@ genericCloud.directive('genericCloud', ["d3", 'globalData','sparqlQuery',
                 var headbar = $('div.head-info');
                 headbar.find('title').text("ddddddtitletitle");
                 headbar.html('');
+                //Function to show the buttons for the reports
+                scope.$parent.exportReport(d.id);
                 var div = $('<div>');
                 var label = $('<span class="label label-primary" style="font-size:35px">').text("PUBLICATIONS OF : " + d.label);
                 div.append(label);
@@ -368,7 +370,7 @@ genericCloud.directive('genericCloud', ["d3", 'globalData','sparqlQuery',
                                 if (keyword["rdfs:label"])
                                 {
                                   var pubsvalue =  keyword[fields[1]]["@value"] > 50 ?  "+50" : keyword[fields[1]]["@value"];
-                                    mappedData.push({label: keyword[fields[0]], value: pubsvalue});
+                                    mappedData.push({id:keyword["@id"], label: keyword[fields[0]], value: pubsvalue});
                                 }
                             });
                             var pageTitle = "";                           

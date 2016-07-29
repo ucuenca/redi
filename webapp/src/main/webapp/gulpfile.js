@@ -47,7 +47,7 @@ gulp.task('images', function() {
 
 // Clean
 gulp.task('clean', function() {
-  return del(['wkhome/js/**/*.min.js', 'wkhome/css/**/*.min.css']);
+  return del(['wkhome/jsmin/**/*.min.js', 'wkhome/cssmin/**/*.min.css']);
 });
 
 // Default task

@@ -331,6 +331,8 @@ cloudGroup.directive('cloudGroup', ["$routeParams", "d3", 'sparqlQuery', 'global
                     var headbar = $('div.head-info');
                     headbar.find('title').text("ddddddtitletitle");
                     headbar.html('');
+                    //Function to show the buttons for the reports
+                    scope.$parent.exportReport(d.id);
                     var div = $('<div>');
                     var label;
                     if ($routeParams.lang === "es") {
