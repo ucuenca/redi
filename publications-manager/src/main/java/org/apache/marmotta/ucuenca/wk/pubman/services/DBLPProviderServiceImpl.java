@@ -52,6 +52,7 @@ import org.apache.marmotta.ucuenca.wk.commons.impl.ConstantServiceImpl;
 import org.apache.marmotta.ucuenca.wk.commons.service.DistanceService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.DBLPProviderService;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
+import org.apache.marmotta.ucuenca.wk.commons.service.GetAuthorsGraphData;
 import org.apache.marmotta.ucuenca.wk.commons.service.KeywordsService;
 
 import org.openrdf.model.Model;
@@ -93,6 +94,9 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
 
     @Inject
     private SparqlFunctionsService sparqlFunctionsService;
+
+    @Inject
+    private GetAuthorsGraphData getauthorsData;
 
     @Inject
     private CommonsServices commonsServices;
@@ -233,14 +237,12 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
             LDClient ldClient = new LDClient(conf);
 
             int allMembers = 0;
-            String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(authorGraph, endpointsGraph);
-
+            
             // TupleQueryResult result = sparqlService.query(QueryLanguage.SPARQL, getAuthors);
             String nameToFind = "";
             String authorResource = "";
             int priorityToFind = 0;
-            List<Map<String, Value>> resultAllAuthors = sparqlService.query(QueryLanguage.SPARQL, getAllAuthorsDataQuery);
-
+            List<Map<String, Value>> resultAllAuthors = getauthorsData.getListOfAuthors();
             /*To Obtain Processed Percent*/
             int allPersons = resultAllAuthors.size();
             int processedPersons = 0;
@@ -462,8 +464,8 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                 printPercentProcess(processedPersons, allPersons, "DBLP");
             }
             return "True for publications";
-        } catch (MarmottaException ex) {
-            log.error("Marmotta Exception: " + ex);
+        } catch (Exception ex) {
+            log.error("Exception: " + ex);
         }
         return "fail";
     }

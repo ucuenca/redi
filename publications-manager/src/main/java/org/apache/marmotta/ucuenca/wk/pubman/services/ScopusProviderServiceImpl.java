@@ -104,9 +104,9 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
     @Inject
     private SparqlFunctionsService sparqlFunctionsService;
 
-    private String namespaceGraph = "http://ucuenca.edu.ec/wkhuska/";
-    private String authorGraph = namespaceGraph + "authors";
-    private String endpointsGraph = namespaceGraph + "endpoints";
+    //private String namespaceGraph = "http://ucuenca.edu.ec/wkhuska/";
+    //private String authorGraph = namespaceGraph + "authors";
+    //private String endpointsGraph = namespaceGraph + "endpoints";
     private int processpercent = 0;
     private final ConstantServiceImpl con = new ConstantServiceImpl();
 
@@ -114,7 +114,7 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
      Graph to save publications data by provider
      Example: http://ucuenca.edu.ec/wkhuska/ScopusProvider
      */
-    private String graphByProviderNS = namespaceGraph + "provider/";
+    //private String graphByProviderNS = namespaceGraph + "provider/";
 
     private String URLSEARCHSCOPUS = "http://api.elsevier.com/content/search/author?query=authfirst%28FIRSTNAME%29authlast%28LASTNAME%29+AND+affil%28PAIS%29&apiKey=a3b64e9d82a8f7b14967b9b9ce8d513d&httpAccept=application/xml";
     @Inject
@@ -229,7 +229,7 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                                  * buscar el recurso.
                                  */
                                 String nameEndpointofPublications = ldClient.getEndpoint(URLSEARCHSCOPUS + nameToFind).getName();
-                                providerGraph = graphByProviderNS + nameEndpointofPublications.replace(" ", "");
+                                providerGraph = con.getProviderNsGraph() + "/"+nameEndpointofPublications.replace(" ", "");
                                 String InsertQueryOneOf = buildInsertQuery(providerGraph, nameToFind.replace(" ", ""), OWL.ONE_OF, authorResource);
                                 updatePub(InsertQueryOneOf);
                             } else {
