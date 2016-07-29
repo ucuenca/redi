@@ -70,4 +70,5 @@ public interface ConstantService {
     
     String getAuthorsGraph();
 
+    String getProviderNsGraph();
 }

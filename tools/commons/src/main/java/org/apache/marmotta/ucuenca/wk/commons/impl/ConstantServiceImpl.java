@@ -62,11 +62,13 @@ public class ConstantServiceImpl implements ConstantService {
         return "http://ucuenca.edu.ec/wkhuska/provider/DBLPRawProvider";
     }
 
+    
     @Override
     public String getScopusGraph() {
         return "http://ucuenca.edu.ec/wkhuska/provider/ScopusProvider";
     }
 
+    
     @Override
     public String getMAGraph() {
         return "http://ucuenca.edu.ec/wkhuska/provider/MicrosoftAcademicsProvider";
@@ -82,6 +84,11 @@ public class ConstantServiceImpl implements ConstantService {
         return "http://ucuenca.edu.ec/wkhuska/endpoints";
     }
 
+    @Override
+    public String getProviderNsGraph() {
+        return getWkhuskaGraph() + getSelectedGraph("provider");
+    }
+    
     @Override
     public String getLimit(String limit) {
         return " Limit " + limit;
@@ -133,7 +140,7 @@ public class ConstantServiceImpl implements ConstantService {
     }
 
     public String getSelectedGraph(String type) {
-        return commonService.getReadPropertyFromFile("parameters.properties", type);
+        return commonService.readPropertyFromFile("parameters.properties", type);
     }
 
 }
