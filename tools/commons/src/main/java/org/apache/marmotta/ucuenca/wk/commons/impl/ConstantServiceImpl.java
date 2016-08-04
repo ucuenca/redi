@@ -54,41 +54,44 @@ public class ConstantServiceImpl implements ConstantService {
 
     @Override
     public String getClusterGraph() {
-        return "http://ucuenca.edu.ec/wkhuska/clusters";
+        return getWkhuskaGraph() + getSelectedGraph("clusters");
+    }
+
+    @Override
+    public String getExternalAuthorsGraph() {
+        return getWkhuskaGraph() + getSelectedGraph("externalauthors");
     }
 
     @Override
     public String getDBLPGraph() {
-        return "http://ucuenca.edu.ec/wkhuska/provider/DBLPRawProvider";
+        return getWkhuskaGraph() + getSelectedGraph("dblp");
     }
 
-    
     @Override
     public String getScopusGraph() {
-        return "http://ucuenca.edu.ec/wkhuska/provider/ScopusProvider";
+            return getWkhuskaGraph() + getSelectedGraph("scopus");
     }
 
-    
     @Override
     public String getMAGraph() {
-        return "http://ucuenca.edu.ec/wkhuska/provider/MicrosoftAcademicsProvider";
+            return getWkhuskaGraph() + getSelectedGraph("microsoftacademics");
     }
 
     @Override
     public String getGSGraph() {
-        return "http://ucuenca.edu.ec/wkhuska/provider/GoogleScholarProvider";
-    }
+            return getWkhuskaGraph() + getSelectedGraph("googlescholar");
+        }
 
     @Override
     public String getEndpointsGraph() {
-        return "http://ucuenca.edu.ec/wkhuska/endpoints";
+        return getWkhuskaGraph() + getSelectedGraph("endpoints");
     }
 
     @Override
     public String getProviderNsGraph() {
         return getWkhuskaGraph() + getSelectedGraph("provider");
     }
-    
+
     @Override
     public String getLimit(String limit) {
         return " Limit " + limit;

@@ -58,6 +58,8 @@ public interface ConstantService {
 
     String getDBLPGraph();
 
+    String getExternalAuthorsGraph();
+    
     String getScopusGraph();
 
     String getMAGraph();
