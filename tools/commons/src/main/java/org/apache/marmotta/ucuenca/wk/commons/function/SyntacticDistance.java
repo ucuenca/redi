@@ -78,6 +78,12 @@ public class SyntacticDistance {
         return true;
     }
 
+    /**
+     * for local | scopus : syntax =  LastName:FirstName
+     * @param source
+     * @param fullname
+     * @return 
+     */
     public List getSplitNames(String source, String fullname) {
      
 
@@ -102,7 +108,7 @@ public class SyntacticDistance {
             String lastName = fullname.substring(0, fullname.indexOf(':'));
             String firstName = fullname.substring(fullname.indexOf(':') + 1);
             String partfirstName = "";
-            //insert nombre 1
+            //Insert nombre 1
             firstName = firstName.replace("=", "");
             String name1toAdd = getfirstgivenName(firstName);
             names.add(name1toAdd);
@@ -210,12 +216,18 @@ public class SyntacticDistance {
      * @return an array of adjacent letter pairs contained in the input string
      */
     private String[] letterPairs(String str) {
+       try{
         int numPairs = str.length() - 1;
         String[] pairs = new String[numPairs];
         for (int i = 0; i < numPairs; i++) {
             pairs[i] = str.substring(i, i + 2);
         }
         return pairs;
+       }
+       catch(Exception e){
+          return null;
+       }
+        
     }
 
 }

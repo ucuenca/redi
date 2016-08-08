@@ -82,7 +82,7 @@ public class CommonsServicesImpl implements CommonsServices {
     }
 
     @Override
-    public String getReadPropertyFromFile(String file,String property) {
+    public String readPropertyFromFile(String file,String property) {
         Properties propiedades = new Properties();
         InputStream entrada = null;
         ConcurrentHashMap<String, String> mapping = new ConcurrentHashMap<String, String>();
@@ -93,7 +93,6 @@ public class CommonsServicesImpl implements CommonsServices {
             for (String source : propiedades.stringPropertyNames()) {
                 String target = propiedades.getProperty(source);
                 mapping.put(source, target);
-
             }
         } catch (IOException ex) {
             log.error("IOException in getReadPropertyFromFile CommonsServiceImpl " + ex);

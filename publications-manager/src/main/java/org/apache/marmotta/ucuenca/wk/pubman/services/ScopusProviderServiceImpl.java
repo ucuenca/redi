@@ -87,7 +87,7 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
     private QueriesService queriesService;
 
     @Inject
-    private ConstantService pubVocabService;
+    private ConstantService constantService;
 
     @Inject
     private KeywordsService kservice;
@@ -104,17 +104,7 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
     @Inject
     private SparqlFunctionsService sparqlFunctionsService;
 
-    private String namespaceGraph = "http://ucuenca.edu.ec/wkhuska/";
-    private String authorGraph = namespaceGraph + "authors";
-    private String endpointsGraph = namespaceGraph + "endpoints";
     private int processpercent = 0;
-    private final ConstantServiceImpl con = new ConstantServiceImpl();
-
-    /* graphByProvider
-     Graph to save publications data by provider
-     Example: http://ucuenca.edu.ec/wkhuska/ScopusProvider
-     */
-    private String graphByProviderNS = namespaceGraph + "provider/";
 
     private String URLSEARCHSCOPUS = "http://api.elsevier.com/content/search/author?query=authfirst%28FIRSTNAME%29authlast%28LASTNAME%29+AND+affil%28PAIS%29&apiKey=a3b64e9d82a8f7b14967b9b9ce8d513d&httpAccept=application/xml";
     @Inject
@@ -172,6 +162,7 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
             }
 
             boolean proccesAllAuthors = Boolean.parseBoolean(mapping.get("proccesAllAuthors").toString());
+            boolean semanticAnalizer = Boolean.parseBoolean(mapping.get("semanticAnalizer").toString());
 
             for (Map<String, Value> map : resultAllAuthors) {
                 processedPersons++;
@@ -181,7 +172,7 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                 String lastName = map.get("lname").stringValue();
                 boolean ask = false;
                 if (!proccesAllAuthors) {
-                    String askTripletQuery = queriesService.getAskProcessAlreadyAuthorProvider(con.getScopusGraph(), authorResource);
+                    String askTripletQuery = queriesService.getAskProcessAlreadyAuthorProvider(constantService.getScopusGraph(), authorResource);
                     try {
 
                         ask = sparqlService.ask(QueryLanguage.SPARQL, askTripletQuery);
@@ -216,7 +207,7 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                             membersSearchResult = 0;
 
                             if (!proccesAllAuthors) {
-                                existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(con.getScopusGraph(), nameToFind.replace(" ", "")));
+                                existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(constantService.getScopusGraph(), nameToFind.replace(" ", "")));
                             }
                             if ((nameToFind.compareTo("") != 0) && !existNativeAuthor) {
                                 response = ldClient.retrieveResource(nameToFind);
@@ -229,7 +220,7 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                                  * buscar el recurso.
                                  */
                                 String nameEndpointofPublications = ldClient.getEndpoint(URLSEARCHSCOPUS + nameToFind).getName();
-                                providerGraph = graphByProviderNS + nameEndpointofPublications.replace(" ", "");
+                                providerGraph = constantService.getProviderNsGraph() + "/" + nameEndpointofPublications.replace(" ", "");
                                 String InsertQueryOneOf = buildInsertQuery(providerGraph, nameToFind.replace(" ", ""), OWL.ONE_OF, authorResource);
                                 updatePub(InsertQueryOneOf);
                             } else {
@@ -295,7 +286,7 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                             String titletext = abstractResource.getValue("object").toString();
                             listB = kservice.getKeywords(titletext);
                             int cero = 0;
-                            if (listB.size() != cero && listA.size() != cero && distance.semanticComparison(listA, listB)) {
+                            if (semanticAnalizer && listB.size() != cero && listA.size() != cero && distance.semanticComparison(listA, listB)) {
 
                                 String getPublicationsFromProviderQuery = queriesService.getPublicationsPropertiesQuery(publication);
                                 TupleQuery pubquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationsFromProviderQuery); //
@@ -342,7 +333,53 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
 
                                 }
 
-                            }
+                            }//end IF semantic distance
+                            else if (!semanticAnalizer){
+                                String getPublicationsFromProviderQuery = queriesService.getPublicationsPropertiesQuery(publication);
+                                TupleQuery pubquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationsFromProviderQuery); //
+                                TupleQueryResult tripletasResult = pubquery.evaluate();
+
+                                while (tripletasResult.hasNext()) {
+                                    try {
+                                        BindingSet tripletsResource = tripletasResult.next();
+                                        //authorNativeResource = tripletsResource.getValue("authorResource").toString();
+                                        String publicationProperty = tripletsResource.getValue("property").toString();
+                                        String publicationObject = tripletsResource.getValue("value").toString();
+                                        ///insert sparql query, 
+                                        String publicationInsertQuery = buildInsertQuery(providerGraph, publication, publicationProperty, publicationObject);
+                                        updatePub(publicationInsertQuery);
+
+                                        // insert dct:contributor      <> dct:contributor <http://dblp.org/pers/xr/s/Saquicela:Victor> 
+                                        String contributorInsertQuery = buildInsertQuery(providerGraph, publication, "http://purl.org/dc/terms/contributor", scopusAuthorUri);
+                                        updatePub(contributorInsertQuery);
+
+                                        // sameAs triplet    <http://190.15.141.102:8080/dspace/contribuidor/autor/SaquicelaGalarza_VictorHugo> owl:sameAs <http://dblp.org/pers/xr/s/Saquicela:Victor> 
+                                        String sameAsInsertQuery = buildInsertQuery(providerGraph, authorResource, "http://www.w3.org/2002/07/owl#sameAs", scopusAuthorUri);
+                                        updatePub(sameAsInsertQuery);
+
+                                        //if value is an uri then search and insert values of this value
+                                        if (commonsServices.isURI(publicationObject)) {
+
+                                            String getResourcesQuery = queriesService.getPublicationsPropertiesQuery(publicationObject);
+                                            TupleQuery resourcequery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getResourcesQuery); //
+                                            TupleQueryResult resourceResult = resourcequery.evaluate();
+
+                                            while (resourceResult.hasNext()) {
+                                                BindingSet resource = resourceResult.next();
+                                                //authorNativeResource = tripletsResource.getValue("authorResource").toString();
+                                                String resourceProperty = resource.getValue("property").toString();
+                                                String resourceObject = resource.getValue("value").toString();
+                                                ///insert sparql query, 
+                                                String resourceInsertQuery = buildInsertQuery(providerGraph, publicationObject, resourceProperty, resourceObject);
+                                                updatePub(resourceInsertQuery);
+                                            }
+                                        }
+                                    } catch (Exception e) {
+                                        log.error("ioexception " + e.toString());
+                                    }
+
+                                }
+                            }//end else if NO semantic Analizer
 
                         }
                     }

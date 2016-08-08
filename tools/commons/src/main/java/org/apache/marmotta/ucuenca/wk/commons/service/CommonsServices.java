@@ -21,6 +21,6 @@ public interface CommonsServices {
 
     String getMD5(String input);
     
-    String getReadPropertyFromFile(String file,String property);
+    String readPropertyFromFile(String file,String property);
 
 }
