@@ -200,5 +200,11 @@ wkhomeControllers.controller('keywordsCloud', ['$routeParams', '$scope', 'global
                 $scope.data = searchData.allkeywordsCloud;
             }
         });
+        
+        //Function that displays the buttons to export the report
+        $scope.exportReport = function (id) {
+            $scope.keyw = id;
+            $scope.showRepButtons = true;
+        };
 
     }]);

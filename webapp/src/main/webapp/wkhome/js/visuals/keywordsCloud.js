@@ -288,6 +288,8 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
                 var headbar = $('div.head-info');
                 headbar.find('title').text("ddddddtitletitle");
                 headbar.html('');
+                //Function to show the buttons for the reports
+                scope.$parent.exportReport(keyword);
                 var div = $('<div>');
                 var label;
                 if ($routeParams.lang === "es") {

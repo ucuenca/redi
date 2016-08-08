@@ -309,6 +309,11 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
          
            
         };
-
+        
+        //Function that displays the buttons to export the report
+        $scope.exportReport = function (id) {
+            $scope.author = id;
+            $scope.showRepButtons = true;
+        };
 
     }]); //end groupTagsController 

@@ -8,22 +8,6 @@
         <title>Ecuadorian Semantic Repository</title>
         <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css"> 
 
-        <link rel="stylesheet" href="wkhome/css/animations.css">
-        <link rel="stylesheet" href="wkhome/css/visuals/general.css"> 
-        <link rel="stylesheet" href="wkhome/css/visuals/home.css">
-        <link rel="stylesheet" href="wkhome/css/visuals/pieChart.css">
-        <link rel="stylesheet" href="wkhome/css/visuals/barChart.css">
-        <link rel="stylesheet" href="wkhome/css/visuals/explorableTree.css">
-        <link rel="stylesheet" href="wkhome/css/visuals/keywordsCloud.css" >
-        <link rel="stylesheet" href="wkhome/css/visuals/genericCloud.css" type="text/css" >
-        <link rel="stylesheet" href="wkhome/css/visuals/groupbyCloud.css" type="text/css">
-        <link rel="stylesheet" href="wkhome/css/visuals/cloudCluster.css" type="text/css">
-        <link rel="stylesheet" href="wkhome/css/visuals/chart.css">
-        <link rel="stylesheet" href="wkhome/css/visuals/geoplain.css">
-        <link rel="stylesheet" href="wkhome/css/visuals/map.css">
-        <link rel="stylesheet" href="wkhome/css/visuals/source.css">
-        <link rel="stylesheet" href="wkhome/css/app.css">
-
         <script src="../bower_components/jquery/dist/jquery.js"></script>
         <script src="../bower_components/jquery/dist/jquery.min.js"></script>
         <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -43,18 +27,29 @@
         <script src="../bower_components/topojson/topojson.js"></script>
         <script src="../bower_components/underscore/underscore-min.js"></script>
         <script src="../bower_components/d3/d3.js"></script>
-        <script src="/wkhome/js/components/d3.geo.js"></script>
         <script src="../bower_components/d3-tip/index.js"></script>
         <script src="../custom_libs/d3-context-menu/js/d3-context-menu.js"></script>
         <script src="../custom_libs/angular-sanitize/angular-sanitize.js"></script>
 
-
-
-
-
+        <!-- DESARROLLO/DEBUG -->
+        <!--<link rel="stylesheet" href="wkhome/css/animations.css">
+        <link rel="stylesheet" href="wkhome/css/visuals/general.css">
+        <link rel="stylesheet" href="wkhome/css/visuals/home.css">
+        <link rel="stylesheet" href="wkhome/css/visuals/pieChart.css">
+        <link rel="stylesheet" href="wkhome/css/visuals/barChart.css">
+        <link rel="stylesheet" href="wkhome/css/visuals/explorableTree.css">
+        <link rel="stylesheet" href="wkhome/css/visuals/keywordsCloud.css">
+        <link rel="stylesheet" href="wkhome/css/visuals/genericCloud.css" type="text/css">
+        <link rel="stylesheet" href="wkhome/css/visuals/groupbyCloud.css" type="text/css">
+        <link rel="stylesheet" href="wkhome/css/visuals/cloudCluster.css" type="text/css">
+        <link rel="stylesheet" href="wkhome/css/visuals/chart.css">
+        <link rel="stylesheet" href="wkhome/css/visuals/geoplain.css">
+        <link rel="stylesheet" href="wkhome/css/visuals/map.css">
+        <link rel="stylesheet" href="wkhome/css/visuals/source.css">
+        <link rel="stylesheet" href="wkhome/css/app.css">
+        
         <script src="wkhome/js/app.js"></script>
-        <!--<script src="wkhome/js/animations.js"></script>-->
-
+        
         <script src="wkhome/js/controllers/controllers.js"></script>
         <script src="wkhome/js/controllers/mainBar.js"></script>
         <script src="wkhome/js/controllers/countAuthors.js"></script>
@@ -76,11 +71,7 @@
         <script src="wkhome/js/controllers/barChart.js"></script>
         <script src="wkhome/js/controllers/loadData.js"></script>
 
-
-        <!--<script src="wkhome/js/directives.js"></script>-->
-        <!--<script src="wkhome/js/filters.js"></script>-->
         <script src="wkhome/js/services.js"></script>
-
 
         <script src="wkhome/js/components/waitingDialog.js"></script>
         <script src="wkhome/js/components/en.js"></script>
@@ -88,7 +79,7 @@
         <script src="wkhome/js/components/translation.js"></script>
         <script src="wkhome/js/components/FileSaver.js"></script>
         <script src="wkhome/js/components/stringsDistance.js"></script>
-        <script src="wkhome/js/components/jspdf.min.js"></script>
+        <script src="wkhome/js/components/d3.geo.js"></script>
 
 
         <script src="wkhome/js/visuals/pieChart.js"></script>
@@ -100,9 +91,71 @@
         <script src="wkhome/js/visuals/clusterKeywordsCloud.js"></script>
         <script src="wkhome/js/visuals/clustersCloud.js"></script>
         <script src="wkhome/js/visuals/genericCloud.js"></script>
-        <script src="wkhome/js/visuals/map.js"></script>
+        <script src="wkhome/js/visuals/map.js"></script>-->
 
-
+        <!-- APP PRODUCCION -->
+        <link rel="stylesheet" href="wkhome/cssmin/animations.min.css">
+        <link rel="stylesheet" href="wkhome/cssmin/visuals/general.min.css"> 
+        <link rel="stylesheet" href="wkhome/cssmin/visuals/home.min.css">
+        <link rel="stylesheet" href="wkhome/cssmin/visuals/pieChart.min.css">
+        <link rel="stylesheet" href="wkhome/cssmin/visuals/barChart.min.css">
+        <link rel="stylesheet" href="wkhome/cssmin/visuals/explorableTree.min.css">
+        <link rel="stylesheet" href="wkhome/cssmin/visuals/keywordsCloud.min.css" >
+        <link rel="stylesheet" href="wkhome/cssmin/visuals/genericCloud.min.css" type="text/css" >
+        <link rel="stylesheet" href="wkhome/cssmin/visuals/groupbyCloud.min.css" type="text/css">
+        <link rel="stylesheet" href="wkhome/cssmin/visuals/cloudCluster.min.css" type="text/css">
+        <link rel="stylesheet" href="wkhome/cssmin/visuals/chart.min.css">
+        <link rel="stylesheet" href="wkhome/cssmin/visuals/geoplain.min.css">
+        <link rel="stylesheet" href="wkhome/cssmin/visuals/map.min.css">
+        <link rel="stylesheet" href="wkhome/cssmin/visuals/source.min.css">
+        <link rel="stylesheet" href="wkhome/cssmin/app.min.css">
+        
+        <script src="wkhome/jsmin/app.min.js"></script>
+        
+        <script src="wkhome/jsmin/controllers/controllers.min.js"></script>
+        <script src="wkhome/jsmin/controllers/mainBar.min.js"></script>
+        <script src="wkhome/jsmin/controllers/countAuthors.min.js"></script>
+        <script src="wkhome/jsmin/controllers/countPublications.min.js"></script>
+        <script src="wkhome/jsmin/controllers/countResearhAreas.min.js"></script>
+        <script src="wkhome/jsmin/controllers/explorableTree.min.js"></script>
+        <script src="wkhome/jsmin/controllers/explorableResearchArea.min.js"></script>
+        <script src="wkhome/jsmin/controllers/exportController.min.js"></script>
+        <script src="wkhome/jsmin/controllers/groupbyCloud.min.js"></script>
+        <script src="wkhome/jsmin/controllers/keywordsCloud.min.js"></script>
+        <script src="wkhome/jsmin/controllers/searchText.min.js"></script>
+        <script src="wkhome/jsmin/controllers/genericCloud.min.js"></script>
+        <script src="wkhome/jsmin/controllers/map.min.js"></script>
+        <script src="wkhome/jsmin/controllers/clusterGroupByCloud.min.js"></script>
+        <script src="wkhome/jsmin/controllers/clusterKeywordsCloud.min.js"></script>
+        <script src="wkhome/jsmin/controllers/clustersCloud.min.js"></script>
+        <script src="wkhome/jsmin/controllers/translate.min.js"></script>
+        <script src="wkhome/jsmin/controllers/pubInfo.min.js"></script>
+        <script src="wkhome/jsmin/controllers/barChart.min.js"></script>
+        <script src="wkhome/jsmin/controllers/loadData.min.js"></script>
+        
+        <script src="wkhome/jsmin/services.min.js"></script>
+        
+        <script src="wkhome/jsmin/components/waitingDialog.min.js"></script>
+        <script src="wkhome/jsmin/components/en.min.js"></script>
+        <script src="wkhome/jsmin/components/es.min.js"></script>
+        <script src="wkhome/jsmin/components/translation.min.js"></script>
+        <script src="wkhome/jsmin/components/FileSaver.min.js"></script>
+        <script src="wkhome/jsmin/components/stringsDistance.min.js"></script>
+        <script src="wkhome/jsmin/components/d3.geo.min.js"></script>
+        
+        <script src="wkhome/jsmin/visuals/pieChart.min.js"></script>
+        <script src="wkhome/jsmin/visuals/barChart.min.js"></script>
+        <script src="wkhome/jsmin/visuals/explorableTree.min.js"></script>
+        <script src="wkhome/jsmin/visuals/keywordsCloud.min.js"></script>
+        <script src="wkhome/jsmin/visuals/groupbyCloud.min.js"></script>
+        <script src="wkhome/jsmin/visuals/clusterGroupByCloud.min.js"></script>
+        <script src="wkhome/jsmin/visuals/clusterKeywordsCloud.min.js"></script>
+        <script src="wkhome/jsmin/visuals/clustersCloud.min.js"></script>
+        <script src="wkhome/jsmin/visuals/genericCloud.min.js"></script>
+        <script src="wkhome/jsmin/visuals/map.min.js"></script>
+        
+        <!--Fin Importacion de Scripts-->
+        
         <script type="text/javascript">
             <!--
       $(document).ready(function () {

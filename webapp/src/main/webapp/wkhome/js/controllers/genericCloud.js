@@ -38,4 +38,11 @@ wkhomeControllers.controller('genericCloud', ['$scope', '$window', 'globalData',
         $scope.$watch('searchData.genericData', function (newValue, oldValue, scope) {
             $scope.data = {schema: {"context": globalData.CONTEXT, fields: ["rdfs:label", "uc:total"]}, data: searchData.genericData};
         });
+        
+        //Function that displays the buttons to export the report
+        $scope.exportReport = function (id) {
+            $scope.author = id;
+            $scope.showRepButtons = true;
+        };
+        
     }]); //end genericcloudController 
