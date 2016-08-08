@@ -32,6 +32,7 @@ import java.util.logging.Level;
 import org.slf4j.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import org.apache.marmotta.commons.sesame.model.ModelCommons;
 import org.apache.marmotta.kiwi.model.rdf.KiWiUriResource;
@@ -102,30 +103,21 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
     private CommonsServices commonsServices;
 
     @Inject
+    private ConstantService constantService;
+
+    @Inject
     private DistanceService distance;
 
     @Inject
     private KeywordsService kservice;
 
-    private String namespaceGraph = "http://ucuenca.edu.ec/wkhuska/";
-    private String authorGraph = namespaceGraph + "authors";
-    private String endpointsGraph = namespaceGraph + "endpoints";
-    private String externalAuthorGraph = namespaceGraph + "externalauthors";
-
-    private final ConstantServiceImpl con = new ConstantServiceImpl();
-
     private int processpercent = 0;
-
-    /* graphByProvider
-     Graph to save publications data by provider
-     Example: http://ucuenca.edu.ec/wkhuska/dblp
-     */
-    private String graphByProviderNS = namespaceGraph + "provider/";
 
     @Inject
     private SparqlService sparqlService;
 
     @Override
+    @Deprecated
     public String runPublicationsTaskImpl(String param) {
 
         try {
@@ -178,9 +170,9 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                         String publicationProperty = pubVocabService.getPubProperty();
 
                         //verificar existencia de la publicacion y su author sobre el grafo general
-                        String askTripletQuery = queriesService.getAskQuery(authorGraph, authorResource, publicationProperty, publicationResource);
+                        String askTripletQuery = queriesService.getAskQuery(constantService.getAuthorsGraph(), authorResource, publicationProperty, publicationResource);
                         if (!sparqlService.ask(QueryLanguage.SPARQL, askTripletQuery)) {
-                            String insertPubQuery = buildInsertQuery(authorGraph, authorResource, publicationProperty, publicationResource);
+                            String insertPubQuery = buildInsertQuery(constantService.getAuthorsGraph(), authorResource, publicationProperty, publicationResource);
                             try {
                                 sparqlService.update(QueryLanguage.SPARQL, insertPubQuery);
                             } catch (MalformedQueryException ex) {
@@ -199,7 +191,7 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
 
                                 String newPublicationProperty = mapping.get(nativeProperty);
                                 String publicacionPropertyValue = pubproperty.get("publicationPropertyValue").toString();
-                                String insertPublicationPropertyQuery = buildInsertQuery(authorGraph, publicationResource, newPublicationProperty, publicacionPropertyValue);
+                                String insertPublicationPropertyQuery = buildInsertQuery(constantService.getAuthorsGraph(), publicationResource, newPublicationProperty, publicacionPropertyValue);
 
                                 try {
                                     sparqlService.update(QueryLanguage.SPARQL, insertPublicationPropertyQuery);
@@ -237,7 +229,7 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
             LDClient ldClient = new LDClient(conf);
 
             int allMembers = 0;
-            
+
             // TupleQueryResult result = sparqlService.query(QueryLanguage.SPARQL, getAuthors);
             String nameToFind = "";
             String authorResource = "";
@@ -277,6 +269,7 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                 }
             }
             boolean proccesAllAuthors = Boolean.parseBoolean(mapping.get("proccesAllAuthors").toString());
+            boolean semanticAnalizer = Boolean.parseBoolean(mapping.get("semanticAnalizer").toString());
 
             for (Map<String, Value> map : resultAllAuthors) {
                 processedPersons++;
@@ -287,7 +280,7 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                 priorityToFind = 1;
                 boolean ask = false;
                 if (!proccesAllAuthors) {
-                    String askTripletQuery = queriesService.getAskProcessAlreadyAuthorProvider(con.getDBLPGraph(), authorResource);
+                    String askTripletQuery = queriesService.getAskProcessAlreadyAuthorProvider(constantService.getDBLPGraph(), authorResource);
 
                     try {
                         ask = sparqlService.ask(QueryLanguage.SPARQL, askTripletQuery);
@@ -313,9 +306,9 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
 
                         if (!proccesAllAuthors) {
                             try {
-                                existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskQuery(con.getDBLPGraph(), NS_DBLP + nameToFind, "http://www.w3.org/2002/07/owl#oneOf", authorResource));
+                                existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskQuery(constantService.getDBLPGraph(), NS_DBLP + nameToFind, "http://www.w3.org/2002/07/owl#oneOf", authorResource));
                             } catch (Exception e) {
-                                log.info("ERROR line 305" + con.getDBLPGraph() + NS_DBLP + nameToFind + "Exception" + e.getMessage());
+                                log.info("ERROR line 305" + constantService.getDBLPGraph() + NS_DBLP + nameToFind + "Exception" + e.getMessage());
                                 log.info("ERROR line 305" + existNativeAuthor);
                             }
                         }
@@ -333,7 +326,7 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                             }
                         }
                         String nameEndpointofPublications = ldClient.getEndpoint(NS_DBLP + nameToFind).getName();
-                        String providerGraph = graphByProviderNS + nameEndpointofPublications.replace(" ", "");
+                        String providerGraph = constantService.getProviderNsGraph() + "/" + nameEndpointofPublications.replace(" ", "");
                         if (dataretrievee)//if the resource data were recovered
                         {
 //                            Model model = response.getData();
@@ -399,9 +392,9 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                                         String titletext = abstractResource.getValue("object").toString();
                                         listB = kservice.getKeywords(titletext);
                                         int cero = 0;
-                                        if (listB.size() != cero && listA.size() != cero && distance.semanticComparison(listA, listB)) {
 
-//SPARQL obtain all publications of author
+                                        if (semanticAnalizer && listB.size() != cero && listA.size() != cero && distance.semanticComparison(listA, listB)) {
+                                            //SPARQL obtain all publications of author
                                             String getPublicationsFromProviderQuery = queriesService.getPublicationsPropertiesQuery(publication);
                                             TupleQuery pubquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationsFromProviderQuery); //
                                             TupleQueryResult tripletasResult = pubquery.evaluate();
@@ -424,22 +417,31 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                                                 updatePub(sameAsInsertQuery);
                                             }
 
-//                                            // SPARQL to obtain all data of a publication
-//                                            String getPublicationPropertiesQuery = queriesService.getPublicationPropertiesQuery("http://dblp.dagstuhl.de/rdf/schema-2015-01-26#authorOf");
-//                                            TupleQuery resourcequery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationPropertiesQuery); //
-//                                            tripletasResult = resourcequery.evaluate();
-//                                            while (tripletasResult.hasNext()) {
-//                                                BindingSet tripletsResource = tripletasResult.next();
-//                                                String publicationResource = tripletsResource.getValue("publicationResource").toString();
-//                                                String publicationProperties = tripletsResource.getValue("publicationProperties").toString();
-//                                                String publicationPropertiesValue = tripletsResource.getValue("publicationPropertiesValue").toString();
-//                                                ///insert sparql query, 
-//                                                String publicationPropertiesInsertQuery = buildInsertQuery(providerGraph, publicationResource, publicationProperties, publicationPropertiesValue);
-//                                                //load values publications to publications resource
-//                                                updatePub(publicationPropertiesInsertQuery);
-//
-//                                            }
-                                        }//end semanticComparison
+                                        }//end if semanticComparison
+                                        else if (!semanticAnalizer) {//In this case: No semantic Analizer
+                                            //SPARQL obtain all publications of author
+                                            String getPublicationsFromProviderQuery = queriesService.getPublicationsPropertiesQuery(publication);
+                                            TupleQuery pubquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationsFromProviderQuery); //
+                                            TupleQueryResult tripletasResult = pubquery.evaluate();
+
+                                            while (tripletasResult.hasNext()) {
+                                                BindingSet tripletsResource = tripletasResult.next();
+                                                //authorNativeResource = tripletsResource.getValue("authorResource").toString();
+                                                String publicationProperty = tripletsResource.getValue("property").toString();
+                                                String publicationObject = tripletsResource.getValue("value").toString();
+                                                ///insert sparql query, 
+                                                String publicationInsertQuery = buildInsertQuery(providerGraph, publication, publicationProperty, publicationObject);
+                                                updatePub(publicationInsertQuery);
+
+                                                // insert dct:contributor      <> dct:contributor <http://dblp.org/pers/xr/s/Saquicela:Victor> 
+                                                String contributorInsertQuery = buildInsertQuery(providerGraph, publication, "http://purl.org/dc/terms/contributor", authorNativeResource);
+                                                updatePub(contributorInsertQuery);
+
+                                                // sameAs triplet    <http://190.15.141.102:8080/dspace/contribuidor/autor/SaquicelaGalarza_VictorHugo> owl:sameAs <http://dblp.org/pers/xr/s/Saquicela:Victor> 
+                                                String sameAsInsertQuery = buildInsertQuery(providerGraph, authorResource, "http://www.w3.org/2002/07/owl#sameAs", authorNativeResource);
+                                                updatePub(sameAsInsertQuery);
+                                            }
+                                        }
                                     }
                                 }//end if numMembers=1
                                 conUri.commit();
@@ -469,8 +471,6 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
         }
         return "fail";
     }
-
-  
 
     @Override
     public JsonArray SearchAuthorTaskImpl(String uri
@@ -556,7 +556,7 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                         String subjet = st.getSubject().stringValue();
                         String predicate = st.getPredicate().stringValue();
                         String object = st.getObject().stringValue();
-                        String querytoInsert = buildInsertQuery(externalAuthorGraph, subjet, predicate, object);
+                        String querytoInsert = buildInsertQuery(constantService.getExternalAuthorsGraph(), subjet, predicate, object);
                         updatePub(querytoInsert);
                         writerjld.handleStatement(st);
                     }

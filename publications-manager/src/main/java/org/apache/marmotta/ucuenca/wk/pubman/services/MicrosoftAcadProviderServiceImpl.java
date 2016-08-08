@@ -72,30 +72,20 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
 
     @Inject
     private QueriesService queriesService;
-    
-    @Inject 
+
+    @Inject
     private CommonsServices commonsServices;
 
     @Inject
-    private ConstantService pubVocabService;
+    private ConstantService constantService;
 
     @Inject
     private SparqlFunctionsService sparqlFunctionsService;
 
-    private String namespaceGraph = "http://ucuenca.edu.ec/wkhuska/";
-    private String authorGraph = namespaceGraph + "authors";
-    private String endpointsGraph = namespaceGraph + "endpoints";
-    private int processpercent = 0;
-
-    /* graphByProvider
-     Graph to save publications data by provider
-     Example: http://ucuenca.edu.ec/wkhuska/dblp
-     */
-    private String graphByProviderNS = namespaceGraph + "provider/";
-
     @Inject
     private SparqlService sparqlService;
-    private final ConstantServiceImpl con = new ConstantServiceImpl();
+
+    private int processpercent = 0;
 
     //for Microsoft Academics
     @Override
@@ -210,8 +200,8 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
             //ClientResponse response = ldClient.retrieveResource("http://rdf.dblp.com/ns/m.0wqhskn");
 
             int allMembers = 0;
-            String nameProviderGraph = "http://ucuenca.edu.ec/wkhuska/provider/MicrosoftAcademicsProvider";
-            String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(authorGraph, endpointsGraph);
+//            String nameProviderGraph = "http://ucuenca.edu.ec/wkhuska/provider/MicrosoftAcademicsProvider";
+            String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(constantService.getAuthorsGraph(), constantService.getEndpointsGraph());
 
             // TupleQueryResult result = sparqlService.query(QueryLanguage.SPARQL, getAuthors);
             String nameToFind = "";
@@ -270,7 +260,7 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                 int waitTime = 0;
                 boolean ask = false;
                 if (!proccesAllAuthors) {
-                    String askTripletQuery = queriesService.getAskProcessAlreadyAuthorProvider(con.getMAGraph(), authorResource);
+                    String askTripletQuery = queriesService.getAskProcessAlreadyAuthorProvider(constantService.getMAGraph(), authorResource);
                     try {
 
                         ask = sparqlService.ask(QueryLanguage.SPARQL, askTripletQuery);
@@ -291,7 +281,7 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
 
                         boolean dataretrievee = false;
                         if (!proccesAllAuthors) {
-                            existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(nameProviderGraph, URL_TO_FIND_Microsoft));
+                            existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(constantService.getMAGraph(), URL_TO_FIND_Microsoft));
                         }
                         if (nameToFind != "" && !existNativeAuthor) {
                             waitTime = 30;
@@ -314,7 +304,7 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
 
                         //String nameEndpointofPublications = ldClient.getEndpoint(NS_DBLP + nameToFind).getName();
                         String nameEndpointofPublications = ldClient.getEndpoint(URL_TO_FIND_Microsoft).getName();
-                        String providerGraph = graphByProviderNS + nameEndpointofPublications.replace(" ", "");
+                        String providerGraph = constantService.getProviderNsGraph() + "/" + nameEndpointofPublications.replace(" ", "");
 
 //                        Model model = response.getData();
 //                        FileOutputStream out = new FileOutputStream("C:\\Users\\Satellite\\Desktop\\" + nameToFind + "_test.ttl");
@@ -427,7 +417,7 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
             LDClient ldClient = new LDClient(conf);
 
             int allMembers = 0;
-            String getAllTitlesDataQuery = queriesService.getAllTitlesDataQuery(con.getWkhuskaGraph());
+            String getAllTitlesDataQuery = queriesService.getAllTitlesDataQuery(constantService.getWkhuskaGraph());
 
             String titleLiteral = "";
             String publicationResource = "";
@@ -474,7 +464,7 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                 titleLiteral = map.get("title").stringValue();
                 boolean ask = false;
                 if (!proccesAllTitles) {
-                    String askTripletQuery = queriesService.getAskResourcePropertieQuery(con.getWkhuskaGraph(), publicationResource, "bibo:abstract");
+                    String askTripletQuery = queriesService.getAskResourcePropertieQuery(constantService.getWkhuskaGraph(), publicationResource, "bibo:abstract");
 
                     try {
                         ask = sparqlService.ask(QueryLanguage.SPARQL, askTripletQuery);
@@ -537,22 +527,22 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                                     BindingSet tripletsResource = tripletasResult.next();
                                     String abstractLiteral = tripletsResource.getValue("object").toString();
                                     // insert sparql query, 
-                                    String abstractInsertQuery = buildInsertQuery(con.getWkhuskaGraph(), publicationResource, "bibo:abstract", abstractLiteral);
+                                    String abstractInsertQuery = buildInsertQuery(constantService.getWkhuskaGraph(), publicationResource, "bibo:abstract", abstractLiteral);
                                     updatePub(abstractInsertQuery);
                                 }
                                 // SPARQL to Retrieve and Insert keywords ( bibo:Quote) from MA
-                                String getKeywordsQuery = queriesService.getObjectByPropertyQuery(publicationNativeResource,"bibo:Quote");
+                                String getKeywordsQuery = queriesService.getObjectByPropertyQuery(publicationNativeResource, "bibo:Quote");
                                 TupleQuery keywordsquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getKeywordsQuery); //
                                 TupleQueryResult keywordsResult = keywordsquery.evaluate();
                                 while (keywordsResult.hasNext()) {
                                     BindingSet keywordsBs = keywordsResult.next();
                                     String keywordLiteral = keywordsBs.getValue("object").toString();
                                     // insert sparql query, 
-                                    String keywordInsertQuery = buildInsertQuery(con.getWkhuskaGraph(), publicationResource, "bibo:Quote", keywordLiteral);
+                                    String keywordInsertQuery = buildInsertQuery(constantService.getWkhuskaGraph(), publicationResource, "bibo:Quote", keywordLiteral);
                                     updatePub(keywordInsertQuery);
                                 }
                             }//end if numMembers=1
-                            else if (allMembers > 1 ) {
+                            else if (allMembers > 1) {
                                 //SPARQL to Retrieve all publications and titles from MA
                                 String getTitlesQuery = queriesService.getSubjectAndObjectByPropertyQuery("dct:title");
                                 TupleQuery titlesquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getTitlesQuery); //
@@ -562,9 +552,9 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                                     BindingSet titleResource = titlesResult.next();
                                     String titlefromMA = titleResource.getBinding("object").getValue().stringValue();;
                                     publicationNativeResource = titleResource.getValue("subject").toString();
-                                    titlefromMA=titlefromMA.replace(".","").replace("-","");
-                                    titleToFind = titleToFind.replace(".","").replace("-",""); 
-                                    
+                                    titlefromMA = titlefromMA.replace(".", "").replace("-", "");
+                                    titleToFind = titleToFind.replace(".", "").replace("-", "");
+
                                     if (titleToFind.compareTo(titlefromMA) == 0) {
                                         //SPARQL to Retrieve and Insert the abstract from MA
                                         String getAbstractQuery = queriesService.getObjectByPropertyQuery(publicationNativeResource, "bibo:abstract");
@@ -575,18 +565,18 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
                                             BindingSet tripletsResource = tripletasResult.next();
                                             String abstractLiteral = tripletsResource.getValue("object").toString();
                                             // insert sparql query, 
-                                            String abstractInsertQuery = buildInsertQuery(con.getWkhuskaGraph(), publicationResource, "bibo:abstract", abstractLiteral);
+                                            String abstractInsertQuery = buildInsertQuery(constantService.getWkhuskaGraph(), publicationResource, "bibo:abstract", abstractLiteral);
                                             updatePub(abstractInsertQuery);
                                         }
                                         // SPARQL to Retrieve and Insert keywords ( bibo:Quote) from MA
-                                        String getKeywordsQuery = queriesService.getObjectByPropertyQuery(publicationNativeResource,"bibo:Quote");
+                                        String getKeywordsQuery = queriesService.getObjectByPropertyQuery(publicationNativeResource, "bibo:Quote");
                                         TupleQuery keywordsquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getKeywordsQuery); //
                                         TupleQueryResult keywordsResult = keywordsquery.evaluate();
                                         while (keywordsResult.hasNext()) {
                                             BindingSet keywordsBs = keywordsResult.next();
                                             String keywordLiteral = keywordsBs.getValue("object").toString();
                                             // insert sparql query, 
-                                            String keywordInsertQuery = buildInsertQuery(con.getWkhuskaGraph(), publicationResource, "bibo:Quote", keywordLiteral);
+                                            String keywordInsertQuery = buildInsertQuery(constantService.getWkhuskaGraph(), publicationResource, "bibo:Quote", keywordLiteral);
                                             updatePub(keywordInsertQuery);
                                         }
                                         break;
@@ -674,8 +664,8 @@ public class MicrosoftAcadProviderServiceImpl implements MicrosoftAcadProviderSe
 
     @Override
     public void run() {
-      runTitleProviderTaskImpl();
-      // runPublicationsProviderTaskImpl("uri");
+        runTitleProviderTaskImpl();
+        // runPublicationsProviderTaskImpl("uri");
     }
 
 }
