@@ -26,7 +26,7 @@ import org.openrdf.query.QueryLanguage;
 
 /**
  *
- * @author Satellite
+ * @author Fernando Baculima
  */
 public class GetAuthorsGraphDataImpl implements GetAuthorsGraphData {
 

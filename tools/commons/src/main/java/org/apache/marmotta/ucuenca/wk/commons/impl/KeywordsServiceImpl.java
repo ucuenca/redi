@@ -226,7 +226,7 @@ public class KeywordsServiceImpl implements KeywordsService {
                 return true;
             }
         }
-        String[] articlesEn = {"a", "are", "an", "abstract", "been", "by", "change", "chapter", "challenging", "do", "dont", "don't", "for", "has", "into", "model", "moreover", "lower", "hight", "of", "object", "problems", "related", "they", "that", "the", "we", "what", "when", "where", "with", "for", "the", "in", "a", "an", "with", "is", "to", "and", "of", "high", "to", "any", "on", "cuenca", "ecuador"};
+        String[] articlesEn = {"a", "are", "an", "abstract", "been", "by", "change", "chapter", "challenging", "do", "dont", "don't", "for", "has", "into", "model", "moreover", "lower", "hight", "of", "object", "problems", "related", "they", "that", "the", "then", "we", "what", "when", "where", "with", "for", "the", "in", "a", "an", "with", "is", "to", "and", "of", "high", "to", "any", "on", "cuenca", "ecuador"};
         for (String article : articlesEn) {
             if (text.toLowerCase().compareTo(article) == 0) {
                 return true;
