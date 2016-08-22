@@ -50,6 +50,7 @@ import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.authors.api.EndpointService;
 import org.apache.marmotta.ucuenca.wk.authors.api.SparqlEndpoint;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
+import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.KeywordsService;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
@@ -88,10 +89,9 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Inject
     private EndpointService authorsendpointService;
-
-    private String namespaceGraph = "http://ucuenca.edu.ec/wkhuska/";
-
-    private String wkhuskaGraph = namespaceGraph + "authors";
+    
+    @Inject
+    private ConstantService constantService;
 
     private int limit = 5000;
 
@@ -171,7 +171,7 @@ public class AuthorServiceImpl implements AuthorService {
                     BindingSet binding = authorsResult.next();
                     resource = String.valueOf(binding.getValue("s"));
                     try {
-                        if (!sparqlFunctionsService.askAuthor(queriesService.getAskResourceQuery(wkhuskaGraph, resource))) {
+                        if (!sparqlFunctionsService.askAuthor(queriesService.getAskResourceQuery(constantService.getAuthorsGraph(), resource))) {
                             contAutoresNuevosEncontrados++;
                             printPercentProcess(contAutoresNuevosEncontrados, allPersons, endpoint.getName());
                             //properties and values quering with LDClient Library de Marmotta
@@ -287,11 +287,11 @@ public class AuthorServiceImpl implements AuthorService {
         if (!predicado.contains(authorDocumentProperty)) {
             //insert provenance triplet query
             if (!provenanceinsert) {
-                String provenanceQueryInsert = buildInsertQuery(wkhuskaGraph, sujeto, "http://purl.org/dc/terms/provenance", endpoint.getResourceId());
+                String provenanceQueryInsert = buildInsertQuery(constantService.getAuthorsGraph(), sujeto, "http://purl.org/dc/terms/provenance", endpoint.getResourceId());
                 updateAuthor(provenanceQueryInsert);
                 provenanceinsert = true;
             }
-            String queryAuthorInsert = buildInsertQuery(wkhuskaGraph, sujeto, predicado, objeto);
+            String queryAuthorInsert = buildInsertQuery(constantService.getAuthorsGraph(), sujeto, predicado, objeto);
             //load data related with author
             updateAuthor(queryAuthorInsert);
             return 1;

@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
+import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.DistanceService;
 
 /**
@@ -25,37 +26,40 @@ public class DistanceServiceImpl implements DistanceService {
     @Inject
     private org.slf4j.Logger log;
 
+    private CommonsServices commonService = new CommonsServicesImpl();
+
     @Override
     public boolean semanticComparison(List<String> listA, List<String> listB) {
         try {
             SemanticDistance dist = new SemanticDistance();
             double value = dist.semanticKeywordsDistance(listA, listB);
-            double semthreshold = 0.8;
+            
+            double semthreshold = Double.parseDouble(commonService.readPropertyFromFile("parameters.properties", "semanticDistanceListAListB"));
             if (value < semthreshold) {
                 return true;
             }
         } catch (IOException | ClassNotFoundException | SQLException ex) {
             log.error("ERROR IN SemanticDistance:" + ex);
-   //         Logger.getLogger(DistanceServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            //         Logger.getLogger(DistanceServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
-    
-     @Override
+
+    @Override
     public boolean semanticComparison(String word, List<String> listB) {
         try {
             List<String> listA = new ArrayList<>();
             listA.add(word);
             SemanticDistance dist = new SemanticDistance();
-            
+
             double value = dist.semanticKeywordsDistance(listA, listB);
-            double semthreshold = 0.8;
+            double semthreshold = Double.parseDouble(commonService.readPropertyFromFile("parameters.properties", "semanticDistanceWordListB"));
             if (value < semthreshold) {
                 return true;
             }
         } catch (IOException | ClassNotFoundException | SQLException ex) {
             log.error("ERROR IN SemanticDistance:" + ex);
-   //         Logger.getLogger(DistanceServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            //         Logger.getLogger(DistanceServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
