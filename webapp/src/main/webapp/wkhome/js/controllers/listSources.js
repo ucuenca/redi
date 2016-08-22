@@ -2,8 +2,8 @@
  * Controller to load/list Authors Sources
  */
 
-wkhomeControllers.controller('listSources', ['sparqlQuery', 'searchData', '$translate', '$routeParams', '$scope', '$window', 'translateService', 'globalData',
-    function (sparqlQuery, searchData, $translate, $routeParams, $scope, $window, translateService, globalData) {
+wkhomeControllers.controller('listSources', ['sparqlQuery', '$scope', 'globalData',
+    function (sparqlQuery, $scope, globalData) {
 
 
         /*************************************************************/
