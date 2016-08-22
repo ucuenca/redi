@@ -1,5 +1,5 @@
 <div class="col-md-12" ng-controller="translate" style="padding-top: 5%">
-    <div class="authorssources">
+    <div class="authorssources" >
         <h3 class="source text-success">{{'Authors Sources'| translate}}</h3>
         <br/>
         <p class="source">
@@ -13,74 +13,22 @@
         </p>
 
         <br/>
-        <table class="source authors">
-            <thead>
-                <tr>
-                    <th>IES</th>
-                    <th>NOMBRE</th>
-                    <th>URL</th>
-                    <th>DESCRIPCION</th>
+        <center>
+            <table ng-controller="listSources" class="authors source">
+                <tr style="background-color: #d6e9c6">
+                    <td>IES</td>
+                    <td>NOMBRE COMPLETO</td>
+                    <td>URL</td>
+                    <td>CIUDAD</td>
                 </tr>
-            </thead>
-            <tbody>
-                <tr >
-                    <td><a target='blank' href="http://ucuenca.edu.ec/">UCuenca</a></td>
-                    <td>Universidad de Cuenca</td>
-                    <td><a target='blank' href="http://ucuenca.edu.ec/">http://ucuenca.edu.ec/</a></td>
+                <tr ng-repeat="source in sources">
+                    <td><a href="{{ source.url}}" target="blank">{{ source.name}}</a></td>
+                    <td>{{ source.fullName}}</td>
+                    <td><a href="{{ source.url}}" target="blank">{{ source.url}}</a></td>
+                    <td>{{ source.city}}</td>
                 </tr>
-                <tr>
-                    <td><a target='blank' href="http://www.utpl.edu.ec/">UTPL</a></td>
-                    <td>Universidad Técnica Particular de Loja</td>
-                    <td><a target='blank' href="http://www.utpl.edu.ec/">http://www.utpl.edu.ec/</a></td>
-                </tr>
-                <tr>
-                    <td><a target='blank' href="http://www.espe.edu.ec/">ESPE</a></td>
-                    <td>Universidad de las Fuerzas Armadas ESPE</td>
-                    <td><a target='blank' href="http://www.espe.edu.ec/">http://www.espe.edu.ec/</a></td>
-                </tr>
-                <tr>
-                    <td><a target='blank' href="http://www.uce.edu.ec/">UCE</a></td>
-                    <td>Universidad Central del Ecuador</td>
-                    <td><a target='blank' href="http://www.uce.edu.ec/">http://www.uce.edu.ec/</a></td>
-                </tr>
-                <tr>
-                    <td><a target='blank' href="http://www.puce.edu.ec">PUCE</a></td>
-                    <td>Pontificia Universidad Católica del Ecuador</td>
-                    <td><a target='blank' href="http://www.puce.edu.ec">http://www.puce.edu.ec</a></td>
-                </tr>
-                <tr>
-                    <td><a target='blank' href="http://www.pucesi.edu.ec/">PUCESI</a></td>
-                    <td>Pontificia Universidad Católica del Ecuador Sede Ibarra</td>
-                    <td><a target='blank' href="http://www.pucesi.edu.ec/">http://www.pucesi.edu.ec/</a></td>
-                </tr>
-                <tr>
-                    <td><a target='blank' href="http://uide.edu.ec">UIDE</a></td>
-                    <td>Universidad Internacional Del Ecuador</td>    
-                    <td><a target='blank' href="http://uide.edu.ec">http://uide.edu.ec</a></td>
-                </tr>
-
-                <tr>
-                    <td><a target='blank' href="http://www.unemi.edu.ec">UNEMI</a></td>
-                    <td>Universidad Estatal de Milagro</td>
-                    <td><a target='blank' href="http://www.unemi.edu.ec">http://www.unemi.edu.ec</a></td>
-                </tr>
-                <tr>
-                    <td><a target='blank' href="http://www.espoch.edu.ec/">ESPOCH</a></td>
-                    <td>Escuela Superior Politécnica de Chimborazo</td>
-                    <td><a target='blank' href="http://www.espoch.edu.ec/">http://www.espoch.edu.ec/</a></td>
-                </tr>
-                <tr>
-                    <td><a target='blank' href="http://www.espol.edu.ec/">ESPOL</a></td>
-                    <td>Escuela Superior Politécnica del Litoral</td>
-                    <td><a target='blank' href="http://www.espol.edu.ec/">http://www.espol.edu.ec/</a></td>
-                </tr>
-
-
-            </tbody>
-        </table>
-
-
-
+            </table>
+        </center>
     </div>
 
     <hr>
@@ -98,10 +46,10 @@
         </p>
 
         <br/>
-        
+
 
     </div>
-<hr>
+    <hr>
 </div>
 
 <hr>
