@@ -86,6 +86,7 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
     private String authorsGraph = "http://ucuenca.edu.ec/wkhuska/authors";
 
     private int processpercent = 0;
+    private boolean comparacionSemantica = false;
 
 
     /* graphByProvider
@@ -250,7 +251,7 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
                                     keyPub.add(key.get("publicationPropertyValue").stringValue());
                                 }
                                 boolean semanticComp = true;
-                                if (keyAut.size() > 4 && keyPub.size() > 4) {
+                                if (keyAut.size() > 4 && keyPub.size() > 4 && comparacionSemantica) {
                                     semanticComp = distanceService.semanticComparison(keyAut, keyPub);
                                 }
                                 if(semanticComp){
@@ -506,7 +507,7 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
                 String fisrtName = publicacion.get("fname").stringValue();
                 String lastName = publicacion.get("lname").stringValue();
 
-                String newuri = uriNewAuthor + cleanStringUriAuthor(( provenance + " " + fisrtName + " " + lastName).replace(".", ""));
+                String newuri = uriNewAuthor + cleanStringUriAuthor(( fisrtName + " " + lastName).replace(".", ""));
                 String askTripletQuery = queriesService.getAskQuery(wkhuskaGraph, newuri, RDF.TYPE, FOAF.NAMESPACE + "Person");
                 boolean askNewAuthor = sparqlService.ask(QueryLanguage.SPARQL, askTripletQuery);
                 if (!askNewAuthor) {
