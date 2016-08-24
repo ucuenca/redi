@@ -69,6 +69,15 @@ public class DistanceServiceImpl implements DistanceService {
 
         try {
             SyntacticDistance syntacticdistance = new SyntacticDistance();
+            if (args != null && args.length > 0) {
+                for (int i = 0; i < args.length; i++) {
+                    if (args[i] == null) {
+                        return false;
+                    }
+                }
+            } else {
+                return false;
+            }
             return syntacticdistance.compareNames(args);
         } catch (Exception ex) {
             Logger.getLogger(DistanceServiceImpl.class.getName()).log(Level.SEVERE, null, ex);

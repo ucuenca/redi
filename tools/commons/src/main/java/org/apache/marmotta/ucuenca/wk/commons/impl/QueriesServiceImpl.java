@@ -509,6 +509,23 @@ public class QueriesServiceImpl implements QueriesService {
                 + " }} "
                 + "ORDER BY ?property ?hasValue ?isValueOf";
     }
+    
+    @Override
+    public String authorGetProvenance(String graph, String authorResource) {
+        return PREFIXES 
+                //+ " PREFIX uc: <http://ucuenca.edu.ec/ontology#> "
+                + " SELECT ?name WHERE "
+                + " {        "
+                + "  GRAPH <http://ucuenca.edu.ec/wkhuska/endpoints> "
+                + "   { "
+                + "  	?object  <http://ucuenca.edu.ec/ontology#name> ?name."
+                + "     GRAPH <" + graph + ">	" //http://ucuenca.edu.ec/wkhuska/authors
+                + "     {  		"
+                + "    	     <" + authorResource + ">  dct:provenance ?object. " //http://190.15.141.85:8080/resource/authors_epn/HIDALGO_TRUJILLO_SILVANA_IVONNE
+                + "     } "
+                + "   }    "
+                + "} ";
+    }
 
     @Override
     public String getAuthorPublicationFilter(String graph, String fname, String lname) {

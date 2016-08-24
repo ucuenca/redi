@@ -130,18 +130,18 @@
                         <h3></h3>
                         <h4 style="padding: 20px" class="text-success"> {{'Total of Publications found'| translate }}: {{todos.length}} </h4>
 
-
-                        <ul>
+                        <div id="list">
+                            <ul style="width: 100%;">
                             <li  ng-repeat="todo in filteredTodos">
                                 <!--  <h3> <a href="{{todo.id}}" target='_blank'>{{todo.title}}</a> </h3>
                                   </br> Abstract: {{todo.abstract}} </br>
                                 -->
                                 <a href="{{todo.uri}}" >
-                                    <div class="panel panel-info">
-                                        <div class="panel-heading">
-                                            <h2 class="panel-title"><a href="{{todo.uri}}" target='_blank'>{{todo.title}}</a></h2>
+                                    <div class="info">
+                                        <div class="heading">
+                                            <h2 class="title"><a href="{{todo.uri}}" target='_blank'>{{todo.title}}</a></h2>
                                         </div>
-                                        <div class="panel-body">
+                                        <div class="body">
                                             <strong>Abstract:</strong> {{todo.abstract}}
                                             </br>
                                             <strong>Keywords:</strong> {{todo.keywords}}
@@ -152,7 +152,7 @@
                                 </a>
 
                             </li>
-                        </ul>
+                        </ul></div>
                         <center>
                             <pagination 
                                 ng-model="currentPage"
