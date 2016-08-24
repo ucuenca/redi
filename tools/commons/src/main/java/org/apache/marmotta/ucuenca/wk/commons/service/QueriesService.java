@@ -153,6 +153,8 @@ public interface QueriesService {
     String getFirstNameLastNameAuhor(String graph, String authorResource);
 
     String authorDetailsOfProvenance(String graph, String authorResource);
+    
+    String authorGetProvenance(String graph, String authorResource);
 
     String getAuthorPublicationFilter(String graph, String fname, String lname);
 

@@ -205,9 +205,10 @@ public class SyntacticDistance {
         for (int w = 0; w < words.length; w++) {
             // Find the pairs of characters
             String[] pairsInWord = letterPairs(words[w]);
+            if (pairsInWord != null) {
             for (int p = 0; p < pairsInWord.length; p++) {
                 allPairs.add(pairsInWord[p]);
-            }
+            }}
         }
         return allPairs;
     }

@@ -138,8 +138,10 @@ public class ScopusPublicationSearchProvider extends AbstractHttpProvider {
                     ClientResponse response = ldClient.retrieveResource(authorUrlResourceCleaned);
                     ValueFactory factory = ValueFactoryImpl.getInstance();
                     triples.add(factory.createURI("http://api.elsevier.com/content/author/author_id/" + authorIdParam), FOAF.PUBLICATIONS, factory.createURI(abstractURLParam));
-                    triples.add(factory.createStatement(factory.createURI(abstractURLParam),
+                    if (abstractAbstractParam != null) {
+                        triples.add(factory.createStatement(factory.createURI(abstractURLParam),
                             factory.createURI("http://purl.org/ontology/bibo/abstract"), factory.createLiteral(abstractAbstractParam)));
+                    }
                     for (String uriCreator : creatorsList) {
                         triples.add(factory.createStatement(factory.createURI(abstractURLParam),
                                 factory.createURI("http://purl.org/dc/terms/contributor"), factory.createURI(uriCreator)));

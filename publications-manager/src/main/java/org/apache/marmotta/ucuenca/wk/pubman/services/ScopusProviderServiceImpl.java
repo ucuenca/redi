@@ -382,9 +382,10 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                             }//end else if NO semantic Analizer
 
                         }
+                        conUri.commit();
+                        conUri.close();
                     }
-                    conUri.commit();
-                    conUri.close();
+                  
                 } catch (QueryEvaluationException | MalformedQueryException | RepositoryException ex) {
                     log.error("Evaluation Exception: " + ex);
                 } catch (Exception e) {

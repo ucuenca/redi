@@ -51,18 +51,18 @@
                 </div>
                 <h4 style="padding: 20px" class="text-success"> {{'Total of Authors found' | translate }}: {{todos.length}} </h4>
 
-
+                <div id="list">
                 <ul>
                     <li  ng-repeat="todo in filteredTodos">
                         <!--  <h3> <a href="{{todo.id}}" target='_blank'>{{todo.title}}</a> </h3>
                           </br> Abstract: {{todo.abstract}} </br>
                         -->
                         <a href="{{todo.uri}}" >
-                            <div class="panel panel-info">
-                                <div class="panel-heading">
-                                    <h2 class="panel-title"><a ng-click="searchAuthor(todo.uri)" >{{todo.name}}</a></h2>
+                            <div class="info">
+                                <div class="heading">
+                                    <h2 class="title"><a ng-click="searchAuthor(todo.uri)" >{{todo.name}}</a></h2>
                                 </div>
-                                <div class="panel-body">
+                                <div class="body">
                                     <strong>Keywords:</strong> {{todo.keywords}}
                                     </br>
                                     <a ng-click="searchAuthor(todo.uri)">{{todo.uri}}</a>
@@ -71,7 +71,7 @@
                         </a>
 
                     </li>
-                </ul>
+                </ul></div>
                 <center>
                     <pagination 
                         ng-model="currentPage"
