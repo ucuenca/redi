@@ -121,6 +121,19 @@
             <version>2.3.1</version>
             <type>jar</type>
         </dependency>
+        
+        <!--Lucene-->
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-analyzers</artifactId>
+            <version>3.6.2</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.optimaize.languagedetector</groupId>
+            <artifactId>language-detector</artifactId>
+            <version>0.5</version>
+        </dependency>
         <!-- http://mvnrepository.com/artifact/postgresql/postgresql -->
         <!--<dependency>
             <groupId>postgresql</groupId>
