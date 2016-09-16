@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package test.ma;
+package test.ak;
 
 import org.apache.marmotta.ldclient.api.ldclient.LDClientService;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
@@ -25,9 +25,9 @@ import org.openrdf.rio.rdfxml.util.RDFXMLPrettyWriter;
  *
  * @author Freddy Sumba
  */
-public class TestMA {
+public class TestAK {
 
-    public TestMA() {
+    public TestAK() {
     }
 
     @BeforeClass

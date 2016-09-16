@@ -14,7 +14,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.apache.marmotta.ucuenca.wk.provider.ma;
+package org.apache.marmotta.ucuenca.wk.provider.ak;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -39,9 +39,9 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.marmotta.ucuenca.wk.provider.ma.util.JSONtoRDF;
-import org.apache.marmotta.ucuenca.wk.provider.ma.util.MapPublications;
-import org.apache.marmotta.ucuenca.wk.provider.ma.util.Publication;
+import org.apache.marmotta.ucuenca.wk.provider.ak.util.JSONtoRDF;
+import org.apache.marmotta.ucuenca.wk.provider.ak.util.MapPublications;
+import org.apache.marmotta.ucuenca.wk.provider.ak.util.Publication;
 import org.json.simple.parser.ParseException;
 
 /**
@@ -49,7 +49,7 @@ import org.json.simple.parser.ParseException;
  * <p/>
  * Author: Santiago Gonzalez
  */
-public class MicrosoftAcademicsProvider extends AbstractHttpProvider {
+public class AcademicsKnowledgeProvider extends AbstractHttpProvider {
 
     public static final String NAME = "Academics Knowlodge Provider";
     public static final String API = "https://api.projectoxford.ai/academic/v1.0/evaluate?expr=Composite(AA.AuN==%27victor%20saquicela%27)&attributes=Id,Ti,Y,D,CC,ECC,AA.AuN,AA.AuId,AA.AfN,AA.AfId,F.FN,F.FId,J.JN,J.JId,C.CN,C.CId,RId,W,E,D&E=DN,D,S,S.Ty,S.U,VFN,VSN,V,I,FP,LP,DOI&subscription-key=f66e8b1a39634d9591151a8efd80cfc2";
@@ -58,7 +58,7 @@ public class MicrosoftAcademicsProvider extends AbstractHttpProvider {
     public static final String PATTERNA = "http://academic\\.research\\.microsoft\\.com/json\\.svc/search\\?AppId\\=(.*)\\&AuthorQuery\\=(.*)\\&ResultObjects\\=Publication\\&PublicationContent\\=AllInfo\\&StartIdx\\=1\\&EndIdx\\=1(.*)$";
 
     private static String nsRedi = "http://redi.cedia.org.ec/namespace1_0/";
-    private static Logger log = LoggerFactory.getLogger(MicrosoftAcademicsProvider.class);
+    private static Logger log = LoggerFactory.getLogger(AcademicsKnowledgeProvider.class);
     public String stringSearch = null, authorSearch = null, advancedSearch = null, appId = null;
     public static final ConcurrentMap<String, String> MAPPINGSCHEMA = new ConcurrentHashMap<String, String>();
     private MapPublications mapPublications = new MapPublications();
@@ -169,7 +169,7 @@ public class MicrosoftAcademicsProvider extends AbstractHttpProvider {
         } catch (IOException e) {
             //e.printStackTrace();
         } catch (ParseException ex) {
-            java.util.logging.Logger.getLogger(MicrosoftAcademicsProvider.class.getName()).log(Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AcademicsKnowledgeProvider.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return Collections.emptyList();

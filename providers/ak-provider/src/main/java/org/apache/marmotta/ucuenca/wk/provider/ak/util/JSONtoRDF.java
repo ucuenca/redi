@@ -1,4 +1,4 @@
-package org.apache.marmotta.ucuenca.wk.provider.ma.util;
+package org.apache.marmotta.ucuenca.wk.provider.ak.util;
 
 import java.util.Map;
 import java.util.regex.Matcher;
