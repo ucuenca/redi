@@ -56,6 +56,7 @@ public class MyWebServiceTest {
     }
 
     @Test
+    @Ignore
     public void testHello() {
         /*
          * GET ?name=<xxx>
@@ -72,6 +73,7 @@ public class MyWebServiceTest {
             .when()
                 .get("/base-module");
     }
+    @Ignore
 
     @Test
     public void testNonAsciiHello() {
@@ -91,6 +93,7 @@ public class MyWebServiceTest {
             .when()
                 .get("/base-module");
     }
+    @Ignore
 
     @Test
     public void testDoThis() {

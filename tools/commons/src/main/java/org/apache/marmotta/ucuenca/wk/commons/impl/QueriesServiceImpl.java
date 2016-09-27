@@ -5,14 +5,13 @@ import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 
-
 /**
  * @author Fernando Baculima
  */
 public class QueriesServiceImpl implements QueriesService {
 
     private final ConstantService con = new ConstantServiceImpl();
-    
+
     private final CommonsServices commonsServices = new CommonsServicesImpl();
 
     private final static String PREFIXES = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
@@ -61,9 +60,10 @@ public class QueriesServiceImpl implements QueriesService {
         }
     }
 
-    private boolean isURI(String value){
+    private boolean isURI(String value) {
         return commonsServices.isURI(value);
     }
+
     /**
      * Return a INSERT QUERY when object is a URI
      */
@@ -77,8 +77,6 @@ public class QueriesServiceImpl implements QueriesService {
             return PREFIXES + INSERTDATA + graphSentence + " " + "{ " + subjectSentence + " " + varargs[2] + " <" + varargs[3] + "> }}";
         }
     }
-
-  
 
     /**
      * Return ASK query for a resource
@@ -206,7 +204,7 @@ public class QueriesServiceImpl implements QueriesService {
     @Override
     public String getAuthorsDataQuery(String graph, String endpointsgraph) {
         return PREFIXES
-                + " SELECT *"
+                + " SELECT distinct *"
                 + " WHERE { " + getGraphString(graph) + " { "
                 //+ " WHERE { graph <http://ucuenca.edu.ec/wkhuska/authorsaux> {"
                 + " ?subject a foaf:Person. "
@@ -214,31 +212,31 @@ public class QueriesServiceImpl implements QueriesService {
                 + " ?subject foaf:firstName ?fname. "
                 + " ?subject foaf:lastName ?lname. "
                 + " ?subject dct:provenance ?provenance. "
-//                                + "{"
-//                                + " filter (regex(UCASE(?subject), \"SAQUICELA\"))"
-//                                + "filter (regex(UCASE(?subject), \"GALARZA\"))  "
-//                                + "    }"
-//                                + "UNION "
-//                                + "{"
-//                                + "filter (regex(UCASE(?subject), \"ESPINOZA\")) "
-//                                + "filter (regex(UCASE(?subject), \"MAURICIO\")) "
-//                                + "}"
-//                                + "UNION {"
-//                                + "filter (regex(UCASE(?subject), \"CARVALLO\"))  "
-//                                + "filter (regex(UCASE(?subject), \"JUAN\"))     "
-//                                + "}"
-//                                + " UNION {"
-//                                + " filter (regex(UCASE(?subject), \"FELIPE\"))  "
-//                                + "filter (regex(UCASE(?subject), \"CISNEROS\"))   "
-//                                + "  } UNION"
-//                                + " {"
-//                                + "  filter (regex(UCASE(?subject), \"NELSON\"))  "
-//                                + "  filter (regex(UCASE(?subject), \"PIEDRA\"))   "
-//                                + " } UNION"
-//                                + " {"
-//                                + " filter (regex(UCASE(?subject), \"LIZANDRO\"))  "
-//                                + "  filter (regex(UCASE(?subject), \"SOLANO\"))     "
-//                                + "} "
+                //                                + "{"
+                //                                + " filter (regex(UCASE(?subject), \"SAQUICELA\"))"
+                //                                + "filter (regex(UCASE(?subject), \"GALARZA\"))  "
+                //                                + "    }"
+                //                                + "UNION "
+                //                                + "{"
+                //                                + "filter (regex(UCASE(?subject), \"ESPINOZA\")) "
+                //                                + "filter (regex(UCASE(?subject), \"MAURICIO\")) "
+                //                                + "}"
+                //                                + "UNION {"
+                //                                + "filter (regex(UCASE(?subject), \"CARVALLO\"))  "
+                //                                + "filter (regex(UCASE(?subject), \"JUAN\"))     "
+                //                                + "}"
+                //                                + " UNION {"
+                //                                + " filter (regex(UCASE(?subject), \"FELIPE\"))  "
+                //                                + "filter (regex(UCASE(?subject), \"CISNEROS\"))   "
+                //                                + "  } UNION"
+                //                                + " {"
+                //                                + "  filter (regex(UCASE(?subject), \"NELSON\"))  "
+                //                                + "  filter (regex(UCASE(?subject), \"PIEDRA\"))   "
+                //                                + " } UNION"
+                //                                + " {"
+                //                                + " filter (regex(UCASE(?subject), \"LIZANDRO\"))  "
+                //                                + "  filter (regex(UCASE(?subject), \"SOLANO\"))     "
+                //                                + "} "
                 + " { select ?status "
                 + "     where { " + getGraphString(endpointsgraph) + " {"
                 + "     ?provenance <http://ucuenca.edu.ec/ontology#status> ?status "
@@ -256,7 +254,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + " graph ?grafo {?x ?y ?z } "
                 + " } ";
     }
-    
+
     /**
      * Return ASK query for triplet
      */
@@ -290,22 +288,19 @@ public class QueriesServiceImpl implements QueriesService {
 //                + " }  "
 //                + " }  ";
 //    }
-
     @Override
     public String getPublicationsPropertiesQuery(String providerGraph, String publicationResource) {
-        return 
-                 " SELECT DISTINCT ?publicationProperties ?publicationPropertyValue WHERE { "
+        return " SELECT DISTINCT ?publicationProperties ?publicationPropertyValue WHERE { "
                 + getGraphString(providerGraph)
                 + " {"
                 + " <" + publicationResource + ">  ?publicationProperties ?publicationPropertyValue. "
                 + " } }"
                 + "ORDER BY DESC(?publicationProperties) ";
     }
-    
+
     @Override
     public String getPublicationsPropertiesQuery(String publicationResource) {
-        return 
-                 " SELECT DISTINCT ?property ?value WHERE { "
+        return " SELECT DISTINCT ?property ?value WHERE { "
                 + " <" + publicationResource + ">  ?property ?value. "
                 + " }";
     }
@@ -327,56 +322,54 @@ public class QueriesServiceImpl implements QueriesService {
 
     @Override
     public String getPublicationPropertiesQuery(String property) {
-        return "SELECT DISTINCT ?publicationResource ?publicationProperties ?publicationPropertiesValue "
-                + " WHERE { ?authorResource "+(isURI(property)? "<" + property + ">" : property) + " ?publicationResource. ?publicationResource ?publicationProperties ?publicationPropertiesValue }";
+        return PREFIXES + "SELECT DISTINCT ?publicationResource ?publicationProperties ?publicationPropertiesValue "
+                + " WHERE { ?authorResource " + (isURI(property) ? "<" + property + ">" : property) + " ?publicationResource. ?publicationResource ?publicationProperties ?publicationPropertiesValue }";
     }
-
 
     @Override
     public String getAllTitlesDataQuery(String graph) {
-        
+
         return PREFIXES + "SELECT DISTINCT  ?publications ?title "
                 + " FROM <" + graph + "> "
                 + " WHERE { ?publications dct:title ?title  } ";
     }
-    
+
     @Override
-    public String getSubjectAndObjectByPropertyQuery(String property){
-      return PREFIXES + "SELECT DISTINCT  ?subject ?object "
-//                + " WHERE { ?subject "+(commonsServices.isURI(property)? "<" + property + ">" : property) + " ?object  } ";
-              + " WHERE { ?subject "+  property + " ?object  } ";
-}
-            
+    public String getSubjectAndObjectByPropertyQuery(String property) {
+        return PREFIXES + "SELECT DISTINCT  ?subject ?object "
+                //                + " WHERE { ?subject "+(commonsServices.isURI(property)? "<" + property + ">" : property) + " ?object  } ";
+                + " WHERE { ?subject " + property + " ?object  } ";
+    }
+
     @Override
     public String getObjectByPropertyQuery(String subject, String property) {
         return PREFIXES + " SELECT DISTINCT ?object "
-      //          + "  WHERE { <" + subject + "> "+(commonsServices.isURI(property)? "<" + property + ">" : property) + "  ?object } ";
-            + "  WHERE { <" + subject + "> "+ property  + "  ?object } ";
+                //          + "  WHERE { <" + subject + "> "+(commonsServices.isURI(property)? "<" + property + ">" : property) + "  ?object } ";
+                + "  WHERE { <" + subject + "> " + property + "  ?object } ";
 
-   }
-    
+    }
+
     @Override
     public String getObjectByPropertyQuery(String property) {
         return PREFIXES + " SELECT DISTINCT ?object "
-            //    + "  WHERE {  ?s "+(commonsServices.isURI(property)? "<" + property + ">" : property) + "  ?object } ";
-                    + "  WHERE {  ?s "+ property + "  ?object } ";
-    
-                }
-    
-     @Override
+                //    + "  WHERE {  ?s "+(commonsServices.isURI(property)? "<" + property + ">" : property) + "  ?object } ";
+                + "  WHERE {  ?s " + property + "  ?object } ";
+
+    }
+
+    @Override
     public String getAbstractAndTitleQuery(String resource) {
         return PREFIXES + " SELECT DISTINCT  ?title ?abstract ?description "
                 + "  WHERE {   <" + resource + "> dct:title ?title. "
                 + "OPTIONAL {  <" + resource + "> bibo:abstract  ?abstract  }"
                 + "OPTIONAL {  <" + resource + "> dct:description  ?description  } } ";
     }
- 
+
     @Override
     public String getAuthorsKeywordsQuery(String resource) {
         return PREFIXES + " SELECT DISTINCT ?keyword FROM <http://ucuenca.edu.ec/wkhuska/authors> "
                 + " WHERE { <" + resource + "> dct:subject ?keyword. } limit 50";
     }
-    
 
     @Override
     public String getPublicationPropertiesAsResourcesQuery() {
@@ -432,16 +425,16 @@ public class QueriesServiceImpl implements QueriesService {
                 + " { FILTER (regex(?pubproperty,\"authorOf\")) }  "
                 + "UNION { FILTER (regex(?pubproperty,\"pub\")) }  }} ";
     }
-    
-     @Override
+
+    @Override
     public String getPublicationsTitleScopusQuery(String providerGraph, String prefix) {
-        return PREFIXES 
+        return PREFIXES
                 + " SELECT DISTINCT ?authorResource ?publicationResource ?title "
                 + " WHERE {" + getGraphString(providerGraph)
                 + "{   ?authorResource " + OWLSAMEAS + "   ?authorNative. "
                 + " ?publicationResource dct:contributor ?authorNative. "
                 + " ?publicationResource <" + prefix + ">  ?title "
-               + " }} ";
+                + " }} ";
     }
 
     @Override
@@ -509,10 +502,10 @@ public class QueriesServiceImpl implements QueriesService {
                 + " }} "
                 + "ORDER BY ?property ?hasValue ?isValueOf";
     }
-    
+
     @Override
     public String authorGetProvenance(String graph, String authorResource) {
-        return PREFIXES 
+        return PREFIXES
                 //+ " PREFIX uc: <http://ucuenca.edu.ec/ontology#> "
                 + " SELECT ?name WHERE "
                 + " {        "
@@ -584,6 +577,72 @@ public class QueriesServiceImpl implements QueriesService {
                 + "   ?document dct:isPartOf <" + repository + ">. "
                 + "   ?document dct:creator ?author. "
                 + " }";
+    }
+
+    @Override
+    public String getResourceUriByType(String type) {
+        return PREFIXES + "SELECT DISTINCT * WHERE { ?publicationResource  " + type + " ?authorResource } ";
+    }
+
+    @Override
+    public String getPropertiesOfResourceByType(String type) {
+        return PREFIXES + "SELECT DISTINCT * WHERE { ?publicationResource a " + type + ". "
+                + "?publicationResource ?publicationProperties ?publicationPropertiesValue } ";
+    }
+
+    @Override
+    public String getPublicationsTitleByType(String graph, String type) {
+        return PREFIXES + "SELECT DISTINCT ?authorResource ?publicationResource ?title\n"
+                + "WHERE { "
+                + "  GRAPH <" + graph + ">  {"
+                + "	   ?authorResource " + type + " ?publicationResource."
+                + "        ?publicationResource dct:title ?title "
+                + "  }"
+                + "} ";
+    }
+
+    @Override
+    public String getAuthorsDataQueryByUri(String graph, String endpointsgraph, String resource) {
+        return PREFIXES
+                + " SELECT distinct *"
+                + " WHERE   { " + getGraphString(graph) + " { "
+                + " ?subject a foaf:Person. "
+                + " ?subject foaf:name ?name."
+                + " ?subject foaf:firstName ?fname. "
+                + " ?subject foaf:lastName ?lname. "
+                + " ?subject foaf:nick ?nick. "
+                + " ?subject dct:provenance ?provenance. "
+                + " { select ?status "
+                + "     where { " + getGraphString(endpointsgraph) + " {"
+                + "     ?provenance <http://ucuenca.edu.ec/ontology#status> ?status "
+                + " }}} filter (regex(?status,\"true\"))"
+                + "filter (regex(?subject,\"" + resource + "\"))"
+                + "                }}";
+
+    }
+
+    @Override
+    public String getTriplesByFilter(String... args) {
+
+        return PREFIXES + "SELECT * WHERE {"
+                + "  ?subject ?property ?object\n"
+                + "  FILTER (regex(?object, \"" + args[0] + "\", \"i\")  "
+                + "         || regex(?object, \"" + args[1] + "\", \"i\") "
+                + "         || regex(str(?object), \"" + args[2] + "\", \"i\") "
+                + "         || regex(str(?object), \"" + args[3] + "\", \"i\") )  "
+                + "}";
+
+    }
+
+    @Override
+    public String getEndPointUriByName(String nameEndpoint) {
+        return "SELECT ?object  WHERE {"
+                + "  GRAPH <http://ucuenca.edu.ec/wkhuska/endpoints> {\n"
+                + "      	?object  <http://ucuenca.edu.ec/ontology#name> ?name "
+                + "             filter (regex(?name,\"" + nameEndpoint + "\")) "
+                + "  }    "
+                + "} ";
+
     }
 
 }

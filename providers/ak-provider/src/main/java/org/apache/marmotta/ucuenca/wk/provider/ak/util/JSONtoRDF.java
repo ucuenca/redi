@@ -15,45 +15,20 @@ import com.google.gson.JsonObject;
 
 public class JSONtoRDF {
 
-    private String resource;
     private JsonArray data;
     private Model model;
     private Map<String, String> schema;
     private final ValueFactory factory = ValueFactoryImpl.getInstance();
     private String academicsUrl = "https://academic.microsoft.com/#/detail/";
 
-    public JSONtoRDF(String resource, Map<String, String> schema, JsonArray data, Model model) {
-        this.resource = resource;
+    public JSONtoRDF(Map<String, String> schema, JsonArray data, Model model) {
         this.schema = schema;
         this.data = data;
         this.model = model;
     }
 
-    public void buldHead() {
-//        model.add(factory.createStatement(factory.createURI(resource),
-//                RDF.TYPE, factory.createURI(schema.get("entity::type")))
-//        );
-
-        int i = 0;
-
-        while (i < data.size()) {
-
-            JsonObject json = data.get(i).getAsJsonObject();
-            model.add(factory.createStatement(factory.createURI(resource),
-                    RDF.TYPE, factory.createURI(schema.get("entity::type"), academicsUrl + json.get("id").getAsLong() + "/")));
-
-//            model.add(factory.createStatement(factory.createURI(resource),
-//                    factory.createURI(schema.get("entity::property:uri")), factory.createURI(academicsUrl + json.get("id").getAsLong() + "/")));
-//            model.add(factory.createStatement(factory.createURI(resource),
-//                    factory.createURI("http://xmlns.com/foaf/0.1/publications"), factory.createURI(academicsUrl + Long.toString(json.get("id").getAsLong()) + "/")));
-            i++;
-        }
-
-    }
-
     public void parse() throws Exception {
         Integer i = 0;
-        buldHead();
         while (i < data.size()) {
             JsonObject json = data.get(i).getAsJsonObject();
             this.mappingProcess(academicsUrl + Long.toString(json.get("id").getAsLong()) + "/", json);
@@ -80,6 +55,7 @@ public class JSONtoRDF {
             getAttributesPartOne(key, json, resource);
             getAttributesPartTwo(key, json, resource);
             getAttributesPartThree(key, json, resource);
+            getAttributesPartFour(key, json, resource);
 
         }
 
@@ -139,7 +115,7 @@ public class JSONtoRDF {
             case "entity::property:creator":
                 aux = json.get("authors").getAsJsonArray();
                 model.add(factory.createStatement(factory.createURI(resource),
-                        factory.createURI(schema.get(key)), factory.createURI(academicsUrl + aux.get(0).getAsJsonObject().get("id").getAsString() + "/")));
+                        factory.createURI(schema.get(key)), factory.createLiteral(aux.get(0).getAsJsonObject().get("name").getAsString())));
 
                 break;
             case "entity::property:contributor":
@@ -150,7 +126,7 @@ public class JSONtoRDF {
                 for (int iterator = 1; iterator < aux.size(); iterator++) {
                     JsonElement element = aux.get(iterator);
                     model.add(factory.createStatement(factory.createURI(resource),
-                            factory.createURI(schema.get(key)), factory.createURI(academicsUrl + element.getAsJsonObject().get("id").getAsString() + "/")));
+                            factory.createURI(schema.get(key)), factory.createLiteral(element.getAsJsonObject().get("name").getAsString())));
 
                 }
                 break;
@@ -189,10 +165,32 @@ public class JSONtoRDF {
 
                 }
                 break;
-
             default:
                 break;
 
+        }
+    }
+
+    public void getAttributesPartFour(String key, JsonObject json, String resource) {
+        JsonArray aux = new JsonArray();
+        switch (key) {
+
+            case "entity::property:text":
+                aux = json.get("authors").getAsJsonArray();
+                String text = "";
+                for (int iterator = 0; iterator < aux.size(); iterator++) {
+                    JsonElement element = aux.get(iterator);
+
+                    text = text + (element.getAsJsonObject().get("afiliation") != null ? element.getAsJsonObject().get("afiliation").getAsString() : "") + " -";
+                }
+                model.add(factory.createStatement(factory.createURI(resource),
+                        factory.createURI(schema.get(key)), factory.createLiteral(text)));
+                break;
+
+            case "entity::property:empty":
+                break;
+            default:
+                break;
         }
     }
 

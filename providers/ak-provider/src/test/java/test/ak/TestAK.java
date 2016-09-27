@@ -57,7 +57,7 @@ public class TestAK {
         LDClientService ldclient = new LDClient(config);
         try {
             ClientResponse res;
-            res = ldclient.retrieveResource("https://api.projectoxford.ai/academic/v1.0/evaluate?expr=Composite(AA.AuN==%27Brajesh%20Kumar%27)&attributes=Id,Ti,Y,D,CC,ECC,AA.AuN,AA.AuId,AA.AfN,AA.AfId,F.FN,F.FId,J.JN,J.JId,C.CN,C.CId,RId,W,E,D&E=DN,D,S,S.Ty,S.U,VFN,VSN,V,I,FP,LP,DOI&subscription-key=f66e8b1a39634d9591151a8efd80cfc2&count=100");
+            res = ldclient.retrieveResource("https://api.projectoxford.ai/academic/v1.0/evaluate?expr=Composite(AA.AuN==%27victor%20saquicela%27)&attributes=Id,Ti,Y,D,CC,ECC,AA.AuN,AA.AuId,AA.AfN,AA.AfId,F.FN,F.FId,J.JN,J.JId,C.CN,C.CId,RId,W,E,D&E=DN,D,S,S.Ty,S.U,VFN,VSN,V,I,FP,LP,DOI&subscription-key=f66e8b1a39634d9591151a8efd80cfc2&count=100");
             RDFHandler handler = new RDFXMLPrettyWriter(System.out);
             
             try {

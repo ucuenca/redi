@@ -62,6 +62,7 @@ public class AcademicsKnowledgeProvider extends AbstractHttpProvider {
     public String stringSearch = null, authorSearch = null, advancedSearch = null, appId = null;
     public static final ConcurrentMap<String, String> MAPPINGSCHEMA = new ConcurrentHashMap<String, String>();
     private MapPublications mapPublications = new MapPublications();
+    private int limitPublications = 100;
 
     static {
         MAPPINGSCHEMA.put("entity::type", "http://purl.org/ontology/bibo/Document");
@@ -80,6 +81,7 @@ public class AcademicsKnowledgeProvider extends AbstractHttpProvider {
         MAPPINGSCHEMA.put("entity::property:subject", "http://purl.org/dc/terms/subject");
         MAPPINGSCHEMA.put("entity::property:Conference", "http://purl.org/ontology/bibo/Conference");
         MAPPINGSCHEMA.put("entity::property:references", "http://purl.org/dc/terms/references");
+        MAPPINGSCHEMA.put("entity::property:text", "http://purl.org/ontology/bibo/content");
 
         MAPPINGSCHEMA.put("entity::property:type", nsRedi + "Type");
         MAPPINGSCHEMA.put("entity::property:referenceCount", nsRedi + "referenceCount");
@@ -152,12 +154,16 @@ public class AcademicsKnowledgeProvider extends AbstractHttpProvider {
             List<Publication> resultOutput = new ArrayList();
 
             resultOutput = mapPublications.getPublications(responseStrBuilder.toString());
+            if (resultOutput.size() == limitPublications) {
+                resultOutput = resultOutput.subList(0, 20);
+            }
+
             Gson gson = new Gson();
             JsonArray json = new JsonArray();
             for (Publication d : resultOutput) {
                 json.add(gson.toJsonTree(d).getAsJsonObject());
             }
-            JSONtoRDF parser = new JSONtoRDF(resource, MAPPINGSCHEMA, json, triples);
+            JSONtoRDF parser = new JSONtoRDF(MAPPINGSCHEMA, json, triples);
             //Model model2 = new TreeModel();
 
             try {
