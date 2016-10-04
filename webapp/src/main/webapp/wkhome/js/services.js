@@ -40,7 +40,7 @@ wkhomeServices.factory('authorRestQuery', ['$resource', '$http', '$window',
     }]);
 
 
-wkhomeServices.factory('sparqlQuery', ['$resource', '$http', '$window', 
+wkhomeServices.factory('sparqlQuery', ['$resource', '$http', '$window',
     function ($resource, $http, $window) {
         $http.defaults.headers.common['content-type'] = 'application/x-www-form-urlencoded';
         $http.defaults.headers.common['Accept'] = 'application/ld+json';
@@ -78,7 +78,7 @@ wkhomeServices.factory('translateService', ['$resource', '$http', '$window', 'gl
         return $resource('resources/:data.json', {}, {
             query: {method: 'GET', params: {data: globalData.language}, isArray: false}
         });
-    
+
     }]);
 
 wkhomeServices.factory('reportService', ['$resource', '$http', '$window',
@@ -97,4 +97,3 @@ wkhomeServices.factory('reportService', ['$resource', '$http', '$window',
             querySrv: {method: 'POST', isArray: false, transformRequest: transform, headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}}
         });
     }]);
-

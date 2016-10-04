@@ -74,6 +74,3 @@ gulp.task('watch', function() {
   //gulp.watch(['dist/**']).on('change', livereload.changed);
 
 });
-
-
-

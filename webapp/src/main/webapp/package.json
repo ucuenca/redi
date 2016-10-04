@@ -29,7 +29,8 @@
     "protractor": "~1.0.0",
     "shelljs": "^0.2.6",
     "tmp": "0.0.23",
-    "webdriver-manager": "~5.0.0"
+    "webdriver-manager": "~5.0.0",
+    "autotrack": "^1.0.3"
   },
   "scripts": {
     "postinstall": "bower install",
