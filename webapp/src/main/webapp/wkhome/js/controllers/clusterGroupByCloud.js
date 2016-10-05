@@ -4,9 +4,9 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$timeout', '$scope', 'glob
         $('html,body').animate({
             scrollTop: $("#scrollToTop").offset().top
         }, "slow");
-        
+
         $scope.gbselectedItem = 'cluster';
-        
+
         $scope.$watch('searchData.areaSearch', function (newValue, oldValue, scope) {
 
             if (searchData.areaSearch) {
@@ -102,7 +102,7 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$timeout', '$scope', 'glob
         function groupByResources(values, groupby)//grouByResources resources by ...
         {
             // executeDraw(values,groupby);
-            //this activity is cheking directly in cloudGroup.js 
+            //this activity is cheking directly in cloudGroup.js
         }//end grouByResources
 
         function loadResources(value, groupby)//load resources related with selected keyword
@@ -114,6 +114,10 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$timeout', '$scope', 'glob
                 searchData.clustersAuthors = [];
 
                 var queryClusters = globalData.PREFIX +
+                        'CONSTRUCT { ?author foaf:name ?name. ?author uc:hasCluster ?clusterId. ?author rdfs:label ?label. ?author bibo:Quote ?keywords } WHERE{ { SELECT DISTINCT ?author ?name ?clusterId ?label (group_concat(DISTINCT ?keyword; separator = ", ") as ?keywords) WHERE{ ?clusterId uc:hasPerson ?author . ?author foaf:name ?name . ?author foaf:publications ?publication . ?publication bibo:Quote ?keyword . { SELECT ?clusterId ?label WHERE { graph <http://ucuenca.edu.ec/wkhuska/clusters> { ?clusterId rdfs:label ?label . ?clusterId uc:hasPerson ?person . } } GROUP BY ?clusterId ?label HAVING(count(?person) > 20) } } GROUP BY ?author ?name ?clusterId ?label } }';
+
+                // Change of query to solve problem about timeout
+                /**var queryClusters = globalData.PREFIX +
                         ' CONSTRUCT ' +
                         '{ ' +
                         '  ?author foaf:name ?name. ' +
@@ -140,8 +144,7 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$timeout', '$scope', 'glob
                         '        } group by ?author ?name ?keywords ' +
                         '      }' +
                         '    }' +
-                        '}';
-
+                        '}';**/
                 sparqlQuery.querySrv({query: queryClusters}, function (rdf) {
 
                     jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
@@ -149,11 +152,13 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$timeout', '$scope', 'glob
                             var model = {};
                             var clusterIds = res["uc:hasCluster"];
                             var keywords = "";
+                            /** Keywords come aggregated, so it not necessary to aggregate again.
                             if (res["bibo:Quote"] != null && (res["bibo:Quote"].constructor === Array || res["bibo:Quote"] instanceof Array)) {
                                 for (i = 0; i < res["bibo:Quote"].length && i < 12; i++) {
                                     keywords += (i == 0 ? res["bibo:Quote"][i] : ", " + res["bibo:Quote"][i]);
                                 }
-                            }
+                            }**/
+                            keywords = res["bibo:Quote"];
                             if (clusterIds != null && (clusterIds.constructor === Array || clusterIds instanceof Array)) {
                                 for (i = 0; i < clusterIds.length; i++) {
                                     model["IdAuthor"] = res["@id"];
@@ -205,7 +210,7 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$timeout', '$scope', 'glob
                 $timeout(executeDraw(searchData.clustersAuthors, groupby));
                 searchData.areaSearch = null;
             }
-           /* 
+           /*
             clustersQuery.success(function (data) {
                 $scope.clusters = data;
                 var myArray = new Array();
@@ -240,7 +245,7 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$timeout', '$scope', 'glob
             });
              */
         }//end Load Resources
-        
+
         $scope.clickonAuthor = function (id_author)
         {
             clickonRelatedauthor(id_author);
@@ -280,4 +285,4 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$timeout', '$scope', 'glob
         }
 
 
-    }]); //end clusterTagsController 
+    }]); //end clusterTagsController
