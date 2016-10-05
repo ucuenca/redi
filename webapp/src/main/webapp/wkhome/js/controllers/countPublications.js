@@ -1,14 +1,14 @@
 
 wkhomeControllers.controller('countPublications', ['$window','$routeParams','$scope','searchData', 'globalData', 'sparqlQuery',
     function ($window, $routeParams,$scope,searchData, globalData, sparqlQuery) {
-        
+
            //if click in pie-chart (Authors)
         $scope.ifClick = function (value)
         {
             searchData.genericData = value;
             $window.location.hash = "/" + $routeParams.lang + "/w/cloud?" + "datacloud";
         };
-        
+
         var queryTotalAuthors =   globalData.PREFIX
                 + ' CONSTRUCT '
                 + ' {  '
@@ -45,9 +45,9 @@ wkhomeControllers.controller('countPublications', ['$window','$routeParams','$sc
                 var data = []
                 endpoints.forEach(function (endpoint) {
                     var name = endpoint['uc:name'];
-                   
+
                             data.push({label: name, value: endpoint['uc:total']['@value']});
-                
+
                 });
                 $scope.$apply(function () {
                     $scope.data = {'entityName': 'Articles', 'data': data};

@@ -161,7 +161,7 @@ wkhomeControllers.controller('keywordsCloud', ['$routeParams', '$scope', 'global
         else
         {
             $scope.data = searchData.allkeywordsCloud;
-        } // end if if (!searchData.allkeywordsCloud) 
+        } // end if if (!searchData.allkeywordsCloud)
 
         $scope.$watch('selectedItem', function (newValue, oldValue, scope) {
             if (newValue && newValue != "") {
@@ -200,7 +200,7 @@ wkhomeControllers.controller('keywordsCloud', ['$routeParams', '$scope', 'global
                 $scope.data = searchData.allkeywordsCloud;
             }
         });
-        
+
         //Function that displays the buttons to export the report
         $scope.exportReport = function (id) {
             $scope.keyw = id;
