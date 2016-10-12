@@ -645,4 +645,15 @@ public class QueriesServiceImpl implements QueriesService {
 
     }
 
+    @Override
+    public String getAuthorPublicationsQueryFromGenericProvider(String... varargs) {
+        return PREFIXES
+                + "SELECT DISTINCT  ?pubproperty ?publicationResource ?title "
+                + "WHERE {"
+                + "graph <" + varargs[0] + ">"
+                + " {     <" + varargs[1] + "> foaf:publications ?publicationResource."
+                + " ?publicationResource <" + varargs[2] + ">  ?title"
+                + "}} ";
+    }
+
 }

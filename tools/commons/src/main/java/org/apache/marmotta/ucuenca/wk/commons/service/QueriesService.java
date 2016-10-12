@@ -219,4 +219,5 @@ public interface QueriesService {
      */
     String getEndPointUriByName(String nameEndpint);
 
+    String getAuthorPublicationsQueryFromGenericProvider(String... args);
 }

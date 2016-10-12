@@ -121,19 +121,19 @@ public class AcademicsKnowledgeProviderServiceImpl implements AcademicsKnowledge
                 try {
                     nameToFind = stripAccents(nick == null ? priorityFindQueryBuilding(firstName, lastName) : nick.toLowerCase().replace(" ", "%20"));
                     proceced++;
-                    String URL_TO_FIND_AK1 = "https://api.projectoxford.ai/academic/v1.0/evaluate?expr=And(Composite(AA.AuN==%27" + nameToFind + "%27),Composite(AA.AfN==%27" + nameOfSource.replace(" ", "%20") + "%27))&attributes=Id,Ti,Y,D,CC,ECC,AA.AuN,AA.AuId,AA.AfN,AA.AfId,F.FN,F.FId,J.JN,J.JId,C.CN,C.CId,RId,W,E,D&E=DN,D,S,S.Ty,S.U,VFN,VSN,V,I,FP,LP,DOI&subscription-key=" + keysubscriptions + "&count=100";
-                    String URL_TO_FIND_AK2 = "https://api.projectoxford.ai/academic/v1.0/evaluate?expr=Composite(AA.AuN==%27" + nameToFind + "%27)&attributes=Id,Ti,Y,D,CC,ECC,AA.AuN,AA.AuId,AA.AfN,AA.AfId,F.FN,F.FId,J.JN,J.JId,C.CN,C.CId,RId,W,E,D&E=DN,D,S,S.Ty,S.U,VFN,VSN,V,I,FP,LP,DOI&subscription-key=" + keysubscriptions + "&count=100";
+                    String URL_TO_FIND_AK1 = "https://api.projectoxford.ai/academic/v1.0/evaluate?expr=And(Composite(AA.AuN==%27" + nameToFind + "%27),Composite(AA.AfN==%27" + nameOfSource.replace(" ", "%20") + "%27))&attributes=Id,Ti,Y,D,CC,ECC,AA.AuN,AA.AuId,AA.AfN,AA.AfId,F.FN,F.FId,J.JN,J.JId,C.CN,C.CId,RId,W,E,D&E=DN,D,S,S.Ty,S.U,VFN,VSN,V,I,FP,LP,DOI&subscription-key=" + keysubscriptions + "&count=100&sort=2";
+                    String URL_TO_FIND_AK2 = "https://api.projectoxford.ai/academic/v1.0/evaluate?expr=Composite(AA.AuN==%27" + nameToFind + "%27)&attributes=Id,Ti,Y,D,CC,ECC,AA.AuN,AA.AuId,AA.AfN,AA.AfId,F.FN,F.FId,J.JN,J.JId,C.CN,C.CId,RId,W,E,D&E=DN,D,S,S.Ty,S.U,VFN,VSN,V,I,FP,LP,DOI&subscription-key=" + keysubscriptions + "&count=100&sort=2";
                     boolean dataretrievee = false;
 
                     String nameEndpointofPublications = ldClient.getEndpoint(URL_TO_FIND_AK1).getName();
                     String providerGraph = constantService.getProviderNsGraph() + "/" + nameEndpointofPublications.replace(" ", "");
 
                     //Ask if already search query is in triple Store .
-                    if (!sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(providerGraph, URL_TO_FIND_AK1))
+                    if (!sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(providerGraph, URL_TO_FIND_AK2))
                             && !sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(providerGraph, URL_TO_FIND_AK2))) {
 
                         try {
-                            response = ldClient.retrieveResource(URL_TO_FIND_AK1);
+                            response = ldClient.retrieveResource(URL_TO_FIND_AK2);
                             if (!response.getData().isEmpty()) {
                                 //load retrieve triples in Sesame repository to make some searchs.
                                 conUri = ModelCommons.asRepository(response.getData()).getConnection();
@@ -142,12 +142,12 @@ public class AcademicsKnowledgeProviderServiceImpl implements AcademicsKnowledge
                             }
                         } catch (DataRetrievalException e) {
 
-                            log.error("Data Retrieval emply to find: " + URL_TO_FIND_AK1 + " " + e.getMessage());
+                            log.error("Data Retrieval emply to find: " + URL_TO_FIND_AK2 + " " + e.getMessage());
                             dataretrievee = false;
 
                         } finally {
                             //Save the search query with success result in triple store
-                            authorSeachQuery = URL_TO_FIND_AK1;
+                            authorSeachQuery = URL_TO_FIND_AK2;
                             //Wait four seconds to do send other query
                             try {
                                 Thread.sleep(4000);
@@ -196,15 +196,15 @@ public class AcademicsKnowledgeProviderServiceImpl implements AcademicsKnowledge
                         // Save triples if data retrieval is not null.
                         if (dataretrievee) {
 
-                            boolean existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(providerGraph, authorSeachQuery));
+                            boolean existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(providerGraph, authorResource));
 
-                            String InsertQueryOneOf = buildInsertQuery(providerGraph, authorSeachQuery, OWL.ONE_OF, authorResource);
-                            updatePub(InsertQueryOneOf);
+//                            String InsertQueryOneOf = buildInsertQuery(providerGraph, authorSeachQuery, OWL.ONE_OF, authorResource);
+//                            updatePub(InsertQueryOneOf);
 
-                            if (existNativeAuthor) {
-                                String sameAsInsertQuery = buildInsertQuery(providerGraph, authorResource, "http://www.w3.org/2002/07/owl#sameAs", authorSeachQuery);
+//                            if (existNativeAuthor) {
+                                String sameAsInsertQuery = buildInsertQuery(providerGraph, authorResource, OWL.SAME_AS, authorSeachQuery);
                                 updatePub(sameAsInsertQuery);
-                            }
+//                            }
 
                             if (!existNativeAuthor) {
                                 //SPARQL obtain all publications of author

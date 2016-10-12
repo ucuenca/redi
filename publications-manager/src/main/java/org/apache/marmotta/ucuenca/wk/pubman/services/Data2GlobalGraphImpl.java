@@ -196,7 +196,10 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
                         if (!ask) {//Si no se encuentra el autor con esa publicacion, busca la publicacion actual del autor en el grafo central
                             List<Map<String, Value>> resultPublicationsAuthor = sparqlService.query(QueryLanguage.SPARQL, queriesService.getAuthorPublicationsQuery(wkhuskaGraph, newUriAuthorCentral, "http://purl.org/dc/terms/title", getQuerySearchTextAuthor(publicationTitle)));
                             List<Map<String, Value>> auxResultPublicationsAuthorOfProvider = sparqlService.query(QueryLanguage.SPARQL, queriesService.getAuthorPublicationsQueryFromProvider(providerGraph, authorResource, prefixTitleSource, getQuerySearchTextAuthor(publicationTitle)));
-                            List<Map<String, Value>> resultPublicationsAuthorOfProvider = auxResultPublicationsAuthorOfProvider.isEmpty() ? sparqlService.query(QueryLanguage.SPARQL, queriesService.getAuthorPublicationsQueryFromProvider(providerGraph, authorResource, prefixTitleTarget, getQuerySearchTextAuthor(publicationTitle))) : auxResultPublicationsAuthorOfProvider;
+                            List<Map<String, Value>> resultPublicationsAuthorOfGenericProvider = sparqlService.query(QueryLanguage.SPARQL, queriesService.getAuthorPublicationsQueryFromGenericProvider(providerGraph, authorResource, prefixTitleTarget, getQuerySearchTextAuthor(publicationTitle)));
+                            List<Map<String, Value>> resultPublicationsAuthorOfTargetProvider = sparqlService.query(QueryLanguage.SPARQL, queriesService.getAuthorPublicationsQueryFromProvider(providerGraph, authorResource, prefixTitleTarget, getQuerySearchTextAuthor(publicationTitle)));
+                            List<Map<String, Value>> resultPublicationsAuthorOfProvider = auxResultPublicationsAuthorOfProvider.isEmpty() ? resultPublicationsAuthorOfTargetProvider.isEmpty() ? resultPublicationsAuthorOfGenericProvider : resultPublicationsAuthorOfTargetProvider : auxResultPublicationsAuthorOfProvider;
+
                             boolean flagPublicationAlreadyExist = false;
                             String authorResourceBuilding = searchAuthorOfpublication(resultPublicationsAuthorOfProvider, authorResource, newUriAuthorCentral);
                             String authorResourceCentral = authorResourceBuilding == null ? newUriAuthorCentral : authorResourceBuilding;
@@ -599,10 +602,7 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
 
         } else if (providerGraph.toUpperCase().contains("SCOPUS")) {
             return "http://scopus/";
-        } else 
-        
-        
-        {
+        } else {
             return "No definida";
         }
 
