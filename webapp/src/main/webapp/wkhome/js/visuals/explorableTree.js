@@ -486,7 +486,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                         if (entity[key]) {
                             if (model[key].containerType === 'a') {
                                 var values = entity[key].length ?
-                                        _.pluck(entity[key], '@id') : [entity[key]["@id"]];
+                                        _.pluck(entity[key], '@id') : entity[key]["@id"] === undefined ? [entity[key]] :[entity[key]["@id"]];
                                 var div = $('<div>');
                                 var label = $('<span class="label label-primary">').text(model[key].label);
                                 div.append(label);
