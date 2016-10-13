@@ -31,20 +31,20 @@ Mario patricio:PadillaMartinez
 n r:Maddela
 Juan alejandro:Neiramosquera
 Gonzalo:Olmedo
-Marcoantonio:Pilatasigpanchi
+MarcoAntonio:PilatasigPanchi
 Flavio minos:Pineda lopez
 Julio Cesar:Pino
 Filipe Mota:Pinto
 e r wilmer:pozo
 Freddy:Proanoperez
 Geovanny:Raura
-David:Rivas
+David Raimundo:RivasLalaleo
 Priscila:Rodriguez
 O Darwin:Rueda
 Monica:Santillan
 Srinivasulu:Mandala
 Luis:Teran
-Alfonso:tierra
+A R:tierra
 Theofilos:Toulkeridis
 Roberto d:Trivino
 Urquizo:vaca
@@ -54,28 +54,25 @@ Cesar:Villacis
 Sungey:SanchezLlaguno
 euro rodrigo:mena mena
 Luis:Cumbal
-Roberto:Aguiar
-Darwin:Aguilar
+Roberto rodrigo:Aguiar Falconi
+Darwin Leonidas:Aguilar Salazar
 Vladimir:Aguirre
 Sergio:Albiol
-Jorge:Alvarez
-Andres:Arcentales
-Diego:Arcos
-Oscar:Arteaga
+Jorge Damian:Alvarez Veintimilla
+Andres Ricardo:Arcentales Viteri
+Diego gustavo:Arcos Aviles
 Oscar:Arteaga
 Ligia:Ayala
 Aida:Bedon
 Roberto:Beltran
 Luis:Cadena
-Santiago:Calero
-Santiago:Calero
-David:Carrera
-Magda:Cejas
+M Santiago:Calero
+David Vinicio:CarreraVillacres
 Magda:Cejas
 Karina:Cela
-Enrique:Chavez
+Enrique:Chavez cevallos
 Carlos:Chiriboga
-Ana:Diaz
+Diaz:Cevallos
 Jessica:Duchicela
 Edison:Espinosa
 Rodrigo:Fonseca
@@ -87,20 +84,18 @@ Paul:Medina
 Dario:Mendoza
 Jaffer:Mohiddin
 Erika:Murgueitio
-Jorge:Ojeda
-Fernando:Olmedo
-Oswaldo:Ortiz
-Juan:Ortiz
-Juan:Ortiz
-Humberto:Parra
-Patricio:Ponce
+Jorge:Ojeda Escobar
+Gonzalo:Olmedo Cifuentes
+Oswaldo:Ortiz Aldean
+Juan:Ortiz Tirado
+Humberto Anibal:Parra Cardenas
 Thelvia:Ramos
-Ruth:Rios
-Roman:Rodriguez
-Edgardo:Romero
-Jorge:Sanchez
-Monica:Solis
-Hector:Teran
-Marbel:Torres
+Ruth:Rios bayas
+Roman:RodriguezMaecker
+Edgardo:Romero Frometa
+Jorge S:Sanchez
+Monica del carmen:Solis
+Hector Cochise:Teran Herrera
+Marbel:Torres Arias
 Luis E:Trujillo
 Eduardo:Vyhmeister
