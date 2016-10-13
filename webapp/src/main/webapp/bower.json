@@ -43,5 +43,9 @@
     "angular-translate": "2.9.0",
     "autotrack": "^1.0.3",
     "angular-material": "^1.1.1"
+  },
+  "resolutions": {
+    "angular-animate": "^1.4.8",
+    "angular": "^1.4.8"
   }
 }
