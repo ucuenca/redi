@@ -129,11 +129,11 @@ public class AcademicsKnowledgeProviderServiceImpl implements AcademicsKnowledge
                     String providerGraph = constantService.getProviderNsGraph() + "/" + nameEndpointofPublications.replace(" ", "");
 
                     //Ask if already search query is in triple Store .
-                    if (!sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(providerGraph, URL_TO_FIND_AK2))
+                    if (!sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(providerGraph, URL_TO_FIND_AK1))
                             && !sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(providerGraph, URL_TO_FIND_AK2))) {
 
                         try {
-                            response = ldClient.retrieveResource(URL_TO_FIND_AK2);
+                            response = ldClient.retrieveResource(URL_TO_FIND_AK1);
                             if (!response.getData().isEmpty()) {
                                 //load retrieve triples in Sesame repository to make some searchs.
                                 conUri = ModelCommons.asRepository(response.getData()).getConnection();
@@ -142,12 +142,12 @@ public class AcademicsKnowledgeProviderServiceImpl implements AcademicsKnowledge
                             }
                         } catch (DataRetrievalException e) {
 
-                            log.error("Data Retrieval emply to find: " + URL_TO_FIND_AK2 + " " + e.getMessage());
+                            log.error("Data Retrieval emply to find: " + URL_TO_FIND_AK1 + " " + e.getMessage());
                             dataretrievee = false;
 
                         } finally {
                             //Save the search query with success result in triple store
-                            authorSeachQuery = URL_TO_FIND_AK2;
+                            authorSeachQuery = URL_TO_FIND_AK1;
                             //Wait four seconds to do send other query
                             try {
                                 Thread.sleep(4000);

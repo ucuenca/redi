@@ -102,6 +102,5 @@ Jorge:Sanchez
 Monica:Solis
 Hector:Teran
 Marbel:Torres
-Luis:Trujillo
-Luis Enrique:Trujillo
+Luis E:Trujillo
 Eduardo:Vyhmeister

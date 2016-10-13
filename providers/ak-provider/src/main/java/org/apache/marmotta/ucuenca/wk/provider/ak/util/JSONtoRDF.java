@@ -115,7 +115,7 @@ public class JSONtoRDF {
             case "entity::property:creator":
                 aux = json.get("authors").getAsJsonArray();
                 model.add(factory.createStatement(factory.createURI(resource),
-                        factory.createURI(schema.get(key)), factory.createLiteral(aux.get(0).getAsJsonObject().get("name").getAsString())));
+                        factory.createURI(schema.get(key)), factory.createURI(academicsUrl + aux.get(0).getAsJsonObject().get("id").getAsString())));
 
                 break;
             case "entity::property:contributor":
@@ -126,7 +126,7 @@ public class JSONtoRDF {
                 for (int iterator = 1; iterator < aux.size(); iterator++) {
                     JsonElement element = aux.get(iterator);
                     model.add(factory.createStatement(factory.createURI(resource),
-                            factory.createURI(schema.get(key)), factory.createLiteral(element.getAsJsonObject().get("name").getAsString())));
+                            factory.createURI(schema.get(key)), factory.createURI(academicsUrl + element.getAsJsonObject().get("id").getAsString())));
 
                 }
                 break;
