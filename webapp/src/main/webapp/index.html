@@ -7,6 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
         <title>Ecuadorian Semantic Repository</title>
         <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../bower_components/angular-material/angular-material.min.css">
 
         <script src="../bower_components/jquery/dist/jquery.js"></script>
         <script src="../bower_components/jquery/dist/jquery.min.js"></script>
@@ -18,7 +19,7 @@
         <script src="../bower_components/jsonld/js/jsonld.js"></script>
         <!--<script src="../bower_components/angular-jsonld/dist/angular-jsonld.js"></script>-->
         <script src="../bower_components/restangular/dist/restangular.min.js"></script>
-        <script src="../bower_components/angular-animate/angular-animate.js"></script>
+        <script src="../bower_components/angular-animate/angular-animate.min.js"></script>
         <script src="../bower_components/angular-route/angular-route.js"></script>
         <script src="../bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
         <script src="../bower_components/angular-resource/angular-resource.js"></script>
@@ -30,6 +31,8 @@
         <script src="../bower_components/d3-tip/index.js"></script>
         <script src="../custom_libs/d3-context-menu/js/d3-context-menu.js"></script>
         <script src="../custom_libs/angular-sanitize/angular-sanitize.js"></script>
+        <script src="../bower_components/angular-aria/angular-aria.min.js"></script>
+        <script src="../bower_components/angular-material/angular-material.min.js"></script>
 
         <!-- DESARROLLO/DEBUG -->
         <!--<link rel="stylesheet" href="wkhome/css/animations.css">
@@ -73,6 +76,7 @@
         <script src="wkhome/js/controllers/loadData.js"></script>
         <script src="wkhome/js/controllers/listSources.js"></script>
         <script src="wkhome/js/controllers/analytics.js"></script>
+        <script src="wkhome/js/controllers/dataCube.js"></script>
 
         <script src="wkhome/js/services.js"></script>
 
@@ -138,6 +142,7 @@
         <script src="wkhome/jsmin/controllers/loadData.min.js"></script>
         <script src="wkhome/jsmin/controllers/listSources.min.js"></script>
         <script src="wkhome/jsmin/controllers/analytics.min.js"></script>
+        <script src="wkhome/jsmin/controllers/dataCube.min.js"></script>
 
         <script src="wkhome/jsmin/services.min.js"></script>
 
@@ -158,7 +163,7 @@
         <script src="wkhome/jsmin/visuals/clusterKeywordsCloud.min.js"></script>
         <script src="wkhome/jsmin/visuals/clustersCloud.min.js"></script>
         <script src="wkhome/jsmin/visuals/genericCloud.min.js"></script>
-        <script src="wkhome/jsmin/visuals/map.min.js"></script>-
+        <script src="wkhome/jsmin/visuals/map.min.js"></script>
 
         <!--Fin Importacion de Scripts-->
 
@@ -190,7 +195,7 @@
         ga('send', 'pageview');
         </script>
         <script async src='https://www.google-analytics.com/analytics.js'></script>
-        <script async src='node_modules/autotrack/autotrack.js'></script>
+        <script async src='bower_components/autotrack/autotrack.js'></script>
     </head>
     <body ng-controller="analytics">
         <div  ng-view class="container-fluid">
@@ -210,10 +215,10 @@
                             <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/">{{'Home'| translate}}</a></li>
                             <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/tags/cloud">{{'Keywords Cloud'| translate}}</a></li>
                             <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/cloud/group-by">{{'Group By Keyword'| translate}}</a></li>
-                            <li><a class="opcion"  ng-click="refreshLang()" href="#/{{lang}}/geo-views/sources">{{'Map View'| translate}}</a></li>
+                            <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/geo-views/sources">{{'Map View'| translate}}</a></li>
                             <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/cloud/clusters">{{'Clustering by Research Area'| translate}}</a></li>
-                            <!--<li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/data/datacube">{{'data_cube' | translate}}</a></li>-->
-                        <!--<li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/cloud/keywords">{{'Clusters by Keyword'| translate}}</a></li>-->
+                            <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/data/datacube">{{'data_cube' | translate}}</a></li>
+                            <!--<li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/cloud/keywords">{{'Clusters by Keyword'| translate}}</a></li>-->
                             <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/data/statistics">{{'Statistics'| translate}}</a></li>
                         </ul>
                     </li>

@@ -1,31 +1,38 @@
-  
+
 <div id="scrollToTop">
-</div> 
+</div>
 <hr>
-<hr>
+
 <div ng-controller="exportController">
     <div ng-controller="keywordsCloud" >
-        <div class="col-md-12">
-
-
+        <div class="col-md-12" >
             <div class="row subject-cloud">
-
                 <div class="col-md-12" >
-                    <div class="col-md-3" style="padding-top: 1px;">
-                        <h3 class="text-success" style="text-align: left;">{{'Select Research Area'| translate}}:</h3>
-                        <select class="form-control" name="board" id="board" ng-model="selectedItem"  ng-options="key.tag as key.tag for key  in relatedthemes">
-                            <option value="">Select Theme</option>
-                        </select>
+                    <div class="col-md-4" ng-cloak="">
+                      <md-content>
+                        <form ng-submit="$event.preventDefault()">
+                          <md-autocomplete md-no-cache="true" md-selected-item="selectedItem"
+                          md-search-text="searchText" md-selected-item-change="selectedItemChange(item)" md-items="item in querySearch(searchText)"
+                          md-item-text="item.tag" md-min-length="1" placeholder="{{'Keywords' | translate}}">
+                            <md-item-template>
+                              <span md-highlight-text="searchText" md-highlight-flags="i">{{item.tag}}</span>
+                            </md-item-template>
+                            <md-not-found>
+                              {{'No match'  | translate}} "{{searchText}}".
+                            </md-not-found>
+                          </md-autocomplete>
+                        </form>
+                      </md-content>
                     </div>
-                    <cloud-tag data="data" style="display: block; height: 80%;padding-top: 0px;" ctrl-fn="ctrlFn(value)" clickon-Relatedauthor="clickonRelatedauthor(value)" ng-model="value"></cloud-tag> 
+
+                    <cloud-tag data="data" style="display: block; height: 80%;padding-top: 0px;" ctrl-fn="ctrlFn(value)" clickon-Relatedauthor="clickonRelatedauthor(value)"
+                    ng-model="value"></cloud-tag>
                     <div id="scrollToHere">
-                    </div> 
+                    </div>
                     <hr>
                     <hr>
                     <div id="blackspace">
                     </div>
-
-
                 </div>
             </div>
         </div>
@@ -54,10 +61,10 @@
                 <div class="col-md-8" style="padding-top: 30px; font-size: 20pt; color: #003769; padding-left: 30%; font-style: italic">PUBLICACIONES</div>
             </div>
             <!--      <div class="entityInfo">
-                      <span style="font-weigth:bold"> </span> 
+                      <span style="font-weigth:bold"> </span>
                       <div id="title"></div>
                       <a href="" target="_blank"></a>
-                  </div>         
+                  </div>
             -->
 
 
@@ -77,7 +84,7 @@
                         <div class="body">
                             Abstract: {{todo.abstract}}
                             <br>
-                            Autores:  
+                            Autores:
                             <ul>
 
                                 <li ng-repeat="author in todo.author">
@@ -95,19 +102,17 @@
                 </li>
             </ul></div>
             <center>
-                <pagination 
-                    ng-model="currentPage"
-                    total-items="todos.length"
-                    max-size="maxSize"  
-                    boundary-links="true">
-                </pagination>
+              <ul uib-pagination boundary-links="true"
+              total-items="todos.length" ng-model="currentPage"
+              class="pagination-sm" max-size="maxSize" previous-text="&lsaquo;"
+              next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
             </center>
         </div>
 
         <div class='col-md-3'>
 
             <div style="padding-top: 30px; font-size: 20pt; color: #003769; padding-left: 1%; font-style: italic">AUTORES</div>
-            <div class="tree-node-author-info" style="height:100vh">   
+            <div class="tree-node-author-info" style="height:100vh">
                 <div class="authorsByPublications">
                     <!-- <span style="font-weigth:bold">Title: </span> -->
                     <div id="title" style="font-size:50pt"></div>

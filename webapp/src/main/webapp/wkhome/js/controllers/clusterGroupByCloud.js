@@ -114,7 +114,20 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$timeout', '$scope', 'glob
                 searchData.clustersAuthors = [];
 
                 var queryClusters = globalData.PREFIX +
-                        'CONSTRUCT { ?author foaf:name ?name. ?author uc:hasCluster ?clusterId. ?author rdfs:label ?label. ?author bibo:Quote ?keywords } WHERE{ { SELECT DISTINCT ?author ?name ?clusterId ?label (group_concat(DISTINCT ?keyword; separator = ", ") as ?keywords) WHERE{ ?clusterId uc:hasPerson ?author . ?author foaf:name ?name . ?author foaf:publications ?publication . ?publication bibo:Quote ?keyword . { SELECT ?clusterId ?label WHERE { graph <http://ucuenca.edu.ec/wkhuska/clusters> { ?clusterId rdfs:label ?label . ?clusterId uc:hasPerson ?person . } } GROUP BY ?clusterId ?label HAVING(count(?person) > 20) } } GROUP BY ?author ?name ?clusterId ?label } }';
+                        'CONSTRUCT {' +
+                          '?author foaf:name ?name. ' +
+                          '?author uc:hasCluster ?clusterId. ' +
+                          '?author rdfs:label ?label. ' +
+                          '?author bibo:Quote ?keywords ' +
+                        '} WHERE{ ' +
+                          '{ ' +
+                            'SELECT DISTINCT ?author ?name ?clusterId ?label (group_concat(DISTINCT ?keyword; separator = ", ") as ?keywords) ' +
+                            'WHERE{ ?clusterId uc:hasPerson ?author . ' +
+                              '?author foaf:name ?name . ?author foaf:publications ?publication . ?publication bibo:Quote ?keyword . ' +
+                              '{ SELECT ?clusterId ?label WHERE { graph <' + globalData.clustersGraph + '> { ' +
+                                  '?clusterId rdfs:label ?label . ?clusterId uc:hasPerson ?person . } } ' +
+                                  'GROUP BY ?clusterId ?label HAVING(count(?person) > 20) } } '+
+                            'GROUP BY ?author ?name ?clusterId ?label } }';
 
                 // Change of query to solve problem about timeout
                 /**var queryClusters = globalData.PREFIX +
