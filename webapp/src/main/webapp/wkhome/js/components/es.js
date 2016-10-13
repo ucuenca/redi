@@ -1,4 +1,4 @@
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -30,6 +30,7 @@ myApp.labels_es = {
 "Group By Keyword": "Agrupar por institución",
 "Map View": "Mapa",
 "Clustering by Research Area": "Agrupar por área de conocimiento",
+"data_cube": "Cubo de Datos RDF",
 "Clusters by Keyword": "Agrupar por keyword",
 "Statistics": "Estadísticas",
 
@@ -58,6 +59,8 @@ myApp.labels_es = {
 "Grouping Publications": "Agrupar autores por área e institución",
 "Group by":"Agrupar por",
 "Select Research Area":"Área de conocimiento",
+"Keywords":"¿Conoces las palabras claves?",
+"No match":"No existe la palabra clave",
 //"All" - from cloud cluster view
 "Author":"Autor",
 "Source":"Institución",
