@@ -8,6 +8,7 @@ package org.apache.marmotta.ucuenca.wk.pubman.services;
 import com.google.gson.JsonArray;
 import java.util.List;
 import javax.inject.Inject;
+import org.apache.marmotta.ucuenca.wk.pubman.api.AcademicsKnowledgeProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.DBLPProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.GoogleScholarProviderService;
@@ -33,9 +34,11 @@ public class CommonServiceImpl implements CommonService {
 
     @Inject
     GoogleScholarProviderService googleService;
-    
+
     @Inject
     ScopusProviderServiceImpl providerServiceScopus;
+    @Inject
+    AcademicsKnowledgeProviderServiceImpl academicsKnowledgeProviderService;
 
     @Inject
     Data2GlobalGraphImpl data2GlobalGraphService;
@@ -46,20 +49,18 @@ public class CommonServiceImpl implements CommonService {
 //
     @Inject
     DBLPProviderService dblpProviderServiceInt;
-    
+
     @Inject
     ReportsService reportService;
-    
+
     @Inject
     ReportsImpl reportsImpl;
-    
-    
+
     @Override
     public String GetDataFromProvidersService() {
 
         Thread ScopusThread = new Thread((Runnable) providerServiceScopus);
         ScopusThread.start();
-        
 
         //         return googleService.runPublicationsProviderTaskImpl("d");
 //        Thread googleProvider = new Thread(googleProviderService);
@@ -76,19 +77,25 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
+    public String GetDataFromProvidersServiceAcademicsKnowledge() {
+        Thread AKProvider = new Thread(academicsKnowledgeProviderService);
+        AKProvider.start();
+        return "Data Provider AK are extracted in background.   Please review main.log file for details";
+    }
+
+    @Override
     public String GetDataFromProvidersServiceMicrosoftAcademics() {
         Thread MicrosofProvider = new Thread(microsoftAcadProviderService);
         MicrosofProvider.start();
         return "Data Provider MICROSOFT ACEDEMICS are extracted in background.   Please review main.log file for details";
     }
-    
+
     @Override
     public String GetDataFromProvidersServiceGoogleScholar() {
         Thread GoogleProvider = new Thread(googleProviderService);
         GoogleProvider.start();
         return "Data Provider Google Scholar are extracted in background.   Please review main.log file for details";
     }
-    
 
     @Override
     public String Data2GlobalGraph() {

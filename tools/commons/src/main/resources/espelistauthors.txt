@@ -1,116 +1,101 @@
-Luis Cumbal
-Brajesh Kumar
-Mauricio Gonzalez
-Carlos Arroyo
-Vitor Lopes
-Paul Medina
-Vladimir Aguirre
-Jorge Ojeda
-Angie Fernandez
-Magda Cejas
-Nancy Velasco
-Johanna Tobar
-Andres Erazo
-Enrique Chavez
-Edgardo Romero
-Aracely Obando
-Mario Vaca
-Aida Bedon
-Oswaldo Ortiz
-Monica Santillan
-Santiago Calero
-Ruth Rios
-Roberto Aguiar
-Humberto Parra
-Oliva Atiaga
-David Carrera
-Rueda Darwin
-Alexis Debut
-Luis Trujillo
-Maddela N
-Marcelo Grijalva
-Jaffer Mohiddin
-Jessica Duchicela
-Andres Izquierdo
-Freddy Proano
-Patricio Ponce
-Juan Ortiz
-Patricia Falconi
-Emilio Basantes
-Jaime Villacis
-Erika Murgueitio
-Ligia Ayala
-Marbel Torres
-Thelvia Ramos
-Monica Jadan
-Luis Teran
-Walter Fuertes
-Filpe Mota Pinto
-Fernando Galarraga
-Cesar Villacis
-Rodrigo Fonseca
-Giovanni Raura
-Cecilia Hinojosa
-Karina Cela
-Priscila Rodriguez
-Edison Espinosa
-Darwin Alulema
-Roman Lara
-Carrera Enrique
-Gonzalo Olmedo
-Morocho Derlin
-Eduardo Vyhmeister
-Luis Cadena
-Paola Leon
-Jorge Alvarez
-Flavio Pineda
-Darwin Aguilar
-Diego Arcos
-Yolanda Angulo
-Andres Arcentales
-David Rivas
-Victor Andaluz
-Marco Pilatasig
-Dario Mendoza
-Eddie Galarza
-Santiago Urquizo
-Ivan Escobar
-Oscar Arteaga
-Fausto Acuna
-Theofilos Toulkeridis
-Roman Rodriguez
-Edwin Cevallos
-Sergio Albiol
-Luis Carrion
-Belgica Yaguache
-Cristhian Roman-Herrera
-Mario Padilla Martinez 
-Daniel Trivino
-Ana Diaz
-Lorena Sandoval
-Monica Solis
-Jorge Sanchez
-Mandala Srinivasulu
-Bangeppagari
-Pablo Landazuri
-Elizabeth Urbano
-Carlos Chiriboga
-Luis Enrique Trujillo
-Klever Bravo
-Luis Teran
-Juan Neira
-Darwin Rueda
-Magda Cejas
-Roberto Aguiar
-Theofilos Toulkeridis
-Renan Perez
-Oscar Arteaga
-Hector Teran
-Julio Pino
-Roberto Beltran
-Santiago Calero
-Juan Ortiz
-Modesto Correoso
-Farid Mantilla
-Evelio Granizo
-Fernando Olmedo
+Johanna:Tobar
+Fausto:Acuna
+Darwin:Alulema
+Victor h:Andaluz
+Yolanda:Angulo
+Carlos r:Arroyo
+Manjunatha:Bangeppagari
+Klever antonio:Bravo
+Luis miguel:Carrion matamoros
+Modesto:Correoso r
+O Darwin:Rueda
+Alexis:Debut
+Derlin:Morocho
+Enrique:V Carrera
+Andres:Erazo
+german:erazo
+IvonPatricia:EscobarAachaguano
+Angie:Fernandez l
+Belgica:yaguachecamacho
+Walter:Fuertes
+Fernando:Galarraga
+Eddie:Galarza zambrano
+Evelio:Granizo
+Cecilia milena:Hinojosa raza
+Monica:Jadan
+Brajesh:Kumar
+Pablo:Landazuri
+Roman alcides:Lara cueva
+Vitor v:Lopes
+Mario patricio:PadillaMartinez
+n r:Maddela
+Juan alejandro:Neiramosquera
+Gonzalo:Olmedo
+MarcoAntonio:PilatasigPanchi
+Flavio minos:Pineda lopez
+Julio Cesar:Pino
+Filipe Mota:Pinto
+e r wilmer:pozo
+Freddy:Proanoperez
+Geovanny:Raura
+David Raimundo:RivasLalaleo
+Priscila:Rodriguez
+O Darwin:Rueda
+Monica:Santillan
+Srinivasulu:Mandala
+Luis:Teran
+A R:tierra
+Theofilos:Toulkeridis
+Roberto d:Trivino
+Urquizo:vaca
+nancy del rocio :Velasco erazo
+Jaime:Villacis
+Cesar:Villacis
+Sungey:SanchezLlaguno
+euro rodrigo:mena mena
+Luis:Cumbal
+Roberto rodrigo:Aguiar Falconi
+Darwin Leonidas:Aguilar Salazar
+Vladimir:Aguirre
+Sergio:Albiol
+Jorge Damian:Alvarez Veintimilla
+Andres Ricardo:Arcentales Viteri
+Diego gustavo:Arcos Aviles
+Oscar:Arteaga
+Ligia:Ayala
+Aida:Bedon
+Roberto:Beltran
+Luis:Cadena
+M Santiago:Calero
+David Vinicio:CarreraVillacres
+Magda:Cejas
+Karina:Cela
+Enrique:Chavez cevallos
+Carlos:Chiriboga
+Diaz:Cevallos
+Jessica:Duchicela
+Edison:Espinosa
+Rodrigo:Fonseca
+oswaldo Mauricio:Gonzalez
+Marcelo:Grijalva
+Andres:Izquierdo
+Paola:Leon
+Paul:Medina
+Dario:Mendoza
+Jaffer:Mohiddin
+Erika:Murgueitio
+Jorge:Ojeda Escobar
+Gonzalo:Olmedo Cifuentes
+Oswaldo:Ortiz Aldean
+Juan:Ortiz Tirado
+Humberto Anibal:Parra Cardenas
+Thelvia:Ramos
+Ruth:Rios bayas
+Roman:RodriguezMaecker
+Edgardo:Romero Frometa
+Jorge S:Sanchez
+Monica del carmen:Solis
+Hector Cochise:Teran Herrera
+Marbel:Torres Arias
+Luis E:Trujillo
+Eduardo:Vyhmeister

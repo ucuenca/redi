@@ -12,8 +12,8 @@ import java.util.List;
  * @author Satellite
  */
 public interface DistanceService {
- 
-     /**
+
+    /**
      * Full Name formats FROM DBLP: Avila=Gonzales:Carlos_Andres FROM SCOPUS:
      * Avila Gonzales:Carlos Andres FROM LOCAL: Avila Gonzales:Carlos Andres
      *
@@ -22,9 +22,10 @@ public interface DistanceService {
      * @return
      */
     boolean syntacticComparisonNames(String... args);
-    
-    
+
     boolean semanticComparison(List<String> listA, List<String> listB);
-    
+
     boolean semanticComparison(String word, List<String> listB);
+
+    double cosineSimilarityAndLevenshteinDistance(String param1, String param2);
 }

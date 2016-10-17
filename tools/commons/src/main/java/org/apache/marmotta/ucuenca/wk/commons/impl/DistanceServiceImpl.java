@@ -16,6 +16,12 @@ import java.util.logging.Logger;
 import javax.inject.Inject;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.DistanceService;
+import org.simmetrics.metrics.CosineSimilarity;
+import org.simmetrics.metrics.Levenshtein;
+import org.simmetrics.simplifiers.Simplifiers;
+import org.simmetrics.tokenizers.Tokenizers;
+import org.simmetrics.StringMetric;
+import static org.simmetrics.StringMetricBuilder.with;
 
 /**
  *
@@ -33,7 +39,7 @@ public class DistanceServiceImpl implements DistanceService {
         try {
             SemanticDistance dist = new SemanticDistance();
             double value = dist.semanticKeywordsDistance(listA, listB);
-            
+
             double semthreshold = Double.parseDouble(commonService.readPropertyFromFile("parameters.properties", "semanticDistanceListAListB"));
             if (value < semthreshold) {
                 return true;
@@ -83,6 +89,30 @@ public class DistanceServiceImpl implements DistanceService {
             Logger.getLogger(DistanceServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
+    }
+
+    public double cosineSimilarityAndLevenshteinDistance(String param1, String param2) {
+
+        String a = param1;
+        String b = param2;
+
+        StringMetric metric
+                = with(new CosineSimilarity<String>())
+                .simplify(Simplifiers.toLowerCase())
+                .simplify(Simplifiers.removeNonWord()).simplifierCache()
+                .tokenize(Tokenizers.qGram(3)).tokenizerCache().build();
+        float compare = metric.compare(a, b);
+
+        StringMetric metric2
+                = with(new Levenshtein())
+                .simplify(Simplifiers.removeDiacritics())
+                .simplify(Simplifiers.toLowerCase()).build();
+
+        float compare2 = metric2.compare(a, b);
+
+        float similarity = (float) ((compare + compare2) / 2.0);
+
+        return similarity;
     }
 
 }

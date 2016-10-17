@@ -19,7 +19,6 @@ public interface QueriesService {
 
     String getOffset(String offset);
 
-
     /**
      * return query to obtain all subject ( keywords ) of an author , using
      * dct:subject property
@@ -60,7 +59,6 @@ public interface QueriesService {
      */
     String getInsertDataUriQuery(String... args);
 
-
     /**
      *
      * @param graph
@@ -96,7 +94,6 @@ public interface QueriesService {
     String getPublicationsPropertiesQuery(String publicationResource);
 
     //String getMembersQuery();
-
     String getPublicationFromProviderQuery();
 
     String getPublicationForExternalAuthorFromProviderQuery(String property);
@@ -105,28 +102,22 @@ public interface QueriesService {
 
     //Microsoft Academics
 //    String getPublicationsMAQuery(String providerGraph);
-
-  //  String getPublicationFromMAProviderQuery();
-
-  //  String getPublicationMAPropertiesQuery();
-
+    //  String getPublicationFromMAProviderQuery();
+    //  String getPublicationMAPropertiesQuery();
     String getAllTitlesDataQuery(String graph);
-    
-   // String getAllTitlesDataQuery();
-    
+
+    // String getAllTitlesDataQuery();
     //String getMembersByTitleQuery();
-    
     String getObjectByPropertyQuery(String subject, String property);
-    
+
     String getObjectByPropertyQuery(String property);
-   
+
     String getAbstractAndTitleQuery(String resource);
-    
-    
+
     String getSubjectAndObjectByPropertyQuery(String property);
     //Google Scholar
-    
-   // String getAllCreatorsDataQuery();
+
+    // String getAllCreatorsDataQuery();
     //String getPublicationFromGSProviderQuery();
     String getAuthorPublicationsQuery(String... varargs);
 
@@ -135,9 +126,9 @@ public interface QueriesService {
     String getPublicationDetails(String publicationResource);
 
     String getPublicationsTitleQuery(String providerGraph, String prefix);
-    
+
     String getPublicationsTitleScopusQuery(String providerGraph, String prefix);
-    
+
     String getPublicationsCount(String graph);
 
     String getTotalAuthorWithPublications(String graph);
@@ -153,7 +144,7 @@ public interface QueriesService {
     String getFirstNameLastNameAuhor(String graph, String authorResource);
 
     String authorDetailsOfProvenance(String graph, String authorResource);
-    
+
     String authorGetProvenance(String graph, String authorResource);
 
     String getAuthorPublicationFilter(String graph, String fname, String lname);
@@ -161,22 +152,72 @@ public interface QueriesService {
     String getAskResourcePropertieQuery(String graph, String resource, String propertie);
 
     String getAskProcessAlreadyAuthorProvider(String providerGraph, String authorResource);
-    
+
     String getAuthorsKeywordsQuery(String resource);
-    
+
     /**
      * Get All Data sources from UTPL ENDPOINT
+     *
      * @param graph
-     * @return 
+     * @return
      */
     String getSourcesfromUniqueEndpoit(String graph);
-    
+
     /**
      * Get All documents from UTPL ENDPOINT
+     *
      * @param repository
-     * @return 
+     * @return
      */
     String getDocumentsAuthors(String repository, String graph);
-    
-   
+
+    /**
+     * @See Get all resources of an specific type
+     *
+     * @param type
+     * @return
+     */
+    String getResourceUriByType(String type);
+
+    /**
+     * @See Get all properties of a resource by type
+     * @param type
+     * @return
+     */
+    String getPropertiesOfResourceByType(String type);
+
+    /**
+     * Get all titles of publications give a type.
+     *
+     * @param graph
+     * @param type
+     * @return
+     */
+    String getPublicationsTitleByType(String graph, String type);
+
+    /**
+     * @See Get all properties of an author by uri.
+     * @param graph
+     * @param endpointsgraph
+     * @param resource
+     * @return
+     */
+    String getAuthorsDataQueryByUri(String graph, String endpointsgraph, String resource);
+
+    /**
+     * @See Get triples by filters, parameters of search in args[]
+     * @param args
+     * @return
+     */
+    String getTriplesByFilter(String... args);
+
+    /**
+     * @See Get an uri endpoint by name of endpoint.
+     *
+     * @param nameEndpint
+     * @return
+     */
+    String getEndPointUriByName(String nameEndpint);
+
+    String getAuthorPublicationsQueryFromGenericProvider(String... args);
 }
