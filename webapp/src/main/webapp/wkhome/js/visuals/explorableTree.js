@@ -379,7 +379,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                                     + ' OPTIONAL {?pub dct:isPartOf ?isPartOf. } '
                                     + ' OPTIONAL {?pub bibo:numPages ?numPages. } '
                                     + ' FILTER (!regex(?contributor, ":node")) '
-                                    + ' } } limit 100';
+                                    + ' } } ';
                             sparqlQuery.querySrv({query: queryPublications}, function (rdf) {
 
                                 jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {

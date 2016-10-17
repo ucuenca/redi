@@ -1,13 +1,5 @@
-lucia:lupercio
-lorena:siguenzaGuzman
-andres:tello
-Angel:Vazquez
 diego arturo:ponce vasquez
-otto:parra
-maria fernanda:Granda
-miguel:zunigaPrieto
-priscila:cedillo
-jorge j:maldonado
-veronica:mora
-piedad magali:mejia pesantez
-jorge l:bermeo
+victor:saquicela
+juan pablo:carvallo
+Pablo:Vanegas
+Mauricio:Espinoza
