@@ -132,7 +132,7 @@ wkhomeControllers.controller('exploreAuthor', ['$routeParams', '$scope', '$rootS
                         $('#searchResults').modal('show');
                     } else {
                         searchData.authorSearch["@graph"] = authorSearch;
-                        //$scope.data = searchData.authorSearch;         
+                        //$scope.data = searchData.authorSearch;
                         waitingDialog.hide();
                         //$scope.author = searchData.authorSearch["@graph"]["@id"];
                         searchAuthorInfo(searchData.authorSearch["@graph"][0]["@id"]);
