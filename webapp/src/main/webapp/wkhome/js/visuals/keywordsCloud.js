@@ -95,7 +95,7 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
                 return "translate(" + d.x + "," + d.y + ")";
             });
             return label.style("left", function (d) {
-                /*if(d.label == "Amino Acid") { 
+                /*if(d.label == "Amino Acid") {
                  d = d;
                  }*/      //POSITION OF LABEL
                 return (17 + (margin.left + d.x) - d.dx / 2) + "px";
@@ -104,7 +104,7 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
             });
         };
 
-        //main method to plot 
+        //main method to plot
         chart = function (selection) {
             return selection.each(function (rawData) {
                 var maxDomainValue, svg, svgEnter;
@@ -235,7 +235,7 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
                             var values = entity.length ? entity : [entity];
                             authorInfo.append('<h4 style="padding: 20px" class="totalauthors text-success"> Autores: ' + ( values.length -1 ) + '</h4>');
                             var div = $('<div>');
-                           
+
                             authorInfo.append(div);
                             _.map(values, function (value) {
                                 if (value["rdfs:label"] && value["uc:total"]["@value"])
@@ -300,7 +300,6 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
                 div.append(label);
                 div.append("</br>");
                 headbar.append(div);
-
                 //var sparqlDescribe = "DESCRIBE <" + id + ">";
                 var sparqlPublications = globalData.PREFIX
                         + ' CONSTRUCT { ?keyword uc:publication ?publicationUri. '
@@ -405,7 +404,7 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
         };
 
         var draw = function draw(element, widthEl, heightEl, data, scopeEl, attrsEl) {
-            var pubInfo = element;		
+            var pubInfo = element;
             pubInfo.html('');
             width = widthEl;
             height = heightEl;
@@ -455,4 +454,3 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
             }
         };
     }]);
-

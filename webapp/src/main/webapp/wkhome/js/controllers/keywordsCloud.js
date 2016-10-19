@@ -1,10 +1,8 @@
 
-wkhomeControllers.controller('keywordsCloud', ['$routeParams', '$scope', 'globalData', 'sparqlQuery', 'searchData', '$window',
-    function ($routeParams, $scope, globalData, sparqlQuery, searchData, $window) {
-        $('html,body').animate({
-            scrollTop: $("#scrollToTop").offset().top
-        }, "slow");
-
+wkhomeControllers.controller('keywordsCloud', ['$translate', '$routeParams', '$scope', 'globalData', 'sparqlQuery', 'searchData', '$window',
+    function ($translate, $routeParams, $scope, globalData, sparqlQuery, searchData, $window) {
+      $("html, body").animate({scrollTop:0}, 'slow', 'swing');
+      $translate.use($routeParams.lang);
         if (!searchData.allkeywordsList) {
             $scope.themes = [];
             var queryKeywords = globalData.PREFIX
@@ -45,7 +43,22 @@ wkhomeControllers.controller('keywordsCloud', ['$routeParams', '$scope', 'global
             $scope.selectedItem = "";
         }
 
+        /**
+        * Search for areas...
+        */
+        $scope.querySearch   = function (query) {
+              return query ? searchData.allkeywordsList.filter( createFilterFor(query) ) : searchData.allkeywordsList;
+        };
 
+        /**
+        * Create filter function for a query string
+        */
+        function createFilterFor(query) {
+          var lowercaseQuery = angular.lowercase(query);
+          return function filterFn(area) {
+            return (angular.lowercase(area.tag).indexOf(lowercaseQuery) !== -1);
+          };
+        }
 
         $scope.clickonAuthor = function (id_author)
         {
@@ -54,7 +67,7 @@ wkhomeControllers.controller('keywordsCloud', ['$routeParams', '$scope', 'global
 
         clickonRelatedauthor = function (id_author)
         {
-            var getAuthorDataQuery = globalData.PREFIX
+              var getAuthorDataQuery = globalData.PREFIX
                     + ' CONSTRUCT {   <' + id_author + '> foaf:name ?name; a foaf:Person  '
                     + ' }   '
                     + ' WHERE '
@@ -161,8 +174,47 @@ wkhomeControllers.controller('keywordsCloud', ['$routeParams', '$scope', 'global
         else
         {
             $scope.data = searchData.allkeywordsCloud;
-        } // end if if (!searchData.allkeywordsCloud) 
+        } // end if if (!searchData.allkeywordsCloud)
 
+
+        $scope.selectedItemChange = function (item) {
+          if (item != undefined) {
+              waitingDialog.show();
+              var queryKeywords = globalData.PREFIX
+                      + ' CONSTRUCT { '
+                      + ' ?keyword rdfs:label ?key1; '
+                      + ' uc:total ?totalPub '
+                      + ' } '
+                      + ' WHERE '
+                      + ' { '
+                      + ' SELECT DISTINCT ?key1 ?keyword (COUNT(DISTINCT(?publications)) AS ?totalPub)'
+                      + ' WHERE'
+                      + ' {'
+                      + '     graph <' + globalData.centralGraph + '>    '
+                      + '     {'
+                     // + '         ?author foaf:publications ?publications. '
+                      + '         ?publications bibo:Quote ?key1.'
+                      + '         ?publications bibo:Quote ?quote . '
+                      + '         FILTER (mm:fulltext-search(?quote, "' + item.tag+ '")).'
+                      + '         BIND(IRI(?key1) AS ?keyword) '
+                      + '     } '
+                      + ' } '
+                      + ' GROUP BY ?key1 ?keyword   '
+                      + ' }';
+              sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
+                  jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
+                      $scope.$apply(function () {
+                          $scope.data = {schema: {"context": globalData.CONTEXT, fields: ["rdfs:label", "uc:total"]}, data: compacted};
+                          //searchData.allkeywordsCloud = {schema: {"context": globalData.CONTEXT, fields: ["rdfs:label", "uc:total"]}, data: compacted};
+                          waitingDialog.hide();
+                      });
+                  });
+              });
+          } else {
+              $scope.data = searchData.allkeywordsCloud;
+          }
+        };
+        /**
         $scope.$watch('selectedItem', function (newValue, oldValue, scope) {
             if (newValue && newValue != "") {
                 waitingDialog.show();
@@ -200,7 +252,7 @@ wkhomeControllers.controller('keywordsCloud', ['$routeParams', '$scope', 'global
                 $scope.data = searchData.allkeywordsCloud;
             }
         });
-        
+        */
         //Function that displays the buttons to export the report
         $scope.exportReport = function (id) {
             $scope.keyw = id;

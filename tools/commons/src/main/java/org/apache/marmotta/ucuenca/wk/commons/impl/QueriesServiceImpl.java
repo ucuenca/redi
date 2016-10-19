@@ -432,7 +432,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + " SELECT DISTINCT ?authorResource ?publicationResource ?title "
                 + " WHERE {" + getGraphString(providerGraph)
                 + "{   ?authorResource " + OWLSAMEAS + "   ?authorNative. "
-                + " ?publicationResource dct:contributor ?authorNative. "
+                + " ?authorNative foaf:publications ?publicationResource. "
                 + " ?publicationResource <" + prefix + ">  ?title "
                 + " }} ";
     }
