@@ -58,7 +58,7 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
                         else
                         {
                             /**
-                             * Second Attempt: search text using CONTAINS function of SPARQL 
+                             * Second Attempt: search text using CONTAINS function of SPARQL
                              */
                             var filterPath = 'FILTER(CONTAINS(UCASE(?name), "{0}" )) . ';
                             var searchTextt = $scope.searchText.trim();
@@ -129,10 +129,10 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
                                                     waitingDialog.hide();
                                                 }
                                             });
-                                        }); // end of  sparqlQuery.querySrv({...}) last Attempt                                       
+                                        }); // end of  sparqlQuery.querySrv({...}) last Attempt
                                     } // end else of last attempt
                                 });
-                            }); // end of  sparqlQuery.querySrv({...}) of second Attempt   
+                            }); // end of  sparqlQuery.querySrv({...}) of second Attempt
                         }//end else of second attempt
                     });
                 }); // end of  sparqlQuery.querySrv({...}) of firts attempt
