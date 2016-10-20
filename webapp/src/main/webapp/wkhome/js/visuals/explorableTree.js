@@ -122,6 +122,13 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                                 var values = entity.length ? entity : [entity];
                                 var div = $('<div>');
                                 authorInfo.append(div);
+                                values = _.sortBy(values, function(value) {
+                                  if(value.hasOwnProperty('uc:total')) {
+                                    console.log(value["uc:total"]["@value"]);
+                                    return parseInt(value["uc:total"]["@value"]);
+                                  } else
+                                    return -1;
+                                  }).reverse();
                                 _.map(values, function (value) {
                                     if (value["rdfs:label"] && value["uc:total"]["@value"])
                                     {
