@@ -1,7 +1,7 @@
 wkhomeControllers.controller('exploreAuthor', ['$routeParams', '$scope', '$rootScope', 'globalData', 'searchData', '$window', 'sparqlQuery',
     function ($routeParams, $scope, $rootScope, globalData, searchData, $window, sparqlQuery) {
         $('html,body').animate({
-            scrollTop: $("#scrollToTop").offset().top
+            scrollTop: 0
         }, "slow");
 
 
@@ -46,6 +46,50 @@ wkhomeControllers.controller('exploreAuthor', ['$routeParams', '$scope', '$rootS
             searchData.genericData = value;
             $window.location.hash = "/" + $routeParams.lang + "/w/cloud?" + "datacloud";
         };
+
+        $scope.buildnetworks = function (){
+
+
+                  var author = _.findWhere($scope.data["@graph"], {"@type": "foaf:Person"});
+                  if (author["foaf:name"]) {
+                    var getRelatedAuthors = globalData.PREFIX
+                            + 'CONSTRUCT {  <http://ucuenca.edu.ec/wkhuska/resultTitle> a uc:pagetitle. <http://ucuenca.edu.ec/wkhuska/resultTitle> uc:viewtitle "Authors Related With '+ author["foaf:name"] +'"  .         ?subject rdfs:label ?name.         ?subject uc:total ?totalPub   } '
+                            + 'WHERE {'
+                            + '  {'
+                            + '    SELECT ?subject ?name (COUNT(DISTINCT ?relpublication) as ?totalPub)'
+                            + '    WHERE {'
+                            + '        GRAPH <'+ globalData.clustersGraph +'> {'
+                            + '          ?cluster foaf:publications ?publication .'
+                            + '          ?publication uc:hasPerson <'+ author["@id"] +'> .'
+                            + '          ?cluster foaf:publications ?relpublication .'
+                            + '          ?relpublication uc:hasPerson ?subject .'
+                            + '          {'
+                            + '            SELECT ?name {'
+                            + '              GRAPH <' + globalData.centralGraph +'> { '
+                            + '                ?subject foaf:name ?name .'
+                            + '              }'
+                            + '            }'
+                            + '          }'
+                            + '          FILTER (?subject != <'+ author["@id"] +'>)'
+                            + '        }'
+                            + '    }'
+                            + '    GROUP BY ?subject ?name'
+                            + '  }'
+                            + '}';
+                    waitingDialog.show("Loading Authors Related with " + author["foaf:name"]);
+                    sparqlQuery.querySrv({query: getRelatedAuthors}, function (rdf) {
+
+                        jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
+                            if (compacted && compacted.hasOwnProperty("@graph")) {
+                                $scope.ifrightClick(compacted);
+                                waitingDialog.hide();
+                            } else {
+                                waitingDialog.hide();
+                            }
+                        });
+                    });
+                  }
+        }
 
         if (searchData.authorSearch != null && searchData.authorSearch["@graph"].length == 1) {
             //$scope.data = searchData.authorSearch;

@@ -54,6 +54,9 @@ myApp.labels_es = {
 "Article Info": "Información de la publicación",
 "Try to Find": "Intentar buscar en",
 "Export pub": "Exportar investigador y publicaciones",
+"see.all":"Ver todos",
+"coauthor":"Coautores",
+"relatedauthors":"Autores Relacionados",
 
 //   GROUP BY  VIEW
 "Grouping Publications": "Agrupar autores por área e institución",
