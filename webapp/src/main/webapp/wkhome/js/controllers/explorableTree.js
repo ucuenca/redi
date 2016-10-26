@@ -47,9 +47,11 @@ wkhomeControllers.controller('exploreAuthor', ['$routeParams', '$scope', '$rootS
             $window.location.hash = "/" + $routeParams.lang + "/w/cloud?" + "datacloud";
         };
 
+        $scope.clickPublications = function (){
+          $window.location.hash = "/" + $routeParams.lang + "/w/publications/" + $scope.authorId;
+        };
+
         $scope.buildnetworks = function (){
-
-
                   var author = _.findWhere($scope.data["@graph"], {"@type": "foaf:Person"});
                   if (author["foaf:name"]) {
                     var getRelatedAuthors = globalData.PREFIX

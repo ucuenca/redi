@@ -13,6 +13,7 @@ var wkhomeApp = angular.module('wkhomeApp', [
     'wkhomeServices',
     'ngAnimate',
     'ngMaterial',
+    'hm.readmore'
 ]);
 
 
@@ -77,6 +78,9 @@ wkhomeApp.config(['$routeProvider',
                 }).
                 when('/:lang/w/cloud?:text', {
                     templateUrl: '/wkhome/partials/genericPageCloud.html',
+                }).
+                when('/:lang/w/publications/:authorId*\/', {
+                    templateUrl: '/wkhome/partials/publications.html',
                 }).
                 when('/:lang/w/clusters?:text', {
                     templateUrl: '/wkhome/partials/clustersCloud.html',

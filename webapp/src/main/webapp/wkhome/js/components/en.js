@@ -54,6 +54,7 @@ myApp.labels_en = {
 "see.all":"See all",
 "coauthor":"Co-Authors",
 "relatedauthors":"Related Authors",
+"list.pub":"List publications",
 
 //   GROUP BY  VIEW
 "Grouping Publications": "Grouping Authors",
@@ -94,5 +95,14 @@ myApp.labels_en = {
 //SOURCE HTML
 "Authors Sources":"Authors Data Sources",
 "Publications Data Source":"Publications Data Sources",
+
+// PUBLICATIONS LIST
+"num.pub":"Total publications",
+"source":"Source",
+"read.more":"Read more",
+"read.less":"Read less",
+"pub.of":"Publications of ",
+"area.study":"Fields of study"
+
 };
 }());
