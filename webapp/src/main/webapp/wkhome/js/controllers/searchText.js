@@ -44,7 +44,7 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
                 /**
                  * Firts Attempt, search text using fulltext function of marmotta
                  */
-                var fulltextFilter = ' FILTER(mm:fulltext-search(str(?name), "' + $scope.searchText + '")).'
+                var fulltextFilter = ' FILTER(mm:fulltext-search(str(?name), "' + $scope.searchText + '", "es")).'
                 var fulltextqueryAuthors = String.format(queryAuthors, fulltextFilter);
                 sparqlQuery.querySrv({query: fulltextqueryAuthors},
                 function (rdf) {

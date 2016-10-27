@@ -113,51 +113,37 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$timeout', '$scope', 'glob
             if (searchData.clustersAuthors == null || searchData.clustersAuthors.length == 0) {
                 searchData.clustersAuthors = [];
 
-                var queryClusters = globalData.PREFIX +
-                        'CONSTRUCT {' +
-                          '?author foaf:name ?name. ' +
-                          '?author uc:hasCluster ?clusterId. ' +
-                          '?author rdfs:label ?label. ' +
-                          '?author bibo:Quote ?keywords ' +
-                        '} WHERE{ ' +
-                          '{ ' +
-                            'SELECT DISTINCT ?author ?name ?clusterId ?label (group_concat(DISTINCT ?keyword; separator = ", ") as ?keywords) ' +
-                            'WHERE{ ?clusterId uc:hasPerson ?author . ' +
-                              '?author foaf:name ?name . ?author foaf:publications ?publication . ?publication bibo:Quote ?keyword . ' +
-                              '{ SELECT ?clusterId ?label WHERE { graph <' + globalData.clustersGraph + '> { ' +
-                                  '?clusterId rdfs:label ?label . ?clusterId uc:hasPerson ?person . } } ' +
-                                  'GROUP BY ?clusterId ?label HAVING(count(?person) > 20) } } '+
-                            'GROUP BY ?author ?name ?clusterId ?label } }';
+                var queryClusters = globalData.PREFIX
+                  + 'CONSTRUCT {?author foaf:name ?name. ?author uc:hasCluster ?clusterId. ?author rdfs:label ?label. ?author bibo:Quote ?keywords }'
+                  + 'WHERE{ '
+                  + '  { '
+                  + '    SELECT DISTINCT ?author ?name ?clusterId ?label (group_concat(DISTINCT ?keyword; separator = ", ") as ?keywords) '
+                  + '    WHERE {'
+                  + '      GRAPH <' + globalData.clustersGraph + '> { '
+                  + '        {'
+                  + '          SELECT ?clusterId '
+                  + '          WHERE{'
+                  + '            ?clusterId foaf:publications  ?pub'
+                  + '          } GROUP BY ?clusterId'
+                  + '            HAVING (COUNT(?pub) > 20)'
+                  + '        }'
+                  + '        ?clusterId rdfs:label ?label . '
+                  + '        ?clusterId foaf:publications  ?publication . '
+                  + '        ?publication uc:hasPerson ?author .'
+                  + '        {'
+                  + '          SELECT * {'
+                  + '            GRAPH <' + globalData.centralGraph + '> {'
+                  + '                ?author foaf:name ?name .'
+                  + '                ?publication bibo:Quote ?keyword.'
+                  + '            }'
+                  + '          } '
+                  + '        }'
+                  + '      } '
+                  + '    } '
+                  + '    GROUP BY ?author ?name ?clusterId ?label'
+                  + '  } '
+                  + '}';
 
-                // Change of query to solve problem about timeout
-                /**var queryClusters = globalData.PREFIX +
-                        ' CONSTRUCT ' +
-                        '{ ' +
-                        '  ?author foaf:name ?name. ' +
-                        '  ?author uc:hasCluster ?clusterId. ' +
-                        '  ?author rdfs:label ?label. ' +
-                        '  ?author bibo:Quote ?keywords ' +
-                        '} ' +
-                        'WHERE ' +
-                        '{' +
-                        '    graph <' + globalData.clustersGraph + '> ' +
-                        '    { ' +
-                        '      ?clusterId uc:hasPerson ?author.' +
-                        '      ?clusterId rdfs:label ?label.' +
-                        '      { ' +
-                        '        select DISTINCT ?author ?name ?keywords ' +
-                        '        where ' +
-                        '        {' +
-                        '          graph <' + globalData.centralGraph + '> ' +
-                        '          {' +
-                        '              ?author foaf:name ?name.' +
-                        '              ?author foaf:publications ?publicationUri.' +
-                        '              ?publicationUri bibo:Quote ?keywords.' +
-                        '          }' +
-                        '        } group by ?author ?name ?keywords ' +
-                        '      }' +
-                        '    }' +
-                        '}';**/
                 sparqlQuery.querySrv({query: queryClusters}, function (rdf) {
 
                     jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
@@ -178,7 +164,7 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$timeout', '$scope', 'glob
                                     model["IdCluster"] = res["uc:hasCluster"][i]["@id"];
                                     model["ClusterName"] = res["rdfs:label"][i];
                                     model["Author"] = res["foaf:name"];
-                                    model["Keyword"] = keywords;
+                                    model["Keyword"] = keywords[i];
                                     model["Title"] = res["foaf:name"];
                                     model["URI"] = res["foaf:name"];
                                     authors.push({idAuthor: model["IdAuthor"], cluster: model["IdCluster"], clusterName: model["ClusterName"], author: model["Author"], keyword: model["Keyword"], title: model["Title"], uri: model["URI"]});

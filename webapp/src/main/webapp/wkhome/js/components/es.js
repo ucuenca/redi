@@ -54,6 +54,10 @@ myApp.labels_es = {
 "Article Info": "Información de la publicación",
 "Try to Find": "Intentar buscar en",
 "Export pub": "Exportar investigador y publicaciones",
+"see.all":"Ver todos",
+"coauthor":"Coautores",
+"relatedauthors":"Autores Relacionados",
+"list.pub":"Listar publicaciones",
 
 //   GROUP BY  VIEW
 "Grouping Publications": "Agrupar autores por área e institución",
@@ -94,6 +98,15 @@ myApp.labels_es = {
 
 //SOURCE HTML
 "Authors Sources":"Fuentes de datos de autores",
-"Publications Data Source":"Fuentes de datos de publicaciones"
+"Publications Data Source":"Fuentes de datos de publicaciones",
+
+// PUBLICATIONS LIST
+"num.pub":"Total de publicaciones",
+"source":"Fuente",
+"read.more":"Leer mas",
+"read.less":"Leer menos",
+"pub.of":"Publicaciones de ",
+"area.study":"Areas de Estudio"
+
 };
 }());

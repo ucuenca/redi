@@ -1,0 +1,73 @@
+<div class="" ng-controller="publicationsController" >
+  <br>
+  <br>
+  <div class="container">
+    <div class="row">
+      <h1>
+        <span class="label label-primary" style="font-size: 45%">{{ 'pub.of' | translate }}{{author.name}}</span>
+        <small class="text-success" style="font-size: 25%; vertical-align: bottom ">{{ 'Total of Publications found' | translate }}: {{publications.length}}</small>
+      </h1>
+    </div>
+    <br>
+    <br>
+    <div class="row">
+      <div class="col-md-9">
+        <div>
+          <ul>
+            <li ng-repeat="publication in filterPublications">
+              <div class="publicationList">
+                <h2 class="title"><a href="{{publication.uri.ur}}" target='_blank'>{{publication.title}}</a></h2>
+
+                <div ng-show="publication.abstract">
+                  <hm-read-more
+                    hm-text="{{publication.abstract}}" hm-limit="500" hm-more-text="{{ 'read.more' | translate }}"
+                    hm-less-text="{{ 'read.less' | translate}}" hm-dots-class="dots" hm-link-class="links">
+                  </hm-read-more>
+                </div>
+
+                <div ng-show={{publication.keywords}}>
+                  <ul id="keywords" class="list-inline">
+                    <b style="padding-left: 5px;">Keywords:</b>
+                    <li ng-repeat="keyword in publication.keywords">{{keyword}}</li>
+                  </ul>
+                </div>
+
+                  <br>
+                <div ng-show="{{publication.uri.type == 'pdf' || publication.uri.type == 'web'}}">
+                  <a href="{{publication.uri.uri}}" target='_blank'>
+                    <span>
+                      <img ng-src="wkhome/images/{{publication.uri.type}}_source.png" style="float:none; margin: 0 10px 0 0;"/>{{ 'source' | translate }}
+                    </span>
+                  </a>
+                </div>
+              </div>
+              <hr>
+            </li>
+          </ul>
+        </div>
+
+        <center>
+          <ul uib-pagination boundary-links="true"
+          total-items="publications.length" ng-model="currentPage"
+          class="pagination-sm" max-size="maxSize" previous-text="&lsaquo;"
+          next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+        </center>
+      </div>
+      <div class="col-md-3">
+        <a ng-click="loadAuthorProfile()"><h2 style="margin: 0px 0px">{{author.name}}</h2></a>
+        <h5 style="margin: 0px 0px"><i>{{author.institution}}</i></h5>
+        <h6 style="margin: 0px 0px">{{author.province}}, {{author.city}}</h6>
+        <br>
+        <div ng-show="author.areas">
+          <b>{{ 'area.study' | translate }}: </b>
+          <ul>
+            <li ng-repeat="area in author.areas"><small>{{area}}</small></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+
+
+</div>
