@@ -54,9 +54,11 @@ ul, ol {
     top:0px;
 }
 
+div.publicationList:hover{
+  background-color: #e1e1e1;
+}
 
 .relatedauthors{
-
     cursor:pointer;
     font-size: medium;
     font-style: initial;
@@ -64,12 +66,17 @@ ul, ol {
     opacity: none;
 }
 
-a.relatedauthors:hover{  
+.viewallrelatedauthors{
+    font-size: smaller;
+    font-family: monospace;
+}
+
+a.relatedauthors:hover{
     color: #DDD;
     cursor: pointer;
     text-decoration: none;
     opacity: none;
 }
 a.relatedauthors:visited{
-    color: #2F6FAD;  
+    color: #2F6FAD;
 }

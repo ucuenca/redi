@@ -11,6 +11,9 @@ var wkhomeApp = angular.module('wkhomeApp', [
     'wkhomeControllers',
     //'commonDirectives',
     'wkhomeServices',
+    'ngAnimate',
+    'ngMaterial',
+    'hm.readmore'
 ]);
 
 
@@ -49,10 +52,11 @@ wkhomeApp.service('globalData', function () {
         "dc": "http://purl.org/dc/elements/1.1/",
         "dct": "http://purl.org/dc/terms/",
     };
-    
+
     this.urltofindinGOOGLE = 'https://scholar.google.com/scholar?q={0}';
     this.urltofindinDBLP = 'http://dblp.uni-trier.de/search?q={0}';
-    this.urltofindinSCOPUS = 'http://www.scopus.com/results/results.uri?numberOfFields=0&src=s&clickedLink=&edit=&editSaveSearch=&origin=searchbasic&authorTab=&affiliationTab=&advancedTab=&scint=1&menu=search&tablin=&searchterm1={0}&field1=TITLE&dateType=Publication_Date_Type&yearFrom=Before+1960&yearTo=Present&loadDate=7&documenttype=All&subjects=LFSC&_subjects=on&subjects=HLSC&_subjects=on&subjects=PHSC&_subjects=on&subjects=SOSC&_subjects=on&st1={1}&st2=&sot=b&sdt=b&sl=91&s=TITLE%28{2}%29'
+    this.urltofindinSCOPUS = 'http://www.scopus.com/results/results.uri?numberOfFields=0&src=s&clickedLink=&edit=&editSaveSearch=&origin=searchbasic&authorTab=&affiliationTab=&advancedTab=&scint=1&menu=search&tablin=&searchterm1={0}&field1=TITLE&dateType=Publication_Date_Type&yearFrom=Before+1960&yearTo=Present&loadDate=7&documenttype=All&subjects=LFSC&_subjects=on&subjects=HLSC&_subjects=on&subjects=PHSC&_subjects=on&subjects=SOSC&_subjects=on&st1={1}&st2=&sot=b&sdt=b&sl=91&s=TITLE%28{2}%29';
+    this.urltofindinACADEMICS = 'https://academic.microsoft.com/#/search?iq=@{0}@&q={1}&filters=&from=0&sort=0';
 });
 
 wkhomeApp.config(['$routeProvider',
@@ -75,8 +79,14 @@ wkhomeApp.config(['$routeProvider',
                 when('/:lang/w/cloud?:text', {
                     templateUrl: '/wkhome/partials/genericPageCloud.html',
                 }).
+                when('/:lang/w/publications/:authorId*\/', {
+                    templateUrl: '/wkhome/partials/publications.html',
+                }).
                 when('/:lang/w/clusters?:text', {
                     templateUrl: '/wkhome/partials/clustersCloud.html',
+                }).
+                when('/:lang/data/datacube', {
+                    templateUrl: '/wkhome/partials/dataCube.html',
                 }).
                 when('/:lang/data/statistics', {
                     templateUrl: '/wkhome/partials/statistics.html',

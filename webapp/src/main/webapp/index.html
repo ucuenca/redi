@@ -6,7 +6,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
         <title>Ecuadorian Semantic Repository</title>
-        <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css"> 
+        <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../bower_components/angular-material/angular-material.min.css">
 
         <script src="../bower_components/jquery/dist/jquery.js"></script>
         <script src="../bower_components/jquery/dist/jquery.min.js"></script>
@@ -16,9 +17,9 @@
         <script src="../bower_components/angular-swipe/dist/angular-swipe.min.js"></script>
         <script src="../custom_libs/angular-snapscroll.js"></script>
         <script src="../bower_components/jsonld/js/jsonld.js"></script>
-        <script src="../bower_components/angular-jsonld/dist/angular-jsonld.js"></script>
+        <!--<script src="../bower_components/angular-jsonld/dist/angular-jsonld.js"></script>-->
         <script src="../bower_components/restangular/dist/restangular.min.js"></script>
-        <script src="../bower_components/angular-animate/angular-animate.js"></script>
+        <script src="../bower_components/angular-animate/angular-animate.min.js"></script>
         <script src="../bower_components/angular-route/angular-route.js"></script>
         <script src="../bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
         <script src="../bower_components/angular-resource/angular-resource.js"></script>
@@ -30,6 +31,9 @@
         <script src="../bower_components/d3-tip/index.js"></script>
         <script src="../custom_libs/d3-context-menu/js/d3-context-menu.js"></script>
         <script src="../custom_libs/angular-sanitize/angular-sanitize.js"></script>
+        <script src="../bower_components/angular-aria/angular-aria.min.js"></script>
+        <script src="../bower_components/angular-material/angular-material.min.js"></script>
+        <script src="../bower_components/angular-read-more/dist/readmore.min.js"></script>
 
         <!-- DESARROLLO/DEBUG -->
         <!--<link rel="stylesheet" href="wkhome/css/animations.css">
@@ -48,9 +52,9 @@
         <link rel="stylesheet" href="wkhome/css/visuals/source.css">
         <link rel="stylesheet" href="wkhome/css/visuals/lists.css">
         <link rel="stylesheet" href="wkhome/css/app.css">
-        
+
         <script src="wkhome/js/app.js"></script>
-        
+
         <script src="wkhome/js/controllers/controllers.js"></script>
         <script src="wkhome/js/controllers/mainBar.js"></script>
         <script src="wkhome/js/controllers/countAuthors.js"></script>
@@ -72,6 +76,9 @@
         <script src="wkhome/js/controllers/barChart.js"></script>
         <script src="wkhome/js/controllers/loadData.js"></script>
         <script src="wkhome/js/controllers/listSources.js"></script>
+        <script src="wkhome/js/controllers/analytics.js"></script>
+        <script src="wkhome/js/controllers/dataCube.js"></script>
+        <script src="wkhome/js/controllers/publications.js"></script>
 
         <script src="wkhome/js/services.js"></script>
 
@@ -97,7 +104,7 @@
 
         <!-- APP PRODUCCION -->
         <link rel="stylesheet" href="wkhome/cssmin/animations.min.css">
-        <link rel="stylesheet" href="wkhome/cssmin/visuals/general.min.css"> 
+        <link rel="stylesheet" href="wkhome/cssmin/visuals/general.min.css">
         <link rel="stylesheet" href="wkhome/cssmin/visuals/home.min.css">
         <link rel="stylesheet" href="wkhome/cssmin/visuals/pieChart.min.css">
         <link rel="stylesheet" href="wkhome/cssmin/visuals/barChart.min.css">
@@ -112,9 +119,9 @@
         <link rel="stylesheet" href="wkhome/cssmin/visuals/source.min.css">
         <link rel="stylesheet" href="wkhome/cssmin/visuals/lists.min.css">
         <link rel="stylesheet" href="wkhome/cssmin/app.min.css">
-        
+
         <script src="wkhome/jsmin/app.min.js"></script>
-        
+
         <script src="wkhome/jsmin/controllers/controllers.min.js"></script>
         <script src="wkhome/jsmin/controllers/mainBar.min.js"></script>
         <script src="wkhome/jsmin/controllers/countAuthors.min.js"></script>
@@ -136,9 +143,12 @@
         <script src="wkhome/jsmin/controllers/barChart.min.js"></script>
         <script src="wkhome/jsmin/controllers/loadData.min.js"></script>
         <script src="wkhome/jsmin/controllers/listSources.min.js"></script>
-        
+        <script src="wkhome/jsmin/controllers/analytics.min.js"></script>
+        <script src="wkhome/jsmin/controllers/dataCube.min.js"></script>
+        <script src="wkhome/jsmin/controllers/publications.min.js"></script>
+
         <script src="wkhome/jsmin/services.min.js"></script>
-        
+
         <script src="wkhome/jsmin/components/waitingDialog.min.js"></script>
         <script src="wkhome/jsmin/components/en.min.js"></script>
         <script src="wkhome/jsmin/components/es.min.js"></script>
@@ -146,7 +156,7 @@
         <script src="wkhome/jsmin/components/FileSaver.min.js"></script>
         <script src="wkhome/jsmin/components/stringsDistance.min.js"></script>
         <script src="wkhome/jsmin/components/d3.geo.min.js"></script>
-        
+
         <script src="wkhome/jsmin/visuals/pieChart.min.js"></script>
         <script src="wkhome/jsmin/visuals/barChart.min.js"></script>
         <script src="wkhome/jsmin/visuals/explorableTree.min.js"></script>
@@ -157,9 +167,9 @@
         <script src="wkhome/jsmin/visuals/clustersCloud.min.js"></script>
         <script src="wkhome/jsmin/visuals/genericCloud.min.js"></script>
         <script src="wkhome/jsmin/visuals/map.min.js"></script>
-        
+
         <!--Fin Importacion de Scripts-->
-        
+
         <script type="text/javascript">
             <!--
       $(document).ready(function () {
@@ -174,48 +184,58 @@
 -->
         </script>
 
+        <!-- For Google Analytycs -->
+        <script>
+        window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+        ga('create', 'UA-85166611-1', 'auto');
+
+        // Replace the following lines with the plugins you want to use.
+        ga('require', 'eventTracker');
+        ga('require', 'outboundLinkTracker');
+        ga('require', 'urlChangeTracker');
+        // ...
+
+        ga('send', 'pageview');
+        </script>
+        <script async src='https://www.google-analytics.com/analytics.js'></script>
+        <script async src='bower_components/autotrack/autotrack.js'></script>
     </head>
-    <body>
+    <body ng-controller="analytics">
         <div  ng-view class="container-fluid">
 
         </div>
         <div ng-controller="loadData"></div>
- 
+
         <!-- <div class="view-container"> -->
         <nav class="navbar navbar-inverse navbar-fixed-top" style="opacity:1; margin-bottom:0; border:0; z-index: 0;">
-           
 
             <!-- MENU DESPLEGABLE -->
             <div id="headerdesplegable">
                 <!--<nav> <!-- Aqui estamos iniciando la nueva etiqueta nav -->
                 <ul class="nav desplegable">
-                    <li><img style="height: 45px;padding-right: 4px;" src='wkhome/images/logo_wk.png'  alt="REDI"><img style="width: 7%" src='wkhome/images/icono_menu.png'  alt="REDI"> 
+                    <li><img style="height: 45px;padding-right: 4px;" src='wkhome/images/logo_wk.png'  alt="REDI"><img style="width: 7%" src='wkhome/images/icono_menu.png'  alt="REDI">
                         <ul ng-controller="translate">
                             <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/">{{'Home'| translate}}</a></li>
                             <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/tags/cloud">{{'Keywords Cloud'| translate}}</a></li>
                             <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/cloud/group-by">{{'Group By Keyword'| translate}}</a></li>
-                            <li><a class="opcion"  ng-click="refreshLang()" href="#/{{lang}}/geo-views/sources">{{'Map View'| translate}}</a></li>
+                            <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/geo-views/sources">{{'Map View'| translate}}</a></li>
                             <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/cloud/clusters">{{'Clustering by Research Area'| translate}}</a></li>
-                        <!--<li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/cloud/keywords">{{'Clusters by Keyword'| translate}}</a></li>-->
-                            <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/data/statistics">{{'Statistics'| translate}}</a></li> 
+                            <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/data/datacube">{{'data_cube' | translate}}</a></li>
+                            <!--<li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/cloud/keywords">{{'Clusters by Keyword'| translate}}</a></li>-->
+                            <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/data/statistics">{{'Statistics'| translate}}</a></li>
                         </ul>
-                    </li>                     
+                    </li>
                 </ul>
                 <!--</nav><!-- Aqui estamos cerrando la nueva etiqueta nav -->
             </div>
 
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav" ng-controller="translate">
-
-
-
-
                     <li><a ng-click="refreshLang()" href="#/{{lang}}/">{{'home'| translate}}<span class="sr-only">(current)</span></a></li>
                     <li><a ng-click="refreshLang()" href="#/{{lang}}/info/about">{{'about'| translate}}</a></li>
                     <li><a ng-click="refreshLang()" href="#/{{lang}}/info/help">{{'help'| translate}}</a></li>
                     <li><a ng-click="refreshLang()" href="#/{{lang}}/info/contact">{{'contact'| translate}}</a></li>
                     <li><a ng-click="refreshLang()" href="#/{{lang}}/info/sources">{{'sources'| translate}}</a></li>
-                 
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right" style="padding-right:0px" ng-controller="translate">
@@ -224,46 +244,19 @@
                             <img style="height:15px" src='wkhome/images/en-icon.gif'>
                         </a>
                     </li>
-                    <li> 
+                    <li>
                         <a style="padding-top: 10px;" ng-click="setLanguage('es')" >
                             <img style="height: 15px" src='wkhome/images/es-icon.gif'>
                         </a>
                     </li>
-                    
-
-
-
-
-
                     <form class="navbar-form navbar-left" role="search" ng-submit="submit()" ng-controller="searchText" style="padding-right: 30px; ">
                         <div class="form-group">
                             <input  name="searchText" ng-model="searchText" type="text" class="form-control input-md" placeholder="{{'Search'| translate}}..">
                         </div>
                     </form>
                 </ul>
-            </div><!-- /.navbar-collapse -->
-            <!--
-            <div class="col-md-12">
-              
-              <div class="header">
-                <h1>
-                    <div>Watiqai Khuska - Ecuadorian Semantic Repository</div>
-                    
-                </h1>
-    
-              </div>
-              
-    
             </div>
-          </div>
-            -->
-
-        
-
     </nav>
-    <!--<div style="position: absolute;right: 5px;top: 15px;"><img src="images/Marmotta_Head.png"></div>-->
-
-
     <!-- <div ng-view class="view-frame"></div> -->
 </body>
 </html>

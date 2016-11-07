@@ -1,4 +1,4 @@
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -30,6 +30,7 @@ myApp.labels_es = {
 "Group By Keyword": "Agrupar por institución",
 "Map View": "Mapa",
 "Clustering by Research Area": "Agrupar por área de conocimiento",
+"data_cube": "Cubo de Datos RDF",
 "Clusters by Keyword": "Agrupar por keyword",
 "Statistics": "Estadísticas",
 
@@ -53,11 +54,17 @@ myApp.labels_es = {
 "Article Info": "Información de la publicación",
 "Try to Find": "Intentar buscar en",
 "Export pub": "Exportar investigador y publicaciones",
+"see.all":"Ver todos",
+"coauthor":"Coautores",
+"relatedauthors":"Autores Relacionados",
+"list.pub":"Listar publicaciones",
 
 //   GROUP BY  VIEW
 "Grouping Publications": "Agrupar autores por área e institución",
 "Group by":"Agrupar por",
 "Select Research Area":"Área de conocimiento",
+"Keywords":"¿Conoces las palabras claves?",
+"No match":"No existe la palabra clave",
 //"All" - from cloud cluster view
 "Author":"Autor",
 "Source":"Institución",
@@ -91,6 +98,15 @@ myApp.labels_es = {
 
 //SOURCE HTML
 "Authors Sources":"Fuentes de datos de autores",
-"Publications Data Source":"Fuentes de datos de publicaciones"
+"Publications Data Source":"Fuentes de datos de publicaciones",
+
+// PUBLICATIONS LIST
+"num.pub":"Total de publicaciones",
+"source":"Fuente",
+"read.more":"Leer mas",
+"read.less":"Leer menos",
+"pub.of":"Publicaciones de ",
+"area.study":"Areas de Estudio"
+
 };
 }());

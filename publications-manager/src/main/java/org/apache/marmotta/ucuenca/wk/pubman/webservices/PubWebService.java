@@ -63,6 +63,7 @@ public class PubWebService {
     public static final String GET_PUBLICATIONS_GOOGLE = "/publications_google";
     public static final String GET_PUBLICATIONS_DBLP = "/publications_dblp";
     public static final String GET_PUBLICATIONS_MA = "/publications_ma";
+    public static final String GET_PUBLICATIONS_AK = "/publications_ak";
     public static final String LOAD_PUBLICATIONS = "/publications_provider_graph";
     public static final String GET_AUTHOR_DATA = "/pubsearch";
     public static final String GET_REPORT = "/report";
@@ -79,7 +80,7 @@ public class PubWebService {
         return runPublicationsProviderTask(params);
     }
 
-  /*
+    /*
      * Get Publications Data from Source and Load into Provider Graph
      */
     @POST
@@ -90,7 +91,7 @@ public class PubWebService {
         String result = commonService.GetDataFromProvidersServiceGoogleScholar();
         return Response.ok().entity(result).build();
     }
-    
+
     /*
      * Get Publications Data from Source and Load into Provider Graph
      */
@@ -100,6 +101,18 @@ public class PubWebService {
         String params = resultType;
         log.debug("Publications Task", params);
         String result = commonService.GetDataFromProvidersServiceDBLP();
+        return Response.ok().entity(result).build();
+    }
+
+    /*
+     * Get Publications Data from Source and Load into Provider Graph
+     */
+    @POST
+    @Path(GET_PUBLICATIONS_AK)
+    public Response readPublicationsPostAK(@QueryParam("Endpoint") String resultType) {
+        String params = resultType;
+        log.debug("Publications Task", params);
+        String result = commonService.GetDataFromProvidersServiceAcademicsKnowledge();
         return Response.ok().entity(result).build();
     }
 
@@ -198,7 +211,7 @@ public class PubWebService {
      *
      */
     @POST
-    @Path(TRANSLATE) 
+    @Path(TRANSLATE)
     @Produces("application/ld+json")
     public Response translate(@QueryParam("totranslate") String totranslate) {
         String result = traslateService.translate(totranslate).toString();

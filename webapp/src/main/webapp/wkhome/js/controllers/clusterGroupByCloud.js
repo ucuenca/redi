@@ -4,9 +4,9 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$timeout', '$scope', 'glob
         $('html,body').animate({
             scrollTop: $("#scrollToTop").offset().top
         }, "slow");
-        
+
         $scope.gbselectedItem = 'cluster';
-        
+
         $scope.$watch('searchData.areaSearch', function (newValue, oldValue, scope) {
 
             if (searchData.areaSearch) {
@@ -102,7 +102,7 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$timeout', '$scope', 'glob
         function groupByResources(values, groupby)//grouByResources resources by ...
         {
             // executeDraw(values,groupby);
-            //this activity is cheking directly in cloudGroup.js 
+            //this activity is cheking directly in cloudGroup.js
         }//end grouByResources
 
         function loadResources(value, groupby)//load resources related with selected keyword
@@ -113,34 +113,36 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$timeout', '$scope', 'glob
             if (searchData.clustersAuthors == null || searchData.clustersAuthors.length == 0) {
                 searchData.clustersAuthors = [];
 
-                var queryClusters = globalData.PREFIX +
-                        ' CONSTRUCT ' +
-                        '{ ' +
-                        '  ?author foaf:name ?name. ' +
-                        '  ?author uc:hasCluster ?clusterId. ' +
-                        '  ?author rdfs:label ?label. ' +
-                        '  ?author bibo:Quote ?keywords ' +
-                        '} ' +
-                        'WHERE ' +
-                        '{' +
-                        '    graph <' + globalData.clustersGraph + '> ' +
-                        '    { ' +
-                        '      ?clusterId uc:hasPerson ?author.' +
-                        '      ?clusterId rdfs:label ?label.' +
-                        '      { ' +
-                        '        select DISTINCT ?author ?name ?keywords ' +
-                        '        where ' +
-                        '        {' +
-                        '          graph <' + globalData.centralGraph + '> ' +
-                        '          {' +
-                        '              ?author foaf:name ?name.' +
-                        '              ?author foaf:publications ?publicationUri.' +
-                        '              ?publicationUri bibo:Quote ?keywords.' +
-                        '          }' +
-                        '        } group by ?author ?name ?keywords ' +
-                        '      }' +
-                        '    }' +
-                        '}';
+                var queryClusters = globalData.PREFIX
+                  + 'CONSTRUCT {?author foaf:name ?name. ?author uc:hasCluster ?clusterId. ?author rdfs:label ?label. ?author bibo:Quote ?keywords }'
+                  + 'WHERE{ '
+                  + '  { '
+                  + '    SELECT DISTINCT ?author ?name ?clusterId ?label (group_concat(DISTINCT ?keyword; separator = ", ") as ?keywords) '
+                  + '    WHERE {'
+                  + '      GRAPH <' + globalData.clustersGraph + '> { '
+                  + '        {'
+                  + '          SELECT ?clusterId '
+                  + '          WHERE{'
+                  + '            ?clusterId foaf:publications  ?pub'
+                  + '          } GROUP BY ?clusterId'
+                  + '            HAVING (COUNT(?pub) > 20)'
+                  + '        }'
+                  + '        ?clusterId rdfs:label ?label . '
+                  + '        ?clusterId foaf:publications  ?publication . '
+                  + '        ?publication uc:hasPerson ?author .'
+                  + '        {'
+                  + '          SELECT * {'
+                  + '            GRAPH <' + globalData.centralGraph + '> {'
+                  + '                ?author foaf:name ?name .'
+                  + '                ?publication bibo:Quote ?keyword.'
+                  + '            }'
+                  + '          } '
+                  + '        }'
+                  + '      } '
+                  + '    } '
+                  + '    GROUP BY ?author ?name ?clusterId ?label'
+                  + '  } '
+                  + '}';
 
                 sparqlQuery.querySrv({query: queryClusters}, function (rdf) {
 
@@ -149,18 +151,20 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$timeout', '$scope', 'glob
                             var model = {};
                             var clusterIds = res["uc:hasCluster"];
                             var keywords = "";
+                            /** Keywords come aggregated, so it not necessary to aggregate again.
                             if (res["bibo:Quote"] != null && (res["bibo:Quote"].constructor === Array || res["bibo:Quote"] instanceof Array)) {
                                 for (i = 0; i < res["bibo:Quote"].length && i < 12; i++) {
                                     keywords += (i == 0 ? res["bibo:Quote"][i] : ", " + res["bibo:Quote"][i]);
                                 }
-                            }
+                            }**/
+                            keywords = res["bibo:Quote"];
                             if (clusterIds != null && (clusterIds.constructor === Array || clusterIds instanceof Array)) {
                                 for (i = 0; i < clusterIds.length; i++) {
                                     model["IdAuthor"] = res["@id"];
                                     model["IdCluster"] = res["uc:hasCluster"][i]["@id"];
                                     model["ClusterName"] = res["rdfs:label"][i];
                                     model["Author"] = res["foaf:name"];
-                                    model["Keyword"] = keywords;
+                                    model["Keyword"] = keywords[i];
                                     model["Title"] = res["foaf:name"];
                                     model["URI"] = res["foaf:name"];
                                     authors.push({idAuthor: model["IdAuthor"], cluster: model["IdCluster"], clusterName: model["ClusterName"], author: model["Author"], keyword: model["Keyword"], title: model["Title"], uri: model["URI"]});
@@ -205,7 +209,7 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$timeout', '$scope', 'glob
                 $timeout(executeDraw(searchData.clustersAuthors, groupby));
                 searchData.areaSearch = null;
             }
-           /* 
+           /*
             clustersQuery.success(function (data) {
                 $scope.clusters = data;
                 var myArray = new Array();
@@ -240,7 +244,7 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$timeout', '$scope', 'glob
             });
              */
         }//end Load Resources
-        
+
         $scope.clickonAuthor = function (id_author)
         {
             clickonRelatedauthor(id_author);
@@ -280,4 +284,4 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$timeout', '$scope', 'glob
         }
 
 
-    }]); //end clusterTagsController 
+    }]); //end clusterTagsController

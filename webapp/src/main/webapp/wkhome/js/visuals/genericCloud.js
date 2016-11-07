@@ -51,7 +51,7 @@ genericCloud.directive('genericCloud', ["d3", 'globalData','sparqlQuery',
                 return "translate(" + d.x + "," + d.y + ")";
             });
             return label.style("left", function (d) {
-                /*if(d.label == "Amino Acid") { 
+                /*if(d.label == "Amino Acid") {
                  d = d;
                  }*/      //POSITION OF LABEL
                 return (17 + (margin.left + d.x) - d.dx / 2) + "px";
@@ -60,7 +60,7 @@ genericCloud.directive('genericCloud', ["d3", 'globalData','sparqlQuery',
             });
         };
 
-        //main method to plot 
+        //main method to plot
         chart = function (selection) {
             return selection.each(function (rawData) {
                 var maxDomainValue, svg, svgEnter;
@@ -166,7 +166,7 @@ genericCloud.directive('genericCloud', ["d3", 'globalData','sparqlQuery',
                 });
             };
         };
-       
+
         connectEvents = function (d) {
             d.on("click", click);
             d.on("mouseover", mouseover);
@@ -175,7 +175,7 @@ genericCloud.directive('genericCloud', ["d3", 'globalData','sparqlQuery',
         clear = function () {
             return location.replace("#");
         };
-        
+
         click = function (d) {
             //   location.replace("#" + encodeURIComponent(idValue(d)));
 
@@ -226,7 +226,7 @@ genericCloud.directive('genericCloud', ["d3", 'globalData','sparqlQuery',
                 waitingDialog.show("Searching Publications of: " + key);
 
                 sparqlQuery.querySrv({query: sparqlPublications}, function (rdf) {
-                   
+
                     jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                         if (compacted)
                         {
@@ -351,9 +351,9 @@ genericCloud.directive('genericCloud', ["d3", 'globalData','sparqlQuery',
                      x: d.time,
                      y: d.visitors
                      }
-                     
+
                      });
-                     
+
                      draw(svg, width, height, data);
                      },	true);*/
                     scope.$watch('data', function (newVal, oldVal, scope) {
@@ -365,7 +365,7 @@ genericCloud.directive('genericCloud', ["d3", 'globalData','sparqlQuery',
                             var schema = data.schema;
                             var fields = schema.fields;
                             var mappedData = [];
-                            
+
                             _.each(jsonld['@graph'], function (keyword, idx) {
                                 if (keyword["rdfs:label"])
                                 {
@@ -373,7 +373,7 @@ genericCloud.directive('genericCloud', ["d3", 'globalData','sparqlQuery',
                                     mappedData.push({id:keyword["@id"], label: keyword[fields[0]], value: pubsvalue});
                                 }
                             });
-                            var pageTitle = "";                           
+                            var pageTitle = "";
                             pageTitle = _.findWhere(jsonld['@graph'],{"@type": "uc:pagetitle"})["uc:viewtitle"];
                             draw(svg, width, height, mappedData, scope, attrs, pageTitle);
                         }
