@@ -17,6 +17,9 @@ barChart.directive('barChart', ["d3", "globalData", "sparqlQuery",
                 return {Autores: "#807dba", Publicaciones: "#e08214", Salud: "#41ab5d"}[c];
             }
 
+            var color = d3.scale.ordinal()
+                .range(["#807dba", "#41ab5d"]);
+
             // compute total for each source.
             fData.forEach(function (d) {
                 d.total = 0;
@@ -39,8 +42,9 @@ barChart.directive('barChart', ["d3", "globalData", "sparqlQuery",
                 // create function for x-axis mapping.
                 var x = d3.scale.ordinal().rangeRoundBands([0, hGDim.w], 0.1)
                         .domain(fD.map(function (d) {
-                            return d[0];
+                            return d.ies;
                         }));
+                var x1 = d3.scale.ordinal().domain(["publications","authors"]).rangeRoundBands([0, x.rangeBand()]);
 
                 // Add x-axis to the histogram svg.
                 hGsvg.append("g").attr("class", "x axis")
@@ -50,59 +54,75 @@ barChart.directive('barChart', ["d3", "globalData", "sparqlQuery",
                 // Create function for y-axis map.
                 var y = d3.scale.linear().range([hGDim.h, 0])
                         .domain([0, d3.max(fD, function (d) {
-                                return d[1];
+                                return d3.max(d.values, function (d){
+                                  return d.value;
+                                });
                             })]);
 
                 // Create bars for histogram to contain rectangles and freq labels.
                 var bars = hGsvg.selectAll(".bar").data(fD).enter()
-                        .append("g").attr("class", "bar");
+                        .append("g").attr("class", "bar")
+                        .attr("transform", function(d) {
+                          return "translate(" + x(d.ies) + ",0)";
+                        });
 
                 //create the rectangles.
-                bars.append("rect")
+                bars.selectAll("rect")
+                      .data(function(d) {
+                        return d.values;
+                      })
+                    .enter().append("rect")
                         .attr("x", function (d) {
-                            return x(d[0]);
+                            return x1(d.name);
                         })
                         .attr("y", function (d) {
-                            return y(d[1]);
+                            return y(d.value);
                         })
-                        .attr("width", x.rangeBand())
+                        .attr("width", x1.rangeBand())
                         .attr("height", function (d) {
-                            return hGDim.h - y(d[1]);
+                            return hGDim.h - y(d.value);
                         })
-                        .attr('fill', barColor)
+                        .attr("fill", function(d) {
+                          return d.name === "authors" ? segColor("Autores") : segColor("Publicaciones");
+                        })
                         .on("mouseover", mouseover)// mouseover is defined below.
                         .on("mouseout", mouseout);// mouseout is defined below.
 
                 //Create the frequency labels above the rectangles.
-                bars.append("text").text(function (d) {
-                    return d3.format(",")(d[1])
-                })
+                bars.selectAll("div")
+                      .data(function(d) {
+                        return d.values;
+                      })
+                    .enter().append("text").text(function (d) {
+                          return d3.format(",")(d.value)
+                        })
                         .attr("x", function (d) {
-                            return x(d[0]) + x.rangeBand() / 2;
+                            return x1(d.name) + x1.rangeBand() / 2;
                         })
                         .attr("y", function (d) {
-                            return y(d[1]) - 5;
+                            return y(d.value) - 5;
                         })
-                        .attr("text-anchor", "middle");
+                        .attr("text-anchor", "middle")
+                        .style("font-size","70%");
 
                 function mouseover(d) {  // utility function to be called on mouseover.
                     $("h2.selected").text("");
-                    $("h2.selected").text(d[0]);
+                    $("h2.selected").text(d.ies);
                     // filter for selected source.
                     var st = fData.filter(function (s) {
-                        return s.Source == d[0];
+                        return d.hasOwnProperty("ies") ? s.Source === d.ies : s.Source === d[0];
                     })[0],
                             nD = d3.keys(st.freq).map(function (s) {
                         return {type: s, freq: st.freq[s]};
                     });
 
-                    // call update functions of pie-chart and legend.    
+                    // call update functions of pie-chart and legend.
                     pC.update(nD);
                     leg.update(nD);
                 }
 
                 function mouseout(d) {    // utility function to be called on mouseout.
-                    // reset the pie-chart and legend.    
+                    // reset the pie-chart and legend.
                     $("h2.selected").text("");
                     $("h2.selected").text("Todas las Universidades");
                     pC.update(tF);
@@ -111,6 +131,7 @@ barChart.directive('barChart', ["d3", "globalData", "sparqlQuery",
 
                 // create function to update the bars. This will be used by pie-chart.
                 hG.update = function (nD, color) {
+                    if (typeof nD[0] === 'undefined') return;
                     // update the domain of the y-axis map to reflect change in frequencies.
                     y.domain([0, d3.max(nD, function (d) {
                             return d[1];
@@ -187,7 +208,7 @@ barChart.directive('barChart', ["d3", "globalData", "sparqlQuery",
                     // call the update function of histogram with all data.
                     hG.update(fData.map(function (v) {
                         return [v.Source, v.total];
-                    }), barColor);
+                    }), segColor(d.data.type));
                 }
                 // Animating the pie-slice requiring a custom function which specifies
                 // how the intermediate paths should be drawn.
@@ -269,7 +290,9 @@ barChart.directive('barChart', ["d3", "globalData", "sparqlQuery",
 
             // calculate total frequency by source for all segment.
             var sF = fData.map(function (d) {
-                return [d.Source, d.total];
+                return {ies:d.Source, values: [
+                  {name:"publications", value:d.freq.Publicaciones, ies:d.Source},
+                  {name:"authors", value:d.freq.Autores, ies:d.Source}]};
             });
 
             var hG = histoGram(sF), // create the histogram.
@@ -304,4 +327,3 @@ barChart.directive('barChart', ["d3", "globalData", "sparqlQuery",
             }
         };
     }]);
-

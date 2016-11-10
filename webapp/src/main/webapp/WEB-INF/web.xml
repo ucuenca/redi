@@ -46,9 +46,9 @@
     <!-- specifies the home directory; overridden by environment variable MARMOTTA_HOME or system property marmotta.home -->
     <context-param>
         <param-name>marmotta.home</param-name>
-        <param-value>/home/santteegt/marmotta_home</param-value>
+        <param-value>/home/gtrsemantica/marmotta_home</param-value>
     </context-param>
-    
+
     <!-- handle OPTIONS requests -->
     <filter>
         <filter-name>MarmottaOptionsFilter</filter-name>
@@ -79,7 +79,7 @@
         <filter-name>CORS</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-    
+
     <!-- this filter performs startup configurations for first installation -->
     <filter>
         <filter-name>MarmottaPreStartupFilter</filter-name>
@@ -155,7 +155,7 @@
         <filter-name>MarmottaWebservices</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-    
+
     <context-param>
         <param-name>resteasy.injector.factory</param-name>
         <param-value>org.jboss.resteasy.cdi.CdiInjectorFactory</param-value>
