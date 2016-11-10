@@ -91,4 +91,4 @@ wkhomeControllers.controller('barChart', ['$scope', 'globalData', 'sparqlQuery',
 
         //$scope.data = dataToSend;
 
-    }]); //end barController 
+    }]); //end barController
