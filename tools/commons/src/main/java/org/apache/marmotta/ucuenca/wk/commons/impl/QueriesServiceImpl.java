@@ -31,7 +31,25 @@ public class QueriesServiceImpl implements QueriesService {
     @Override
     public String getAuthorsQuery(String datagraph) {
         return PREFIXES
-                + " SELECT DISTINCT ?s WHERE {" + getGraphString(datagraph) + "{ ?s rdf:type foaf:Person }}";
+                + " select ?s where{" + getGraphString(datagraph) + "{"
+                + " ?doc rdf:type bibo:Document ."
+                + " {"
+                + "      ?doc ?c ?s ."
+                + "      ?doc a bibo:Thesis."
+                + "      ?s a foaf:Person."
+                + " } UNION"
+                + " {"
+                + "     ?doc ?c ?s ."
+                + "     ?doc a <http://purl.org/net/nknouf/ns/bibtex#Mastersthesis>."
+                + "     ?s a foaf:Person."
+                + " } UNION{"
+                + ""
+                + "     ?doc a bibo:Article."
+                + "     ?doc ?c ?s ."
+                + "     ?s a foaf:Person."
+                + " } } }"
+                + " group by ?s"
+                + " having (count(?doc)>1)";
     }
 
     @Override
@@ -182,7 +200,27 @@ public class QueriesServiceImpl implements QueriesService {
     @Override
     public String getCountPersonQuery(String graph) {
         return PREFIXES
-                + " SELECT (COUNT(?s) as ?count) WHERE { " + getGraphString(graph) + " { ?s rdf:type foaf:Person. }}";
+                + " SELECT (COUNT( distinct ?s) as ?count) WHERE {"
+                + " select distinct ?s where {" + getGraphString(graph) + "{ "
+                + " ?docu rdf:type bibo:Document . "
+                + " {"
+                + "      ?docu ?c ?s ."
+                + "      ?docu a bibo:Thesis."
+                + "      ?s a foaf:Person."
+                + " }"
+                + " UNION"
+                + " {"
+                + "     ?docu ?c ?s ."
+                + "     ?docu a <http://purl.org/net/nknouf/ns/bibtex#Mastersthesis>."
+                + "     ?s a foaf:Person."
+                + " }"
+                + " UNION { "
+                + "   ?docu a bibo:Article."
+                + "   ?docu ?c ?s ."
+                + "   ?s a foaf:Person."
+                + " }}}"
+                + " group by ?s"
+                + " having (count(?docu)>1)}";
     }
 
     @Override

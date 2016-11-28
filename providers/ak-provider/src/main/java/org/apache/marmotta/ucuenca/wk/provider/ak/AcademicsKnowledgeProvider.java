@@ -39,6 +39,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.marmotta.commons.vocabulary.FOAF;
 import org.apache.marmotta.ucuenca.wk.provider.ak.util.JSONtoRDF;
 import org.apache.marmotta.ucuenca.wk.provider.ak.util.MapPublications;
 import org.apache.marmotta.ucuenca.wk.provider.ak.util.Publication;
@@ -68,21 +69,20 @@ public class AcademicsKnowledgeProvider extends AbstractHttpProvider {
         MAPPINGSCHEMA.put("entity::type", "http://purl.org/ontology/bibo/Document");
         MAPPINGSCHEMA.put("entity::property:uri", "http://purl.org/ontology/bibo/uri");
         MAPPINGSCHEMA.put("entity::property:title", "http://purl.org/dc/terms/title");
-        MAPPINGSCHEMA.put("entity::property:abstract", "http://purl.org/ontology/bibo/abstract");
-        MAPPINGSCHEMA.put("entity::property:journal", "http://purl.org/ontology/bibo/Journal");
+        MAPPINGSCHEMA.put("entity::property:abstractt", "http://purl.org/ontology/bibo/abstract");
+        MAPPINGSCHEMA.put("entity::list:journals", "http://purl.org/ontology/bibo/Journal");
         MAPPINGSCHEMA.put("entity::property:creator", "http://purl.org/dc/elements/1.1/creator");
-        MAPPINGSCHEMA.put("entity::property:date", "http://purl.org/dc/elements/1.1/date");
+        MAPPINGSCHEMA.put("entity::property:year", "http://purl.org/dc/elements/1.1/date");
         MAPPINGSCHEMA.put("entity::property:created", "http://purl.org/dc/terms/created");
         MAPPINGSCHEMA.put("entity::property:doi", "http://purl.org/ontology/bibo/doi");
         MAPPINGSCHEMA.put("entity::property:authorlist", "http://purl.org/ontology/bibo/authorList");
-        MAPPINGSCHEMA.put("entity::property:quote", "http://purl.org/ontology/bibo/Quote");
+        MAPPINGSCHEMA.put("entity::list:keyWord", "http://purl.org/ontology/bibo/Quote");
         MAPPINGSCHEMA.put("entity::property:conference", "http://purl.org/ontology/bibo/Conference");
         MAPPINGSCHEMA.put("entity::property:contributor", "http://purl.org/dc/terms/contributor");
-        MAPPINGSCHEMA.put("entity::property:subject", "http://purl.org/dc/terms/subject");
-        MAPPINGSCHEMA.put("entity::property:Conference", "http://purl.org/ontology/bibo/Conference");
+        MAPPINGSCHEMA.put("entity::list:fields", "http://purl.org/dc/terms/subject");
         MAPPINGSCHEMA.put("entity::property:references", "http://purl.org/dc/terms/references");
         MAPPINGSCHEMA.put("entity::property:text", "http://purl.org/ontology/bibo/content");
-
+        MAPPINGSCHEMA.put("entity::property:name", FOAF.name.toString());
         MAPPINGSCHEMA.put("entity::property:type", nsRedi + "Type");
         MAPPINGSCHEMA.put("entity::property:referenceCount", nsRedi + "referenceCount");
         MAPPINGSCHEMA.put("entity::property:citationCount", nsRedi + "citationCount");
@@ -111,7 +111,7 @@ public class AcademicsKnowledgeProvider extends AbstractHttpProvider {
     @Override
     public String[] listMimeTypes() {
         return new String[]{
-            "text/html"
+            "application/json"
         };
     }
 

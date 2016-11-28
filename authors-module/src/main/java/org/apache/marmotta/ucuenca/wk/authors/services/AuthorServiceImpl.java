@@ -210,7 +210,7 @@ public class AuthorServiceImpl implements AuthorService {
                     }
                 }// while (authorsResult.hasNext()) 
             } catch (QueryEvaluationException ex) {
-                log.error("Fallo consulta ASK de:  " + resource);
+                log.error("Fallo consulta ASK de:  " + resource+ "error"+ ex.getMessage());
             }
 
         }//END FOR   Obteniedo resultados de acuerdo a LIMIT y OFFSET
