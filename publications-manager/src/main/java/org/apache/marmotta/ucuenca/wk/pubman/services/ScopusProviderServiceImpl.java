@@ -107,7 +107,7 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
 
     private int processpercent = 0;
 
-    private String URLSEARCHSCOPUS = "http://api.elsevier.com/content/search/author?query=authfirst%28FIRSTNAME%29authlast%28LASTNAME%29AFFILIATION&apiKey=c311ce719014fbf923e96fb95067ae8b&httpAccept=application/xml";
+    private String URLSEARCHSCOPUS = "http://api.elsevier.com/content/search/author?query=authfirst%28FIRSTNAME%29authlast%28LASTNAME%29+AND+affil%28PAIS%29&apiKey=a3b64e9d82a8f7b14967b9b9ce8d513d&httpAccept=application/xml";
     private String AFFILIATIONPARAM = "+AND+affil%28PAIS%29";
     List<Map<String, Value>> uniNames = new ArrayList<>(); //nombre de universidades
     
