@@ -16,21 +16,23 @@
  */
 package org.apache.marmotta.ucuenca.wk.provider.gs;
 
-//import org.apache.commons.lang3.StringUtils;
-//import org.apache.marmotta.commons.vocabulary.FOAF;
-//import com.google.common.base.Preconditions;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
+//import com.google.gson.Gson;
+//import com.google.gson.JsonArray;
+import org.apache.marmotta.ucuenca.wk.provider.gs.util.Author;
+import org.apache.marmotta.ucuenca.wk.provider.gs.util.ProfileHandler;
+import org.apache.marmotta.ucuenca.wk.provider.gs.util.Publication;
+import org.apache.marmotta.ucuenca.wk.provider.gs.util.PublicationHandler;
+import org.apache.marmotta.ucuenca.wk.provider.gs.util.SearchHandler;
 
 import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
-import org.apache.marmotta.ldclient.model.ClientConfiguration;
-import org.apache.marmotta.ldclient.model.ClientResponse;
-import org.apache.marmotta.ldclient.services.ldclient.LDClient;
-import org.apache.marmotta.ldclient.services.provider.AbstractHttpProvider;
-import org.apache.marmotta.ucuenca.wk.provider.gs.util.GSXMLHandler;
-import org.apache.marmotta.ucuenca.wk.provider.gs.util.GSresult;
-import org.apache.marmotta.ucuenca.wk.provider.gs.util.JSONtoRDF;
+//import org.apache.marmotta.ldclient.model.ClientConfiguration;
+//import org.apache.marmotta.ldclient.model.ClientResponse;
+//import org.apache.marmotta.ldclient.services.ldclient.LDClient;
+//import org.apache.marmotta.ldclient.services.provider.AbstractHttpProvider;
+//import org.apache.marmotta.ucuenca.wk.provider.gs.util.GSXMLHandler;
+//import org.apache.marmotta.ucuenca.wk.provider.gs.util.GSresult;
+//import org.apache.marmotta.ucuenca.wk.provider.gs.util.JSONtoRDF;
 //import org.jdom2.Document;
 //import org.jdom2.Element;
 //import org.jdom2.JDOMException;
@@ -50,31 +52,46 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Arrays;
 //import java.net.URL;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.logging.Level;
 //import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.marmotta.ldclient.services.provider.AbstractHttpProvider;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Support Google Scholar information as RDF
  * <p/>
  * Author: Santiago Gonzalez
+ *
+ * @author Xavier Sumba
  */
-public class GoogleScholarProvider extends AbstractHttpProvider {
+public class GoogleScholarProvider extends AbstractHttpProvider {//NOPMD
 
     public static final String NAME = "Google Scholar Provider";
     public static final String API = "http://scholar.google.com/scholar?start=%s&q=author:%%22%s%%22%s&hl=en&as_sdt=1%%2C15&as_vis=1%s";
-    public static final String PATTERN = "http(s?)://scholar\\.google\\.com/scholar\\?start\\=0\\&q=author\\:%22(.*)%22\\&hl=en\\&as_sdt\\=1%2C15\\&as_vis\\=1(.*)$";
+    //public static final String PATTERN = "http(s?)://scholar\\.google\\.com/scholar\\?start\\=0\\&q=author\\:%22(.*)%22\\&hl=en\\&as_sdt\\=1%2C15\\&as_vis\\=1(.*)$";
+    //public static final String PATTERN = "http(s?)://scholar\\.google\\.com/citations\\?mauthors\\=(.*)\\&hl=en\\&view_op\\=search_authors(.*)$";
+    public static final String PATTERN = "(http(s?)://scholar\\.google\\.com/citations\\?mauthors\\=(.*)\\&hl=en\\&view_op\\=search_authors);(.*)-(.*)-(.*)-(.*)$";
+    public static final String SCHOLAR_GOOGLE = "https://scholar.google.com";
     private static String nsUcuenca = "https://www.cedia.org.ec/";
 
     private static Logger log = LoggerFactory.getLogger(GoogleScholarProvider.class);
 
-    private String stringSearch = null, authorSearch = null, advancedSearch = null;
+    private String stringSearch = null;//, authorSearch = null, advancedSearch = null;
+
+    private String city;
+    private String province;
+    private String[] ies;
+    private String[] domains;
 
     public static final ConcurrentMap<String, String> MAPPINGSCHEMA = new ConcurrentHashMap<String, String>();
 
@@ -141,102 +158,146 @@ public class GoogleScholarProvider extends AbstractHttpProvider {
         String url = null;
         Matcher m = Pattern.compile(PATTERN).matcher(resource);
         if (m.find()) {
-            stringSearch = m.group(2);
-            authorSearch = m.group(3);
-            advancedSearch = m.group(3);
-            log.debug("Extracting info for: {0}", stringSearch);
-            if (authorSearch.length() > 0) {
-                log.debug("Extra author search parameters: {0}", authorSearch);
-            }
-            if (advancedSearch.length() > 0) {
-                log.debug("Advanced search parameters: {0}", advancedSearch);
-            }
-            url = resource;
+            stringSearch = m.group(3);
+            city = m.group(4);
+            province = m.group(5);
+            ies = m.group(6).split(",");
+            domains = m.group(7).split(",");
+
+            log.info(stringSearch);
+            log.info(city);
+            log.info(province);
+            log.info(ies[0]);
+            log.info(domains[0]);
+//            log.debug("Extracting info for: {0}", stringSearch);
+//            if (authorSearch.length() > 0) {
+//                log.debug("Extra author search parameters: {0}", authorSearch);
+//            }
+//            if (advancedSearch.length() > 0) {
+//                log.debug("Advanced search parameters: {0}", advancedSearch);
+//            }
+            url = m.group(1);
         }
         return Collections.singletonList(url);
     }
 
     @Override
-    public List<String> parseResponse(String resource, String requestUrl, Model triples, InputStream input, String contentType) throws DataRetrievalException {
-        log.debug("Request Successful to {0}", requestUrl);
-        final GSXMLHandler gsXMLHandler = new GSXMLHandler();
-        gsXMLHandler.clearGSresultList();
-        try {
-            XMLReader xr = XMLReaderFactory.createXMLReader("org.ccil.cowan.tagsoup.Parser");
-            xr.setContentHandler(gsXMLHandler);
-            InputSource gsxml = new InputSource(input);
-            gsxml.setEncoding("iso-8859-1");
-            xr.parse(gsxml);
+    public List<String> parseResponse(String resource, String requestUrl, Model triples, InputStream input, String contentType) throws DataRetrievalException {//NOPMD
+        try { //NOPMD
+            log.debug("Request Successful to {0}", requestUrl);
 
-            final Set<GSresult> gsresultlist = gsXMLHandler.getGSresultList();
-            Gson gson = new Gson();
-            JsonArray json = new JsonArray();
-            for (GSresult d : gsresultlist) {
-                json.add(gson.toJsonTree(d).getAsJsonObject());
-            }
-            JSONtoRDF parser = new JSONtoRDF(resource, MAPPINGSCHEMA, json, triples);
-            try {
-                parser.parse();
-            } catch (Exception e) {
-                throw new DataRetrievalException("I/O exception while retrieving resource: " + requestUrl, e);
-            }
-            int numPages = (int) ((double) (gsXMLHandler.getNumResults() / 10)) + 1;
-            int pagesLoaded = 1;
-            Model model = null;
-            while (pagesLoaded < numPages) {
-               
-                String pagenumquery = Integer.toString(pagesLoaded * 10);
-                String moreDataUrl = String.format(API, pagenumquery, stringSearch, authorSearch, advancedSearch);
-                ClientConfiguration conf = new ClientConfiguration();
-                LDClient ldClient = new LDClient(conf);
-                ClientResponse response = ldClient.retrieveResource(moreDataUrl);
-                Model pageModel = response.getData();
-                if (model == null) {
-                    model = pageModel;
-                } else {
-                    model.addAll(pageModel);
+            // Extract information of authors if they have a gs profile.
+            SearchHandler searchHandler = new SearchHandler();
+            extract(resource, searchHandler);
+            List<Author> authors = searchHandler.getResults();
+
+            for (Author a : chooseCorrectAuthors(authors)) {
+
+                int init = 0;
+
+                // Extract url of publications from author's profile
+                do {
+                    String urlProfile = a.getProfile() + "&cstart=" + init + "&pagesize=100";
+                    extract(urlProfile, new ProfileHandler(a));
+                    init += 100;
+                } while (a.getNumPublications() == init);
+
+                // Extract information of each publication URL
+                for (Publication p : a.getPublications()) {
+                    String urlPublication = p.getUrl();
+                    extract(urlPublication, new PublicationHandler(p));
                 }
-                pagesLoaded++;
+
+                // Returns JSON
+                a.map();
             }
-            triples.addAll(model);
-
-        } catch (SAXException | IOException e) {
-            throw new DataRetrievalException("I/O exception while retrieving resource: " + requestUrl, e);
+        } catch (MalformedURLException ex) {
+            java.util.logging.Logger.getLogger(GoogleScholarProvider.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SAXException ex) {
+            java.util.logging.Logger.getLogger(GoogleScholarProvider.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            java.util.logging.Logger.getLogger(GoogleScholarProvider.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-//    	try {
-//    		List<String> candidates = new ArrayList<String>();
-//    		ValueFactory factory = ValueFactoryImpl.getInstance();
-//    		final Document doc = new SAXBuilder(XMLReaders.NONVALIDATING).build(input);
-//	    	for(Element element: queryElements(doc, "/result/hits/hit/info/url")) {
-//	    		String candidate = element.getText();
-//	    		triples.add(factory.createStatement(factory.createURI( resource ), FOAF.member, factory.createURI( candidate ) ));
-//	    		candidates.add(candidate);
-//	    	}
-//	    	ClientConfiguration conf = new ClientConfiguration();
-//	        LDClient ldClient = new LDClient(conf);
-//	        if(!candidates.isEmpty()) {
-//		        Model candidateModel = null;
-//		    	for(String author: candidates) {
-//		    		ClientResponse response = ldClient.retrieveResource(author);
-//		        	Model authorModel = response.getData();
-//		        	if(candidateModel == null) {
-//		        		candidateModel = authorModel;
-//		        	} else {
-//		        		candidateModel.addAll(authorModel);
-//		        	}
-//		    	}
-//		    	triples.addAll(candidateModel);
-//	        }
-//    	}catch (IOException e) {
-//            throw new DataRetrievalException("I/O error while parsing HTML response", e);
-//        }catch (JDOMException e) {
-//            throw new DataRetrievalException("could not parse XML response. It is not in proper XML format", e);
+        ////////////////////////////////////////////////////////
+//        final GSXMLHandler gsXMLHandler = new GSXMLHandler();
+//        gsXMLHandler.clearGSresultList();
+//        try {
+//            XMLReader xr = XMLReaderFactory.createXMLReader("org.ccil.cowan.tagsoup.Parser");
+//            xr.setContentHandler(gsXMLHandler);
+//            InputSource gsxml = new InputSource(input);
+//            gsxml.setEncoding("iso-8859-1");
+//            xr.parse(gsxml);
+//
+//            final Set<GSresult> gsresultlist = gsXMLHandler.getGSresultList();
+//            Gson gson = new Gson();
+//            JsonArray json = new JsonArray();
+//            for (GSresult d : gsresultlist) {
+//                json.add(gson.toJsonTree(d).getAsJsonObject());
+//            }
+//            JSONtoRDF parser = new JSONtoRDF(resource, MAPPINGSCHEMA, json, triples);
+//            try {
+//                parser.parse();
+//            } catch (Exception e) {
+//                throw new DataRetrievalException("I/O exception while retrieving resource: " + requestUrl, e);
+//            }
+//            int numPages = (int) ((double) (gsXMLHandler.getNumResults() / 10)) + 1;
+//            int pagesLoaded = 1;
+//            Model model = null;
+//            while (pagesLoaded < numPages) {
+//
+//                String pagenumquery = Integer.toString(pagesLoaded * 10);
+//                String moreDataUrl = String.format(API, pagenumquery, stringSearch, authorSearch, advancedSearch);
+//                ClientConfiguration conf = new ClientConfiguration();
+//                LDClient ldClient = new LDClient(conf);
+//                ClientResponse response = ldClient.retrieveResource(moreDataUrl);
+//                Model pageModel = response.getData();
+//                if (model == null) {
+//                    model = pageModel;
+//                } else {
+//                    model.addAll(pageModel);
+//                }
+//                pagesLoaded++;
+//            }
+//            triples.addAll(model);
+//
+//        } catch (SAXException | IOException e) {
+//            throw new DataRetrievalException("I/O exception while retrieving resource: " + requestUrl, e);
 //        }
         return Collections.emptyList();
     }
 
-//    protected static List<Element> queryElements(Document n, String query) {
-//        return XPathFactory.instance().compile(query, new ElementFilter()).evaluate(n);
-//    }
+    private List<Author> chooseCorrectAuthors(List<Author> authors) {
+        return Arrays.asList(authors.get(0));
+    }
+
+    private void sleep(int ms) throws InterruptedException {
+        Thread.sleep(ms);
+    }
+
+    private void extract(String url, DefaultHandler handler) throws MalformedURLException, SAXException, InterruptedException {
+        int tries = 0;
+        while (true) {
+            try {
+                log.info("SCRAPPRING " + url);
+
+                XMLReader xr = XMLReaderFactory.createXMLReader("org.ccil.cowan.tagsoup.Parser");
+
+                xr.setContentHandler(handler);
+                InputSource profile = new InputSource(
+                        new URL(url)
+                        .openConnection().getInputStream());
+                profile.setEncoding("iso-8859-1");
+                xr.parse(profile);
+                sleep(5000);
+                break;
+            } catch (IOException e) {
+                tries++;
+                log.error(String.format("TRIES: %s \n", tries), e);
+                final int two_hour = 2 * 60 * 60 * 1000;
+                log.info("WAITING TWO HOURS....");
+                sleep(two_hour);
+            }
+        }
+    }
+
 }

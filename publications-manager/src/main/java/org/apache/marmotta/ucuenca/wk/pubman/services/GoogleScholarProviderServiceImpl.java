@@ -23,6 +23,7 @@ package org.apache.marmotta.ucuenca.wk.pubman.services;
 //import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,12 +35,10 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.apache.marmotta.commons.sesame.model.ModelCommons;
-import org.apache.marmotta.kiwi.model.rdf.KiWiUriResource;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
 import org.apache.marmotta.ldclient.model.ClientConfiguration;
 import org.apache.marmotta.ldclient.model.ClientResponse;
 import org.apache.marmotta.ldclient.services.ldclient.LDClient;
-import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
@@ -52,31 +51,19 @@ import org.apache.marmotta.ucuenca.wk.commons.service.KeywordsService;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 
 import org.openrdf.query.BindingSet;
-import org.openrdf.query.MalformedQueryException;
-//import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
 import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.model.Value;
-import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.UpdateExecutionException;
-import org.openrdf.repository.RepositoryException;
 
-//import org.openrdf.query.impl.TupleQueryResultImpl;
-//import org.openrdf.repository.RepositoryException;
-//import org.openrdf.rio.RDFFormat;
-//import org.openrdf.rio.RDFHandlerException;
-//import org.openrdf.rio.RDFWriter;
-//import org.openrdf.rio.Rio;
-//import org.openrdf.model.Model;
-//import org.openrdf.model.Statement;
 /**
  * Default Implementation of {@link PubVocabService} Get Data From Google
  * Scholar using Google Scholar Provider
  *
  * Fernando Baculima CEDIA - Universidad de Cuenca
  *
+ * @author Xavier Sumba <xavier.sumba93@ucuenca.ec>
  */
 @ApplicationScoped
 public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderService, Runnable {
@@ -229,11 +216,9 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
             LDClient ldClient = new LDClient(conf);
             //ClientResponse response = ldClient.retrieveResource("http://rdf.dblp.com/ns/m.0wqhskn");
 
-            int allMembers = 0;
             String nameProviderGraph = "http://ucuenca.edu.ec/wkhuska/provider/GoogleScholarProvider";
             String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(authorGraph, endpointsGraph);
 
-            // TupleQueryResult result = sparqlService.query(QueryLanguage.SPARQL, getAuthors);
             String nameToFind = "";
             String authorResource = "";
             int priorityToFind = 0;
@@ -258,12 +243,24 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                     do {
                         try {
                             boolean existNativeAuthor = false;
-                            allMembers = 0;
                             nameToFind = commonsServices.removeAccents(priorityFindQueryBuilding(priorityToFind, firstName, lastName).replace("_", "+"));
-                            //response = ldClient.retrieveResource(NS_DBLP + nameToFind);
-                            String URL_TO_FIND = "https://scholar.google.com/scholar?start=0&q=author:%22" + nameToFind + "%22&hl=en&as_sdt=1%2C15&as_vis=1";
+
+                            //String URL_TO_FIND = "https://scholar.google.com/scholar?start=0&q=author:%22" + nameToFind + "%22&hl=en&as_sdt=1%2C15&as_vis=1";
+                            String URL_TO_FIND = "https://scholar.google.com/citations?mauthors=" + nameToFind + "&hl=en&view_op=search_authors";
+
                             existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(nameProviderGraph, URL_TO_FIND));
                             if (nameToFind.compareTo("") != 0 && !existNativeAuthor) {
+
+                                String info = "";
+                                List<Map<String, Value>> iesInfo = sparqlService.query(QueryLanguage.SPARQL, queriesService.getIESInfobyAuthor(authorResource));
+                                if (!iesInfo.isEmpty()) {
+                                    String city = iesInfo.get(0).get("city").stringValue();
+                                    String province = iesInfo.get(0).get("province").stringValue();
+                                    String ies = iesInfo.get(0).get("ies").stringValue();
+                                    String domains = iesInfo.get(0).get("domains").stringValue();
+
+                                    info = ";" + city + "-" + province + "-" + ies + "-" + domains;
+                                }
 
                                 //do {
                                 try {//waint 1  second between queries
@@ -272,7 +269,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                                     Thread.currentThread().interrupt();
                                 }
                                 try {
-                                    response = ldClient.retrieveResource(URL_TO_FIND);
+                                    response = ldClient.retrieveResource(URL_TO_FIND + info);
                                     dataretrieve = true;
                                 } catch (DataRetrievalException e) {
                                     //do {
@@ -285,9 +282,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                                     dataretrieve = false;
                                 }
 
-                                // } while (true);
-                                //(!dataretrievee && response.getHttpStatus() == 503);
-                            }//end  if  nameToFind != ""
+                            }
 
                             //String nameEndpointofPublications = ldClient.getEndpoint(NS_DBLP + nameToFind).getName();
                             String nameEndpointofPublications = ldClient.getEndpoint(URL_TO_FIND).getName();

@@ -19,6 +19,8 @@ public interface QueriesService {
 
     String getOffset(String offset);
 
+    String getIESInfobyAuthor(String authorName);
+
     /**
      * return query to obtain all subject ( keywords ) of an author , using
      * dct:subject property

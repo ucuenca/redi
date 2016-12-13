@@ -241,6 +241,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + "     where { " + getGraphString(endpointsgraph) + " {"
                 + "     ?provenance <http://ucuenca.edu.ec/ontology#status> ?status "
                 + " }}} filter (regex(?status,\"true\")) "
+                + "filter (mm:fulltext-search(?name,\"juan pablo carvallo\"))"
                 + "                }} ";
 
     }
@@ -654,6 +655,29 @@ public class QueriesServiceImpl implements QueriesService {
                 + " {     <" + varargs[1] + "> foaf:publications ?publicationResource."
                 + " ?publicationResource <" + varargs[2] + ">  ?title"
                 + "}} ";
+    }
+
+    @Override
+    public String getIESInfobyAuthor(String authorURI) {
+        return PREFIXES
+                + "SELECT DISTINCT *"
+                + "WHERE {  "
+                + "  GRAPH <http://ucuenca.edu.ec/wkhuska/authors>  {"
+                + "    <" + authorURI + "> dct:provenance ?provenance."
+                + "    {"
+                + "      SELECT ?city ?province (GROUP_CONCAT(DISTINCT STR(?fullname); separator=\",\") as ?ies) (GROUP_CONCAT(DISTINCT ?domain; separator=\",\") as ?domains)"
+                + "      WHERE {"
+                + "        GRAPH <http://ucuenca.edu.ec/wkhuska/endpoints>  {"
+                + "          ?provenance <http://ucuenca.edu.ec/ontology#fullName> ?fullname;"
+                + "                      <http://ucuenca.edu.ec/ontology#status> true  ;"
+                + "                      <http://ucuenca.edu.ec/ontology#city> ?city;"
+                + "                      <http://ucuenca.edu.ec/ontology#province> ?province;"
+                + "                      <http://ucuenca.edu.ec/ontology#domains>/rdf:first ?domain."
+                + "        }"
+                + "      } GROUP BY ?provenance ?city ?province"
+                + "    }"
+                + "  }"
+                + "} ";
     }
 
 }
