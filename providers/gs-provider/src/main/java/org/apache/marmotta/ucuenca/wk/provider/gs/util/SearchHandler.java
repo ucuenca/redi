@@ -31,7 +31,7 @@ public final class SearchHandler extends DefaultHandler implements IHandler {
     private boolean isPhotoDiv = false;
     private boolean extract = false;
     private boolean isLastAttr = false;
-
+    
     @Override
     public List<Author> getResults() {
         return authors;
