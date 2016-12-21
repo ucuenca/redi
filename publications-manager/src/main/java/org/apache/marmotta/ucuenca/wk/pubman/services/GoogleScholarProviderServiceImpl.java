@@ -24,6 +24,7 @@ package org.apache.marmotta.ucuenca.wk.pubman.services;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +34,12 @@ import java.util.logging.Level;
 import org.slf4j.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.net.ssl.SSLContext;
+import org.apache.http.client.HttpClient;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 
 import org.apache.marmotta.commons.sesame.model.ModelCommons;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
@@ -212,6 +219,12 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
         try {
             //new AuthorVersioningJob(log).proveSomething();
             ClientConfiguration conf = new ClientConfiguration();
+
+            //<editor-fold defaultstate="collapsed" desc="Util to skip certificate problem. Just for test purposes">
+            HttpClient httpclient = HttpClientBuilder.create().build();
+            conf.setHttpClient(httpclient);
+//</editor-fold>
+
             //conf.addEndpoint(new DBLPEndpoint());
             LDClient ldClient = new LDClient(conf);
             //ClientResponse response = ldClient.retrieveResource("http://rdf.dblp.com/ns/m.0wqhskn");
@@ -239,6 +252,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                 priorityToFind = 1;
                 if (!sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(nameProviderGraph, authorResource))) {
                     boolean dataretrieve = false;//( Data Retrieve Exception )
+                    String infoIES = "";
 
                     do {
                         try {
@@ -251,7 +265,6 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                             existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(nameProviderGraph, URL_TO_FIND));
                             if (nameToFind.compareTo("") != 0 && !existNativeAuthor) {
 
-                                String info = "";
                                 List<Map<String, Value>> iesInfo = sparqlService.query(QueryLanguage.SPARQL, queriesService.getIESInfobyAuthor(authorResource));
                                 if (!iesInfo.isEmpty()) {
                                     String city = iesInfo.get(0).get("city").stringValue();
@@ -259,7 +272,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                                     String ies = iesInfo.get(0).get("ies").stringValue();
                                     String domains = iesInfo.get(0).get("domains").stringValue();
 
-                                    info = ";" + city + "-" + province + "-" + ies + "-" + domains;
+                                    infoIES = ";" + city + "-" + province + "-" + ies + "-" + domains;
                                 }
 
                                 //do {
@@ -269,7 +282,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                                     Thread.currentThread().interrupt();
                                 }
                                 try {
-                                    response = ldClient.retrieveResource(URL_TO_FIND + info);
+                                    response = ldClient.retrieveResource(URL_TO_FIND + infoIES);
                                     dataretrieve = true;
                                 } catch (DataRetrievalException e) {
                                     //do {
@@ -285,7 +298,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                             }
 
                             //String nameEndpointofPublications = ldClient.getEndpoint(NS_DBLP + nameToFind).getName();
-                            String nameEndpointofPublications = ldClient.getEndpoint(URL_TO_FIND).getName();
+                            String nameEndpointofPublications = ldClient.getEndpoint(URL_TO_FIND + infoIES).getName();
                             String providerGraph = graphByProviderNS + nameEndpointofPublications.replace(" ", "");
                             if (dataretrieve) {
 //                                Model model = response.getData();
@@ -317,91 +330,125 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                                      * some keywords of NameToFind author is
                                      * contained into a retrieve publication
                                      */
-                                    String getPublicationsFromProviderQuery = queriesService.getSubjectAndObjectByPropertyQuery("dc:creator");
-                                    TupleQuery pubquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationsFromProviderQuery); //
-                                    TupleQueryResult gsPublicationsResult = pubquery.evaluate();
+                                    // Store all triples from GS
+                                    String getTriples = queriesService.getRetrieveResourceQuery();
+                                    TupleQuery triplesGS = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getTriples);
+                                    TupleQueryResult gsResult = triplesGS.evaluate();
+                                    while (gsResult.hasNext()) {
+                                        BindingSet bind = gsResult.next();
+                                        String s = bind.getValue("x").toString();
+                                        String p = bind.getValue("y").toString();
+                                        String o = bind.getValue("z").toString();
 
-                                    while (gsPublicationsResult.hasNext()) {
-                                        BindingSet gsResource = gsPublicationsResult.next();
-                                        String publication = gsResource.getValue("subject").toString();
-                                        String authorfromGS = gsResource.getValue("object").toString();
-                                        /**
-                                         * Getting and formating full name from
-                                         * google scholar Example ->
-                                         * author:%22M+Espinoza+Marin%22 Example
-                                         * 2 -> author:%22JM+Espinoza%22. The
-                                         * comparisonNames.syntacticComparison
-                                         * Service need the format : Name1
-                                         * Name2:Name3 Name4
-                                         */
-                                        String googlescholarfullname = authorfromGS;
-                                        googlescholarfullname = googlescholarfullname.substring(googlescholarfullname.indexOf("author:") + 10);
-                                        if (googlescholarfullname.indexOf("+") == 0) {
-                                            googlescholarfullname = googlescholarfullname.substring(1, googlescholarfullname.indexOf("%22"));
-                                        } else {
-                                            googlescholarfullname = googlescholarfullname.substring(0, googlescholarfullname.indexOf("%22"));
-                                        }
-                                        googlescholarfullname = googlescholarfullname.replace('+', ':');
-                                        /**
-                                         * case JM:Espinoza or JP:Carvallo
-                                         * replace with : J:Espinoza or
-                                         * J:Carvallo
-                                         */
-                                        if (googlescholarfullname.substring(0, googlescholarfullname.indexOf(":")).length() == 2) {
-                                            googlescholarfullname = googlescholarfullname.substring(0, 1) + googlescholarfullname.substring(2);
-                                        }
+                                        String publicationInsertQuery = buildInsertQuery(providerGraph, s, p, o);
+                                        updatePub(publicationInsertQuery);
 
-                                        String localfullname = firstName + ":" + lastName;
-
-                                        /**
-                                         * in comparisonNames send local because
-                                         * the syntax names are similar
-                                         */
-                                        if (distance.syntacticComparisonNames("local", localfullname, "local", googlescholarfullname)) {
-
-                                            List<String> listA = kservice.getKeywordsOfAuthor(authorResource);
-                                            List<String> listB = new ArrayList<String>();
-                                            String getAbstractAndTitleFromProviderQuery = queriesService.getAbstractAndTitleQuery(publication);
-                                            TupleQuery abstracttitlequery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getAbstractAndTitleFromProviderQuery); //
-                                            TupleQueryResult abstractResult = abstracttitlequery.evaluate();
-
-                                            if (abstractResult.hasNext()) {
-                                                BindingSet abstractResource = abstractResult.next();
-                                                String abstracttext = abstractResource.getValue("abstract").toString();
-                                                String titletext = abstractResource.getValue("title").toString();
-                                                listB = kservice.getKeywords(titletext);
-
-                                            }
-                                            int cero = 0;
-                                            if (listB.size() != cero && listA.size() != cero && distance.semanticComparison(listA, listB)) {
-                                                //SPARQL obtain all data publications of author from Google Scholar Provider
-                                                String getPublicationDataFromProviderQuery = queriesService.getPublicationsPropertiesQuery(publication);
-                                                TupleQuery dataquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationDataFromProviderQuery); //
-                                                TupleQueryResult tripletasResult = dataquery.evaluate();
-
-                                                while (tripletasResult.hasNext()) {
-                                                    BindingSet tripletsResource = tripletasResult.next();
-                                                    String predicate = tripletsResource.getValue("property").toString();
-                                                    String object = tripletsResource.getValue("value").toString();
-
-                                                    //String publicationProperty = tripletsResource.getValue("publicationProperty").toString();
-                                                    ///insert sparql query, 
-                                                    String publicationInsertQuery = buildInsertQuery(providerGraph, publication, predicate, object);
-                                                    updatePub(publicationInsertQuery);
-
-                                                    // insert dct:contributor      <> dct:contributor <http://dblp.org/pers/xr/s/Saquicela:Victor> 
-                                                    String contributorInsertQuery = buildInsertQuery(providerGraph, publication, "http://purl.org/dc/terms/contributor", authorNativeResource);
-                                                    updatePub(contributorInsertQuery);
-
-                                                    // sameAs triplet    <http://190.15.141.102:8080/dspace/contribuidor/autor/SaquicelaGalarza_VictorHugo> owl:sameAs <http://dblp.org/pers/xr/s/Saquicela:Victor> 
-                                                    String sameAsInsertQuery = buildInsertQuery(providerGraph, authorResource, "http://www.w3.org/2002/07/owl#sameAs", authorNativeResource);
-                                                    updatePub(sameAsInsertQuery);
-
-                                                }
-                                            }//end if semantic comparison
-
-                                        }//end if syntactic comparison
                                     }
+
+                                    // SameAs URI DSPACE/GS
+                                    String getAuthor = queriesService.getSubjectAndObjectByPropertyQuery("foaf:publications");
+
+                                    TupleQuery authorQuery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getAuthor); //
+                                    TupleQueryResult gsAuthor = authorQuery.evaluate();
+
+                                    if (gsAuthor.hasNext()) {
+                                        BindingSet bind = gsAuthor.next();
+                                        String authorfromGS = bind.getValue("subject").toString();
+                                        String sameAsInsertQuery = buildInsertQuery(providerGraph, authorResource, "http://www.w3.org/2002/07/owl#sameAs", authorfromGS);
+                                        updatePub(sameAsInsertQuery);
+                                    }
+////<editor-fold defaultstate="collapsed" desc="Old code">
+//                                    /// Same code codigo
+//                                    String getPublicationsFromProviderQuery = queriesService.getSubjectAndObjectByPropertyQuery("foaf:publications");
+//                                    TupleQuery pubquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationsFromProviderQuery); //
+//                                    TupleQueryResult gsPublicationsResult = pubquery.evaluate();
+//
+//                                    while (gsPublicationsResult.hasNext()) {
+//                                        BindingSet gsResource = gsPublicationsResult.next();
+//                                        String authorfromGS = gsResource.getValue("subject").toString();
+//                                        String publication = gsResource.getValue("object").toString();
+//                                        /**
+//                                         * Getting and formating full name from
+//                                         * google scholar. Example 1 ->
+//                                         * author:%22M+Espinoza+Marin%22 Example
+//                                         * 2 -> author:%22JM+Espinoza%22. The
+//                                         * comparisonNames.syntacticComparison
+//                                         * Service need the format : Name1
+//                                         * Name2:Name3 Name4
+//                                         */
+//                                        String googlescholarfullname = authorfromGS;
+//                                        googlescholarfullname = googlescholarfullname.substring(googlescholarfullname.indexOf("author/") + 7);
+////<editor-fold defaultstate="collapsed" desc="Used for sintactic comparison">
+////                                        googlescholarfullname = googlescholarfullname.substring(googlescholarfullname.indexOf("author/") + 7).replace("_", ":");
+////                                        if (googlescholarfullname.indexOf("+") == 0) {
+////                                            googlescholarfullname = googlescholarfullname.substring(1, googlescholarfullname.indexOf("%22"));
+////                                        } else {
+////                                            googlescholarfullname = googlescholarfullname.substring(0, googlescholarfullname.indexOf("%22"));
+////                                        }
+////                                        googlescholarfullname = googlescholarfullname.replace('+', ':');
+////</editor-fold>
+//                                        /**
+//                                         * case JM:Espinoza or JP:Carvallo
+//                                         * replace with : J:Espinoza or
+//                                         * J:Carvallo
+//                                         */
+////                                        if (googlescholarfullname.substring(0, googlescholarfullname.indexOf(":")).length() == 2) {
+////                                            googlescholarfullname = googlescholarfullname.substring(0, 1) + googlescholarfullname.substring(2);
+////                                        }
+//
+//                                        String localfullname = firstName + ":" + lastName;
+//
+//                                        /**
+//                                         * in comparisonNames send local because
+//                                         * the syntax names are similar
+//                                         */
+//                                        //if (distance.syntacticComparisonNames("local", localfullname, "local", googlescholarfullname)) {
+////<editor-fold defaultstate="collapsed" desc="Used for semantic comparison">
+////List<String> listA = kservice.getKeywordsOfAuthor(authorResource);
+////List<String> listB = new ArrayList<String>();
+////String getAbstractAndTitleFromProviderQuery = queriesService.getAbstractAndTitleQuery(publication);
+////TupleQuery abstracttitlequery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getAbstractAndTitleFromProviderQuery); //
+////TupleQueryResult abstractResult = abstracttitlequery.evaluate();
+////
+////if (abstractResult.hasNext()) {
+////    BindingSet abstractResource = abstractResult.next();
+////    String abstracttext = abstractResource.getValue("abstract").toString();
+////    String titletext = abstractResource.getValue("title").toString();
+////    listB = kservice.getKeywords(titletext);
+////    
+////}
+////int cero = 0;
+////if (listB.size() != cero && listA.size() != cero && distance.semanticComparison(listA, listB)) {
+////</editor-fold>
+//                                        //SPARQL obtain all data publications of author from Google Scholar Provider
+//                                        String getPublicationDataFromProviderQuery = queriesService.getPublicationsPropertiesQuery(publication);
+//                                        TupleQuery dataquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationDataFromProviderQuery); //
+//                                        TupleQueryResult tripletasResult = dataquery.evaluate();
+//
+//                                        while (tripletasResult.hasNext()) {
+//                                            BindingSet tripletsResource = tripletasResult.next();
+//                                            String predicate = tripletsResource.getValue("property").toString();
+//                                            String object = tripletsResource.getValue("value").toString();
+//
+//                                            //String publicationProperty = tripletsResource.getValue("publicationProperty").toString();
+//                                            ///insert sparql query, 
+//                                            String publicationInsertQuery = buildInsertQuery(providerGraph, publication, predicate, object);
+//                                            updatePub(publicationInsertQuery);
+//
+//                                            // insert dct:contributor      <> dct:contributor <http://dblp.org/pers/xr/s/Saquicela:Victor> 
+//                                            String contributorInsertQuery = buildInsertQuery(providerGraph, publication, "http://purl.org/dc/terms/contributor", authorNativeResource);
+//                                            updatePub(contributorInsertQuery);
+//
+//                                            // sameAs triplet    <http://190.15.141.102:8080/dspace/contribuidor/autor/SaquicelaGalarza_VictorHugo> owl:sameAs <http://dblp.org/pers/xr/s/Saquicela:Victor> 
+//                                            String sameAsInsertQuery = buildInsertQuery(providerGraph, authorResource, "http://www.w3.org/2002/07/owl#sameAs", authorNativeResource);
+//                                            updatePub(sameAsInsertQuery);
+//
+//                                        }
+//                                        //}//end if semantic comparison
+//
+//                                        //}//end if syntactic comparison
+//                                    }
+//                                    //</editor-fold >
                                 }//end if existNativeAuthor
                                 conUri.commit();
                                 conUri.close();
@@ -413,6 +460,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                     } while (priorityToFind < 3 && !dataretrieve);//end do while
                     printPercentProcess(processedPersons, allPersons, "Google Scholar");
                 }
+
             }
             return "True for GS publications";
         } catch (MarmottaException ex) {

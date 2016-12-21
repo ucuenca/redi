@@ -53,8 +53,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Arrays;
+import java.util.ArrayList;
 //import java.net.URL;
 import java.util.Collections;
 import java.util.List;
@@ -65,6 +64,12 @@ import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.marmotta.ldclient.services.provider.AbstractHttpProvider;
+import org.apache.marmotta.ucuenca.wk.provider.gs.util.MapAuthor;
+import org.apache.marmotta.ucuenca.wk.provider.gs.vocabulary.BIBO;
+import org.apache.marmotta.ucuenca.wk.provider.gs.vocabulary.REDI;
+import org.openrdf.model.URI;
+import org.openrdf.model.vocabulary.DCTERMS;
+import org.openrdf.model.vocabulary.FOAF;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
@@ -83,10 +88,12 @@ public class GoogleScholarProvider extends AbstractHttpProvider {//NOPMD
     public static final String PATTERN = "(http(s?)://scholar\\.google\\.com/citations\\?mauthors\\=(.*)\\&hl=en\\&view_op\\=search_authors);(.*)-(.*)-(.*)-(.*)$";
     public static final String SCHOLAR_GOOGLE = "https://scholar.google.com";
     private static String nsUcuenca = "https://www.cedia.org.ec/";
+    public static final String URI_START_WITH = "http";
 
     private static Logger log = LoggerFactory.getLogger(GoogleScholarProvider.class);
 
     private String stringSearch = null;//, authorSearch = null, advancedSearch = null;
+    private MapAuthor mauthor = null;
 
     private String city;
     private String province;
@@ -94,8 +101,26 @@ public class GoogleScholarProvider extends AbstractHttpProvider {//NOPMD
     private String[] domains;
 
     public static final ConcurrentMap<String, String> MAPPINGSCHEMA = new ConcurrentHashMap<String, String>();
+    public static final ConcurrentMap<String, URI> MAPPING_SCHEMA = new ConcurrentHashMap();
 
     static {
+        MAPPING_SCHEMA.put("name", FOAF.NAME);
+        MAPPING_SCHEMA.put("affiliation", FOAF.ORGANIZATION);
+        MAPPING_SCHEMA.put("img", FOAF.IMAGE);
+        MAPPING_SCHEMA.put("numCitations", REDI.CITATION_COUNT);
+        MAPPING_SCHEMA.put("url", BIBO.URI);
+        MAPPING_SCHEMA.put("areas", DCTERMS.SUBJECT);
+
+        MAPPING_SCHEMA.put("title", DCTERMS.TITLE);
+        MAPPING_SCHEMA.put("description", BIBO.ABSTRACT);
+        MAPPING_SCHEMA.put("pages", BIBO.PAGES);
+        MAPPING_SCHEMA.put("publisher", DCTERMS.PUBLISHER);
+        MAPPING_SCHEMA.put("conference", BIBO.CONFERENCE);
+        MAPPING_SCHEMA.put("journal", BIBO.JOURNAL);
+        MAPPING_SCHEMA.put("volume", BIBO.VOLUME);
+        MAPPING_SCHEMA.put("issue", BIBO.ISSUE);
+        MAPPING_SCHEMA.put("date", DCTERMS.CREATED);
+
         MAPPINGSCHEMA.put("entity::type", "http://purl.org/ontology/bibo/Document");
         MAPPINGSCHEMA.put("entity::property:link", "http://purl.org/ontology/bibo/uri");
         MAPPINGSCHEMA.put("entity::property:title", "http://purl.org/dc/terms/title");
@@ -178,47 +203,73 @@ public class GoogleScholarProvider extends AbstractHttpProvider {//NOPMD
 //            }
             url = m.group(1);
         }
+
+        mauthor = new MapAuthor(stringSearch.replace("+", " "));
+
         return Collections.singletonList(url);
     }
+    private Author author = null;
 
     @Override
     public List<String> parseResponse(String resource, String requestUrl, Model triples, InputStream input, String contentType) throws DataRetrievalException {//NOPMD
+        List<String> urls = new ArrayList<>();
         try { //NOPMD
             log.debug("Request Successful to {0}", requestUrl);
 
+            DefaultHandler handler = null;
+
             // Extract information of authors if they have a gs profile.
-            SearchHandler searchHandler = new SearchHandler();
-            extract(resource, searchHandler);
-            List<Author> authors = searchHandler.getResults();
-
-            for (Author a : chooseCorrectAuthors(authors)) {
-
-                int init = 0;
-
+            if (requestUrl.contains("https://scholar.google.com/citations?mauthors=")) {
+                handler = new SearchHandler();
+                extract(input, handler);
+                author = chooseCorrectAuthor(((SearchHandler) handler).getResults());
+                urls.add(author.getProfile() + "&cstart=0&pagesize=100");
+            } else if (requestUrl.contains("https://scholar.google.com/citations?user=") && author != null) {
                 // Extract url of publications from author's profile
-                do {
-                    String urlProfile = a.getProfile() + "&cstart=" + init + "&pagesize=100";
-                    extract(urlProfile, new ProfileHandler(a));
-                    init += 100;
-                } while (a.getNumPublications() == init);
+                handler = new ProfileHandler(author);
+                extract(input, handler);
 
-                // Extract information of each publication URL
-                for (Publication p : a.getPublications()) {
-                    String urlPublication = p.getUrl();
-                    extract(urlPublication, new PublicationHandler(p));
+                int start = Integer.parseInt(requestUrl.substring(requestUrl.indexOf("start=") + 6, requestUrl.indexOf("&pagesize"))) + 100;
+                if (author.getNumPublications() == start) {
+                    urls.add(author.getProfile() + "&cstart=" + start + "&pagesize=100");
                 }
+//                int i = -1;
+                for (Publication p : author.getPublications()) {
+                    urls.add(p.getUrl());
+//                    i++;
+//                    if (i == MapAuthor.MIN_ATTR_PUB) {
+//                        break;
+//                    }
+                }
+                triples.addAll(mauthor.map(author));
+            } else if (requestUrl.contains("https://scholar.google.com/citations?view_op=view_citation")) {
+                // Extract information of each publication URL
 
-                // Returns JSON
-                a.map();
+                Publication p = new Publication();
+                p.setUrl(requestUrl);
+//                for (Publication publication : author.getPublications()) {
+//                    if (requestUrl.contains(publication.getUrl())) {
+//                        p = publication;
+//                        break;
+//                    }
+//                }
+                extract(input, new PublicationHandler(p));
+                triples.addAll(mauthor.map(p));
             }
+
         } catch (MalformedURLException ex) {
             java.util.logging.Logger.getLogger(GoogleScholarProvider.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SAXException ex) {
             java.util.logging.Logger.getLogger(GoogleScholarProvider.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InterruptedException ex) {
             java.util.logging.Logger.getLogger(GoogleScholarProvider.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalArgumentException ex) {
+            java.util.logging.Logger.getLogger(GoogleScholarProvider.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(GoogleScholarProvider.class.getName()).log(Level.SEVERE, null, ex);
         }
-        ////////////////////////////////////////////////////////
+//<editor-fold defaultstate="collapsed" desc="old code">
+////////////////////////////////////////////////////////
 //        final GSXMLHandler gsXMLHandler = new GSXMLHandler();
 //        gsXMLHandler.clearGSresultList();
 //        try {
@@ -263,31 +314,28 @@ public class GoogleScholarProvider extends AbstractHttpProvider {//NOPMD
 //        } catch (SAXException | IOException e) {
 //            throw new DataRetrievalException("I/O exception while retrieving resource: " + requestUrl, e);
 //        }
-        return Collections.emptyList();
+//</editor-fold>
+        return urls;
     }
 
-    private List<Author> chooseCorrectAuthors(List<Author> authors) {
-        return Arrays.asList(authors.get(0));
+    private Author chooseCorrectAuthor(List<Author> authors) {
+        return authors.get(0);
     }
 
     private void sleep(int ms) throws InterruptedException {
         Thread.sleep(ms);
     }
 
-    private void extract(String url, DefaultHandler handler) throws MalformedURLException, SAXException, InterruptedException {
+    private void extract(InputStream input, DefaultHandler handler) throws MalformedURLException, SAXException, InterruptedException {
         int tries = 0;
         while (true) {
             try {
-                log.info("SCRAPPRING " + url);
-
                 XMLReader xr = XMLReaderFactory.createXMLReader("org.ccil.cowan.tagsoup.Parser");
 
                 xr.setContentHandler(handler);
-                InputSource profile = new InputSource(
-                        new URL(url)
-                        .openConnection().getInputStream());
-                profile.setEncoding("iso-8859-1");
-                xr.parse(profile);
+                InputSource is = new InputSource(input);
+                is.setEncoding("iso-8859-1");
+                xr.parse(is);
                 sleep(5000);
                 break;
             } catch (IOException e) {

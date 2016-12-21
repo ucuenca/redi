@@ -75,7 +75,7 @@ public final class PublicationHandler extends DefaultHandler implements IHandler
     
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        if (extract && (ANCHOR.equals(localName) || (DIV.equals(localName)))) {
+        if (extract && (ANCHOR.equals(localName) || DIV.equals(localName))) {
             extract = false;
         } else if (isField && DIV.equals(localName)) {
             isField = false;

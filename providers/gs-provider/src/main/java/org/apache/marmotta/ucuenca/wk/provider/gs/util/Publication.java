@@ -22,10 +22,8 @@ public class Publication {
 
     private String url;
     private String title;
-
-    private int citations;
+    private int numCitations;
     private String date;
-    private List<String> authors;
     private String description;
     private String pages;
     private String publisher;
@@ -35,6 +33,7 @@ public class Publication {
     private String issue;
     private String book;
 
+    private List<String> authors = new ArrayList<>();
     private List<String> resources = new ArrayList<>();
 
     /**
@@ -87,17 +86,17 @@ public class Publication {
     }
 
     /**
-     * @return the citations
+     * @return the numCitations
      */
     public int getCitations() {
-        return citations;
+        return numCitations;
     }
 
     /**
-     * @param citations the citations to set
+     * @param citations the numCitations to set
      */
     public void setCitations(int citations) {
-        this.citations = citations;
+        this.numCitations = citations;
     }
 
     /**
@@ -244,7 +243,7 @@ public class Publication {
     public void map(Map<String, String> fields) {
         for (Map.Entry<String, String> entry : fields.entrySet()) {
             String value = entry.getValue();
-            switch (value) {
+            switch (entry.getKey()) {
                 case "Total citations":
                     this.setCitations(Integer.parseInt(value.replaceAll("[^0-9]", "")));
                     break;
@@ -289,7 +288,7 @@ public class Publication {
                     this.setBook(value);
                     break;
                 default:
-                    log.debug("ADD TO MAP => " + entry.getKey() + ":" + entry.getValue());
+                    log.info("ADD TO MAP => " + entry.getKey() + ":" + entry.getValue());
                     break;
             }
         }
@@ -297,7 +296,7 @@ public class Publication {
 
     @Override
     public String toString() {
-        return "Publication{" + "url=" + url + ", title=" + title + ", citations=" + citations + ", date=" + date + ", authors=" + authors + ", description=" + description + ", pages=" + pages + ", publisher=" + publisher + ", conference=" + conference + ", journal=" + journal + ", volume=" + volume + ", issue=" + issue + ", book=" + book + ", resources=" + resources + '}';
+        return "Publication{" + "url=" + url + ", title=" + title + ", citations=" + numCitations + ", date=" + date + ", authors=" + authors + ", description=" + description + ", pages=" + pages + ", publisher=" + publisher + ", conference=" + conference + ", journal=" + journal + ", volume=" + volume + ", issue=" + issue + ", book=" + book + ", resources=" + resources + '}';
     }
 
 }

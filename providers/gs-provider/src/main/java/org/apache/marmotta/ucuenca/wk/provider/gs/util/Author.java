@@ -18,7 +18,7 @@ public class Author {
 
     private String name;
     private String affiliation;
-    private String profile;
+    private String url;
     private String img;
     private String domain;
     private int numCitations;
@@ -27,6 +27,7 @@ public class Author {
     private List<Publication> publications;
 
     private static Logger log = LoggerFactory.getLogger(Author.class);
+
 
     public Author() {
         this.areas = new ArrayList<>();
@@ -63,17 +64,17 @@ public class Author {
     }
 
     /**
-     * @return the profile
+     * @return the url
      */
     public String getProfile() {
-        return profile;
+        return url;
     }
 
     /**
-     * @param url the profile to set
+     * @param url the url to set
      */
     public void setProfile(String url) {
-        this.profile = url;
+        this.url = url;
     }
 
     /**
@@ -167,14 +168,6 @@ public class Author {
         this.publications = publications;
     }
 
-    /**
-     * Convert an author object to RDF.
-     */
-    public void map() {
-        int myvar = 1 + 1;
-        log.info(String.valueOf(myvar));
-
-    }
 
     /**
      * Stores the extracted value to an author object.
@@ -216,6 +209,6 @@ public class Author {
 
     @Override
     public String toString() {
-        return "Author{" + "name=" + name + ", affiliation=" + affiliation + ", profile=" + profile + ", img=" + img + ", domain=" + domain + ", numCitations=" + numCitations + ", areas=" + areas + ", publications=" + publications + '}';
+        return "Author{" + "name=" + name + ", affiliation=" + affiliation + ", profile=" + url + ", img=" + img + ", domain=" + domain + ", numCitations=" + numCitations + ", areas=" + areas + ", publications=" + publications + '}';
     }
 }
