@@ -29,10 +29,10 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 @SuppressWarnings("PMD.CyclomaticComplexity")
 public final class PublicationHandler extends DefaultHandler implements IHandler {
-
+    
     private static final String ANCHOR = "a";
     private static final String DIV = "div";
-
+    
     private boolean isPublication = false;
     private boolean extract = false;
     private boolean isField = false;
@@ -40,11 +40,11 @@ public final class PublicationHandler extends DefaultHandler implements IHandler
     private String key;
     private final ConcurrentHashMap<String, String> fields = new ConcurrentHashMap<>();
     private final Publication publication;
-
+    
     public PublicationHandler(Publication publication) {
         this.publication = publication;
     }
-
+    
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         if (localName.equals("div") && (attributes.getType("id") != null || attributes.getType("class") != null)) {
@@ -72,10 +72,10 @@ public final class PublicationHandler extends DefaultHandler implements IHandler
             publication.addResources(attributes.getValue("href"));
         }
     }
-
+    
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        if (extract && ANCHOR.equals(localName)) {
+        if (extract && (ANCHOR.equals(localName) || (DIV.equals(localName)))) {
             extract = false;
         } else if (isField && DIV.equals(localName)) {
             isField = false;
@@ -83,12 +83,12 @@ public final class PublicationHandler extends DefaultHandler implements IHandler
             isValue = false;
         }
     }
-
+    
     @Override
     public void endDocument() throws SAXException {
         publication.map(fields);
     }
-
+    
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
         if (extract) {
@@ -102,10 +102,10 @@ public final class PublicationHandler extends DefaultHandler implements IHandler
             fields.replace(key, fields.get(key) + new String(ch, start, length));
         }
     }
-
+    
     @Override
     public List<Publication> getResults() {
         return Arrays.asList(publication);
     }
-
+    
 }
