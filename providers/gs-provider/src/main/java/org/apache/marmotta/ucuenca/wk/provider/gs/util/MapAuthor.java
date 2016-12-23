@@ -28,13 +28,13 @@ import org.openrdf.model.vocabulary.RDF;
  */
 @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity"})
 public class MapAuthor {
-
+    
     private final ValueFactory factory = ValueFactoryImpl.getInstance();
     public static final int MIN_ATTR_PUB = 1;
-    private final List fields = Arrays.asList("name", "affiliation", "url", "img", "numCitations",
+    private final List fields = Arrays.asList("name", "affiliation", "profile", "img", "numCitations",
             "title", "description", "pages", "publisher", "conference", "journal", "volume", "issue", "date");
     private final URI authorURI;
-
+    
     public MapAuthor(String author) {
         authorURI = generateURI(REDI.NAMESPACE_AUTHOR, author);
     }
@@ -47,10 +47,13 @@ public class MapAuthor {
      */
     public Model map(Publication publication) throws IllegalArgumentException, IllegalAccessException {
         Model triples = new TreeModel();
-
+        
         URI publicationURI = generateURI(REDI.NAMESPACE_PUBLICATION, publication.getTitle());
         // Parse common attributes
         parseObject(triples, publication, publicationURI);
+
+        // Store the 
+        triples.add(new StatementImpl(publicationURI, REDI.GSCHOLAR_PUB, factory.createLiteral(publication.getUrl())));
 
         // Add types/relation author-publications for
         triples.add(new StatementImpl(publicationURI, RDF.TYPE, BIBO.ACADEMIC_ARTICLE));
@@ -62,9 +65,10 @@ public class MapAuthor {
             String authorName = publication.getAuthors().get(0);
             URI creatorURI = generateURI(REDI.NAMESPACE_AUTHOR, authorName);
             triples.add(new StatementImpl(publicationURI, DCTERMS.CREATOR, creatorURI));
-
+            
             if (!authorURI.equals(creatorURI)) {
                 triples.add(new StatementImpl(creatorURI, FOAF.NAME, factory.createLiteral(authorName)));
+                triples.add(new StatementImpl(creatorURI, RDF.TYPE, FOAF.PERSON));
             }
             for (int i = 1; i < publication.getAuthors().size(); i++) {
                 authorName = publication.getAuthors().get(i);
@@ -72,6 +76,7 @@ public class MapAuthor {
                 triples.add(new StatementImpl(publicationURI, DCTERMS.CONTRIBUTOR, contributorURI));
                 if (!authorURI.equals(contributorURI)) {
                     triples.add(new StatementImpl(contributorURI, FOAF.NAME, factory.createLiteral(authorName)));
+                    triples.add(new StatementImpl(contributorURI, RDF.TYPE, FOAF.PERSON));
                 }
             }
         }
@@ -79,7 +84,7 @@ public class MapAuthor {
         // Add book resoruces/literals if exist
         if (publication.getBook() != null) {
             URI bookURI = generateURI(REDI.NAMESPACE_BOOK, publication.getBook());
-
+            
             triples.add(new StatementImpl(publicationURI, DCTERMS.IS_PART_OF, bookURI));
             triples.add(new StatementImpl(bookURI, RDF.TYPE, BIBO.BOOK));
             triples.add(new StatementImpl(bookURI, DCTERMS.TITLE, factory.createLiteral(publication.getBook())));
@@ -87,9 +92,9 @@ public class MapAuthor {
 
         // Add resources where you can find the publication
         for (String resource : publication.getResources()) {
-            triples.add(new StatementImpl(publicationURI, BIBO.URI, factory.createURI(resource)));
+            triples.add(new StatementImpl(publicationURI, BIBO.URI, factory.createLiteral(resource)));
         }
-
+        
         return triples;
     }
 
@@ -111,7 +116,7 @@ public class MapAuthor {
 
         // Add URLS for each publication
         for (Publication publication : author.getPublications()) {
-            triples.add(new StatementImpl(authorURI, REDI.GSCHOLAR_PUB, factory.createURI(publication.getUrl())));
+            triples.add(new StatementImpl(authorURI, REDI.GSCHOLAR_PUB, factory.createLiteral(publication.getUrl())));
         }
         return triples;
     }
@@ -194,12 +199,12 @@ public class MapAuthor {
 //</editor-fold>
     private void parseObject(Model triples, Object o, URI resource) throws IllegalArgumentException, IllegalAccessException {
         for (Field f : o.getClass().getDeclaredFields()) {
-
+            
             if (fields.contains(f.getName())) {
                 f.setAccessible(true);
                 if (f.get(o) != null) {
                     Value object = null;
-
+                    
                     if (f.getType() == String.class) {
                         object = String.valueOf(f.get(o)).startsWith(GoogleScholarProvider.URI_START_WITH)
                                 ? factory.createURI(String.valueOf(f.get(o)))
@@ -207,20 +212,26 @@ public class MapAuthor {
                     } else if (f.getType() == Integer.TYPE) {
                         object = factory.createLiteral(new Integer(String.valueOf(f.get(o))));
                     }
-
+                    
                     if ("numCitations".equals(f.getName())) { // Specific case to store just citations greater that 0
                         if (Integer.parseInt(object.stringValue()) > 0) {
                             triples.add(new StatementImpl(resource, GoogleScholarProvider.MAPPING_SCHEMA.get(f.getName()), object));
                         }
+                    } else if ("profile".equals(f.getName())) { // Specific case to store profile url from an Author as Literal using bibo:uri
+                        triples.add(new StatementImpl(resource, GoogleScholarProvider.MAPPING_SCHEMA.get(f.getName()),
+                                factory.createLiteral(String.valueOf(f.get(o)))));
+                    } else if ("img".equals(f.getName())) {
+                        triples.add(new StatementImpl(resource, GoogleScholarProvider.MAPPING_SCHEMA.get(f.getName()), object));
+                        triples.add(new StatementImpl(factory.createURI(object.stringValue()), RDF.TYPE, FOAF.IMAGE));
                     } else {
                         triples.add(new StatementImpl(resource, GoogleScholarProvider.MAPPING_SCHEMA.get(f.getName()), object));
                     }
                 }
-
+                
             }
         }
     }
-
+    
     private URI generateURI(String namespace, String id) {
         return factory.createURI(namespace + id.trim().replace(" ", "_"));
     }

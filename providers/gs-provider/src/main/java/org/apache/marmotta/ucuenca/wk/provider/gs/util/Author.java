@@ -18,7 +18,7 @@ public class Author {
 
     private String name;
     private String affiliation;
-    private String url;
+    private String profile;
     private String img;
     private String domain;
     private int numCitations;
@@ -67,14 +67,14 @@ public class Author {
      * @return the url
      */
     public String getProfile() {
-        return url;
+        return profile;
     }
 
     /**
      * @param url the url to set
      */
     public void setProfile(String url) {
-        this.url = url;
+        this.profile = url;
     }
 
     /**
@@ -209,6 +209,6 @@ public class Author {
 
     @Override
     public String toString() {
-        return "Author{" + "name=" + name + ", affiliation=" + affiliation + ", profile=" + url + ", img=" + img + ", domain=" + domain + ", numCitations=" + numCitations + ", areas=" + areas + ", publications=" + publications + '}';
+        return "Author{" + "name=" + name + ", affiliation=" + affiliation + ", profile=" + profile + ", img=" + img + ", domain=" + domain + ", numCitations=" + numCitations + ", areas=" + areas + ", publications=" + publications + '}';
     }
 }
