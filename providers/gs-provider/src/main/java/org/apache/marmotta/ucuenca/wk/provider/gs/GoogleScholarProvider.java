@@ -106,9 +106,9 @@ public class GoogleScholarProvider extends AbstractHttpProvider {//NOPMD
     static {
         MAPPING_SCHEMA.put("name", FOAF.NAME);
         MAPPING_SCHEMA.put("affiliation", FOAF.ORGANIZATION);
-        MAPPING_SCHEMA.put("img", FOAF.IMAGE);
+        MAPPING_SCHEMA.put("img", FOAF.IMG);
         MAPPING_SCHEMA.put("numCitations", REDI.CITATION_COUNT);
-        MAPPING_SCHEMA.put("url", BIBO.URI);
+        MAPPING_SCHEMA.put("profile", BIBO.URI);
         MAPPING_SCHEMA.put("areas", DCTERMS.SUBJECT);
 
         MAPPING_SCHEMA.put("title", DCTERMS.TITLE);
