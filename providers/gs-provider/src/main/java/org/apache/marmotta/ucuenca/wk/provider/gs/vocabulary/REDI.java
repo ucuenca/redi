@@ -16,11 +16,16 @@ import org.openrdf.model.impl.ValueFactoryImpl;
 @SuppressWarnings("PMD.ShortClassName")
 public class REDI {
 
-    public static final String NAMESPACE = "http://ucuenca.edu.ec/ontology#";
-    public static final String NAMESPACE_AUTHOR = "http://ucuenca.edu.ec/resource/author/";
-    public static final String NAMESPACE_BOOK = "http://ucuenca.edu.ec/resource/book/";
-    public static final String NAMESPACE_PUBLICATION = "http://ucuenca.edu.ec/wkhuska/publication/";
     public static final String PREFIX = "uc";
+
+    // Change domain accord with redi's domain
+    private static final String DOMAIN = "http://localhost:8080/resource/";
+
+    public static final String NAMESPACE = "http://ucuenca.edu.ec/ontology#";
+    public static final String NAMESPACE_AUTHOR = DOMAIN + "author/";
+    public static final String NAMESPACE_BOOK = DOMAIN + "book/";
+    public static final String NAMESPACE_PUBLICATION = DOMAIN + "publication/";
+
     public static final URI CITATION_COUNT;
     public static final URI GSCHOLAR_PUB;
 
