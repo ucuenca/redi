@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,7 +101,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
     private String authorGraph = namespaceGraph + "authors";
     private String endpointsGraph = namespaceGraph + "endpoints";
     private int processpercent = 0;
-
+    
     /* graphByProvider
      Graph to save publications data by provider
      Example: http://ucuenca.edu.ec/wkhuska/dblp
@@ -217,40 +218,35 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
     public String runPublicationsProviderTaskImpl(String param) {
 
         try {
-            //new AuthorVersioningJob(log).proveSomething();
             ClientConfiguration conf = new ClientConfiguration();
 
-            //<editor-fold defaultstate="collapsed" desc="Util to skip certificate problem. Just for test purposes">
+            //<editor-fold defaultstate="collapsed" desc="Used to skip certificate problem. Just for test purposes">
             HttpClient httpclient = HttpClientBuilder.create().build();
             conf.setHttpClient(httpclient);
-//</editor-fold>
-
-            //conf.addEndpoint(new DBLPEndpoint());
+            //</editor-fold>
             LDClient ldClient = new LDClient(conf);
-            //ClientResponse response = ldClient.retrieveResource("http://rdf.dblp.com/ns/m.0wqhskn");
 
-            String nameProviderGraph = "http://ucuenca.edu.ec/wkhuska/provider/GoogleScholarProvider";
-            String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(authorGraph, endpointsGraph);
+            String graphName = "http://ucuenca.edu.ec/wkhuska/provider/GoogleScholarProvider";
 
             String nameToFind = "";
             String authorResource = "";
             int priorityToFind = 0;
-            List<Map<String, Value>> resultAllAuthors = sparqlService.query(QueryLanguage.SPARQL, getAllAuthorsDataQuery);
+            List<Map<String, Value>> resultAllAuthors = sparqlService.query(QueryLanguage.SPARQL, queriesService.getAuthorsDataQuery(authorGraph, endpointsGraph));
 
             /*To Obtain Processed Percent*/
-            int allPersons = resultAllAuthors.size();
+            int allAuthors = resultAllAuthors.size();
             int processedPersons = 0;
 
             RepositoryConnection conUri = null;
             ClientResponse response = null;
             for (Map<String, Value> map : resultAllAuthors) {
                 processedPersons++;
-                log.info("Autores procesados con GoogleScholar: " + processedPersons + " de " + allPersons);
+                log.info("Autores procesados con GoogleScholar: " + processedPersons + " de " + allAuthors);
                 authorResource = map.get("subject").stringValue();
                 String firstName = map.get("fname").stringValue();
                 String lastName = map.get("lname").stringValue();
                 priorityToFind = 1;
-                if (!sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(nameProviderGraph, authorResource))) {
+                if (!sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(graphName, authorResource))) {
                     boolean dataretrieve = false;//( Data Retrieve Exception )
                     String infoIES = "";
 
@@ -262,7 +258,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                             //String URL_TO_FIND = "https://scholar.google.com/scholar?start=0&q=author:%22" + nameToFind + "%22&hl=en&as_sdt=1%2C15&as_vis=1";
                             String URL_TO_FIND = "https://scholar.google.com/citations?mauthors=" + nameToFind + "&hl=en&view_op=search_authors";
 
-                            existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(nameProviderGraph, URL_TO_FIND));
+                            existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(graphName, URL_TO_FIND));
                             if (nameToFind.compareTo("") != 0 && !existNativeAuthor) {
 
                                 List<Map<String, Value>> iesInfo = sparqlService.query(QueryLanguage.SPARQL, queriesService.getIESInfobyAuthor(authorResource));
@@ -274,7 +270,6 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
 
                                     infoIES = ";" + city + "-" + province + "-" + ies + "-" + domains;
                                 }
-
                                 //do {
                                 try {//waint 1  second between queries
                                     Thread.sleep(1000);
@@ -282,15 +277,22 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                                     Thread.currentThread().interrupt();
                                 }
                                 try {
-                                    response = ldClient.retrieveResource(URL_TO_FIND + infoIES);
+                                    boolean retry = false;
+                                    do {
+                                        response = ldClient.retrieveResource(URL_TO_FIND + infoIES);
+                                        if (response.getHttpStatus() >= 500 || response.getHttpStatus() >= 503 || response.getHttpStatus() == 504) {
+                                            retry = true;
+                                            long retryAfter = response.getExpires().getTime() - new Date(System.currentTimeMillis()).getTime();
+                                            if (retryAfter > 0) {
+                                                Thread.sleep(retryAfter);
+                                            }
+                                        } else {
+                                            retry = false;
+                                        }
+                                    } while (retry);
+
                                     dataretrieve = true;
                                 } catch (DataRetrievalException e) {
-                                    //do {
-                                    try {//waint 1 second if fail retrieve data
-                                        Thread.sleep(1000);
-                                    } catch (InterruptedException ex) {
-                                        Thread.currentThread().interrupt();
-                                    }
                                     log.error("Error when retrieve: " + URL_TO_FIND + " -  Exception: " + e);
                                     dataretrieve = false;
                                 }
@@ -458,15 +460,24 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                         }
                         priorityToFind++;
                     } while (priorityToFind < 3 && !dataretrieve);//end do while
-                    printPercentProcess(processedPersons, allPersons, "Google Scholar");
+                    printPercentProcess(processedPersons, allAuthors, "Google Scholar");
+                } else if (sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskPublicationsURLGS(graphName, authorResource))) {
+                    // ask if there are publications left to extract for authorresource
+                    List<Map<String, Value>> publications = sparqlService.query(QueryLanguage.SPARQL, queriesService.getPublicationsURLGS(graphName, authorResource));
+                    for (Map<String, Value> publication : publications) {
+                        log.info(publication.get("url").stringValue());
+                    }
+                } else if (false) {
+                    // include process for update based on the number of publications
+                    log.info("Update Google Scholar Information");
                 }
 
             }
-            return "True for GS publications";
+            return "Extracction successful";
         } catch (MarmottaException ex) {
             java.util.logging.Logger.getLogger(GoogleScholarProviderServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return "Fail for GS";
+        return "Something is going wrong";
     }
 
     public String priorityFindQueryBuilding(int priority, String firstName, String lastName) {

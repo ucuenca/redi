@@ -87,18 +87,18 @@ public class GoogleScholarProvider extends AbstractHttpProvider {//NOPMD
     //public static final String PATTERN = "http(s?)://scholar\\.google\\.com/citations\\?mauthors\\=(.*)\\&hl=en\\&view_op\\=search_authors(.*)$";
     public static final String PATTERN = "(http(s?)://scholar\\.google\\.com/citations\\?mauthors\\=(.*)\\&hl=en\\&view_op\\=search_authors);(.*)-(.*)-(.*)-(.*)$";
     public static final String SCHOLAR_GOOGLE = "https://scholar.google.com";
-    private static String nsUcuenca = "https://www.cedia.org.ec/";
     public static final String URI_START_WITH = "http";
 
     private static Logger log = LoggerFactory.getLogger(GoogleScholarProvider.class);
 
-    private String stringSearch = null;//, authorSearch = null, advancedSearch = null;
+    //private String stringSearch = null;//, authorSearch = null, advancedSearch = null;
     private MapAuthor mauthor = null;
 
     private String city;
     private String province;
     private String[] ies;
     private String[] domains;
+    private Author author = null;
 
     public static final ConcurrentMap<String, String> MAPPINGSCHEMA = new ConcurrentHashMap<String, String>();
     public static final ConcurrentMap<String, URI> MAPPING_SCHEMA = new ConcurrentHashMap();
@@ -121,26 +121,25 @@ public class GoogleScholarProvider extends AbstractHttpProvider {//NOPMD
         MAPPING_SCHEMA.put("issue", BIBO.ISSUE);
         MAPPING_SCHEMA.put("date", DCTERMS.CREATED);
 
-        MAPPINGSCHEMA.put("entity::type", "http://purl.org/ontology/bibo/Document");
-        MAPPINGSCHEMA.put("entity::property:link", "http://purl.org/ontology/bibo/uri");
-        MAPPINGSCHEMA.put("entity::property:title", "http://purl.org/dc/terms/title");
-        MAPPINGSCHEMA.put("entity::property:text", "http://purl.org/ontology/bibo/abstract");
-        MAPPINGSCHEMA.put("entity::property:journal", "http://purl.org/ontology/bibo/Journal");
-        MAPPINGSCHEMA.put("entity::property:date", "http://purl.org/dc/elements/1.1/date");
-        MAPPINGSCHEMA.put("entity::property:doi", "http://purl.org/ontology/bibo/doi");
-        MAPPINGSCHEMA.put("entity::property:authorlist", "http://purl.org/ontology/bibo/authorList");
-        MAPPINGSCHEMA.put("entity::property:quote", "http://purl.org/ontology/bibo/Quote");
-        MAPPINGSCHEMA.put("entity::property:conference", "http://purl.org/ontology/bibo/Conference");
-        MAPPINGSCHEMA.put("entity::property:cites", "http://purl.org/ontology/bibo/cites");
-        MAPPINGSCHEMA.put("entity::property:type", nsUcuenca + "type");
-        MAPPINGSCHEMA.put("entity::property:referenceCount", nsUcuenca + "referenceCount");
-        MAPPINGSCHEMA.put("entity::property:citationCount", nsUcuenca + "citationCount");
-        MAPPINGSCHEMA.put("entity::property:contributor", "http://purl.org/dc/terms/contributor");
-        MAPPINGSCHEMA.put("entity::property:pdf", nsUcuenca + "pdf");
-        MAPPINGSCHEMA.put("entity::property:cites", "http://purl.org/ontology/bibo/cites");
-        MAPPINGSCHEMA.put("entity::property:fulltextlink", "http://purl.org/ontology/bibo/content");
-        MAPPINGSCHEMA.put("entity::property:creator", "http://purl.org/dc/elements/1.1/creator");
-
+//        MAPPINGSCHEMA.put("entity::type", "http://purl.org/ontology/bibo/Document");
+//        MAPPINGSCHEMA.put("entity::property:link", "http://purl.org/ontology/bibo/uri");
+//        MAPPINGSCHEMA.put("entity::property:title", "http://purl.org/dc/terms/title");
+//        MAPPINGSCHEMA.put("entity::property:text", "http://purl.org/ontology/bibo/abstract");
+//        MAPPINGSCHEMA.put("entity::property:journal", "http://purl.org/ontology/bibo/Journal");
+//        MAPPINGSCHEMA.put("entity::property:date", "http://purl.org/dc/elements/1.1/date");
+//        MAPPINGSCHEMA.put("entity::property:doi", "http://purl.org/ontology/bibo/doi");
+//        MAPPINGSCHEMA.put("entity::property:authorlist", "http://purl.org/ontology/bibo/authorList");
+//        MAPPINGSCHEMA.put("entity::property:quote", "http://purl.org/ontology/bibo/Quote");
+//        MAPPINGSCHEMA.put("entity::property:conference", "http://purl.org/ontology/bibo/Conference");
+//        MAPPINGSCHEMA.put("entity::property:cites", "http://purl.org/ontology/bibo/cites");
+//        MAPPINGSCHEMA.put("entity::property:type", nsUcuenca + "type");
+//        MAPPINGSCHEMA.put("entity::property:referenceCount", nsUcuenca + "referenceCount");
+//        MAPPINGSCHEMA.put("entity::property:citationCount", nsUcuenca + "citationCount");
+//        MAPPINGSCHEMA.put("entity::property:contributor", "http://purl.org/dc/terms/contributor");
+//        MAPPINGSCHEMA.put("entity::property:pdf", nsUcuenca + "pdf");
+//        MAPPINGSCHEMA.put("entity::property:cites", "http://purl.org/ontology/bibo/cites");
+//        MAPPINGSCHEMA.put("entity::property:fulltextlink", "http://purl.org/ontology/bibo/content");
+//        MAPPINGSCHEMA.put("entity::property:creator", "http://purl.org/dc/elements/1.1/creator");
     }
 
     /**
@@ -182,25 +181,17 @@ public class GoogleScholarProvider extends AbstractHttpProvider {//NOPMD
     public List<String> buildRequestUrl(String resource, Endpoint endpoint) {
         String url = null;
         Matcher m = Pattern.compile(PATTERN).matcher(resource);
+        String stringSearch = null;
         if (m.find()) {
             stringSearch = m.group(3);
             city = m.group(4);
             province = m.group(5);
-            ies = m.group(6).split(",");
+            ies = m.group(6).split("");
             domains = m.group(7).split(",");
 
             log.info(stringSearch);
             log.info(city);
-            log.info(province);
             log.info(ies[0]);
-            log.info(domains[0]);
-//            log.debug("Extracting info for: {0}", stringSearch);
-//            if (authorSearch.length() > 0) {
-//                log.debug("Extra author search parameters: {0}", authorSearch);
-//            }
-//            if (advancedSearch.length() > 0) {
-//                log.debug("Advanced search parameters: {0}", advancedSearch);
-//            }
             url = m.group(1);
         }
 
@@ -208,7 +199,6 @@ public class GoogleScholarProvider extends AbstractHttpProvider {//NOPMD
 
         return Collections.singletonList(url);
     }
-    private Author author = null;
 
     @Override
     public List<String> parseResponse(String resource, String requestUrl, Model triples, InputStream input, String contentType) throws DataRetrievalException {//NOPMD
@@ -223,36 +213,31 @@ public class GoogleScholarProvider extends AbstractHttpProvider {//NOPMD
                 handler = new SearchHandler();
                 extract(input, handler);
                 author = chooseCorrectAuthor(((SearchHandler) handler).getResults());
-                urls.add(author.getProfile() + "&cstart=0&pagesize=100");
+                if (author != null) {
+                    urls.add(author.getProfile() + "&cstart=0&pagesize=100");
+                }
             } else if (requestUrl.contains("https://scholar.google.com/citations?user=") && author != null) {
                 // Extract url of publications from author's profile
                 handler = new ProfileHandler(author);
                 extract(input, handler);
+                boolean isDone = true;
+                int maxPub = Integer.parseInt(requestUrl.substring(requestUrl.indexOf("start=") + 6, requestUrl.indexOf("&pagesize"))) + 100;
+                if (author.getNumPublications() == maxPub) {
+                    urls.add(author.getProfile() + "&cstart=" + maxPub + "&pagesize=100");
+                    isDone = false;
+                }
 
-                int start = Integer.parseInt(requestUrl.substring(requestUrl.indexOf("start=") + 6, requestUrl.indexOf("&pagesize"))) + 100;
-                if (author.getNumPublications() == start) {
-                    urls.add(author.getProfile() + "&cstart=" + start + "&pagesize=100");
+                // Just add all publications URL and return all triples from author when there is not left publications URL
+                if (isDone) {
+                    for (Publication p : author.getPublications()) {
+                        urls.add(p.getUrl());
+                    }
+                    triples.addAll(mauthor.map(author));
                 }
-//                int i = -1;
-                for (Publication p : author.getPublications()) {
-                    urls.add(p.getUrl());
-//                    i++;
-//                    if (i == MapAuthor.MIN_ATTR_PUB) {
-//                        break;
-//                    }
-                }
-                triples.addAll(mauthor.map(author));
             } else if (requestUrl.contains("https://scholar.google.com/citations?view_op=view_citation")) {
                 // Extract information of each publication URL
-
                 Publication p = new Publication();
                 p.setUrl(requestUrl);
-//                for (Publication publication : author.getPublications()) {
-//                    if (requestUrl.contains(publication.getUrl())) {
-//                        p = publication;
-//                        break;
-//                    }
-//                }
                 extract(input, new PublicationHandler(p));
                 triples.addAll(mauthor.map(p));
             }
@@ -319,7 +304,24 @@ public class GoogleScholarProvider extends AbstractHttpProvider {//NOPMD
     }
 
     private Author chooseCorrectAuthor(List<Author> authors) {
-        return authors.get(0);
+
+        for (Author author : authors) {
+
+            // If the authors domain correspond with IES domain, the author belongs to the IES
+            for (String domain : domains) {
+                if (domain.equals(author.getDomain())) {
+                    return author;
+                }
+            }
+
+            // compare University, sometimes Universities has the name of the city in it
+            // compare(author.getAffiliation(), ies)
+            if (author.getAffiliation().toLowerCase().contains(city.toLowerCase())
+                    || author.getAffiliation().toLowerCase().contains(province.toLowerCase())) {
+                return author;
+            }
+        }
+        return null;
     }
 
     private void sleep(int ms) throws InterruptedException {
