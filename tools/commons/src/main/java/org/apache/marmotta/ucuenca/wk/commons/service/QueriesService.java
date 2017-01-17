@@ -21,6 +21,10 @@ public interface QueriesService {
 
     String getIESInfobyAuthor(String authorName);
 
+    String getAskPublicationsURLGS(String graphName, String authorResource);
+
+    String getPublicationsURLGS(String graphName, String authorResource);
+
     /**
      * return query to obtain all subject ( keywords ) of an author , using
      * dct:subject property

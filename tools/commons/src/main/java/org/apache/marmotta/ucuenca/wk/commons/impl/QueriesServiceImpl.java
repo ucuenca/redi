@@ -7,6 +7,7 @@ import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 
 /**
  * @author Fernando Baculima
+ * @author Xavier Sumba
  */
 public class QueriesServiceImpl implements QueriesService {
 
@@ -26,7 +27,8 @@ public class QueriesServiceImpl implements QueriesService {
 
     private final static String INSERTDATA = "INSERT DATA { ";
 
-    private final static String ENDPOINTPREFIX = "http://ucuenca.edu.ec/wkhuska/endpoint/";
+    //private final static String ENDPOINTPREFIX = "http://ucuenca.edu.ec/wkhuska/endpoint/";
+    private final static String ENDPOINTPREFIX = "http://localhost:8080/resource/endpoint/";
 
     @Override
     public String getAuthorsQuery(String datagraph) {
@@ -241,7 +243,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + "     where { " + getGraphString(endpointsgraph) + " {"
                 + "     ?provenance <http://ucuenca.edu.ec/ontology#status> ?status "
                 + " }}} filter (regex(?status,\"true\")) "
-                + "filter (mm:fulltext-search(?name,\"Lizandro Solano\"))"
+               // + "filter (mm:fulltext-search(?name,\"Víctor Saquicela\")) "
                 + "                }} ";
 
     }
@@ -678,6 +680,32 @@ public class QueriesServiceImpl implements QueriesService {
                 + "    }"
                 + "  }"
                 + "} ";
+    }
+
+    @Override
+    public String getAskPublicationsURLGS(String graphName, String authorResource) {
+        return pubUrlsGS(graphName, authorResource, true);
+    }
+
+    @Override
+    public String getPublicationsURLGS(String graphName, String authorResource) {
+        return pubUrlsGS(graphName, authorResource, false);
+    }
+
+    private String pubUrlsGS(String graphName, String authorResource, boolean isAsk) {
+        String query = PREFIXES;
+        query += isAsk ? "ASK " : "SELECT ?author ?url ";
+        query += "WHERE {"
+                + getGraphString(graphName) + "{"
+                + "    <" + authorResource + ">  owl:sameAs  ?author."
+                + "    ?author a foaf:Person ;"
+                + "     {?author <http://ucuenca.edu.ec/ontology#googlescholarURL> ?url . }"
+                + "    MINUS "
+                + "     {?author foaf:publications [<http://ucuenca.edu.ec/ontology#googlescholarURL> ?url].}"
+                + "  }"
+                + "}";
+
+        return query;
     }
 
 }

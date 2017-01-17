@@ -90,7 +90,7 @@ public class EndpointServiceImpl implements EndpointService {
         } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
             Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+        }
 
     /**
      * Function that return a Hash Code to get a unique ID for resource URI
