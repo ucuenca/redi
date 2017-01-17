@@ -33,7 +33,25 @@ public class QueriesServiceImpl implements QueriesService {
     @Override
     public String getAuthorsQuery(String datagraph) {
         return PREFIXES
-                + " SELECT DISTINCT ?s WHERE {" + getGraphString(datagraph) + "{ ?s rdf:type foaf:Person }}";
+                + " select ?s where{" + getGraphString(datagraph) + "{"
+                + " ?doc rdf:type bibo:Document ."
+                + " {"
+                + "      ?doc ?c ?s ."
+                + "      ?doc a bibo:Thesis."
+                + "      ?s a foaf:Person."
+                + " } UNION"
+                + " {"
+                + "     ?doc ?c ?s ."
+                + "     ?doc a <http://purl.org/net/nknouf/ns/bibtex#Mastersthesis>."
+                + "     ?s a foaf:Person."
+                + " } UNION{"
+                + ""
+                + "     ?doc a bibo:Article."
+                + "     ?doc ?c ?s ."
+                + "     ?s a foaf:Person."
+                + " } } }"
+                + " group by ?s"
+                + " having (count(?doc)>1)";
     }
 
     @Override
@@ -111,26 +129,42 @@ public class QueriesServiceImpl implements QueriesService {
         if (condition) {
             return INSERTDATA + getGraphString(endpointsGraph) + "{<" + ENDPOINTPREFIX + resourceHash + ">  " + con.uc(parameter) + "  <" + newValue + "> }}";
         } else {
-            return INSERTDATA + getGraphString(endpointsGraph) + "{<" + ENDPOINTPREFIX + resourceHash + ">  " + con.uc(parameter) + "   '" + newValue + "'^^xsd:" + type + " }}  ";
+            return INSERTDATA + getGraphString(endpointsGraph) + "{<" + ENDPOINTPREFIX + resourceHash + ">  " + con.uc(parameter) + "   '" + newValue + "'" + type + " }}  ";
         }
     }
 
     @Override
     public String getlisEndpointsQuery(String endpointsGraph) {
         String id = " ?id ";
-        return "SELECT DISTINCT ?id ?status ?name ?url ?graph ?fullName ?city ?province ?latitude ?longitude  WHERE {  "
+        String fullName = "fullName";
+        return "SELECT DISTINCT ?id ?status ?name ?url ?graph (concat(?fName, \" - \", ?engName) as ?fullName) ?city ?province ?latitude ?longitude  WHERE {  "
                 + " GRAPH <" + endpointsGraph + ">"
                 + " {"
                 + id + con.uc("status") + " ?status."
                 + id + con.uc("name") + " ?name ."
                 + id + con.uc("url") + " ?url."
                 + id + con.uc("graph") + " ?graph."
-                + id + con.uc("fullName") + " ?fullName."
+                + id + con.uc(fullName) + " ?fName."
+                + id + con.uc(fullName) + "?engName."
                 + id + con.uc("city") + " ?city."
                 + id + con.uc("province") + " ?province."
                 + id + con.uc("latitude") + " ?latitude."
                 + id + con.uc("longitude") + " ?longitude."
+                + " FILTER (lang(?fName) = 'es') . "
+                + " FILTER (lang(?engName) = 'en') . "
                 + "}}";
+    }
+    
+    @Override
+    public String getlistEndpointNamesQuery() {
+        String id = " ?id ";
+        return "SELECT DISTINCT ?fullName WHERE {  "
+                + "  GRAPH <http://ucuenca.edu.ec/wkhuska/endpoints>"
+                + "	{"
+                + "      " + id + con.uc("fullName") + " ?fName."
+                + "      	BIND (STR(?fName)  AS ?fullName)"
+                + "	}"
+                + "}";
     }
 
     @Override
@@ -184,7 +218,27 @@ public class QueriesServiceImpl implements QueriesService {
     @Override
     public String getCountPersonQuery(String graph) {
         return PREFIXES
-                + " SELECT (COUNT(?s) as ?count) WHERE { " + getGraphString(graph) + " { ?s rdf:type foaf:Person. }}";
+                + " SELECT (COUNT( distinct ?s) as ?count) WHERE {"
+                + " select distinct ?s where {" + getGraphString(graph) + "{ "
+                + " ?docu rdf:type bibo:Document . "
+                + " {"
+                + "      ?docu ?c ?s ."
+                + "      ?docu a bibo:Thesis."
+                + "      ?s a foaf:Person."
+                + " }"
+                + " UNION"
+                + " {"
+                + "     ?docu ?c ?s ."
+                + "     ?docu a <http://purl.org/net/nknouf/ns/bibtex#Mastersthesis>."
+                + "     ?s a foaf:Person."
+                + " }"
+                + " UNION { "
+                + "   ?docu a bibo:Article."
+                + "   ?docu ?c ?s ."
+                + "   ?s a foaf:Person."
+                + " }}}"
+                + " group by ?s"
+                + " having (count(?docu)>1)}";
     }
 
     @Override

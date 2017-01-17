@@ -109,7 +109,7 @@ public class AcademicsKnowledgeProviderServiceImpl implements AcademicsKnowledge
                 authorResource = map.get("subject").stringValue();
                 String firstName = map.get("fname").stringValue();
                 String lastName = map.get("lname").stringValue();
-                String nick = map.get("nick").stringValue();
+                String nick = map.get("nick") != null ? map.get("nick").stringValue() : null;
 
                 boolean AuthorDataisLoad = false;
                 boolean ask = false;
@@ -200,10 +200,9 @@ public class AcademicsKnowledgeProviderServiceImpl implements AcademicsKnowledge
 
 //                            String InsertQueryOneOf = buildInsertQuery(providerGraph, authorSeachQuery, OWL.ONE_OF, authorResource);
 //                            updatePub(InsertQueryOneOf);
-
 //                            if (existNativeAuthor) {
-                                String sameAsInsertQuery = buildInsertQuery(providerGraph, authorResource, OWL.SAME_AS, authorSeachQuery);
-                                updatePub(sameAsInsertQuery);
+                            String sameAsInsertQuery = buildInsertQuery(providerGraph, authorResource, OWL.SAME_AS, authorSeachQuery);
+                            updatePub(sameAsInsertQuery);
 //                            }
 
                             if (!existNativeAuthor) {
