@@ -118,7 +118,7 @@ public class GSXMLHandler extends DefaultHandler {
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         String div = "div";
-        String div1 = "h3";
+         String div1 = "h3";
         String div2 = "a";
         String div3 = "span";
 

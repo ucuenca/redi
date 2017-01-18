@@ -4,9 +4,11 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
+import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
 
 /**
  * @author Fernando Baculima
+ * @author Xavier Sumba
  */
 public class QueriesServiceImpl implements QueriesService {
 
@@ -25,8 +27,6 @@ public class QueriesServiceImpl implements QueriesService {
     private final static String OWLSAMEAS = "<http://www.w3.org/2002/07/owl#sameAs>";
 
     private final static String INSERTDATA = "INSERT DATA { ";
-
-    private final static String ENDPOINTPREFIX = "http://ucuenca.edu.ec/wkhuska/endpoint/";
 
     @Override
     public String getAuthorsQuery(String datagraph) {
@@ -117,42 +117,37 @@ public class QueriesServiceImpl implements QueriesService {
     }
 
     @Override
-    public String getEndpointDataQuery(String... arg) {
-        String endpointsGraph = arg[0];
-        String parameter = arg[1];
-        String newValue = arg[2];
-        String resourceHash = arg[3];
-        String type = arg[4];
-        boolean condition = "url".equals(parameter) || "graph".equals(parameter);
-        if (condition) {
-            return INSERTDATA + getGraphString(endpointsGraph) + "{<" + ENDPOINTPREFIX + resourceHash + ">  " + con.uc(parameter) + "  <" + newValue + "> }}";
+    public String getInsertEndpointQuery(String resourceHash, String property, String object, String literal) {
+        String graph = REDI.ENDPOINT_GRAPH;
+        String resource = REDI.ENDPOINT_RESOURCE + resourceHash;
+        if (isURI(object)) {
+            return INSERTDATA + getGraphString(graph) + "{<" + resource + ">  <" + property + ">  <" + object + "> }}";
         } else {
-            return INSERTDATA + getGraphString(endpointsGraph) + "{<" + ENDPOINTPREFIX + resourceHash + ">  " + con.uc(parameter) + "   '" + newValue + "'" + type + " }}  ";
+            return INSERTDATA + getGraphString(graph) + "{<" + resource + ">  <" + property + "> '" + object + "'" + literal + " }}  ";
         }
     }
 
     @Override
-    public String getlisEndpointsQuery(String endpointsGraph) {
+    public String getLisEndpointsQuery() {
         String id = " ?id ";
         String fullName = "fullName";
         return "SELECT DISTINCT ?id ?status ?name ?url ?graph (concat(?fName, \" - \", ?engName) as ?fullName) ?city ?province ?latitude ?longitude  WHERE {  "
-                + " GRAPH <" + endpointsGraph + ">"
+                + " GRAPH <" + REDI.ENDPOINT_GRAPH + ">"
                 + " {"
-                + id + con.uc("status") + " ?status."
-                + id + con.uc("name") + " ?name ."
-                + id + con.uc("url") + " ?url."
-                + id + con.uc("graph") + " ?graph."
-                + id + con.uc(fullName) + " ?fName."
-                + id + con.uc(fullName) + "?engName."
-                + id + con.uc("city") + " ?city."
-                + id + con.uc("province") + " ?province."
-                + id + con.uc("latitude") + " ?latitude."
-                + id + con.uc("longitude") + " ?longitude."
-                + " FILTER (lang(?fName) = 'es') . "
-                + " FILTER (lang(?engName) = 'en') . "
+                + id + con.uc("status") + " ?status;"
+                + con.uc("name") + " ?name;"
+                + con.uc("url") + " ?url;"
+                + con.uc("graph") + " ?graph;"
+                + con.uc(fullName) + " ?fName;"
+                + con.uc(fullName) + "?engName;"
+                + con.uc("city") + " ?city;"
+                + con.uc("province") + " ?province;"
+                + con.uc("latitude") + " ?latitude;"
+                + con.uc("longitude") + " ?longitude."
+                + " FILTER (langMatches(lang(?fName), 'es') && langMatches(lang(?engName),'en')) .  "
                 + "}}";
     }
-    
+
     @Override
     public String getlistEndpointNamesQuery() {
         String id = " ?id ";
@@ -295,6 +290,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + "     where { " + getGraphString(endpointsgraph) + " {"
                 + "     ?provenance <http://ucuenca.edu.ec/ontology#status> ?status "
                 + " }}} filter (regex(?status,\"true\")) "
+                // + "filter (mm:fulltext-search(?name,\"Víctor Saquicela\")) "
                 + "                }} ";
 
     }
@@ -708,6 +704,55 @@ public class QueriesServiceImpl implements QueriesService {
                 + " {     <" + varargs[1] + "> foaf:publications ?publicationResource."
                 + " ?publicationResource <" + varargs[2] + ">  ?title"
                 + "}} ";
+    }
+
+    @Override
+    public String getIESInfobyAuthor(String authorURI) {
+        return PREFIXES
+                + "SELECT DISTINCT *"
+                + "WHERE {  "
+                + "  GRAPH <http://ucuenca.edu.ec/wkhuska/authors>  {"
+                + "    <" + authorURI + "> dct:provenance ?provenance."
+                + "    {"
+                + "      SELECT ?city ?province (GROUP_CONCAT(DISTINCT STR(?fullname); separator=\",\") as ?ies) (GROUP_CONCAT(DISTINCT ?domain; separator=\",\") as ?domains)"
+                + "      WHERE {"
+                + "        GRAPH <http://ucuenca.edu.ec/wkhuska/endpoints>  {"
+                + "          ?provenance <http://ucuenca.edu.ec/ontology#fullName> ?fullname;"
+                + "                      <http://ucuenca.edu.ec/ontology#status> true  ;"
+                + "                      <http://ucuenca.edu.ec/ontology#city> ?city;"
+                + "                      <http://ucuenca.edu.ec/ontology#province> ?province;"
+                + "                      <http://ucuenca.edu.ec/ontology#domains>/rdf:first ?domain."
+                + "        }"
+                + "      } GROUP BY ?provenance ?city ?province"
+                + "    }"
+                + "  }"
+                + "} ";
+    }
+
+    @Override
+    public String getAskPublicationsURLGS(String graphName, String authorResource) {
+        return pubUrlsGS(graphName, authorResource, true);
+    }
+
+    @Override
+    public String getPublicationsURLGS(String graphName, String authorResource) {
+        return pubUrlsGS(graphName, authorResource, false);
+    }
+
+    private String pubUrlsGS(String graphName, String authorResource, boolean isAsk) {
+        String query = PREFIXES;
+        query += isAsk ? "ASK " : "SELECT ?author ?url ";
+        query += "WHERE {"
+                + getGraphString(graphName) + "{"
+                + "    <" + authorResource + ">  owl:sameAs  ?author."
+                + "    ?author a foaf:Person ;"
+                + "     {?author <http://ucuenca.edu.ec/ontology#googlescholarURL> ?url . }"
+                + "    MINUS "
+                + "     {?author foaf:publications [<http://ucuenca.edu.ec/ontology#googlescholarURL> ?url].}"
+                + "  }"
+                + "}";
+
+        return query;
     }
 
 }

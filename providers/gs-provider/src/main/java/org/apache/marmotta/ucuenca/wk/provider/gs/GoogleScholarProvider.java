@@ -16,21 +16,23 @@
  */
 package org.apache.marmotta.ucuenca.wk.provider.gs;
 
-//import org.apache.commons.lang3.StringUtils;
-//import org.apache.marmotta.commons.vocabulary.FOAF;
-//import com.google.common.base.Preconditions;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
+//import com.google.gson.Gson;
+//import com.google.gson.JsonArray;
+import org.apache.marmotta.ucuenca.wk.provider.gs.util.Author;
+import org.apache.marmotta.ucuenca.wk.provider.gs.util.ProfileHandler;
+import org.apache.marmotta.ucuenca.wk.provider.gs.util.Publication;
+import org.apache.marmotta.ucuenca.wk.provider.gs.util.PublicationHandler;
+import org.apache.marmotta.ucuenca.wk.provider.gs.util.SearchHandler;
 
 import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
-import org.apache.marmotta.ldclient.model.ClientConfiguration;
-import org.apache.marmotta.ldclient.model.ClientResponse;
-import org.apache.marmotta.ldclient.services.ldclient.LDClient;
-import org.apache.marmotta.ldclient.services.provider.AbstractHttpProvider;
-import org.apache.marmotta.ucuenca.wk.provider.gs.util.GSXMLHandler;
-import org.apache.marmotta.ucuenca.wk.provider.gs.util.GSresult;
-import org.apache.marmotta.ucuenca.wk.provider.gs.util.JSONtoRDF;
+//import org.apache.marmotta.ldclient.model.ClientConfiguration;
+//import org.apache.marmotta.ldclient.model.ClientResponse;
+//import org.apache.marmotta.ldclient.services.ldclient.LDClient;
+//import org.apache.marmotta.ldclient.services.provider.AbstractHttpProvider;
+//import org.apache.marmotta.ucuenca.wk.provider.gs.util.GSXMLHandler;
+//import org.apache.marmotta.ucuenca.wk.provider.gs.util.GSresult;
+//import org.apache.marmotta.ucuenca.wk.provider.gs.util.JSONtoRDF;
 //import org.jdom2.Document;
 //import org.jdom2.Element;
 //import org.jdom2.JDOMException;
@@ -50,55 +52,94 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
 //import java.net.URL;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.logging.Level;
 //import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.marmotta.ldclient.services.provider.AbstractHttpProvider;
+import org.apache.marmotta.ucuenca.wk.provider.gs.util.MapAuthor;
+import org.apache.marmotta.ucuenca.wk.provider.gs.vocabulary.BIBO;
+import org.apache.marmotta.ucuenca.wk.provider.gs.vocabulary.REDI;
+import org.openrdf.model.URI;
+import org.openrdf.model.vocabulary.DCTERMS;
+import org.openrdf.model.vocabulary.FOAF;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Support Google Scholar information as RDF
  * <p/>
  * Author: Santiago Gonzalez
+ *
+ * @author Xavier Sumba
  */
-public class GoogleScholarProvider extends AbstractHttpProvider {
+public class GoogleScholarProvider extends AbstractHttpProvider {//NOPMD
 
     public static final String NAME = "Google Scholar Provider";
     public static final String API = "http://scholar.google.com/scholar?start=%s&q=author:%%22%s%%22%s&hl=en&as_sdt=1%%2C15&as_vis=1%s";
-    public static final String PATTERN = "http(s?)://scholar\\.google\\.com/scholar\\?start\\=0\\&q=author\\:%22(.*)%22\\&hl=en\\&as_sdt\\=1%2C15\\&as_vis\\=1(.*)$";
-    private static String nsUcuenca = "https://www.cedia.org.ec/";
+    //public static final String PATTERN = "http(s?)://scholar\\.google\\.com/scholar\\?start\\=0\\&q=author\\:%22(.*)%22\\&hl=en\\&as_sdt\\=1%2C15\\&as_vis\\=1(.*)$";
+    //public static final String PATTERN = "http(s?)://scholar\\.google\\.com/citations\\?mauthors\\=(.*)\\&hl=en\\&view_op\\=search_authors(.*)$";
+    public static final String PATTERN = "(http(s?)://scholar\\.google\\.com/citations\\?mauthors\\=(.*)\\&hl=en\\&view_op\\=search_authors);(.*)-(.*)-(.*)-(.*)$";
+    public static final String SCHOLAR_GOOGLE = "https://scholar.google.com";
+    public static final String URI_START_WITH = "http";
 
     private static Logger log = LoggerFactory.getLogger(GoogleScholarProvider.class);
 
-    private String stringSearch = null, authorSearch = null, advancedSearch = null;
+    //private String stringSearch = null;//, authorSearch = null, advancedSearch = null;
+    private MapAuthor mauthor = null;
+
+    private String city;
+    private String province;
+    private String[] ies;
+    private String[] domains;
+    private Author author = null;
 
     public static final ConcurrentMap<String, String> MAPPINGSCHEMA = new ConcurrentHashMap<String, String>();
+    public static final ConcurrentMap<String, URI> MAPPING_SCHEMA = new ConcurrentHashMap();
 
     static {
-        MAPPINGSCHEMA.put("entity::type", "http://purl.org/ontology/bibo/Document");
-        MAPPINGSCHEMA.put("entity::property:link", "http://purl.org/ontology/bibo/uri");
-        MAPPINGSCHEMA.put("entity::property:title", "http://purl.org/dc/terms/title");
-        MAPPINGSCHEMA.put("entity::property:text", "http://purl.org/ontology/bibo/abstract");
-        MAPPINGSCHEMA.put("entity::property:journal", "http://purl.org/ontology/bibo/Journal");
-        MAPPINGSCHEMA.put("entity::property:date", "http://purl.org/dc/elements/1.1/date");
-        MAPPINGSCHEMA.put("entity::property:doi", "http://purl.org/ontology/bibo/doi");
-        MAPPINGSCHEMA.put("entity::property:authorlist", "http://purl.org/ontology/bibo/authorList");
-        MAPPINGSCHEMA.put("entity::property:quote", "http://purl.org/ontology/bibo/Quote");
-        MAPPINGSCHEMA.put("entity::property:conference", "http://purl.org/ontology/bibo/Conference");
-        MAPPINGSCHEMA.put("entity::property:cites", "http://purl.org/ontology/bibo/cites");
-        MAPPINGSCHEMA.put("entity::property:type", nsUcuenca + "type");
-        MAPPINGSCHEMA.put("entity::property:referenceCount", nsUcuenca + "referenceCount");
-        MAPPINGSCHEMA.put("entity::property:citationCount", nsUcuenca + "citationCount");
-        MAPPINGSCHEMA.put("entity::property:contributor", "http://purl.org/dc/terms/contributor");
-        MAPPINGSCHEMA.put("entity::property:pdf", nsUcuenca + "pdf");
-        MAPPINGSCHEMA.put("entity::property:cites", "http://purl.org/ontology/bibo/cites");
-        MAPPINGSCHEMA.put("entity::property:fulltextlink", "http://purl.org/ontology/bibo/content");
-        MAPPINGSCHEMA.put("entity::property:creator", "http://purl.org/dc/elements/1.1/creator");
+        MAPPING_SCHEMA.put("name", FOAF.NAME);
+        MAPPING_SCHEMA.put("affiliation", FOAF.ORGANIZATION);
+        MAPPING_SCHEMA.put("img", FOAF.IMG);
+        MAPPING_SCHEMA.put("numCitations", REDI.CITATION_COUNT);
+        MAPPING_SCHEMA.put("profile", BIBO.URI);
+        MAPPING_SCHEMA.put("areas", DCTERMS.SUBJECT);
 
+        MAPPING_SCHEMA.put("title", DCTERMS.TITLE);
+        MAPPING_SCHEMA.put("description", BIBO.ABSTRACT);
+        MAPPING_SCHEMA.put("pages", BIBO.PAGES);
+        MAPPING_SCHEMA.put("publisher", DCTERMS.PUBLISHER);
+        MAPPING_SCHEMA.put("conference", BIBO.CONFERENCE);
+        MAPPING_SCHEMA.put("journal", BIBO.JOURNAL);
+        MAPPING_SCHEMA.put("volume", BIBO.VOLUME);
+        MAPPING_SCHEMA.put("issue", BIBO.ISSUE);
+        MAPPING_SCHEMA.put("date", DCTERMS.CREATED);
+
+//        MAPPINGSCHEMA.put("entity::type", "http://purl.org/ontology/bibo/Document");
+//        MAPPINGSCHEMA.put("entity::property:link", "http://purl.org/ontology/bibo/uri");
+//        MAPPINGSCHEMA.put("entity::property:title", "http://purl.org/dc/terms/title");
+//        MAPPINGSCHEMA.put("entity::property:text", "http://purl.org/ontology/bibo/abstract");
+//        MAPPINGSCHEMA.put("entity::property:journal", "http://purl.org/ontology/bibo/Journal");
+//        MAPPINGSCHEMA.put("entity::property:date", "http://purl.org/dc/elements/1.1/date");
+//        MAPPINGSCHEMA.put("entity::property:doi", "http://purl.org/ontology/bibo/doi");
+//        MAPPINGSCHEMA.put("entity::property:authorlist", "http://purl.org/ontology/bibo/authorList");
+//        MAPPINGSCHEMA.put("entity::property:quote", "http://purl.org/ontology/bibo/Quote");
+//        MAPPINGSCHEMA.put("entity::property:conference", "http://purl.org/ontology/bibo/Conference");
+//        MAPPINGSCHEMA.put("entity::property:cites", "http://purl.org/ontology/bibo/cites");
+//        MAPPINGSCHEMA.put("entity::property:type", nsUcuenca + "type");
+//        MAPPINGSCHEMA.put("entity::property:referenceCount", nsUcuenca + "referenceCount");
+//        MAPPINGSCHEMA.put("entity::property:citationCount", nsUcuenca + "citationCount");
+//        MAPPINGSCHEMA.put("entity::property:contributor", "http://purl.org/dc/terms/contributor");
+//        MAPPINGSCHEMA.put("entity::property:pdf", nsUcuenca + "pdf");
+//        MAPPINGSCHEMA.put("entity::property:cites", "http://purl.org/ontology/bibo/cites");
+//        MAPPINGSCHEMA.put("entity::property:fulltextlink", "http://purl.org/ontology/bibo/content");
+//        MAPPINGSCHEMA.put("entity::property:creator", "http://purl.org/dc/elements/1.1/creator");
     }
 
     /**
@@ -140,103 +181,173 @@ public class GoogleScholarProvider extends AbstractHttpProvider {
     public List<String> buildRequestUrl(String resource, Endpoint endpoint) {
         String url = null;
         Matcher m = Pattern.compile(PATTERN).matcher(resource);
+        String stringSearch = null;
         if (m.find()) {
-            stringSearch = m.group(2);
-            authorSearch = m.group(3);
-            advancedSearch = m.group(3);
-            log.debug("Extracting info for: {0}", stringSearch);
-            if (authorSearch.length() > 0) {
-                log.debug("Extra author search parameters: {0}", authorSearch);
-            }
-            if (advancedSearch.length() > 0) {
-                log.debug("Advanced search parameters: {0}", advancedSearch);
-            }
-            url = resource;
+            stringSearch = m.group(3);
+            city = m.group(4);
+            province = m.group(5);
+            ies = m.group(6).split("");
+            domains = m.group(7).split(",");
+
+            log.info(stringSearch);
+            log.info(city);
+            log.info(ies[0]);
+            url = m.group(1);
         }
+
+        mauthor = new MapAuthor(stringSearch.replace("+", " "));
+
         return Collections.singletonList(url);
     }
 
     @Override
-    public List<String> parseResponse(String resource, String requestUrl, Model triples, InputStream input, String contentType) throws DataRetrievalException {
-        log.debug("Request Successful to {0}", requestUrl);
-        final GSXMLHandler gsXMLHandler = new GSXMLHandler();
-        gsXMLHandler.clearGSresultList();
-        try {
-            XMLReader xr = XMLReaderFactory.createXMLReader("org.ccil.cowan.tagsoup.Parser");
-            xr.setContentHandler(gsXMLHandler);
-            InputSource gsxml = new InputSource(input);
-            gsxml.setEncoding("iso-8859-1");
-            xr.parse(gsxml);
+    public List<String> parseResponse(String resource, String requestUrl, Model triples, InputStream input, String contentType) throws DataRetrievalException {//NOPMD
+        List<String> urls = new ArrayList<>();
+        try { //NOPMD
+            log.debug("Request Successful to {0}", requestUrl);
 
-            final Set<GSresult> gsresultlist = gsXMLHandler.getGSresultList();
-            Gson gson = new Gson();
-            JsonArray json = new JsonArray();
-            for (GSresult d : gsresultlist) {
-                json.add(gson.toJsonTree(d).getAsJsonObject());
-            }
-            JSONtoRDF parser = new JSONtoRDF(resource, MAPPINGSCHEMA, json, triples);
-            try {
-                parser.parse();
-            } catch (Exception e) {
-                throw new DataRetrievalException("I/O exception while retrieving resource: " + requestUrl, e);
-            }
-            int numPages = (int) ((double) (gsXMLHandler.getNumResults() / 10)) + 1;
-            int pagesLoaded = 1;
-            Model model = null;
-            while (pagesLoaded < numPages) {
-               
-                String pagenumquery = Integer.toString(pagesLoaded * 10);
-                String moreDataUrl = String.format(API, pagenumquery, stringSearch, authorSearch, advancedSearch);
-                ClientConfiguration conf = new ClientConfiguration();
-                LDClient ldClient = new LDClient(conf);
-                ClientResponse response = ldClient.retrieveResource(moreDataUrl);
-                Model pageModel = response.getData();
-                if (model == null) {
-                    model = pageModel;
-                } else {
-                    model.addAll(pageModel);
+            DefaultHandler handler = null;
+
+            // Extract information of authors if they have a gs profile.
+            if (requestUrl.contains("https://scholar.google.com/citations?mauthors=")) {
+                handler = new SearchHandler();
+                extract(input, handler);
+                author = chooseCorrectAuthor(((SearchHandler) handler).getResults());
+                if (author != null) {
+                    urls.add(author.getProfile() + "&cstart=0&pagesize=100");
                 }
-                pagesLoaded++;
+            } else if (requestUrl.contains("https://scholar.google.com/citations?user=") && author != null) {
+                // Extract url of publications from author's profile
+                handler = new ProfileHandler(author);
+                extract(input, handler);
+                boolean isDone = true;
+                int maxPub = Integer.parseInt(requestUrl.substring(requestUrl.indexOf("start=") + 6, requestUrl.indexOf("&pagesize"))) + 100;
+                if (author.getNumPublications() == maxPub) {
+                    urls.add(author.getProfile() + "&cstart=" + maxPub + "&pagesize=100");
+                    isDone = false;
+                }
+
+                // Just add all publications URL and return all triples from author when there is not left publications URL
+                if (isDone) {
+                    for (Publication p : author.getPublications()) {
+                        urls.add(p.getUrl());
+                    }
+                    triples.addAll(mauthor.map(author));
+                }
+            } else if (requestUrl.contains("https://scholar.google.com/citations?view_op=view_citation")) {
+                // Extract information of each publication URL
+                Publication p = new Publication();
+                p.setUrl(requestUrl);
+                extract(input, new PublicationHandler(p));
+                triples.addAll(mauthor.map(p));
             }
-            triples.addAll(model);
 
-        } catch (SAXException | IOException e) {
-            throw new DataRetrievalException("I/O exception while retrieving resource: " + requestUrl, e);
+        } catch (MalformedURLException ex) {
+            java.util.logging.Logger.getLogger(GoogleScholarProvider.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SAXException ex) {
+            java.util.logging.Logger.getLogger(GoogleScholarProvider.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            java.util.logging.Logger.getLogger(GoogleScholarProvider.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalArgumentException ex) {
+            java.util.logging.Logger.getLogger(GoogleScholarProvider.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(GoogleScholarProvider.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-//    	try {
-//    		List<String> candidates = new ArrayList<String>();
-//    		ValueFactory factory = ValueFactoryImpl.getInstance();
-//    		final Document doc = new SAXBuilder(XMLReaders.NONVALIDATING).build(input);
-//	    	for(Element element: queryElements(doc, "/result/hits/hit/info/url")) {
-//	    		String candidate = element.getText();
-//	    		triples.add(factory.createStatement(factory.createURI( resource ), FOAF.member, factory.createURI( candidate ) ));
-//	    		candidates.add(candidate);
-//	    	}
-//	    	ClientConfiguration conf = new ClientConfiguration();
-//	        LDClient ldClient = new LDClient(conf);
-//	        if(!candidates.isEmpty()) {
-//		        Model candidateModel = null;
-//		    	for(String author: candidates) {
-//		    		ClientResponse response = ldClient.retrieveResource(author);
-//		        	Model authorModel = response.getData();
-//		        	if(candidateModel == null) {
-//		        		candidateModel = authorModel;
-//		        	} else {
-//		        		candidateModel.addAll(authorModel);
-//		        	}
-//		    	}
-//		    	triples.addAll(candidateModel);
-//	        }
-//    	}catch (IOException e) {
-//            throw new DataRetrievalException("I/O error while parsing HTML response", e);
-//        }catch (JDOMException e) {
-//            throw new DataRetrievalException("could not parse XML response. It is not in proper XML format", e);
+//<editor-fold defaultstate="collapsed" desc="old code">
+////////////////////////////////////////////////////////
+//        final GSXMLHandler gsXMLHandler = new GSXMLHandler();
+//        gsXMLHandler.clearGSresultList();
+//        try {
+//            XMLReader xr = XMLReaderFactory.createXMLReader("org.ccil.cowan.tagsoup.Parser");
+//            xr.setContentHandler(gsXMLHandler);
+//            InputSource gsxml = new InputSource(input);
+//            gsxml.setEncoding("iso-8859-1");
+//            xr.parse(gsxml);
+//
+//            final Set<GSresult> gsresultlist = gsXMLHandler.getGSresultList();
+//            Gson gson = new Gson();
+//            JsonArray json = new JsonArray();
+//            for (GSresult d : gsresultlist) {
+//                json.add(gson.toJsonTree(d).getAsJsonObject());
+//            }
+//            JSONtoRDF parser = new JSONtoRDF(resource, MAPPINGSCHEMA, json, triples);
+//            try {
+//                parser.parse();
+//            } catch (Exception e) {
+//                throw new DataRetrievalException("I/O exception while retrieving resource: " + requestUrl, e);
+//            }
+//            int numPages = (int) ((double) (gsXMLHandler.getNumResults() / 10)) + 1;
+//            int pagesLoaded = 1;
+//            Model model = null;
+//            while (pagesLoaded < numPages) {
+//
+//                String pagenumquery = Integer.toString(pagesLoaded * 10);
+//                String moreDataUrl = String.format(API, pagenumquery, stringSearch, authorSearch, advancedSearch);
+//                ClientConfiguration conf = new ClientConfiguration();
+//                LDClient ldClient = new LDClient(conf);
+//                ClientResponse response = ldClient.retrieveResource(moreDataUrl);
+//                Model pageModel = response.getData();
+//                if (model == null) {
+//                    model = pageModel;
+//                } else {
+//                    model.addAll(pageModel);
+//                }
+//                pagesLoaded++;
+//            }
+//            triples.addAll(model);
+//
+//        } catch (SAXException | IOException e) {
+//            throw new DataRetrievalException("I/O exception while retrieving resource: " + requestUrl, e);
 //        }
-        return Collections.emptyList();
+//</editor-fold>
+        return urls;
     }
 
-//    protected static List<Element> queryElements(Document n, String query) {
-//        return XPathFactory.instance().compile(query, new ElementFilter()).evaluate(n);
-//    }
+    private Author chooseCorrectAuthor(List<Author> authors) {
+
+        for (Author author : authors) {
+
+            // If the authors domain correspond with IES domain, the author belongs to the IES
+            for (String domain : domains) {
+                if (domain.equals(author.getDomain())) {
+                    return author;
+                }
+            }
+
+            // compare University, sometimes Universities has the name of the city in it
+            // compare(author.getAffiliation(), ies)
+            if (author.getAffiliation().toLowerCase().contains(city.toLowerCase())
+                    || author.getAffiliation().toLowerCase().contains(province.toLowerCase())) {
+                return author;
+            }
+        }
+        return null;
+    }
+
+    private void sleep(int ms) throws InterruptedException {
+        Thread.sleep(ms);
+    }
+
+    private void extract(InputStream input, DefaultHandler handler) throws MalformedURLException, SAXException, InterruptedException {
+        int tries = 0;
+        while (true) {
+            try {
+                XMLReader xr = XMLReaderFactory.createXMLReader("org.ccil.cowan.tagsoup.Parser");
+
+                xr.setContentHandler(handler);
+                InputSource is = new InputSource(input);
+                is.setEncoding("iso-8859-1");
+                xr.parse(is);
+                sleep(5000);
+                break;
+            } catch (IOException e) {
+                tries++;
+                log.error(String.format("TRIES: %s \n", tries), e);
+                final int two_hour = 2 * 60 * 60 * 1000;
+                log.info("WAITING TWO HOURS....");
+                sleep(two_hour);
+            }
+        }
+    }
+
 }

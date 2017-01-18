@@ -21,7 +21,7 @@ public class JSONtoRDF {
     private final ValueFactory factory = ValueFactoryImpl.getInstance();
 
     public JSONtoRDF(String resource, Map<String, String> schema, JsonArray data, Model model) {
-        this.resource = resource;
+            this.resource = resource;
         this.schema = schema;
         this.data = data;
         this.model = model;
