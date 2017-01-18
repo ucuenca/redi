@@ -81,10 +81,10 @@ public interface QueriesService {
      */
     String getAskQuery(String... args);
 
-    String getEndpointDataQuery(String... arg);
+    String getInsertEndpointQuery(String resourceHash, String property, String object, String literal);
 
-    String getlisEndpointsQuery(String endpointsGraph);
-    
+    String getLisEndpointsQuery();
+
     String getlistEndpointNamesQuery();
 
     String getEndpointByIdQuery(String endpointsGraph, String id);

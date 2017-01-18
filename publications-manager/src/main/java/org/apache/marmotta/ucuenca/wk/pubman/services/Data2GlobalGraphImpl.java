@@ -41,6 +41,7 @@ import org.simmetrics.metrics.Levenshtein;
 import org.simmetrics.simplifiers.Simplifiers;
 import org.simmetrics.tokenizers.Tokenizers;
 import org.slf4j.Logger;
+import static org.simmetrics.StringMetricBuilder.with;
 
 /**
  *
