@@ -83,6 +83,8 @@ public interface QueriesService {
 
     String getInsertEndpointQuery(String resourceHash, String property, String object, String literal);
 
+    String getInsertDomainQuery(String enpointId, String domain);
+
     String getLisEndpointsQuery();
 
     String getlistEndpointNamesQuery();

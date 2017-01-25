@@ -1,9 +1,9 @@
 package org.apache.marmotta.ucuenca.wk.commons.impl;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
-import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
+import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
+import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
 
 /**
@@ -753,6 +753,14 @@ public class QueriesServiceImpl implements QueriesService {
                 + "}";
 
         return query;
+    }
+
+    @Override
+    public String getInsertDomainQuery(String enpointId, String domain) {
+        return "INSERT DATA { "
+                + "GRAPH <" + REDI.ENDPOINT_GRAPH + "> {"
+                + " <" + enpointId + ">   <" + REDI.DOMAIN + "> \"" + domain + "\""
+                + "}}";
     }
 
 }

@@ -29,6 +29,7 @@ import org.openrdf.query.UpdateExecutionException;
 /**
  *
  * @author Satellite
+ * @author Xavier Sumba
  */
 public class EndpointServiceImpl implements EndpointService {
 
@@ -173,6 +174,18 @@ public class EndpointServiceImpl implements EndpointService {
             Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    @Override
+    public String addDomain(String resourceId, String domain) {
+        try {
+            String query = queriesService.getInsertDomainQuery(resourceId, domain);
+            sparqlService.update(QueryLanguage.SPARQL, query);
+        } catch (MarmottaException | InvalidArgumentException | MalformedQueryException | UpdateExecutionException ex) {
+            Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return String.format("ERROR: %s", ex.getMessage());
+        }
+        return "Domain added successful";
     }
 
 }

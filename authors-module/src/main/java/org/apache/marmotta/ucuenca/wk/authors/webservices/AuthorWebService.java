@@ -24,21 +24,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.marmotta.ucuenca.wk.authors.api.AuthorService;
 import org.apache.marmotta.ucuenca.wk.authors.api.EndpointService;
 import org.apache.marmotta.ucuenca.wk.authors.api.SparqlEndpoint;
@@ -46,9 +44,9 @@ import org.apache.marmotta.ucuenca.wk.authors.api.UTPLAuthorService;
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.DaoException;
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.UpdateException;
 import org.openrdf.query.MalformedQueryException;
-
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.repository.RepositoryException;
+import org.slf4j.Logger;
 
 @ApplicationScoped
 @Path("/authors-module")
@@ -59,7 +57,7 @@ public class AuthorWebService {
 
     @Inject
     private AuthorService authorService;
-   
+
     @Inject
     private UTPLAuthorService utplAuthorService;
 
@@ -90,6 +88,13 @@ public class AuthorWebService {
             java.util.logging.Logger.getLogger(AuthorWebService.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    @POST
+    @Path("/domain")
+    public Response addDomain(@QueryParam("id") String id, @QueryParam("domain") String domain) throws IOException {
+        String result = endpointService.addDomain(id, domain);
+        return Response.status(Status.CREATED).entity(result).build();
     }
 
     @DELETE

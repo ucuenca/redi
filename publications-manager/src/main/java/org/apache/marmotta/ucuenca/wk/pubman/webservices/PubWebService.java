@@ -18,13 +18,7 @@
 package org.apache.marmotta.ucuenca.wk.pubman.webservices;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import java.util.AbstractList;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import org.slf4j.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -37,11 +31,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
-import org.apache.marmotta.ucuenca.wk.pubman.services.ReportsImpl;
 import org.apache.marmotta.ucuenca.wk.commons.service.TranslationService;
 
 @Path("/pubman")
