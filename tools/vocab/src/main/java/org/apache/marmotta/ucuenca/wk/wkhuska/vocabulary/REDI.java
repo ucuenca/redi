@@ -17,27 +17,24 @@ public class REDI {
 
     // Change domain accord with redi's domain
     //private static final String DOMAIN = "http://190.15.141.85:8080/resource/";
-    private static final String DOMAIN = "http://localhost:8080/";
-    private static final String BASE_GRAPHS = "http://ucuenca.edu.ec/wkhuska/";
+    private static final String BASE_DOMAIN = "http://localhost:8080";
 
     public static final String PREFIX = "uc";
     public static final String NAMESPACE = "http://ucuenca.edu.ec/ontology#";
 
     // Resources
-    public static final String AUTHOR_RESOURCE = DOMAIN + "resource/author/";
-    public static final String BOOK_RESOURCE = DOMAIN + "resource/book/";
-    public static final String PUBLICATION_RESOURCE = DOMAIN + "resource/publication/";
-    public static final String ENDPOINT_RESOURCE = DOMAIN + "resource/endpoint/";
+    public static final String AUTHOR_RESOURCE = BASE_DOMAIN + "/resource/author/";
+    public static final String BOOK_RESOURCE = BASE_DOMAIN + "/resource/book/";
+    public static final String PUBLICATION_RESOURCE = BASE_DOMAIN + "/resource/publication/";
+    public static final String ENDPOINT_RESOURCE = BASE_DOMAIN + "/resource/endpoint/";
 
     // Graphs
-    //public static final String ENDPOINT_GRAPH = BASE_GRAPHS + "endpoints";
-    public static final String ENDPOINT_GRAPH = "http://localhost:8080/context/" + "endpoints";
+    public static final String ENDPOINT_GRAPH = BASE_DOMAIN + "/context/endpoints";
+    public static final String AUTHOR_GRAPH = BASE_DOMAIN + "/context/authors";
 
+    // Properties
     public static final URI CITATION_COUNT;
     public static final URI GSCHOLAR_PUB;
-    /**
-     * Status of an Endpoint.
-     */
     public static final URI STATUS;
     public static final URI NAME;
     public static final URI URL;
@@ -47,6 +44,7 @@ public class REDI {
     public static final URI PROVINCE;
     public static final URI LATITUDE;
     public static final URI LONGITUDE;
+    public static final URI DOMAIN;
 
     static {
         ValueFactory factory = ValueFactoryImpl.getInstance();
@@ -62,6 +60,7 @@ public class REDI {
         PROVINCE = factory.createURI(REDI.NAMESPACE, "province");
         LATITUDE = factory.createURI(REDI.NAMESPACE, "latitude");
         LONGITUDE = factory.createURI(REDI.NAMESPACE, "longitude");
+        DOMAIN = factory.createURI(REDI.NAMESPACE, "domain");
 
     }
 }
