@@ -19,12 +19,6 @@ public interface QueriesService {
 
     String getOffset(String offset);
 
-    String getIESInfobyAuthor(String authorName);
-
-    String getAskPublicationsURLGS(String graphName, String authorResource);
-
-    String getPublicationsURLGS(String graphName, String authorResource);
-
     /**
      * return query to obtain all subject ( keywords ) of an author , using
      * dct:subject property
@@ -81,10 +75,10 @@ public interface QueriesService {
      */
     String getAskQuery(String... args);
 
-    String getInsertEndpointQuery(String resourceHash, String property, String object, String literal);
+    String getEndpointDataQuery(String... arg);
 
-    String getLisEndpointsQuery();
-
+    String getlisEndpointsQuery(String endpointsGraph);
+    
     String getlistEndpointNamesQuery();
 
     String getEndpointByIdQuery(String endpointsGraph, String id);

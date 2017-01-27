@@ -12,6 +12,5 @@
   <packaging>pom</packaging>
   <modules>
     <module>commons</module>
-    <module>vocab</module>
   </modules>
 </project>

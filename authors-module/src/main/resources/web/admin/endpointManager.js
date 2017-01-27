@@ -187,15 +187,15 @@
             var table = $("<table class='simple_table'/>");
             var tr = $("<tr class='title' valign='top' style='font-weight:bold;color: white;background-color:gray;'/>");
             //tr.append($("<td/>").html("&nbsp;"));
-            tr.append($("<td/>").html("&nbsp;"));
+            tr.append($("<td/>").text("Enable"));
             tr.append($("<td/>").text("Name"));
             tr.append($("<td/>").text("Endpoint URL"));
-            //tr.append($("<td/>").text("Graph URI"));
+            tr.append($("<td/>").text("Graph URI"));
             tr.append($("<td/>").text("Full Name"));
             tr.append($("<td/>").text("City"));
             tr.append($("<td/>").text("Province"));
-            //tr.append($("<td/>").text("Latitude"));
-            //tr.append($("<td/>").text("Longitude"));
+            tr.append($("<td/>").text("Latitude"));
+            tr.append($("<td/>").text("Longitude"));
             //tr.append($("<td/>").text("Endpoint"));
             //tr.append($("<td/>").text("Mimetype"));
             //tr.append($("<td/>").text("Expiry"));
@@ -238,17 +238,15 @@
                     col = "odd";
                 }
                 var tr = $("<tr class='" + col + "'/>");
-                var a = document.createElement('a');
-                
-                $("<td/>").append(buildIcon(ps[i].status == 'true')).appendTo(tr);
-                $("<td/>").append($('<a></a>').attr("href",ps[i].id).append(ps[i].name || '')).appendTo(tr);
+                $("<td/>").text(ps[i].status || '').appendTo(tr);
+                $("<td/>").text(ps[i].name || '').appendTo(tr);
                 $("<td/>").text(ps[i].url || '').appendTo(tr);
-                //$("<td/>").text(ps[i].graph || '').appendTo(tr);
+                $("<td/>").text(ps[i].graph || '').appendTo(tr);
                 $("<td/>").text(ps[i].fullName || '').appendTo(tr);
                 $("<td/>").text(ps[i].city || '').appendTo(tr);
                 $("<td/>").text(ps[i].province || '').appendTo(tr);
-                //$("<td/>").text(ps[i].latitude || '').appendTo(tr);
-                //$("<td/>").text(ps[i].longitude || '').appendTo(tr);
+                $("<td/>").text(ps[i].latitude || '').appendTo(tr);
+                $("<td/>").text(ps[i].longitude || '').appendTo(tr);
                 //$("<td/>").text(ps[i].endpoint || '').appendTo(tr);
                 //$("<td/>").text(ps[i].mimetype != undefined ? ctToString(ps[i].mimetype) : '').appendTo(tr);
                 //$("<td/>").text(ps[i].expiry || '').appendTo(tr);
