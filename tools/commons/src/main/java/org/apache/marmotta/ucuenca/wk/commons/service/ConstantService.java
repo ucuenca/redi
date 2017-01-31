@@ -30,8 +30,16 @@ public interface ConstantService {
             + " PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
             + " PREFIX bibo: <http://purl.org/ontology/bibo/> ";
 
+    String getBaseURI();
+
+    String getAuthorsGraph();
+
+    String getAuthorResource();
+
+    String getBaseResource();
+
     String getPrefixes();
-    
+
     String getPubProperty();
 
     String getTittleProperty();
@@ -39,7 +47,7 @@ public interface ConstantService {
     String getGraphString(String graph);
 
     String getWkhuskaGraph();
-    
+
     String getEndpointsGraph();
 
     String getProvenanceProperty();
@@ -59,18 +67,17 @@ public interface ConstantService {
     String getDBLPGraph();
 
     String getExternalAuthorsGraph();
-    
+
     String getScopusGraph();
 
     String getMAGraph();
 
     String getGSGraph();
-    
-    String getClusterGraph();
-    
-    String getLogoPath();
-    
-    String getAuthorsGraph();
 
+    String getClusterGraph();
+
+    String getLogoPath();
+
+    //String getAuthorsGraph();
     String getProviderNsGraph();
 }

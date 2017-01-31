@@ -5,6 +5,8 @@
  */
 package org.apache.marmotta.ucuenca.wk.commons.impl;
 
+import javax.inject.Inject;
+import org.apache.marmotta.platform.core.api.config.ConfigurationService;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 
@@ -14,11 +16,33 @@ import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
  */
 public class ConstantServiceImpl implements ConstantService {
 
+    @Inject
+    private ConfigurationService confService;
     private final static String FOAFNS = "http://xmlns.com/foaf/0.1/";
     private final static String OWLNS = "http://www.w3.org/2002/07/owl#";
     private final static String LOGO_PATH = "./../wkhuska_webapps/ROOT/wkhome/images/logo_wk.png";
 
     private CommonsServices commonService = new CommonsServicesImpl();
+
+    @Override
+    public String getBaseURI() {
+        return confService.getBaseUri();
+    }
+
+    @Override
+    public String getAuthorsGraph() {
+        return confService.getBaseContext() + "authors";
+    }
+
+    @Override
+    public String getBaseResource() {
+        return getBaseURI() + "resource/";
+    }
+
+    @Override
+    public String getAuthorResource() {
+        return getBaseResource() + "authors/";
+    }
 
     @Override
     public String getPubProperty() {
@@ -47,11 +71,10 @@ public class ConstantServiceImpl implements ConstantService {
      *
      * @return
      */
-    @Override
-    public String getAuthorsGraph() {
-        return getWkhuskaGraph() + getSelectedGraph("authors");
-    }
-
+//    @Override
+//    public String getAuthorsGraph() {
+//        return getWkhuskaGraph() + getSelectedGraph("authors");
+//    }
     @Override
     public String getClusterGraph() {
         return getWkhuskaGraph() + getSelectedGraph("clusters");
@@ -69,18 +92,18 @@ public class ConstantServiceImpl implements ConstantService {
 
     @Override
     public String getScopusGraph() {
-            return getWkhuskaGraph() + getSelectedGraph("scopus");
+        return getWkhuskaGraph() + getSelectedGraph("scopus");
     }
 
     @Override
     public String getMAGraph() {
-            return getWkhuskaGraph() + getSelectedGraph("microsoftacademics");
+        return getWkhuskaGraph() + getSelectedGraph("microsoftacademics");
     }
 
     @Override
     public String getGSGraph() {
-            return getWkhuskaGraph() + getSelectedGraph("googlescholar");
-        }
+        return getWkhuskaGraph() + getSelectedGraph("googlescholar");
+    }
 
     @Override
     public String getEndpointsGraph() {

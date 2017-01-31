@@ -16,6 +16,8 @@ public interface CommonsServices {
 
     /**
      * Return true or false if object is a URI
+     * @param object
+     * @return 
      */
     Boolean isURI(String object);
 
