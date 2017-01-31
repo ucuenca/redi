@@ -18,6 +18,7 @@
     <exclude name="StdCyclomaticComplexity"/>
     <exclude name="ExcessiveClassLength"/>
     <exclude name="ExcessivePublicCount"/>
+    <exclude name="ExcessiveMethodLength"/>
   </rule>
   <rule ref="rulesets/java/naming.xml">
     <exclude name="ShortVariable"/>

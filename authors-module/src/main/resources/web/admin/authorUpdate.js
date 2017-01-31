@@ -24,23 +24,21 @@ function runUpdateAuthor(options) {
 
     document.getElementById("imgloading").style.visibility = "visible";
 
-    var endpoint = "http://example";
-    var graphuri = "http://example/data";
+    //var endpoint = "http://example";
+    //var graphuri = "http://example/data";
     var settings = {
         host: options
     };
-    var dataT = {
-        "Endpoint": endpoint,
-        "GraphUri": graphuri
-    };
+    //var dataT = {
+    //    "Endpoint": endpoint,
+    //    "GraphUri": graphuri
+    //};
 
     $.ajax({
         type: "POST",
-        data: JSON.stringify(dataT),
         dataType: "text", //result data type
-        contentType: "application/json", // send data type
         url: settings.host + "authors-module/update",
-        //    url:  "http://localhost:8079/marmotta/authors-module/update",
+
         success: function (Result) {
             document.getElementById("imgloading").style.visibility = "hidden";
             alert("Correcto: " + Result);

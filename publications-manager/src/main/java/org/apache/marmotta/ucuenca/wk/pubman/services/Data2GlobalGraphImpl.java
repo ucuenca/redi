@@ -42,6 +42,8 @@ import org.simmetrics.simplifiers.Simplifiers;
 import org.simmetrics.tokenizers.Tokenizers;
 import org.slf4j.Logger;
 import static org.simmetrics.StringMetricBuilder.with;
+import static org.simmetrics.StringMetricBuilder.with;
+import static org.simmetrics.StringMetricBuilder.with;
 
 /**
  *

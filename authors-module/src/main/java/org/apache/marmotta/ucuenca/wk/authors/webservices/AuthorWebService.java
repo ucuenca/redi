@@ -64,7 +64,6 @@ public class AuthorWebService {
     @Inject
     private EndpointService endpointService;
 
-    public static final String AUTHOR_UPDATE = "/update";
     public static final String ADD_ENDPOINT = "/addendpoint";
     public static final String AUTHOR_SPLIT = "/split";
 
@@ -181,49 +180,36 @@ public class AuthorWebService {
     /**
      * Author Load Service
      *
-     * @param resultType
-     * @param request
      * @return
+     * @throws org.apache.marmotta.ucuenca.wk.authors.exceptions.UpdateException
+     * @throws org.apache.marmotta.ucuenca.wk.authors.exceptions.DaoException
+     * @throws org.openrdf.query.QueryEvaluationException
      */
     @POST
-    @Path(AUTHOR_UPDATE)
-    public Response updateAuthorPost(@QueryParam("Endpoint") String resultType, @Context HttpServletRequest request) {
-        try {
-            String params = CharStreams.toString(request.getReader());
-            log.debug("EndPoint & GraphURI: {}", params);
-            return authorUpdate(params);
-        } catch (IOException ex) {
-            java.util.logging.Logger.getLogger(AuthorWebService.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UpdateException ex) {
-            java.util.logging.Logger.getLogger(AuthorWebService.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
+    @Path("/update")
+    public Response updateAuthorPost() throws UpdateException, DaoException {
+        //String params = CharStreams.toString(request.getReader());
+        //log.debug("EndPoint & GraphURI: {}", params);
+                String result = authorService.runAuthorsUpdateMultipleEP();
+        return Response.ok().entity(result).build();
+        //return authorUpdate();
 
-    /**
-     * AUTHOR UPDATE IMPLEMENTATION
-     *
-     * @param urisString // JSON contains Endpoint and GraphURI
-     *
-     */
-    private Response authorUpdate(String urisString) throws UpdateException {
-        if (StringUtils.isBlank(urisString)) {
-            return Response.status(Response.Status.NOT_ACCEPTABLE).entity("Required Endpoint and GraphURI").build();
-        } else {
-            try {
-                String endpoint = urisString.split("\"")[3];
-                String graphUri = urisString.split("\"")[7];
-                String result = authorService.runAuthorsUpdateMultipleEP(endpoint, graphUri);
-                return Response.ok().entity(result).build();
-            } catch (DaoException ex) {
-                java.util.logging.Logger.getLogger(AuthorWebService.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (QueryEvaluationException ex) {
-                java.util.logging.Logger.getLogger(AuthorWebService.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-        }
-        return null;
     }
+//
+//    /**
+//     * AUTHOR UPDATE IMPLEMENTATION
+//     *
+//     * @param urisString // JSON contains Endpoint and GraphURI
+//     *
+//     */
+//    private Response authorUpdate() throws UpdateException, DaoException, QueryEvaluationException {
+//        //if (StringUtils.isBlank(urisString)) {
+//        //return Response.status(Response.Status.NOT_ACCEPTABLE).entity("Required Endpoint and GraphURI").build();
+//        // } else {
+//
+//
+//        //}
+//    }
 
     @POST
     @Path(AUTHOR_SPLIT)
