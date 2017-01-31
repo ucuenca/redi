@@ -66,6 +66,15 @@ public interface QueriesService {
     String getInsertDataUriQuery(String... args);
 
     /**
+     * Returns Insert query. Where args[0] is graph, args[1] is subject, args[2]
+     * is predicate, and args[3] is object.
+     *
+     * @param args
+     * @return
+     */
+    String buildInsertQuery(String... args);
+
+    /**
      *
      * @param graph
      * @param resource

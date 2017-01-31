@@ -68,7 +68,7 @@ public class QueriesServiceImpl implements QueriesService {
         if (varargs[3].contains("^^")) {
             object = "\"" + StringEscapeUtils.escapeJava(varargs[3].substring(1, varargs[3].indexOf("^^") - 1)) + "\"" + varargs[3].substring(varargs[3].indexOf("^^"));
         } else {
-            object = "\"" + StringEscapeUtils.escapeJava(varargs[3].substring(1, varargs[3].length() - 1)) + "\"" + (varargs.length > 4 ? varargs[4] != null ? "^^xsd:" + varargs[4] : "^^xsd:string" : "^^xsd:string");
+            object = String.format("\"%s\"%s", StringEscapeUtils.escapeJava(varargs[3].substring(0, varargs[3].length())), (varargs.length > 4 ? varargs[4] != null ? "^^xsd:" + varargs[4] : "^^xsd:string" : "^^xsd:string"));
         }
 
         if (isURI(varargs[2])) {
@@ -84,6 +84,8 @@ public class QueriesServiceImpl implements QueriesService {
 
     /**
      * Return a INSERT QUERY when object is a URI
+     *
+     * @param varargs
      */
     @Override
     public String getInsertDataUriQuery(String... varargs) {
@@ -94,6 +96,18 @@ public class QueriesServiceImpl implements QueriesService {
         } else {
             return PREFIXES + INSERTDATA + graphSentence + " " + "{ " + subjectSentence + " " + varargs[2] + " <" + varargs[3] + "> }}";
         }
+    }
+
+    @Override
+    public String buildInsertQuery(String... args) {
+        String graph = args[0];
+        String sujeto = args[1];
+        String predicado = args[2];
+        String objeto = args[3];
+        if (isURI(objeto)) {
+            return getInsertDataUriQuery(graph, sujeto, predicado, objeto);
+        }
+        return getInsertDataLiteralQuery(graph, sujeto, predicado, objeto);
     }
 
     /**
@@ -247,7 +261,7 @@ public class QueriesServiceImpl implements QueriesService {
     @Override
     public String getRetrieveKeysQuery() {
         return " PREFIX dct: <http://purl.org/dc/terms/>  "
-                + " SELECT ?x ?y ?z WHERE { ?x dct:subject ?z. ?x ?y ?z. }";
+                + " SELECT ?subject WHERE { [] dct:subject ?subject}";
     }
 
     @Override
@@ -261,6 +275,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + " ?subject foaf:firstName ?fname. "
                 + " ?subject foaf:lastName ?lname. "
                 + " ?subject dct:provenance ?provenance. "
+                //<editor-fold defaultstate="collapsed" desc="authors for test purposes">
                 //                                + "{"
                 //                                + " filter (regex(UCASE(?subject), \"SAQUICELA\"))"
                 //                                + "filter (regex(UCASE(?subject), \"GALARZA\"))  "
@@ -286,6 +301,7 @@ public class QueriesServiceImpl implements QueriesService {
                 //                                + " filter (regex(UCASE(?subject), \"LIZANDRO\"))  "
                 //                                + "  filter (regex(UCASE(?subject), \"SOLANO\"))     "
                 //                                + "} "
+                //</editor-fold>
                 + " { select ?status "
                 + "     where { " + getGraphString(endpointsgraph) + " {"
                 + "     ?provenance <http://ucuenca.edu.ec/ontology#status> ?status "
@@ -327,17 +343,6 @@ public class QueriesServiceImpl implements QueriesService {
                 + " }}";
     }
 
-//    @Override
-//    public String getPublicationsMAQuery(String providerGraph) {
-//        return " SELECT DISTINCT ?authorResource ?pubproperty ?publicationResource WHERE { "
-//                + getGraphString(providerGraph)
-//                + " {  "
-//                + " ?authorResource owl:sameAs   ?authorNative. "
-//                + " ?authorNative ?pubproperty ?publicationResource. "
-//                + " filter (regex(?pubproperty,\"pub\")) "
-//                + " }  "
-//                + " }  ";
-//    }
     @Override
     public String getPublicationsPropertiesQuery(String providerGraph, String publicationResource) {
         return " SELECT DISTINCT ?publicationProperties ?publicationPropertyValue WHERE { "
