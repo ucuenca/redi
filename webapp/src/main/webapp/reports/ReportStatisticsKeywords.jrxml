@@ -40,7 +40,7 @@
 				<textElement textAlignment="Center">
 					<font isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<text><![CDATA[REPORTE DE ESTADÍSTICAS POR UNIVERSIDAD]]></text>
+				<text><![CDATA[REPORTE DE PUBLICACIONES POR KEYWORD]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="48" width="555" height="13" uuid="0f7c8acf-ea7c-42df-be60-fb87a428bb57"/>

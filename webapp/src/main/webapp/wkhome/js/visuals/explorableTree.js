@@ -184,7 +184,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
             function setChildrenAndUpdateForAuthor(node, right) {
                 var id = node.author["@id"];
                 var modelAuthor = {"foaf:name": {label: "Nombre:", containerType: "div"},
-                    "uc:fullName": {label: "IES: ", containerType: "div"},
+                    "uc:fullName": {label: "Institución: ", containerType: "div"},
                     "uc:city": {label: "Ciudad: ", containerType: "div"},
                     "uc:province": {label: "Provincia: ", containerType: "div"},
                     "dct:subject": {label: "Subjects: ", containerType: "div"}
@@ -204,14 +204,15 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                         + '         dct:provenance ?provenance; '
                         + '         OPTIONAL {  <' + id + '> dct:subject ?subjects. }'
                         + '         { '
-                        + '             SELECT DISTINCT * '
+                        + '             SELECT DISTINCT ?provenance ?city (STR(?pname) as ?provname) ?province '
                         + '             WHERE'
                         + '             {'
                         + '                 graph <' + globalData.endpointsGraph + '> '
                         + '                 { '
-                        + '                     ?provenance uc:fullName ?provname.'
+                        + '                     ?provenance uc:fullName ?pname.'
                         + '                     ?provenance uc:city ?city.'
                         + '                     ?provenance uc:province ?province.'
+                        + '                     FILTER (lang(?pname) = "es").'
                         + '                 }'
                         + '             }'
                         + '         }'
@@ -379,10 +380,14 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                                     + ' ?pub bibo:Quote ?keyword. '
                                     + ' ?pub dct:isPartOf ?isPartOf. '
                                     + ' ?pub bibo:numPages ?numPages. '
+                                    + ' ?pub uc:origin ?origin. '
+                                    + ' ?pub uc:latindex ?latindex. '
                                     + ' } '
                                     + ' WHERE { graph <' + globalData.centralGraph + '> {  '
                                     + ' <' + nodeId + '> foaf:publications ?pub . '
-                                    + '?pub dct:title ?title '
+                                    + '?pub dct:title ?title. '
+                                    + ' ?pub uc:origin ?origin. filter (!regex(?origin, "Latindex")). '
+                                    + ' OPTIONAL {?pub uc:origin ?latindex. filter (regex(?latindex, "Latindex")). } '
                                     + ' OPTIONAL {?pub bibo:abstract ?abstract. } '
                                     + ' OPTIONAL {?pub bibo:uri ?uri. } '
                                     + ' OPTIONAL {?pub dct:contributor ?contributor. } '
@@ -390,7 +395,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                                     + ' OPTIONAL {?pub bibo:Quote ?keyword. } '
                                     + ' OPTIONAL {?pub dct:isPartOf ?isPartOf. } '
                                     + ' OPTIONAL {?pub bibo:numPages ?numPages. } '
-                                    + ' FILTER (!regex(?contributor, ":node")) '
+                                    + ' FILTER (!regex(?contributor, ":node")). '
                                     + ' } } ';
                             sparqlQuery.querySrv({query: queryPublications}, function (rdf) {
 
@@ -445,6 +450,8 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                     //view data in infoBar
                     var entity = _.findWhere(node.publication.jsonld["@graph"], {"@id": id, "@type": "bibo:Document"});
                     var model = {"dct:title": {label: "Titulo", containerType: "div"},
+                        "uc:latindex": {label: "Indexación: ", containerType: "div"},
+                        "uc:origin": {label: "Extraído de: ", containerType: "div"},
                         "bibo:uri": {label: "URL: Link Externo", containerType: "a"},
                         "dct:contributor": {label: "CO-Autores - Links Externos: ", containerType: "a"},
                         "dct:isPartOf": {label: "Es parte de: ", containerType: "a"},

@@ -125,7 +125,11 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
                                                 }
                                                 else
                                                 {
-                                                    alert("Information not found");
+                                                    if ($routeParams.lang === "es") {
+                                                        alert("La información no se encuentra disponible en REDI en este momento.");
+                                                    } else {
+                                                        alert("The information is not available in REDI at the moment. Please try again later.");
+                                                    }
                                                     waitingDialog.hide();
                                                 }
                                             });
