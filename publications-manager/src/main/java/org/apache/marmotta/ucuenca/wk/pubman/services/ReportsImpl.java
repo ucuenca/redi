@@ -17,7 +17,6 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.services;
 
-import ar.com.fdvs.dj.domain.constants.Font;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
@@ -28,11 +27,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import org.slf4j.Logger;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -43,27 +39,23 @@ import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
+import org.apache.marmotta.ucuenca.wk.commons.impl.ConstantServiceImpl;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
-
+import org.apache.marmotta.ucuenca.wk.pubman.api.ReportsService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
-
-import org.apache.marmotta.ucuenca.wk.commons.impl.ConstantServiceImpl;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQueryResult;
-
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
-import org.apache.marmotta.ucuenca.wk.pubman.api.ReportsService;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
+import org.openrdf.query.QueryLanguage;
+import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.Repository;
+import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.sparql.SPARQLRepository;
+import org.slf4j.Logger;
 
 /**
  *
@@ -169,7 +161,7 @@ public class ReportsImpl implements ReportsService {
                     // Get the Json with the top keywords (considering the number of publications).
                     json = getJSONStatisticsTopKeywords(hostname);
 
-                    break;   
+                    break;
             }
             //Always the first element of the array has the json stream
             stream = new ByteArrayInputStream(json[0].getBytes("UTF-8"));
@@ -726,9 +718,10 @@ public class ReportsImpl implements ReportsService {
                     + "       dct:provenance ?endpoint ."
                     + "    ?author foaf:name ?name ."
                     + "    {"
-                    + "    	SELECT * {"
+                    + "    	SELECT ?endpoint {"
                     + "        	GRAPH <" + constant.getEndpointsGraph() + "> {"
-                    + "              ?endpoint uc:name \"" + ies + "\"^^xsd:string ."
+                    + "          ?endpoint uc:name ?nameIES .\n"
+                    + "          FILTER(STR(?nameIES)=\"" + ies + "\")"
                     + "            }"
                     + "        }"
                     + "    }"
@@ -741,9 +734,9 @@ public class ReportsImpl implements ReportsService {
                     + "SELECT (STR(?name) as ?fname)"
                     + "WHERE {"
                     + "  GRAPH <" + constant.getEndpointsGraph() + ">  {"
-                    + "    ?endpoint uc:name \"" + ies + "\"^^xsd:string ."
+                    + "    ?endpoint uc:name ?acronym ."
                     + "    ?endpoint uc:fullName ?name ."
-                    + " FILTER (lang(?name) = \"es\")."
+                    + "    FILTER (STR(?acronym)=\"" + ies + "\" && lang(?name)=\"es\").  "
                     + "  }"
                     + "}";
 
@@ -796,7 +789,7 @@ public class ReportsImpl implements ReportsService {
         }
         return new String[]{"", ""};
     }
-    
+
     public String[] getJSONStatisticsTopKeywords(String hostname) {
 
         String getQuery = "";
@@ -837,24 +830,24 @@ public class ReportsImpl implements ReportsService {
                 TupleQueryResult resulta = con.prepareTupleQuery(QueryLanguage.SPARQL, getQuery).evaluate();
 
                 JSONArray keywords = new JSONArray();
-                
+
                 String uri, key, total;
-                
+
                 while (resulta.hasNext()) {
                     BindingSet binding = resulta.next();
                     uri = String.valueOf(binding.getValue("uriArea")).replace("\"", "").replace("^^", "").split("<")[0];
                     key = String.valueOf(binding.getValue("keyword")).replace("\"", "").replace("^^", "").split("<")[0];
                     total = String.valueOf(binding.getValue("total")).replace("\"", "").replace("^^", "").split("<")[0];
-                    
+
                     JSONObject keyword = new JSONObject();
                     keyword.put("uri", uri);
                     keyword.put("key", key);
                     keyword.put("total", total);
-                    
+
                     keywords.add(keyword);
                 }
                 con.close();
-                
+
                 return new String[]{keywords.toString(), ""};
             } catch (RepositoryException ex) {
                 java.util.logging.Logger.getLogger(ReportsImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -868,5 +861,5 @@ public class ReportsImpl implements ReportsService {
         }
         return new String[]{"", ""};
     }
-    
+
 }
