@@ -97,7 +97,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Inject
     private ConstantService constantService;
 
-    private final int limit = 5000;
+    private int limit = 5000;
 
     private int processpercent = 0;
 
