@@ -183,17 +183,12 @@ public class AuthorWebService {
      * @return
      * @throws org.apache.marmotta.ucuenca.wk.authors.exceptions.UpdateException
      * @throws org.apache.marmotta.ucuenca.wk.authors.exceptions.DaoException
-     * @throws org.openrdf.query.QueryEvaluationException
      */
     @POST
     @Path("/update")
     public Response updateAuthorPost() throws UpdateException, DaoException {
-        //String params = CharStreams.toString(request.getReader());
-        //log.debug("EndPoint & GraphURI: {}", params);
-                String result = authorService.runAuthorsUpdateMultipleEP();
+        String result = authorService.runAuthorsUpdateMultipleEP();
         return Response.ok().entity(result).build();
-        //return authorUpdate();
-
     }
 //
 //    /**

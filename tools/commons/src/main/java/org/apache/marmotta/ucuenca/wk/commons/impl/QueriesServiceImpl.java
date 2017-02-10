@@ -1,5 +1,6 @@
 package org.apache.marmotta.ucuenca.wk.commons.impl;
 
+import javax.inject.Inject;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
@@ -12,9 +13,10 @@ import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
  */
 public class QueriesServiceImpl implements QueriesService {
 
-    private final ConstantService con = new ConstantServiceImpl();
-
-    private final CommonsServices commonsServices = new CommonsServicesImpl();
+    @Inject
+    private ConstantService con;//= new ConstantServiceImpl();
+    @Inject
+    private CommonsServices commonsServices;//= new CommonsServicesImpl();
 
     private final static String PREFIXES = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
             + " PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
@@ -116,6 +118,11 @@ public class QueriesServiceImpl implements QueriesService {
     @Override
     public String getAskResourceQuery(String graph, String resource) {
         return "ASK FROM <" + graph + "> { <" + resource + "> ?p ?o }";
+    }
+
+    @Override
+    public String getAskObjectQuery(String graph, String object) {
+        return "ASK FROM  <" + graph + "> { ?s ?p <" + object + "> }";
     }
 
     /**
@@ -220,6 +227,26 @@ public class QueriesServiceImpl implements QueriesService {
                 + "             <" + args[1] + "> " + status + " ?status"
                 + "             FILTER (regex(?status,'" + args[2] + "')) "
                 + " }   } ";
+    }
+
+    @Override
+    public String getAuthors() {
+        return PREFIXES
+                + "SELECT ?s WHERE {"
+                + "  GRAPH <" + con.getAuthorsGraph() + "> { "
+                + "    ?s a foaf:Person. "
+                + "   }"
+                + "}";
+    }
+
+    @Override
+    public String getSameAsAuthors(String authorResource) {
+        return PREFIXES
+                + "SELECT ?o WHERE {"
+                + "  GRAPH <http://localhost:8080/context/authors> { "
+                + "     <" + authorResource + "> owl:sameAs  ?o . "
+                + "   }"
+                + "}";
     }
 
     @Override

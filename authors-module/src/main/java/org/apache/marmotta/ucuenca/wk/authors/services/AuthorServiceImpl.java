@@ -17,22 +17,30 @@
  */
 package org.apache.marmotta.ucuenca.wk.authors.services;
 
-//import java.io.BufferedReader;
-//import java.io.File;
-//import java.io.FileNotFoundException;
-//import java.io.FileReader;
-//import java.io.IOException;
-//import java.util.ArrayList;
-//import java.util.Iterator;
-//import java.util.List;
+import cc.mallet.pipe.CharSequence2TokenSequence;
+import cc.mallet.pipe.Pipe;
+import cc.mallet.pipe.SerialPipes;
+import cc.mallet.pipe.TokenSequence2FeatureSequenceWithBigrams;
+import cc.mallet.pipe.TokenSequenceLowercase;
+import cc.mallet.pipe.TokenSequenceRemoveStopwords;
+import cc.mallet.pipe.iterator.ArrayIterator;
+import cc.mallet.topics.ParallelTopicModel;
+import cc.mallet.types.InstanceList;
+import info.debatty.java.stringsimilarity.Cosine;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import org.apache.commons.io.LineIterator;
 import org.apache.marmotta.commons.sesame.model.ModelCommons;
 import org.apache.marmotta.ldclient.api.ldclient.LDClientService;
 import org.apache.marmotta.ldclient.endpoint.rdf.SPARQLEndpoint;
@@ -40,12 +48,10 @@ import org.apache.marmotta.ldclient.exception.DataRetrievalException;
 import org.apache.marmotta.ldclient.model.ClientConfiguration;
 import org.apache.marmotta.ldclient.model.ClientResponse;
 import org.apache.marmotta.ldclient.services.ldclient.LDClient;
-import org.apache.marmotta.platform.core.api.config.ConfigurationService;
 import org.apache.marmotta.ucuenca.wk.authors.api.AuthorService;
 import org.apache.marmotta.ucuenca.wk.authors.api.EndpointService;
 import org.apache.marmotta.ucuenca.wk.authors.api.SparqlEndpoint;
 import org.apache.marmotta.ucuenca.wk.authors.api.SparqlFunctionsService;
-import org.apache.marmotta.ucuenca.wk.authors.exceptions.AskException;
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.DaoException;
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.UpdateException;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
@@ -79,9 +85,8 @@ public class AuthorServiceImpl implements AuthorService {
     @Inject
     private SparqlFunctionsService sparqlFunctionsService;
 
-    @Inject
-    private ConfigurationService configurationService;
-
+//    @Inject
+//    private ConfigurationService configurationService;
     @Inject
     private QueriesService queriesService;
 
@@ -97,11 +102,16 @@ public class AuthorServiceImpl implements AuthorService {
     @Inject
     private ConstantService constantService;
 
-    private int limit = 5000;
-
+    private static final int LIMIT = 5000;
+    private static final double COSINE_DISTANCE = 0.1;
     private int processpercent = 0;
+    private static List<SparqlEndpoint> endpoints;
 
-    //private boolean provenanceinsert = false; //variable to know if the provenance of an author was already inserted
+    @PostConstruct
+    public void init() {
+        endpoints = authorsendpointService.listEndpoints();
+    }
+
     /**
      * authorDocumentProperty : http://rdaregistry.info/Elements/a/P50161 |
      * http://rdaregistry.info/Elements/a/P50195
@@ -114,7 +124,6 @@ public class AuthorServiceImpl implements AuthorService {
     public String runAuthorsUpdateMultipleEP() throws DaoException, UpdateException {
         Boolean someUpdate = false;
         StringBuilder response = new StringBuilder();
-        List<SparqlEndpoint> endpoints = authorsendpointService.listEndpoints();
         if (!endpoints.isEmpty()) {
             for (SparqlEndpoint endpoint : endpoints) {
                 if (Boolean.parseBoolean(endpoint.getStatus())) {
@@ -136,6 +145,12 @@ public class AuthorServiceImpl implements AuthorService {
                     someUpdate = true;
                 }
             }
+            try {
+                response.append(extractSubjects());
+            } catch (QueryEvaluationException | RepositoryException | MalformedQueryException | DataRetrievalException ex) {
+                log.error("Cannnot extract subjects. Error: {}", ex.getMessage());
+            }
+
             if (!someUpdate) {
                 return "Any  Endpoints";
             }
@@ -150,131 +165,166 @@ public class AuthorServiceImpl implements AuthorService {
         int tripletasCargadas = 0; //cantidad de tripletas actualizadaas
         int contAutoresNuevosNoCargados = 0; //cantidad de actores nuevos no cargados
         int contAutoresNuevosEncontrados = 0; //hace referencia a la cantidad de actores existentes en el archivo temporal antes de la actualizacion
-        //configurationService.getHome();
-        String lastUpdateUrisFile = configurationService.getHome() + "\\listAuthorsUpdate_" + endpoint.getName() + ".aut";
+
         /* Conecting to repository using LDC ( Linked Data Client ) Library */
         ClientConfiguration config = new ClientConfiguration();
         config.addEndpoint(new SPARQLEndpoint(endpoint.getName(), endpoint.getEndpointUrl(), "^" + "http://" + ".*"));
         LDClientService ldClientEndpoint = new LDClient(config);
 
         Repository endpointTemp = new SPARQLRepository(endpoint.getEndpointUrl());
-        endpointTemp.initialize();
+        TupleQueryResult result = executeQuery(endpointTemp, queriesService.getCountPersonQuery(endpoint.getGraph()));
+        int authorsSize = Integer.parseInt(result.next().getBinding("count").getValue().stringValue());//getAuthorsSize(conn, endpoint.getGraph());//Integer.parseInt(bindingCount.getValue("count").stringValue());
+
+        //endpointTemp.initialize();
         //After that you can use the endpoint like any other Sesame Repository, by creating a connection and doing queries on that:
-        RepositoryConnection conn = endpointTemp.getConnection();
-        int authorsSize = getAuthorsSize(conn, endpoint.getGraph());//Integer.parseInt(bindingCount.getValue("count").stringValue());
+        // RepositoryConnection conn = endpointTemp.getConnection();
         //Query that let me obtain all resource related with author from source sparqlendpoint 
         String getAuthorsQuery = queriesService.getAuthorsQuery(endpoint.getGraph());
         String resource = "";
         for (int offset = 0; offset < authorsSize; offset += 5000) {
             try {
-                TupleQueryResult authorsResult = conn.prepareTupleQuery(QueryLanguage.SPARQL, getAuthorsQuery + getLimitOffset(limit, offset)).evaluate();
+                TupleQueryResult authorsResult = executeQuery(endpointTemp, getAuthorsQuery + getLimitOffset(LIMIT, offset));//conn.prepareTupleQuery(QueryLanguage.SPARQL, getAuthorsQuery + getLimitOffset(limit, offset)).evaluate();
                 while (authorsResult.hasNext()) {
                     resource = authorsResult.next().getValue("s").stringValue();
-                    try {
-                        if (!sparqlFunctionsService.askAuthor(queriesService.getAskResourceQuery(constantService.getAuthorsGraph(), resource))) {
-                            contAutoresNuevosEncontrados++;
-                            printPercentProcess(contAutoresNuevosEncontrados, authorsSize, endpoint.getName());
-                            String localResource = buildLocalURI(resource);
-                            List<String> documents = new ArrayList<>();
-                            Set<String> subjects = new HashSet<>();
+                    if (!sparqlFunctionsService.askAuthor(queriesService.getAskObjectQuery(constantService.getAuthorsGraph(), resource))) {
+                        contAutoresNuevosEncontrados++;
+                        printPercentProcess(contAutoresNuevosEncontrados, authorsSize, endpoint.getName());
+                        String localResource = buildLocalURI(resource);
 
-                            //properties and values quering with LDClient Library de Marmotta
-                            String getResourcePropertyQuery = "";
-                            try {
-                                //ClientResponse respUri = ldClientEndpoint.retrieveResource(utf8DecodeQuery(resource));
-                                ClientResponse respUri = ldClientEndpoint.retrieveResource(resource);
-                                RepositoryConnection conUri = ModelCommons.asRepository(respUri.getData()).getConnection();
-                                conUri.begin();
-                                // SPARQL to get all data of a Resource
-                                getResourcePropertyQuery = queriesService.getRetrieveResourceQuery();
-                                TupleQuery resourcequery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getResourcePropertyQuery); //
-                                TupleQueryResult tripletasResult = resourcequery.evaluate();
-//                                provenanceinsert = false;
-                                while (tripletasResult.hasNext()) {
-                                    BindingSet tripletsResource = tripletasResult.next();
-                                    String subject = tripletsResource.getValue("x").stringValue();
-                                    String predicate = tripletsResource.getValue("y").stringValue();
-                                    String object = tripletsResource.getValue("z").stringValue();
+                        String getResourcePropertyQuery = queriesService.getRetrieveResourceQuery();
+                        ClientResponse response = ldClientEndpoint.retrieveResource(resource);
+                        Repository repository = ModelCommons.asRepository(response.getData());
+                        RepositoryConnection conn = repository.getConnection();
+                        TupleQueryResult tripletasResult = conn.prepareTupleQuery(QueryLanguage.SPARQL, getResourcePropertyQuery).evaluate();
 
-                                    if (predicate.contains("http://rdaregistry.info")) {
-                                        subjects.addAll(extractSubjectsFromDocument(ldClientEndpoint, object));
-                                        documents.addAll(extractDocument(ldClientEndpoint, object));
-                                        continue;
-                                    }
-                                    String queryAuthorInsert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, predicate, object);
-                                    sparqlFunctionsService.updateAuthor(queryAuthorInsert);
-                                    if (!tripletasResult.hasNext()) {
-                                        String sameAs = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, OWL.SAMEAS.toString(), subject);
-                                        sparqlFunctionsService.updateAuthor(sameAs);
-                                    }
-                                }
-                                // Insert provenance 
-                                String provenanceQueryInsert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, "http://purl.org/dc/terms/provenance", endpoint.getResourceId());
-                                sparqlFunctionsService.updateAuthor(provenanceQueryInsert);
-                                combineSubjects(localResource, documents, subjects);
-                                // insert subjects
-                                conUri.commit();
-                                conUri.close();
-                            } catch (QueryEvaluationException ex) {
-                                log.error("Al evaluar la consulta: " + getResourcePropertyQuery);
-                            } catch (DataRetrievalException ex) {
-                                contAutoresNuevosNoCargados++;
-                                //log.error("Al recuperar datos del recurso : " + resource);
+                        while (tripletasResult.hasNext()) {
+                            BindingSet tripletsResource = tripletasResult.next();
+                            String predicate = tripletsResource.getValue("y").stringValue();
+                            String object = tripletsResource.getValue("z").stringValue();
+
+                            if (predicate.contains("http://rdaregistry.info")) {
+                                continue;
                             }
-                        }//end  if (!sparqlFunctionsService.askAuthor( ... )
-                    } catch (AskException ex) {
-                        log.error("Failure to ask existence of: " + resource);
+                            if (predicate.contains(OWL.SAMEAS.toString())) { // If sameas found include the provenance
+                                SparqlEndpoint newEndpoint = matchWithProvenance(object);
+                                if (newEndpoint != null) {
+                                    String provenanceQueryInsert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, DCTERMS.PROVENANCE.toString(), newEndpoint.getResourceId());
+                                    sparqlFunctionsService.updateAuthor(provenanceQueryInsert);
+                                }
+                            }
+                            if (!tripletasResult.hasNext()) { // Insert sameAs abd provenance in last iteration
+                                String sameAs = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, OWL.SAMEAS.toString(), resource);
+                                sparqlFunctionsService.updateAuthor(sameAs);
+
+                                String provenanceQueryInsert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, DCTERMS.PROVENANCE.toString(), endpoint.getResourceId());
+                                sparqlFunctionsService.updateAuthor(provenanceQueryInsert);
+                            }
+                            String queryAuthorInsert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, predicate, object);
+                            sparqlFunctionsService.updateAuthor(queryAuthorInsert);
+                        }
+                        conn.commit();
+                        conn.close();
+                        repository.shutDown();
                     }
                 }
             } catch (QueryEvaluationException ex) {
-                log.error("Fallo consulta ASK de:  " + resource + "error" + ex.getMessage());
+                log.error("Something happened evaluating the query Error: {}", ex.getMessage());
+            } catch (DataRetrievalException ex) {
+                log.error("Something happened retrieving triples for resource {} Error: {}", resource, ex.getMessage());
+                contAutoresNuevosNoCargados++;
             } finally {
                 endpointTemp.shutDown();
+                ldClientEndpoint.shutdown();
             }
 
         }
-        /*    
-         *    @deprecated
-         *    ESCRIBIENDO URIS DE AUTORES EN ARCHIVO TEMPORAL
-         *    @param conn, conection endpoint and configuration
-         *    @param query, query to obtain all resource uris of authors
-         *    @param lastUpdateUrisFile path of temporal file to save last uris update   */
-        sparqlFunctionsService.updateLastAuthorsFile(conn, getAuthorsQuery, lastUpdateUrisFile);
-        ldClientEndpoint.shutdown();
+
         log.info(endpoint.getName() + " endpoint. Se detectaron " + contAutoresNuevosEncontrados + " autores nuevos ");
         log.info(endpoint.getName() + " endpoint. Se cargaron " + (contAutoresNuevosEncontrados - contAutoresNuevosNoCargados) + " autores nuevos exitosamente");
         log.info(endpoint.getName() + " endpoint. Se cargaron " + tripletasCargadas + " tripletas ");
         log.info(endpoint.getName() + " endpoint. No se pudieron cargar " + contAutoresNuevosNoCargados + " autores");
-        conn.close();
+
         return "Carga Finalizada. Revise Archivo Log Para mas detalles";
     }
 
-    public List<String> extractDocument(LDClientService ldClient, String documentURI) throws DataRetrievalException, QueryEvaluationException, RepositoryException, MalformedQueryException, IOException, ClassNotFoundException {
+    private String extractSubjects() throws QueryEvaluationException, RepositoryException, MalformedQueryException, DataRetrievalException, UpdateException {
+        String allAuthorsQuery = queriesService.getAuthors();
 
-        ClientResponse respPub = ldClient.retrieveResource(documentURI);
-        RepositoryConnection conUriPub = ModelCommons.asRepository(respPub.getData()).getConnection();
-        conUriPub.begin();
+        Repository repository = new SPARQLRepository("http://localhost:8080/sparql/select");
+        TupleQueryResult allAuthors = executeQuery(repository, allAuthorsQuery);
+        while (allAuthors.hasNext()) {
+            String authorResource = allAuthors.next().getBinding("s").getValue().stringValue();
+            String sameAsAuthorsQuery = queriesService.getSameAsAuthors(authorResource);
+            TupleQueryResult sameAsAuthors = executeQuery(repository, sameAsAuthorsQuery);
+            while (sameAsAuthors.hasNext()) { // for each author
+                List<String> documents = new ArrayList<>();
+                List<String> subjects = new ArrayList<>();
+
+                String sameAsResource = sameAsAuthors.next().getBinding("o").getValue().stringValue();
+                SparqlEndpoint endpoint = matchWithProvenance(sameAsResource);
+
+                ClientConfiguration conf = new ClientConfiguration();
+                conf.addEndpoint(new SPARQLEndpoint(endpoint.getName(), endpoint.getEndpointUrl(), "^http://.*"));
+                LDClient ldc = new LDClient(conf);
+                ClientResponse response = ldc.retrieveResource(sameAsResource);
+                Repository tempRepository = ModelCommons.asRepository(response.getData());
+                TupleQueryResult tempResult = tempRepository.getConnection().
+                        prepareTupleQuery(QueryLanguage.SPARQL, queriesService.getRetrieveResourceQuery())
+                        .evaluate();
+
+                while (tempResult.hasNext()) {
+                    BindingSet triples = tempResult.next();
+                    String predicate = triples.getBinding("y").getValue().stringValue();
+                    String object = triples.getBinding("z").getValue().stringValue();
+
+                    if (predicate.contains("http://rdaregistry.info")) {
+                        subjects.addAll(extractSubjectsFromDocument(ldc, object));
+                        documents.addAll(extractContentFromDocument(ldc, object));
+                    }
+                }
+                combineSubjects(authorResource, documents, subjects);
+            }
+        }
+        return "Subjects Extracted";
+    }
+
+    private TupleQueryResult executeQuery(Repository repository, String query) throws RepositoryException, MalformedQueryException, QueryEvaluationException {
+        if (!repository.isInitialized()) {
+            repository.initialize();
+        }
+        RepositoryConnection conn = repository.getConnection();
+        conn.begin();
+        TupleQueryResult result = conn.prepareTupleQuery(QueryLanguage.SPARQL, query).evaluate();
+        conn.close();
+        return result;
+    }
+
+    private List<String> extractContentFromDocument(LDClientService ldClient, String documentURI) throws DataRetrievalException, RepositoryException, MalformedQueryException, QueryEvaluationException {
+
         List<String> documents = new ArrayList<>();
-
-        String getAbstractAndTitleQuery = queriesService.getAbstractAndTitleQuery(documentURI);
-        TupleQuery abstractTitlequery = conUriPub.prepareTupleQuery(QueryLanguage.SPARQL, getAbstractAndTitleQuery); //
-        TupleQueryResult tripletasATResult = abstractTitlequery.evaluate();
-        while (tripletasATResult.hasNext()) {
-            BindingSet tripletsATResource = tripletasATResult.next();
+        String getDocQuery = queriesService.getAbstractAndTitleQuery(documentURI);
+        ClientResponse response = ldClient.retrieveResource(documentURI);
+        Repository repository = ModelCommons.asRepository(response.getData());
+        RepositoryConnection conn = repository.getConnection();
+        conn.begin();
+        TupleQueryResult result = conn.prepareTupleQuery(QueryLanguage.SPARQL, getDocQuery).evaluate();
+        while (result.hasNext()) {
+            BindingSet tripletsATResource = result.next();
             StringBuilder document = new StringBuilder();
             for (Binding binding : tripletsATResource) {
-                document.append(binding.getValue().stringValue());
+                document.append(binding.getValue().stringValue()).append(' ');
             }
 
             documents.add(document.toString());
         }
-        conUriPub.commit();
-        conUriPub.close();
+        conn.commit();
+        conn.close();
+        repository.shutDown();
         return documents;
     }
 
-    private Set<String> extractSubjectsFromDocument(LDClientService ldClient, String documentURI)
-            throws DataRetrievalException, RepositoryException, MalformedQueryException, QueryEvaluationException, Exception {
+    private List<String> extractSubjectsFromDocument(LDClientService ldClient, String documentURI)
+            throws DataRetrievalException, RepositoryException, MalformedQueryException, QueryEvaluationException {
         Set<String> subjects = new HashSet<>();
         String getRetrieveKeysQuery = "";
         ClientResponse respPub = ldClient.retrieveResource(documentURI);
@@ -285,18 +335,60 @@ public class AuthorServiceImpl implements AuthorService {
         TupleQueryResult tripletaskeysResult = keysquery.evaluate();
         while (tripletaskeysResult.hasNext()) {
             BindingSet tripletskeysResource = tripletaskeysResult.next();
-            String keyword = tripletskeysResource.getValue("subject").stringValue();
+            String keyword = tripletskeysResource.getValue("subject").stringValue().trim();
             subjects.add(keyword);
         }
         conUriPub.commit();
         conUriPub.close();
-        return subjects;
+        return new ArrayList<>(subjects);
     }
 
     private String buildLocalURI(String endpointURI) {
         return constantService.getAuthorResource() + endpointURI.substring(endpointURI.lastIndexOf('/') + 1);
     }
 
+    private List<String> findTopics(List<String> documents, int numTopics, int numWords) {
+        Set<String> topics = new TreeSet<>();
+
+        BufferedReader input = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("helpers/stoplist.txt")));
+        LineIterator it = new LineIterator(input);
+        String line;
+        ArrayList<String> stopwords = new ArrayList<>();
+        while (it.hasNext()) {
+            line = it.nextLine();
+            String[] words = line.split("\\s+");
+            stopwords.addAll(Arrays.asList(words));
+        }
+        it.close();
+
+        //File stoplist = new File(getClass().getClassLoader().getResource("/helpers/stoplist.txt"));
+        ArrayIterator iterator = new ArrayIterator(documents);
+
+        ArrayList<Pipe> workflow = new ArrayList<>();
+        workflow.add(new CharSequence2TokenSequence("\\p{L}+"));
+        workflow.add(new TokenSequenceLowercase());
+        //workflow.add(new TokenSequenceRemoveStopwords(stoplist, "UTF-8", false, false, false).addStopWords(stopwords));
+        workflow.add(new TokenSequenceRemoveStopwords(false, false).addStopWords(stopwords.toArray(new String[]{})));
+        workflow.add(new TokenSequence2FeatureSequenceWithBigrams());
+
+        InstanceList data = new InstanceList(new SerialPipes(workflow));
+        data.addThruPipe(iterator);
+
+        ParallelTopicModel lda = new ParallelTopicModel(numTopics);
+        lda.addInstances(data);
+        try {
+            lda.estimate();
+        } catch (IOException ex) {
+            log.error("Cannot find topics. Error: {}", ex.getMessage());
+        }
+
+        for (Object[] words : lda.getTopWords(numWords)) {
+            for (Object word : words) {
+                topics.add(String.valueOf(word));
+            }
+        }
+        return new ArrayList<>(topics);
+    }
 
     /*
      * 
@@ -304,7 +396,7 @@ public class AuthorServiceImpl implements AuthorService {
      * @param allPersons
      * @param endpointName 
      */
-    public void printPercentProcess(int contAutoresNuevosEncontrados, int allPersons, String endpointName) {
+    private void printPercentProcess(int contAutoresNuevosEncontrados, int allPersons, String endpointName) {
 
         if ((contAutoresNuevosEncontrados * 100 / allPersons) != processpercent) {
             processpercent = contAutoresNuevosEncontrados * 100 / allPersons;
@@ -312,27 +404,57 @@ public class AuthorServiceImpl implements AuthorService {
         }
     }
 
-    public String getLimitOffset(int limit, int offset) {
+    private String getLimitOffset(int limit, int offset) {
         return " " + queriesService.getLimit(String.valueOf(limit)) + " " + queriesService.getOffset(String.valueOf(offset));
     }
 
-    private int getAuthorsSize(RepositoryConnection conn, String graph) throws RepositoryException, MalformedQueryException, QueryEvaluationException {
-        String querytoCount = queriesService.getCountPersonQuery(graph);
-        TupleQueryResult countPerson = conn.prepareTupleQuery(QueryLanguage.SPARQL, querytoCount).evaluate();
-        BindingSet bindingCount = countPerson.next();
-        return Integer.parseInt(bindingCount.getValue("count").stringValue());
-
-    }
-
-    private void combineSubjects(String localSubject, List<String> documents, Set<String> subjects) throws UpdateException {
+    private void combineSubjects(String localSubject, List<String> documents, List<String> subjects) throws UpdateException {
         // TODO: comnbine repository subjects with documents subjects and store a # x as subject
+        List<String> topics = findTopics(documents, 5, 15);
+        List<String> newSubjects = getWeightedSubjects(subjects, topics);
+        if (!newSubjects.isEmpty()) {
+            subjects.clear();
+            subjects.addAll(newSubjects);
+
+        }
         for (String keyword : subjects) {
-            if ((!commonsService.isURI(keyword)) && (kservice.isValidKeyword(keyword))) {
+            if ((!commonsService.isURI(keyword))) {//&& (kservice.isValidKeyword(keyword))) {
                 String insertKeywords = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localSubject, DCTERMS.SUBJECT.toString(), kservice.cleaningText(keyword).toUpperCase());
                 sparqlFunctionsService.updateAuthor(insertKeywords);
             }
         }
-        log.info("Resource %s has %d documents", localSubject, documents.size());
+        log.info("Resource {} has {} documents and {} subjects ", localSubject, documents.size(), subjects.size());
+    }
+
+    private List<String> getWeightedSubjects(List<String> subjects, List<String> topics) {
+        List<String> result = new ArrayList<>();
+        for (String subject : subjects) {
+            for (String topic : topics) {
+                if (areSimilar(subject.toLowerCase(), topic)) {
+                    result.add(subject);
+                }
+            }
+        }
+        return result;
+    }
+
+    private boolean areSimilar(String subject, String topic) {
+        Cosine l = new Cosine();
+        for (String s : subject.split(" ")) {
+            if (l.distance(s, topic) <= COSINE_DISTANCE) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private SparqlEndpoint matchWithProvenance(String object) {
+        for (SparqlEndpoint endpoint : endpoints) {
+            if (object.matches(endpoint.getGraph() + "(.*)")) {
+                return endpoint;
+            }
+        }
+        return null;
     }
 
 }
