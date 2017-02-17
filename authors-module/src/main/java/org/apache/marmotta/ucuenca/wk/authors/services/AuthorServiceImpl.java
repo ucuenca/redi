@@ -145,11 +145,7 @@ public class AuthorServiceImpl implements AuthorService {
                     someUpdate = true;
                 }
             }
-            try {
-                response.append(extractSubjects());
-            } catch (QueryEvaluationException | RepositoryException | MalformedQueryException | DataRetrievalException ex) {
-                log.error("Cannnot extract subjects. Error: {}", ex.getMessage());
-            }
+            response.append(extractSubjects());
 
             if (!someUpdate) {
                 return "Any  Endpoints";
@@ -247,43 +243,56 @@ public class AuthorServiceImpl implements AuthorService {
         return "Carga Finalizada. Revise Archivo Log Para mas detalles";
     }
 
-    private String extractSubjects() throws QueryEvaluationException, RepositoryException, MalformedQueryException, DataRetrievalException, UpdateException {
-        String allAuthorsQuery = queriesService.getAuthors();
+    private String extractSubjects() {
+        try {
+            String allAuthorsQuery = queriesService.getAuthors();
+            Repository repository = new SPARQLRepository("http://localhost:8080/sparql/select");
+            TupleQueryResult allAuthors = executeQuery(repository, allAuthorsQuery);
 
-        Repository repository = new SPARQLRepository("http://localhost:8080/sparql/select");
-        TupleQueryResult allAuthors = executeQuery(repository, allAuthorsQuery);
-        while (allAuthors.hasNext()) {
-            String authorResource = allAuthors.next().getBinding("s").getValue().stringValue();
-            String sameAsAuthorsQuery = queriesService.getSameAsAuthors(authorResource);
-            TupleQueryResult sameAsAuthors = executeQuery(repository, sameAsAuthorsQuery);
-            while (sameAsAuthors.hasNext()) { // for each author
-                List<String> documents = new ArrayList<>();
-                List<String> subjects = new ArrayList<>();
+            while (allAuthors.hasNext()) {
+                String authorResource = allAuthors.next().getBinding("s").getValue().stringValue();
+                String sameAsAuthorsQuery = queriesService.getSameAsAuthors(authorResource);
+                TupleQueryResult sameAsAuthors = executeQuery(repository, sameAsAuthorsQuery);
+                while (sameAsAuthors.hasNext()) { // for each author
+                    List<String> documents = new ArrayList<>();
+                    List<String> subjects = new ArrayList<>();
 
-                String sameAsResource = sameAsAuthors.next().getBinding("o").getValue().stringValue();
-                SparqlEndpoint endpoint = matchWithProvenance(sameAsResource);
+                    String sameAsResource = sameAsAuthors.next().getBinding("o").getValue().stringValue();
+                    SparqlEndpoint endpoint = matchWithProvenance(sameAsResource);
 
-                ClientConfiguration conf = new ClientConfiguration();
-                conf.addEndpoint(new SPARQLEndpoint(endpoint.getName(), endpoint.getEndpointUrl(), "^http://.*"));
-                LDClient ldc = new LDClient(conf);
-                ClientResponse response = ldc.retrieveResource(sameAsResource);
-                Repository tempRepository = ModelCommons.asRepository(response.getData());
-                TupleQueryResult tempResult = tempRepository.getConnection().
-                        prepareTupleQuery(QueryLanguage.SPARQL, queriesService.getRetrieveResourceQuery())
-                        .evaluate();
-
-                while (tempResult.hasNext()) {
-                    BindingSet triples = tempResult.next();
-                    String predicate = triples.getBinding("y").getValue().stringValue();
-                    String object = triples.getBinding("z").getValue().stringValue();
-
-                    if (predicate.contains("http://rdaregistry.info")) {
-                        subjects.addAll(extractSubjectsFromDocument(ldc, object));
-                        documents.addAll(extractContentFromDocument(ldc, object));
+                    if (endpoint == null) {
+                        log.warn("There isn't an endpoint for {} resource.", sameAsResource);
+                        continue;
                     }
+                    ClientConfiguration conf = new ClientConfiguration();
+                    conf.addEndpoint(new SPARQLEndpoint(endpoint.getName(), endpoint.getEndpointUrl(), "^http://.*"));
+                    LDClient ldc = new LDClient(conf);
+                    ClientResponse response = ldc.retrieveResource(sameAsResource);
+                    RepositoryConnection connection = ModelCommons.asRepository(response.getData()).getConnection();
+                    TupleQueryResult tempResult = connection.prepareTupleQuery(QueryLanguage.SPARQL, queriesService.getRetrieveResourceQuery())
+                            .evaluate();
+
+                    while (tempResult.hasNext()) {
+                        BindingSet triples = tempResult.next();
+                        String predicate = triples.getBinding("y").getValue().stringValue();
+                        String object = triples.getBinding("z").getValue().stringValue();
+
+                        if (predicate.contains("http://rdaregistry.info")) {
+                            subjects.addAll(extractSubjectsFromDocument(ldc, object));
+                            documents.addAll(extractContentFromDocument(ldc, object));
+                        }
+                    }
+                    combineSubjects(authorResource, documents, subjects);
+                    connection.commit();
+                    connection.close();
+                    ldc.shutdown();
                 }
-                combineSubjects(authorResource, documents, subjects);
             }
+            repository.shutDown();
+            log.info("Finished to extract subjects");
+        } catch (QueryEvaluationException | RepositoryException | MalformedQueryException | DataRetrievalException ex) {
+            log.error("Cannnot extract subjects. Error: {}", ex);
+            return ex.getMessage();
         }
         return "Subjects Extracted";
     }
@@ -408,22 +417,20 @@ public class AuthorServiceImpl implements AuthorService {
         return " " + queriesService.getLimit(String.valueOf(limit)) + " " + queriesService.getOffset(String.valueOf(offset));
     }
 
-    private void combineSubjects(String localSubject, List<String> documents, List<String> subjects) throws UpdateException {
-        // TODO: comnbine repository subjects with documents subjects and store a # x as subject
+    private void combineSubjects(String localSubject, List<String> documents, List<String> subjects) {
         List<String> topics = findTopics(documents, 5, 15);
-        List<String> newSubjects = getWeightedSubjects(subjects, topics);
-        if (!newSubjects.isEmpty()) {
-            subjects.clear();
-            subjects.addAll(newSubjects);
-
-        }
-        for (String keyword : subjects) {
-            if ((!commonsService.isURI(keyword))) {//&& (kservice.isValidKeyword(keyword))) {
-                String insertKeywords = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localSubject, DCTERMS.SUBJECT.toString(), kservice.cleaningText(keyword).toUpperCase());
-                sparqlFunctionsService.updateAuthor(insertKeywords);
+        Set<String> selectedSubjects = new HashSet<>(getWeightedSubjects(subjects, topics));
+        for (String keyword : selectedSubjects) {
+            if ((!commonsService.isURI(keyword))) {
+                try {
+                    String insertKeywords = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localSubject, DCTERMS.SUBJECT.toString(), kservice.cleaningText(keyword).toUpperCase());
+                    sparqlFunctionsService.updateAuthor(insertKeywords);
+                } catch (UpdateException ex) {
+                    log.error("Cannot insert new subjects. Error: {}", ex.getMessage());
+                }
             }
         }
-        log.info("Resource {} has {} documents and {} subjects ", localSubject, documents.size(), subjects.size());
+        log.info("Resource {} has {} documents and {} subjects ", localSubject, documents.size(), selectedSubjects.size());
     }
 
     private List<String> getWeightedSubjects(List<String> subjects, List<String> topics) {
