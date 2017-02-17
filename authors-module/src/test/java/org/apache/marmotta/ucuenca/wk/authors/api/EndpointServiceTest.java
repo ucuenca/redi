@@ -8,7 +8,6 @@ package org.apache.marmotta.ucuenca.wk.authors.api;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.marmotta.platform.core.test.base.EmbeddedMarmotta;
@@ -16,21 +15,22 @@ import org.apache.marmotta.ucuenca.wk.authors.services.EndpointServiceImpl;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
+import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
  * @author Satellite
  */
 public class EndpointServiceTest {
+
     private static EmbeddedMarmotta marmotta;
     private static EndpointService myService;
+
     public EndpointServiceTest() {
     }
-    
+
     @BeforeClass
     public static void setUp() {
         marmotta = new EmbeddedMarmotta();
@@ -41,8 +41,7 @@ public class EndpointServiceTest {
     public static void tearDownClass() {
         marmotta.shutdown();
     }
-    
-    
+
     @After
     public void tearDown() {
     }
@@ -77,8 +76,7 @@ public class EndpointServiceTest {
     public void testGetEndpoint() {
     }
 
-    
-     /**
+    /**
      * Function that return a Hash Code to get a unique ID for resource URI
      * according name, url and graph. example:
      * http://localhost:8080/endpoint/21552MED5454AFDCSS55422354F54D5SX9VRSSDB
@@ -98,8 +96,7 @@ public class EndpointServiceTest {
         BigInteger bigInt = new BigInteger(1, digest);
         return bigInt.toString(16);
     }
-    
-    
+
     /**
      * Test of listEndpoints method, of class EndpointService.
      */
@@ -113,13 +110,13 @@ public class EndpointServiceTest {
     @Test
     public void testRemoveEndpoint() {
         System.out.println("removeEndpoint");
-         try {
+        try {
             System.out.println("getEndpoint");
             String name = "PRUEBA";
             String endpointUrl = "http://example.ec/sparql";
             String graphUri = "http://example.ec/data";
             String resourceHash = getHashCode(name, endpointUrl, graphUri);
-            String resourceId = "http://localhost:8080/endpoint/"+resourceHash;
+            String resourceId = "http://localhost:8080/endpoint/" + resourceHash;
             EndpointService instance = new EndpointServiceImpl();
             String expResult = "Endpoint was DELETE";
             String result = myService.removeEndpoint(resourceId);
@@ -128,12 +125,7 @@ public class EndpointServiceTest {
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(EndpointServiceTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
-        
-        
-        
+
     }
 
-    
 }

@@ -13,6 +13,10 @@ public interface QueriesService {
 
     String getAuthorsDataQuery(String graph, String endpointsgraph);
 
+    String getAuthors();
+
+    String getSameAsAuthors(String authorResource);
+
     String getCountPersonQuery(String graph);
 
     String getLimit(String limit);
@@ -81,6 +85,8 @@ public interface QueriesService {
      * @return
      */
     String getAskResourceQuery(String graph, String resource);
+
+    String getAskObjectQuery(String graph, String object);
 
     /**
      * ASK is exist a triplet
