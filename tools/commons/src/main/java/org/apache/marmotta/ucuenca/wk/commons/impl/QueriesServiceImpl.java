@@ -139,8 +139,8 @@ public class QueriesServiceImpl implements QueriesService {
 
     @Override
     public String getInsertEndpointQuery(String resourceHash, String property, String object, String literal) {
-        String graph = REDI.ENDPOINT_GRAPH;
-        String resource = REDI.ENDPOINT_RESOURCE + resourceHash;
+        String graph = con.getEndpointsGraph();
+        String resource = con.getEndpointResource() + resourceHash;
         if (isURI(object)) {
             return INSERTDATA + getGraphString(graph) + "{<" + resource + ">  <" + property + ">  <" + object + "> }}";
         } else {
@@ -153,7 +153,7 @@ public class QueriesServiceImpl implements QueriesService {
         String id = " ?id ";
         String fullName = "fullName";
         return "SELECT DISTINCT ?id ?status ?name ?url ?graph (concat(?fName, \" - \", ?engName) as ?fullName) ?city ?province ?latitude ?longitude  WHERE {  "
-                + " GRAPH <" + REDI.ENDPOINT_GRAPH + ">"
+                + " GRAPH <" + con.getEndpointsGraph() + ">"
                 + " {"
                 + id + con.uc("status") + " ?status;"
                 + con.uc("name") + " ?name;"
@@ -243,7 +243,7 @@ public class QueriesServiceImpl implements QueriesService {
     public String getSameAsAuthors(String authorResource) {
         return PREFIXES
                 + "SELECT ?o WHERE {"
-                + "  GRAPH <http://localhost:8080/context/authors> { "
+                + "  GRAPH <" + con.getAuthorsGraph() + "> { "
                 + "     <" + authorResource + "> owl:sameAs  ?o . "
                 + "   }"
                 + "}";
@@ -790,7 +790,7 @@ public class QueriesServiceImpl implements QueriesService {
     @Override
     public String getInsertDomainQuery(String enpointId, String domain) {
         return "INSERT DATA { "
-                + "GRAPH <" + REDI.ENDPOINT_GRAPH + "> {"
+                + "GRAPH <" + con.getEndpointsGraph() + "> {"
                 + " <" + enpointId + ">   <" + REDI.DOMAIN + "> \"" + domain + "\""
                 + "}}";
     }
