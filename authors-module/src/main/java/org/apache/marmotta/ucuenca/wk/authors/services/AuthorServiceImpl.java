@@ -41,7 +41,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -116,8 +115,6 @@ public class AuthorServiceImpl implements AuthorService {
 
     @PostConstruct
     public void init() {
-        endpoints = authorsendpointService.listEndpoints();
-
         BufferedReader input = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("helpers/stoplist.txt")));
         LineIterator it = new LineIterator(input);
         String line;
@@ -139,6 +136,8 @@ public class AuthorServiceImpl implements AuthorService {
     //private String documentProperty = "http://rdaregistry.info";
     @Override
     public String runAuthorsUpdateMultipleEP() throws DaoException, UpdateException {
+        endpoints = authorsendpointService.listEndpoints();
+
         Boolean someUpdate = false;
         StringBuilder response = new StringBuilder();
         if (!endpoints.isEmpty()) {
@@ -148,16 +147,13 @@ public class AuthorServiceImpl implements AuthorService {
                         log.info("Extraction started for endpoint {}.", endpoint.getName());
                         response.append(extractAuthors(endpoint));
                     } catch (RepositoryException ex) {
-                        log.error("Excepcion de repositorio. Problemas en conectarse a " + endpoint.getName());
-                        java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                        log.error("ERROR: Excepcion de repositorio. Problemas en conectarse a " + endpoint.getName());
                     } catch (MalformedQueryException ex) {
-                        log.error("Excepcion de forma de consulta. Revise consultas SPARQL y sintaxis. Revise estandar SPARQL");
-                        java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                        log.error("ERROR: Excepcion de forma de consulta. Revise consultas SPARQL y sintaxis. Revise estandar SPARQL");
                     } catch (QueryEvaluationException ex) {
-                        log.error("Excepcion de ejecucion de consulta. No se ha ejecutado la consulta general para la obtencion de los Authores.");
-                        java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                        log.error("ERROR: Excepcion de ejecucion de consulta. No se ha ejecutado la consulta general para la obtencion de los Authores.");
                     } catch (Exception ex) {
-                        java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                        log.error("ERROR: Exception... ", ex);
                     }
                     someUpdate = true;
                 }
@@ -277,7 +273,7 @@ public class AuthorServiceImpl implements AuthorService {
                     // Get SameAsAuthors
                     String sameAsAuthorsQuery = queriesService.getSameAsAuthors(authorResource);
                     TupleQueryResult sameAsAuthors = executeQuery(repository, sameAsAuthorsQuery);
-                    while (sameAsAuthors.hasNext() && numSubjects < 5) { // extract subjects for each author
+                    while (sameAsAuthors.hasNext() && numSubjects < 3) { // extract subjects for each author
                         Set<String> documents = new HashSet<>();
                         Set<String> subjects = new HashSet<>();
                         //Set<String> mentions = new HashSet<>();
