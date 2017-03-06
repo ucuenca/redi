@@ -19,6 +19,10 @@ public interface QueriesService {
 
     String getCountPersonQuery(String graph);
 
+    String getCountAuthors();
+
+    String getCountSubjects(String authorResource);
+
     String getLimit(String limit);
 
     String getOffset(String offset);

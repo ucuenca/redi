@@ -233,7 +233,7 @@ public class QueriesServiceImpl implements QueriesService {
     public String getAuthors() {
         return PREFIXES
                 + "SELECT ?s WHERE {"
-                + "  GRAPH <" + con.getAuthorsGraph() + "> { "
+                + "  GRAPH  <" + con.getAuthorsGraph() + "> { "
                 + "    ?s a foaf:Person. "
                 + "   }"
                 + "}";
@@ -273,6 +273,21 @@ public class QueriesServiceImpl implements QueriesService {
                 + " }}}"
                 + " group by ?s"
                 + " having (count(?docu)>1)}";
+    }
+
+    @Override
+    public String getCountAuthors() {
+        return PREFIXES
+                + "SELECT (COUNT(?author) as ?count) WHERE { "
+                + "  GRAPH <" + con.getAuthorsGraph() + "> { ?author a foaf:Person . }}";
+    }
+
+    @Override
+    public String getCountSubjects(String authorResource) {
+        return PREFIXES
+                + "SELECT (COUNT(?subject) as ?count) WHERE { "
+                + "GRAPH <" + con.getAuthorsGraph() + "> "
+                + "{ <" + authorResource + "> dct:subject ?subject .  } }";
     }
 
     @Override
