@@ -46,6 +46,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.commons.io.LineIterator;
 import org.apache.marmotta.commons.sesame.model.ModelCommons;
+import org.apache.marmotta.commons.vocabulary.FOAF;
 import org.apache.marmotta.ldclient.api.ldclient.LDClientService;
 import org.apache.marmotta.ldclient.endpoint.rdf.SPARQLEndpoint;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
@@ -211,7 +212,19 @@ public class AuthorServiceImpl implements AuthorService {
                             String predicate = tripletsResource.getValue("y").stringValue();
                             String object = tripletsResource.getValue("z").stringValue();
 
-                            if (predicate.contains("http://rdaregistry.info")) {
+                            if (predicate.contains("http://rdaregistry.info")
+                                    || predicate.contains("http://www.w3.org/2000/01/rdf-schema#label")
+                                    || object.contains("http://xmlns.com/foaf/0.1/Agent")) {
+                                continue;
+                            }
+                            if ("http://xmlns.com/foaf/0.1/givenName".equals(predicate)) { // Save foaf:givenName as foaf:firstName
+                                String insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, FOAF.firstName.toString(), object);
+                                sparqlFunctionsService.updateAuthor(insert);
+                                continue;
+                            }
+                            if ("http://xmlns.com/foaf/0.1/familyName".equals(predicate)) { // Save foaf:familyName as foaf:lastName
+                                String insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, FOAF.lastName.toString(), object);
+                                sparqlFunctionsService.updateAuthor(insert);
                                 continue;
                             }
                             if (predicate.contains(OWL.SAMEAS.toString())) { // If sameas found include the provenance
@@ -273,13 +286,17 @@ public class AuthorServiceImpl implements AuthorService {
                     // Get SameAsAuthors
                     String sameAsAuthorsQuery = queriesService.getSameAsAuthors(authorResource);
                     TupleQueryResult sameAsAuthors = executeQuery(repository, sameAsAuthorsQuery);
+
+                    // Get Provenance
+                    String provenanceQuery = queriesService.authorGetProvenance(authorResource);
+                    String provenance = executeQuery(repository, provenanceQuery).next().getValue("name").stringValue();
                     while (sameAsAuthors.hasNext() && numSubjects < 3) { // extract subjects for each author
                         Set<String> documents = new HashSet<>();
                         Set<String> subjects = new HashSet<>();
                         //Set<String> mentions = new HashSet<>();
 
                         String sameAsResource = sameAsAuthors.next().getBinding("o").getValue().stringValue();
-                        SparqlEndpoint endpoint = matchWithProvenance(sameAsResource);
+                        SparqlEndpoint endpoint = matchWithProvenance(provenance);
                         if (endpoint == null) {
                             log.warn("There isn't an endpoint for {} resource.", sameAsResource);
                             continue;
@@ -478,9 +495,9 @@ public class AuthorServiceImpl implements AuthorService {
         return hm;
     }
 
-    private SparqlEndpoint matchWithProvenance(String object) {
+    private SparqlEndpoint matchWithProvenance(String provenanceName) {
         for (SparqlEndpoint endpoint : endpoints) {
-            if (object.matches(endpoint.getGraph() + "(.*)")) {
+            if (provenanceName.equals(endpoint.getName())) {
                 return endpoint;
             }
         }

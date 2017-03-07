@@ -176,6 +176,8 @@ public interface QueriesService {
 
     String authorGetProvenance(String graph, String authorResource);
 
+    String authorGetProvenance(String authorResource);
+
     String getAuthorPublicationFilter(String graph, String fname, String lname);
 
     String getAskResourcePropertieQuery(String graph, String resource, String propertie);

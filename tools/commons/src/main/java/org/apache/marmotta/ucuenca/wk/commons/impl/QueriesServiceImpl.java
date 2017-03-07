@@ -33,25 +33,13 @@ public class QueriesServiceImpl implements QueriesService {
     @Override
     public String getAuthorsQuery(String datagraph) {
         return PREFIXES
-                + " select ?s where{" + getGraphString(datagraph) + "{"
-                + " ?doc rdf:type bibo:Document ."
-                + " {"
-                + "      ?doc ?c ?s ."
-                + "      ?doc a bibo:Thesis."
-                + "      ?s a foaf:Person."
-                + " } UNION"
-                + " {"
-                + "     ?doc ?c ?s ."
-                + "     ?doc a <http://purl.org/net/nknouf/ns/bibtex#Mastersthesis>."
-                + "     ?s a foaf:Person."
-                + " } UNION{"
-                + ""
-                + "     ?doc a bibo:Article."
-                + "     ?doc ?c ?s ."
-                + "     ?s a foaf:Person."
-                + " } } }"
-                + " group by ?s"
-                + " having (count(?doc)>1)";
+                + " SELECT ?s WHERE { " + getGraphString(datagraph) + "{"
+                + " ?doc rdf:type bibo:Document ;"
+                + " ?c ?s ."
+                + "?s a foaf:Person."
+                + "} }"
+                + " GROUP BY ?s"
+                + " HAVING (count(?doc)>1)";
     }
 
     @Override
@@ -252,27 +240,14 @@ public class QueriesServiceImpl implements QueriesService {
     @Override
     public String getCountPersonQuery(String graph) {
         return PREFIXES
-                + " SELECT (COUNT( distinct ?s) as ?count) WHERE {"
-                + " select distinct ?s where {" + getGraphString(graph) + "{ "
-                + " ?docu rdf:type bibo:Document . "
-                + " {"
-                + "      ?docu ?c ?s ."
-                + "      ?docu a bibo:Thesis."
-                + "      ?s a foaf:Person."
-                + " }"
-                + " UNION"
-                + " {"
-                + "     ?docu ?c ?s ."
-                + "     ?docu a <http://purl.org/net/nknouf/ns/bibtex#Mastersthesis>."
-                + "     ?s a foaf:Person."
-                + " }"
-                + " UNION { "
-                + "   ?docu a bibo:Article."
-                + "   ?docu ?c ?s ."
-                + "   ?s a foaf:Person."
-                + " }}}"
-                + " group by ?s"
-                + " having (count(?docu)>1)}";
+                + " SELECT (COUNT(DISTINCT ?s) as ?count) WHERE {"
+                + " SELECT DISTINCT ?s WHERE {" + getGraphString(graph) + "{ "
+                + " ?docu rdf:type bibo:Document ; "
+                + "      ?c ?s ."
+                + " ?s a foaf:Person."
+                + " } }"
+                + " GROUP BY ?s"
+                + " HAVING (count(?docu)>1)}";
     }
 
     @Override
@@ -612,6 +587,22 @@ public class QueriesServiceImpl implements QueriesService {
                 + "     GRAPH <" + graph + ">	" //http://ucuenca.edu.ec/wkhuska/authors
                 + "     {  		"
                 + "    	     <" + authorResource + ">  dct:provenance ?object. " //http://190.15.141.85:8080/resource/authors_epn/HIDALGO_TRUJILLO_SILVANA_IVONNE
+                + "     } "
+                + "   }    "
+                + "} ";
+    }
+
+    @Override
+    public String authorGetProvenance(String authorResource) {
+        return PREFIXES
+                + " SELECT ?name WHERE "
+                + " {        "
+                + "   GRAPH <" + con.getEndpointsGraph() + "> "
+                + "   { "
+                + "  	?object  <http://ucuenca.edu.ec/ontology#name> ?name."
+                + "     GRAPH <" + con.getAuthorsGraph() + ">	"
+                + "     {  		"
+                + "    	     <" + authorResource + ">  dct:provenance ?object. "
                 + "     } "
                 + "   }    "
                 + "} ";
