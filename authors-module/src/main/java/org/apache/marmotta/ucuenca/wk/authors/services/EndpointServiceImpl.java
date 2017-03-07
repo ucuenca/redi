@@ -13,12 +13,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.authors.api.EndpointService;
 import org.apache.marmotta.ucuenca.wk.authors.api.SparqlEndpoint;
+import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
 import org.openrdf.model.Value;
@@ -39,7 +41,15 @@ public class EndpointServiceImpl implements EndpointService {
     @Inject
     private QueriesService queriesService;
 
-    private String endpointsGraph = REDI.ENDPOINT_GRAPH;
+    @Inject
+    private ConstantService constantService;
+
+    private String endpointsGraph;
+
+    @PostConstruct
+    public void init() {
+        endpointsGraph = constantService.getEndpointsGraph();
+    }
 
     /**
      * Funcion que agrega un nuevo endpoint

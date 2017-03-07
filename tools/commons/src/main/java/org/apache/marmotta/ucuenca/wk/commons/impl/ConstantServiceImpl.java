@@ -35,13 +35,28 @@ public class ConstantServiceImpl implements ConstantService {
     }
 
     @Override
+    public String getEndpointsGraph() {
+        return confService.getBaseContext() + "endpoints";
+    }
+
+    @Override
     public String getBaseResource() {
         return getBaseURI() + "resource/";
     }
 
     @Override
+    public String getSPARQLEndpointURL() {
+        return getBaseURI() + "sparql/select";
+    }
+
+    @Override
     public String getAuthorResource() {
         return getBaseResource() + "authors/";
+    }
+
+    @Override
+    public String getEndpointResource() {
+        return getBaseResource() + "endpoint/";
     }
 
     @Override
@@ -105,11 +120,10 @@ public class ConstantServiceImpl implements ConstantService {
         return getWkhuskaGraph() + getSelectedGraph("googlescholar");
     }
 
-    @Override
-    public String getEndpointsGraph() {
-        return getWkhuskaGraph() + getSelectedGraph("endpoints");
-    }
-
+//    @Override
+//    public String getEndpointsGraph() {
+//        return getWkhuskaGraph() + getSelectedGraph("endpoints");
+//    }
     @Override
     public String getProviderNsGraph() {
         return getWkhuskaGraph() + getSelectedGraph("provider");
