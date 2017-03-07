@@ -26,6 +26,8 @@ public interface DistanceService {
     boolean semanticComparison(List<String> listA, List<String> listB);
 
     boolean semanticComparison(String word, List<String> listB);
+    
+    Double semanticComparisonValue(List<String> listA, List<String> listB);
 
     double cosineSimilarityAndLevenshteinDistance(String param1, String param2);
 }

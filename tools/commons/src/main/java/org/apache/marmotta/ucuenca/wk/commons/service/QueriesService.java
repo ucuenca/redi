@@ -14,6 +14,10 @@ public interface QueriesService {
     String getAuthorsDataQuery(String graph, String endpointsgraph);
 
     String getAuthors();
+    
+    String getAuthorDataQuery(String graph, String authorUri);
+    
+    String getAuthorsByName(String graph, String firstName, String lastName);
 
     String getSameAsAuthors(String authorResource);
 
