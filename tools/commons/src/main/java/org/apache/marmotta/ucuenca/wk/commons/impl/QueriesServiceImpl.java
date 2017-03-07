@@ -34,25 +34,13 @@ public class QueriesServiceImpl implements QueriesService {
     @Override
     public String getAuthorsQuery(String datagraph) {
         return PREFIXES
-                + " select ?s where{" + getGraphString(datagraph) + "{"
-                + " ?doc rdf:type bibo:Document ."
-                + " {"
-                + "      ?doc ?c ?s ."
-                + "      ?doc a bibo:Thesis."
-                + "      ?s a foaf:Person."
-                + " } UNION"
-                + " {"
-                + "     ?doc ?c ?s ."
-                + "     ?doc a <http://purl.org/net/nknouf/ns/bibtex#Mastersthesis>."
-                + "     ?s a foaf:Person."
-                + " } UNION{"
-                + ""
-                + "     ?doc a bibo:Article."
-                + "     ?doc ?c ?s ."
-                + "     ?s a foaf:Person."
-                + " } } }"
-                + " group by ?s"
-                + " having (count(?doc)>1)";
+                + " SELECT ?s WHERE { " + getGraphString(datagraph) + "{"
+                + " ?doc rdf:type bibo:Document ;"
+                + " ?c ?s ."
+                + "?s a foaf:Person."
+                + "} }"
+                + " GROUP BY ?s"
+                + " HAVING (count(?doc)>1)";
     }
 
     @Override
@@ -140,8 +128,8 @@ public class QueriesServiceImpl implements QueriesService {
 
     @Override
     public String getInsertEndpointQuery(String resourceHash, String property, String object, String literal) {
-        String graph = REDI.ENDPOINT_GRAPH;
-        String resource = REDI.ENDPOINT_RESOURCE + resourceHash;
+        String graph = con.getEndpointsGraph();
+        String resource = con.getEndpointResource() + resourceHash;
         if (isURI(object)) {
             return INSERTDATA + getGraphString(graph) + "{<" + resource + ">  <" + property + ">  <" + object + "> }}";
         } else {
@@ -154,7 +142,7 @@ public class QueriesServiceImpl implements QueriesService {
         String id = " ?id ";
         String fullName = "fullName";
         return "SELECT DISTINCT ?id ?status ?name ?url ?graph (concat(?fName, \" - \", ?engName) as ?fullName) ?city ?province ?latitude ?longitude  WHERE {  "
-                + " GRAPH <" + REDI.ENDPOINT_GRAPH + ">"
+                + " GRAPH <" + con.getEndpointsGraph() + ">"
                 + " {"
                 + id + con.uc("status") + " ?status;"
                 + con.uc("name") + " ?name;"
@@ -234,7 +222,7 @@ public class QueriesServiceImpl implements QueriesService {
     public String getAuthors() {
         return PREFIXES
                 + "SELECT ?s WHERE {"
-                + "  GRAPH <" + con.getAuthorsGraph() + "> { "
+                + "  GRAPH  <" + con.getAuthorsGraph() + "> { "
                 + "    ?s a foaf:Person. "
                 + "   }"
                 + "}";
@@ -253,27 +241,29 @@ public class QueriesServiceImpl implements QueriesService {
     @Override
     public String getCountPersonQuery(String graph) {
         return PREFIXES
-                + " SELECT (COUNT( distinct ?s) as ?count) WHERE {"
-                + " select distinct ?s where {" + getGraphString(graph) + "{ "
-                + " ?docu rdf:type bibo:Document . "
-                + " {"
-                + "      ?docu ?c ?s ."
-                + "      ?docu a bibo:Thesis."
-                + "      ?s a foaf:Person."
-                + " }"
-                + " UNION"
-                + " {"
-                + "     ?docu ?c ?s ."
-                + "     ?docu a <http://purl.org/net/nknouf/ns/bibtex#Mastersthesis>."
-                + "     ?s a foaf:Person."
-                + " }"
-                + " UNION { "
-                + "   ?docu a bibo:Article."
-                + "   ?docu ?c ?s ."
-                + "   ?s a foaf:Person."
-                + " }}}"
-                + " group by ?s"
-                + " having (count(?docu)>1)}";
+                + " SELECT (COUNT(DISTINCT ?s) as ?count) WHERE {"
+                + " SELECT DISTINCT ?s WHERE {" + getGraphString(graph) + "{ "
+                + " ?docu rdf:type bibo:Document ; "
+                + "      ?c ?s ."
+                + " ?s a foaf:Person."
+                + " } }"
+                + " GROUP BY ?s"
+                + " HAVING (count(?docu)>1)}";
+    }
+
+    @Override
+    public String getCountAuthors() {
+        return PREFIXES
+                + "SELECT (COUNT(?author) as ?count) WHERE { "
+                + "  GRAPH <" + con.getAuthorsGraph() + "> { ?author a foaf:Person . }}";
+    }
+
+    @Override
+    public String getCountSubjects(String authorResource) {
+        return PREFIXES
+                + "SELECT (COUNT(?subject) as ?count) WHERE { "
+                + "GRAPH <" + con.getAuthorsGraph() + "> "
+                + "{ <" + authorResource + "> dct:subject ?subject .  } }";
     }
 
     @Override
@@ -633,6 +623,22 @@ public class QueriesServiceImpl implements QueriesService {
     }
 
     @Override
+    public String authorGetProvenance(String authorResource) {
+        return PREFIXES
+                + " SELECT ?name WHERE "
+                + " {        "
+                + "   GRAPH <" + con.getEndpointsGraph() + "> "
+                + "   { "
+                + "  	?object  <http://ucuenca.edu.ec/ontology#name> ?name."
+                + "     GRAPH <" + con.getAuthorsGraph() + ">	"
+                + "     {  		"
+                + "    	     <" + authorResource + ">  dct:provenance ?object. "
+                + "     } "
+                + "   }    "
+                + "} ";
+    }
+
+    @Override
     public String getAuthorPublicationFilter(String graph, String fname, String lname) {
         return PREFIXES
                 + " SELECT distinct ?authorResource  ?publicationResource ?title  WHERE { "
@@ -820,7 +826,7 @@ public class QueriesServiceImpl implements QueriesService {
     @Override
     public String getInsertDomainQuery(String enpointId, String domain) {
         return "INSERT DATA { "
-                + "GRAPH <" + REDI.ENDPOINT_GRAPH + "> {"
+                + "GRAPH <" + con.getEndpointsGraph() + "> {"
                 + " <" + enpointId + ">   <" + REDI.DOMAIN + "> \"" + domain + "\""
                 + "}}";
     }

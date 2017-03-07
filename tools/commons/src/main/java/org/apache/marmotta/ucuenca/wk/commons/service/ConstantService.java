@@ -34,9 +34,15 @@ public interface ConstantService {
 
     String getAuthorsGraph();
 
+    String getEndpointsGraph();
+
     String getAuthorResource();
 
+    String getEndpointResource();
+
     String getBaseResource();
+
+    String getSPARQLEndpointURL();
 
     String getPrefixes();
 
@@ -48,8 +54,7 @@ public interface ConstantService {
 
     String getWkhuskaGraph();
 
-    String getEndpointsGraph();
-
+    // String getEndpointsGraph();
     String getProvenanceProperty();
 
     String getLimit(String limit);
