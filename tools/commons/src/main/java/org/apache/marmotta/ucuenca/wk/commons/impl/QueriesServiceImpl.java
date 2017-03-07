@@ -639,38 +639,6 @@ public class QueriesServiceImpl implements QueriesService {
     }
 
     @Override
-    public String authorGetProvenance(String authorResource) {
-        return PREFIXES
-                + " SELECT ?name WHERE "
-                + " {        "
-                + "   GRAPH <" + con.getEndpointsGraph() + "> "
-                + "   { "
-                + "  	?object  <http://ucuenca.edu.ec/ontology#name> ?name."
-                + "     GRAPH <" + con.getAuthorsGraph() + ">	"
-                + "     {  		"
-                + "    	     <" + authorResource + ">  dct:provenance ?object. "
-                + "     } "
-                + "   }    "
-                + "} ";
-    }
-
-    @Override
-    public String authorGetProvenance(String authorResource) {
-        return PREFIXES
-                + " SELECT ?name WHERE "
-                + " {        "
-                + "   GRAPH <" + con.getEndpointsGraph() + "> "
-                + "   { "
-                + "  	?object  <http://ucuenca.edu.ec/ontology#name> ?name."
-                + "     GRAPH <" + con.getAuthorsGraph() + ">	"
-                + "     {  		"
-                + "    	     <" + authorResource + ">  dct:provenance ?object. "
-                + "     } "
-                + "   }    "
-                + "} ";
-    }
-
-    @Override
     public String getAuthorPublicationFilter(String graph, String fname, String lname) {
         return PREFIXES
                 + " SELECT distinct ?authorResource  ?publicationResource ?title  WHERE { "
