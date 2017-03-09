@@ -66,6 +66,7 @@ import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.openrdf.model.Statement;
 import org.openrdf.model.vocabulary.DCTERMS;
 import org.openrdf.model.vocabulary.OWL;
+import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
@@ -125,6 +126,14 @@ public class AuthorServiceImpl implements AuthorService {
             stopwords.addAll(Arrays.asList(words));
         }
         it.close();
+
+//        filterProperties = Arrays.asList("http://www.w3.org/2004/02/skos/core#prefLabel",
+//                "http://www.w3.org/2000/01/rdf-schema#comment",
+//                "http://www.w3.org/ns/dcat#contactPoint",
+//                "http://www.w3.org/ns/dcat#landingPage",
+//                "http://vivoweb.org/ontology/core#freetextKeyword",
+//                "http://www.w3.org/2002/07/owl#disjointWith", "http://rdaregistry.info",
+//                "http://www.w3.org/2000/01/rdf-schema#label", "http://purl.org");
     }
 
     /**
@@ -212,38 +221,44 @@ public class AuthorServiceImpl implements AuthorService {
                             String predicate = tripletsResource.getValue("y").stringValue();
                             String object = tripletsResource.getValue("z").stringValue();
 
-                            if (predicate.contains("http://rdaregistry.info")
-                                    || predicate.contains("http://www.w3.org/2000/01/rdf-schema#label")
-                                    || object.contains("http://xmlns.com/foaf/0.1/Agent")) {
-                                continue;
+                            String insert = "";
+                            switch (predicate) {
+                                case "http://xmlns.com/foaf/0.1/givenName":// store foaf:firstName
+                                case "http://xmlns.com/foaf/0.1/firstName":
+                                    insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, FOAF.firstName.toString(), object);
+                                    sparqlFunctionsService.updateAuthor(insert);
+                                    break;
+                                case "http://xmlns.com/foaf/0.1/familyName": // store foaf:lastName
+                                case "http://xmlns.com/foaf/0.1/lastName":
+                                    insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, FOAF.lastName.toString(), object);
+                                    sparqlFunctionsService.updateAuthor(insert);
+                                    break;
+                                case "http://xmlns.com/foaf/0.1/name": // store foaf:name
+                                    insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, FOAF.name.toString(), object);
+                                    sparqlFunctionsService.updateAuthor(insert);
+                                    break;
+                                case "http://www.w3.org/2002/07/owl#sameAs": // If sameas found include the provenance
+                                    SparqlEndpoint newEndpoint = matchWithProvenance(object);
+                                    if (newEndpoint != null) {
+                                        String provenanceQueryInsert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, DCTERMS.PROVENANCE.toString(), newEndpoint.getResourceId());
+                                        sparqlFunctionsService.updateAuthor(provenanceQueryInsert);
+                                    }
+                                    insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, OWL.SAMEAS.toString(), object);
+                                    sparqlFunctionsService.updateAuthor(insert);
+                                    break;
+                                default:
                             }
-                            if ("http://xmlns.com/foaf/0.1/givenName".equals(predicate)) { // Save foaf:givenName as foaf:firstName
-                                String insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, FOAF.firstName.toString(), object);
-                                sparqlFunctionsService.updateAuthor(insert);
-                                continue;
-                            }
-                            if ("http://xmlns.com/foaf/0.1/familyName".equals(predicate)) { // Save foaf:familyName as foaf:lastName
-                                String insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, FOAF.lastName.toString(), object);
-                                sparqlFunctionsService.updateAuthor(insert);
-                                continue;
-                            }
-                            if (predicate.contains(OWL.SAMEAS.toString())) { // If sameas found include the provenance
-                                SparqlEndpoint newEndpoint = matchWithProvenance(object);
-                                if (newEndpoint != null) {
-                                    String provenanceQueryInsert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, DCTERMS.PROVENANCE.toString(), newEndpoint.getResourceId());
-                                    sparqlFunctionsService.updateAuthor(provenanceQueryInsert);
-                                }
-                            }
-                            if (!tripletasResult.hasNext()) { // Insert sameAs abd provenance in last iteration
-                                String sameAs = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, OWL.SAMEAS.toString(), resource);
-                                sparqlFunctionsService.updateAuthor(sameAs);
-
-                                String provenanceQueryInsert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, DCTERMS.PROVENANCE.toString(), endpoint.getResourceId());
-                                sparqlFunctionsService.updateAuthor(provenanceQueryInsert);
-                            }
-                            String queryAuthorInsert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, predicate, object);
-                            sparqlFunctionsService.updateAuthor(queryAuthorInsert);
                         }
+                        // Insert sameAs, provenance, and rdf:type foaf:Person
+                        String sameAs = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, OWL.SAMEAS.toString(), resource);
+                        sparqlFunctionsService.updateAuthor(sameAs);
+
+                        String provenanceQueryInsert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, DCTERMS.PROVENANCE.toString(), endpoint.getResourceId());
+                        sparqlFunctionsService.updateAuthor(provenanceQueryInsert);
+
+                        String foafPerson = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, RDF.TYPE.toString(), FOAF.Person.toString());
+                        sparqlFunctionsService.updateAuthor(foafPerson);
+
                         conn.commit();
                         conn.close();
                         repository.shutDown();
