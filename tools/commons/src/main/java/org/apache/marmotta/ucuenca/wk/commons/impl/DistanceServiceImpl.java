@@ -50,6 +50,18 @@ public class DistanceServiceImpl implements DistanceService {
         }
         return false;
     }
+    
+    @Override
+    public Double semanticComparisonValue(List<String> listA, List<String> listB) {
+        try {
+            SemanticDistance dist = new SemanticDistance();
+            return dist.nwdDistance(listA, listB); //double value = dist.semanticKeywordsDistance(listA, listB);
+
+        } catch (IOException | ClassNotFoundException | SQLException ex) {
+            log.error("ERROR IN SemanticDistance:" + ex);
+        }
+        return 1.11;
+    }
 
     @Override
     public boolean semanticComparison(String word, List<String> listB) {

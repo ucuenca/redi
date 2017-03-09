@@ -6,12 +6,22 @@
 package org.apache.marmotta.ucuenca.wk.commons.function;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Optional;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.memetix.mst.language.Language;
 import com.memetix.mst.translate.Translate;
+import com.optimaize.langdetect.LanguageDetector;
+import com.optimaize.langdetect.LanguageDetectorBuilder;
+import com.optimaize.langdetect.i18n.LdLocale;
+import com.optimaize.langdetect.ngram.NgramExtractors;
+import com.optimaize.langdetect.profiles.LanguageProfile;
+import com.optimaize.langdetect.profiles.LanguageProfileReader;
+import com.optimaize.langdetect.text.CommonTextObjectFactories;
+import com.optimaize.langdetect.text.TextObject;
+import com.optimaize.langdetect.text.TextObjectFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -55,6 +65,14 @@ public class TranslateForSemanticDistance {
     //Statement stmt = null;
 
     private JsonObject config = null;
+    
+    //load all languages:
+    private List<LanguageProfile> languageProfiles = new LanguageProfileReader().readAllBuiltIn();
+    
+    //build language detector:
+    private LanguageDetector languageDetector = LanguageDetectorBuilder.create(NgramExtractors.standard())
+                    .withProfiles(languageProfiles)
+                    .build();
 
     public TranslateForSemanticDistance() throws IOException, ClassNotFoundException {
         JsonParser parser = new JsonParser();
@@ -76,19 +94,82 @@ public class TranslateForSemanticDistance {
     public List<String> traductor(List<String> join) throws SQLException, IOException, ClassNotFoundException {
         Class.forName("org.postgresql.Driver");
         conn = DriverManager.getConnection(dburl, user, pass);
-        boolean truevalue = true;
         List<String> ls = new ArrayList();
         for (String w : join) {
-            if (truevalue) {
-                ls.add(traductorYandex(w.trim()).trim().toLowerCase());
-            } else {
-                ls.add(traductorBing(w.trim()).trim().toLowerCase());
+            String translated = "";
+            String language = detectLanguage(w);
+            String english = "en";
+            if (!english.equals(language)) {
+            
+                Statement stmt = conn.createStatement();
+                String sql;
+                sql = "SELECT * FROM translation where translation.word='" + w.trim() + "'";
+                java.sql.ResultSet rs;
+                
+                try {
+                    rs = stmt.executeQuery(sql);
+                } catch (SQLException ex) {
+                    rs = null;
+                }
+                
+                if (rs != null) {
+                    if (rs.next()) {
+                        translated = rs.getString("value");
+                        rs.close();
+                        stmt.close();
+                    } else {
+                        rs.close();
+                        stmt.close();
+                        translated = traductorYandex(w.trim());
+                        if (translated.equals(w.trim())) {
+                            translated = traductorBing(w.trim()).trim().toLowerCase();
+                        }
+                        try {
+                            PreparedStatement stmt2 = conn.prepareStatement("INSERT INTO translation (word, value) values (?, ?)");
+                            stmt2.setString(1, w.trim());
+                            stmt2.setString(2, translated);
+                            stmt2.executeUpdate();
+                            stmt2.close();
+                        } catch (SQLException ex) {
+                            Logger.getLogger(SemanticDistance.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                } else {
+                    translated = traductorYandex(w.trim());
+                    if (translated.equals(w.trim())) {
+                        translated = traductorBing(w.trim()).trim().toLowerCase();
+                    }
+                }
             }
+            else {
+                translated = w.trim();
+            }
+            ls.add(translated.trim().toLowerCase());
         }
         conn.close();
         return ls;
     }
+    
+    private String detectLanguage(String word) {
+        String language = "es";
 
+        //create a text object factory
+        TextObjectFactory textObjectFactory = CommonTextObjectFactories.forDetectingShortCleanText();
+        
+        //Text to query:
+        TextObject textObject;
+        textObject = textObjectFactory.forText(word.toLowerCase());
+
+        //Detect the language
+        Optional<LdLocale> lang = languageDetector.detect(textObject);
+        if (lang.isPresent()) {
+            language = lang.get().getLanguage();
+        }//languageDetector.detect(textObjectFactory.forText("bullying bullying bullying bullying bullying bullying bullying bullying bullying ")).get().getLanguage();
+        //"es" para espanol y "en" para ingles.
+        return language;
+
+    }
+    
     private String traductorYandex(String palabras) throws UnsupportedEncodingException, SQLException, IOException {
         String url = "https://translate.yandex.net/api/v1.5/tr.json/translate";
         //String url = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20160321T160516Z.43cfb95e23a69315.6c0a2ae19f56388c134615f4740fbb1d400f15d3&lang=en&text=" + URLEncoder.encode(palabras, "UTF-8");
@@ -130,8 +211,10 @@ public class TranslateForSemanticDistance {
     }
 
     private String traductorBing(String palabras) {
-        boolean falsevalue = false;
-        if (falsevalue) {
+        //boolean falsevalue = false;
+        double randomNum = Math.random();
+        double prob = 0.2;
+        if (randomNum < prob) {
             Translate.setClientId("fedquest");
             Translate.setClientSecret("ohCuvdnTlx8Sac4r7gfqyHy0xOJJpKK9duFC4tn9Sho=");
         } else {

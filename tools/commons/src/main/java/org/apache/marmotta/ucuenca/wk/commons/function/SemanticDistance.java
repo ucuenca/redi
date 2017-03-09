@@ -99,7 +99,7 @@ public class SemanticDistance {
                 }
                 double sum = 0;
                 double num = 0;
-
+                
                 for (String t1 : ka1) {
                     for (String t2 : ka2) {
                         num++;
@@ -107,7 +107,72 @@ public class SemanticDistance {
                         String tt2 = t2;
                         double v = ngd(tt1, tt2);
                         sum += v;
+                        }
                     }
+                double prom = sum / num;
+                if (num == 0 && sum == 0) {
+                    prom = 2;
+                }
+                result.put(i + "," + j, prom);
+
+                avg = avg(avg, prom);
+                har = har(har, prom);
+            }
+        }
+
+        conn.close();
+        return mapEntry(result);
+    }
+    
+    /**
+     * @param args the command line arguments
+     */
+    public synchronized double nwdDistance(List<String> a, List<String> b) throws ClassNotFoundException, SQLException, IOException {
+        Class.forName("org.postgresql.Driver");
+        conn = DriverManager.getConnection(dburl, user, pass);
+        ConcurrentHashMap<String, List<String>> map = new ConcurrentHashMap<>();
+        List<String> authors = new ArrayList();
+        authors.add("a1");
+        authors.add("a2");
+        ConcurrentHashMap<String, Double> result = new ConcurrentHashMap<>();
+        double avg = 0;
+        double har = 0;
+        for (int i = 0; i < authors.size(); i++) {
+            for (int j = i + 1; j < authors.size(); j++) {
+                String a1 = authors.get(i);
+                String a2 = authors.get(j);
+                List<String> ka1 = null;
+                List<String> ka2 = null;
+                if (map.containsKey(a1)) {
+                    ka1 = map.get(a1);
+                } else {
+                    ka1 = formatList(a, a.size());//consultado2R(a1, Endpoints.get(i));
+                    map.put(a1, ka1);
+                }
+                if (map.containsKey(a2)) {
+                    ka2 = map.get(a2);
+                } else {
+                    ka2 = formatList(b, b.size());//consultado2R(a2, Endpoints.get(j));
+                    map.put(a2, ka2);
+                }
+                double sum = 0;
+                double num = 0;
+                
+	        double min;
+
+                for (String t1 : ka1) {
+                    min = 1.2;
+                    for (String t2 : ka2) {
+                        
+                        String tt1 = t1;
+                        String tt2 = t2;
+                        double v = ngd(tt1, tt2);
+                        if (v < min) {
+                            min = v;
+                        }
+                    }
+                    sum += min;		
+	            num++;
                 }
                 double prom = sum / num;
                 if (num == 0 && sum == 0) {
@@ -155,7 +220,19 @@ public class SemanticDistance {
         TranslateForSemanticDistance trans = new TranslateForSemanticDistance();
         a = trans.traductor(a);//new LinkedList<String>(java.util.Arrays.asList(t1_.split("\\s\\|\\s")));
         a = trans.clean(a);
-        a = topT(a, (int) (2.0 * Math.log(a.size())));
+            a = topT(a, (int) (2.0 * Math.log(a.size())));
+        return a;
+    }
+    
+    private List<String> formatList(List<String> a, Integer top) throws SQLException, IOException, ClassNotFoundException {
+        TranslateForSemanticDistance trans = new TranslateForSemanticDistance();
+        a = trans.traductor(a);//new LinkedList<String>(java.util.Arrays.asList(t1_.split("\\s\\|\\s")));
+        a = trans.clean(a);
+        if (top == 0) {
+            a = topT(a, (int) (2.0 * Math.log(a.size())));
+        } else {
+            a = topT(a, top);
+        }
         return a;
     }
 

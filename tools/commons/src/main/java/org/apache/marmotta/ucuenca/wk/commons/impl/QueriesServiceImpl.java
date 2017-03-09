@@ -10,6 +10,7 @@ import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
 /**
  * @author Fernando Baculima
  * @author Xavier Sumba
+ * @author Jose Cullcay
  */
 public class QueriesServiceImpl implements QueriesService {
 
@@ -327,6 +328,35 @@ public class QueriesServiceImpl implements QueriesService {
                 + "                }} ";
 
     }
+    
+    @Override
+    public String getAuthorDataQuery(String graph, String authorUri) {
+        authorUri = " <" + authorUri + "> ";
+        return PREFIXES
+                + " SELECT distinct * WHERE { " + getGraphString(graph) + " {    "
+                + authorUri + " a foaf:Person. "
+                + authorUri + " foaf:name ?name."
+                + authorUri + " foaf:firstName ?fname. "
+                + authorUri + " foaf:lastName ?lname. "
+                + authorUri + " dct:provenance ?provenance. "
+                + " } } ";
+
+    }
+    
+    @Override
+    public String getAuthorsByName(String graph, String firstName, String lastName) {
+        return PREFIXES
+                + "SELECT distinct ?subject ?name (STR(?fName)  AS ?firstName) (STR(?lName)  AS ?lastName)  WHERE { "
+                + getGraphString(graph) + "{ "
+                + "    ?subject a foaf:Person; "
+                + " foaf:name ?name; "
+                + " foaf:firstName ?fName; "
+                + " foaf:lastName ?lName. "
+                + "    filter(regex(?fName, '" + firstName + "', 'i')). " //"^M$"
+                + "    filter(regex(?lName, '" + lastName + "', 'i')). " //"^Espinoza"
+                + "  } "
+                + "}";
+    }
 
     /**
      * get list of graphs query
@@ -439,7 +469,7 @@ public class QueriesServiceImpl implements QueriesService {
 
     @Override
     public String getAuthorsKeywordsQuery(String resource) {
-        return PREFIXES + " SELECT DISTINCT ?keyword FROM <http://ucuenca.edu.ec/wkhuska/authors> "
+        return PREFIXES + " SELECT DISTINCT ?keyword FROM <" + con.getAuthorsGraph() + "> "
                 + " WHERE { <" + resource + "> dct:subject ?keyword. } limit 50";
     }
 
