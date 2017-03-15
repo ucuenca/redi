@@ -40,6 +40,11 @@ public class ConstantServiceImpl implements ConstantService {
     }
 
     @Override
+    public String getGoogleScholarGraph() {
+        return confService.getBaseContext() + "GoogleScholarProvider";
+    }
+
+    @Override
     public String getBaseResource() {
         return getBaseURI() + "resource/";
     }
