@@ -160,7 +160,7 @@ public class AuthorServiceImpl implements AuthorService {
      */
     //private String documentProperty = "http://rdaregistry.info";
     @Override
-    public String runAuthorsUpdateMultipleEP() throws DaoException, UpdateException {
+    public String extractAuthors() throws DaoException, UpdateException {
         endpoints = authorsendpointService.listEndpoints();
 
         Boolean someUpdate = false;
@@ -170,7 +170,7 @@ public class AuthorServiceImpl implements AuthorService {
                 if (Boolean.parseBoolean(endpoint.getStatus())) {
                     try {
                         log.info("Extraction started for endpoint {}.", endpoint.getName());
-                        response.append(extractAuthors(endpoint));
+                        response.append(AuthorServiceImpl.this.extractAuthors(endpoint));
                     } catch (RepositoryException ex) {
                         log.error("ERROR: Excepcion de repositorio. Problemas en conectarse a " + endpoint.getName());
                     } catch (MalformedQueryException ex) {
@@ -183,8 +183,8 @@ public class AuthorServiceImpl implements AuthorService {
                     someUpdate = true;
                 }
             }
-            response.append(extractSubjects());
-            response.append(searchDuplicates());
+//            response.append(extractSubjects());
+//            response.append(searchDuplicates());
 
             if (!someUpdate) {
                 return "Any  Endpoints";
@@ -300,7 +300,8 @@ public class AuthorServiceImpl implements AuthorService {
         return String.format("Carga Finalizada para %s endpoint. Revise Archivo Log Para mas detalles \n", endpoint.getName());
     }
 
-    private String extractSubjects() {
+    @Override
+    public String extractSubjects() {
         try {
             Repository repository = new SPARQLRepository(constantService.getSPARQLEndpointURL());
             int numAuthors = Integer.parseInt(executeQuery(repository, queriesService.getCountAuthors()).next().getBinding("count").getValue().stringValue());
@@ -359,7 +360,8 @@ public class AuthorServiceImpl implements AuthorService {
         return "Subjects Extracted";
     }
 
-    private String searchDuplicates() {
+    @Override
+    public String searchDuplicates() {
         try {
             String allAuthorsQuery = queriesService.getAuthors();
             Repository repository = new SPARQLRepository("http://localhost:8080/sparql/select");

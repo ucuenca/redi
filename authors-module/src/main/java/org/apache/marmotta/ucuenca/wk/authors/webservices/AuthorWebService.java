@@ -187,7 +187,21 @@ public class AuthorWebService {
     @POST
     @Path("/update")
     public Response updateAuthorPost() throws UpdateException, DaoException {
-        String result = authorService.runAuthorsUpdateMultipleEP();
+        String result = authorService.extractAuthors();
+        return Response.ok().entity(result).build();
+    }
+
+    @POST
+    @Path("/extract-subjects")
+    public Response extractSubjects() throws UpdateException, DaoException {
+        String result = authorService.extractSubjects();
+        return Response.ok().entity(result).build();
+    }
+
+    @POST
+    @Path("/search-duplicates")
+    public Response searchDuplicates() throws UpdateException, DaoException {
+        String result = authorService.searchDuplicates();
         return Response.ok().entity(result).build();
     }
 //

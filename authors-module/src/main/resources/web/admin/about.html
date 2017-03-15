@@ -25,10 +25,15 @@
         <script type="text/javascript" src="js/widgets/authorUpdate.js"></script>
         <script type="text/javascript" src="../../core/public/js/widgets/configurator/configurator.js"></script>
         <script type="text/javascript">
-            var host =  _SERVER_URL;
-            function run()
-            {
+            var host = _SERVER_URL;
+            function run(){
                 runUpdateAuthor(host);
+            }
+            function runExtractSubjects(){
+                extractSubjects(host);
+            }
+            function runSearchDuplicates(){
+                searchDuplicates(host);
             }
         </script>
         <!--###END_HEAD###-->
@@ -63,11 +68,13 @@
             si los datos aun no se encuentran en la plataforma.
         </p>
         <p>"Authors-Module" maneja su propio Endpoint Manager.   Endpoint Manager permite agregar y eliminar los endpoints de los cuales 
-        se  extraera la informacion de los autores</p>
+            se  extraera la informacion de los autores</p>
         <p>Los Datos de cada Endpoint, son registrados en la misma plataforma Marmotta, pero en un grafo especifico solo para endpoints</p>
         <p>Click sobre el botton "RUN UPDATE" para iniciar la carga de autores</p>
         <form> 
-            <button type="button"  onclick="run()"  value="Activar Función">RUN UPDATE</button>
+            <button type="button"  onclick="run()"  value="Activar Función">Extract Authors</button>
+            <button type="button"  onclick="runExtractSubjects()"  value="Activar Función">Extract Keywords</button>
+            <button type="button"  onclick="runSearchDuplicates()"  value="Activar Función">Similar Authors</button>
             <div id="imgloading" style="visibility: hidden">
                 <img src="img/ajax-loader-big.gif" alt="Loading Authors" height="120" width="120">
                 <p> Please wait until the reply message</p>
