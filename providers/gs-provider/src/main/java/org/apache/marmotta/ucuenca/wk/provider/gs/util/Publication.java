@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,7 +62,10 @@ public class Publication {
      * @param title the title to set
      */
     public void setTitle(String title) {
-        this.title = title;
+        if (this.title == null) {
+            this.title = "";
+        }
+        this.title += StringEscapeUtils.escapeJava(title);
     }
 
     /**
@@ -131,6 +135,15 @@ public class Publication {
      * @return the description
      */
     public String getDescription() {
+        if (description.startsWith("Abstract")) {
+            return description.replaceFirst("Abstract", "").trim();
+        } else if (description.startsWith("ABSTRACT")) {
+            return description.replaceFirst("ABSTRACT", "").trim();
+        } else if (description.startsWith("Resumen")) {
+            return description.replaceFirst("Resumen", "").trim();
+        } else if (description.startsWith("RESUMEN")) {
+            return description.replaceFirst("RESUMEN", "").trim();
+        }
         return description;
     }
 
@@ -287,8 +300,10 @@ public class Publication {
                 case "Book":
                     this.setBook(value);
                     break;
+                case "Scholar articles":
+                    break;
                 default:
-                    log.info("ADD TO MAP => " + entry.getKey() + ":" + entry.getValue());
+                    log.info("ADD TO MAP => {}:{} for resource '{}'", entry.getKey(), entry.getValue(), url);
                     break;
             }
         }
