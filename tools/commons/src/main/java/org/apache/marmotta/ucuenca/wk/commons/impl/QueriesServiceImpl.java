@@ -59,7 +59,7 @@ public class QueriesServiceImpl implements QueriesService {
         if (varargs[3].contains("^^")) {
             object = "\"" + StringEscapeUtils.escapeJava(varargs[3].substring(1, varargs[3].indexOf("^^") - 1)) + "\"" + varargs[3].substring(varargs[3].indexOf("^^"));
         } else {
-            object = String.format("\"%s\"%s", StringEscapeUtils.escapeJava(varargs[3].substring(0, varargs[3].length())), (varargs.length > 4 ? varargs[4] != null ? "^^xsd:" + varargs[4] : "^^xsd:string" : "^^xsd:string"));
+            object = String.format("\"%s\"%s", StringEscapeUtils.escapeJava(varargs[3]), (varargs.length > 4 ? varargs[4] != null ? "^^xsd:" + varargs[4] : "^^xsd:string" : "^^xsd:string"));
         }
 
         if (isURI(varargs[2])) {
@@ -287,7 +287,6 @@ public class QueriesServiceImpl implements QueriesService {
         return PREFIXES
                 + " SELECT distinct *"
                 + " WHERE { " + getGraphString(graph) + " { "
-                //+ " WHERE { graph <http://ucuenca.edu.ec/wkhuska/authorsaux> {"
                 + " ?subject a foaf:Person. "
                 + " ?subject foaf:name ?name."
                 + " ?subject foaf:firstName ?fname. "
@@ -328,7 +327,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + "                }} ";
 
     }
-    
+
     @Override
     public String getAuthorDataQuery(String graph, String authorUri) {
         authorUri = " <" + authorUri + "> ";
@@ -342,7 +341,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + " } } ";
 
     }
-    
+
     @Override
     public String getAuthorsByName(String graph, String firstName, String lastName) {
         return PREFIXES
@@ -779,17 +778,17 @@ public class QueriesServiceImpl implements QueriesService {
         return PREFIXES
                 + "SELECT DISTINCT *"
                 + "WHERE {  "
-                + "  GRAPH <http://ucuenca.edu.ec/wkhuska/authors>  {"
+                + "  GRAPH  <" + con.getAuthorsGraph() + ">  {"
                 + "    <" + authorURI + "> dct:provenance ?provenance."
                 + "    {"
                 + "      SELECT ?city ?province (GROUP_CONCAT(DISTINCT STR(?fullname); separator=\",\") as ?ies) (GROUP_CONCAT(DISTINCT ?domain; separator=\",\") as ?domains)"
                 + "      WHERE {"
-                + "        GRAPH <http://ucuenca.edu.ec/wkhuska/endpoints>  {"
+                + "        GRAPH  <" + con.getEndpointsGraph() + ">  {"
                 + "          ?provenance <http://ucuenca.edu.ec/ontology#fullName> ?fullname;"
                 + "                      <http://ucuenca.edu.ec/ontology#status> true  ;"
                 + "                      <http://ucuenca.edu.ec/ontology#city> ?city;"
                 + "                      <http://ucuenca.edu.ec/ontology#province> ?province;"
-                + "                      <http://ucuenca.edu.ec/ontology#domains>/rdf:first ?domain."
+                + "                      <http://ucuenca.edu.ec/ontology#domain> ?domain."
                 + "        }"
                 + "      } GROUP BY ?provenance ?city ?province"
                 + "    }"

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.apache.marmotta.ucuenca.wk.provider.gs.util;
+package org.apache.marmotta.ucuenca.wk.provider.gs.handler;
 
 import java.util.List;
 

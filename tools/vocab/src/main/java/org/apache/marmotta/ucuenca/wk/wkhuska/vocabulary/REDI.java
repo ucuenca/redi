@@ -15,22 +15,8 @@ import org.openrdf.model.impl.ValueFactoryImpl;
  */
 public class REDI {
 
-    // Change domain accord with redi's domain
-    //private static final String DOMAIN = "http://190.15.141.85:8080/resource/";
-    //private static final String BASE_DOMAIN = "http://localhost:8080";
-
     public static final String PREFIX = "uc";
     public static final String NAMESPACE = "http://ucuenca.edu.ec/ontology#";
-
-    // Resources
-    //public static final String AUTHOR_RESOURCE = BASE_DOMAIN + "/resource/author/";
-    //public static final String BOOK_RESOURCE = BASE_DOMAIN + "/resource/book/";
-    //public static final String PUBLICATION_RESOURCE = BASE_DOMAIN + "/resource/publication/";
-    //public static final String ENDPOINT_RESOURCE = BASE_DOMAIN + "/resource/endpoint/";
-
-    // Graphs
-    //public static final String ENDPOINT_GRAPH = BASE_DOMAIN + "/context/endpoints";
-    //public static final String AUTHOR_GRAPH = BASE_DOMAIN + "/context/authors";
 
     // Properties
     public static final URI CITATION_COUNT;

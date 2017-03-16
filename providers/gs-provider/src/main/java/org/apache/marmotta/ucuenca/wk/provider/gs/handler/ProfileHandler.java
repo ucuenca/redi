@@ -14,11 +14,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.apache.marmotta.ucuenca.wk.provider.gs.util;
+package org.apache.marmotta.ucuenca.wk.provider.gs.handler;
 
 import java.util.Arrays;
 import java.util.List;
 import org.apache.marmotta.ucuenca.wk.provider.gs.GoogleScholarProvider;
+import org.apache.marmotta.ucuenca.wk.provider.gs.util.Author;
+import org.apache.marmotta.ucuenca.wk.provider.gs.util.Publication;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;

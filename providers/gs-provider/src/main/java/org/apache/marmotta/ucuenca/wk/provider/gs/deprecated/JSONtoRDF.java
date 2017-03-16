@@ -1,4 +1,4 @@
-package org.apache.marmotta.ucuenca.wk.provider.gs.util;
+package org.apache.marmotta.ucuenca.wk.provider.gs.deprecated;
 
 import java.util.Map;
 import java.util.regex.Matcher;

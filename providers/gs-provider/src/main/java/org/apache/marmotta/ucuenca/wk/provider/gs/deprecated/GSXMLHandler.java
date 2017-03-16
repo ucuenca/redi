@@ -6,7 +6,7 @@
  * released) 2012/05/09 (v2.0 released) 2012/12/18 (v2.1 released) email	-
  * microbuff@hotmail.com ***********************************************
  */
-package org.apache.marmotta.ucuenca.wk.provider.gs.util;
+package org.apache.marmotta.ucuenca.wk.provider.gs.deprecated;
 
 import java.text.NumberFormat;
 import java.text.ParseException;

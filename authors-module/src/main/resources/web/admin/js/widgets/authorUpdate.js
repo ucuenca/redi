@@ -24,21 +24,14 @@ function runUpdateAuthor(options) {
 
     document.getElementById("imgloading").style.visibility = "visible";
 
-    //var endpoint = "http://example";
-    //var graphuri = "http://example/data";
     var settings = {
         host: options
     };
-    //var dataT = {
-    //    "Endpoint": endpoint,
-    //    "GraphUri": graphuri
-    //};
 
     $.ajax({
         type: "POST",
         dataType: "text", //result data type
         url: settings.host + "authors-module/update",
-
         success: function (Result) {
             document.getElementById("imgloading").style.visibility = "hidden";
             alert("Correcto: " + Result);
@@ -48,6 +41,51 @@ function runUpdateAuthor(options) {
             alert("Error" + data.responseText);
         }
     });
+}
+
+function extractSubjects(options) {
+
+    document.getElementById("imgloading").style.visibility = "visible";
+
+    var settings = {
+        host: options
+    };
+
+    $.ajax({
+        type: "POST",
+        dataType: "text", //result data type
+        url: settings.host + "authors-module/extract-subjects",
+        success: function (Result) {
+            document.getElementById("imgloading").style.visibility = "hidden";
+            alert("Correcto: " + Result);
+        },
+        error: function (data) {
+            document.getElementById("imgloading").style.visibility = "hidden";
+            alert("Error" + data.responseText);
+        }
+    });
+}
 
 
+function searchDuplicates(options) {
+
+    document.getElementById("imgloading").style.visibility = "visible";
+
+    var settings = {
+        host: options
+    };
+
+    $.ajax({
+        type: "POST",
+        dataType: "text", //result data type
+        url: settings.host + "authors-module/search-duplicates",
+        success: function (Result) {
+            document.getElementById("imgloading").style.visibility = "hidden";
+            alert("Correcto: " + Result);
+        },
+        error: function (data) {
+            document.getElementById("imgloading").style.visibility = "hidden";
+            alert("Error" + data.responseText);
+        }
+    });
 }
