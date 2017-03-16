@@ -60,6 +60,11 @@ public class ConstantServiceImpl implements ConstantService {
     }
 
     @Override
+    public String getGoogleScholarResource() {
+        return getBaseResource() + "GoogleScholar/";
+    }
+
+    @Override
     public String getEndpointResource() {
         return getBaseResource() + "endpoint/";
     }

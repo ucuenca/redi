@@ -40,6 +40,8 @@ public interface ConstantService {
 
     String getAuthorResource();
 
+    String getGoogleScholarResource();
+
     String getEndpointResource();
 
     String getBaseResource();
