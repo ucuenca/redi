@@ -17,11 +17,10 @@
  */
 package org.apache.marmotta.ucuenca.wk.endpoint.gs;
 
+import java.nio.charset.Charset;
 import org.apache.marmotta.commons.http.ContentType;
 import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
-//import org.apache.marmotta.ucuenca.wk.provider.dblp.DBLPRawProvider;
 import org.apache.marmotta.ucuenca.wk.provider.gs.GoogleScholarProvider;
-
 
 /**
  * Endpoint for accessing Google Scholar Data as RDF.
@@ -30,12 +29,62 @@ import org.apache.marmotta.ucuenca.wk.provider.gs.GoogleScholarProvider;
  */
 public class GoogleScholarEndpoint extends Endpoint {
 
+    private String city;
+    private String province;
+    private String[] ies;
+    private String[] domains;
+    private String resource;
+
     public GoogleScholarEndpoint() {
-    	super(GoogleScholarProvider.NAME, GoogleScholarProvider.NAME, GoogleScholarProvider.PATTERN, null, 86400L);
+        super(GoogleScholarProvider.NAME,
+                GoogleScholarProvider.NAME,
+                "http(s?)://scholar\\.google\\.com/citations\\?mauthors\\=(.*)\\&hl=en\\&view_op\\=search_authors",
+                null, 86400L);
         setPriority(PRIORITY_MEDIUM);
-        addContentType(new ContentType("text", "turtle", 1.0));
-        addContentType(new ContentType("text", "plain", 0.2));
+//        addContentType(new ContentType("text", "turtle", 1.0));
+//        addContentType(new ContentType("text", "plain", 0.2));
+        addContentType(new ContentType("text", "html", Charset.forName("UTF-8")));
         addContentType(new ContentType("*", "*", 0.1));
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String[] getIes() {
+        return ies;
+    }
+
+    public void setIes(String... ies) {
+        this.ies = ies;
+    }
+
+    public String[] getDomains() {
+        return domains;
+    }
+
+    public void setDomains(String... domains) {
+        this.domains = domains;
+    }
+
+    public String getResource() {
+        return resource;
+    }
+
+    public void setResource(String resource) {
+        this.resource = resource;
     }
 
 }
