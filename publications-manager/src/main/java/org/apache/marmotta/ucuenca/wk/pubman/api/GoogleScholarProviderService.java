@@ -19,22 +19,12 @@ package org.apache.marmotta.ucuenca.wk.pubman.api;
 
 public interface GoogleScholarProviderService {
 
-
-    
     /**
      * Get publications data from source, and load into provider graph
+     *
      * @param param
-     * @return 
+     * @return
      */
     String runPublicationsProviderTaskImpl(String param);
-    
-    
-    
-    /**
-     * Load publications:  Provider Graph to General Graph
-     * @param param
-     * @return 
-     */
-    String runPublicationsTaskImpl(String param);
-    
+
 }
