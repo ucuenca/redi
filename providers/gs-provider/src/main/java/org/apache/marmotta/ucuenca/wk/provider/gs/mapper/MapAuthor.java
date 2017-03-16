@@ -33,20 +33,18 @@ import org.openrdf.model.vocabulary.RDF;
 public class MapAuthor {
 
     private final ValueFactory factory = ValueFactoryImpl.getInstance();
-    public static final int MIN_ATTR_PUB = 1;
     private final List fields = Arrays.asList("name", "affiliation", "profile", "img", "numCitations",
             "title", "description", "pages", "publisher", "conference", "journal", "volume", "issue", "date");
     private final URI authorURI;
-
     private final String resourceUri;
 
     public MapAuthor(String author, String baseResource) {
         resourceUri = baseResource;
-        authorURI = generateURI(String.format("%sGoogleScholar/author/", resourceUri), author);
+        authorURI = generateURI(String.format("%sauthor/", resourceUri), author);
     }
 
     /**
-     * Convert an author object to RDF.
+     * Convert a publication object to RDF.
      *
      * @param publication
      * @return
@@ -128,82 +126,6 @@ public class MapAuthor {
         return triples;
     }
 
-    //<editor-fold defaultstate="collapsed" desc="parseAuthor">
-//    /**
-//     * Convert an author object to RDF.
-//     *
-//     * @param author
-//     * @return
-//     */
-//    public Model mapAuthor(Author author) throws IllegalArgumentException, IllegalAccessException {
-//        Model triples = new TreeModel();
-//        URI authorURI = generateURI(REDI.NAMESPACE_AUTHOR, author.getName());
-//        
-//        parseObject(triples, author, authorURI);
-//        for (String area : author.getAreas()) {
-//            triples.add(new StatementImpl(authorURI, GoogleScholarProvider.MAPPING_SCHEMA.get("areas"), factory.createLiteral(area)));
-//        }
-//        triples.add(new StatementImpl(authorURI, RDF.TYPE, FOAF.PERSON));
-//        
-//        // publication
-//        for (Publication publication : author.getPublications()) {
-//            // We could get just the URL of Google Scholar; then we just use a
-//            // publication when extractir have finished to extrac attributes
-//            if (publication.getNumAttr() > MIN_ATTR_PUB) {
-//                URI publicationURI = generateURI(REDI.NAMESPACE_PUBLICATION, publication.getTitle());
-//                // Parse common attributes
-//                parseObject(triples, publication, publicationURI);
-//                
-//                // Add types/relation author-publications for
-//                triples.add(new StatementImpl(publicationURI, RDF.TYPE, BIBO.ACADEMIC_ARTICLE));
-//                triples.add(new StatementImpl(publicationURI, RDF.TYPE, BIBO.DOCUMENT));
-//                triples.add(new StatementImpl(authorURI, FOAF.PUBLICATIONS, publicationURI));
-//                
-//                // Add authors if exist
-//                if (publication.getAuthors().size() > 0) {
-//                    String authorName = publication.getAuthors().get(0);
-//                    URI creatorURI = generateURI(REDI.NAMESPACE_AUTHOR, authorName);
-//                    triples.add(new StatementImpl(publicationURI, DCTERMS.CREATOR, creatorURI));
-//                    
-//                    if (!authorURI.equals(creatorURI)) {
-//                        triples.add(new StatementImpl(creatorURI, FOAF.NAME, factory.createLiteral(authorName)));
-//                    }
-//                    for (int i = 1; i < publication.getAuthors().size(); i++) {
-//                        authorName = publication.getAuthors().get(i);
-//                        URI contributorURI = generateURI(REDI.NAMESPACE_AUTHOR, authorName);
-//                        triples.add(new StatementImpl(publicationURI, DCTERMS.CONTRIBUTOR, contributorURI));
-//                        if (!authorURI.equals(contributorURI)) {
-//                            triples.add(new StatementImpl(contributorURI, FOAF.NAME, factory.createLiteral(authorName)));
-//                        }
-//                    }
-//                }
-//                
-//                // Add book resoruces/literals if exist
-//                if (publication.getBook() != null) {
-//                    URI bookURI = generateURI(REDI.NAMESPACE_BOOK, publication.getBook());
-//                    
-//                    triples.add(new StatementImpl(publicationURI, DCTERMS.IS_PART_OF, bookURI));
-//                    triples.add(new StatementImpl(bookURI, RDF.TYPE, BIBO.BOOK));
-//                    triples.add(new StatementImpl(bookURI, DCTERMS.TITLE, factory.createLiteral(publication.getBook())));
-//                }
-//                
-//                // Add resources where you can find the publication
-//                for (String resource : publication.getResources()) {
-//                    triples.add(new StatementImpl(publicationURI, BIBO.URI, factory.createURI(resource)));
-//                }
-//                
-//            }
-//            
-//        }
-//        
-////        for (org.openrdf.model.Statement triple : triples) {
-////            String object = triple.getObject().toString().startsWith(ExtractionManager.URI_START_WITH)
-////                    ? ("<" + triple.getObject() + ">") : triple.getObject().toString();
-////            System.out.println(String.format("%s %s %s .", "<" + triple.getSubject().toString() + ">", "<" + triple.getPredicate().toString() + ">", object));
-////        }
-//return triples;
-//    }
-//</editor-fold>
     private void parseObject(Model triples, Object o, URI resource) throws IllegalArgumentException, IllegalAccessException {
         for (Field f : o.getClass().getDeclaredFields()) {
 
