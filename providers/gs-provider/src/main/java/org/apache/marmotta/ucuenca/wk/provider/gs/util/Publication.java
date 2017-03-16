@@ -135,15 +135,6 @@ public class Publication {
      * @return the description
      */
     public String getDescription() {
-        if (description.startsWith("Abstract")) {
-            return description.replaceFirst("Abstract", "").trim();
-        } else if (description.startsWith("ABSTRACT")) {
-            return description.replaceFirst("ABSTRACT", "").trim();
-        } else if (description.startsWith("Resumen")) {
-            return description.replaceFirst("Resumen", "").trim();
-        } else if (description.startsWith("RESUMEN")) {
-            return description.replaceFirst("RESUMEN", "").trim();
-        }
         return description;
     }
 
@@ -151,7 +142,26 @@ public class Publication {
      * @param description the description to set
      */
     public void setDescription(String description) {
-        this.description = description;
+        if (description.startsWith("Abstract")) {
+            this.description = description.replaceFirst("Abstract", "").trim();
+        } else if (description.startsWith("ABSTRACT")) {
+            this.description = description.replaceFirst("ABSTRACT", "").trim();
+        } else if (description.startsWith("abstract")) {
+            this.description = description.replaceFirst("abstract", "").trim();
+        } else if (description.startsWith("Resumen")) {
+            this.description = description.replaceFirst("Resumen", "").trim();
+        } else if (description.startsWith("RESUMEN")) {
+            this.description = description.replaceFirst("RESUMEN", "").trim();
+        } else {
+            this.description = description;
+        }
+
+        if (this.description.startsWith(".")) {
+            this.description = this.description.replace(".", "").trim();
+        }
+        if (this.description.startsWith(":")) {
+            this.description = this.description.replace(":", "").trim();
+        }
     }
 
     /**
