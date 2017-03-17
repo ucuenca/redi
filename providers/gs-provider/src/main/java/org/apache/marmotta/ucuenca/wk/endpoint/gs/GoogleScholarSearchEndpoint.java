@@ -20,24 +20,29 @@ package org.apache.marmotta.ucuenca.wk.endpoint.gs;
 import java.nio.charset.Charset;
 import org.apache.marmotta.commons.http.ContentType;
 import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
-import org.apache.marmotta.ucuenca.wk.provider.gs.GoogleScholarProvider;
 
 /**
  * Endpoint for accessing Google Scholar Data as RDF.
  *
+ * Constraints: In order to avoid unnecessary requests authors are selected
+ * according to a profile. So, city, province, ies, domains and resource should
+ * be added.
+ *
  * @author Santiago Gonzalez
+ * @author Xavier Sumba
  */
-public class GoogleScholarEndpoint extends Endpoint {
+public class GoogleScholarSearchEndpoint extends Endpoint {
 
+    // TODO: find another way to read this parameters
     private String city;
     private String province;
     private String[] ies;
     private String[] domains;
     private String resource;
 
-    public GoogleScholarEndpoint() {
-        super(GoogleScholarProvider.NAME,
-                GoogleScholarProvider.NAME,
+    public GoogleScholarSearchEndpoint() {
+        super("Google Scholar Search Endpoint",
+                "Google Scholar Search",
                 "http(s?)://scholar\\.google\\.com/citations\\?mauthors\\=(.*)\\&hl=en\\&view_op\\=search_authors",
                 null, 86400L);
         setPriority(PRIORITY_MEDIUM);

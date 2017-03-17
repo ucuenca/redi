@@ -302,6 +302,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public String extractSubjects() {
+        endpoints = authorsendpointService.listEndpoints();
         try {
             Repository repository = new SPARQLRepository(constantService.getSPARQLEndpointURL());
             int numAuthors = Integer.parseInt(executeQuery(repository, queriesService.getCountAuthors()).next().getBinding("count").getValue().stringValue());

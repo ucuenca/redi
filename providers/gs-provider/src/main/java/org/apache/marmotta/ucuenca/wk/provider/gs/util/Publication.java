@@ -37,6 +37,10 @@ public class Publication {
     private List<String> authors = new ArrayList<>();
     private List<String> resources = new ArrayList<>();
 
+    public Publication(String url) {
+        this.url = url;
+    }
+
     /**
      * @return the url
      */

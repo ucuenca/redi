@@ -1,2 +1,2 @@
-org.apache.marmotta.ucuenca.wk.provider.gs.GoogleScholarPageProvider
-org.apache.marmotta.ucuenca.wk.provider.gs.GoogleScholarProvider
+org.apache.marmotta.ucuenca.wk.provider.gs.GoogleScholarPublicationProvider
+org.apache.marmotta.ucuenca.wk.provider.gs.GoogleScholarSearchProvider
