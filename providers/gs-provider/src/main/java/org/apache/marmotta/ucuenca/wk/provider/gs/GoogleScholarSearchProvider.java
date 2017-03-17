@@ -19,7 +19,6 @@ package org.apache.marmotta.ucuenca.wk.provider.gs;
 //import com.google.gson.Gson;
 //import com.google.gson.JsonArray;
 import com.google.common.base.Preconditions;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -33,11 +32,12 @@ import java.util.regex.Matcher;
 import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
 import org.apache.marmotta.ldclient.services.provider.AbstractHttpProvider;
-import org.apache.marmotta.ucuenca.wk.endpoint.gs.GoogleScholarEndpoint;
+import org.apache.marmotta.ucuenca.wk.endpoint.gs.GoogleScholarSearchEndpoint;
+import org.apache.marmotta.ucuenca.wk.provider.gs.handler.IHandler;
 import org.apache.marmotta.ucuenca.wk.provider.gs.handler.ProfileHandler;
 import org.apache.marmotta.ucuenca.wk.provider.gs.handler.PublicationHandler;
 import org.apache.marmotta.ucuenca.wk.provider.gs.handler.SearchHandler;
-import org.apache.marmotta.ucuenca.wk.provider.gs.mapper.MapAuthor;
+import org.apache.marmotta.ucuenca.wk.provider.gs.mapper.MapperObjectRDF;
 import org.apache.marmotta.ucuenca.wk.provider.gs.util.Author;
 import org.apache.marmotta.ucuenca.wk.provider.gs.util.Publication;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.BIBO;
@@ -48,30 +48,27 @@ import org.openrdf.model.vocabulary.DCTERMS;
 import org.openrdf.model.vocabulary.FOAF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
+ * <p>
  * Support Google Scholar information as RDF
  * <p/>
  * Author: Santiago Gonzalez
  *
  * @author Xavier Sumba
  */
-public class GoogleScholarProvider extends AbstractHttpProvider {//NOPMD
+public class GoogleScholarSearchProvider extends AbstractHttpProvider {//NOPMD
 
-    public static final String NAME = "Google Scholar Provider";
-    private static Logger log = LoggerFactory.getLogger(GoogleScholarProvider.class);
+//    public static final String NAME = "";
+    private static Logger log = LoggerFactory.getLogger(GoogleScholarSearchProvider.class);
     public static final String SCHOLAR_GOOGLE = "https://scholar.google.com";
     public static final String URI_START_WITH = "http";
     //public static final String PATTERN = "http(s?)://scholar\\.google\\.com/scholar\\?start\\=0\\&q=author\\:%22(.*)%22\\&hl=en\\&as_sdt\\=1%2C15\\&as_vis\\=1(.*)$";
     //public static final String PATTERN = "http(s?)://scholar\\.google\\.com/citations\\?mauthors\\=(.*)\\&hl=en\\&view_op\\=search_authors(.*)$";
 //    public static final String PATTERN = "(http(s?)://scholar\\.google\\.com/citations\\?mauthors\\=(.*)\\&hl=en\\&view_op\\=search_authors);(.*)-(.*)-(.*)-(.*)$";
 
-    private MapAuthor mapper = null;
+    private MapperObjectRDF mapper = null;
 
     private String city;
     private String province;
@@ -109,7 +106,7 @@ public class GoogleScholarProvider extends AbstractHttpProvider {//NOPMD
      */
     @Override
     public String getName() {
-        return NAME;
+        return "Google Scholar Search";
     }
 
     /**
@@ -138,12 +135,12 @@ public class GoogleScholarProvider extends AbstractHttpProvider {//NOPMD
      */
     @Override
     public List<String> buildRequestUrl(String resource, Endpoint endpoint) {
-        Preconditions.checkArgument(endpoint instanceof GoogleScholarEndpoint);
+        Preconditions.checkArgument(endpoint instanceof GoogleScholarSearchEndpoint);
         Matcher m = endpoint.getUriPatternCompiled().matcher(resource);
         String stringSearch = null;
         String baseResource = "";
-        if (endpoint instanceof GoogleScholarEndpoint) {
-            GoogleScholarEndpoint gsEndpoint = ((GoogleScholarEndpoint) endpoint);
+        if (endpoint instanceof GoogleScholarSearchEndpoint) {
+            GoogleScholarSearchEndpoint gsEndpoint = ((GoogleScholarSearchEndpoint) endpoint);
             city = gsEndpoint.getCity();
             province = gsEndpoint.getProvince();
             ies = gsEndpoint.getIes();
@@ -153,7 +150,7 @@ public class GoogleScholarProvider extends AbstractHttpProvider {//NOPMD
         }
         if (m.find()) {
             stringSearch = m.group(2);
-            mapper = new MapAuthor(stringSearch.replace("+", " "), baseResource);
+            mapper = new MapperObjectRDF(stringSearch.replace("+", " "), baseResource);
         }
         return Collections.singletonList(resource);
     }
@@ -164,12 +161,12 @@ public class GoogleScholarProvider extends AbstractHttpProvider {//NOPMD
         try { //NOPMD
             log.debug("Request Successful to {0}", requestUrl);
 
-            DefaultHandler handler = null;
+            IHandler handler = null;
 
             // Extract information of authors if they have a gs profile.
             if (requestUrl.contains("https://scholar.google.com/citations?mauthors=")) {
                 handler = new SearchHandler();
-                extract(input, handler);
+                handler.extract(input);
                 author = chooseCorrectAuthor(((SearchHandler) handler).getResults());
                 if (author != null) {
                     urls.add(author.getProfile() + "&cstart=0&pagesize=100");
@@ -177,7 +174,7 @@ public class GoogleScholarProvider extends AbstractHttpProvider {//NOPMD
             } else if (requestUrl.contains("https://scholar.google.com/citations?user=") && author != null) {
                 // Extract url of publications from author's profile
                 handler = new ProfileHandler(author);
-                extract(input, handler);
+                handler.extract(input);
                 boolean isDone = true;
                 int maxPub = Integer.parseInt(requestUrl.substring(requestUrl.indexOf("start=") + 6, requestUrl.indexOf("&pagesize"))) + 100;
                 if (author.getNumPublications() == maxPub) {
@@ -194,14 +191,14 @@ public class GoogleScholarProvider extends AbstractHttpProvider {//NOPMD
                 }
             } else if (requestUrl.contains("https://scholar.google.com/citations?view_op=view_citation")) {
                 // Extract information of each publication URL
-                Publication p = new Publication();
-                p.setUrl(requestUrl);
-                extract(input, new PublicationHandler(p));
+                Publication p = new Publication(requestUrl);
+                handler = new PublicationHandler(p);
+                handler.extract(input);
                 triples.addAll(mapper.map(p));
             }
 
         } catch (MalformedURLException | SAXException | InterruptedException | IllegalArgumentException | IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(GoogleScholarProvider.class.getName()).log(Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GoogleScholarSearchProvider.class.getName()).log(Level.SEVERE, null, ex);
         }
 //<editor-fold defaultstate="collapsed" desc="old code">
 ////////////////////////////////////////////////////////
@@ -271,32 +268,6 @@ public class GoogleScholarProvider extends AbstractHttpProvider {//NOPMD
             }
         }
         return null;
-    }
-
-    private void sleep(int ms) throws InterruptedException {
-        Thread.sleep(ms);
-    }
-
-    private void extract(InputStream input, DefaultHandler handler) throws MalformedURLException, SAXException, InterruptedException {
-        int tries = 0;
-        while (true) {
-            try {
-                XMLReader xr = XMLReaderFactory.createXMLReader("org.ccil.cowan.tagsoup.Parser");
-
-                xr.setContentHandler(handler);
-                InputSource is = new InputSource(input);
-                is.setEncoding("iso-8859-1");
-                xr.parse(is);
-                sleep(5000);
-                break;
-            } catch (IOException e) {
-                tries++;
-                log.error(String.format("TRIES: %s \n", tries), e);
-                final int two_hour = 2 * 60 * 60 * 1000;
-                log.info("WAITING TWO HOURS....");
-                sleep(two_hour);
-            }
-        }
     }
 
 }

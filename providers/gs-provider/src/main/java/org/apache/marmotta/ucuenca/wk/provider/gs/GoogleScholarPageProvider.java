@@ -148,7 +148,7 @@ public class GoogleScholarPageProvider extends AbstractHttpProvider{
             for (GSresult d : gsresultlist) {
                 json.add( gson.toJsonTree(d).getAsJsonObject() );
             }
-            JSONtoRDF parser = new JSONtoRDF(resource, GoogleScholarProvider.MAPPINGSCHEMA, json, triples);
+            JSONtoRDF parser = new JSONtoRDF(resource, GoogleScholarSearchProvider.MAPPINGSCHEMA, json, triples);
             try {
             	parser.parse();
             }catch(Exception e) {

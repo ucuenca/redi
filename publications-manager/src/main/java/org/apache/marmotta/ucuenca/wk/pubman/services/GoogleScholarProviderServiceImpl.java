@@ -21,10 +21,10 @@ package org.apache.marmotta.ucuenca.wk.pubman.services;
 //import java.io.FileInputStream;
 //import java.io.FileNotFoundException;
 //import java.io.FileOutputStream;
+import com.google.common.base.Preconditions;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -39,19 +39,21 @@ import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
-import org.apache.marmotta.ucuenca.wk.commons.service.DistanceService;
-import org.apache.marmotta.ucuenca.wk.commons.service.KeywordsService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
-import org.apache.marmotta.ucuenca.wk.endpoint.gs.GoogleScholarEndpoint;
+import org.apache.marmotta.ucuenca.wk.endpoint.gs.GoogleScholarPublicationEndpoint;
+import org.apache.marmotta.ucuenca.wk.endpoint.gs.GoogleScholarSearchEndpoint;
 import org.apache.marmotta.ucuenca.wk.pubman.api.GoogleScholarProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
 import org.apache.marmotta.ucuenca.wk.pubman.exceptions.PubException;
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
+import org.openrdf.query.MalformedQueryException;
+import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
 import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
 
 /**
@@ -72,21 +74,15 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
     private QueriesService queriesService;
 
     @Inject
-    private ConstantService pubVocabService;
-
-    @Inject
     private CommonsServices commonsServices;
     @Inject
     private ConstantService constantService;
 
     @Inject
-    private DistanceService distance;
-
-    @Inject
-    private KeywordsService kservice;
-
-    @Inject
     private SparqlFunctionsService sparqlFunctionsService;
+
+    @Inject
+    private SparqlService sparqlService;
 
     private String authorGraph;
     private String endpointsGraph;
@@ -94,9 +90,6 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
     private String resourceGoogle;
 
     private int processpercent = 0;
-
-    @Inject
-    private SparqlService sparqlService;
 
     @PostConstruct
     public void init() {
@@ -128,7 +121,6 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
             int processedPersons = 0;
 
             RepositoryConnection conUri = null;
-            ClientResponse response = null;
             for (Map<String, Value> map : resultAllAuthors) {
                 processedPersons++;
                 log.info("Autores procesados con GoogleScholar: " + processedPersons + " de " + allAuthors);
@@ -141,6 +133,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                     do {
                         try {
                             boolean existNativeAuthor = false;
+                            ClientResponse response = null;
                             nameToFind = commonsServices.removeAccents(priorityFindQueryBuilding(priorityToFind, firstName, lastName).replace("_", "+"));
 
                             //String URL_TO_FIND = "https://scholar.google.com/scholar?start=0&q=author:%22" + nameToFind + "%22&hl=en&as_sdt=1%2C15&as_vis=1";
@@ -151,7 +144,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
 
                                 List<Map<String, Value>> iesInfo = sparqlService.query(QueryLanguage.SPARQL, queriesService.getIESInfobyAuthor(authorResource));
                                 if (!iesInfo.isEmpty()) {
-                                    GoogleScholarEndpoint endpoint = (GoogleScholarEndpoint) ldClient.getEndpoint(URL_TO_FIND);
+                                    GoogleScholarSearchEndpoint endpoint = (GoogleScholarSearchEndpoint) ldClient.getEndpoint(URL_TO_FIND);
                                     endpoint.setCity(iesInfo.get(0).get("city").stringValue());
                                     endpoint.setProvince(iesInfo.get(0).get("province").stringValue());
                                     endpoint.setIes(iesInfo.get(0).get("ies").stringValue().split(","));
@@ -190,6 +183,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                             }
 
                             if (dataretrieve) {
+                                Preconditions.checkNotNull(response);
                                 conUri = ModelCommons.asRepository(response.getData()).getConnection();
                                 conUri.begin();
 
@@ -228,7 +222,37 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                     // ask if there are publications left to extract for authorresource
                     List<Map<String, Value>> publications = sparqlService.query(QueryLanguage.SPARQL, queriesService.getPublicationsURLGS(googleGraph, authorResource));
                     for (Map<String, Value> publication : publications) {
-                        log.info(publication.get("url").stringValue());
+                        String url = publication.get("url").stringValue();
+                        String author = publication.get("author").stringValue();
+                        try {
+                            GoogleScholarPublicationEndpoint pubEndpoint = (GoogleScholarPublicationEndpoint) ldClient.getEndpoint(url);
+                            pubEndpoint.setAuthorURI(author);
+                            log.info(url);
+                            ClientResponse response = ldClient.retrieveResource(url);
+                            if (response.getData().size() > 0 && response.getHttpStatus() == 200) {
+
+                                conUri = ModelCommons.asRepository(response.getData()).getConnection();
+                                conUri.begin();
+
+                                String getTriples = queriesService.getRetrieveResourceQuery();
+                                TupleQueryResult result = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getTriples).evaluate();
+                                while (result.hasNext()) {
+                                    BindingSet bind = result.next();
+                                    String s = bind.getValue("x").stringValue().trim();
+                                    String p = bind.getValue("y").stringValue().trim();
+                                    String o = bind.getValue("z").stringValue().trim();
+
+                                    String publicationInsertQuery = buildInsertQuery(googleGraph, s, p, o);
+                                    updatePub(publicationInsertQuery);
+
+                                }
+                                conUri.commit();
+                                conUri.close();
+                            }
+
+                        } catch (DataRetrievalException | RepositoryException | MalformedQueryException | QueryEvaluationException ex) {
+                            log.error("Something went wrong when extracting publication {}. Error: {}", url, ex.getMessage());
+                        }
                     }
                 } else if (false) {
                     // include process for update based on the number of publications
@@ -236,10 +260,12 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                 }
 
             }
+            ldClient.shutdown();
             return "Extracction successful";
         } catch (MarmottaException ex) {
-            java.util.logging.Logger.getLogger(GoogleScholarProviderServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            log.error("Something went wrong. Error: {}", ex.getMessage());
         }
+
         return "Something is going wrong";
     }
 
