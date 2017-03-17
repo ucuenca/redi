@@ -22,14 +22,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.marmotta.ucuenca.wk.provider.gs.util.Publication;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 /**
  *
  * @author Xavier Sumba <xavier.sumba93@ucuenca.ec>
  */
 @SuppressWarnings("PMD.CyclomaticComplexity")
-public final class PublicationHandler extends DefaultHandler implements IHandler {
+public final class PublicationHandler extends IHandler {
 
     private static final String ANCHOR = "a";
     private static final String DIV = "div";

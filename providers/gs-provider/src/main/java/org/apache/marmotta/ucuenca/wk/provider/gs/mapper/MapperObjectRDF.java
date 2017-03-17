@@ -9,7 +9,7 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.marmotta.ucuenca.wk.provider.gs.GoogleScholarProvider;
+import org.apache.marmotta.ucuenca.wk.provider.gs.GoogleScholarSearchProvider;
 import org.apache.marmotta.ucuenca.wk.provider.gs.util.Author;
 import org.apache.marmotta.ucuenca.wk.provider.gs.util.Publication;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.BIBO;
@@ -30,17 +30,32 @@ import org.openrdf.model.vocabulary.RDF;
  * @author Xavier Sumba <xavier.sumba93@ucuenca.ec>
  */
 @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity"})
-public class MapAuthor {
+public class MapperObjectRDF {
 
     private final ValueFactory factory = ValueFactoryImpl.getInstance();
     private final List fields = Arrays.asList("name", "affiliation", "profile", "img", "numCitations",
             "title", "description", "pages", "publisher", "conference", "journal", "volume", "issue", "date");
     private final URI authorURI;
-    private final String resourceUri;
+    private final String publicationResource;
+    private final String authorResource;
+    private final String bookResource;
 
-    public MapAuthor(String author, String baseResource) {
-        resourceUri = baseResource;
-        authorURI = generateURI(String.format("%sauthor/", resourceUri), author);
+    /**
+     * Map an object to RDF. Constraints author should the name searched or an
+     * URI.
+     *
+     * @param author
+     * @param baseResource
+     */
+    public MapperObjectRDF(String author, String baseResource) {
+        publicationResource = String.format("%spublication/", baseResource);
+        authorResource = String.format("%sauthor/", baseResource);
+        bookResource = String.format("%sbook/", baseResource);
+        if (author.matches("^https?:\\/\\/.*")) {
+            authorURI = factory.createURI(author);
+        } else {
+            authorURI = generateURI(String.format("%sauthor/", baseResource), author);
+        }
     }
 
     /**
@@ -53,7 +68,7 @@ public class MapAuthor {
     public Model map(Publication publication) throws IllegalArgumentException, IllegalAccessException {
         Model triples = new TreeModel();
 
-        URI publicationURI = generateURI(String.format("%sgscholar/publication/", resourceUri), StringEscapeUtils.unescapeJava(publication.getTitle().toUpperCase()));
+        URI publicationURI = generateURI(publicationResource, StringEscapeUtils.unescapeJava(publication.getTitle().toUpperCase()));
         // Parse common attributes
         parseObject(triples, publication, publicationURI);
 
@@ -68,7 +83,7 @@ public class MapAuthor {
         // Add authors if exist
         if (publication.getAuthors().size() > 0) {
             String authorName = publication.getAuthors().get(0);
-            URI creatorURI = generateURI(String.format("%sgscholar/author/", resourceUri), authorName);
+            URI creatorURI = generateURI(authorResource, authorName);
             triples.add(new StatementImpl(publicationURI, DCTERMS.CREATOR, creatorURI));
 
             if (!authorURI.equals(creatorURI)) {
@@ -77,7 +92,7 @@ public class MapAuthor {
             }
             for (int i = 1; i < publication.getAuthors().size(); i++) {
                 authorName = publication.getAuthors().get(i);
-                URI contributorURI = generateURI(String.format("%sgscholar/author/", resourceUri), authorName);
+                URI contributorURI = generateURI(authorResource, authorName);
                 triples.add(new StatementImpl(publicationURI, DCTERMS.CONTRIBUTOR, contributorURI));
                 if (!authorURI.equals(contributorURI)) {
                     triples.add(new StatementImpl(contributorURI, FOAF.NAME, factory.createLiteral(authorName)));
@@ -88,7 +103,7 @@ public class MapAuthor {
 
         // Add book resoruces/literals if exist
         if (publication.getBook() != null) {
-            URI bookURI = generateURI(String.format("%sgscholar/book/", resourceUri), publication.getBook());
+            URI bookURI = generateURI(bookResource, publication.getBook());
 
             triples.add(new StatementImpl(publicationURI, DCTERMS.IS_PART_OF, bookURI));
             triples.add(new StatementImpl(bookURI, RDF.TYPE, BIBO.BOOK));
@@ -115,7 +130,7 @@ public class MapAuthor {
 
         parseObject(triples, author, authorURI);
         for (String area : author.getAreas()) {
-            triples.add(new StatementImpl(authorURI, GoogleScholarProvider.MAPPING_SCHEMA.get("areas"), factory.createLiteral(area)));
+            triples.add(new StatementImpl(authorURI, GoogleScholarSearchProvider.MAPPING_SCHEMA.get("areas"), factory.createLiteral(area)));
         }
         triples.add(new StatementImpl(authorURI, RDF.TYPE, FOAF.PERSON));
 
@@ -135,7 +150,7 @@ public class MapAuthor {
                     Value object = null;
 
                     if (f.getType() == String.class) {
-                        object = String.valueOf(f.get(o)).startsWith(GoogleScholarProvider.URI_START_WITH)
+                        object = String.valueOf(f.get(o)).startsWith(GoogleScholarSearchProvider.URI_START_WITH)
                                 ? factory.createURI(String.valueOf(f.get(o)))
                                 : factory.createLiteral(String.valueOf(f.get(o)).trim());
                     } else if (f.getType() == Integer.TYPE) {
@@ -144,16 +159,16 @@ public class MapAuthor {
 
                     if ("numCitations".equals(f.getName())) { // Specific case to store just citations greater that 0
                         if (Integer.parseInt(object.stringValue()) > 0) {
-                            triples.add(new StatementImpl(resource, GoogleScholarProvider.MAPPING_SCHEMA.get(f.getName()), object));
+                            triples.add(new StatementImpl(resource, GoogleScholarSearchProvider.MAPPING_SCHEMA.get(f.getName()), object));
                         }
                     } else if ("profile".equals(f.getName())) { // Specific case to store profile url from an Author as Literal using bibo:uri
-                        triples.add(new StatementImpl(resource, GoogleScholarProvider.MAPPING_SCHEMA.get(f.getName()),
+                        triples.add(new StatementImpl(resource, GoogleScholarSearchProvider.MAPPING_SCHEMA.get(f.getName()),
                                 factory.createLiteral(String.valueOf(f.get(o)))));
                     } else if ("img".equals(f.getName())) {
-                        triples.add(new StatementImpl(resource, GoogleScholarProvider.MAPPING_SCHEMA.get(f.getName()), object));
+                        triples.add(new StatementImpl(resource, GoogleScholarSearchProvider.MAPPING_SCHEMA.get(f.getName()), object));
                         triples.add(new StatementImpl(factory.createURI(object.stringValue()), RDF.TYPE, FOAF.IMAGE));
                     } else {
-                        triples.add(new StatementImpl(resource, GoogleScholarProvider.MAPPING_SCHEMA.get(f.getName()), object));
+                        triples.add(new StatementImpl(resource, GoogleScholarSearchProvider.MAPPING_SCHEMA.get(f.getName()), object));
                     }
                 }
 

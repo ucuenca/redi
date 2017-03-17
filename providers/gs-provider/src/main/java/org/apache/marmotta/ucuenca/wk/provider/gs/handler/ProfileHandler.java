@@ -18,18 +18,17 @@ package org.apache.marmotta.ucuenca.wk.provider.gs.handler;
 
 import java.util.Arrays;
 import java.util.List;
-import org.apache.marmotta.ucuenca.wk.provider.gs.GoogleScholarProvider;
+import org.apache.marmotta.ucuenca.wk.provider.gs.GoogleScholarSearchProvider;
 import org.apache.marmotta.ucuenca.wk.provider.gs.util.Author;
 import org.apache.marmotta.ucuenca.wk.provider.gs.util.Publication;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 /**
  *
  * @author Xavier Sumba <xavier.sumba93@ucuenca.ec>
  */
-public final class ProfileHandler extends DefaultHandler implements IHandler {
+public final class ProfileHandler extends IHandler {
 
     private boolean numEntriesDiv = false;
     private boolean isPublication = false;
@@ -48,8 +47,8 @@ public final class ProfileHandler extends DefaultHandler implements IHandler {
         } else if (attributes.getType("class") != null && attributes.getValue("class").equals("gsc_a_tr")) {
             isPublication = true;
         } else if (isPublication && ANCHOR.equals(localName) && attributes.getValue("class").equals("gsc_a_at")) {
-            Publication pub = new Publication();
-            pub.setUrl(GoogleScholarProvider.SCHOLAR_GOOGLE + attributes.getValue("href"));
+            String url = GoogleScholarSearchProvider.SCHOLAR_GOOGLE + attributes.getValue("href");
+            Publication pub = new Publication(url);
             author.addPublications(pub);
         }
     }
