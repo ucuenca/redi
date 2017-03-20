@@ -36,7 +36,11 @@ public interface ConstantService {
 
     String getEndpointsGraph();
 
+    String getGoogleScholarGraph();
+
     String getAuthorResource();
+
+    String getGoogleScholarResource();
 
     String getEndpointResource();
 

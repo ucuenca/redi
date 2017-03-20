@@ -30,9 +30,9 @@ import org.apache.marmotta.ldclient.exception.DataRetrievalException;
 //import org.apache.marmotta.ldclient.model.ClientResponse;
 //import org.apache.marmotta.ldclient.services.ldclient.LDClient;
 import org.apache.marmotta.ldclient.services.provider.AbstractHttpProvider;
-import org.apache.marmotta.ucuenca.wk.provider.gs.util.GSXMLHandler;
-import org.apache.marmotta.ucuenca.wk.provider.gs.util.GSresult;
-import org.apache.marmotta.ucuenca.wk.provider.gs.util.JSONtoRDF;
+import org.apache.marmotta.ucuenca.wk.provider.gs.deprecated.GSXMLHandler;
+import org.apache.marmotta.ucuenca.wk.provider.gs.deprecated.GSresult;
+import org.apache.marmotta.ucuenca.wk.provider.gs.deprecated.JSONtoRDF;
 //import org.jdom2.Document;
 //import org.jdom2.Element;
 //import org.jdom2.JDOMException;
@@ -148,7 +148,7 @@ public class GoogleScholarPageProvider extends AbstractHttpProvider{
             for (GSresult d : gsresultlist) {
                 json.add( gson.toJsonTree(d).getAsJsonObject() );
             }
-            JSONtoRDF parser = new JSONtoRDF(resource, GoogleScholarProvider.MAPPINGSCHEMA, json, triples);
+            JSONtoRDF parser = new JSONtoRDF(resource, GoogleScholarSearchProvider.MAPPINGSCHEMA, json, triples);
             try {
             	parser.parse();
             }catch(Exception e) {

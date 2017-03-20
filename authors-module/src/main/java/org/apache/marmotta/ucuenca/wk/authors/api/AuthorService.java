@@ -22,15 +22,17 @@ import org.apache.marmotta.ucuenca.wk.authors.exceptions.UpdateException;
 
 public interface AuthorService {
 
-   
     /**
-     * Run update with all Active EndPoints  MultipleEP
+     * Run update with all Active EndPoints MultipleEP
+     *
      * @return
      * @throws DaoException
-     * @throws UpdateException 
+     * @throws UpdateException
      */
-    String runAuthorsUpdateMultipleEP() throws DaoException, UpdateException;
-    
-    
-    
+    String extractAuthors() throws DaoException, UpdateException;
+
+    String extractSubjects();
+
+    String searchDuplicates();
+
 }

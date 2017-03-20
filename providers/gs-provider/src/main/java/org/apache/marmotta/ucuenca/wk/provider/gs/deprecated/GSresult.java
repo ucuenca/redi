@@ -14,7 +14,7 @@
  * email	   - microbuff@hotmail.com
  * ***********************************************
  */
-package org.apache.marmotta.ucuenca.wk.provider.gs.util;
+package org.apache.marmotta.ucuenca.wk.provider.gs.deprecated;
 
 public class GSresult {
 

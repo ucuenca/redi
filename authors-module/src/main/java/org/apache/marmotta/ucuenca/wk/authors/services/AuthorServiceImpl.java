@@ -70,6 +70,7 @@ import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.openrdf.model.Statement;
 import org.openrdf.model.vocabulary.DCTERMS;
 import org.openrdf.model.vocabulary.OWL;
+import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
@@ -102,7 +103,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Inject
     private CommonsServices commonsService;
-    
+
     @Inject
     private DistanceService distanceService;
 
@@ -122,13 +123,13 @@ public class AuthorServiceImpl implements AuthorService {
     private int processpercent = 0;
 
     private static int upperLimitKey = 5;
-    
+
     private PrintWriter out;
-    
+
     private static double tolerance = 0.9;
-    
+
     private Set<String> setExplored = new HashSet<String>();
-    
+
     @PostConstruct
     public void init() {
         BufferedReader input = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("helpers/stoplist.txt")));
@@ -140,6 +141,14 @@ public class AuthorServiceImpl implements AuthorService {
             stopwords.addAll(Arrays.asList(words));
         }
         it.close();
+
+//        filterProperties = Arrays.asList("http://www.w3.org/2004/02/skos/core#prefLabel",
+//                "http://www.w3.org/2000/01/rdf-schema#comment",
+//                "http://www.w3.org/ns/dcat#contactPoint",
+//                "http://www.w3.org/ns/dcat#landingPage",
+//                "http://vivoweb.org/ontology/core#freetextKeyword",
+//                "http://www.w3.org/2002/07/owl#disjointWith", "http://rdaregistry.info",
+//                "http://www.w3.org/2000/01/rdf-schema#label", "http://purl.org");
     }
 
     /**
@@ -151,7 +160,7 @@ public class AuthorServiceImpl implements AuthorService {
      */
     //private String documentProperty = "http://rdaregistry.info";
     @Override
-    public String runAuthorsUpdateMultipleEP() throws DaoException, UpdateException {
+    public String extractAuthors() throws DaoException, UpdateException {
         endpoints = authorsendpointService.listEndpoints();
 
         Boolean someUpdate = false;
@@ -161,7 +170,7 @@ public class AuthorServiceImpl implements AuthorService {
                 if (Boolean.parseBoolean(endpoint.getStatus())) {
                     try {
                         log.info("Extraction started for endpoint {}.", endpoint.getName());
-                        response.append(extractAuthors(endpoint));
+                        response.append(AuthorServiceImpl.this.extractAuthors(endpoint));
                     } catch (RepositoryException ex) {
                         log.error("ERROR: Excepcion de repositorio. Problemas en conectarse a " + endpoint.getName());
                     } catch (MalformedQueryException ex) {
@@ -174,8 +183,8 @@ public class AuthorServiceImpl implements AuthorService {
                     someUpdate = true;
                 }
             }
-            response.append(extractSubjects());
-            response.append(searchDuplicates());
+//            response.append(extractSubjects());
+//            response.append(searchDuplicates());
 
             if (!someUpdate) {
                 return "Any  Endpoints";
@@ -228,38 +237,44 @@ public class AuthorServiceImpl implements AuthorService {
                             String predicate = tripletsResource.getValue("y").stringValue();
                             String object = tripletsResource.getValue("z").stringValue();
 
-                            if (predicate.contains("http://rdaregistry.info")
-                                    || predicate.contains("http://www.w3.org/2000/01/rdf-schema#label")
-                                    || object.contains("http://xmlns.com/foaf/0.1/Agent")) {
-                                continue;
+                            String insert = "";
+                            switch (predicate) {
+                                case "http://xmlns.com/foaf/0.1/givenName":// store foaf:firstName
+                                case "http://xmlns.com/foaf/0.1/firstName":
+                                    insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, FOAF.firstName.toString(), object);
+                                    sparqlFunctionsService.updateAuthor(insert);
+                                    break;
+                                case "http://xmlns.com/foaf/0.1/familyName": // store foaf:lastName
+                                case "http://xmlns.com/foaf/0.1/lastName":
+                                    insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, FOAF.lastName.toString(), object);
+                                    sparqlFunctionsService.updateAuthor(insert);
+                                    break;
+                                case "http://xmlns.com/foaf/0.1/name": // store foaf:name
+                                    insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, FOAF.name.toString(), object);
+                                    sparqlFunctionsService.updateAuthor(insert);
+                                    break;
+                                case "http://www.w3.org/2002/07/owl#sameAs": // If sameas found include the provenance
+                                    SparqlEndpoint newEndpoint = matchWithProvenance(object);
+                                    if (newEndpoint != null) {
+                                        String provenanceQueryInsert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, DCTERMS.PROVENANCE.toString(), newEndpoint.getResourceId());
+                                        sparqlFunctionsService.updateAuthor(provenanceQueryInsert);
+                                    }
+                                    insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, OWL.SAMEAS.toString(), object);
+                                    sparqlFunctionsService.updateAuthor(insert);
+                                    break;
+                                default:
                             }
-                            if ("http://xmlns.com/foaf/0.1/givenName".equals(predicate)) { // Save foaf:givenName as foaf:firstName
-                                String insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, FOAF.firstName.toString(), object);
-                                sparqlFunctionsService.updateAuthor(insert);
-                                continue;
-                            }
-                            if ("http://xmlns.com/foaf/0.1/familyName".equals(predicate)) { // Save foaf:familyName as foaf:lastName
-                                String insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, FOAF.lastName.toString(), object);
-                                sparqlFunctionsService.updateAuthor(insert);
-                                continue;
-                            }
-                            if (predicate.contains(OWL.SAMEAS.toString())) { // If sameas found include the provenance
-                                SparqlEndpoint newEndpoint = matchWithProvenance(object);
-                                if (newEndpoint != null) {
-                                    String provenanceQueryInsert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, DCTERMS.PROVENANCE.toString(), newEndpoint.getResourceId());
-                                    sparqlFunctionsService.updateAuthor(provenanceQueryInsert);
-                                }
-                            }
-                            if (!tripletasResult.hasNext()) { // Insert sameAs abd provenance in last iteration
-                                String sameAs = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, OWL.SAMEAS.toString(), resource);
-                                sparqlFunctionsService.updateAuthor(sameAs);
-
-                                String provenanceQueryInsert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, DCTERMS.PROVENANCE.toString(), endpoint.getResourceId());
-                                sparqlFunctionsService.updateAuthor(provenanceQueryInsert);
-                            }
-                            String queryAuthorInsert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, predicate, object);
-                            sparqlFunctionsService.updateAuthor(queryAuthorInsert);
                         }
+                        // Insert sameAs, provenance, and rdf:type foaf:Person
+                        String sameAs = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, OWL.SAMEAS.toString(), resource);
+                        sparqlFunctionsService.updateAuthor(sameAs);
+
+                        String provenanceQueryInsert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, DCTERMS.PROVENANCE.toString(), endpoint.getResourceId());
+                        sparqlFunctionsService.updateAuthor(provenanceQueryInsert);
+
+                        String foafPerson = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, RDF.TYPE.toString(), FOAF.Person.toString());
+                        sparqlFunctionsService.updateAuthor(foafPerson);
+
                         conn.commit();
                         conn.close();
                         repository.shutDown();
@@ -285,7 +300,9 @@ public class AuthorServiceImpl implements AuthorService {
         return String.format("Carga Finalizada para %s endpoint. Revise Archivo Log Para mas detalles \n", endpoint.getName());
     }
 
-    private String extractSubjects() {
+    @Override
+    public String extractSubjects() {
+        endpoints = authorsendpointService.listEndpoints();
         try {
             Repository repository = new SPARQLRepository(constantService.getSPARQLEndpointURL());
             int numAuthors = Integer.parseInt(executeQuery(repository, queriesService.getCountAuthors()).next().getBinding("count").getValue().stringValue());
@@ -343,21 +360,22 @@ public class AuthorServiceImpl implements AuthorService {
         }
         return "Subjects Extracted";
     }
-    
-    private String searchDuplicates() {
+
+    @Override
+    public String searchDuplicates() {
         try {
             String allAuthorsQuery = queriesService.getAuthors();
             Repository repository = new SPARQLRepository("http://localhost:8080/sparql/select");
             TupleQueryResult allAuthors = executeQuery(repository, allAuthorsQuery);
-            
+
             out = new PrintWriter("ListAuthorsPubs.txt");
             int authorCount = 0;
             while (allAuthors.hasNext()) {
                 String authorResource = allAuthors.next().getBinding("s").getValue().stringValue();
                 authorCount++;
-                
+
                 out.println(" Author Number: " + authorCount);
-                
+
                 //Encontramos los nombres del autor actual
                 String getNamesQuery = queriesService.getAuthorDataQuery(constantService.getAuthorsGraph(), authorResource);
                 TupleQueryResult namesAuthor = executeQuery(repository, getNamesQuery);
@@ -377,11 +395,11 @@ public class AuthorServiceImpl implements AuthorService {
                 while (sameAsAuthors.hasNext()) { // for each author
                     String sameAsResource = sameAsAuthors.next().getBinding("o").getValue().stringValue();
                     sameAuthors.add(sameAsResource);
-                    
+
                 }
                 //Encontramos los que pueden ser iguales
                 sameAuthors = findSameAuthor(repository, sameAuthors, authorResource, firstName, lastName);
-                
+
                 //Agrego la propiedad sameAs a cada uno de los autores identificados
                 for (String sameAuthorResource : sameAuthors) {
                     if (!authorResource.equals(sameAuthorResource)) {
@@ -405,11 +423,11 @@ public class AuthorServiceImpl implements AuthorService {
         }
         return "Duplicate authors searched";
     }
-    
+
     private Set<String> findSameAuthor(Repository repository, Set<String> setResult, String authorResource, String nombres, String apellidos) {
-        
+
         setExplored = new HashSet<String>();
-            
+
         String givenName = cleaningTextAuthor(nombres);
         String lastName = cleaningTextAuthor(apellidos);
 
@@ -430,22 +448,22 @@ public class AuthorServiceImpl implements AuthorService {
         }*/
 
         // 1. Busca 4 nombres sin acentos
-        setResult.addAll(searchSameAuthor(setResult, repository, authorResource, nombres, apellidos, 
-        givenName, lastName, false));
+        setResult.addAll(searchSameAuthor(setResult, repository, authorResource, nombres, apellidos,
+                givenName, lastName, false));
 
         // 2. primer nombre y apellidos
-        setResult.addAll(searchSameAuthor(setResult, repository, authorResource, nombres, apellidos, 
-            givenName1, lastName, true));
+        setResult.addAll(searchSameAuthor(setResult, repository, authorResource, nombres, apellidos,
+                givenName1, lastName, true));
 
         // 3. segundo nombre y apellidos
         if (givenName2 != null && !givenName2.trim().isEmpty()) {
-            setResult.addAll(searchSameAuthor(setResult, repository, authorResource, nombres, apellidos, 
-            givenName2, lastName, false));
+            setResult.addAll(searchSameAuthor(setResult, repository, authorResource, nombres, apellidos,
+                    givenName2, lastName, false));
 
             // 5. segundo nombre y primer apellido (si hay mas de un nombre)
             setResult.addAll(searchSameAuthor(setResult, repository, authorResource, nombres, apellidos,
                     givenName2, lastName1, true));
-            
+
             // 8. segunda inicial y apellidos (si hay mas de un nombre)
             String inicial = "" + givenName2.trim().charAt(0);
             setResult.addAll(searchSameAuthor(setResult, repository, authorResource, inicial, apellidos,
@@ -454,12 +472,12 @@ public class AuthorServiceImpl implements AuthorService {
             // 9. segunda inicial y primer apellido (si hay mas de un apellido)
             setResult.addAll(searchSameAuthor(setResult, repository, authorResource, inicial, apellidos,
                     inicial, lastName1, true));
-            
+
         }
 
         // 4. primer nombre y primer apellido (si hay más de un nombre y un apellido)
         setResult.addAll(searchSameAuthor(setResult, repository, authorResource, nombres, apellidos,
-            givenName1, lastName1, true));
+                givenName1, lastName1, true));
 
         // 6. primera inicial y apellidos (si hay mas de un nombre y el primer nombre no es inicial solamente)
         if (givenName1 != null && !givenName1.trim().isEmpty()) {
@@ -475,15 +493,15 @@ public class AuthorServiceImpl implements AuthorService {
         }
 
         return setResult;
-        
-    } 
-    
-    private Set<String> searchSameAuthor(Set<String> setResult, Repository repository, String authorResource, String nombresOrig, String apellidosOrig, 
+
+    }
+
+    private Set<String> searchSameAuthor(Set<String> setResult, Repository repository, String authorResource, String nombresOrig, String apellidosOrig,
             String givenName, String lastName, boolean semanticCheck) {
 
         try {
             String similarAuthorResource = "";
-            String otherGivenName = ""; 
+            String otherGivenName = "";
             String otherLastName = "";
             String queryNames = queriesService.getAuthorsByName(
                     constantService.getAuthorsGraph(), "^" + givenName + "$", "^" + lastName + ".*$");
@@ -494,25 +512,25 @@ public class AuthorServiceImpl implements AuthorService {
                 similarAuthorResource = next.getBinding("subject").getValue().stringValue();
                 otherGivenName = next.getBinding("firstName").getValue().stringValue();
                 otherLastName = next.getBinding("lastName").getValue().stringValue();
-                
+
                 boolean equalNames = false;
-                if (!setResult.contains(similarAuthorResource) && !authorResource.equals(similarAuthorResource) 
+                if (!setResult.contains(similarAuthorResource) && !authorResource.equals(similarAuthorResource)
                         && !setExplored.contains(similarAuthorResource)) {
                     out.println(" ");
                     equalNames = getEqualNames(authorResource, similarAuthorResource, nombresOrig, apellidosOrig, otherGivenName, otherLastName, semanticCheck, repository);
                     if (equalNames && semanticCheck) {
-                        
+
                         out.println("URI: " + authorResource + " URI2: " + similarAuthorResource);
                         out.println("Nombres originales:   " + nombresOrig);
                         out.println("Apellidos originales: " + apellidosOrig);
                         out.println("Nombres nuevos 2:     " + otherGivenName);
                         out.println("Apellidos nuevos 2:   " + otherLastName);
                         out.println("Sintactic equal?: " + equalNames);
-                        
+
                         equalNames = semanticCheck(authorResource, similarAuthorResource, repository);
-                        
+
                         out.println("Semantic check?: " + semanticCheck);
-        
+
                         out.println("Semantic check Result: " + equalNames);
                         out.println(" ");
                     }
@@ -521,7 +539,7 @@ public class AuthorServiceImpl implements AuthorService {
                     }
                     setExplored.add(similarAuthorResource);
                 }
-                
+
             }
             return setResult;
         } catch (QueryEvaluationException | RepositoryException | MalformedQueryException ex) {
@@ -530,8 +548,8 @@ public class AuthorServiceImpl implements AuthorService {
 
         return setResult;
     }
-    
-    public boolean getEqualNames(String authorResource, String similarAuthorResource, String nombresOrig, String apellidosOrig, String otherGivenName, String otherLastName, boolean semanticCheck, Repository repository){
+
+    public boolean getEqualNames(String authorResource, String similarAuthorResource, String nombresOrig, String apellidosOrig, String otherGivenName, String otherLastName, boolean semanticCheck, Repository repository) {
         boolean equal = false;
         int one = 1;
         //Getting the original names
@@ -548,7 +566,7 @@ public class AuthorServiceImpl implements AuthorService {
         if (numberLastNames > one) {
             lastName2 = removeAccents(apellidosOrig.split(" ")[1]).toLowerCase();
         }
-        
+
         //Getting the other names
         String otherGivenName1 = removeAccents(otherGivenName.split(" ")[0]).toLowerCase();
         String otherGivenName2 = null;
@@ -561,15 +579,15 @@ public class AuthorServiceImpl implements AuthorService {
         if (otherLastName.split(" ").length > one) {
             otherLastName2 = removeAccents(otherLastName.split(" ")[1]).toLowerCase();
         }
-        
-        if (lastName2!=null && lastName2.length() == one && otherLastName2!=null && otherLastName2.length() >= one) {
+
+        if (lastName2 != null && lastName2.length() == one && otherLastName2 != null && otherLastName2.length() >= one) {
             otherLastName2 = otherLastName2.substring(0, 1);
         }
-        
+
         //Compare given names and surnames
-        equal = compareNames(givenName1, givenName2, lastName1, lastName2, 
+        equal = compareNames(givenName1, givenName2, lastName1, lastName2,
                 otherGivenName1, otherGivenName2, otherLastName1, otherLastName2);
-        
+
         // 1. Busca 4 nombres sin acentos
         // 2. primer nombre y apellidos
         // 3. segundo nombre y apellidos
@@ -579,17 +597,16 @@ public class AuthorServiceImpl implements AuthorService {
         // 7. primera inicial y primer apellido (si hay más de un apellido y el nombre no era solo inicial)
         // 8. segunda inicial y apellidos (si hay mas de un nombre)
         // 9. segunda inicial y primer apellido (si hay mas de un apellido)
-                
         return equal;
-        
+
     }
-    
-    public boolean compareNames(String givenName1, String givenName2, String lastName1, String lastName2, 
+
+    public boolean compareNames(String givenName1, String givenName2, String lastName1, String lastName2,
             String otherGivenName1, String otherGivenName2, String otherLastName1, String otherLastName2) {
         boolean result = false;
-        
-        if (givenName2 != null  && lastName2 != null) {
-            
+
+        if (givenName2 != null && lastName2 != null) {
+
             if (otherGivenName2 != null && otherLastName2 != null) {
                 if (compareExactStrings(givenName1, otherGivenName1) && compareExactStrings(givenName2, otherGivenName2)
                         && compareExactStrings(lastName1, otherLastName1) && compareExactStrings(lastName2, otherLastName2)) {
@@ -608,8 +625,8 @@ public class AuthorServiceImpl implements AuthorService {
             } else if (otherGivenName2 == null && otherLastName2 == null
                     && (compareExactStrings(otherGivenName1, givenName1) || compareExactStrings(otherGivenName1, givenName2))
                     && compareExactStrings(lastName1, otherLastName1)) {
-                    return true;
-                
+                return true;
+
             }
 
         } else if (givenName2 == null && lastName2 != null) {
@@ -625,15 +642,14 @@ public class AuthorServiceImpl implements AuthorService {
                 }
             } else if (otherGivenName2 == null && otherLastName2 != null) {
                 if (compareExactStrings(otherGivenName1, givenName1)
-                        && compareExactStrings(lastName1, otherLastName1) && compareExactStrings(lastName2, otherLastName2) 
-                   ) {
+                        && compareExactStrings(lastName1, otherLastName1) && compareExactStrings(lastName2, otherLastName2)) {
                     return true;
 
                 }
-            } else if (otherGivenName2 == null && otherLastName2 == null &&
-                    compareExactStrings(otherGivenName1, givenName1) && compareExactStrings(lastName1, otherLastName1)) {
-                    return true;
-                
+            } else if (otherGivenName2 == null && otherLastName2 == null
+                    && compareExactStrings(otherGivenName1, givenName1) && compareExactStrings(lastName1, otherLastName1)) {
+                return true;
+
             }
 
         } else if (givenName2 != null && lastName2 == null) {
@@ -642,11 +658,11 @@ public class AuthorServiceImpl implements AuthorService {
                         && compareExactStrings(lastName1, otherLastName1)) {
                     return true;
                 }
-            } else if (otherGivenName2 == null && 
-                    (compareExactStrings(otherGivenName1, givenName1) || compareExactStrings(otherGivenName1, givenName2))
-                        && compareExactStrings(lastName1, otherLastName1)) {
-                    return true;
-                
+            } else if (otherGivenName2 == null
+                    && (compareExactStrings(otherGivenName1, givenName1) || compareExactStrings(otherGivenName1, givenName2))
+                    && compareExactStrings(lastName1, otherLastName1)) {
+                return true;
+
             }
 
         } else if (givenName2 == null && lastName2 == null) {
@@ -655,26 +671,26 @@ public class AuthorServiceImpl implements AuthorService {
                         && compareExactStrings(lastName1, otherLastName1)) {
                     return true;
                 }
-            } else if (otherGivenName2 == null && compareExactStrings(otherGivenName1, givenName1) 
+            } else if (otherGivenName2 == null && compareExactStrings(otherGivenName1, givenName1)
                     && compareExactStrings(lastName1, otherLastName1)) {
-                    return true;
-                
+                return true;
+
             }
 
         }
         return result;
     }
-    
+
     public boolean semanticCheck(String authorResource, String similarAuthorResource, Repository repository) {
         boolean result = false;
         try {
             double coefficient = 1.1;
-            
+
             String getQueryKeys1 = queriesService.getAuthorsKeywordsQuery(authorResource);
             TupleQueryResult keywords1 = executeQuery(repository, getQueryKeys1);
             String getQueryKeys2 = queriesService.getAuthorsKeywordsQuery(similarAuthorResource);
             TupleQueryResult keywords2 = executeQuery(repository, getQueryKeys2);
-            
+
             int cont = 0;
             List<String> keywordsAuthor1 = new ArrayList<>();
             while (keywords1.hasNext() && cont <= upperLimitKey) {
@@ -685,7 +701,7 @@ public class AuthorServiceImpl implements AuthorService {
                     cont++;
                 }
             }
-            
+
             cont = 0;
             List<String> keywordsAuthor2 = new ArrayList<>();
             while (keywords2.hasNext() && cont <= upperLimitKey) {
@@ -697,29 +713,30 @@ public class AuthorServiceImpl implements AuthorService {
                 }
             }
             int lowerLimit = upperLimitKey - 2;
-            if (!keywordsAuthor1.isEmpty() && !keywordsAuthor2.isEmpty() && keywordsAuthor1.size() >= lowerLimit 
+            if (!keywordsAuthor1.isEmpty() && !keywordsAuthor2.isEmpty() && keywordsAuthor1.size() >= lowerLimit
                     && keywordsAuthor2.size() >= lowerLimit) {
                 coefficient = distanceService.semanticComparisonValue(keywordsAuthor1, keywordsAuthor2);
-                
+
                 out.println("Keywords Author 1: " + keywordsAuthor1.toString());
                 out.println("Keywords Author 2: " + keywordsAuthor2.toString());
                 out.println("Distance: " + coefficient);
                 out.println(" ");
-                
+
                 if (coefficient < tolerance) {
                     result = true;
                 } else {
-                    result = false;}
+                    result = false;
+                }
             } else {
                 out.println("Not enough keywords to compare.");
             }
-            
+
         } catch (QueryEvaluationException | RepositoryException | MalformedQueryException ex) {
             log.error("Cannot find similar authors for duplicate authors DSpace. Error: {}", ex);
         }
         return result;
     }
-    
+
     public boolean compareExactStrings(String string1, String string2) {
         return (string1.matches("^" + string2 + "$") || string2.matches("^" + string1 + "$"));
     }
@@ -736,7 +753,7 @@ public class AuthorServiceImpl implements AuthorService {
         }//end for i
         return output;
     }
-    
+
     public String removeAccents(String value) {
         value = value.replace(".", "");
         value = value.replace("??", ".*").trim();
@@ -802,7 +819,7 @@ public class AuthorServiceImpl implements AuthorService {
         return constantService.getAuthorResource() + endpointURI.substring(endpointURI.lastIndexOf('/') + 1);
     }
 
-    private List<String> findTopics(List<String> documents, int numTopics, int numWords) {
+    private List<String>[] findTopics(List<String> documents, int numTopics, int numWords) {
         Set<String> topics = new TreeSet<>();
 
         //File stoplist = new File(getClass().getClassLoader().getResource("/helpers/stoplist.txt"));
@@ -832,7 +849,16 @@ public class AuthorServiceImpl implements AuthorService {
                 topics.add(String.valueOf(word));
             }
         }
-        return new ArrayList<>(topics);
+        Set<String> topicsToStore = new HashSet<>();
+        // store 2 for each topic because sometimes words are repeated among topics
+        for (Object[] words : lda.getTopWords(2)) {
+            for (Object word : words) {
+                topicsToStore.add(String.valueOf(word));
+            }
+        }
+        return new List[]{
+            new ArrayList<>(topics),
+            new ArrayList<>(topicsToStore)};
     }
 
     /*
@@ -855,7 +881,8 @@ public class AuthorServiceImpl implements AuthorService {
 
     private void combineSubjects(String localSubject, Set<String> documents, Set<String> subjects) {//, Set<String> mentions) {
         // find topics and weight frequent words
-        List<String> topics = findTopics(new ArrayList(documents), 5, 15);
+        List<String>[] resultTopics = findTopics(new ArrayList(documents), 5, 15);
+        List<String> topics = resultTopics[0];
         Set<String> selectedSubjects = new HashSet<>(getWeightedSubjects(subjects, topics));
 
         // Insert subjects
@@ -867,6 +894,16 @@ public class AuthorServiceImpl implements AuthorService {
                 } catch (UpdateException ex) {
                     log.error("Cannot insert new subjects. Error: {}", ex.getMessage());
                 }
+            }
+        }
+
+        // Insert some topics
+        for (String topic : resultTopics[1]) {
+            try {
+                String insertTopic = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localSubject, FOAF.topic.toString(), topic.trim().toUpperCase());
+                sparqlFunctionsService.updateAuthor(insertTopic);
+            } catch (UpdateException ex) {
+                log.error("Cannot insert topics. Error: {}", ex.getMessage());
             }
         }
         log.info("Resource {} has {} documents and {} subjects ", localSubject, documents.size(), selectedSubjects.size());

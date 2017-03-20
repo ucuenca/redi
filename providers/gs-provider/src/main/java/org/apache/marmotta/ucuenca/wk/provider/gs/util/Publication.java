@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +37,10 @@ public class Publication {
     private List<String> authors = new ArrayList<>();
     private List<String> resources = new ArrayList<>();
 
+    public Publication(String url) {
+        this.url = url;
+    }
+
     /**
      * @return the url
      */
@@ -61,7 +66,10 @@ public class Publication {
      * @param title the title to set
      */
     public void setTitle(String title) {
-        this.title = title;
+        if (this.title == null) {
+            this.title = "";
+        }
+        this.title += StringEscapeUtils.escapeJava(title);
     }
 
     /**
@@ -138,7 +146,26 @@ public class Publication {
      * @param description the description to set
      */
     public void setDescription(String description) {
-        this.description = description;
+        if (description.startsWith("Abstract")) {
+            this.description = description.replaceFirst("Abstract", "").trim();
+        } else if (description.startsWith("ABSTRACT")) {
+            this.description = description.replaceFirst("ABSTRACT", "").trim();
+        } else if (description.startsWith("abstract")) {
+            this.description = description.replaceFirst("abstract", "").trim();
+        } else if (description.startsWith("Resumen")) {
+            this.description = description.replaceFirst("Resumen", "").trim();
+        } else if (description.startsWith("RESUMEN")) {
+            this.description = description.replaceFirst("RESUMEN", "").trim();
+        } else {
+            this.description = description;
+        }
+
+        if (this.description.startsWith(".")) {
+            this.description = this.description.replace(".", "").trim();
+        }
+        if (this.description.startsWith(":")) {
+            this.description = this.description.replace(":", "").trim();
+        }
     }
 
     /**
@@ -287,8 +314,10 @@ public class Publication {
                 case "Book":
                     this.setBook(value);
                     break;
+                case "Scholar articles":
+                    break;
                 default:
-                    log.info("ADD TO MAP => " + entry.getKey() + ":" + entry.getValue());
+                    log.info("ADD TO MAP => {}:{} for resource '{}'", entry.getKey(), entry.getValue(), url);
                     break;
             }
         }

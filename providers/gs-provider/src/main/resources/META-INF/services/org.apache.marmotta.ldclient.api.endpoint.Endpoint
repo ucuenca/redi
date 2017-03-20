@@ -1,2 +1,2 @@
-org.apache.marmotta.ucuenca.wk.endpoint.gs.GoogleScholarEndpoint
-org.apache.marmotta.ucuenca.wk.endpoint.gs.GoogleScholarPageEndpoint
+org.apache.marmotta.ucuenca.wk.endpoint.gs.GoogleScholarPublicationEndpoint
+org.apache.marmotta.ucuenca.wk.endpoint.gs.GoogleScholarSearchEndpoint

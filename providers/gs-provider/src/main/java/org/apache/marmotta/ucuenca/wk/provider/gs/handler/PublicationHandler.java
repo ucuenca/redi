@@ -14,37 +14,38 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.apache.marmotta.ucuenca.wk.provider.gs.util;
+package org.apache.marmotta.ucuenca.wk.provider.gs.handler;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import org.apache.marmotta.ucuenca.wk.provider.gs.util.Publication;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 /**
  *
  * @author Xavier Sumba <xavier.sumba93@ucuenca.ec>
  */
 @SuppressWarnings("PMD.CyclomaticComplexity")
-public final class PublicationHandler extends DefaultHandler implements IHandler {
-    
+public final class PublicationHandler extends IHandler {
+
     private static final String ANCHOR = "a";
     private static final String DIV = "div";
-    
+
     private boolean isPublication = false;
     private boolean extract = false;
     private boolean isField = false;
     private boolean isValue = false;
+    private boolean isTitle = false;
     private String key;
     private final ConcurrentHashMap<String, String> fields = new ConcurrentHashMap<>();
     private final Publication publication;
-    
+
     public PublicationHandler(Publication publication) {
         this.publication = publication;
     }
-    
+
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         if (localName.equals("div") && (attributes.getType("id") != null || attributes.getType("class") != null)) {
@@ -54,8 +55,11 @@ public final class PublicationHandler extends DefaultHandler implements IHandler
                     isPublication = true;
                     break;
                 case "gsc_title_gg":
+                    extract = isPublication;
+                    break;
                 case "gsc_title":
                     extract = isPublication;
+                    isTitle = true;
                     break;
                 case "gsc_field":
                     isField = true;
@@ -72,7 +76,7 @@ public final class PublicationHandler extends DefaultHandler implements IHandler
             publication.addResources(attributes.getValue("href"));
         }
     }
-    
+
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (extract && (ANCHOR.equals(localName) || DIV.equals(localName))) {
@@ -83,15 +87,15 @@ public final class PublicationHandler extends DefaultHandler implements IHandler
             isValue = false;
         }
     }
-    
+
     @Override
     public void endDocument() throws SAXException {
         publication.map(fields);
     }
-    
+
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
-        if (extract) {
+        if (extract && isTitle) {
             publication.setTitle(new String(ch, start, length));
         } else if (isField) {
             key = new String(ch, start, length);
@@ -102,10 +106,10 @@ public final class PublicationHandler extends DefaultHandler implements IHandler
             fields.replace(key, fields.get(key) + new String(ch, start, length));
         }
     }
-    
+
     @Override
     public List<Publication> getResults() {
         return Arrays.asList(publication);
     }
-    
+
 }
