@@ -56,6 +56,7 @@ public class PubWebService {
     public static final String GET_PUBLICATIONS_DBLP = "/publications_dblp";
     public static final String GET_PUBLICATIONS_MA = "/publications_ma";
     public static final String GET_PUBLICATIONS_AK = "/publications_ak";
+    public static final String GET_PUBLICATIONS_DSPACE = "/publications_dspace";
     public static final String LOAD_PUBLICATIONS = "/publications_provider_graph";
     public static final String GET_AUTHOR_DATA = "/pubsearch";
     public static final String GET_REPORT = "/report";
@@ -117,6 +118,18 @@ public class PubWebService {
         String params = resultType;
         log.debug("Publications Task", params);
         String result = commonService.GetDataFromProvidersServiceMicrosoftAcademics();
+        return Response.ok().entity(result).build();
+    }
+    
+    /*
+     * Get Publications Data from Source and Load into Provider Graph
+     */
+    @POST
+    @Path(GET_PUBLICATIONS_DSPACE)
+    public Response readPublicationsPostDspace(@QueryParam("Endpoint") String resultType) {
+        String params = resultType;
+        log.debug("Publications Task", params);
+        String result = commonService.GetDataFromProvidersServiceDspace();
         return Response.ok().entity(result).build();
     }
 

@@ -29,6 +29,8 @@ public interface CommonService {
     String GetDataFromProvidersServiceGoogleScholar();
 
     String GetDataFromProvidersServiceAcademicsKnowledge();
+    
+    String GetDataFromProvidersServiceDspace();
 
     JsonArray searchAuthor(String uri);
 
