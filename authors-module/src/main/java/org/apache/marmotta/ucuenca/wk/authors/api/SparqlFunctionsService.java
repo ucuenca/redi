@@ -12,6 +12,7 @@ import org.openrdf.repository.RepositoryConnection;
 /**
  *
  * @author Fernando B.
+ * @author Jose Cullcay
  * CEDIA
  */
 public interface SparqlFunctionsService {
