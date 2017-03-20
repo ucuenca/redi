@@ -15,17 +15,25 @@ public interface QueriesService {
 
     String getAuthors();
     
-    String getAuthorDataQuery(String graph, String authorUri);
+    String getAuthorsTuplesQuery(String subject);
+    
+    String getAuthorDeleteQuery(String id);
+    
+    String getAuthorDataQuery(String authorUri);
     
     String getAuthorsByName(String graph, String firstName, String lastName);
 
     String getSameAsAuthors(String authorResource);
+    
+    String getSameAsAuthors(String graph, String authorResource);
 
     String getCountPersonQuery(String graph);
 
     String getCountAuthors();
 
     String getCountSubjects(String authorResource);
+    
+    String getArticlesFromDspaceQuery(String graph, String person);
 
     String getLimit(String limit);
 
@@ -189,6 +197,8 @@ public interface QueriesService {
     String getAskProcessAlreadyAuthorProvider(String providerGraph, String authorResource);
 
     String getAuthorsKeywordsQuery(String resource);
+    
+    String getAuthorSubjectQuery(String resource);
 
     /**
      * Get All Data sources from UTPL ENDPOINT

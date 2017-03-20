@@ -33,6 +33,11 @@ public class ConstantServiceImpl implements ConstantService {
     public String getAuthorsGraph() {
         return confService.getBaseContext() + "authors";
     }
+    
+    @Override
+    public String getSameAuthorsGraph() {
+        return confService.getBaseContext() + "sameAuthors";
+    }
 
     @Override
     public String getEndpointsGraph() {
@@ -128,6 +133,11 @@ public class ConstantServiceImpl implements ConstantService {
     @Override
     public String getGSGraph() {
         return getWkhuskaGraph() + getSelectedGraph("googlescholar");
+    }
+    
+    @Override
+    public String getDspaceGraph() {
+        return getWkhuskaGraph() + getSelectedGraph("dspace");
     }
 
 //    @Override

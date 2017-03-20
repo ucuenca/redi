@@ -49,6 +49,9 @@ public class CommonServiceImpl implements CommonService {
 //
     @Inject
     DBLPProviderService dblpProviderServiceInt;
+    
+    @Inject
+    DspaceProviderServiceImpl dspaceProviderService;
 
     @Inject
     ReportsService reportService;
@@ -95,6 +98,13 @@ public class CommonServiceImpl implements CommonService {
         Thread GoogleProvider = new Thread(googleProviderService);
         GoogleProvider.start();
         return "Data Provider Google Scholar are extracted in background.   Please review main.log file for details";
+    }
+    
+    @Override
+    public String GetDataFromProvidersServiceDspace() {
+        Thread DspaceProvider = new Thread(dspaceProviderService);
+        DspaceProvider.start();
+        return "Data Provider Dspace are extracted in background.   Please review main.log file for details";
     }
 
     @Override

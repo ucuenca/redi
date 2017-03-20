@@ -33,6 +33,8 @@ public interface ConstantService {
     String getBaseURI();
 
     String getAuthorsGraph();
+    
+    String getSameAuthorsGraph();
 
     String getEndpointsGraph();
 
@@ -82,6 +84,8 @@ public interface ConstantService {
     String getMAGraph();
 
     String getGSGraph();
+    
+    String getDspaceGraph();
 
     String getClusterGraph();
 

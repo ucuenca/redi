@@ -204,8 +204,8 @@ public class QueriesServiceImpl implements QueriesService {
     @Override
     public String getEndpointUpdateStatusQuery(String... args) {
         String status = con.uc("status");
-        return " DELETE { " + getGraphString(args[0]) + " { "
-                + "     <" + args[1] + "> " + status + " ?status "
+        return " DELETE { " + getGraphString(args[0]) 
+                + "   {   <" + args[1] + "> " + status + " ?status "
                 + " }} "
                 + " INSERT  { "
                 + getGraphString(args[0]) + "  {"
@@ -237,7 +237,16 @@ public class QueriesServiceImpl implements QueriesService {
                 + "   }"
                 + "}";
     }
-
+    
+    @Override
+    public String getSameAsAuthors(String graph, String authorResource) {
+        return PREFIXES
+                + "SELECT ?o WHERE {  GRAPH <" + graph + ">  {     "
+                + "     <" + authorResource + "> owl:sameAs  ?o . "
+                + "   }"
+                + "}";
+    }
+    
     @Override
     public String getCountPersonQuery(String graph) {
         return PREFIXES
@@ -249,6 +258,13 @@ public class QueriesServiceImpl implements QueriesService {
                 + " } }"
                 + " GROUP BY ?s"
                 + " HAVING (count(?docu)>1)}";
+    }
+    
+    @Override
+    public String getArticlesFromDspaceQuery(String graph, String person) {
+        return PREFIXES
+                + " select distinct ?docu where { " + getGraphString(graph) 
+                + "{   ?docu a bibo:Article. ?docu ?c <" + person + "> .    }   } ";
     }
 
     @Override
@@ -327,18 +343,33 @@ public class QueriesServiceImpl implements QueriesService {
                 + "                }} ";
 
     }
-
+    
     @Override
-    public String getAuthorDataQuery(String graph, String authorUri) {
+    public String getAuthorsTuplesQuery(String subject) {
+        return PREFIXES
+                + " SELECT distinct ?p ?o WHERE { " 
+                + con.getGraphString(con.getAuthorsGraph())
+                + "  {<" + subject + "> ?p ?o.    }  }   ";
+    }
+    
+    @Override
+    public String getAuthorDeleteQuery(String id) {
+        return "DELETE { " + con.getGraphString(con.getAuthorsGraph()) + "  { <" + id + "> ?p ?o }} WHERE { "
+                + con.getGraphString(con.getAuthorsGraph())
+                + " {   <" + id + "> ?p ?o .      }  } ";
+    }
+    
+    @Override
+    public String getAuthorDataQuery(String authorUri) {
         authorUri = " <" + authorUri + "> ";
         return PREFIXES
-                + " SELECT distinct * WHERE { " + getGraphString(graph) + " {    "
+                + " SELECT distinct * WHERE { " + con.getGraphString(con.getAuthorsGraph()) + "   {     "
                 + authorUri + " a foaf:Person. "
                 + authorUri + " foaf:name ?name."
                 + authorUri + " foaf:firstName ?fname. "
                 + authorUri + " foaf:lastName ?lname. "
                 + authorUri + " dct:provenance ?provenance. "
-                + " } } ";
+                + " }  } ";
 
     }
 
@@ -470,6 +501,12 @@ public class QueriesServiceImpl implements QueriesService {
     public String getAuthorsKeywordsQuery(String resource) {
         return PREFIXES + " SELECT DISTINCT ?keyword FROM <" + con.getAuthorsGraph() + "> "
                 + " WHERE { <" + resource + "> dct:subject ?keyword. } limit 50";
+    }
+    
+    @Override
+    public String getAuthorSubjectQuery(String resource) {
+        return PREFIXES + " SELECT DISTINCT ?keyword FROM <" + con.getAuthorsGraph() + "> "
+                + " WHERE { <" + resource + "> foaf:topic ?keyword. } limit 50";
     }
 
     @Override
