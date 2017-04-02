@@ -366,7 +366,19 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public String searchDuplicates() {
         try {
-            String allAuthorsQuery = queriesService.getAuthors();
+            String allAuthorsQuery = queriesService.getAuthors(); 
+                    /*"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX foaf: <http://xmlns.com/foaf/0.1/>  PREFIX owl: <http://www.w3.org/2002/07/owl#>  PREFIX dct: <http://purl.org/dc/terms/>  PREFIX mm: <http://marmotta.apache.org/vocabulary/sparql-functions#>  PREFIX dcat: <http://www.w3.org/ns/dcat#>  PREFIX bibo: <http://purl.org/ontology/bibo/> PREFIX dc: <http://purl.org/dc/elements/1.1/> "
+                    + "SELECT distinct ?s WHERE {  "
+                    + "GRAPH  <http://ucuenca.edu.ec/wkhuska/authors> {     "
+                    + " ?s a foaf:Person.    ?s dct:provenance ?endpoint."
+                    + " {"
+                    + "    SELECT * { "
+                    + "        	GRAPH <http://ucuenca.edu.ec/wkhuska/endpoints> { "
+                    + "              ?endpoint uc:name \"UCUENCA\"^^xsd:string . "
+                    + "            } "
+                    + "        } "
+                    + " }"
+                    + "}}";*/
             Repository repository = new SPARQLRepository(constantService.getSPARQLEndpointURL());
             TupleQueryResult allAuthors = executeQuery(repository, allAuthorsQuery);
             
@@ -602,7 +614,7 @@ public class AuthorServiceImpl implements AuthorService {
                 if (!setResult.contains(similarAuthorResource) && !authorResource.equals(similarAuthorResource) 
                         && !setExplored.contains(similarAuthorResource)) {
                     out.println(" ");
-                    equalNames = getEqualNames(authorResource, similarAuthorResource, nombresOrig, apellidosOrig, otherGivenName, otherLastName, semanticCheck, repository);
+                    equalNames = getEqualNames(nombresOrig, apellidosOrig, otherGivenName, otherLastName, semanticCheck, repository);
                     if (equalNames && semanticCheck) {
                         
                         out.println("URI: " + authorResource + " URI2: " + similarAuthorResource);
@@ -634,7 +646,7 @@ public class AuthorServiceImpl implements AuthorService {
         return setResult;
     }
     
-    public boolean getEqualNames(String authorResource, String similarAuthorResource, String nombresOrig, String apellidosOrig, String otherGivenName, String otherLastName, boolean semanticCheck, Repository repository){
+    public boolean getEqualNames(String nombresOrig, String apellidosOrig, String otherGivenName, String otherLastName, boolean semanticCheck, Repository repository){
         boolean equal = false;
         //Getting the original names
         String givenName1 = removeAccents(nombresOrig.split(" ")[0]).toLowerCase();
