@@ -223,9 +223,9 @@ public class QueriesServiceImpl implements QueriesService {
         return PREFIXES
                 + "SELECT ?s WHERE {"
                 + "  GRAPH  <" + con.getAuthorsGraph() + "> { "
-                + "    ?s a foaf:Person. "
+                + "    ?s a foaf:Person. ?s foaf:name ?name. " 
                 + "   }"
-                + "}";
+                + "} order by desc(strlen(str(?name)))";
     }
 
     @Override
@@ -337,7 +337,8 @@ public class QueriesServiceImpl implements QueriesService {
                 //</editor-fold>
                 + " { select ?status "
                 + "     where { " + getGraphString(endpointsgraph) + " {"
-                + "     ?provenance <http://ucuenca.edu.ec/ontology#status> ?status "
+                + "     ?provenance <http://ucuenca.edu.ec/ontology#status> ?status. "
+                //+ "     ?provenance <http://ucuenca.edu.ec/ontology#name> \"UCUENCA\"^^xsd:string ."
                 + " }}} filter (regex(?status,\"true\")) "
                 // + "filter (mm:fulltext-search(?name,\"Víctor Saquicela\")) "
                 + "                }} ";
