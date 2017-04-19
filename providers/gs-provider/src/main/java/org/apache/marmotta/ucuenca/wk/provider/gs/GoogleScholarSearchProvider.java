@@ -16,8 +16,6 @@
  */
 package org.apache.marmotta.ucuenca.wk.provider.gs;
 
-//import com.google.gson.Gson;
-//import com.google.gson.JsonArray;
 import com.google.common.base.Preconditions;
 import java.io.InputStream;
 import java.net.MalformedURLException;
