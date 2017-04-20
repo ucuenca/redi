@@ -14,17 +14,17 @@ public interface QueriesService {
     String getAuthorsDataQuery(String graph, String endpointsgraph);
 
     String getAuthors();
-    
+
     String getAuthorsTuplesQuery(String subject);
-    
+
     String getAuthorDeleteQuery(String id);
-    
+
     String getAuthorDataQuery(String authorUri);
-    
+
     String getAuthorsByName(String graph, String firstName, String lastName);
 
     String getSameAsAuthors(String authorResource);
-    
+
     String getSameAsAuthors(String graph, String authorResource);
 
     String getCountPersonQuery(String graph);
@@ -32,7 +32,7 @@ public interface QueriesService {
     String getCountAuthors();
 
     String getCountSubjects(String authorResource);
-    
+
     String getArticlesFromDspaceQuery(String graph, String person);
 
     String getLimit(String limit);
@@ -197,7 +197,7 @@ public interface QueriesService {
     String getAskProcessAlreadyAuthorProvider(String providerGraph, String authorResource);
 
     String getAuthorsKeywordsQuery(String resource);
-    
+
     String getAuthorSubjectQuery(String resource);
 
     /**
@@ -265,4 +265,8 @@ public interface QueriesService {
     String getEndPointUriByName(String nameEndpint);
 
     String getAuthorPublicationsQueryFromGenericProvider(String... args);
+
+    String getPublicationsScholar(String resource);
+
+    String getProfileScholarAuthor();
 }

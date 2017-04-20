@@ -56,7 +56,7 @@ public class GoogleScholarProfileProvider extends AbstractHttpProvider {
 
             if (noMorePublications) {
                 for (Publication p : author.getPublications()) {
-                    model.add(vf.createStatement(vf.createURI(resourceUri), REDI.GSCHOLAR_PUB, vf.createLiteral(p.getUrl())));
+                    model.add(vf.createStatement(vf.createURI(resourceUri), REDI.GSCHOLAR_URl, vf.createLiteral(p.getUrl())));
                 }
             }
             return urls;

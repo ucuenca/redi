@@ -19,22 +19,20 @@ package org.apache.marmotta.ucuenca.wk.pubman.webservices;
 
 import com.google.gson.JsonArray;
 import java.util.List;
-import org.slf4j.Logger;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
-
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Response;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
-import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
+import javax.ws.rs.core.Response;
 import org.apache.marmotta.ucuenca.wk.commons.service.TranslationService;
+import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
+import org.slf4j.Logger;
 
 @Path("/pubman")
 @ApplicationScoped
@@ -81,7 +79,7 @@ public class PubWebService {
     public Response readPublicationsPostGoogle(@QueryParam("Endpoint") String resultType) {
         String params = resultType;
         log.debug("Publications Task", params);
-        String result = commonService.GetDataFromProvidersServiceGoogleScholar();
+        String result = commonService.GetDataFromProvidersServiceGoogleScholar(true);
         return Response.ok().entity(result).build();
     }
 
