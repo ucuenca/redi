@@ -234,6 +234,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + "SELECT ?o WHERE {"
                 + "  GRAPH <" + con.getAuthorsGraph() + "> { "
                 + "     <" + authorResource + "> owl:sameAs  ?o . "
+                + "     <" + authorResource + "> a foaf:Person . "
                 + "   }"
                 + "}";
     }
@@ -376,6 +377,12 @@ public class QueriesServiceImpl implements QueriesService {
 
     @Override
     public String getAuthorsByName(String graph, String firstName, String lastName) {
+        int one = 1;
+        String option = ", 'i'";
+        if (firstName.length() == one) {
+            option = "";
+        }
+        
         return PREFIXES
                 + "SELECT distinct ?subject ?name (STR(?fName)  AS ?firstName) (STR(?lName)  AS ?lastName)  WHERE { "
                 + getGraphString(graph) + "{ "
@@ -383,7 +390,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + " foaf:name ?name; "
                 + " foaf:firstName ?fName; "
                 + " foaf:lastName ?lName. "
-                + "    filter(regex(?fName, '" + firstName + "', 'i')). " //"^M$"
+                + "    filter(regex(?fName, '" + firstName + "'" + option + ")). " //"^M$"
                 + "    filter(regex(?lName, '" + lastName + "', 'i')). " //"^Espinoza"
                 + "  } "
                 + "}";
@@ -501,7 +508,7 @@ public class QueriesServiceImpl implements QueriesService {
     @Override
     public String getAuthorsKeywordsQuery(String resource) {
         return PREFIXES + " SELECT DISTINCT ?keyword FROM <" + con.getAuthorsGraph() + "> "
-                + " WHERE { <" + resource + "> dct:subject ?keyword. } limit 50";
+                + " WHERE { <" + resource + "> dct:subject ?keyword. filter(strlen(?keyword) < 41) } limit 50";
     }
     
     @Override
