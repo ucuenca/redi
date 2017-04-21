@@ -99,6 +99,7 @@ function runUpdatePublicationGOOGLE(options) {
 
     var endpoint = "http://example";
     var graphuri = "http://example/data";
+    var update = document.getElementById('updateGoogleScholar').checked;
     var settings = {
         host: options
     }
@@ -112,8 +113,7 @@ function runUpdatePublicationGOOGLE(options) {
         data: JSON.stringify(dataT),
         dataType: "text", //result data type
         contentType: "application/json", // send data type
-        url: settings.host + "pubman/publications_google",
-        //    url:  "http://localhost:8079/marmotta/authors-module/update",
+        url: settings.host + "pubman/publications_google?update=" + update,
         success: function (Result) {
             document.getElementById("imgloading").style.visibility = "hidden";
             alert(Result);
@@ -269,14 +269,14 @@ function runPublicationsCount(options) {
             alert("Error" + data.responseText);
         }
     });
-    
+
 }
 
 /**
-* Method that gets the publications from Dspace
-* @author Jose Luis Cullcay
-* @param {options} options
-*/
+ * Method that gets the publications from Dspace
+ * @author Jose Luis Cullcay
+ * @param {options} options
+ */
 function runUpdatePublicationDspace(options) {
 
     document.getElementById("imgloading").style.visibility = "visible";

@@ -59,10 +59,10 @@ public class PubWebService {
     public static final String GET_AUTHOR_DATA = "/pubsearch";
     public static final String GET_REPORT = "/report";
     public static final String TRANSLATE = "/translate";
+
     /*
      * Get Publications Data from Source and Load into Provider Graph
      */
-
     @POST
     @Path(GET_PUBLICATIONS)
     public Response readPublicationsPost(@QueryParam("Endpoint") String resultType) {
@@ -76,10 +76,9 @@ public class PubWebService {
      */
     @POST
     @Path(GET_PUBLICATIONS_GOOGLE)
-    public Response readPublicationsPostGoogle(@QueryParam("Endpoint") String resultType) {
-        String params = resultType;
-        log.debug("Publications Task", params);
-        String result = commonService.GetDataFromProvidersServiceGoogleScholar(true);
+    public Response readPublicationsPostGoogle(@QueryParam("update") Boolean update) {
+        log.debug("Publications Task, update {}", update);
+        String result = commonService.GetDataFromProvidersServiceGoogleScholar(update);
         return Response.ok().entity(result).build();
     }
 
@@ -118,7 +117,7 @@ public class PubWebService {
         String result = commonService.GetDataFromProvidersServiceMicrosoftAcademics();
         return Response.ok().entity(result).build();
     }
-    
+
     /*
      * Get Publications Data from Source and Load into Provider Graph
      */
