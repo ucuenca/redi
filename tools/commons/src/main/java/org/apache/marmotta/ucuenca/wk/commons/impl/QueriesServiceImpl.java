@@ -204,7 +204,7 @@ public class QueriesServiceImpl implements QueriesService {
     @Override
     public String getEndpointUpdateStatusQuery(String... args) {
         String status = con.uc("status");
-        return " DELETE { " + getGraphString(args[0]) 
+        return " DELETE { " + getGraphString(args[0])
                 + "   {   <" + args[1] + "> " + status + " ?status "
                 + " }} "
                 + " INSERT  { "
@@ -237,7 +237,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + "   }"
                 + "}";
     }
-    
+
     @Override
     public String getSameAsAuthors(String graph, String authorResource) {
         return PREFIXES
@@ -246,7 +246,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + "   }"
                 + "}";
     }
-    
+
     @Override
     public String getCountPersonQuery(String graph) {
         return PREFIXES
@@ -259,11 +259,11 @@ public class QueriesServiceImpl implements QueriesService {
                 + " GROUP BY ?s"
                 + " HAVING (count(?docu)>1)}";
     }
-    
+
     @Override
     public String getArticlesFromDspaceQuery(String graph, String person) {
         return PREFIXES
-                + " select distinct ?docu where { " + getGraphString(graph) 
+                + " select distinct ?docu where { " + getGraphString(graph)
                 + "{   ?docu a bibo:Article. ?docu ?c <" + person + "> .    }   } ";
     }
 
@@ -339,26 +339,26 @@ public class QueriesServiceImpl implements QueriesService {
                 + "     where { " + getGraphString(endpointsgraph) + " {"
                 + "     ?provenance <http://ucuenca.edu.ec/ontology#status> ?status "
                 + " }}} filter (regex(?status,\"true\")) "
-                // + "filter (mm:fulltext-search(?name,\"Víctor Saquicela\")) "
+                //+ "filter (mm:fulltext-search(?name,\"Víctor Saquicela\")) "
                 + "                }} ";
 
     }
-    
+
     @Override
     public String getAuthorsTuplesQuery(String subject) {
         return PREFIXES
-                + " SELECT distinct ?p ?o WHERE { " 
+                + " SELECT distinct ?p ?o WHERE { "
                 + con.getGraphString(con.getAuthorsGraph())
                 + "  {<" + subject + "> ?p ?o.    }  }   ";
     }
-    
+
     @Override
     public String getAuthorDeleteQuery(String id) {
         return "DELETE { " + con.getGraphString(con.getAuthorsGraph()) + "  { <" + id + "> ?p ?o }} WHERE { "
                 + con.getGraphString(con.getAuthorsGraph())
                 + " {   <" + id + "> ?p ?o .      }  } ";
     }
-    
+
     @Override
     public String getAuthorDataQuery(String authorUri) {
         authorUri = " <" + authorUri + "> ";
@@ -502,7 +502,7 @@ public class QueriesServiceImpl implements QueriesService {
         return PREFIXES + " SELECT DISTINCT ?keyword FROM <" + con.getAuthorsGraph() + "> "
                 + " WHERE { <" + resource + "> dct:subject ?keyword. } limit 50";
     }
-    
+
     @Override
     public String getAuthorSubjectQuery(String resource) {
         return PREFIXES + " SELECT DISTINCT ?keyword FROM <" + con.getAuthorsGraph() + "> "
@@ -865,6 +865,26 @@ public class QueriesServiceImpl implements QueriesService {
                 + "GRAPH <" + con.getEndpointsGraph() + "> {"
                 + " <" + enpointId + ">   <" + REDI.DOMAIN + "> \"" + domain + "\""
                 + "}}";
+    }
+
+    @Override
+    public String getPublicationsScholar(String resource) {
+        return PREFIXES
+                + "SELECT ?url WHERE{ GRAPH <" + con.getGoogleScholarGraph() + "> {\n"
+                + "	<" + resource + "> a foaf:Person ;\n"
+                + "    	<" + REDI.GSCHOLAR_URl + "> ?url\n"
+                + "}} ";
+    }
+
+    @Override
+    public String getProfileScholarAuthor() {
+        return PREFIXES
+                + "SELECT ?resource ?profile (COUNT(?url) as ?count) "
+                + "WHERE{ GRAPH <" + con.getGoogleScholarGraph() + "> {\n"
+                + "	?resource a foaf:Person ;\n"
+                + " 		bibo:uri  ?profile;\n"
+                + "    	<" + REDI.GSCHOLAR_URl + "> ?url\n"
+                + "}} GROUP BY ?resource ?profile";
     }
 
 }

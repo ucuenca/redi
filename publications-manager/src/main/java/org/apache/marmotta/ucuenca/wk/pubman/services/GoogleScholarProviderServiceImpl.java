@@ -22,6 +22,7 @@ package org.apache.marmotta.ucuenca.wk.pubman.services;
 //import java.io.FileNotFoundException;
 //import java.io.FileOutputStream;
 import com.google.common.base.Preconditions;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,7 @@ import org.apache.marmotta.ldclient.exception.DataRetrievalException;
 import org.apache.marmotta.ldclient.model.ClientConfiguration;
 import org.apache.marmotta.ldclient.model.ClientResponse;
 import org.apache.marmotta.ldclient.services.ldclient.LDClient;
+import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
@@ -45,6 +47,9 @@ import org.apache.marmotta.ucuenca.wk.endpoint.gs.GoogleScholarSearchEndpoint;
 import org.apache.marmotta.ucuenca.wk.pubman.api.GoogleScholarProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
 import org.apache.marmotta.ucuenca.wk.pubman.exceptions.PubException;
+import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
+import org.openrdf.model.Model;
+import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
@@ -52,6 +57,7 @@ import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
 import org.openrdf.query.TupleQueryResult;
+import org.openrdf.query.UpdateExecutionException;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
@@ -89,6 +95,8 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
     private String googleGraph;
     private String resourceGoogle;
 
+    private boolean update = false;
+
     private int processpercent = 0;
 
     @PostConstruct
@@ -100,7 +108,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
     }
 
     @Override
-    public String runPublicationsProviderTaskImpl(String param) {
+    public String runPublicationsProviderTaskImpl(boolean update) {
 
         try {
             ClientConfiguration conf = new ClientConfiguration();
@@ -254,11 +262,11 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                             log.error("Something went wrong when extracting publication {}. Error: {}", url, ex.getMessage());
                         }
                     }
-                } else if (false) {
-                    // include process for update based on the number of publications
-                    log.info("Update Google Scholar Information");
                 }
-
+            }
+            if (update) {
+                String result = updateAuthors(ldClient);
+                log.info(result);
             }
             ldClient.shutdown();
             return "Extracction successful";
@@ -267,6 +275,75 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
         }
 
         return "Something is going wrong";
+    }
+
+    private String updateAuthors(LDClient ldClient) {
+        String queryAuthorScholar = queriesService.getProfileScholarAuthor();
+        List<Map<String, Value>> authors;
+        int authorsUpdated = 0;
+        try {
+            authors = sparqlService.query(QueryLanguage.SPARQL, queryAuthorScholar);
+        } catch (MarmottaException ex) {
+            log.error("Can't query authors from Google Scholar. Error: {}", ex);
+            return "Can't query authors from Google Scholar. Check log for more detail.";
+        }
+
+        for (Map<String, Value> author : authors) {
+            String resource = author.get("resource").stringValue();
+            String profile = author.get("profile").stringValue() + "&cstart=0&pagesize=100";
+            int oldPublicationsSize = Integer.parseInt(author.get("count").stringValue());
+            Model model;
+            try {
+                model = ldClient.retrieveResource(profile).getData();
+            } catch (DataRetrievalException ex) {
+                log.error("Can't retrieve profile publications. Error: {}", ex);
+                continue;
+            }
+            int newPublicationsSize = model.size();
+            if (newPublicationsSize != oldPublicationsSize) {
+                String queryPublications = queriesService.getPublicationsScholar(resource);
+                List<String> newPublications = new ArrayList<>();
+                try {
+                    for (Map<String, Value> map : sparqlService.query(QueryLanguage.SPARQL, queryPublications)) {
+                        newPublications.add(map.get("url").toString());
+                    }
+                    for (Statement statement : model) {
+                        if (newPublications.contains(statement.getObject().stringValue())) {
+                            newPublications.remove(statement.getObject().stringValue());
+                        } else {
+                            newPublications.add(statement.getObject().stringValue());
+                        }
+                    }
+                } catch (MarmottaException ex) {
+                    log.error("Can't query publications to resource '{}'. Error: {}", resource, ex);
+                    continue;
+                }
+                for (String url : newPublications) {
+                    Model publication;
+                    try {
+                        GoogleScholarPublicationEndpoint pubEndpoint = (GoogleScholarPublicationEndpoint) ldClient.getEndpoint(url);
+                        pubEndpoint.setAuthorURI(resource);
+                        publication = ldClient.retrieveResource(url).getData();
+                    } catch (DataRetrievalException ex) {
+                        log.error("Can't retrieve publication information. Error: {}", ex);
+                        continue;
+                    }
+                    try {
+                        for (Statement s : publication) {
+                            log.debug("{}", s);
+                            sparqlService.update(QueryLanguage.SPARQL,
+                                    buildInsertQuery(googleGraph, s.getSubject().stringValue(),
+                                            s.getPredicate().stringValue(), s.getObject().stringValue()));
+                        }
+                        sparqlService.update(QueryLanguage.SPARQL, buildInsertQuery(googleGraph, resource, REDI.GSCHOLAR_URl.toString(), url));
+                    } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
+                        log.error("Can't insert triple statement. Error: {}", ex);
+                    }
+                }
+                authorsUpdated++;
+            }
+        }
+        return String.format("%s authors have been updated.", authorsUpdated);
     }
 
     public String priorityFindQueryBuilding(int priority, String firstName, String lastName) {
@@ -332,9 +409,17 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
         }
     }
 
+    public boolean isUpdate() {
+        return update;
+    }
+
+    public void setUpdate(boolean update) {
+        this.update = update;
+    }
+
     @Override
     public void run() {
-        runPublicationsProviderTaskImpl("uri");
+        runPublicationsProviderTaskImpl(update);
     }
 
 }

@@ -73,7 +73,7 @@ public class MapperObjectRDF {
         parseObject(triples, publication, publicationURI);
 
         // Store the 
-        triples.add(new StatementImpl(publicationURI, REDI.GSCHOLAR_PUB, factory.createLiteral(publication.getUrl())));
+        triples.add(new StatementImpl(publicationURI, REDI.GSCHOLAR_URl, factory.createLiteral(publication.getUrl())));
 
         // Add types/relation author-publications for
         triples.add(new StatementImpl(publicationURI, RDF.TYPE, BIBO.ACADEMIC_ARTICLE));
@@ -136,7 +136,7 @@ public class MapperObjectRDF {
 
         // Add URLS for each publication
         for (Publication publication : author.getPublications()) {
-            triples.add(new StatementImpl(authorURI, REDI.GSCHOLAR_PUB, factory.createLiteral(publication.getUrl())));
+            triples.add(new StatementImpl(authorURI, REDI.GSCHOLAR_URl, factory.createLiteral(publication.getUrl())));
         }
         return triples;
     }
