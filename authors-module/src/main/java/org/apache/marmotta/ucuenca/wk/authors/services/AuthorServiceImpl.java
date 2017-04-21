@@ -402,7 +402,7 @@ public class AuthorServiceImpl implements AuthorService {
                 
                 out.println(" Author Number: " + authorCount);
                 //bw.write(" Author Number: " + authorCount);
-                
+                log.error(" Author Number: " + authorCount, " Author Number: " + authorCount);
                 //Encontramos los nombres del autor actual
                 String getNamesQuery = queriesService.getAuthorDataQuery(authorResource);
                 TupleQueryResult namesAuthor = executeQuery(repository, getNamesQuery);

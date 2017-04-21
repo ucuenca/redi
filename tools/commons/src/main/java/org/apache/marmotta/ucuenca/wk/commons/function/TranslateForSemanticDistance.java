@@ -212,7 +212,7 @@ public class TranslateForSemanticDistance {
                 e.printStackTrace(new PrintStream(System.out));
 
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(400);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(SemanticDistance.class.getName()).log(Level.SEVERE, null, ex);
                 }
