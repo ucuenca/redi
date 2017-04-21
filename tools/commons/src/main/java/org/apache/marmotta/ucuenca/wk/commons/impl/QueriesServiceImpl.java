@@ -339,7 +339,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + "     where { " + getGraphString(endpointsgraph) + " {"
                 + "     ?provenance <http://ucuenca.edu.ec/ontology#status> ?status "
                 + " }}} filter (regex(?status,\"true\")) "
-                + "filter (mm:fulltext-search(?name,\"Víctor Saquicela\")) "
+                //+ "filter (mm:fulltext-search(?name,\"Víctor Saquicela\")) "
                 + "                }} ";
 
     }
