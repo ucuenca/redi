@@ -19,22 +19,20 @@ package org.apache.marmotta.ucuenca.wk.pubman.webservices;
 
 import com.google.gson.JsonArray;
 import java.util.List;
-import org.slf4j.Logger;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
-
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Response;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
-import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
+import javax.ws.rs.core.Response;
 import org.apache.marmotta.ucuenca.wk.commons.service.TranslationService;
+import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
+import org.slf4j.Logger;
 
 @Path("/pubman")
 @ApplicationScoped
@@ -61,10 +59,10 @@ public class PubWebService {
     public static final String GET_AUTHOR_DATA = "/pubsearch";
     public static final String GET_REPORT = "/report";
     public static final String TRANSLATE = "/translate";
+
     /*
      * Get Publications Data from Source and Load into Provider Graph
      */
-
     @POST
     @Path(GET_PUBLICATIONS)
     public Response readPublicationsPost(@QueryParam("Endpoint") String resultType) {
@@ -78,10 +76,9 @@ public class PubWebService {
      */
     @POST
     @Path(GET_PUBLICATIONS_GOOGLE)
-    public Response readPublicationsPostGoogle(@QueryParam("Endpoint") String resultType) {
-        String params = resultType;
-        log.debug("Publications Task", params);
-        String result = commonService.GetDataFromProvidersServiceGoogleScholar();
+    public Response readPublicationsPostGoogle(@QueryParam("update") Boolean update) {
+        log.debug("Publications Task, update {}", update);
+        String result = commonService.GetDataFromProvidersServiceGoogleScholar(update);
         return Response.ok().entity(result).build();
     }
 
@@ -120,7 +117,7 @@ public class PubWebService {
         String result = commonService.GetDataFromProvidersServiceMicrosoftAcademics();
         return Response.ok().entity(result).build();
     }
-    
+
     /*
      * Get Publications Data from Source and Load into Provider Graph
      */

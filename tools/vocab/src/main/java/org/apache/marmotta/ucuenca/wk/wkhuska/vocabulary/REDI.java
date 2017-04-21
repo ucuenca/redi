@@ -20,7 +20,7 @@ public class REDI {
 
     // Properties
     public static final URI CITATION_COUNT;
-    public static final URI GSCHOLAR_PUB;
+    public static final URI GSCHOLAR_URl;
     public static final URI STATUS;
     public static final URI NAME;
     public static final URI URL;
@@ -36,7 +36,7 @@ public class REDI {
         ValueFactory factory = ValueFactoryImpl.getInstance();
         // Properties
         CITATION_COUNT = factory.createURI(REDI.NAMESPACE, "citationCount");
-        GSCHOLAR_PUB = factory.createURI(REDI.NAMESPACE, "googlescholarURL");
+        GSCHOLAR_URl = factory.createURI(REDI.NAMESPACE, "googlescholarURL");
         STATUS = factory.createURI(REDI.NAMESPACE, "status");
         NAME = factory.createURI(REDI.NAMESPACE, "name");
         URL = factory.createURI(REDI.NAMESPACE, "url");

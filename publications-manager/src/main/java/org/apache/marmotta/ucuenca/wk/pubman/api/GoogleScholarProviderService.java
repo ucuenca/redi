@@ -22,9 +22,9 @@ public interface GoogleScholarProviderService {
     /**
      * Get publications data from source, and load into provider graph
      *
-     * @param param
+     * @param update
      * @return
      */
-    String runPublicationsProviderTaskImpl(String param);
+    String runPublicationsProviderTaskImpl(boolean update);
 
 }

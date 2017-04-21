@@ -35,6 +35,7 @@ public class GoogleScholarPublicationProvider extends AbstractHttpProvider {
     @Override
     protected List<String> buildRequestUrl(String resourceUri, Endpoint endpoint) throws DataRetrievalException {
         Preconditions.checkArgument(endpoint instanceof GoogleScholarPublicationEndpoint);
+        Preconditions.checkArgument(((GoogleScholarPublicationEndpoint) endpoint).getAuthorURI() instanceof String);
         GoogleScholarPublicationEndpoint publicationEndpoint = (GoogleScholarPublicationEndpoint) endpoint;
         String authorURI = publicationEndpoint.getAuthorURI();
         // There is a constraint that the resource author has the word "author/"
