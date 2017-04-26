@@ -1,10 +1,7 @@
 # Watiqay Khuska - Ecuadorian Semantic Repository  #
+[![Build Status](https://travis-ci.org/ucuenca/REDI.svg?branch=REDI-100)](https://travis-ci.org/ucuenca/REDI)
 
 Ecuadorian Semantic Repository of Ecuadorian Academics that allows the discovery of common research areas. The platform is based on the Apache Marmotta Linked Data Platform.
-
-**Build status**
-
-[![Build Status](https://travis-ci.org/ucuenca/REDI.svg?branch=master)](https://travis-ci.org/ucuenca/REDI)
 
 ### What is this repository for? ###
 
