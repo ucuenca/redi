@@ -4,7 +4,7 @@ Ecuadorian Semantic Repository of Ecuadorian Academics that allows the discovery
 
 **Build status**
 
-[ ![Codeship Status for santteegt/wkhuska](https://codeship.com/projects/26b04380-b7fa-0133-2ed7-6ef29f71ac4a/status?branch=master)](https://codeship.com/projects/134976)
+[![Build Status](https://travis-ci.org/ucuenca/REDI.svg?branch=master)](https://travis-ci.org/ucuenca/REDI)
 
 ### What is this repository for? ###
 
