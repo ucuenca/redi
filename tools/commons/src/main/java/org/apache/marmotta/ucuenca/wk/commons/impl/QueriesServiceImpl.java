@@ -833,7 +833,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + "                      <http://ucuenca.edu.ec/ontology#status> true  ;"
                 + "                      <http://ucuenca.edu.ec/ontology#city> ?city;"
                 + "                      <http://ucuenca.edu.ec/ontology#province> ?province;"
-                + "                      <http://ucuenca.edu.ec/ontology#domain> ?domain."
+                + "           OPTIONAL { ?provenance  <http://ucuenca.edu.ec/ontology#domain> ?domain.}"
                 + "        }"
                 + "      } GROUP BY ?provenance ?city ?province"
                 + "    }"

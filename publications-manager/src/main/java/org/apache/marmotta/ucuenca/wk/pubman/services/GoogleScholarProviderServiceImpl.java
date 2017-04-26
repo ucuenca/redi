@@ -156,7 +156,10 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                                     endpoint.setCity(iesInfo.get(0).get("city").stringValue());
                                     endpoint.setProvince(iesInfo.get(0).get("province").stringValue());
                                     endpoint.setIes(iesInfo.get(0).get("ies").stringValue().split(","));
-                                    endpoint.setDomains(iesInfo.get(0).get("domains").stringValue().split(","));
+                                    String[] domains = iesInfo.get(0).containsKey("domains")
+                                            ? iesInfo.get(0).get("domains").stringValue().split(",")
+                                            : new String[0];
+                                    endpoint.setDomains(domains);
                                     endpoint.setResource(resourceGoogle);
                                 }
                                 //do {
@@ -171,7 +174,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                                         response = ldClient.retrieveResource(URL_TO_FIND);
                                         if (response.getHttpStatus() >= 500 || response.getHttpStatus() >= 503 || response.getHttpStatus() == 504) {
                                             retry = true;
-                                            long retryAfter = response.getExpires().getTime() - new Date(System.currentTimeMillis()).getTime();
+                                            long retryAfter = 21600000 + response.getExpires().getTime() - new Date(System.currentTimeMillis()).getTime();
                                             if (retryAfter > 0) {
                                                 Thread.sleep(retryAfter);
                                             }
@@ -347,7 +350,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
     }
 
     public String priorityFindQueryBuilding(int priority, String firstName, String lastName) {
-        String[] fnamelname = {"", "", "", "", ""};
+        String[] fnamelname = {"", "", "", "", "", ""};
         /**
          * fnamelname[0] is a firstName A, fnamelname[1] is a firstName B
          * fnamelname[2] is a lastName A, fnamelname[3] is a lastName B
