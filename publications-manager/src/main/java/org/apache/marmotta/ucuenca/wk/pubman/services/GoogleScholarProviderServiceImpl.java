@@ -22,10 +22,16 @@ package org.apache.marmotta.ucuenca.wk.pubman.services;
 //import java.io.FileNotFoundException;
 //import java.io.FileOutputStream;
 import com.google.common.base.Preconditions;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -136,7 +142,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                 String firstName = map.get("fname").stringValue();
                 String lastName = map.get("lname").stringValue();
                 priorityToFind = 1;
-                if (!sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(googleGraph, authorResource))) {
+                if (!sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(googleGraph, authorResource)) && !isProcessed(authorResource)) {
                     boolean dataretrieve = false;//( Data Retrieve Exception )
                     do {
                         try {
@@ -145,14 +151,14 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                             nameToFind = commonsServices.removeAccents(priorityFindQueryBuilding(priorityToFind, firstName, lastName).replace("_", "+"));
 
                             //String URL_TO_FIND = "https://scholar.google.com/scholar?start=0&q=author:%22" + nameToFind + "%22&hl=en&as_sdt=1%2C15&as_vis=1";
-                            String URL_TO_FIND = "https://scholar.google.com/citations?mauthors=" + nameToFind + "&hl=en&view_op=search_authors";
+                            String url_to_find = "https://scholar.google.com/citations?mauthors=" + nameToFind + "&hl=en&view_op=search_authors";
 
-                            existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(googleGraph, URL_TO_FIND));
+                            existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(googleGraph, url_to_find));
                             if (nameToFind.compareTo("") != 0 && !existNativeAuthor) {
 
                                 List<Map<String, Value>> iesInfo = sparqlService.query(QueryLanguage.SPARQL, queriesService.getIESInfobyAuthor(authorResource));
                                 if (!iesInfo.isEmpty()) {
-                                    GoogleScholarSearchEndpoint endpoint = (GoogleScholarSearchEndpoint) ldClient.getEndpoint(URL_TO_FIND);
+                                    GoogleScholarSearchEndpoint endpoint = (GoogleScholarSearchEndpoint) ldClient.getEndpoint(url_to_find);
                                     endpoint.setCity(iesInfo.get(0).get("city").stringValue());
                                     endpoint.setProvince(iesInfo.get(0).get("province").stringValue());
                                     endpoint.setIes(iesInfo.get(0).get("ies").stringValue().split(","));
@@ -171,7 +177,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                                 try {
                                     boolean retry = false;
                                     do {
-                                        response = ldClient.retrieveResource(URL_TO_FIND);
+                                        response = ldClient.retrieveResource(url_to_find);
                                         if (response.getHttpStatus() >= 500 || response.getHttpStatus() >= 503 || response.getHttpStatus() == 504) {
                                             retry = true;
                                             long retryAfter = 21600000 + response.getExpires().getTime() - new Date(System.currentTimeMillis()).getTime();
@@ -187,7 +193,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                                         dataretrieve = true;
                                     }
                                 } catch (DataRetrievalException e) {
-                                    log.error("Error when retrieve: " + URL_TO_FIND + " -  Exception: " + e);
+                                    log.error("Error when retrieve: " + url_to_find + " -  Exception: " + e);
                                     dataretrieve = false;
                                 }
 
@@ -228,6 +234,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                         }
                         priorityToFind++;
                     } while (priorityToFind < 3 && !dataretrieve);//end do while
+                    writeResource(authorResource);
                     printPercentProcess(processedPersons, allAuthors, "Google Scholar");
                 } else if (sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskPublicationsURLGS(googleGraph, authorResource))) {
                     // ask if there are publications left to extract for authorresource
@@ -425,4 +432,28 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
         runPublicationsProviderTaskImpl(update);
     }
 
+    private void writeResource(String authorResource) {
+        try {
+            File f = new File(constantService.getHome(), "ProcessedGoogleScholarURIs");
+            if (!f.exists()) {
+                f.createNewFile();
+            }
+            Files.write(f.toPath(), String.format("%s\n", authorResource).getBytes(), StandardOpenOption.APPEND);
+        } catch (IOException ex) {
+            log.error("Can't save resource {}, Error: {} \n{}", authorResource, ex.getMessage(), ex);
+        }
+    }
+
+    private boolean isProcessed(String authorResource) {
+        try (Scanner scanner = new Scanner(new File(constantService.getHome(), "ProcessedGoogleScholarURIs"));) {
+            while (scanner.hasNext()) {
+                if (authorResource.equals(scanner.nextLine().trim())) {
+                    return true;
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            log.error("Can't read URIs. URI trying to read {}. Error msj {}.\n{}", authorResource, ex.getMessage(), ex);
+        }
+        return false;
+    }
 }

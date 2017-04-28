@@ -25,6 +25,11 @@ public class ConstantServiceImpl implements ConstantService {
     private CommonsServices commonService = new CommonsServicesImpl();
 
     @Override
+    public String getHome() {
+        return confService.getHome();
+    }
+
+    @Override
     public String getBaseURI() {
         return confService.getBaseUri();
     }
@@ -33,7 +38,7 @@ public class ConstantServiceImpl implements ConstantService {
     public String getAuthorsGraph() {
         return confService.getBaseContext() + "authors";
     }
-    
+
     @Override
     public String getSameAuthorsGraph() {
         return confService.getBaseContext() + "sameAuthors";
@@ -46,7 +51,7 @@ public class ConstantServiceImpl implements ConstantService {
 
     @Override
     public String getGoogleScholarGraph() {
-        return confService.getBaseContext() + "GoogleScholarProvider";
+        return confService.getBaseContext() + "provider/GoogleScholarProvider";
     }
 
     @Override
@@ -134,7 +139,7 @@ public class ConstantServiceImpl implements ConstantService {
     public String getGSGraph() {
         return getWkhuskaGraph() + getSelectedGraph("googlescholar");
     }
-    
+
     @Override
     public String getDspaceGraph() {
         return getWkhuskaGraph() + getSelectedGraph("dspace");

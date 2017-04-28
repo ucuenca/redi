@@ -31,10 +31,12 @@ public interface ConstantService {
             + " PREFIX bibo: <http://purl.org/ontology/bibo/> "
             + " PREFIX dc: <http://purl.org/dc/elements/1.1/> ";
 
+    String getHome();
+
     String getBaseURI();
 
     String getAuthorsGraph();
-    
+
     String getSameAuthorsGraph();
 
     String getEndpointsGraph();
@@ -85,7 +87,7 @@ public interface ConstantService {
     String getMAGraph();
 
     String getGSGraph();
-    
+
     String getDspaceGraph();
 
     String getClusterGraph();

@@ -223,7 +223,7 @@ public class QueriesServiceImpl implements QueriesService {
         return PREFIXES
                 + "SELECT ?s WHERE {"
                 + "  GRAPH  <" + con.getAuthorsGraph() + "> { "
-                + "    ?s a foaf:Person. ?s foaf:name ?name. " 
+                + "    ?s a foaf:Person. ?s foaf:name ?name. "
                 + "   }"
                 + "} order by desc(strlen(str(?name)))";
     }
@@ -382,7 +382,7 @@ public class QueriesServiceImpl implements QueriesService {
         if (firstName.length() == one) {
             option = "";
         }
-        
+
         return PREFIXES
                 + "SELECT distinct ?subject ?name (STR(?fName)  AS ?firstName) (STR(?lName)  AS ?lastName)  WHERE { "
                 + getGraphString(graph) + "{ "

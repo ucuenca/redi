@@ -11,7 +11,7 @@
     <artifactId>commons</artifactId>
     <packaging>jar</packaging>
 
-    <name>wkhuska-commons</name>
+    <name>Wkhuska-commons</name>
     <description>Common tools for WKhuska Platform</description>
     <url>http://maven.apache.org</url>
 
