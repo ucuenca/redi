@@ -81,7 +81,7 @@ public class MapperObjectRDF {
 
         // Add types/relation author-publications for
         triples.add(new StatementImpl(publicationURI, RDF.TYPE, BIBO.ACADEMIC_ARTICLE));
-        triples.add(new StatementImpl(publicationURI, RDF.TYPE, BIBO.DOCUMENT));
+        //triples.add(new StatementImpl(publicationURI, RDF.TYPE, BIBO.DOCUMENT));
         triples.add(new StatementImpl(authorURI, FOAF.PUBLICATIONS, publicationURI));
 
         // Add authors if exist
