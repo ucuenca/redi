@@ -232,7 +232,7 @@ public class QueriesServiceImpl implements QueriesService {
     public String getSameAsAuthors(String authorResource) {
         return PREFIXES
                 + "SELECT ?o WHERE {"
-                + "  GRAPH <" + con.getAuthorsGraph() + "> { "
+                + " GRAPH <" + con.getAuthorsGraph() + "> { "
                 + "     <" + authorResource + "> owl:sameAs  ?o . "
                 + "     <" + authorResource + "> a foaf:Person . "
                 + "   }"
@@ -640,11 +640,13 @@ public class QueriesServiceImpl implements QueriesService {
 
     @Override
     public String authorDetailsOfProvenance(String graph, String authorResource) {
-        return " SELECT DISTINCT ?property ?hasValue  WHERE { "
+        return PREFIXES
+                + " SELECT DISTINCT ?property ?hasValue  WHERE { "
                 + "  graph <" + graph + ">{ "
                 + "  { <" + authorResource + "> ?property ?hasValue } "
                 + " UNION "
                 + "  { ?isValueOf ?property <" + authorResource + "> } "
+                + " FILTER(?property != foaf:topic ) "
                 + " }} "
                 + "ORDER BY ?property ?hasValue ?isValueOf";
     }
@@ -655,7 +657,7 @@ public class QueriesServiceImpl implements QueriesService {
                 //+ " PREFIX uc: <http://ucuenca.edu.ec/ontology#> "
                 + " SELECT ?name WHERE "
                 + " {        "
-                + "  GRAPH <http://ucuenca.edu.ec/wkhuska/endpoints> "
+                + "  GRAPH <" + con.getEndpointsGraph() + "> "
                 + "   { "
                 + "  	?object  <http://ucuenca.edu.ec/ontology#name> ?name."
                 + "     GRAPH <" + graph + ">	" //http://ucuenca.edu.ec/wkhuska/authors

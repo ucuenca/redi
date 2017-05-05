@@ -43,7 +43,11 @@ public interface ConstantService {
 
     String getGoogleScholarGraph();
 
+    String getCentralGraph();
+
     String getAuthorResource();
+
+    String getPublicationResource();
 
     String getGoogleScholarResource();
 

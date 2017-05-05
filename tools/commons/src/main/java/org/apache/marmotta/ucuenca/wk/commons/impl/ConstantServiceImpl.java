@@ -55,6 +55,11 @@ public class ConstantServiceImpl implements ConstantService {
     }
 
     @Override
+    public String getCentralGraph() {
+        return "http://ucuenca.edu.ec/wkhuska";
+    }
+
+    @Override
     public String getBaseResource() {
         return getBaseURI() + "resource/";
     }
@@ -67,6 +72,11 @@ public class ConstantServiceImpl implements ConstantService {
     @Override
     public String getAuthorResource() {
         return getBaseResource() + "authors/";
+    }
+
+    @Override
+    public String getPublicationResource() {
+        return getBaseResource() + "publication/";
     }
 
     @Override
