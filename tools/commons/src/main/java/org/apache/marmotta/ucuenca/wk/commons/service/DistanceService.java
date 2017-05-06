@@ -33,4 +33,8 @@ public interface DistanceService {
     
     float jaccardDistance(String param1, String param2);
     
+    Boolean getEqualNames(String nombresOrig, String apellidosOrig, String otherGivenName, String otherLastName);
+    
+    Boolean getEqualNames(String nombresOrig, String apellidosOrig, String otherName);
+    
 }

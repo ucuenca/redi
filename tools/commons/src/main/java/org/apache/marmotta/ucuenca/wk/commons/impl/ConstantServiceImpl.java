@@ -146,7 +146,7 @@ public class ConstantServiceImpl implements ConstantService {
 //    }
     @Override
     public String getProviderNsGraph() {
-        return getWkhuskaGraph() + getSelectedGraph("provider");
+        return (confService.getBaseContext() + getSelectedGraph("provider")).replace("\\//", "\\/");
     }
 
     @Override
