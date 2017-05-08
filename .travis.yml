@@ -12,7 +12,5 @@ cache:
 
 before_install:
   - echo "MAVEN_OPTS='-Xmx2g'" > ~/.mavenrc
-  - cat ~/.m2/settings.xml
-  - rm ~/.m2/settings.xml
 
 script: mvn clean install
