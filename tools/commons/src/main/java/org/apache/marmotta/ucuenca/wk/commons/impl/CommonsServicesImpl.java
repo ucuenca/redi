@@ -27,7 +27,7 @@ public class CommonsServicesImpl implements CommonsServices {
 
     @Inject
     private Logger log;
-    
+       
     /**
      * Función que elimina acentos y caracteres especiales
      *
@@ -44,8 +44,24 @@ public class CommonsServicesImpl implements CommonsServices {
         for (int i = 0; i < original.length(); i++) {
             // Reemplazamos los caracteres especiales.
             output = output.replace(original.charAt(i), ascii.charAt(i));
-        }//for i
+        }//end for i
         return output;
+    }
+    
+    @Override
+    public String cleanNameArticles(String value) {
+        value = value.replace(".", "").trim();
+        value = value.replace("??", ".*");
+        value = value.replace("?", ".*").toLowerCase();
+        value = value.replace(" de ", " ");
+        value = value.replace("^del ", " ");
+        value = value.replace(" del ", " ");
+        value = value.replace(" los ", " ");
+        value = value.replace(" y ", " ");
+        value = value.replace(" las ", " ");
+        value = value.replace(" la ", " ");
+        
+        return value;
     }
 
     /**
