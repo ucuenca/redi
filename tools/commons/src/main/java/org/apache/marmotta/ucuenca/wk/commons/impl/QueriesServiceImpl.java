@@ -342,6 +342,7 @@ public class QueriesServiceImpl implements QueriesService {
                 //+ "     ?provenance <http://ucuenca.edu.ec/ontology#name> \"UCUENCA\"^^xsd:string ."
                 + " }}} filter (regex(?status,\"true\")) "
                 //+ "filter (mm:fulltext-search(?name,\"Víctor Saquicela\")) "
+                //                + "filter (mm:fulltext-search(?name,\"Juan Pablo Carvallo\")) "
                 + "                }} ";
 
     }
@@ -823,24 +824,17 @@ public class QueriesServiceImpl implements QueriesService {
     @Override
     public String getIESInfobyAuthor(String authorURI) {
         return PREFIXES
-                + "SELECT DISTINCT *"
-                + "WHERE {  "
-                + "  GRAPH  <" + con.getAuthorsGraph() + ">  {"
-                + "    <" + authorURI + "> dct:provenance ?provenance."
-                + "    {"
-                + "      SELECT ?city ?province (GROUP_CONCAT(DISTINCT STR(?fullname); separator=\",\") as ?ies) (GROUP_CONCAT(DISTINCT ?domain; separator=\",\") as ?domains)"
-                + "      WHERE {"
-                + "        GRAPH  <" + con.getEndpointsGraph() + ">  {"
-                + "          ?provenance <http://ucuenca.edu.ec/ontology#fullName> ?fullname;"
-                + "                      <http://ucuenca.edu.ec/ontology#status> true  ;"
-                + "                      <http://ucuenca.edu.ec/ontology#city> ?city;"
-                + "                      <http://ucuenca.edu.ec/ontology#province> ?province;"
-                + "           OPTIONAL { ?provenance  <http://ucuenca.edu.ec/ontology#domain> ?domain.}"
-                + "        }"
-                + "      } GROUP BY ?provenance ?city ?province"
-                + "    }"
-                + "  }"
-                + "} ";
+                + "SELECT DISTINCT ?city ?province\n"
+                + "(GROUP_CONCAT(DISTINCT STR(?fullname); separator=\",\") as ?ies) \n"
+                + "(GROUP_CONCAT(DISTINCT ?domain; separator=\",\") as ?domains) WHERE {    \n"
+                + "{<" + authorURI + "> dct:provenance ?p }\n"
+                + "UNION\n"
+                + "{<" + authorURI + "> owl:sameAs [dct:provenance ?p].}\n"
+                + "?p <http://ucuenca.edu.ec/ontology#fullName> ?fullname;\n"
+                + "   <http://ucuenca.edu.ec/ontology#city> ?city;  \n"
+                + "   <http://ucuenca.edu.ec/ontology#province> ?province; \n"
+                + "  OPTIONAL { ?p  <http://ucuenca.edu.ec/ontology#domain> ?domain.}  \n"
+                + "} GROUP BY ?p ?city ?province";
     }
 
     @Override

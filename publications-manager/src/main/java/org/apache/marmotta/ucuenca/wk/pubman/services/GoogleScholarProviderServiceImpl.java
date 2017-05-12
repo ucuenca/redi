@@ -28,10 +28,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -156,17 +159,30 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                             existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(googleGraph, url_to_find));
                             if (nameToFind.compareTo("") != 0 && !existNativeAuthor) {
 
-                                List<Map<String, Value>> iesInfo = sparqlService.query(QueryLanguage.SPARQL, queriesService.getIESInfobyAuthor(authorResource));
-                                if (!iesInfo.isEmpty()) {
+                                List<Map<String, Value>> infoQuery = sparqlService.query(QueryLanguage.SPARQL, queriesService.getIESInfobyAuthor(authorResource));
+                                Set[] infoIES = new HashSet[]{new HashSet(), new HashSet(), new HashSet(), new HashSet()};
+                                for (Map<String, Value> info : infoQuery) {
+                                    infoIES[0].add(info.get("city").stringValue());
+                                    infoIES[1].add(info.get("province").stringValue());
+                                    infoIES[2].addAll(Arrays.asList(info.get("ies").stringValue().split(",")));
+                                    infoIES[3].addAll(Arrays.asList(info.get("domains").stringValue().split(",")));
+                                }
+                                if (!infoIES[0].isEmpty() && !infoIES[1].isEmpty() && !infoIES[2].isEmpty()) {
                                     GoogleScholarSearchEndpoint endpoint = (GoogleScholarSearchEndpoint) ldClient.getEndpoint(url_to_find);
-                                    endpoint.setCity(iesInfo.get(0).get("city").stringValue());
-                                    endpoint.setProvince(iesInfo.get(0).get("province").stringValue());
-                                    endpoint.setIes(iesInfo.get(0).get("ies").stringValue().split(","));
-                                    String[] domains = iesInfo.get(0).containsKey("domains")
-                                            ? iesInfo.get(0).get("domains").stringValue().split(",")
-                                            : new String[0];
-                                    endpoint.setDomains(domains);
+
+                                    endpoint.setCity((String[]) infoIES[0].toArray(new String[0]));
+                                    endpoint.setProvince((String[]) infoIES[1].toArray(new String[0]));
+                                    endpoint.setIes((String[]) infoIES[2].toArray(new String[0]));
+
+                                    if (!infoIES[3].isEmpty()) {
+                                        endpoint.setDomains((String[]) infoIES[3].toArray(new String[0]));
+                                    } else {
+                                        endpoint.setDomains(new String[0]);
+                                    }
+
                                     endpoint.setResource(resourceGoogle);
+                                    endpoint.setFirstName(firstName);
+                                    endpoint.setLastName(lastName);
                                 }
                                 //do {
                                 try {//waint 1  second between queries
@@ -233,7 +249,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                             log.error("ioexception " + e.toString());
                         }
                         priorityToFind++;
-                    } while (priorityToFind < 3 && !dataretrieve);//end do while
+                    } while (priorityToFind <= 3 && !dataretrieve);//end do while
                     writeResource(authorResource);
                     printPercentProcess(processedPersons, allAuthors, "Google Scholar");
                 } else if (sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskPublicationsURLGS(googleGraph, authorResource))) {
@@ -373,6 +389,8 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
         }
 
         switch (priority) {
+            case 3:
+                return fnamelname[1] + "_" + fnamelname[2];
             case 2:
                 return fnamelname[0] + "_" + fnamelname[2];
             case 1:
