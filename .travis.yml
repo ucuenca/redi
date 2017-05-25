@@ -3,7 +3,8 @@ language: java
 jdk:
 - oraclejdk7
 - oraclejdk8
-
+node_js:
+- 4.8.3
 install: true
 
 cache:
@@ -12,7 +13,11 @@ cache:
 
 before_install:
   - echo "MAVEN_OPTS='-Xmx2g'" > ~/.mavenrc
-  - npm update -g npm@latest
-  - npm -v
+  - . $HOME/.nvm/nvm.sh
+  - nvm install stable
+  - nvm use stable
+  - npm install
+  - node -v
+  - npm -v  
 
 script: mvn clean install
