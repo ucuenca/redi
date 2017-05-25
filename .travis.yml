@@ -12,6 +12,7 @@ cache:
 
 before_install:
   - echo "MAVEN_OPTS='-Xmx2g'" > ~/.mavenrc
-  - npm update -g npm 
+  - npm update -g npm@latest
+  - npm -v
 
 script: mvn clean install
