@@ -16,8 +16,8 @@ before_install:
   - . $HOME/.nvm/nvm.sh
   - nvm install stable
   - nvm use stable
-  - npm install
-  - npm -g install bower-npm-install
+#  - npm install
+  - npm install bower
   - node -v
   - npm -v
   - bower -v
