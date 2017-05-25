@@ -15,7 +15,7 @@ before_install:
   - echo "MAVEN_OPTS='-Xmx2g'" > ~/.mavenrc
   - . $HOME/.nvm/nvm.sh
   - nvm install stable
-  - nvm use stable
+  - nvm use v4.8.3
 #  - npm install
   - npm install bower
   - node -v
