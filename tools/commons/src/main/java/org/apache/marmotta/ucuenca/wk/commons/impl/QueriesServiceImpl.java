@@ -491,6 +491,14 @@ public class QueriesServiceImpl implements QueriesService {
     }
 
     @Override
+    public String getObjectByPropertyQuery(String graphname, String subject, String property) {
+        return PREFIXES
+                + " SELECT DISTINCT ?object FROM <" + graphname + "> WHERE { "
+                + "                <" + subject + ">   <" + property + "> ?object"
+                + "}";
+    }
+
+    @Override
     public String getObjectByPropertyQuery(String property) {
         return PREFIXES + " SELECT DISTINCT ?object "
                 //    + "  WHERE {  ?s "+(commonsServices.isURI(property)? "<" + property + ">" : property) + "  ?object } ";
@@ -640,15 +648,14 @@ public class QueriesServiceImpl implements QueriesService {
     }
 
     @Override
-    public String authorDetailsOfProvenance(String graph, String authorResource) {
+    public String detailsOfProvenance(String graph, String resource) {
         return PREFIXES
                 + " SELECT DISTINCT ?property ?hasValue  WHERE { "
                 + "  graph <" + graph + ">{ "
-                + "  { <" + authorResource + "> ?property ?hasValue } "
+                + "  {  <" + resource + "> ?property ?hasValue } "
                 + " UNION "
-                + "  { ?isValueOf ?property <" + authorResource + "> } "
-                + " FILTER(?property != foaf:topic ) "
-                + " }} "
+                + "  { ?isValueOf ?property <" + resource + "> } "
+                + " }}  "
                 + "ORDER BY ?property ?hasValue ?isValueOf";
     }
 

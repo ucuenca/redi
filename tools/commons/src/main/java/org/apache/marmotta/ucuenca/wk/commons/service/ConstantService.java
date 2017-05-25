@@ -47,6 +47,14 @@ public interface ConstantService {
 
     String getAuthorResource();
 
+    String getJournalResource();
+
+    String getConferenceResource();
+
+    String getPublisherResource();
+
+    String getTopicResource();
+
     String getPublicationResource();
 
     String getGoogleScholarResource();

@@ -75,6 +75,26 @@ public class ConstantServiceImpl implements ConstantService {
     }
 
     @Override
+    public String getJournalResource() {
+        return getBaseResource() + "journal/";
+    }
+
+    @Override
+    public String getConferenceResource() {
+        return getBaseResource() + "conference/";
+    }
+
+    @Override
+    public String getPublisherResource() {
+        return getBaseResource() + "publisher/";
+    }
+
+    @Override
+    public String getTopicResource() {
+        return getBaseResource() + "topic/";
+    }
+
+    @Override
     public String getPublicationResource() {
         return getBaseResource() + "publication/";
     }
