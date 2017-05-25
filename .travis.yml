@@ -17,7 +17,9 @@ before_install:
   - nvm install stable
   - nvm use stable
   - npm install
+  - npm -g install bower-npm-install
   - node -v
-  - npm -v  
+  - npm -v
+  - bower -v
 
 script: mvn clean install
