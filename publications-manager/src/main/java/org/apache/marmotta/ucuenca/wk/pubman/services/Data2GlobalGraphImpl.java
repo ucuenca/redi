@@ -289,12 +289,16 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
                                             key = "contributor";
                                             resource = constant.getAuthorResource();
                                             uri = true;
+                                        } else if (nativeProperty.equals(mapper.get("book"))) {
+                                            key = "book";
+                                            resource = constant.getBookResource();
+                                            uri = true;
                                         }
 
                                         if (uri) {
                                             if (commonsServices.isURI(publicacionPropertyValue)) {
                                                 String name = sparqlService
-                                                        .query(QueryLanguage.SPARQL, queriesService.getObjectByPropertyQuery(providerGraph, publicacionPropertyValue, mapper.get(key + ".name")))
+                                                        .query(QueryLanguage.SPARQL, queriesService.getObjectByPropertyQuery(providerGraph, publicacionPropertyValue, mapper.get(key + ".name.provider")))
                                                         .get(0).get("object").stringValue();
                                                 newuri = resource + cleanStringUri(name.replace(".", ""));
 
@@ -303,17 +307,17 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
                                                 boolean existType = false;
                                                 for (Map<String, Value> values : resultAuthorName) {
                                                     if (values.containsKey("property") && values.containsKey("hasValue")) {
-                                                        String property = mapper.get(values.get("property").stringValue());
+                                                        String property = mapper.get(key + "." + values.get("property").stringValue());
                                                         String hasvalue = values.get("hasValue").stringValue();
-                                                        existType = existType ? true : RDF.TYPE.equals(property);
+                                                        existType = RDF.TYPE.equals(property);
 
-                                                        if (property != null) {
+                                                        if (property != null && !existType) {
                                                             sparqlService.update(QueryLanguage.SPARQL, buildInsertQuery(constant.getCentralGraph(), newuri, property, hasvalue));
                                                         }
+                                                        if (existType) {
+                                                            sparqlService.update(QueryLanguage.SPARQL, buildInsertQuery(constant.getCentralGraph(), newuri, RDF.TYPE, mapper.get(key + ".type")));
+                                                        }
                                                     }
-                                                }
-                                                if (!existType) {
-                                                    sparqlService.update(QueryLanguage.SPARQL, buildInsertQuery(constant.getCentralGraph(), newuri, RDF.TYPE, mapper.get(key + ".type")));
                                                 }
                                             } else {
                                                 newuri = resource + cleanStringUriAuthor(publicacionPropertyValue.replace(".", ""));

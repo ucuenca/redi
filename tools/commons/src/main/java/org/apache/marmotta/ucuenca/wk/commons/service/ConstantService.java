@@ -51,6 +51,8 @@ public interface ConstantService {
 
     String getConferenceResource();
 
+    String getBookResource();
+
     String getPublisherResource();
 
     String getTopicResource();

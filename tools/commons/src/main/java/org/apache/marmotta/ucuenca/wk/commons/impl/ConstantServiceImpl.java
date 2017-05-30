@@ -85,6 +85,11 @@ public class ConstantServiceImpl implements ConstantService {
     }
 
     @Override
+    public String getBookResource() {
+        return getBaseResource() + "book/";
+    }
+
+    @Override
     public String getPublisherResource() {
         return getBaseResource() + "publisher/";
     }

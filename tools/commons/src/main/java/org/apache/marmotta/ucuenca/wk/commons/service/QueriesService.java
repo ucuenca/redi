@@ -214,6 +214,7 @@ public interface QueriesService {
      * Get All documents from UTPL ENDPOINT
      *
      * @param repository
+     * @param graph
      * @return
      */
     String getDocumentsAuthors(String repository, String graph);
