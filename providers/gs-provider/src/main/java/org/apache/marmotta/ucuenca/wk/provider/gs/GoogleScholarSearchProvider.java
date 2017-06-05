@@ -60,7 +60,7 @@ import org.xml.sax.SAXException;
  */
 public class GoogleScholarSearchProvider extends AbstractHttpProvider {//NOPMD
 
-    private final DistanceService distance =new DistanceServiceImpl();
+    private final DistanceService distance = new DistanceServiceImpl();
     private static final Logger LOG = LoggerFactory.getLogger(GoogleScholarSearchProvider.class);
     public static final String SCHOLAR_GOOGLE = "https://scholar.google.com";
     public static final String URI_START_WITH = "http";

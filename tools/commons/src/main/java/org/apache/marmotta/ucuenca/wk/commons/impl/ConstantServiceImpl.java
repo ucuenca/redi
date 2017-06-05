@@ -55,6 +55,11 @@ public class ConstantServiceImpl implements ConstantService {
     }
 
     @Override
+    public String getAcademicsKnowledgeGraph() {
+        return confService.getBaseContext() + "provider/AcademicsKnowledgeProvider";
+    }
+
+    @Override
     public String getCentralGraph() {
         return "http://ucuenca.edu.ec/wkhuska";
     }
@@ -90,6 +95,11 @@ public class ConstantServiceImpl implements ConstantService {
     }
 
     @Override
+    public String getSubjectResource() {
+        return getBaseResource() + "subject/";
+    }
+
+    @Override
     public String getPublisherResource() {
         return getBaseResource() + "publisher/";
     }
@@ -107,6 +117,11 @@ public class ConstantServiceImpl implements ConstantService {
     @Override
     public String getGoogleScholarResource() {
         return getBaseResource() + "GoogleScholar/";
+    }
+
+    @Override
+    public String getAcademicsKnowledgeResource() {
+        return getBaseResource() + "AcademicsKnowledge/";
     }
 
     @Override

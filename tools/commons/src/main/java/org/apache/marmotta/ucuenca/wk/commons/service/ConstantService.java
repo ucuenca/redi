@@ -43,6 +43,8 @@ public interface ConstantService {
 
     String getGoogleScholarGraph();
 
+    String getAcademicsKnowledgeGraph();
+
     String getCentralGraph();
 
     String getAuthorResource();
@@ -53,6 +55,8 @@ public interface ConstantService {
 
     String getBookResource();
 
+    String getSubjectResource();
+
     String getPublisherResource();
 
     String getTopicResource();
@@ -60,6 +64,8 @@ public interface ConstantService {
     String getPublicationResource();
 
     String getGoogleScholarResource();
+
+    String getAcademicsKnowledgeResource();
 
     String getEndpointResource();
 
