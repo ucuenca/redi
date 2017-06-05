@@ -14,9 +14,9 @@ cache:
 before_install:
   - echo "MAVEN_OPTS='-Xmx2g'" > ~/.mavenrc
   - . $HOME/.nvm/nvm.sh
-  - nvm install stable
-  - nvm use stable
-#  - npm install
+  - nvm install v4.8.3
+  - nvm ls
+  - nvm use 4
   - npm install bower
   - node -v
   - npm -v
