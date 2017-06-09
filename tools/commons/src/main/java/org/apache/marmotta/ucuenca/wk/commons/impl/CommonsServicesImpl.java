@@ -53,13 +53,17 @@ public class CommonsServicesImpl implements CommonsServices {
         value = value.replace(".", "").trim();
         value = value.replace("??", ".*");
         value = value.replace("?", ".*").toLowerCase();
-        value = value.replace(" de ", " ");
-        value = value.replace("^del ", " ");
-        value = value.replace(" del ", " ");
-        value = value.replace(" los ", " ");
-        value = value.replace(" y ", " ");
-        value = value.replace(" las ", " ");
-        value = value.replace(" la ", " ");
+        value = value.replaceAll(" de ", " ");
+        value = value.replaceAll("^del ", " ");
+        value = value.replaceAll(" del ", " ");
+        value = value.replaceAll(" los ", " ");
+        value = value.replaceAll(" y ", " ");
+        value = value.replaceAll(" las ", " ");
+        value = value.replaceAll(" la ", " ");
+        value = value.replaceAll("^de ", " ");
+        value = value.replaceAll("^los ", " ");
+        value = value.replaceAll("^las ", " ");
+        value = value.replaceAll("^la ", " ");
         
         return value;
     }

@@ -20,6 +20,8 @@ public interface QueriesService {
     String getAuthorDeleteQuery(String id);
 
     String getAuthorDataQuery(String authorUri);
+    
+    String getAuthorProvenanceQuery(String authorUri);
 
     String getAuthorsByName(String graph, String firstName, String lastName);
 

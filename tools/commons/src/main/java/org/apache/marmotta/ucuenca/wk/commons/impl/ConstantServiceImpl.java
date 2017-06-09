@@ -18,11 +18,13 @@ public class ConstantServiceImpl implements ConstantService {
 
     @Inject
     private ConfigurationService confService;
+    
+    @Inject
+    private CommonsServices commonService;
+    
     private final static String FOAFNS = "http://xmlns.com/foaf/0.1/";
     private final static String OWLNS = "http://www.w3.org/2002/07/owl#";
     private final static String LOGO_PATH = "./../wkhuska_webapps/ROOT/wkhome/images/logo_wk.png";
-
-    private CommonsServices commonService = new CommonsServicesImpl();
 
     @Override
     public String getBaseURI() {
