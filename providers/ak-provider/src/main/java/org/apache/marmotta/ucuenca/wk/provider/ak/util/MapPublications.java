@@ -10,6 +10,8 @@ package org.apache.marmotta.ucuenca.wk.provider.ak.util;
 //import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -25,18 +27,17 @@ public class MapPublications {
         List<Publication> resultOutput = new ArrayList();
 
         JSONParser parser = new JSONParser();
-        Object obj = parser.parse(json);
-        JSONObject jsonObject = (JSONObject) obj;
+        JSONObject jsonObject = (JSONObject) parser.parse(json);
         JSONArray result = (JSONArray) jsonObject.get("entities");
         for (Object publicationResultObject : result) {
             JSONObject publicationResult = (JSONObject) publicationResultObject;
             long id = (long) publicationResult.get("Id");
             String title = (String) publicationResult.get("Ti");
-            String year = toString(publicationResult.get("Y"));
-            String paperDate = toString(publicationResult.get("D"));
-            String citationcount = toString(publicationResult.get("CC"));
-            String estimatedCitationcount = toString(publicationResult.get("ECC"));
-            String extendedMetaData = toString(publicationResult.get("E"));
+            String year = StringUtils.trimToEmpty(((Long) publicationResult.get("Y")).toString());
+            String paperDate = StringUtils.trimToEmpty((String) publicationResult.get("D"));
+            String citationcount = StringUtils.trimToEmpty(((Long) publicationResult.get("CC")).toString());
+            String estimatedCitationcount = StringUtils.trimToEmpty(((Long) publicationResult.get("ECC")).toString());
+            String extendedMetaData = StringUtils.trimToEmpty((String) publicationResult.get("E"));
 
             List<Author> authors = new ArrayList();
             JSONArray authorArray = (JSONArray) publicationResult.get("AA");
@@ -45,7 +46,7 @@ public class MapPublications {
                 Author newaut = new Author();
                 newaut.setName((String) authorResult.get("AuN"));
                 newaut.setId((long) authorResult.get("AuId"));
-                newaut.setAfiliation(toString(authorResult.get("AfN")));
+                newaut.setAfiliation(StringUtils.trimToEmpty((String) authorResult.get("AfN")));
                 authors.add(newaut);
             }
 
@@ -75,21 +76,21 @@ public class MapPublications {
             }
 
             //Extract metadata
-//            extendedMetaData = extendedMetaData.replace("\\\"", "\"");
             JSONParser parserMD = new JSONParser();
             Object objMD = parserMD.parse(extendedMetaData);
-            JSONObject jsonObjectMD = (JSONObject) objMD;
-            String abstractt = toString(jsonObjectMD.get("D"));
-            String doi = toString(jsonObjectMD.get("DOI"));
-            String conference = (toString(jsonObjectMD.get("VFN"))) + " " + (toString(jsonObjectMD.get("VSN")));
+            JSONObject jsonObjectEMD = (JSONObject) objMD;
+            String abstractt = buildInvertedAbstractToPlainAbstract((JSONObject) jsonObjectEMD.get("IA"));
+            String doi = StringUtils.trimToEmpty((String) jsonObjectEMD.get("DOI"));
+            String conference = StringUtils.trimToEmpty((String) jsonObjectEMD.get("VFN"))
+                    + StringUtils.trimToEmpty((String) jsonObjectEMD.get("VSN"));
 
             //Extract Sources
             List<String> sources = new ArrayList();
-            if (jsonObjectMD.get("S") != null) {
-                JSONArray sourceArray = (JSONArray) jsonObjectMD.get("S");
+            if (jsonObjectEMD.get("S") != null) {
+                JSONArray sourceArray = (JSONArray) jsonObjectEMD.get("S");
                 for (Object source : sourceArray) {
                     JSONObject fieldValue = (JSONObject) source;
-                    sources.add(toString(fieldValue.get("U")));
+                    sources.add(StringUtils.trimToEmpty((String) fieldValue.get("U")));
                 }
             }
 
@@ -116,12 +117,22 @@ public class MapPublications {
         return resultOutput;
     }
 
-    public String toString(Object o) {
-        if (o == null) {
+    public String buildInvertedAbstractToPlainAbstract(JSONObject invertedAbstract) {
+        if (invertedAbstract == null) {
             return "";
         }
-
-        return o.toString();
+        Long size = (long) invertedAbstract.get("IndexLength");
+        String[] plainAbs = new String[size.intValue()];
+        JSONObject abs = (JSONObject) invertedAbstract.get("InvertedIndex");
+        Set<String> keys = abs.keySet();
+        for (String key : keys) {
+            JSONArray indexes = (JSONArray) abs.get(key);
+            for (Object index : indexes) {
+                int i = ((Long) index).intValue();
+                plainAbs[i] = key;
+            }
+        }
+        return String.join(" ", plainAbs);
     }
 
     public List<String> getJsonString(JSONObject jSONObject, String identifier) {
@@ -139,9 +150,9 @@ public class MapPublications {
         List<String> terms = new ArrayList();
         if (jSONObject.get(identifier1) != null) {
             JSONObject object = (JSONObject) jSONObject.get(identifier1);
-            
-                terms.add(toString(object.get(identifier2)));
-            
+
+            terms.add(StringUtils.trimToEmpty((String) object.get(identifier2)));
+
         }
 
         return terms;

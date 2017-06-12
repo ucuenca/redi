@@ -34,11 +34,15 @@ import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
 public class GoogleScholarSearchEndpoint extends Endpoint {
 
     // TODO: find another way to read this parameters
-    private String city;
-    private String province;
+//    private String city;
+//    private String province;
     private String[] ies;
+    private String[] provinces;
+    private String[] cities;
     private String[] domains;
     private String resource;
+    private String firstName;
+    private String lastName;
 
     public GoogleScholarSearchEndpoint() {
         super("Google Scholar Search Endpoint",
@@ -52,20 +56,20 @@ public class GoogleScholarSearchEndpoint extends Endpoint {
         addContentType(new ContentType("*", "*", 0.1));
     }
 
-    public String getCity() {
-        return city;
+    public String[] getCities() {
+        return cities;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setCity(String... cities) {
+        this.cities = cities;
     }
 
-    public String getProvince() {
-        return province;
+    public String[] getProvinces() {
+        return provinces;
     }
 
-    public void setProvince(String province) {
-        this.province = province;
+    public void setProvince(String... provinces) {
+        this.provinces = provinces;
     }
 
     public String[] getIes() {
@@ -90,6 +94,22 @@ public class GoogleScholarSearchEndpoint extends Endpoint {
 
     public void setResource(String resource) {
         this.resource = resource;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
 }

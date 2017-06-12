@@ -21,6 +21,7 @@ public class REDI {
     // Properties
     public static final URI CITATION_COUNT;
     public static final URI GSCHOLAR_URl;
+    public static final URI ACADEMICS_KNOWLEDGE_URl;
     public static final URI STATUS;
     public static final URI NAME;
     public static final URI URL;
@@ -37,6 +38,7 @@ public class REDI {
         // Properties
         CITATION_COUNT = factory.createURI(REDI.NAMESPACE, "citationCount");
         GSCHOLAR_URl = factory.createURI(REDI.NAMESPACE, "googlescholarURL");
+        ACADEMICS_KNOWLEDGE_URl = factory.createURI(REDI.NAMESPACE, "academicsKnowledgeURL");
         STATUS = factory.createURI(REDI.NAMESPACE, "status");
         NAME = factory.createURI(REDI.NAMESPACE, "name");
         URL = factory.createURI(REDI.NAMESPACE, "url");

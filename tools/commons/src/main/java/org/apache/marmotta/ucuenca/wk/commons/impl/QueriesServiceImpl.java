@@ -223,7 +223,7 @@ public class QueriesServiceImpl implements QueriesService {
         return PREFIXES
                 + "SELECT ?s WHERE {"
                 + "  GRAPH  <" + con.getAuthorsGraph() + "> { "
-                + "    ?s a foaf:Person. ?s foaf:name ?name. " 
+                + "    ?s a foaf:Person. ?s foaf:name ?name. "
                 + "   }"
                 + "} order by desc(strlen(str(?name)))";
     }
@@ -232,7 +232,7 @@ public class QueriesServiceImpl implements QueriesService {
     public String getSameAsAuthors(String authorResource) {
         return PREFIXES
                 + "SELECT ?o WHERE {"
-                + "  GRAPH <" + con.getAuthorsGraph() + "> { "
+                + " GRAPH <" + con.getAuthorsGraph() + "> { "
                 + "     <" + authorResource + "> owl:sameAs  ?o . "
                 + "     <" + authorResource + "> a foaf:Person . "
                 + "   }"
@@ -342,6 +342,7 @@ public class QueriesServiceImpl implements QueriesService {
                 //+ "     ?provenance <http://ucuenca.edu.ec/ontology#name> \"UCUENCA\"^^xsd:string ."
                 + " }}} filter (regex(?status,\"true\")) "
                 //+ "filter (mm:fulltext-search(?name,\"Víctor Saquicela\")) "
+                //                + "filter (mm:fulltext-search(?name,\"Juan Pablo Carvallo\")) "
                 + "                }} ";
 
     }
@@ -392,7 +393,7 @@ public class QueriesServiceImpl implements QueriesService {
         if (firstName.length() == one) {
             option = "";
         }
-        
+
         return PREFIXES
                 + "SELECT distinct ?subject ?name (STR(?fName)  AS ?firstName) (STR(?lName)  AS ?lastName)  WHERE { "
                 + getGraphString(graph) + "{ "
@@ -497,6 +498,14 @@ public class QueriesServiceImpl implements QueriesService {
                 //          + "  WHERE { <" + subject + "> "+(commonsServices.isURI(property)? "<" + property + ">" : property) + "  ?object } ";
                 + "  WHERE { <" + subject + "> " + property + "  ?object } ";
 
+    }
+
+    @Override
+    public String getObjectByPropertyQuery(String graphname, String subject, String property) {
+        return PREFIXES
+                + " SELECT DISTINCT ?object FROM <" + graphname + "> WHERE { "
+                + "                <" + subject + ">   <" + property + "> ?object"
+                + "}";
     }
 
     @Override
@@ -655,13 +664,14 @@ public class QueriesServiceImpl implements QueriesService {
     }
 
     @Override
-    public String authorDetailsOfProvenance(String graph, String authorResource) {
-        return " SELECT DISTINCT ?property ?hasValue  WHERE { "
+    public String detailsOfProvenance(String graph, String resource) {
+        return PREFIXES
+                + " SELECT DISTINCT ?property ?hasValue  WHERE { "
                 + "  graph <" + graph + ">{ "
-                + "  { <" + authorResource + "> ?property ?hasValue } "
+                + "  {  <" + resource + "> ?property ?hasValue } "
                 + " UNION "
-                + "  { ?isValueOf ?property <" + authorResource + "> } "
-                + " }} "
+                + "  { ?isValueOf ?property <" + resource + "> } "
+                + " }}  "
                 + "ORDER BY ?property ?hasValue ?isValueOf";
     }
 
@@ -671,7 +681,7 @@ public class QueriesServiceImpl implements QueriesService {
                 //+ " PREFIX uc: <http://ucuenca.edu.ec/ontology#> "
                 + " SELECT ?name WHERE "
                 + " {        "
-                + "  GRAPH <http://ucuenca.edu.ec/wkhuska/endpoints> "
+                + "  GRAPH <" + con.getEndpointsGraph() + "> "
                 + "   { "
                 + "  	?object  <http://ucuenca.edu.ec/ontology#name> ?name."
                 + "     GRAPH <" + graph + ">	" //http://ucuenca.edu.ec/wkhuska/authors
@@ -837,24 +847,17 @@ public class QueriesServiceImpl implements QueriesService {
     @Override
     public String getIESInfobyAuthor(String authorURI) {
         return PREFIXES
-                + "SELECT DISTINCT *"
-                + "WHERE {  "
-                + "  GRAPH  <" + con.getAuthorsGraph() + ">  {"
-                + "    <" + authorURI + "> dct:provenance ?provenance."
-                + "    {"
-                + "      SELECT ?city ?province (GROUP_CONCAT(DISTINCT STR(?fullname); separator=\",\") as ?ies) (GROUP_CONCAT(DISTINCT ?domain; separator=\",\") as ?domains)"
-                + "      WHERE {"
-                + "        GRAPH  <" + con.getEndpointsGraph() + ">  {"
-                + "          ?provenance <http://ucuenca.edu.ec/ontology#fullName> ?fullname;"
-                + "                      <http://ucuenca.edu.ec/ontology#status> true  ;"
-                + "                      <http://ucuenca.edu.ec/ontology#city> ?city;"
-                + "                      <http://ucuenca.edu.ec/ontology#province> ?province;"
-                + "                      <http://ucuenca.edu.ec/ontology#domain> ?domain."
-                + "        }"
-                + "      } GROUP BY ?provenance ?city ?province"
-                + "    }"
-                + "  }"
-                + "} ";
+                + "SELECT DISTINCT ?city ?province\n"
+                + "(GROUP_CONCAT(DISTINCT STR(?fullname); separator=\",\") as ?ies) \n"
+                + "(GROUP_CONCAT(DISTINCT ?domain; separator=\",\") as ?domains) WHERE {    \n"
+                + "{<" + authorURI + "> dct:provenance ?p }\n"
+                + "UNION\n"
+                + "{<" + authorURI + "> owl:sameAs [dct:provenance ?p].}\n"
+                + "?p <http://ucuenca.edu.ec/ontology#fullName> ?fullname;\n"
+                + "   <http://ucuenca.edu.ec/ontology#city> ?city;  \n"
+                + "   <http://ucuenca.edu.ec/ontology#province> ?province; \n"
+                + "  OPTIONAL { ?p  <http://ucuenca.edu.ec/ontology#domain> ?domain.}  \n"
+                + "} GROUP BY ?p ?city ?province";
     }
 
     @Override

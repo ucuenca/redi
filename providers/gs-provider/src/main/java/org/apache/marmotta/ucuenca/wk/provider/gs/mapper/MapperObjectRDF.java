@@ -68,7 +68,11 @@ public class MapperObjectRDF {
     public Model map(Publication publication) throws IllegalArgumentException, IllegalAccessException {
         Model triples = new TreeModel();
 
-        URI publicationURI = generateURI(publicationResource, StringEscapeUtils.unescapeJava(publication.getTitle().toUpperCase()));
+        URI publicationURI = generateURI(publicationResource, StringEscapeUtils.unescapeJava(publication.getTitle()
+                .toUpperCase())
+                .replace("'", "")
+                .replace("\"", "")
+        );
         // Parse common attributes
         parseObject(triples, publication, publicationURI);
 
@@ -77,7 +81,7 @@ public class MapperObjectRDF {
 
         // Add types/relation author-publications for
         triples.add(new StatementImpl(publicationURI, RDF.TYPE, BIBO.ACADEMIC_ARTICLE));
-        triples.add(new StatementImpl(publicationURI, RDF.TYPE, BIBO.DOCUMENT));
+        //triples.add(new StatementImpl(publicationURI, RDF.TYPE, BIBO.DOCUMENT));
         triples.add(new StatementImpl(authorURI, FOAF.PUBLICATIONS, publicationURI));
 
         // Add authors if exist

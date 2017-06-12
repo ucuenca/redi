@@ -22,10 +22,19 @@ package org.apache.marmotta.ucuenca.wk.pubman.services;
 //import java.io.FileNotFoundException;
 //import java.io.FileOutputStream;
 import com.google.common.base.Preconditions;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
+import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -136,7 +145,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                 String firstName = map.get("fname").stringValue();
                 String lastName = map.get("lname").stringValue();
                 priorityToFind = 1;
-                if (!sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(googleGraph, authorResource))) {
+                if (!sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(googleGraph, authorResource)) && !isProcessed(authorResource)) {
                     boolean dataretrieve = false;//( Data Retrieve Exception )
                     do {
                         try {
@@ -145,19 +154,35 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                             nameToFind = commonsServices.removeAccents(priorityFindQueryBuilding(priorityToFind, firstName, lastName).replace("_", "+"));
 
                             //String URL_TO_FIND = "https://scholar.google.com/scholar?start=0&q=author:%22" + nameToFind + "%22&hl=en&as_sdt=1%2C15&as_vis=1";
-                            String URL_TO_FIND = "https://scholar.google.com/citations?mauthors=" + nameToFind + "&hl=en&view_op=search_authors";
+                            String url_to_find = "https://scholar.google.com/citations?mauthors=" + nameToFind + "&hl=en&view_op=search_authors";
 
-                            existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(googleGraph, URL_TO_FIND));
+                            existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(googleGraph, url_to_find));
                             if (nameToFind.compareTo("") != 0 && !existNativeAuthor) {
 
-                                List<Map<String, Value>> iesInfo = sparqlService.query(QueryLanguage.SPARQL, queriesService.getIESInfobyAuthor(authorResource));
-                                if (!iesInfo.isEmpty()) {
-                                    GoogleScholarSearchEndpoint endpoint = (GoogleScholarSearchEndpoint) ldClient.getEndpoint(URL_TO_FIND);
-                                    endpoint.setCity(iesInfo.get(0).get("city").stringValue());
-                                    endpoint.setProvince(iesInfo.get(0).get("province").stringValue());
-                                    endpoint.setIes(iesInfo.get(0).get("ies").stringValue().split(","));
-                                    endpoint.setDomains(iesInfo.get(0).get("domains").stringValue().split(","));
+                                List<Map<String, Value>> infoQuery = sparqlService.query(QueryLanguage.SPARQL, queriesService.getIESInfobyAuthor(authorResource));
+                                Set[] infoIES = new HashSet[]{new HashSet(), new HashSet(), new HashSet(), new HashSet()};
+                                for (Map<String, Value> info : infoQuery) {
+                                    infoIES[0].add(info.get("city").stringValue());
+                                    infoIES[1].add(info.get("province").stringValue());
+                                    infoIES[2].addAll(Arrays.asList(info.get("ies").stringValue().split(",")));
+                                    infoIES[3].addAll(Arrays.asList(info.get("domains").stringValue().split(",")));
+                                }
+                                if (!infoIES[0].isEmpty() && !infoIES[1].isEmpty() && !infoIES[2].isEmpty()) {
+                                    GoogleScholarSearchEndpoint endpoint = (GoogleScholarSearchEndpoint) ldClient.getEndpoint(url_to_find);
+
+                                    endpoint.setCity((String[]) infoIES[0].toArray(new String[0]));
+                                    endpoint.setProvince((String[]) infoIES[1].toArray(new String[0]));
+                                    endpoint.setIes((String[]) infoIES[2].toArray(new String[0]));
+
+                                    if (!infoIES[3].isEmpty()) {
+                                        endpoint.setDomains((String[]) infoIES[3].toArray(new String[0]));
+                                    } else {
+                                        endpoint.setDomains(new String[0]);
+                                    }
+
                                     endpoint.setResource(resourceGoogle);
+                                    endpoint.setFirstName(firstName);
+                                    endpoint.setLastName(lastName);
                                 }
                                 //do {
                                 try {//waint 1  second between queries
@@ -168,10 +193,10 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                                 try {
                                     boolean retry = false;
                                     do {
-                                        response = ldClient.retrieveResource(URL_TO_FIND);
+                                        response = ldClient.retrieveResource(url_to_find);
                                         if (response.getHttpStatus() >= 500 || response.getHttpStatus() >= 503 || response.getHttpStatus() == 504) {
                                             retry = true;
-                                            long retryAfter = response.getExpires().getTime() - new Date(System.currentTimeMillis()).getTime();
+                                            long retryAfter = 21600000 + response.getExpires().getTime() - new Date(System.currentTimeMillis()).getTime();
                                             if (retryAfter > 0) {
                                                 Thread.sleep(retryAfter);
                                             }
@@ -184,7 +209,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                                         dataretrieve = true;
                                     }
                                 } catch (DataRetrievalException e) {
-                                    log.error("Error when retrieve: " + URL_TO_FIND + " -  Exception: " + e);
+                                    log.error("Error when retrieve: " + url_to_find + " -  Exception: " + e);
                                     dataretrieve = false;
                                 }
 
@@ -224,7 +249,8 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                             log.error("ioexception " + e.toString());
                         }
                         priorityToFind++;
-                    } while (priorityToFind < 3 && !dataretrieve);//end do while
+                    } while (priorityToFind <= 3 && !dataretrieve);//end do while
+                    writeResource(authorResource);
                     printPercentProcess(processedPersons, allAuthors, "Google Scholar");
                 } else if (sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskPublicationsURLGS(googleGraph, authorResource))) {
                     // ask if there are publications left to extract for authorresource
@@ -347,7 +373,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
     }
 
     public String priorityFindQueryBuilding(int priority, String firstName, String lastName) {
-        String[] fnamelname = {"", "", "", "", ""};
+        String[] fnamelname = {"", "", "", "", "", ""};
         /**
          * fnamelname[0] is a firstName A, fnamelname[1] is a firstName B
          * fnamelname[2] is a lastName A, fnamelname[3] is a lastName B
@@ -363,6 +389,8 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
         }
 
         switch (priority) {
+            case 3:
+                return fnamelname[1] + "_" + fnamelname[2];
             case 2:
                 return fnamelname[0] + "_" + fnamelname[2];
             case 1:
@@ -422,4 +450,28 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
         runPublicationsProviderTaskImpl(update);
     }
 
+    private void writeResource(String authorResource) {
+        try {
+            File f = new File(constantService.getHome(), "ProcessedGoogleScholarURIs");
+            if (!f.exists()) {
+                f.createNewFile();
+            }
+            Files.write(f.toPath(), String.format("%s\n", authorResource).getBytes(), StandardOpenOption.APPEND);
+        } catch (IOException ex) {
+            log.error("Can't save resource {}, Error: {} \n{}", authorResource, ex.getMessage(), ex);
+        }
+    }
+
+    private boolean isProcessed(String authorResource) {
+        try (Scanner scanner = new Scanner(new File(constantService.getHome(), "ProcessedGoogleScholarURIs"));) {
+            while (scanner.hasNext()) {
+                if (authorResource.equals(scanner.nextLine().trim())) {
+                    return true;
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            log.error("Can't read URIs. URI trying to read {}. Error msj {}.\n{}", authorResource, ex.getMessage(), ex);
+        }
+        return false;
+    }
 }

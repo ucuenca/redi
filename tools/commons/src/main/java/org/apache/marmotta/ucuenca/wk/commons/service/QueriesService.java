@@ -153,6 +153,8 @@ public interface QueriesService {
     //String getMembersByTitleQuery();
     String getObjectByPropertyQuery(String subject, String property);
 
+    String getObjectByPropertyQuery(String graphname, String subject, String property);
+
     String getObjectByPropertyQuery(String property);
 
     String getAbstractAndTitleQuery(String resource);
@@ -186,7 +188,7 @@ public interface QueriesService {
 
     String getFirstNameLastNameAuhor(String graph, String authorResource);
 
-    String authorDetailsOfProvenance(String graph, String authorResource);
+    String detailsOfProvenance(String graph, String resource);
 
     String authorGetProvenance(String graph, String authorResource);
 
@@ -214,6 +216,7 @@ public interface QueriesService {
      * Get All documents from UTPL ENDPOINT
      *
      * @param repository
+     * @param graph
      * @return
      */
     String getDocumentsAuthors(String repository, String graph);
