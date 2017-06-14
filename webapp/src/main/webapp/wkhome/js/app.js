@@ -34,10 +34,10 @@ wkhomeApp.service('globalData', function () {
     this.centralGraph = "http://ucuenca.edu.ec/wkhuska";
     this.clustersGraph = "http://ucuenca.edu.ec/wkhuska/clusters";
     this.authorsGraph = "http://ucuenca.edu.ec/wkhuska/authors";
-    this.endpointsGraph = "http://ucuenca.edu.ec/wkhuska/endpoints";
+    this.endpointsGraph = "http://localhost:8080/context/endpoints";
     this.externalAuthorsGraph = "http://ucuenca.edu.ec/wkhuska/externalauthors";
     this.translateData = null;
-    this.PREFIX = ' PREFIX bibo: <http://purl.org/ontology/bibo/>'
+    this.PREFIX = 'PREFIX bibo: <http://purl.org/ontology/bibo/>'
             + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>  '
             + ' PREFIX dct: <http://purl.org/dc/terms/> '
             + ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> '
@@ -134,6 +134,10 @@ wkhomeApp.config(['$routeProvider',
                     redirectTo: '/es/'
                 })
                 ;
+    }]);
+
+    wkhomeApp.config(['$locationProvider', function($locationProvider) {
+      $locationProvider.hashPrefix('');
     }]);
 
     wkhomeApp.config(['$compileProvider', function ($compileProvider) {
