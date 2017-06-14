@@ -52,7 +52,7 @@ myApp.labels_es = {
 //EXPLORABLE TREE VIEW
 "Research Info": "Información del investigador",
 "Article Info": "Información de la publicación",
-"Try to Find": "Intentar buscar en",
+"Open in": "Abrir en",
 "Export pub": "Exportar investigador y publicaciones",
 "see.all":"Ver todos",
 "coauthor":"Coautores",
