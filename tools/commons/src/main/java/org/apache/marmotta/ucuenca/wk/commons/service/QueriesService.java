@@ -272,4 +272,17 @@ public interface QueriesService {
     String getPublicationsScholar(String resource);
 
     String getProfileScholarAuthor();
+
+    /**
+     * * Some queries to get info about same authors. This is a test.
+     *
+     * @return
+     */
+    String getAuthorsCentralGraphSize();
+
+    String getAuthorsCentralGraph(int limit, int offset);
+
+    String getSameAuthorsLvl2(String authorResource);
+
+    String getOptionalProperties(String sameAs, String property);
 }
