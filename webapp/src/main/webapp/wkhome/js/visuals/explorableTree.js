@@ -46,15 +46,17 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                 + '  <http://ucuenca.edu.ec/wkhuska/resultTitle> a uc:pagetitle;'
                 + '                                              uc:viewtitle "Authors Related With {0}".'
                 + '  ?subject rdfs:label ?name.'
-                + '  ?subject uc:total ?totalPub '
+                + '  ?subject uc:total ?totalPub .'
+                + '  ?subject foaf:img ?img .'
                 + '} WHERE  {'
-                + '  SELECT ?subject ?name (COUNT(?pub) as ?totalPub)'
+                + '  SELECT ?subject ?name (COUNT(?pub) as ?totalPub) ?img'
                 + '  WHERE { GRAPH <' + globalData.centralGraph + '> {'
                 + '    <{1}> foaf:publications ?pub.'
                 + '    ?subject foaf:publications ?pub;'
                 + '             foaf:name ?name.'
+                + '     OPTIONAL{?subject  foaf:img ?img.}'
                 + '    FILTER(<{1}> != ?subject)'
-                + '  }} GROUP BY ?subject ?name'
+                + '  }} GROUP BY ?subject ?name ?img'
                 + '}';
 
         var draw = function draw(svg, width, height, data, scope) {
@@ -127,7 +129,8 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                                     if (value["rdfs:label"] && value["uc:total"]["@value"]) {
                                         var authorname = typeof value["rdfs:label"] == "string" ? value["rdfs:label"] : _.first(value["rdfs:label"], 1);
                                         var anchor = $("<a class='relatedauthors' target='blank' onclick = 'return clickonRelatedauthor(\"" + value["@id"] + "\")'  >").text("");
-                                        anchor.append('<img src="/wkhome/images/author-ec.png" class="img-rounded" alt="Logo Cedia" width="20" height="20"        >');
+                                        var img = value["foaf:img"] ? value["foaf:img"]["@id"] : "/wkhome/images/author-ec.png";
+                                        anchor.append('<img src="' + img + '" class="img-rounded" alt="Logo Cedia" width="20" height="20"        >');
                                         anchor.append(authorname + "(" + value["uc:total"]["@value"] + ")");
                                         div.append(anchor);
                                         div.append("</br>");
@@ -407,7 +410,9 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                       + "								dct:subject ?keyword; "
                       + "								dct:isPartOf ?isPartOfURI. "
                       + " ?contributorURI foaf:name ?contributor."
+                      + " ?contributorURI foaf:img ?imgContributor."
                       + " ?creatorURI foaf:name ?creator."
+                      + " ?creatorURI foaf:img ?imgCreator."
                       + " ?isPartOfURI rdfs:label ?isPartOf. } "
                       + "WHERE { GRAPH <http://ucuenca.edu.ec/wkhuska> { "
                       + "  <" + id + "> dct:title ?title."
@@ -420,8 +425,10 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                       + "  OPTIONAL {<" + id + "> bibo:volume ?volumne. }"
                       + "  OPTIONAL {<" + id + "> dct:contributor ?contributorURI. }"
                       + "  OPTIONAL {?contributorURI foaf:name ?contributor. }"
+                      + "  OPTIONAL {?contributorURI foaf:img ?imgContributor. }"
                       + "  OPTIONAL {<" + id + "> dct:creator ?creatorURI. }"
                       + "  OPTIONAL {?creatorURI foaf:name ?creator.}"
+                      + "  OPTIONAL {?creatorURI foaf:img ?imgCreator.}"
                       + "  OPTIONAL {<" + id + "> dct:publisher ?publisherURI.}"
                       + "  OPTIONAL {?publisherURI rdfs:label ?publisher. }"
                       + "  OPTIONAL {<" + id + "> dct:subject ?keywordURI. }"
@@ -460,6 +467,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                             author["@id"] = aux['@id'];
                             author["foaf:name"] = getStrVal(aux['foaf:name']);
                             author["@type"] = "foaf:Person"
+                            author['foaf:img'] = aux["foaf:img"] ? aux["foaf:img"] : undefined;
                             authors.push(author);
                           };
 
@@ -854,14 +862,13 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                 nodeEnter.append("image")
                         .attr("xlink:href", function (d) {
                             if (isAuthor(d)) {
-                                if (d.author.jsonld["@graph"][0]["foaf:name"] && (d.author.jsonld["@graph"][0]["@id"].indexOf('localhost') > 0))
-                                {
-                                    return 'wkhome/images/author-ec.png';
-                                } else
-                                {
-                                    return 'wkhome/images/author-default.png';
-                                }
-                                //return AE.getSuitableImage(d.author.images);
+                              if (d.author.jsonld["@graph"][0]["foaf:name"] && d.author.jsonld["@graph"][0]["foaf:img"]) {
+                                  return d.author.jsonld["@graph"][0]["foaf:img"]["@id"];
+                              } else if (d.author.jsonld["@graph"][0]["foaf:name"] && (d.author.jsonld["@graph"][0]["@id"].indexOf('localhost') > 0)) {
+                                  return 'wkhome/images/author-ec.png';
+                              } else {
+                                  return 'wkhome/images/author-default.png';
+                              }
                             } else {
                                 return 'wkhome/images/document-default.png'
                             }
@@ -1092,8 +1099,9 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                     //	Watch	the	data	attribute	of	the	scope
                     scope.$watch('data', function (newVal, oldVal, scope) {
                         //	Update	the	chart
-                        if (scope.data &&
-                                (JSON.stringify(newVal["@graph"]) != JSON.stringify(oldVal ? oldVal["@graph"] : oldVal))) {
+                        if (scope.data){
+                          //&&
+                            //    (JSON.stringify(newVal["@graph"]) != JSON.stringify(oldVal ? oldVal["@graph"] : oldVal))) {
                             var data = jQuery.extend({}, scope.data);
                             draw(svg, width, height, data, scope);
                         }

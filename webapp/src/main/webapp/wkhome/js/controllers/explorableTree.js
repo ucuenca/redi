@@ -28,8 +28,8 @@ wkhomeControllers.controller('exploreAuthor', ['$routeParams', '$scope', '$rootS
 
         clickonRelatedauthor = function (author) {
             var getAuthorDataQuery = globalData.PREFIX
-                    + ' CONSTRUCT {   <' + author + '> foaf:name ?name; a foaf:Person }'
-                    + ' WHERE { <' + author + '> foaf:name ?name } LIMIT 1 ';
+                    + ' CONSTRUCT {   <' + author + '> foaf:name ?name; a foaf:Person; foaf:img ?img. }'
+                    + ' WHERE { <' + author + '> foaf:name ?name; foaf:img?img. } LIMIT 1 ';
 
             sparqlQuery.querySrv({query: getAuthorDataQuery}, function (rdf) {
                 jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
@@ -92,9 +92,9 @@ wkhomeControllers.controller('exploreAuthor', ['$routeParams', '$scope', '$rootS
             }
         }
 
-        if (searchData.authorSearch != null && searchData.authorSearch["@graph"].length == 1) {
-            clickonRelatedauthor(searchData.authorSearch["@graph"][0]["@id"]);
-        }
+        //if (searchData.authorSearch != null && searchData.authorSearch["@graph"].length == 1) {
+        //    clickonRelatedauthor(searchData.authorSearch["@graph"][0]["@id"]);
+        //}
 
         searchAuthorInfo = function (author)
         {
@@ -143,15 +143,16 @@ wkhomeControllers.controller('exploreAuthor', ['$routeParams', '$scope', '$rootS
                             var model = {};
                             //var keys = Object.keys(author);
                             model["id"] = author["@id"];
-                            model["name"] = author["foaf:name"];
+                            model["name"] = author["foaf:name"] instanceof Array ? _.first(author["foaf:name"]) : author["foaf:name"];
                             model["keyword"] = "";
 
                             author["dct:subject"] instanceof Array ?
-                                    _.map(author["dct:subject"], function (eachsubject, idx) {
-                                        if (idx < 5) {
-                                            model["keyword"] = model["keyword"] + eachsubject + ", ";
+                                    _.map(author["dct:subject"], function (eachsubject, idx, subjects) {
+                                        if (subjects.length-1 === idx) {
+                                          model["keyword"] = model["keyword"] + eachsubject.toUpperCase();
+                                        } else if (idx < 5) {
+                                          model["keyword"] = model["keyword"] + eachsubject.toUpperCase() + ", ";
                                         }
-
                                     }) : model["keyword"] = author["dct:subject"];
                             return model;
                         });
@@ -176,7 +177,7 @@ wkhomeControllers.controller('exploreAuthor', ['$routeParams', '$scope', '$rootS
                         $('#searchResults').modal('show');
                     } else {
                         searchData.authorSearch["@graph"] = authorSearch;
-                        //$scope.data = searchData.authorSearch;
+                        $scope.data = searchData.authorSearch;
                         waitingDialog.hide();
                         //$scope.author = searchData.authorSearch["@graph"]["@id"];
                         searchAuthorInfo(searchData.authorSearch["@graph"][0]["@id"]);

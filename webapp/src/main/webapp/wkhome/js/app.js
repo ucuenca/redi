@@ -34,7 +34,8 @@ wkhomeApp.service('globalData', function () {
     this.centralGraph = "http://ucuenca.edu.ec/wkhuska";
     this.clustersGraph = "http://ucuenca.edu.ec/wkhuska/clusters";
     this.authorsGraph = "http://ucuenca.edu.ec/wkhuska/authors";
-    this.endpointsGraph = "http://localhost:8080/context/endpoints";
+    //this.endpointsGraph = "http://localhost:8080/context/endpoints";
+    this.endpointsGraph = "http://redi.cedia.org.ec/marmottatest/context/endpoints";
     this.externalAuthorsGraph = "http://ucuenca.edu.ec/wkhuska/externalauthors";
     this.translateData = null;
     this.PREFIX = 'PREFIX bibo: <http://purl.org/ontology/bibo/>'

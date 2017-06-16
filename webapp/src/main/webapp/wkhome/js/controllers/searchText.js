@@ -16,25 +16,37 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
             return theString;
         };
 
+        //var queryAuthors = globalData.PREFIX
+        //        + " CONSTRUCT { "
+        //        + " ?s a foaf:Person. "
+        //        + " ?s foaf:name ?name. "
+        //        + " ?s dct:subject ?key. } "
+        //        + " WHERE { "
+        //        + " { "
+        //        + "     SELECT DISTINCT ?s ?name  ?key "
+        //        + "     WHERE { "
+        //        + '         GRAPH <' + globalData.centralGraph + '> {'
+        //        + "             ?s a foaf:Person. "
+      //          + "             ?s foaf:name ?name."
+        //        + "             ?s foaf:publications ?pub. "
+        //        + "             ?pub dct:title ?title. "
+        //        + "             optional { ?s dct:subject ?key }"
+        //        + "             {0}"
+        //        + "     } } "
+      //          + "  } "
+      //          + " }";
         var queryAuthors = globalData.PREFIX
-                + " CONSTRUCT { "
-                + " ?s a foaf:Person. "
-                + " ?s foaf:name ?name. "
-                + " ?s dct:subject ?key. } "
-                + " WHERE { "
-                + " { "
-                + "     SELECT DISTINCT ?s ?name  ?key "
-                + "     WHERE { "
-                + '         GRAPH <' + globalData.centralGraph + '> {'
-                + "             ?s a foaf:Person. "
-                + "             ?s foaf:name ?name."
-                + "             ?s foaf:publications ?pub. "
-                + "             ?pub dct:title ?title. "
-                + "             optional { ?s dct:subject ?key }"
-                + "             {0}"
-                + "     } } "
-                + "  } "
-                + " }";
+          + "CONSTRUCT { ?s a foaf:Person; foaf:name ?name; dct:subject ?key; foaf:img ?img. }"
+          + "FROM <" + globalData.centralGraph + ">"
+          + "WHERE {"
+          + "  ?s a foaf:Person;"
+          + "       foaf:name ?name;"
+          + "       foaf:publications []."
+          + "  OPTIONAL { ?s foaf:topic_interest ?topic }"
+          + "  OPTIONAL { ?topic rdfs:label ?key.} "
+          + "  OPTIONAL { ?s foaf:img   ?img }"
+          + "  {0}"
+          + "}";
 
         $scope.submit = function () {
             if ($scope.searchText) {
@@ -49,14 +61,11 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
                 sparqlQuery.querySrv({query: fulltextqueryAuthors},
                 function (rdf) {
                     jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
-                        if (compacted["@graph"])
-                        {
+                        if (compacted["@graph"]){
                             waitingDialog.hide();
                             searchData.authorSearch = compacted;
                             $window.location.hash = "/" + $routeParams.lang + "/w/search?" + $scope.searchText;
-                        }
-                        else
-                        {
+                        } else {
                             /**
                              * Second Attempt: search text using CONTAINS function of SPARQL
                              */
