@@ -15,7 +15,7 @@ wkhomeControllers.controller('exploreAuthor', ['$routeParams', '$scope', '$rootS
          }*/
 
 
-        $scope.author = '';
+        //$scope.author = '';
         $scope.authorId = '';
         $rootScope.$on("CallParentMethod", function (author) {
             $scope.clickonRelatedauthor(author);
@@ -92,39 +92,6 @@ wkhomeControllers.controller('exploreAuthor', ['$routeParams', '$scope', '$rootS
             }
         }
 
-        //if (searchData.authorSearch != null && searchData.authorSearch["@graph"].length == 1) {
-        //    clickonRelatedauthor(searchData.authorSearch["@graph"][0]["@id"]);
-        //}
-
-        searchAuthorInfo = function (author)
-        {
-            var getAuthorDataQuery = globalData.PREFIX
-                    + ' CONSTRUCT {   <' + author + '> foaf:name ?name; '
-                    + ' a foaf:Person;  '
-                    + ' foaf:publications  ?publications. '
-                    + ' ?publications ?predicate ?object. '
-                    + ' ?publications uc:contributor ?authorsName '
-                    + ' }   '
-                    + ' WHERE '
-                    + ' {'
-                    + '     <' + author + '> foaf:name ?name.'
-                    + '     <' + author + '> foaf:publications  ?publications.'
-                    + '     ?publications ?predicate ?object. '
-                    + '     ?authors foaf:publications ?publications. '
-                    + '     ?authors foaf:name ?authorsName.         '
-                    //+ '     FILTER (?authorsName != ?name). '
-                    + ' } ';
-
-            sparqlQuery.querySrv({query: getAuthorDataQuery}, function (rdf) {
-                jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
-                    $scope.$apply(function () {
-                        $scope.author = compacted["@graph"];
-                        $scope.authorId = compacted["@graph"][0]['@id'];
-                    });
-                });
-            });
-        };
-
         $scope.numeroPub = function (publications)
         {
             if (publications != null && (publications.constructor === Array || publications instanceof Array))
@@ -134,7 +101,6 @@ wkhomeControllers.controller('exploreAuthor', ['$routeParams', '$scope', '$rootS
         }
 
         $scope.$watch('searchData.authorSearch', function (newValue, oldValue, scope) {
-
             if (searchData.authorSearch) {
                 var authorSearch = searchData.authorSearch["@graph"];
                 if (authorSearch) {
@@ -157,20 +123,12 @@ wkhomeControllers.controller('exploreAuthor', ['$routeParams', '$scope', '$rootS
                             return model;
                         });
 
-
                         $scope.candidates = candidates;
-
-                        /*if (searchData.authorSearch["@graph"].length === 1)
-                         {
-                         $scope.data = searchData.authorSearch;
-                         }*/
 
                         $scope.selectedAuthor = function ($event, uri) {
                             searchData.authorSearch["@graph"] = _.where(authorSearch, {"@id": uri});
-                            //$scope.data = _.where(authorSearch, {"@id": uri});
                             $scope.data = searchData.authorSearch;
-                            //$scope.author = $scope.data["@graph"]["@id"];
-                            searchAuthorInfo($scope.data["@graph"][0]["@id"]);
+                            $scope.authorId = $scope.data["@graph"][0]["@id"];
                             $('#searchResults').modal('hide');
                         };
                         waitingDialog.hide();
@@ -179,8 +137,7 @@ wkhomeControllers.controller('exploreAuthor', ['$routeParams', '$scope', '$rootS
                         searchData.authorSearch["@graph"] = authorSearch;
                         $scope.data = searchData.authorSearch;
                         waitingDialog.hide();
-                        //$scope.author = searchData.authorSearch["@graph"]["@id"];
-                        searchAuthorInfo(searchData.authorSearch["@graph"][0]["@id"]);
+                        $scope.authorId = $scope.data["@graph"][0]["@id"];
                     }
                 }//End if(authorSearch)
                 else

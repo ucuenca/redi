@@ -16,25 +16,6 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
             return theString;
         };
 
-        //var queryAuthors = globalData.PREFIX
-        //        + " CONSTRUCT { "
-        //        + " ?s a foaf:Person. "
-        //        + " ?s foaf:name ?name. "
-        //        + " ?s dct:subject ?key. } "
-        //        + " WHERE { "
-        //        + " { "
-        //        + "     SELECT DISTINCT ?s ?name  ?key "
-        //        + "     WHERE { "
-        //        + '         GRAPH <' + globalData.centralGraph + '> {'
-        //        + "             ?s a foaf:Person. "
-      //          + "             ?s foaf:name ?name."
-        //        + "             ?s foaf:publications ?pub. "
-        //        + "             ?pub dct:title ?title. "
-        //        + "             optional { ?s dct:subject ?key }"
-        //        + "             {0}"
-        //        + "     } } "
-      //          + "  } "
-      //          + " }";
         var queryAuthors = globalData.PREFIX
           + "CONSTRUCT { ?s a foaf:Person; foaf:name ?name; dct:subject ?key; foaf:img ?img. }"
           + "FROM <" + globalData.centralGraph + ">"
@@ -99,9 +80,7 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
                                         waitingDialog.hide();
                                         searchData.authorSearch = compacted;
                                         $window.location.hash = "/" + $routeParams.lang + "/w/search?" + $scope.searchText;
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         /**
                                          * As a last attempt, the text will look for dct:SUBJECT
                                          *  using fulltext
@@ -113,10 +92,10 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
                                                 + "     SELECT DISTINCT (sample(?keyword) AS ?keywordduri) ?k "
                                                 + "     WHERE { "
                                                 + '         GRAPH <' + globalData.centralGraph + '> {'
-                                                + "         ?s foaf:publications ?pub. "
+                                                + "         ?s foaf:publications [dct:subject ?keyword]."
                                                 //+ "         ?s dct:subject ?k. "
-                                                + "         ?pub bibo:Quote ?k."
-                                                + "         BIND(IRI(?k) AS ?keyword) . "
+                                                + "         ?keyword rdfs:label ?k."
+                                                //+ "         BIND(IRI(?k) AS ?keyword) . "
                                                 + '         FILTER(mm:fulltext-search(str(?k), "' + $scope.searchText + '")).'
                                                 + "     } } "
                                                 + "     GROUP BY ?k "

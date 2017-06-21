@@ -228,7 +228,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                                     autInfo.append(div);
                                     var values = entity[key].length ? entity[key] : [entity[key]];
                                     if(key==='foaf:name')
-                                      values = _.first(values);
+                                      values = typeof(values) === 'string' ? values : _.first(values);
                                     if(location.href.indexOf('/es/') !== -1 && key === 'uc:fullName')
                                       values = _.findWhere(entity["uc:fullName"], {"@language": "es"})["@value"];
                                     else if (location.href.indexOf('/en/') !== -1 && key === 'uc:fullName')
@@ -476,7 +476,14 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                           * If a domain/pdf is found, there's an image. Otherwise the general one is web.
                           */
                           var classifyURLS = function(val, key) {
-                            var url = val["@id"] ? val["@id"] : "";
+                            var url;
+
+                            if(typeof(val) === 'string')  {
+                              url = val;
+                              val = {"@id": url};
+                            } else if(typeof(val) === 'object') url = val["@id"];
+                            else return;
+
                             if (url.indexOf("scholar.google.com") !== -1) {
                               val["source"] = "scholar";
                               val["label"] = "Google Scholar";
@@ -513,7 +520,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                             return val;
                           };
 
-                          _.mapObject(publication["bibo:uri"], classifyURLS);
+
 
                           pubclean.id = publication['@id'];
                           pubclean.title = getStrVal(publication['dct:title']);
@@ -524,7 +531,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                           pubclean.issue = getStrVal(publication['bibo:issue']);//
                           pubclean.volume = getStrVal(publication['bibo:volume']);
                           pubclean.publisher = getStrVal(publication['dct:publisher']);
-                          pubclean.uri = publication['bibo:uri'];
+                          pubclean.uri = _.mapObject(publication["bibo:uri"], classifyURLS);
                           pubclean.subjects = publication['dct:subject'];
 
                           _.each(publication["dct:contributor"],buildAuthor);

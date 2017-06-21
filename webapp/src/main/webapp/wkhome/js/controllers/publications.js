@@ -92,13 +92,15 @@ wkhomeControllers.controller('publicationsController', ['$scope', '$window', 'gl
         jsonld.compact(rdf, globalData.CONTEXT, function(error, compacted){
           if (!error) {
             var entity = _.findWhere(compacted["@graph"], {"@type": "foaf:Person"});
-            $scope.author.name = _.first(entity["foaf:name"]);
+            $scope.author.name = typeof(entity["foaf:name"]) === 'string' ? entity["foaf:name"] : _.first(entity["foaf:name"]);
             $scope.author.areas = entity["foaf:topic"];
             $scope.author.photo = entity["foaf:img"] ? entity["foaf:img"]["@id"] : undefined;
             $scope.author.institutions = [];
             _.each(entity["dct:provenance"], function(v){
-              var provenance = _.findWhere(compacted["@graph"], v)
-              var name = location.href.indexOf("/es/")
+              var provenance = typeof(v) === 'object'
+                        ? _.findWhere(compacted["@graph"], v)
+                        : _.findWhere(compacted["@graph"], {"@id": v})
+              var name = location.href.indexOf("/es/") !== -1
                         ? _.findWhere(provenance["uc:fullName"], {"@language": "es"})["@value"]
                         : _.findWhere(provenance["uc:fullName"], {"@language": "en"})["@value"];
               $scope.author.institutions.push({name: name, province: provenance["uc:city"], city: provenance["uc:province"]})
