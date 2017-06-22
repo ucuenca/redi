@@ -61,11 +61,6 @@
                                 </tbody>
                             </table>
                         </div>
-                        <!--
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        </div>
-                        -->
                     </div>
                 </div>
             </div>
@@ -104,12 +99,12 @@
               <div class="row pub-keywords"><small class="label label-default" ng-repeat="keyword in publication.subjects">{{keyword}}</small></div>
               <div class="row pub-authors"><small ng-repeat="author in publication.authors"><a href="{{author['@id']}}" target="_blank">{{author['foaf:name']}}{{$last ? '' : ', '}}</a></small></div>
               <div class="row">
-                <small class="pub-pages" ng-show="publication.pages"><strong>Pages:</strong>{{publication.pages}}</small>
-                <small class="pub-created" ng-show="publication.created"><strong>Created:</strong>{{publication.created}}</small>
+                <small class="pub-pages" ng-show="publication.pages"><strong>{{'pages' | translate}}:</strong>{{publication.pages}}</small>
+                <small class="pub-created" ng-show="publication.created"><strong>{{'created' | translate}}:</strong>{{publication.created}}</small>
                 <small class="pub-doi" ng-show="publication.doi"><strong>DOI:</strong>{{publication.doi}}</small>
-                <small class="pub-issue" ng-show="publication.issue"><strong>Issue:</strong>{{publication.issue}}</small>
-                <small class="pub-volume" ng-show="publication.volume"><strong>Volume:</strong>{{publication.volume}}</small>
-                <small class="pub-publisher" ng-show="publication.publisher"><strong>Publisher:</strong>{{publication.publisher}}</small>
+                <small class="pub-issue" ng-show="publication.issue"><strong>{{'issue' | translate}}:</strong>{{publication.issue}}</small>
+                <small class="pub-volume" ng-show="publication.volume"><strong>{{'volume' | translate}}:</strong>{{publication.volume}}</small>
+                <small class="pub-publisher" ng-show="publication.publisher"><strong>{{'publisher' | translate}}:</strong>{{publication.publisher}}</small>
               </div>
               <div class="row pub-url" ng-show="publication.uri">
                 <a href="{{uri['@id']}}" target="_blank" class="btn btn-default btn-xs col-md-2" role="button" ng-repeat="uri in publication.uri">

@@ -55,6 +55,11 @@ myApp.labels_en = {
 "coauthor":"Co-Authors",
 "relatedauthors":"Related Authors",
 "list.pub":"List publications",
+"pages" : "Pages",
+"created" : "Created",
+"issue" : "Issue",
+"volume" : "Volume",
+"publisher" : "Publisher",
 
 //   GROUP BY  VIEW
 "Grouping Publications": "Grouping Authors",

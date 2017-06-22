@@ -58,6 +58,11 @@ myApp.labels_es = {
 "coauthor":"Coautores",
 "relatedauthors":"Autores Relacionados",
 "list.pub":"Listar publicaciones",
+"pages" : "Paginas",
+"created" : "Creado",
+"issue" : "Emitido",
+"volume" : "Volumen",
+"publisher" : "Editorial",
 
 //   GROUP BY  VIEW
 "Grouping Publications": "Agrupar autores por área e institución",
