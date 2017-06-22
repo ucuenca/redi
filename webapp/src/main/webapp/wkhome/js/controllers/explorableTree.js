@@ -4,18 +4,10 @@ wkhomeControllers.controller('exploreAuthor', ['$routeParams', '$scope', '$rootS
             scrollTop: 0
         }, "slow");
 
-        /*var keys = Object.keys($routeParams)
-         for (var k in Object.keys($routeParams)) {
-         if (keys[parseInt(k)] != 'lang' && keys[parseInt(k)] != 'text') {
-         searchData.authorSearch = "";//searchText.search(keys[parseInt(k)]);
+        if (searchData.authorSearch == null) {
+          $window.location.hash = "/" + $routeParams.lang;
          }
-         }*/
-        /*if (searchData.authorSearch == null) {
-         searchData.authorSearch = $routeParams.text;
-         }*/
 
-
-        //$scope.author = '';
         $scope.authorId = '';
         $rootScope.$on("CallParentMethod", function (author) {
             $scope.clickonRelatedauthor(author);
@@ -23,8 +15,6 @@ wkhomeControllers.controller('exploreAuthor', ['$routeParams', '$scope', '$rootS
 
         $scope.data = '';
         $scope.publication = undefined;
-
-
 
         clickonRelatedauthor = function (author) {
             var getAuthorDataQuery = globalData.PREFIX
@@ -101,52 +91,46 @@ wkhomeControllers.controller('exploreAuthor', ['$routeParams', '$scope', '$rootS
         }
 
         $scope.$watch('searchData.authorSearch', function (newValue, oldValue, scope) {
-            if (searchData.authorSearch) {
-                var authorSearch = searchData.authorSearch["@graph"];
-                if (authorSearch) {
-                    if (authorSearch.length > 1) {
-                        var candidates = _.map(authorSearch, function (author) {
-                            var model = {};
-                            //var keys = Object.keys(author);
-                            model["id"] = author["@id"];
-                            model["name"] = author["foaf:name"] instanceof Array ? _.first(author["foaf:name"]) : author["foaf:name"];
-                            model["keyword"] = "";
+            if (searchData.authorSearch && searchData.authorSearch["@graph"]) {
+              var authorSearch = searchData.authorSearch["@graph"];
+              if (authorSearch.length > 1) {
+                var candidates = _.map(authorSearch, function (author) {
+                  var model = {};
+                  model["id"] = author["@id"];
+                  model["name"] = author["foaf:name"] instanceof Array ? _.first(author["foaf:name"]) : author["foaf:name"];
+                  model["keyword"] = "";
 
-                            author["dct:subject"] instanceof Array ?
-                                    _.map(author["dct:subject"], function (eachsubject, idx, subjects) {
-                                        if (subjects.length-1 === idx) {
-                                          model["keyword"] = model["keyword"] + eachsubject.toUpperCase();
-                                        } else if (idx < 5) {
-                                          model["keyword"] = model["keyword"] + eachsubject.toUpperCase() + ", ";
-                                        }
-                                    }) : model["keyword"] = author["dct:subject"];
-                            return model;
-                        });
+                  author["dct:subject"] instanceof Array
+                          ? _.map(author["dct:subject"], function (eachsubject, idx, subjects) {
+                                if (subjects.length-1 === idx) {
+                                  model["keyword"] = model["keyword"] + eachsubject.toUpperCase();
+                                } else if (idx < 5) {
+                                  model["keyword"] = model["keyword"] + eachsubject.toUpperCase() + ", ";
+                                }
+                              })
+                          : model["keyword"] = author["dct:subject"];
+                  return model;
+                });
 
-                        $scope.candidates = candidates;
-
-                        $scope.selectedAuthor = function ($event, uri) {
-                            searchData.authorSearch["@graph"] = _.where(authorSearch, {"@id": uri});
-                            $scope.data = searchData.authorSearch;
-                            $scope.authorId = $scope.data["@graph"][0]["@id"];
-                            $('#searchResults').modal('hide');
-                        };
-                        waitingDialog.hide();
-                        $('#searchResults').modal('show');
-                    } else {
-                        searchData.authorSearch["@graph"] = authorSearch;
-                        $scope.data = searchData.authorSearch;
-                        waitingDialog.hide();
-                        $scope.authorId = $scope.data["@graph"][0]["@id"];
-                    }
-                }//End if(authorSearch)
-                else
-                {
-                    alert("Information not found");
-                    $window.location.hash = "/";
-                    waitingDialog.hide();
-                }
+                $scope.candidates = candidates;
+                $scope.selectedAuthor = function ($event, uri) {
+                  searchData.authorSearch["@graph"] = _.where(authorSearch, {"@id": uri});
+                  $scope.data = searchData.authorSearch;
+                  $scope.authorId = $scope.data["@graph"][0]["@id"];
+                  $('#searchResults').modal('hide');
+                };
+                waitingDialog.hide();
+                $('#searchResults').modal('show');
+              } else {
+                searchData.authorSearch["@graph"] = authorSearch;
+                $scope.data = searchData.authorSearch;
+                waitingDialog.hide();
+                $scope.authorId = $scope.data["@graph"][0]["@id"];
+              }
+            }  else {
+              alert("Information not found");
+              $window.location.hash = "/";
+              waitingDialog.hide();
             }
         }, true);
-
-    }]); // end exploreAuthor
+    }]);
