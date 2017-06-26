@@ -24,3 +24,5 @@ npm-debug.log
 
 #ignore Netbeans files
 nbactions.xml
+/webapp/target (copia)/
+/nb-configuration.xml

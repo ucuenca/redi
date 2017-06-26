@@ -1,9 +1,18 @@
-wkhomeControllers.controller('exploreAuthor', ['$routeParams', '$scope', '$rootScope', 'globalData', 'searchData', '$window', 'sparqlQuery',
+wkhomeControllers.controller('exploreAuthor', ['$routeParams', '$scope', '$rootScope', 'globalData', 'searchData', '$window', 'sparqlQuery', 'searchText',
     function ($routeParams, $scope, $rootScope, globalData, searchData, $window, sparqlQuery) {
         $('html,body').animate({
             scrollTop: 0
         }, "slow");
 
+        /*var keys = Object.keys($routeParams)
+        for (var k in Object.keys($routeParams)) {
+            if (keys[parseInt(k)] != 'lang' && keys[parseInt(k)] != 'text') {
+                searchData.authorSearch = "";//searchText.search(keys[parseInt(k)]);
+            }
+        }*/
+        /*if (searchData.authorSearch == null) {
+            searchData.authorSearch = $routeParams.text;
+        }*/
 
 
         $scope.author = '';

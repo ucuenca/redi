@@ -216,7 +216,7 @@ clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery
                         + '     ?subject a foaf:Person. '
                         + '	?subject foaf:name ?name. '
 
-                        + '	?subject bibo:Quote ?keywords. '
+                        + '	?subject dcterms:subject ?keywords. '
                         + '} '
                         + 'where'
                         + '{'
@@ -235,7 +235,8 @@ clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery
                         + '                               ?subject foaf:name ?name.'
                         + '                               ?subject foaf:publications ?publicationUri. '
                         + ' 							  ?publicationUri dct:title ?title .'
-                        + '                           ?publicationUri bibo:Quote ?keywords.'
+                        + '                           ?publicationUri dcterms:subject ?keySub.'
+                        + '                           ?keySub rdfs:label ?keywords. '
                         + '                         }          			'
                         + '                 } group by ?subject ?name ?keywords         	'
                         + ' }           '
@@ -254,13 +255,13 @@ clusterKeywCloud.directive('clusterKeywCloud', ["d3", 'globalData', 'sparqlQuery
                             var newdata = [];
                             _.map(compacted["@graph"], function (keyword) {
                                 var mykeywords;
-                                for (var i = 0; i < 20 && i < keyword["bibo:Quote"].length; i++)
+                                for (var i = 0; i < 20 && i < keyword["dcterms:subject"].length; i++)
                                 {
 
-                                    mykeywords = ( mykeywords ? mykeywords + ", " : "" ) + keyword["bibo:Quote"][i];
+                                    mykeywords = ( mykeywords ? mykeywords + ", " : "" ) + keyword["dcterms:subject"][i];
 
                                 }
-                                newdata.push({"@id": keyword["@id"], "@type": keyword["@type"], "bibo:Quote": mykeywords, "foaf:name": keyword["foaf:name"]});
+                                newdata.push({"@id": keyword["@id"], "@type": keyword["@type"], "dcterms:subject": mykeywords, "foaf:name": keyword["foaf:name"]});
 
 
                             })

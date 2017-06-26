@@ -5,7 +5,6 @@
  */
 package org.apache.marmotta.ucuenca.wk.commons.impl;
 
-import org.slf4j.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
@@ -18,6 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
+import org.slf4j.Logger;
 
 /**
  *
@@ -27,7 +27,7 @@ public class CommonsServicesImpl implements CommonsServices {
 
     @Inject
     private Logger log;
-    
+       
     /**
      * Función que elimina acentos y caracteres especiales
      *
@@ -44,12 +44,32 @@ public class CommonsServicesImpl implements CommonsServices {
         for (int i = 0; i < original.length(); i++) {
             // Reemplazamos los caracteres especiales.
             output = output.replace(original.charAt(i), ascii.charAt(i));
-        }//for i
+        }//end for i
         return output;
+    }
+    
+    @Override
+    public String cleanNameArticles(String value) {
+        value = value.replace(".", "").trim();
+        value = value.replace("??", ".*");
+        value = value.replace("?", ".*").toLowerCase();
+        value = value.replaceAll(" de ", " ");
+        value = value.replaceAll("^del ", " ");
+        value = value.replaceAll(" del ", " ");
+        value = value.replaceAll(" los ", " ");
+        value = value.replaceAll(" y ", " ");
+        value = value.replaceAll(" las ", " ");
+        value = value.replaceAll(" la ", " ");
+        value = value.replaceAll("^de ", " ");
+        value = value.replaceAll("^los ", " ");
+        value = value.replaceAll("^las ", " ");
+        value = value.replaceAll("^la ", " ");
+        
+        return value;
     }
 
     /**
-     * Return true or false if object is a URI
+     * Return true or false if object is a URI.
      */
     @Override
     public Boolean isURI(String object) {

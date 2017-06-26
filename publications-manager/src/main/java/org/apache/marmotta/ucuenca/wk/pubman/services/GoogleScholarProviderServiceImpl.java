@@ -21,20 +21,26 @@ package org.apache.marmotta.ucuenca.wk.pubman.services;
 //import java.io.FileInputStream;
 //import java.io.FileNotFoundException;
 //import java.io.FileOutputStream;
+import com.google.common.base.Preconditions;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-import java.util.logging.Level;
-import org.slf4j.Logger;
+import java.util.Scanner;
+import java.util.Set;
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.marmotta.commons.sesame.model.ModelCommons;
-import org.apache.marmotta.kiwi.model.rdf.KiWiUriResource;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
 import org.apache.marmotta.ldclient.model.ClientConfiguration;
 import org.apache.marmotta.ldclient.model.ClientResponse;
@@ -42,41 +48,36 @@ import org.apache.marmotta.ldclient.services.ldclient.LDClient;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
+import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
+import org.apache.marmotta.ucuenca.wk.endpoint.gs.GoogleScholarPublicationEndpoint;
+import org.apache.marmotta.ucuenca.wk.endpoint.gs.GoogleScholarSearchEndpoint;
+import org.apache.marmotta.ucuenca.wk.pubman.api.GoogleScholarProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
 import org.apache.marmotta.ucuenca.wk.pubman.exceptions.PubException;
-import org.apache.marmotta.ucuenca.wk.pubman.api.GoogleScholarProviderService;
-import org.apache.marmotta.ucuenca.wk.commons.service.DistanceService;
-import org.apache.marmotta.ucuenca.wk.commons.service.KeywordsService;
-import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
-
+import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
+import org.openrdf.model.Model;
+import org.openrdf.model.Statement;
+import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
-//import org.openrdf.query.QueryEvaluationException;
+import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
 import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.model.Value;
-import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.UpdateExecutionException;
+import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
+import org.slf4j.Logger;
 
-//import org.openrdf.query.impl.TupleQueryResultImpl;
-//import org.openrdf.repository.RepositoryException;
-//import org.openrdf.rio.RDFFormat;
-//import org.openrdf.rio.RDFHandlerException;
-//import org.openrdf.rio.RDFWriter;
-//import org.openrdf.rio.Rio;
-//import org.openrdf.model.Model;
-//import org.openrdf.model.Statement;
 /**
  * Default Implementation of {@link PubVocabService} Get Data From Google
  * Scholar using Google Scholar Provider
  *
  * Fernando Baculima CEDIA - Universidad de Cuenca
  *
+ * @author Xavier Sumba <xavier.sumba93@ucuenca.ec>
  */
 @ApplicationScoped
 public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderService, Runnable {
@@ -88,183 +89,101 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
     private QueriesService queriesService;
 
     @Inject
-    private ConstantService pubVocabService;
-
-    @Inject
     private CommonsServices commonsServices;
-
     @Inject
-    private DistanceService distance;
-
-    @Inject
-    private KeywordsService kservice;
+    private ConstantService constantService;
 
     @Inject
     private SparqlFunctionsService sparqlFunctionsService;
 
-    private String namespaceGraph = "http://ucuenca.edu.ec/wkhuska/";
-    private String authorGraph = namespaceGraph + "authors";
-    private String endpointsGraph = namespaceGraph + "endpoints";
-    private int processpercent = 0;
-
-    /* graphByProvider
-     Graph to save publications data by provider
-     Example: http://ucuenca.edu.ec/wkhuska/dblp
-     */
-    private String graphByProviderNS = namespaceGraph + "provider/";
-
     @Inject
     private SparqlService sparqlService;
 
-    //for Microsoft Academics
-    @Override
-    public String runPublicationsTaskImpl(String param) {
-        return "";
-//        try {
-//
-//            String providerGraph = "";
-//            //String getAuthorsQuery = queriesService.getAuthorsQuery();
-//            String getGraphsListQuery = queriesService.getGraphsQuery();
-//            List<Map<String, Value>> resultGraph = sparqlService.query(QueryLanguage.SPARQL, getGraphsListQuery);
-//            /* FOR EACH GRAPH*/
-//
-//            for (Map<String, Value> map : resultGraph) {
-//                providerGraph = map.get("grafo").toString();
-//                KiWiUriResource providerGraphResource = new KiWiUriResource(providerGraph);
-//
-//                if (providerGraph.contains("provider")) {
-//
-//                    Properties propiedades = new Properties();
-//                    InputStream entrada = null;
-//                    Map<String, String> mapping = new HashMap<String, String>();
-//                    try {
-//                        ClassLoader classLoader = getClass().getClassLoader();
-//                        //File file = new File(classLoader.getResource("DBLPProvider.properties").getFile());
-//
-//                        entrada = classLoader.getResourceAsStream(providerGraphResource.getLocalName() + ".properties");
-//                        // mappings file loaded
-//                        propiedades.load(entrada);
-//
-//                        for (String source : propiedades.stringPropertyNames()) {
-//                            String target = propiedades.getProperty(source);
-//                            mapping.put(source.replace("..", ":"), target.replace("..", ":"));
-//                        }
-//                    } catch (IOException ex) {
-//                        ex.printStackTrace();
-//                    } catch (Exception ex) {
-//                        ex.printStackTrace();
-//                    } finally {
-//                        if (entrada != null) {
-//                            try {
-//                                entrada.close();
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }
-//
-//                    List<Map<String, Value>> resultPublications = sparqlService.query(QueryLanguage.SPARQL, queriesService.getPublicationsMAQuery(providerGraph));
-//                    for (Map<String, Value> pubresource : resultPublications) {
-//                        String authorResource = pubresource.get("authorResource").toString();
-//                        String publicationResource = pubresource.get("publicationResource").toString();
-//                        String publicationProperty = pubVocabService.getPubProperty();
-//
-//                        //verificar existencia de la publicacion y su author sobre el grafo general
-//                        String askTripletQuery = queriesService.getAskQuery(authorGraph, authorResource, publicationProperty, publicationResource);
-//                        if (!sparqlService.ask(QueryLanguage.SPARQL, askTripletQuery)) {
-//                            String insertPubQuery = buildInsertQuery(authorGraph, authorResource, publicationProperty, publicationResource);
-//                            try {
-//                                sparqlService.update(QueryLanguage.SPARQL, insertPubQuery);
-//                            } catch (MalformedQueryException ex) {
-//                                log.error("Malformed Query:  " + insertPubQuery);
-//                            } catch (UpdateExecutionException ex) {
-//                                log.error("Update Query :  " + insertPubQuery);
-//                            } catch (MarmottaException ex) {
-//                                log.error("Marmotta Exception:  " + insertPubQuery);
-//                            }
-//                        }
-//
-//                        List<Map<String, Value>> resultPubProperties = sparqlService.query(QueryLanguage.SPARQL, queriesService.getPublicationsPropertiesQuery(providerGraph, publicationResource));
-//                        for (Map<String, Value> pubproperty : resultPubProperties) {
-//                            String nativeProperty = pubproperty.get("publicationProperties").toString();
-//                            if (mapping.get(nativeProperty) != null) {
-//
-//                                String newPublicationProperty = mapping.get(nativeProperty);
-//                                String publicacionPropertyValue = pubproperty.get("publicationPropertyValue").toString();
-//                                String insertPublicationPropertyQuery = buildInsertQuery(authorGraph, publicationResource, newPublicationProperty, publicacionPropertyValue);
-//
-//                                try {
-//                                    sparqlService.update(QueryLanguage.SPARQL, insertPublicationPropertyQuery);
-//                                } catch (MalformedQueryException ex) {
-//                                    log.error("Malformed Query:  " + insertPublicationPropertyQuery);
-//                                } catch (UpdateExecutionException ex) {
-//                                    log.error("Update Query:  " + insertPublicationPropertyQuery);
-//                                } catch (MarmottaException ex) {
-//                                    log.error("Marmotta Exception:  " + insertPublicationPropertyQuery);
-//                                }
-//                            }
-//                        }
-//                        //compare properties with the mapping and insert new properties
-//                        //mapping.get(map)
-//                    }
-//                }
-//
-//                //in this part, for each graph
-//            }
-//            return "Los datos de las publicaciones se han cargado exitosamente.";
-//        } catch (InvalidArgumentException ex) {
-//            return "error:  " + ex;
-//        } catch (MarmottaException ex) {
-//            return "error:  " + ex;
-//        }
+    private String authorGraph;
+    private String endpointsGraph;
+    private String googleGraph;
+    private String resourceGoogle;
+
+    private boolean update = false;
+
+    private int processpercent = 0;
+
+    @PostConstruct
+    public void init() {
+        authorGraph = constantService.getAuthorsGraph();
+        endpointsGraph = constantService.getEndpointsGraph();
+        googleGraph = constantService.getGoogleScholarGraph();
+        resourceGoogle = constantService.getGoogleScholarResource();
     }
 
     @Override
-    public String runPublicationsProviderTaskImpl(String param) {
+    public String runPublicationsProviderTaskImpl(boolean update) {
 
         try {
-            //new AuthorVersioningJob(log).proveSomething();
             ClientConfiguration conf = new ClientConfiguration();
-            //conf.addEndpoint(new DBLPEndpoint());
+
+            //<editor-fold defaultstate="collapsed" desc="Used to skip certificate problem. Just for test purposes">
+            HttpClient httpclient = HttpClientBuilder.create().build();
+            conf.setHttpClient(httpclient);
+            //</editor-fold>
             LDClient ldClient = new LDClient(conf);
-            //ClientResponse response = ldClient.retrieveResource("http://rdf.dblp.com/ns/m.0wqhskn");
 
-            int allMembers = 0;
-            String nameProviderGraph = "http://ucuenca.edu.ec/wkhuska/provider/GoogleScholarProvider";
-            String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(authorGraph, endpointsGraph);
-
-            // TupleQueryResult result = sparqlService.query(QueryLanguage.SPARQL, getAuthors);
             String nameToFind = "";
             String authorResource = "";
             int priorityToFind = 0;
-            List<Map<String, Value>> resultAllAuthors = sparqlService.query(QueryLanguage.SPARQL, getAllAuthorsDataQuery);
+            List<Map<String, Value>> resultAllAuthors = sparqlService.query(QueryLanguage.SPARQL, queriesService.getAuthorsDataQuery(authorGraph, endpointsGraph));
 
             /*To Obtain Processed Percent*/
-            int allPersons = resultAllAuthors.size();
+            int allAuthors = resultAllAuthors.size();
             int processedPersons = 0;
 
             RepositoryConnection conUri = null;
-            ClientResponse response = null;
             for (Map<String, Value> map : resultAllAuthors) {
                 processedPersons++;
-                log.info("Autores procesados con GoogleScholar: " + processedPersons + " de " + allPersons);
+                log.info("Autores procesados con GoogleScholar: " + processedPersons + " de " + allAuthors);
                 authorResource = map.get("subject").stringValue();
                 String firstName = map.get("fname").stringValue();
                 String lastName = map.get("lname").stringValue();
                 priorityToFind = 1;
-                if (!sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(nameProviderGraph, authorResource))) {
+                if (!sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(googleGraph, authorResource)) && !isProcessed(authorResource)) {
                     boolean dataretrieve = false;//( Data Retrieve Exception )
-
                     do {
                         try {
                             boolean existNativeAuthor = false;
-                            allMembers = 0;
+                            ClientResponse response = null;
                             nameToFind = commonsServices.removeAccents(priorityFindQueryBuilding(priorityToFind, firstName, lastName).replace("_", "+"));
-                            //response = ldClient.retrieveResource(NS_DBLP + nameToFind);
-                            String URL_TO_FIND = "https://scholar.google.com/scholar?start=0&q=author:%22" + nameToFind + "%22&hl=en&as_sdt=1%2C15&as_vis=1";
-                            existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(nameProviderGraph, URL_TO_FIND));
+
+                            //String URL_TO_FIND = "https://scholar.google.com/scholar?start=0&q=author:%22" + nameToFind + "%22&hl=en&as_sdt=1%2C15&as_vis=1";
+                            String url_to_find = "https://scholar.google.com/citations?mauthors=" + nameToFind + "&hl=en&view_op=search_authors";
+
+                            existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(googleGraph, url_to_find));
                             if (nameToFind.compareTo("") != 0 && !existNativeAuthor) {
 
+                                List<Map<String, Value>> infoQuery = sparqlService.query(QueryLanguage.SPARQL, queriesService.getIESInfobyAuthor(authorResource));
+                                Set[] infoIES = new HashSet[]{new HashSet(), new HashSet(), new HashSet(), new HashSet()};
+                                for (Map<String, Value> info : infoQuery) {
+                                    infoIES[0].add(info.get("city").stringValue());
+                                    infoIES[1].add(info.get("province").stringValue());
+                                    infoIES[2].addAll(Arrays.asList(info.get("ies").stringValue().split(",")));
+                                    infoIES[3].addAll(Arrays.asList(info.get("domains").stringValue().split(",")));
+                                }
+                                if (!infoIES[0].isEmpty() && !infoIES[1].isEmpty() && !infoIES[2].isEmpty()) {
+                                    GoogleScholarSearchEndpoint endpoint = (GoogleScholarSearchEndpoint) ldClient.getEndpoint(url_to_find);
+
+                                    endpoint.setCity((String[]) infoIES[0].toArray(new String[0]));
+                                    endpoint.setProvince((String[]) infoIES[1].toArray(new String[0]));
+                                    endpoint.setIes((String[]) infoIES[2].toArray(new String[0]));
+
+                                    if (!infoIES[3].isEmpty()) {
+                                        endpoint.setDomains((String[]) infoIES[3].toArray(new String[0]));
+                                    } else {
+                                        endpoint.setDomains(new String[0]);
+                                    }
+
+                                    endpoint.setResource(resourceGoogle);
+                                    endpoint.setFirstName(firstName);
+                                    endpoint.setLastName(lastName);
+                                }
                                 //do {
                                 try {//waint 1  second between queries
                                     Thread.sleep(1000);
@@ -272,141 +191,56 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                                     Thread.currentThread().interrupt();
                                 }
                                 try {
-                                    response = ldClient.retrieveResource(URL_TO_FIND);
-                                    dataretrieve = true;
-                                } catch (DataRetrievalException e) {
-                                    //do {
-                                    try {//waint 1 second if fail retrieve data
-                                        Thread.sleep(1000);
-                                    } catch (InterruptedException ex) {
-                                        Thread.currentThread().interrupt();
+                                    boolean retry = false;
+                                    do {
+                                        response = ldClient.retrieveResource(url_to_find);
+                                        if (response.getHttpStatus() >= 500 || response.getHttpStatus() >= 503 || response.getHttpStatus() == 504) {
+                                            retry = true;
+                                            long retryAfter = 21600000 + response.getExpires().getTime() - new Date(System.currentTimeMillis()).getTime();
+                                            if (retryAfter > 0) {
+                                                Thread.sleep(retryAfter);
+                                            }
+                                        } else {
+                                            retry = false;
+                                        }
+                                    } while (retry);
+
+                                    if (response.getData().size() > 0) {
+                                        dataretrieve = true;
                                     }
-                                    log.error("Error when retrieve: " + URL_TO_FIND + " -  Exception: " + e);
+                                } catch (DataRetrievalException e) {
+                                    log.error("Error when retrieve: " + url_to_find + " -  Exception: " + e);
                                     dataretrieve = false;
                                 }
 
-                                // } while (true);
-                                //(!dataretrievee && response.getHttpStatus() == 503);
-                            }//end  if  nameToFind != ""
+                            }
 
-                            //String nameEndpointofPublications = ldClient.getEndpoint(NS_DBLP + nameToFind).getName();
-                            String nameEndpointofPublications = ldClient.getEndpoint(URL_TO_FIND).getName();
-                            String providerGraph = graphByProviderNS + nameEndpointofPublications.replace(" ", "");
                             if (dataretrieve) {
-//                                Model model = response.getData();
-//                                FileOutputStream out = new FileOutputStream("C:\\Users\\Satellite\\Desktop\\" + nameToFind.replace("?", "_") + "_test.ttl");
-//                                RDFWriter writer = Rio.createWriter(RDFFormat.TURTLE, out);
-//                                try {
-//                                    writer.startRDF();
-//                                    for (Statement st : model) {
-//                                        writer.handleStatement(st);
-//                                    }
-//                                    writer.endRDF();
-//                                } catch (RDFHandlerException e) {
-//                                    // oh no, do something!
-//                                }
+                                Preconditions.checkNotNull(response);
                                 conUri = ModelCommons.asRepository(response.getData()).getConnection();
                                 conUri.begin();
-                                String authorNativeResource = null;
-
-                                //THIS DRIVER NO RETURN MEMBERS OF A SEARCH, ALL DATA IS RELATED WITH A AUTHOR
-                                authorNativeResource = URL_TO_FIND;
-                                //existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(providerGraph, authorNativeResource));
 
                                 if (!existNativeAuthor) {
+                                    String getTriples = queriesService.getRetrieveResourceQuery();
+                                    TupleQuery triplesGS = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getTriples);
+                                    TupleQueryResult gsResult = triplesGS.evaluate();
+                                    while (gsResult.hasNext()) {
+                                        BindingSet bind = gsResult.next();
+                                        String s = bind.getValue("x").stringValue().trim();
+                                        String p = bind.getValue("y").stringValue().trim();
+                                        String o = bind.getValue("z").stringValue().trim();
 
-                                    /**
-                                     * First: Verify resource (publications)
-                                     * that contains the NameToFind in
-                                     * dc:creator property Second: Compare if
-                                     * some keywords of NameToFind author is
-                                     * contained into a retrieve publication
-                                     */
-                                    String getPublicationsFromProviderQuery = queriesService.getSubjectAndObjectByPropertyQuery("dc:creator");
-                                    TupleQuery pubquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationsFromProviderQuery); //
-                                    TupleQueryResult gsPublicationsResult = pubquery.evaluate();
+                                        String publicationInsertQuery = buildInsertQuery(googleGraph, s, p, o);
+                                        updatePub(publicationInsertQuery);
 
-                                    while (gsPublicationsResult.hasNext()) {
-                                        BindingSet gsResource = gsPublicationsResult.next();
-                                        String publication = gsResource.getValue("subject").toString();
-                                        String authorfromGS = gsResource.getValue("object").toString();
-                                        /**
-                                         * Getting and formating full name from
-                                         * google scholar Example ->
-                                         * author:%22M+Espinoza+Marin%22 Example
-                                         * 2 -> author:%22JM+Espinoza%22. The
-                                         * comparisonNames.syntacticComparison
-                                         * Service need the format : Name1
-                                         * Name2:Name3 Name4
-                                         */
-                                        String googlescholarfullname = authorfromGS;
-                                        googlescholarfullname = googlescholarfullname.substring(googlescholarfullname.indexOf("author:") + 10);
-                                        if (googlescholarfullname.indexOf("+") == 0) {
-                                            googlescholarfullname = googlescholarfullname.substring(1, googlescholarfullname.indexOf("%22"));
-                                        } else {
-                                            googlescholarfullname = googlescholarfullname.substring(0, googlescholarfullname.indexOf("%22"));
-                                        }
-                                        googlescholarfullname = googlescholarfullname.replace('+', ':');
-                                        /**
-                                         * case JM:Espinoza or JP:Carvallo
-                                         * replace with : J:Espinoza or
-                                         * J:Carvallo
-                                         */
-                                        if (googlescholarfullname.substring(0, googlescholarfullname.indexOf(":")).length() == 2) {
-                                            googlescholarfullname = googlescholarfullname.substring(0, 1) + googlescholarfullname.substring(2);
-                                        }
-
-                                        String localfullname = firstName + ":" + lastName;
-
-                                        /**
-                                         * in comparisonNames send local because
-                                         * the syntax names are similar
-                                         */
-                                        if (distance.syntacticComparisonNames("local", localfullname, "local", googlescholarfullname)) {
-
-                                            List<String> listA = kservice.getKeywordsOfAuthor(authorResource);
-                                            List<String> listB = new ArrayList<String>();
-                                            String getAbstractAndTitleFromProviderQuery = queriesService.getAbstractAndTitleQuery(publication);
-                                            TupleQuery abstracttitlequery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getAbstractAndTitleFromProviderQuery); //
-                                            TupleQueryResult abstractResult = abstracttitlequery.evaluate();
-
-                                            if (abstractResult.hasNext()) {
-                                                BindingSet abstractResource = abstractResult.next();
-                                                String abstracttext = abstractResource.getValue("abstract").toString();
-                                                String titletext = abstractResource.getValue("title").toString();
-                                                listB = kservice.getKeywords(titletext);
-
-                                            }
-                                            int cero = 0;
-                                            if (listB.size() != cero && listA.size() != cero && distance.semanticComparison(listA, listB)) {
-                                                //SPARQL obtain all data publications of author from Google Scholar Provider
-                                                String getPublicationDataFromProviderQuery = queriesService.getPublicationsPropertiesQuery(publication);
-                                                TupleQuery dataquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationDataFromProviderQuery); //
-                                                TupleQueryResult tripletasResult = dataquery.evaluate();
-
-                                                while (tripletasResult.hasNext()) {
-                                                    BindingSet tripletsResource = tripletasResult.next();
-                                                    String predicate = tripletsResource.getValue("property").toString();
-                                                    String object = tripletsResource.getValue("value").toString();
-
-                                                    //String publicationProperty = tripletsResource.getValue("publicationProperty").toString();
-                                                    ///insert sparql query, 
-                                                    String publicationInsertQuery = buildInsertQuery(providerGraph, publication, predicate, object);
-                                                    updatePub(publicationInsertQuery);
-
-                                                    // insert dct:contributor      <> dct:contributor <http://dblp.org/pers/xr/s/Saquicela:Victor> 
-                                                    String contributorInsertQuery = buildInsertQuery(providerGraph, publication, "http://purl.org/dc/terms/contributor", authorNativeResource);
-                                                    updatePub(contributorInsertQuery);
-
-                                                    // sameAs triplet    <http://190.15.141.102:8080/dspace/contribuidor/autor/SaquicelaGalarza_VictorHugo> owl:sameAs <http://dblp.org/pers/xr/s/Saquicela:Victor> 
-                                                    String sameAsInsertQuery = buildInsertQuery(providerGraph, authorResource, "http://www.w3.org/2002/07/owl#sameAs", authorNativeResource);
-                                                    updatePub(sameAsInsertQuery);
-
-                                                }
-                                            }//end if semantic comparison
-
-                                        }//end if syntactic comparison
                                     }
+
+                                    // SameAs URI DSPACE/GS
+                                    String authorGoogle = resourceGoogle + "author/" + nameToFind.replace("+", "_");
+                                    String sameAs = buildInsertQuery(googleGraph, authorResource, "http://www.w3.org/2002/07/owl#sameAs", authorGoogle);
+                                    updatePub(sameAs);
+                                    sameAs = buildInsertQuery(googleGraph, authorGoogle, "http://www.w3.org/2002/07/owl#sameAs", authorResource);
+                                    updatePub(sameAs);
                                 }//end if existNativeAuthor
                                 conUri.commit();
                                 conUri.close();
@@ -415,19 +249,131 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                             log.error("ioexception " + e.toString());
                         }
                         priorityToFind++;
-                    } while (priorityToFind < 3 && !dataretrieve);//end do while
-                    printPercentProcess(processedPersons, allPersons, "Google Scholar");
+                    } while (priorityToFind <= 3 && !dataretrieve);//end do while
+                    writeResource(authorResource);
+                    printPercentProcess(processedPersons, allAuthors, "Google Scholar");
+                } else if (sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskPublicationsURLGS(googleGraph, authorResource))) {
+                    // ask if there are publications left to extract for authorresource
+                    List<Map<String, Value>> publications = sparqlService.query(QueryLanguage.SPARQL, queriesService.getPublicationsURLGS(googleGraph, authorResource));
+                    for (Map<String, Value> publication : publications) {
+                        String url = publication.get("url").stringValue();
+                        String author = publication.get("author").stringValue();
+                        try {
+                            GoogleScholarPublicationEndpoint pubEndpoint = (GoogleScholarPublicationEndpoint) ldClient.getEndpoint(url);
+                            pubEndpoint.setAuthorURI(author);
+                            log.info(url);
+                            ClientResponse response = ldClient.retrieveResource(url);
+                            if (response.getData().size() > 0 && response.getHttpStatus() == 200) {
+
+                                conUri = ModelCommons.asRepository(response.getData()).getConnection();
+                                conUri.begin();
+
+                                String getTriples = queriesService.getRetrieveResourceQuery();
+                                TupleQueryResult result = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getTriples).evaluate();
+                                while (result.hasNext()) {
+                                    BindingSet bind = result.next();
+                                    String s = bind.getValue("x").stringValue().trim();
+                                    String p = bind.getValue("y").stringValue().trim();
+                                    String o = bind.getValue("z").stringValue().trim();
+
+                                    String publicationInsertQuery = buildInsertQuery(googleGraph, s, p, o);
+                                    updatePub(publicationInsertQuery);
+
+                                }
+                                conUri.commit();
+                                conUri.close();
+                            }
+
+                        } catch (DataRetrievalException | RepositoryException | MalformedQueryException | QueryEvaluationException ex) {
+                            log.error("Something went wrong when extracting publication {}. Error: {}", url, ex.getMessage());
+                        }
+                    }
                 }
             }
-            return "True for GS publications";
+            if (update) {
+                String result = updateAuthors(ldClient);
+                log.info(result);
+            }
+            ldClient.shutdown();
+            return "Extracction successful";
         } catch (MarmottaException ex) {
-            java.util.logging.Logger.getLogger(GoogleScholarProviderServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            log.error("Something went wrong. Error: {}", ex.getMessage());
         }
-        return "Fail for GS";
+
+        return "Something is going wrong";
+    }
+
+    private String updateAuthors(LDClient ldClient) {
+        String queryAuthorScholar = queriesService.getProfileScholarAuthor();
+        List<Map<String, Value>> authors;
+        int authorsUpdated = 0;
+        try {
+            authors = sparqlService.query(QueryLanguage.SPARQL, queryAuthorScholar);
+        } catch (MarmottaException ex) {
+            log.error("Can't query authors from Google Scholar. Error: {}", ex);
+            return "Can't query authors from Google Scholar. Check log for more detail.";
+        }
+
+        for (Map<String, Value> author : authors) {
+            String resource = author.get("resource").stringValue();
+            String profile = author.get("profile").stringValue() + "&cstart=0&pagesize=100";
+            int oldPublicationsSize = Integer.parseInt(author.get("count").stringValue());
+            Model model;
+            try {
+                model = ldClient.retrieveResource(profile).getData();
+            } catch (DataRetrievalException ex) {
+                log.error("Can't retrieve profile publications. Error: {}", ex);
+                continue;
+            }
+            int newPublicationsSize = model.size();
+            if (newPublicationsSize != oldPublicationsSize) {
+                String queryPublications = queriesService.getPublicationsScholar(resource);
+                List<String> newPublications = new ArrayList<>();
+                try {
+                    for (Map<String, Value> map : sparqlService.query(QueryLanguage.SPARQL, queryPublications)) {
+                        newPublications.add(map.get("url").toString());
+                    }
+                    for (Statement statement : model) {
+                        if (newPublications.contains(statement.getObject().stringValue())) {
+                            newPublications.remove(statement.getObject().stringValue());
+                        } else {
+                            newPublications.add(statement.getObject().stringValue());
+                        }
+                    }
+                } catch (MarmottaException ex) {
+                    log.error("Can't query publications to resource '{}'. Error: {}", resource, ex);
+                    continue;
+                }
+                for (String url : newPublications) {
+                    Model publication;
+                    try {
+                        GoogleScholarPublicationEndpoint pubEndpoint = (GoogleScholarPublicationEndpoint) ldClient.getEndpoint(url);
+                        pubEndpoint.setAuthorURI(resource);
+                        publication = ldClient.retrieveResource(url).getData();
+                    } catch (DataRetrievalException ex) {
+                        log.error("Can't retrieve publication information. Error: {}", ex);
+                        continue;
+                    }
+                    try {
+                        for (Statement s : publication) {
+                            log.debug("{}", s);
+                            sparqlService.update(QueryLanguage.SPARQL,
+                                    buildInsertQuery(googleGraph, s.getSubject().stringValue(),
+                                            s.getPredicate().stringValue(), s.getObject().stringValue()));
+                        }
+                        sparqlService.update(QueryLanguage.SPARQL, buildInsertQuery(googleGraph, resource, REDI.GSCHOLAR_URl.toString(), url));
+                    } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
+                        log.error("Can't insert triple statement. Error: {}", ex);
+                    }
+                }
+                authorsUpdated++;
+            }
+        }
+        return String.format("%s authors have been updated.", authorsUpdated);
     }
 
     public String priorityFindQueryBuilding(int priority, String firstName, String lastName) {
-        String[] fnamelname = {"", "", "", "", ""};
+        String[] fnamelname = {"", "", "", "", "", ""};
         /**
          * fnamelname[0] is a firstName A, fnamelname[1] is a firstName B
          * fnamelname[2] is a lastName A, fnamelname[3] is a lastName B
@@ -443,6 +389,8 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
         }
 
         switch (priority) {
+            case 3:
+                return fnamelname[1] + "_" + fnamelname[2];
             case 2:
                 return fnamelname[0] + "_" + fnamelname[2];
             case 1:
@@ -460,8 +408,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
         try {
             sparqlFunctionsService.updatePub(querytoUpdate);
         } catch (PubException ex) {
-            log.error("No se pudo insertar: " + querytoUpdate);
-            //         java.util.logging.Logger.getLogger(PubVocabServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            log.error("No se pudo insertar: {}. EROR: {}", querytoUpdate, ex.getMessage());
         }
         return "Correcto";
 
@@ -490,9 +437,41 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
         }
     }
 
-    @Override
-    public void run() {
-        runPublicationsProviderTaskImpl("uri");
+    public boolean isUpdate() {
+        return update;
     }
 
+    public void setUpdate(boolean update) {
+        this.update = update;
+    }
+
+    @Override
+    public void run() {
+        runPublicationsProviderTaskImpl(update);
+    }
+
+    private void writeResource(String authorResource) {
+        try {
+            File f = new File(constantService.getHome(), "ProcessedGoogleScholarURIs");
+            if (!f.exists()) {
+                f.createNewFile();
+            }
+            Files.write(f.toPath(), String.format("%s\n", authorResource).getBytes(), StandardOpenOption.APPEND);
+        } catch (IOException ex) {
+            log.error("Can't save resource {}, Error: {} \n{}", authorResource, ex.getMessage(), ex);
+        }
+    }
+
+    private boolean isProcessed(String authorResource) {
+        try (Scanner scanner = new Scanner(new File(constantService.getHome(), "ProcessedGoogleScholarURIs"));) {
+            while (scanner.hasNext()) {
+                if (authorResource.equals(scanner.nextLine().trim())) {
+                    return true;
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            log.error("Can't read URIs. URI trying to read {}. Error msj {}.\n{}", authorResource, ex.getMessage(), ex);
+        }
+        return false;
+    }
 }

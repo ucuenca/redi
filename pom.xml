@@ -23,7 +23,6 @@
   <properties>
     <wkhuska.lodp.version>${project.version}</wkhuska.lodp.version>
     <tomcat7-deploy>false</tomcat7-deploy>
-
     <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
 
     <!-- platform and libraries version -->
@@ -47,6 +46,7 @@
     <titan.version>0.4.2</titan.version>
     <commonsio.version>2.4</commonsio.version>
     <logback.version>1.1.2</logback.version>
+    <mallet.version>2.0.8</mallet.version>
   </properties>
   <modules>
     <module>tools</module>

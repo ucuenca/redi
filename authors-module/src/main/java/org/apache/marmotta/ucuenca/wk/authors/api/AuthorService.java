@@ -19,21 +19,20 @@ package org.apache.marmotta.ucuenca.wk.authors.api;
 
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.DaoException;
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.UpdateException;
-import org.openrdf.query.QueryEvaluationException;
 
 public interface AuthorService {
 
-   
     /**
-     * Run update with all Active EndPoints  MultipleEP
-     * @param sparqlEndpoint
-     * @param graphUri
+     * Run update with all Active EndPoints MultipleEP
+     *
      * @return
      * @throws DaoException
-     * @throws UpdateException 
+     * @throws UpdateException
      */
-    String runAuthorsUpdateMultipleEP(String sparqlEndpoint, String graphUri) throws DaoException, UpdateException, QueryEvaluationException;
-    
-    
-    
+    String extractAuthors() throws DaoException, UpdateException;
+
+    String extractSubjects();
+
+    String searchDuplicates();
+
 }

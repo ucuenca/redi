@@ -106,7 +106,8 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
                                                 + '         GRAPH <' + globalData.centralGraph + '> {'
                                                 + "         ?s foaf:publications ?pub. "
                                                 //+ "         ?s dct:subject ?k. "
-                                                + "         ?pub bibo:Quote ?k."
+                                                + "         ?pub dcterms:subject ?keywordSubject. "
+                                                + "         ?keywordSubject rdfs:label ?k. "
                                                 + "         BIND(IRI(?k) AS ?keyword) . "
                                                 + '         FILTER(mm:fulltext-search(str(?k), "' + $scope.searchText + '")).'
                                                 + "     } } "

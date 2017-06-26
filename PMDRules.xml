@@ -46,6 +46,7 @@
     <exclude name="AssignmentToNonFinalStatic"/>
     <exclude name="CloseResource"/>
     <exclude name="FieldDeclarationsShouldBeAtStartOfClass"/>
+    <exclude name="GodClass">
   </rule>
   <!-- <rule ref="rulesets/java/migrating.xml">
   </rule> -->
@@ -63,6 +64,7 @@
     <exclude name="NullAssignment"/>
     <exclude name="UnnecessaryParentheses"/>
     <exclude name="AtLeastOneConstructor"/>
+    <exclude name="UseObjectForClearerAPI"/>
   </rule>
   <rule ref="rulesets/java/unusedcode.xml">
   </rule>

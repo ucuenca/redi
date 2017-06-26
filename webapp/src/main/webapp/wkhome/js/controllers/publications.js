@@ -11,7 +11,7 @@ wkhomeControllers.controller('publicationsController', ['$scope', '$window', 'gl
               + " ?publicationUri dct:title ?title. "
               + " ?publicationUri bibo:abstract ?abstract. "
               + " ?publicationUri bibo:uri ?uri. "
-              + " ?publicationUri bibo:Quote ?keyword. "
+              + " ?publicationUri dcterms:subject ?keyword. "
               + " } "
               + " WHERE {"
               + " GRAPH <"+globalData.centralGraph+">"
@@ -20,7 +20,8 @@ wkhomeControllers.controller('publicationsController', ['$scope', '$window', 'gl
               + " ?publicationUri dct:title ?title ."
               + " OPTIONAL { ?publicationUri bibo:abstract  ?abstract.  } "
               + " OPTIONAL { ?publicationUri bibo:uri  ?uri.  } "
-              + " OPTIONAL { ?publicationUri bibo:Quote ?keyword. }"
+              + " OPTIONAL { ?publicationUri dcterms:subject ?keywordSubject. }"
+              + " OPTIONAL { ?keywordSubject rdfs:label ?keyword. } "
               + " }"
               + "}  ORDER BY DESC(?title)";
 
@@ -40,7 +41,7 @@ wkhomeControllers.controller('publicationsController', ['$scope', '$window', 'gl
                       model["title"] = pub["dct:title"];
                       model["abstract"] = pub["bibo:abstract"] ? pub["bibo:abstract"] : "";
                       model["uri"] = $scope.findPDF(pub["bibo:uri"]);
-                      model["keywords"] = pub["bibo:Quote"];
+                      model["keywords"] = pub["dcterms:subject"];
                       if (model["title"])
                       {
                           $scope.publications.push({id: model["id"], title: model["title"], abstract: model["abstract"], uri: model["uri"], keywords: model['keywords']});

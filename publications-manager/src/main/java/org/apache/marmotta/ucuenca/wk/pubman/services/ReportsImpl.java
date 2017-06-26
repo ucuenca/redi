@@ -75,10 +75,11 @@ public class ReportsImpl implements ReportsService {
     private SparqlFunctionsService sparqlFunctionsService;
     @Inject
     private SparqlService sparqlService;
+    @Inject
+    protected ConstantService constant;
 
     protected String TEMP_PATH = "./../research_webapps/ROOT/tmp";
     protected String REPORTS_FOLDER = "./../research_webapps/ROOT/reports/";
-    protected ConstantServiceImpl constant = new ConstantServiceImpl();
 
     @Override
     public String createReport(String hostname, String realPath, String name, String type, List<String> params) {
@@ -155,6 +156,15 @@ public class ReportsImpl implements ReportsService {
                     parameters.put("universityFullName", json[1]);
                     parameters.put("universityName", params.get(0));
                     parameters.put("totalAuthors", json[2]);
+
+                    break;
+                case "ReportPublicationsbyHEI":
+                    // Get the Json with the all authors from an specific IES.
+                    json = getJSONPublicationsByHEI(params.get(0), hostname);
+
+                    parameters.put("universityFullName", json[1]);
+                    parameters.put("universityName", params.get(0));
+                    //parameters.put("totalAuthors", json[2]);
 
                     break;
                 case "ReportStatisticsKeywords":
@@ -804,7 +814,110 @@ public class ReportsImpl implements ReportsService {
         }
         return new String[]{"", ""};
     }
+    
+    public String[] getJSONPublicationsByHEI(String hei, String hostname) {
+    String getQuery = "";
+    try {
+            /*getQuery = ConstantServiceImpl.PREFIX
+                + " SELECT ?name ?title"
+                + "WHERE { "
+                + "  GRAPH <http://ucuenca.edu.ec/wkhuska>  {"
+                + "    ?author foaf:publications ?publication ;"
+                + "       dct:provenance ?endpoint."
+                + "    ?publication dct:title ?title."
+                + "    ?author foaf:name ?name ."
+                + "    {"
+                + "    	SELECT * {"
+                + "        	GRAPH <http://ucuenca.edu.ec/wkhuska/endpoints> {"
+                + "              ?endpoint uc:name \"" + hei + "\"^^xsd:string ."
+                + "            }"
+                + "        }"
+                + "    }"
+                + "  }"
+                + "}"
+                + "ORDER BY ASC(?name)";*/
+            
+            getQuery = ConstantServiceImpl.PREFIX
+                + " select * { "
+                + "SELECT  distinct ?name ?title ?year (group_concat(?orig; separator = \" \") AS ?origin)  "
+                + "WHERE {   "
+                + "  GRAPH <http://ucuenca.edu.ec/wkhuska>  {  "
+                + "    ?author foaf:publications ?publication.  "
+                + "    ?author foaf:name ?name .  "
+                + "    ?author dct:provenance ?endpoint.  "
+                + "    ?publication dct:title ?title.  "
+                + "    optional{?publication dc:date ?year}.  "
+                + "    ?publication <http://ucuenca.edu.ec/ontology#origin> ?orig.  "
+                + "   	filter(xsd:integer(?year) > 2010).  "
+                + "    {      "
+                + "      SELECT * {         	  "
+                + "      GRAPH <http://ucuenca.edu.ec/wkhuska/endpoints>   "
+                + "            {                 "
+                + "              ?endpoint uc:name \"UCUENCA\"^^xsd:string .               "
+                + "            }           "
+                + "      }  "
+                + "    }  "
+                + "  }  "
+                + "}  "
+                + " GROUP BY ?title ?name ?year "//+ "ORDER BY ASC (?year)";
+                + " } ORDER BY ASC (?year) ";
+                        
+            
+            Repository repository = new SPARQLRepository(hostname + "/sparql/select");
+            repository.initialize();
+            RepositoryConnection connection = repository.getConnection();
+            
+            try {
+                // perform operations on the connection
+                TupleQueryResult resultAuthors = connection.prepareTupleQuery(QueryLanguage.SPARQL, getQuery).evaluate();
+                JSONArray authors = new JSONArray();
+                JSONObject author;
+                int totalAuthors = 0;
+                String fname = "";
 
+                //Check authors of each university
+                while (resultAuthors.hasNext()) {
+                    BindingSet binding = resultAuthors.next();
+                    String name = String.valueOf(binding.getValue("name")).replace("\"", "").replace("^^", "").split("<")[0];
+                    String title = String.valueOf(binding.getValue("title")).replace("\"", "").replace("^^", "").split("<")[0];
+                    String year = String.valueOf(binding.getValue("year")).replace("\"", "").replace("^^", "").split("<")[0];
+                    String origin = String.valueOf(binding.getValue("origin")).replace("\"", "").replace("^^", "").split("<")[0];
+
+                    author = new JSONObject();
+                    author.put("author", name);
+                    author.put("title", title);
+                    author.put("year", year);
+                    author.put("origin", origin);
+
+                    authors.add(author);
+                    totalAuthors++;
+                }
+
+                /*TupleQueryResult resultIES = connection.prepareTupleQuery(QueryLanguage.SPARQL, queryIES).evaluate();
+                if (resultIES.hasNext()) {
+                    BindingSet binding = resultIES.next();
+                    fname = String.valueOf(binding.getValue("fname"));
+                }*/
+
+                connection.close();
+
+                return new String[]{authors.toString(), fname, String.valueOf(totalAuthors)};
+
+            } catch (RepositoryException ex) {
+                java.util.logging.Logger.getLogger(ReportsImpl.class.getName()).log(Level.SEVERE, null, ex);
+                connection.close();
+            }
+
+            return new String[]{"", ""};
+
+        } catch (MalformedQueryException | QueryEvaluationException | RepositoryException ex) {
+            java.util.logging.Logger.getLogger(ReportsImpl.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
+        }
+        return new String[]{"", ""};
+    
+    }
+    
     public String[] getJSONStatisticsTopKeywords(String hostname) {
 
         String getQuery = "";

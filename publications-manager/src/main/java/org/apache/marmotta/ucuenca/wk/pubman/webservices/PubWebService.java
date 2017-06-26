@@ -18,31 +18,21 @@
 package org.apache.marmotta.ucuenca.wk.pubman.webservices;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import java.util.AbstractList;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import org.slf4j.Logger;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
-
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Response;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
-import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
-import org.apache.marmotta.ucuenca.wk.pubman.services.ReportsImpl;
+import javax.ws.rs.core.Response;
 import org.apache.marmotta.ucuenca.wk.commons.service.TranslationService;
+import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
+import org.slf4j.Logger;
 
 @Path("/pubman")
 @ApplicationScoped
@@ -64,14 +54,15 @@ public class PubWebService {
     public static final String GET_PUBLICATIONS_DBLP = "/publications_dblp";
     public static final String GET_PUBLICATIONS_MA = "/publications_ma";
     public static final String GET_PUBLICATIONS_AK = "/publications_ak";
+    public static final String GET_PUBLICATIONS_DSPACE = "/publications_dspace";
     public static final String LOAD_PUBLICATIONS = "/publications_provider_graph";
     public static final String GET_AUTHOR_DATA = "/pubsearch";
     public static final String GET_REPORT = "/report";
     public static final String TRANSLATE = "/translate";
+
     /*
      * Get Publications Data from Source and Load into Provider Graph
      */
-
     @POST
     @Path(GET_PUBLICATIONS)
     public Response readPublicationsPost(@QueryParam("Endpoint") String resultType) {
@@ -85,10 +76,9 @@ public class PubWebService {
      */
     @POST
     @Path(GET_PUBLICATIONS_GOOGLE)
-    public Response readPublicationsPostGoogle(@QueryParam("Endpoint") String resultType) {
-        String params = resultType;
-        log.debug("Publications Task", params);
-        String result = commonService.GetDataFromProvidersServiceGoogleScholar();
+    public Response readPublicationsPostGoogle(@QueryParam("update") Boolean update) {
+        log.debug("Publications Task, update {}", update);
+        String result = commonService.GetDataFromProvidersServiceGoogleScholar(update);
         return Response.ok().entity(result).build();
     }
 
@@ -125,6 +115,18 @@ public class PubWebService {
         String params = resultType;
         log.debug("Publications Task", params);
         String result = commonService.GetDataFromProvidersServiceMicrosoftAcademics();
+        return Response.ok().entity(result).build();
+    }
+
+    /*
+     * Get Publications Data from Source and Load into Provider Graph
+     */
+    @POST
+    @Path(GET_PUBLICATIONS_DSPACE)
+    public Response readPublicationsPostDspace(@QueryParam("Endpoint") String resultType) {
+        String params = resultType;
+        log.debug("Publications Task", params);
+        String result = commonService.GetDataFromProvidersServiceDspace();
         return Response.ok().entity(result).build();
     }
 

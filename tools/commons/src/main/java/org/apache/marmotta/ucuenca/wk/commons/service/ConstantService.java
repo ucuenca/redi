@@ -28,10 +28,53 @@ public interface ConstantService {
             + " PREFIX mm: <http://marmotta.apache.org/vocabulary/sparql-functions#> "
             + " PREFIX uc: <http://ucuenca.edu.ec/ontology#> "
             + " PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
-            + " PREFIX bibo: <http://purl.org/ontology/bibo/> ";
+            + " PREFIX bibo: <http://purl.org/ontology/bibo/> "
+            + " PREFIX dc: <http://purl.org/dc/elements/1.1/> ";
+
+    String getHome();
+
+    String getBaseURI();
+
+    String getAuthorsGraph();
+
+    String getSameAuthorsGraph();
+
+    String getEndpointsGraph();
+
+    String getGoogleScholarGraph();
+
+    String getAcademicsKnowledgeGraph();
+
+    String getCentralGraph();
+
+    String getAuthorResource();
+
+    String getJournalResource();
+
+    String getConferenceResource();
+
+    String getBookResource();
+
+    String getSubjectResource();
+
+    String getPublisherResource();
+
+    String getTopicResource();
+
+    String getPublicationResource();
+
+    String getGoogleScholarResource();
+
+    String getAcademicsKnowledgeResource();
+
+    String getEndpointResource();
+
+    String getBaseResource();
+
+    String getSPARQLEndpointURL();
 
     String getPrefixes();
-    
+
     String getPubProperty();
 
     String getTittleProperty();
@@ -39,9 +82,8 @@ public interface ConstantService {
     String getGraphString(String graph);
 
     String getWkhuskaGraph();
-    
-    String getEndpointsGraph();
 
+    // String getEndpointsGraph();
     String getProvenanceProperty();
 
     String getLimit(String limit);
@@ -59,18 +101,19 @@ public interface ConstantService {
     String getDBLPGraph();
 
     String getExternalAuthorsGraph();
-    
+
     String getScopusGraph();
 
     String getMAGraph();
 
     String getGSGraph();
-    
-    String getClusterGraph();
-    
-    String getLogoPath();
-    
-    String getAuthorsGraph();
 
+    String getDspaceGraph();
+
+    String getClusterGraph();
+
+    String getLogoPath();
+
+    //String getAuthorsGraph();
     String getProviderNsGraph();
 }

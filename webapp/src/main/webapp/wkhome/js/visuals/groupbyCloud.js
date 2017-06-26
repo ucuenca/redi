@@ -350,7 +350,7 @@ cloudGroup.directive('cloudGroup', ["$routeParams", "d3", 'sparqlQuery', 'global
                             + " ?publications dct:title ?title. "
                             + " ?publications bibo:abstract ?abstract. "
                             + " ?publications bibo:uri ?uri. "
-                            + " ?publications bibo:Quote ?keywords "
+                            + " ?publications dcterms:subject ?keywords "
                             + " } "
                             + " WHERE { "
                             + "  SELECT ?publications ?title ?uri (group_concat(distinct ?abst;separator=\" \") as ?abstract) (group_concat(distinct ?key;separator=\", \") as ?keywords)"
@@ -361,7 +361,8 @@ cloudGroup.directive('cloudGroup', ["$routeParams", "d3", 'sparqlQuery', 'global
                             + "     <" + key + "> foaf:publications ?publications. "
                             + "     ?publications dct:title ?title . "
                             + "     OPTIONAL { ?publications bibo:uri  ?uri. }"
-                            + "     OPTIONAL { ?publications bibo:Quote ?key.}"
+                            + "     OPTIONAL { ?publications dcterms:subject ?keySub.}"
+                            + "     OPTIONAL { ?keySub rdfs:label ?key. }"
                             + "     OPTIONAL { ?publications bibo:abstract  ?abst  }"
                             + "     }"
                             + "  } GROUP BY ?publications ?title ?uri "
@@ -399,9 +400,9 @@ cloudGroup.directive('cloudGroup', ["$routeParams", "d3", 'sparqlQuery', 'global
                     + ' WHERE { '
                     + '   GRAPH <' + globalData.clustersGraph + '> '
                     + '         { '
-                    + ' ?cluster uc:hasPerson <{1}> .'
-                    + ' ?cluster uc:hasPerson ?subject.'
-                    + '           ?subject foaf:publications ?pub'
+                    + '             ?cluster foaf:publications ?pub. '
+                    + '             ?pub uc:hasPerson <{1}> . '
+                    + '             ?pub uc:hasPerson ?subject. '
                     + '          {'
                     + ' SELECT ?name'
                     + ' {'

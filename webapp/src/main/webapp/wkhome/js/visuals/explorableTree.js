@@ -377,7 +377,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                                     + ' ?pub bibo:uri ?uri. '
                                     + ' ?pub dct:contributor ?contributor. '
                                     + ' ?pub dct:publisher ?publisher. '
-                                    + ' ?pub bibo:Quote ?keyword. '
+                                    + ' ?pub dcterms:subject ?keyword. '
                                     + ' ?pub dct:isPartOf ?isPartOf. '
                                     + ' ?pub bibo:numPages ?numPages. '
                                     + ' ?pub uc:origin ?origin. '
@@ -391,7 +391,8 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                                     + ' OPTIONAL {?pub bibo:uri ?uri. } '
                                     + ' OPTIONAL {?pub dct:contributor ?contributor. } '
                                     + ' OPTIONAL {?pub dct:publisher ?publisher. } '
-                                    + ' OPTIONAL {?pub bibo:Quote ?keyword. } '
+                                    + ' OPTIONAL {?pub dcterms:subject ?keySub. } '
+                                    + ' OPTIONAL {?keySub rdfs:label ?keyword. } '
                                     + ' OPTIONAL {?pub dct:isPartOf ?isPartOf. } '
                                     + ' OPTIONAL {?pub bibo:numPages ?numPages. } '
                                     + ' FILTER (!regex(?contributor, ":node")). '
@@ -458,7 +459,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                         "dct:publisher": {label: "Publisher: ", containerType: "div"},
                         "bibo:numPages": {label: "Paginas: ", containerType: "div"},
                         "bibo:abstract": {label: "Abstract: ", containerType: "div"},
-                        "bibo:Quote": {label: "Keywords: ", containerType: "div"}
+                        "dcterms:subject": {label: "Keywords: ", containerType: "div"}
                     };
 
 

@@ -13,13 +13,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.authors.api.EndpointService;
 import org.apache.marmotta.ucuenca.wk.authors.api.SparqlEndpoint;
+import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
+import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
 import org.openrdf.model.Value;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryLanguage;
@@ -28,6 +31,7 @@ import org.openrdf.query.UpdateExecutionException;
 /**
  *
  * @author Satellite
+ * @author Xavier Sumba
  */
 public class EndpointServiceImpl implements EndpointService {
 
@@ -36,9 +40,18 @@ public class EndpointServiceImpl implements EndpointService {
 
     @Inject
     private QueriesService queriesService;
+    
+    @Inject
+    private ConstantService constantService;
 
-    private String endpointsGraph = "http://ucuenca.edu.ec/wkhuska/endpoints";
+    private String endpointsGraph;
+
     private String fullName = "fullName";
+    
+    @PostConstruct
+    public void init() {
+        endpointsGraph = constantService.getEndpointsGraph();
+    }
 
     @Override
     public String addEndpoint(String name, String endpointUrl, String graphUri) {
@@ -53,7 +66,7 @@ public class EndpointServiceImpl implements EndpointService {
             Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }*/
         return "AddEndpoint Error";
-    }
+    }    
 
     /**
      * Funcion que agrega un nuevo endpoint
@@ -65,9 +78,11 @@ public class EndpointServiceImpl implements EndpointService {
     public String addEndpoint(String... args) {
         try {
             String resourceHash = getHashCode(args[1], args[2], args[3]);
-            String cad = "^^xsd:string"; String dec = "^^xsd:string";
-            //List of parameters to pass
-            addEndpointData(endpointsGraph, "status", args[0], resourceHash, "^^xsd:boolean");
+            String cad = "^^xsd:string";
+            String dec = "^^xsd:string";
+            String bool = "^^xsd:boolean";
+
+            /*addEndpointData(endpointsGraph, "status", args[0], resourceHash, "^^xsd:boolean");
             addEndpointData(endpointsGraph, "name", args[1], resourceHash, cad);
             addEndpointData(endpointsGraph, "url", args[2], resourceHash,cad);
             addEndpointData(endpointsGraph, "graph", args[3], resourceHash,cad);
@@ -76,7 +91,19 @@ public class EndpointServiceImpl implements EndpointService {
             addEndpointData(endpointsGraph, "city", args[6], resourceHash,cad);
             addEndpointData(endpointsGraph, "province", args[7], resourceHash,cad);
             addEndpointData(endpointsGraph, "latitude", args[8], resourceHash,dec);
-            addEndpointData(endpointsGraph, "longitude", args[9], resourceHash,dec);
+            addEndpointData(endpointsGraph, "longitude", args[9], resourceHash,dec);*/
+            
+            //List of parameters to pass
+            insertEndPoint(resourceHash, REDI.STATUS.toString(), args[0], bool);
+            insertEndPoint(resourceHash, REDI.NAME.toString(), args[1], cad);
+            insertEndPoint(resourceHash, REDI.URL.toString(), args[2], cad);
+            insertEndPoint(resourceHash, REDI.GRAPH.toString(), args[3], cad);
+            insertEndPoint(resourceHash, REDI.FULLNAME.toString(), args[4], "@es");
+            insertEndPoint(resourceHash, REDI.FULLNAME.toString(), args[5], "@en");
+            insertEndPoint(resourceHash, REDI.CITY.toString(), args[6], cad);
+            insertEndPoint(resourceHash, REDI.PROVINCE.toString(), args[7], cad);
+            insertEndPoint(resourceHash, REDI.LATITUDE.toString(), args[8], dec);
+            insertEndPoint(resourceHash, REDI.LONGITUDE.toString(), args[9], dec);
 
             return "Endpoint Insertado Correctamente";
         } catch (NoSuchAlgorithmException ex) {
@@ -85,6 +112,15 @@ public class EndpointServiceImpl implements EndpointService {
         return "AddEndpoint Error";
     }
 
+    private void insertEndPoint(String... parameters) {
+        try {
+            String queryInsertEndpoint = queriesService.getInsertEndpointQuery(parameters[0], parameters[1], parameters[2], parameters[3]);
+            sparqlService.update(QueryLanguage.SPARQL, queryInsertEndpoint);
+        } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
+            Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public void addEndpointData(String... parameters) {
         try {
             String queryEndpoint = queriesService.getEndpointDataQuery(parameters);
@@ -119,7 +155,7 @@ public class EndpointServiceImpl implements EndpointService {
     public List<SparqlEndpoint> listEndpoints() {
         try {
             List<SparqlEndpoint> result = new ArrayList<SparqlEndpoint>();
-            List<Map<String, Value>> endpointsresult = sparqlService.query(QueryLanguage.SPARQL, queriesService.getlisEndpointsQuery(endpointsGraph));
+            List<Map<String, Value>> endpointsresult = sparqlService.query(QueryLanguage.SPARQL, queriesService.getLisEndpointsQuery());
             for (Map<String, Value> singleendpoint : endpointsresult) {
                 SparqlEndpoint endpoint = new SparqlEndpoint();
                 endpoint.setResourceId(singleendpoint.get("id").stringValue());
@@ -177,7 +213,7 @@ public class EndpointServiceImpl implements EndpointService {
     }
 
     @Override
-    public String updateEndpoint(String resourceid, String oldstatus, String newstatus ) {
+    public String updateEndpoint(String resourceid, String oldstatus, String newstatus) {
          try {
             sparqlService.update(QueryLanguage.SPARQL, queriesService.getEndpointUpdateStatusQuery(endpointsGraph, resourceid, oldstatus, newstatus));
             return "Endpoint was UPDATE";
@@ -185,6 +221,18 @@ public class EndpointServiceImpl implements EndpointService {
             Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    @Override
+    public String addDomain(String resourceId, String domain) {
+        try {
+            String query = queriesService.getInsertDomainQuery(resourceId, domain);
+            sparqlService.update(QueryLanguage.SPARQL, query);
+        } catch (MarmottaException | InvalidArgumentException | MalformedQueryException | UpdateExecutionException ex) {
+            Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return String.format("ERROR: %s", ex.getMessage());
+        }
+        return "Domain added successful";
     }
 
 }

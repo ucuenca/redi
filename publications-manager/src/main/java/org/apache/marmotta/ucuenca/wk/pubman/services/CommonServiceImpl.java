@@ -8,13 +8,10 @@ package org.apache.marmotta.ucuenca.wk.pubman.services;
 import com.google.gson.JsonArray;
 import java.util.List;
 import javax.inject.Inject;
-import org.apache.marmotta.ucuenca.wk.pubman.api.AcademicsKnowledgeProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.DBLPProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.GoogleScholarProviderService;
-import org.apache.marmotta.ucuenca.wk.pubman.api.ScopusProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.ReportsService;
-import org.apache.marmotta.ucuenca.wk.pubman.services.ReportsImpl;
 
 /**
  *
@@ -49,6 +46,9 @@ public class CommonServiceImpl implements CommonService {
 //
     @Inject
     DBLPProviderService dblpProviderServiceInt;
+    
+    @Inject
+    DspaceProviderServiceImpl dspaceProviderService;
 
     @Inject
     ReportsService reportService;
@@ -91,10 +91,18 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public String GetDataFromProvidersServiceGoogleScholar() {
+    public String GetDataFromProvidersServiceGoogleScholar(boolean update) {
+        googleProviderService.setUpdate(update);
         Thread GoogleProvider = new Thread(googleProviderService);
         GoogleProvider.start();
         return "Data Provider Google Scholar are extracted in background.   Please review main.log file for details";
+    }
+    
+    @Override
+    public String GetDataFromProvidersServiceDspace() {
+        Thread DspaceProvider = new Thread(dspaceProviderService);
+        DspaceProvider.start();
+        return "Data Provider Dspace are extracted in background.   Please review main.log file for details";
     }
 
     @Override

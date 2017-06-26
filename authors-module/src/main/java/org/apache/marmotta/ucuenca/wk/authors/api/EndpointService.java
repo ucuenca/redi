@@ -6,13 +6,14 @@
 package org.apache.marmotta.ucuenca.wk.authors.api;
 
 import java.util.List;
-import org.apache.marmotta.ucuenca.wk.authors.api.SparqlEndpoint;
 
 /**
  *
  * @author Satellite
+ * @author Xavier Sumba
  */
 public interface EndpointService {
+
     /**
      * Add Enpoint 
      * @param name    //name of the endpoint
@@ -35,7 +36,9 @@ public interface EndpointService {
     
     
     String removeEndpoint(String resourceid);
-  
-    String updateEndpoint(String resourceid , String oldstatus, String newstatus);
-    
+
+    String updateEndpoint(String resourceid, String oldstatus, String newstatus);
+
+    String addDomain(String resourceId, String domain);
+
 }

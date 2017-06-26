@@ -27,13 +27,15 @@ import org.openrdf.query.QueryLanguage;
  */
 public class KeywordsServiceImpl implements KeywordsService {
 
-    //@Inject
-    private QueriesService queriesService = new QueriesServiceImpl();
-
-    private CommonsServices commonService = new CommonsServicesImpl();
+    @Inject
+    private QueriesService queriesService;
+    
+    @Inject
+    private CommonsServices commonService;
+    
     @Inject
     private SparqlService sparqlService;
-
+    
     private final static int MAXKEYWORDS = 10; //maximo retorna 10 keywords desde el texto ( primeras )
 
     @Override

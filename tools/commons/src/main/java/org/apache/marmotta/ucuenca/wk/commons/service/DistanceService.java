@@ -26,6 +26,15 @@ public interface DistanceService {
     boolean semanticComparison(List<String> listA, List<String> listB);
 
     boolean semanticComparison(String word, List<String> listB);
+    
+    Double semanticComparisonValue(List<String> listA, List<String> listB);
 
     double cosineSimilarityAndLevenshteinDistance(String param1, String param2);
+    
+    float jaccardDistance(String param1, String param2);
+    
+    Boolean getEqualNames(String nombresOrig, String apellidosOrig, String otherGivenName, String otherLastName);
+    
+    Boolean getEqualNames(String nombresOrig, String apellidosOrig, String otherName);
+    
 }

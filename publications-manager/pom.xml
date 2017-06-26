@@ -261,8 +261,22 @@
             <artifactId>log4j</artifactId>
             <version>1.2.13</version>
         </dependency>
-
-
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>1.19.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey.contribs</groupId>
+            <artifactId>jersey-multipart</artifactId>
+            <version>1.19.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.marmotta.ucuenca.wk</groupId>
+            <artifactId>authors-module</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 
 </project>

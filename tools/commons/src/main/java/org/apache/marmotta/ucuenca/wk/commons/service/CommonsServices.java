@@ -13,12 +13,16 @@ package org.apache.marmotta.ucuenca.wk.commons.service;
 public interface CommonsServices {
 
     String removeAccents(String input);
+    
+    String cleanNameArticles(String name);
 
     /**
      * Return true or false if object is a URI
+     * @param object
+     * @return 
      */
     Boolean isURI(String object);
-
+    
     String getMD5(String input);
     
     String readPropertyFromFile(String file,String property);

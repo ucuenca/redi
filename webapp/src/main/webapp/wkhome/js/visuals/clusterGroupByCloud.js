@@ -65,7 +65,7 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
                         + '            		{'
                         + '            			graph <' + globalData.centralGraph + '>'
                         + '            			{'
-                        + '            				?pubb bibo:Quote "' + d.label + '".'
+                        + '            				?pubb dcterms:subject "' + d.label + '".'
                         + '                          	?pubb dct:title ?title.'
                         + '              			}'
                         + '          			}'

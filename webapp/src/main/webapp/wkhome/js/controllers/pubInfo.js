@@ -23,7 +23,7 @@ wkhomeControllers.controller('pubInfoController', ['$routeParams', '$scope', '$w
             model["title"] = pub["dct:title"];
             model["abstract"] = pub["bibo:abstract"] ? pub["bibo:abstract"] : "";
             model["uri"] = pub["bibo:uri"]["@id"];
-            model["keywords"] = pub["bibo:Quote"];
+            model["keywords"] = pub["dcterms:subject"];
             if (model["title"])
             {
                 $scope.todos.push({id: model["id"], title: model["title"], abstract: model["abstract"], uri: model["uri"], keywords: model["keywords"]});

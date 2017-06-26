@@ -25,7 +25,7 @@ wkhomeControllers.controller('barChart', ['$scope', 'globalData', 'sparqlQuery',
                 + '                     SELECT * '
                 + '                     WHERE '
                 + '                     { '
-                + '                         graph <http://ucuenca.edu.ec/wkhuska/endpoints> '
+                + '                         graph <' + globalData.endpointsGraph + '> '
                 + '                         { '
                 + '           			?provenance uc:name ?sourcename '
                 + '                         } '

@@ -13,11 +13,39 @@ public interface QueriesService {
 
     String getAuthorsDataQuery(String graph, String endpointsgraph);
 
+    String getAuthors();
+
+    String getAuthorsTuplesQuery(String subject);
+
+    String getAuthorDeleteQuery(String id);
+
+    String getAuthorDataQuery(String authorUri);
+    
+    String getAuthorProvenanceQuery(String authorUri);
+
+    String getAuthorsByName(String graph, String firstName, String lastName);
+
+    String getSameAsAuthors(String authorResource);
+
+    String getSameAsAuthors(String graph, String authorResource);
+
     String getCountPersonQuery(String graph);
+
+    String getCountAuthors();
+
+    String getCountSubjects(String authorResource);
+
+    String getArticlesFromDspaceQuery(String graph, String person);
 
     String getLimit(String limit);
 
     String getOffset(String offset);
+
+    String getIESInfobyAuthor(String authorName);
+
+    String getAskPublicationsURLGS(String graphName, String authorResource);
+
+    String getPublicationsURLGS(String graphName, String authorResource);
 
     /**
      * return query to obtain all subject ( keywords ) of an author , using
@@ -60,12 +88,23 @@ public interface QueriesService {
     String getInsertDataUriQuery(String... args);
 
     /**
+     * Returns Insert query. Where args[0] is graph, args[1] is subject, args[2]
+     * is predicate, and args[3] is object.
+     *
+     * @param args
+     * @return
+     */
+    String buildInsertQuery(String... args);
+
+    /**
      *
      * @param graph
      * @param resource
      * @return
      */
     String getAskResourceQuery(String graph, String resource);
+
+    String getAskObjectQuery(String graph, String object);
 
     /**
      * ASK is exist a triplet
@@ -75,7 +114,14 @@ public interface QueriesService {
      */
     String getAskQuery(String... args);
 
+
     String getEndpointDataQuery(String... arg);
+
+    String getInsertEndpointQuery(String resourceHash, String property, String object, String literal);
+
+    String getInsertDomainQuery(String enpointId, String domain);
+
+    String getLisEndpointsQuery();
 
     String getlisEndpointsQuery(String endpointsGraph);
     
@@ -112,6 +158,8 @@ public interface QueriesService {
     //String getMembersByTitleQuery();
     String getObjectByPropertyQuery(String subject, String property);
 
+    String getObjectByPropertyQuery(String graphname, String subject, String property);
+
     String getObjectByPropertyQuery(String property);
 
     String getAbstractAndTitleQuery(String resource);
@@ -145,9 +193,11 @@ public interface QueriesService {
 
     String getFirstNameLastNameAuhor(String graph, String authorResource);
 
-    String authorDetailsOfProvenance(String graph, String authorResource);
+    String detailsOfProvenance(String graph, String resource);
 
     String authorGetProvenance(String graph, String authorResource);
+
+    String authorGetProvenance(String authorResource);
 
     String getAuthorPublicationFilter(String graph, String fname, String lname);
 
@@ -156,6 +206,8 @@ public interface QueriesService {
     String getAskProcessAlreadyAuthorProvider(String providerGraph, String authorResource);
 
     String getAuthorsKeywordsQuery(String resource);
+
+    String getAuthorSubjectQuery(String resource);
 
     /**
      * Get All Data sources from UTPL ENDPOINT
@@ -169,6 +221,7 @@ public interface QueriesService {
      * Get All documents from UTPL ENDPOINT
      *
      * @param repository
+     * @param graph
      * @return
      */
     String getDocumentsAuthors(String repository, String graph);
@@ -222,4 +275,8 @@ public interface QueriesService {
     String getEndPointUriByName(String nameEndpint);
 
     String getAuthorPublicationsQueryFromGenericProvider(String... args);
+
+    String getPublicationsScholar(String resource);
+
+    String getProfileScholarAuthor();
 }
