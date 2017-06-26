@@ -46,7 +46,7 @@ public class CommonServiceImpl implements CommonService {
 //
     @Inject
     DBLPProviderService dblpProviderServiceInt;
-    
+
     @Inject
     DspaceProviderServiceImpl dspaceProviderService;
 
@@ -55,6 +55,9 @@ public class CommonServiceImpl implements CommonService {
 
     @Inject
     ReportsImpl reportsImpl;
+
+    @Inject
+    AuthorAttributesImpl authorAttr;
 
     @Override
     public String GetDataFromProvidersService() {
@@ -97,7 +100,7 @@ public class CommonServiceImpl implements CommonService {
         GoogleProvider.start();
         return "Data Provider Google Scholar are extracted in background.   Please review main.log file for details";
     }
-    
+
     @Override
     public String GetDataFromProvidersServiceDspace() {
         Thread DspaceProvider = new Thread(dspaceProviderService);
@@ -128,5 +131,11 @@ public class CommonServiceImpl implements CommonService {
     @Override
     public String createReport(String hostname, String realPath, String name, String type, List<String> params) {
         return reportService.createReport(hostname, realPath, name, type, params);
+    }
+
+    @Override
+    public String authorAttrFromProviders() {
+        new Thread(authorAttr).start();
+        return "Extracting attributes from authors. Task run in background.   Please review main.log file for details";
     }
 }

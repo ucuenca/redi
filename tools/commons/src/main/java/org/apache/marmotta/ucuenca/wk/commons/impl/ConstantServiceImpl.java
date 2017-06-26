@@ -25,6 +25,11 @@ public class ConstantServiceImpl implements ConstantService {
     private CommonsServices commonService = new CommonsServicesImpl();
 
     @Override
+    public String getHome() {
+        return confService.getHome();
+    }
+
+    @Override
     public String getBaseURI() {
         return confService.getBaseUri();
     }
@@ -33,7 +38,7 @@ public class ConstantServiceImpl implements ConstantService {
     public String getAuthorsGraph() {
         return confService.getBaseContext() + "authors";
     }
-    
+
     @Override
     public String getSameAuthorsGraph() {
         return confService.getBaseContext() + "sameAuthors";
@@ -46,7 +51,17 @@ public class ConstantServiceImpl implements ConstantService {
 
     @Override
     public String getGoogleScholarGraph() {
-        return confService.getBaseContext() + "GoogleScholarProvider";
+        return confService.getBaseContext() + "provider/GoogleScholarProvider";
+    }
+
+    @Override
+    public String getAcademicsKnowledgeGraph() {
+        return confService.getBaseContext() + "provider/AcademicsKnowledgeProvider";
+    }
+
+    @Override
+    public String getCentralGraph() {
+        return "http://ucuenca.edu.ec/wkhuska";
     }
 
     @Override
@@ -65,8 +80,48 @@ public class ConstantServiceImpl implements ConstantService {
     }
 
     @Override
+    public String getJournalResource() {
+        return getBaseResource() + "journal/";
+    }
+
+    @Override
+    public String getConferenceResource() {
+        return getBaseResource() + "conference/";
+    }
+
+    @Override
+    public String getBookResource() {
+        return getBaseResource() + "book/";
+    }
+
+    @Override
+    public String getSubjectResource() {
+        return getBaseResource() + "subject/";
+    }
+
+    @Override
+    public String getPublisherResource() {
+        return getBaseResource() + "publisher/";
+    }
+
+    @Override
+    public String getTopicResource() {
+        return getBaseResource() + "topic/";
+    }
+
+    @Override
+    public String getPublicationResource() {
+        return getBaseResource() + "publication/";
+    }
+
+    @Override
     public String getGoogleScholarResource() {
         return getBaseResource() + "GoogleScholar/";
+    }
+
+    @Override
+    public String getAcademicsKnowledgeResource() {
+        return getBaseResource() + "AcademicsKnowledge/";
     }
 
     @Override
@@ -134,7 +189,7 @@ public class ConstantServiceImpl implements ConstantService {
     public String getGSGraph() {
         return getWkhuskaGraph() + getSelectedGraph("googlescholar");
     }
-    
+
     @Override
     public String getDspaceGraph() {
         return getWkhuskaGraph() + getSelectedGraph("dspace");

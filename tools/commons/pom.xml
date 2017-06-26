@@ -11,14 +11,14 @@
     <artifactId>commons</artifactId>
     <packaging>jar</packaging>
 
-    <name>wkhuska-commons</name>
+    <name>Wkhuska-commons</name>
     <description>Common tools for WKhuska Platform</description>
     <url>http://maven.apache.org</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-  
+
     <build>
         <plugins>
             <plugin>
@@ -40,7 +40,7 @@
                     <forkMode>always</forkMode>
                 </configuration>
             </plugin>
-         
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
@@ -71,24 +71,24 @@
             <scope>test</scope>
             <type>jar</type>
         </dependency>
-        
+
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>${postgresql.version}</version>
             <scope>test</scope>
             <type>jar</type>
-        </dependency> 
-        
+        </dependency>
+
         <!-- Test dependencies -->
- 
+
         <dependency>
             <groupId>org.apache.marmotta</groupId>
             <artifactId>marmotta-sparql</artifactId>
             <version>${marmotta.version}</version>
             <type>jar</type>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.marmotta</groupId>
             <artifactId>marmotta-core</artifactId>
@@ -121,14 +121,14 @@
             <version>2.3.1</version>
             <type>jar</type>
         </dependency>
-        
+
         <!--Lucene-->
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-analyzers</artifactId>
             <version>3.6.2</version>
         </dependency>
-        
+
         <dependency>
             <groupId>com.optimaize.languagedetector</groupId>
             <artifactId>language-detector</artifactId>
@@ -153,13 +153,6 @@
         </dependency>
         <dependency>
             <groupId>org.apache.marmotta.ucuenca.wk.tools</groupId>
-            <artifactId>commons</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>test</scope>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.marmotta.ucuenca.wk.tools</groupId>
             <artifactId>vocab</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
@@ -175,5 +168,5 @@
             <type>jar</type>
         </dependency>
     </dependencies>
-   
+
 </project>

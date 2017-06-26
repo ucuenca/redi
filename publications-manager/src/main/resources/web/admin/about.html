@@ -25,11 +25,12 @@
         <script type="text/javascript" src="publicationsUpdate.js"></script>
         <script type="text/javascript" src="../../core/public/js/widgets/configurator/configurator.js"></script>
         <script type="text/javascript">
-            var host =  _SERVER_URL;
+            var host = _SERVER_URL;
             function runPub()
             {
                 runGeneralPublication(host);
             }
+            function extractAuthorAttr(){authorsAttr(host);}
         </script>
         <!--###END_HEAD###-->
     </head>
@@ -53,15 +54,20 @@
 
         <h2> PUBLICACIONES DE AUTORES </h2>
 
-        <!-- <p><a href="#" onClick="runUpdateAuthor();">UPDATE</a></p>    --> 
         <p>
             Las publicaciones se relacionan con los datos de los autores extraidos con el modulo de Autores.
-            
-            
-            
+
+
+
         </p>
         <form> 
             <button type="button"  onclick="runPub()"  value="Activar Función">PUBLICATIONS TASK</button>
+            <div id="imgloading" style="visibility: hidden">
+                <img src="img/ajax-loader-big.gif" alt="Loading Authors" height="120" width="120">
+                <p> Please wait until the reply message</p>
+            </div>
+
+            <button type="button"  onclick="extractAuthorAttr()"  value="Activar Función">Extract author attributes</button>
             <div id="imgloading" style="visibility: hidden">
                 <img src="img/ajax-loader-big.gif" alt="Loading Authors" height="120" width="120">
                 <p> Please wait until the reply message</p>
