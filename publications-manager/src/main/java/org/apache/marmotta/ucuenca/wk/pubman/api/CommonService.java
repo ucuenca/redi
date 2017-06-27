@@ -18,6 +18,8 @@ public interface CommonService {
 
     String Data2GlobalGraph();
 
+    String authorAttrFromProviders();
+
     String CountPublications();
 
     String GetDataFromProvidersServiceDBLP();
@@ -27,7 +29,7 @@ public interface CommonService {
     String GetDataFromProvidersServiceGoogleScholar(boolean update);
 
     String GetDataFromProvidersServiceAcademicsKnowledge();
-    
+
     String GetDataFromProvidersServiceDspace();
 
     JsonArray searchAuthor(String uri);

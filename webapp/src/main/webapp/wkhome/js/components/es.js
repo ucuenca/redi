@@ -52,12 +52,17 @@ myApp.labels_es = {
 //EXPLORABLE TREE VIEW
 "Research Info": "Información del investigador",
 "Article Info": "Información de la publicación",
-"Try to Find": "Intentar buscar en",
+"Open in": "Abrir en",
 "Export pub": "Exportar investigador y publicaciones",
 "see.all":"Ver todos",
 "coauthor":"Coautores",
 "relatedauthors":"Autores Relacionados",
 "list.pub":"Listar publicaciones",
+"pages" : "Paginas",
+"created" : "Creado",
+"issue" : "Emitido",
+"volume" : "Volumen",
+"publisher" : "Editorial",
 
 //   GROUP BY  VIEW
 "Grouping Publications": "Agrupar autores por área e institución",
