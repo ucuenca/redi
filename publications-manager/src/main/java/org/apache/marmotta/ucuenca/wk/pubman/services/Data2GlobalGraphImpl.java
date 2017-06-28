@@ -88,7 +88,7 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
     private boolean newInsert = false;
     private String bufferTitle = null;
     private int countPublicationAskIngnored = 0;
-    private List<String> results = new ArrayList<String>();
+    private List<String> results;
     private String authorsGraph = "http://ucuenca.edu.ec/wkhuska/authors";
     
     private int processpercent = 0;
@@ -106,6 +106,7 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
     @Override
     public String LoadData2GlobalGraph() {
         try {
+            results = new ArrayList<String>();
             
             String providerGraph = "";
             String getGraphsListQuery = queriesService.getGraphsQuery();

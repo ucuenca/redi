@@ -83,6 +83,7 @@ public class AcademicsKnowledgeProvider extends AbstractHttpProvider {
         MAPPINGSCHEMA.put("entity::property:references", "http://purl.org/dc/terms/references");
         MAPPINGSCHEMA.put("entity::property:text", "http://purl.org/ontology/bibo/content");
         MAPPINGSCHEMA.put("entity::property:name", FOAF.name.toString());
+        MAPPINGSCHEMA.put("entity::property::typePerson", FOAF.Person.toString());
         MAPPINGSCHEMA.put("entity::property:type", nsRedi + "Type");
         MAPPINGSCHEMA.put("entity::property:referenceCount", nsRedi + "referenceCount");
         MAPPINGSCHEMA.put("entity::property:citationCount", nsRedi + "citationCount");

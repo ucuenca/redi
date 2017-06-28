@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.DistanceService;
@@ -28,30 +29,23 @@ import org.simmetrics.metrics.JaccardSimilarity;
  *
  * @author Jose Luis Cullcay
  */
+@ApplicationScoped
 public class DistanceServiceImpl implements DistanceService {
 
     @Inject
     private org.slf4j.Logger log;
-       
+
+    @Inject
+    private CommonsServices commonService;
+    
+    //private SemanticDistance dist;
+
     private static int one = 1;
-
-    private CommonsServices commonService = new CommonsServicesImpl();
-    private SemanticDistance dist = null;
-
-    public DistanceServiceImpl() {
-        try {
-            this.dist = new SemanticDistance();
-        } catch (IOException ex) {
-            Logger.getLogger(DistanceServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(DistanceServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
 
     @Override
     public boolean semanticComparison(List<String> listA, List<String> listB) {
         try {
-            //SemanticDistance dist = new SemanticDistance();
+            SemanticDistance dist = new SemanticDistance();
             double value = dist.semanticKeywordsDistance(listA, listB);
 
             double semthreshold = Double.parseDouble(commonService.readPropertyFromFile("parameters.properties", "semanticDistanceListAListB"));
@@ -68,7 +62,7 @@ public class DistanceServiceImpl implements DistanceService {
     @Override
     public Double semanticComparisonValue(List<String> listA, List<String> listB) {
         try {
-            //SemanticDistance dist = new SemanticDistance();
+            SemanticDistance dist = new SemanticDistance();
             return dist.nwdDistance(listA, listB); //double value = dist.semanticKeywordsDistance(listA, listB);
 
         } catch (IOException | ClassNotFoundException | SQLException ex) {

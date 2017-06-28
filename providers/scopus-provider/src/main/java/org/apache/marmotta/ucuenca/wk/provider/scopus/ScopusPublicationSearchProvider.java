@@ -31,8 +31,8 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.input.sax.XMLReaders;
 import org.jdom2.xpath.XPathFactory;
 import org.openrdf.model.Model;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,6 +41,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.enterprise.context.ApplicationScoped;
 import org.jdom2.Namespace;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.ValueFactoryImpl;
@@ -51,14 +52,15 @@ import org.openrdf.model.vocabulary.FOAF;
  * <p/>
  * @author Freddy Sumba
  */
-    public class ScopusPublicationSearchProvider extends AbstractHttpProvider {
+@ApplicationScoped
+public class ScopusPublicationSearchProvider extends AbstractHttpProvider {
 
     public static final String NAME = "Scopus  Search Publication Provider";
     public static final String API = "http://api.elsevier.com/content/search/scopus?query=&apiKey=";
     public static final String PATTERN = "http://api\\.elsevier\\.com/content/search/scopus\\?query\\=au\\-id%28(.*)%29\\&apiKey\\=(.*)\\&httpAccept\\=application/xml\\&view\\=COMPLETE";
     public static final String URL_RESOURCE_PUBLICATION = "http://api.elsevier.com/content/abstract/doi/DOIParam?apiKey=apiKeyParam&httpAccept=application/rdf%2Bxml";
     public static final String URL_RESOURCE_PUBLICATIONPARAM = "http://api.elsevier.com/content/abstract/doi/DOIParam";
-    private static Logger log = LoggerFactory.getLogger(ScopusPublicationSearchProvider.class);
+    //private static Logger log = LoggerFactory.getLogger(ScopusPublicationSearchProvider.class);
     private static String apiKeyParam = "";
     private static String authorIdParam = "";
     public static final Namespace NAMESPACE_DC = Namespace.getNamespace("dc", "http://purl.org/dc/elements/1.1/");
@@ -114,11 +116,11 @@ import org.openrdf.model.vocabulary.FOAF;
 
     @Override
     public List<String> parseResponse(String resource, String requestUrl, Model triples, InputStream input, String contentType) throws DataRetrievalException {
-        log.debug("Request Successful to {0}", requestUrl);
+        //log.debug("Request Successful to {0}", requestUrl);
         try {
             final Document doc = new SAXBuilder(XMLReaders.NONVALIDATING).build(input);
             Element aux = doc.getRootElement();
-            boolean ecuatoriano = false;
+            boolean ecuatoriano = true;
             for (Element element : aux.getChildren("entry", aux.getNamespace())) {
                 if (affiliationEcuador(element.getChildren("affiliation", NAMESPACE_ATOM))) {
                     ecuatoriano = true;

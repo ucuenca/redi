@@ -115,30 +115,30 @@ public class DspaceProviderServiceImpl implements DspaceProviderService, Runnabl
     
     @Inject
     private EndpointService authorsendpointService;
-
-    List<Map<String, Value>> uniNames = new ArrayList<>(); //nombre de universidades
     
     @Inject
     private SparqlService sparqlService;
 
+    List<Map<String, Value>> uniNames; //nombre de universidades
 
     @Override
     public String runPublicationsProviderTaskImpl(String param) {
         
         try {
-            String allAuthorsQuery = queriesService.getAuthors();
-                    /*"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX foaf: <http://xmlns.com/foaf/0.1/>  PREFIX owl: <http://www.w3.org/2002/07/owl#>  PREFIX dct: <http://purl.org/dc/terms/>  PREFIX mm: <http://marmotta.apache.org/vocabulary/sparql-functions#>  PREFIX dcat: <http://www.w3.org/ns/dcat#>  PREFIX bibo: <http://purl.org/ontology/bibo/> PREFIX dc: <http://purl.org/dc/elements/1.1/> prefix uc: <http://ucuenca.edu.ec/ontology#> "
+            uniNames = new ArrayList<>();
+            String allAuthorsQuery = //queriesService.getAuthors();
+                    "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX foaf: <http://xmlns.com/foaf/0.1/>  PREFIX owl: <http://www.w3.org/2002/07/owl#>  PREFIX dct: <http://purl.org/dc/terms/>  PREFIX mm: <http://marmotta.apache.org/vocabulary/sparql-functions#>  PREFIX dcat: <http://www.w3.org/ns/dcat#>  PREFIX bibo: <http://purl.org/ontology/bibo/> PREFIX dc: <http://purl.org/dc/elements/1.1/> prefix uc: <http://ucuenca.edu.ec/ontology#> "
                     + "SELECT distinct ?s WHERE {  "
-                    + "GRAPH  <http://ucuenca.edu.ec/wkhuska/authors> {     "
+                    + "GRAPH  <http://localhost:8080/context/authors> {     "
                     + " ?s a foaf:Person.    ?s dct:provenance ?endpoint."
                     + " {"
                     + "    SELECT * { "
-                    + "        	GRAPH <http://ucuenca.edu.ec/wkhuska/endpoints> { "
+                    + "        	GRAPH <http://localhost:8080/context/endpoints> { "
                     + "              ?endpoint uc:name \"UCUENCA\"^^xsd:string . "
                     + "            } "
                     + "        } "
                     + " }"
-                    + "}}"*/
+                    + "}}";
             Repository repository = new SPARQLRepository(constantService.getSPARQLEndpointURL());
             TupleQueryResult allAuthors = executeQuery(repository, allAuthorsQuery);
             
@@ -150,42 +150,38 @@ public class DspaceProviderServiceImpl implements DspaceProviderService, Runnabl
                 //guardar en la variable sameAuthors los autores que ya tienen sameAs;
                 Set<String> sameAuthors = getAllSameAuthors(repository, authorResource);
                 
+                Set<String> provenances = getProvenances(repository, sameAuthors);
+                
                 for (String author : sameAuthors) {
                     try {
                         // 1. get the endpointurl from the author
                         //Encontramos el provenance del autor actual
-                        String getNamesQuery = queriesService.getAuthorDataQuery(author);
-                        TupleQueryResult resultAuthor = executeQuery(repository, getNamesQuery);
-                        String endpointId = null;
-                        if (resultAuthor.hasNext()) {
-                            BindingSet next = resultAuthor.next();
-                            endpointId = next.getBinding("provenance").getValue().stringValue();
-                            //lastName = next.getBinding("lname").getValue().stringValue();
-                            //fullName = namesAuthor.next().getBinding("name").getValue().stringValue();
+                        for (String endpointId : provenances) {
+                            //provenance
+                            SparqlEndpoint endpoint = authorsendpointService.getEndpoint(endpointId);
+
+                            /* Conecting to repository using LDC ( Linked Data Client ) Library */
+                            ClientConfiguration config = new ClientConfiguration();
+                            config.addEndpoint(new SPARQLEndpoint(endpoint.getName(), endpoint.getEndpointUrl(), "^" + "http://" + ".*"));
+                            LDClientService ldClientEndpoint = new LDClient(config);
+
+                            Repository endpointTempRepo = new SPARQLRepository(endpoint.getEndpointUrl());
+                            TupleQueryResult resultArticles = executeQuery(endpointTempRepo, queriesService.getArticlesFromDspaceQuery(endpoint.getGraph(), author));
+
+                            // 2. get the publications from author and save them with authorResource link
+                            String articleId = null;
+                            if (resultArticles.hasNext()) {
+                                BindingSet nextArticle = resultArticles.next();
+                                articleId = nextArticle.getBinding("docu").getValue().stringValue();
+
+                                saveAuthor(repository, authorResource);
+                                saveArticleFromDspace(endpointTempRepo, repository, articleId, authorResource, ldClientEndpoint);
+                                log.error("Dspace author: " + authorCount);
+                            }
+
+                            endpointTempRepo.shutDown();
                         }
-                        //provenance
-                        SparqlEndpoint endpoint = authorsendpointService.getEndpoint(endpointId);
-
-                        /* Conecting to repository using LDC ( Linked Data Client ) Library */
-                        ClientConfiguration config = new ClientConfiguration();
-                        config.addEndpoint(new SPARQLEndpoint(endpoint.getName(), endpoint.getEndpointUrl(), "^" + "http://" + ".*"));
-                        LDClientService ldClientEndpoint = new LDClient(config);
-
-                        Repository endpointTempRepo = new SPARQLRepository(endpoint.getEndpointUrl());
-                        TupleQueryResult resultArticles = executeQuery(endpointTempRepo, queriesService.getArticlesFromDspaceQuery(endpoint.getGraph(), author));
-
-                        // 2. get the publications from author and save them with authorResource link
-                        String articleId = null;
-                        if (resultArticles.hasNext()) {
-                            BindingSet next = resultArticles.next();
-                            articleId = next.getBinding("docu").getValue().stringValue();
-                            
-                            saveAuthor(repository, authorResource);
-                            saveArticleFromDspace(endpointTempRepo, repository, articleId, authorResource, ldClientEndpoint);
-
-                        }
-
-                        endpointTempRepo.shutDown();
+                        
                     } catch (Exception ex) {
                         log.error("Exception: " + ex);
                     }
@@ -227,6 +223,29 @@ public class DspaceProviderServiceImpl implements DspaceProviderService, Runnabl
             log.error("Exception: " + ex);
         }
         return sameAuthors;
+    }
+    
+    private Set<String> getProvenances (Repository repository, Set<String> authors) {
+        Set<String> provenances = new HashSet<String>();
+        
+        for (String author : authors) {
+            try {
+                // 1. get the endpointurl from the author
+                //Encontramos el provenance del autor actual
+                String getNamesQuery = queriesService.getAuthorProvenanceQuery(author);
+                TupleQueryResult resultAuthor = executeQuery(repository, getNamesQuery);
+                String endpointId = null;
+                if (resultAuthor.hasNext()) {
+                    BindingSet next = resultAuthor.next();
+                    provenances.add(next.getBinding("provenance").getValue().stringValue());
+                }
+            } catch (Exception ex) {
+                log.error("Exception: " + ex);
+            }
+        }
+        
+        return provenances;
+        
     }
     
     private void saveAuthor(Repository repository, String authorResource) {
@@ -338,7 +357,7 @@ public class DspaceProviderServiceImpl implements DspaceProviderService, Runnabl
                                 graphToSave, publicationURI, predicate, object);
                         sparqlFunctionsService.updatePub(queryPublicationInsert);
                     }
-
+                   
                     //Save URI
                     //http://purl.org/ontology/bibo/uri http://purl.org/ontology/bibo/uri
                     //(revisar)
@@ -378,6 +397,11 @@ public class DspaceProviderServiceImpl implements DspaceProviderService, Runnabl
 
                     //Save ISSN
                     //http://prismstandard.org/namespaces/basic/2.0/issn
+                    if ("http://purl.org/ontology/bibo/issn".equals(predicate)) {
+                        queryPublicationInsert = queriesService.buildInsertQuery(
+                                graphToSave, publicationURI, "http://prismstandard.org/namespaces/basic/2.0/issn", object);
+                        sparqlFunctionsService.updatePub(queryPublicationInsert);
+                    }
                 }
 
                 //Save Title

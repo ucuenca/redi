@@ -375,6 +375,16 @@ public class QueriesServiceImpl implements QueriesService {
                 + " }  } ";
 
     }
+    
+    @Override
+    public String getAuthorProvenanceQuery(String authorUri) {
+        authorUri = " <" + authorUri + "> ";
+        return PREFIXES
+                + " SELECT distinct * WHERE { " + con.getGraphString(con.getAuthorsGraph()) + "   {     "
+                + authorUri + " dct:provenance ?provenance. "
+                + " }  } ";
+
+    }
 
     @Override
     public String getAuthorsByName(String graph, String firstName, String lastName) {
@@ -516,8 +526,14 @@ public class QueriesServiceImpl implements QueriesService {
 
     @Override
     public String getAuthorsKeywordsQuery(String resource) {
-        return PREFIXES + " SELECT DISTINCT ?keyword FROM <" + con.getAuthorsGraph() + "> "
+        if (con != null) {
+            return PREFIXES + " SELECT DISTINCT ?keyword FROM <" + con.getAuthorsGraph() + "> "
                 + " WHERE { <" + resource + "> dct:subject ?keyword. filter(strlen(?keyword) < 41) } limit 50";
+        } else {
+            //ConstantServiceImpl constantService = new ConstantServiceImpl();
+            return PREFIXES + " SELECT DISTINCT ?keyword FROM <" + "http://localhost:8080/context/authors" + "> "
+                + " WHERE { <" + resource + "> dct:subject ?keyword. filter(strlen(?keyword) < 41) } limit 50";
+        }
     }
 
     @Override
