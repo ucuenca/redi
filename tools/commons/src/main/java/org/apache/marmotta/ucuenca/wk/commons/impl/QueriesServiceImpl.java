@@ -31,6 +31,18 @@ public class QueriesServiceImpl implements QueriesService {
 
     private final static String INSERTDATA = "INSERT DATA { ";
 
+    private final static String ENDPOINTPREFIX = "http://ucuenca.edu.ec/wkhuska/endpoint/";
+    
+    private String id = " ?id ";
+    
+    private String fullName = "fullName";
+    
+    private String status = "status";
+    
+    private String url = "url";
+    
+    private String graph = "graph";
+
     @Override
     public String getAuthorsQuery(String datagraph) {
         return PREFIXES
@@ -83,7 +95,7 @@ public class QueriesServiceImpl implements QueriesService {
         String graphSentence = getGraphString(varargs[0]);
         String subjectSentence = "<" + varargs[1] + ">";
         if (isURI(varargs[2])) {
-            return INSERTDATA + graphSentence + " " + "{ " + subjectSentence + " <" + varargs[2] + "> <" + varargs[3] + "> }}";
+            return INSERTDATA + graphSentence + " " + "{ " + subjectSentence + " <" + varargs[2] + "> <" + varargs[3] + "> }}  ";
         } else {
             return PREFIXES + INSERTDATA + graphSentence + " " + "{ " + subjectSentence + " " + varargs[2] + " <" + varargs[3] + "> }}";
         }
@@ -125,7 +137,7 @@ public class QueriesServiceImpl implements QueriesService {
             return PREFIXES + "ASK FROM <" + graph + "> {  <" + resource + "> " + property + " ?o }";
         }
     }
-
+    
     @Override
     public String getInsertEndpointQuery(String resourceHash, String property, String object, String literal) {
         String graph = con.getEndpointsGraph();
@@ -137,17 +149,17 @@ public class QueriesServiceImpl implements QueriesService {
         }
     }
 
+    
+    
     @Override
     public String getLisEndpointsQuery() {
-        String id = " ?id ";
-        String fullName = "fullName";
         return "SELECT DISTINCT ?id ?status ?name ?url ?graph (concat(?fName, \" - \", ?engName) as ?fullName) ?city ?province ?latitude ?longitude  WHERE {  "
-                + " GRAPH <" + con.getEndpointsGraph() + ">"
+                + "   GRAPH <" + con.getEndpointsGraph() + ">"
                 + " {"
-                + id + con.uc("status") + " ?status;"
+                + id + con.uc(status) + " ?status;"
                 + con.uc("name") + " ?name;"
-                + con.uc("url") + " ?url;"
-                + con.uc("graph") + " ?graph;"
+                + con.uc(url) + " ?url;"
+                + con.uc(graph) + " ?graph;"
                 + con.uc(fullName) + " ?fName;"
                 + con.uc(fullName) + "?engName;"
                 + con.uc("city") + " ?city;"
@@ -159,12 +171,31 @@ public class QueriesServiceImpl implements QueriesService {
     }
 
     @Override
+    public String getlisEndpointsQuery(String endpointsGraph) {
+        return "SELECT DISTINCT ?id ?status ?name ?url ?graph (concat(?fName, \" - \", ?engName) as ?fullName) ?city ?province ?latitude ?longitude  WHERE {  "
+                + "  GRAPH <" + con.getEndpointsGraph() + ">"
+                + " GRAPH <" + endpointsGraph + ">"
+                + " {"
+                + id + con.uc(status) + " ?status."
+                + id + con.uc("name") + " ?name ."
+                + id + con.uc(url) + " ?url."
+                + id + con.uc(graph) + " ?graph."
+                + id + con.uc(fullName) + " ?fName."
+                + id + con.uc(fullName) + "?engName."
+                + id + con.uc("city") + " ?city."
+                + id + con.uc("province") + " ?province."
+                + id + con.uc("latitude") + " ?latitude."
+                + id + con.uc("longitude") + " ?longitude."
+                + " FILTER (lang(?fName) = 'es') . "
+                + " FILTER (lang(?engName) = 'en') . "
+                + "}}";
+    }
+    
+    @Override
     public String getlistEndpointNamesQuery() {
-        String id = " ?id ";
-        return "SELECT DISTINCT ?fullName WHERE {  "
-                + "  GRAPH <http://ucuenca.edu.ec/wkhuska/endpoints>"
+        return "SELECT DISTINCT ?fullName WHERE {   GRAPH <http://ucuenca.edu.ec/wkhuska/endpoints>"
                 + "	{"
-                + "      " + id + con.uc("fullName") + " ?fName."
+                + "      " + id + con.uc(fullName) + " ?fName."
                 + "      	BIND (STR(?fName)  AS ?fullName)"
                 + "	}"
                 + "}";
@@ -176,11 +207,11 @@ public class QueriesServiceImpl implements QueriesService {
         return "SELECT DISTINCT ?id ?status ?name ?url ?graph ?fullName ?city ?province ?latitude ?longitude  WHERE {  "
                 + getGraphString(endpointsGraph)
                 + " {"
-                + idc + con.uc("status") + " ?status."
+                + idc + con.uc(status) + " ?status."
                 + idc + con.uc("name") + " ?name ."
-                + idc + con.uc("url") + " ?url."
-                + idc + con.uc("graph") + " ?graph."
-                + idc + con.uc("fullName") + " ?fullName."
+                + idc + con.uc(url) + " ?url."
+                + idc + con.uc(graph) + " ?graph."
+                + idc + con.uc(fullName) + " ?fullName."
                 + idc + con.uc("city") + " ?city."
                 + idc + con.uc("province") + " ?province."
                 + idc + con.uc("latitude") + " ?latitude."
@@ -203,17 +234,17 @@ public class QueriesServiceImpl implements QueriesService {
 
     @Override
     public String getEndpointUpdateStatusQuery(String... args) {
-        String status = con.uc("status");
+        String stat = con.uc("status");
         return " DELETE { " + getGraphString(args[0])
-                + "   {   <" + args[1] + "> " + status + " ?status "
+                + "   {   <" + args[1] + "> " + stat + " ?status "
                 + " }} "
                 + " INSERT  { "
                 + getGraphString(args[0]) + "  {"
-                + "             <" + args[1] + "> " + status + " '" + args[3] + "'^^xsd:boolean"
+                + "             <" + args[1] + "> " + stat + " '" + args[3] + "'^^xsd:boolean"
                 + " }       } "
                 + "WHERE { "
                 + getGraphString(args[0]) + "  { "
-                + "             <" + args[1] + "> " + status + " ?status"
+                + "             <" + args[1] + "> " + stat + " ?status"
                 + "             FILTER (regex(?status,'" + args[2] + "')) "
                 + " }   } ";
     }
@@ -232,7 +263,7 @@ public class QueriesServiceImpl implements QueriesService {
     public String getSameAsAuthors(String authorResource) {
         return PREFIXES
                 + "SELECT ?o WHERE {"
-                + " GRAPH <" + con.getAuthorsGraph() + "> { "
+                + "GRAPH <" + con.getAuthorsGraph() + "> { "
                 + "     <" + authorResource + "> owl:sameAs  ?o . "
                 + "     <" + authorResource + "> a foaf:Person . "
                 + "   }"
@@ -271,15 +302,13 @@ public class QueriesServiceImpl implements QueriesService {
     @Override
     public String getCountAuthors() {
         return PREFIXES
-                + "SELECT (COUNT(?author) as ?count) WHERE { "
-                + "  GRAPH <" + con.getAuthorsGraph() + "> { ?author a foaf:Person . }}";
+                + "SELECT (COUNT(?author) as ?count) WHERE {GRAPH <" + con.getAuthorsGraph() + "> { ?author a foaf:Person . }}";
     }
 
     @Override
     public String getCountSubjects(String authorResource) {
         return PREFIXES
-                + "SELECT (COUNT(?subject) as ?count) WHERE { "
-                + "GRAPH <" + con.getAuthorsGraph() + "> "
+                + "SELECT (COUNT(?subject) as ?count) WHERE {  GRAPH <" + con.getAuthorsGraph() + "> "
                 + "{ <" + authorResource + "> dct:subject ?subject .  } }";
     }
 
@@ -439,6 +468,17 @@ public class QueriesServiceImpl implements QueriesService {
                 + " }}";
     }
 
+//    @Override
+//    public String getPublicationsMAQuery(String providerGraph) {
+//        return " SELECT DISTINCT ?authorResource ?pubproperty ?publicationResource WHERE { "
+//                + getGraphString(providerGraph)
+//                + " {  "
+//                + " ?authorResource owl:sameAs   ?authorNative. "
+//                + " ?authorNative ?pubproperty ?publicationResource. "
+//                + " filter (regex(?pubproperty,\"pub\")) "
+//                + " }  "
+//                + " }  ";
+//    }
     @Override
     public String getPublicationsPropertiesQuery(String providerGraph, String publicationResource) {
         return " SELECT DISTINCT ?publicationProperties ?publicationPropertyValue WHERE { "
@@ -526,14 +566,8 @@ public class QueriesServiceImpl implements QueriesService {
 
     @Override
     public String getAuthorsKeywordsQuery(String resource) {
-        if (con != null) {
-            return PREFIXES + " SELECT DISTINCT ?keyword FROM <" + con.getAuthorsGraph() + "> "
+        return PREFIXES + " SELECT DISTINCT ?keyword FROM <" + con.getAuthorsGraph() + "> "
                 + " WHERE { <" + resource + "> dct:subject ?keyword. filter(strlen(?keyword) < 41) } limit 50";
-        } else {
-            //ConstantServiceImpl constantService = new ConstantServiceImpl();
-            return PREFIXES + " SELECT DISTINCT ?keyword FROM <" + "http://localhost:8080/context/authors" + "> "
-                + " WHERE { <" + resource + "> dct:subject ?keyword. filter(strlen(?keyword) < 41) } limit 50";
-        }
     }
 
     @Override
@@ -666,8 +700,7 @@ public class QueriesServiceImpl implements QueriesService {
     @Override
     public String detailsOfProvenance(String graph, String resource) {
         return PREFIXES
-                + " SELECT DISTINCT ?property ?hasValue  WHERE { "
-                + "  graph <" + graph + ">{ "
+                + " SELECT DISTINCT ?property ?hasValue  WHERE {  graph <" + graph + ">{ "
                 + "  {  <" + resource + "> ?property ?hasValue } "
                 + " UNION "
                 + "  { ?isValueOf ?property <" + resource + "> } "
@@ -680,8 +713,7 @@ public class QueriesServiceImpl implements QueriesService {
         return PREFIXES
                 //+ " PREFIX uc: <http://ucuenca.edu.ec/ontology#> "
                 + " SELECT ?name WHERE "
-                + " {        "
-                + "  GRAPH <" + con.getEndpointsGraph() + "> "
+                + " {          GRAPH <" + con.getEndpointsGraph() + "> "
                 + "   { "
                 + "  	?object  <http://ucuenca.edu.ec/ontology#name> ?name."
                 + "     GRAPH <" + graph + ">	" //http://ucuenca.edu.ec/wkhuska/authors
@@ -730,7 +762,7 @@ public class QueriesServiceImpl implements QueriesService {
     }
 
     public String getGraphString(String graph) {
-        return " GRAPH <" + graph + "> ";
+        return "GRAPH <" + graph + "> ";
     }
 
     @Override
@@ -781,8 +813,7 @@ public class QueriesServiceImpl implements QueriesService {
     @Override
     public String getPublicationsTitleByType(String graph, String type) {
         return PREFIXES + "SELECT DISTINCT ?authorResource ?publicationResource ?title\n"
-                + "WHERE { "
-                + "  GRAPH <" + graph + ">  {"
+                + "WHERE {   GRAPH <" + graph + ">  {"
                 + "	   ?authorResource " + type + " ?publicationResource."
                 + "        ?publicationResource dct:title ?title "
                 + "  }"
@@ -837,14 +868,12 @@ public class QueriesServiceImpl implements QueriesService {
     public String getAuthorPublicationsQueryFromGenericProvider(String... varargs) {
         return PREFIXES
                 + "SELECT DISTINCT  ?pubproperty ?publicationResource ?title "
-                + "WHERE {"
-                + "graph <" + varargs[0] + ">"
+                + "WHERE {graph <" + varargs[0] + ">"
                 + " {     <" + varargs[1] + "> foaf:publications ?publicationResource."
                 + " ?publicationResource <" + varargs[2] + ">  ?title"
                 + "}} ";
     }
 
-    @Override
     public String getIESInfobyAuthor(String authorURI) {
         return PREFIXES
                 + "SELECT DISTINCT ?city ?province\n"
@@ -858,14 +887,12 @@ public class QueriesServiceImpl implements QueriesService {
                 + "   <http://ucuenca.edu.ec/ontology#province> ?province; \n"
                 + "  OPTIONAL { ?p  <http://ucuenca.edu.ec/ontology#domain> ?domain.}  \n"
                 + "} GROUP BY ?p ?city ?province";
-    }
+}
 
-    @Override
     public String getAskPublicationsURLGS(String graphName, String authorResource) {
         return pubUrlsGS(graphName, authorResource, true);
     }
 
-    @Override
     public String getPublicationsURLGS(String graphName, String authorResource) {
         return pubUrlsGS(graphName, authorResource, false);
     }
@@ -888,8 +915,7 @@ public class QueriesServiceImpl implements QueriesService {
 
     @Override
     public String getInsertDomainQuery(String enpointId, String domain) {
-        return "INSERT DATA { "
-                + "GRAPH <" + con.getEndpointsGraph() + "> {"
+        return "INSERT DATA {   GRAPH <" + con.getEndpointsGraph() + "> {"
                 + " <" + enpointId + ">   <" + REDI.DOMAIN + "> \"" + domain + "\""
                 + "}}";
     }
@@ -914,6 +940,22 @@ public class QueriesServiceImpl implements QueriesService {
                 + "}} GROUP BY ?resource ?profile";
     }
 
+
+    @Override
+    public String getEndpointDataQuery(String... arg) {
+        String endpointsGraph = arg[0];
+        String parameter = arg[1];
+        String newValue = arg[2];
+        String resourceHash = arg[3];
+        String type = arg[4];
+        boolean condition = "url".equals(parameter) || "graph".equals(parameter);
+        if (condition) {
+            return INSERTDATA + getGraphString(endpointsGraph) + "{<" + ENDPOINTPREFIX + resourceHash + ">  " + con.uc(parameter) + "  <" + newValue + "> }}";
+        } else {
+            return INSERTDATA + getGraphString(endpointsGraph) + "{<" + ENDPOINTPREFIX + resourceHash + ">  " + con.uc(parameter) + "   '" + newValue + "'" + type + " }}  ";
+        }
+    }
+    
     @Override
     public String getAuthorsCentralGraphSize() {
         return PREFIXES

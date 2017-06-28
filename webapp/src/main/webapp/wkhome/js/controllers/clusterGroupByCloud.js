@@ -53,7 +53,8 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$timeout', '$scope', 'glob
                         + ' WHERE { '
                         + '     SELECT  (count(?key) as ?k) ?key '
                         + '     WHERE { '
-                        + '         ?subject bibo:Quote ?key. '
+                        + '         ?subject dcterms:subject ?keywordSubject. '
+                        + '         ?keywordSubject rdfs:label ?key. '
                         + '         BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
                         + '         BIND(IRI(?unickey) as ?keyword) '
                         + '     } '
@@ -114,7 +115,7 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$timeout', '$scope', 'glob
                 searchData.clustersAuthors = [];
 
                 var queryClusters = globalData.PREFIX
-                  + 'CONSTRUCT {?author foaf:name ?name. ?author uc:hasCluster ?clusterId. ?author rdfs:label ?label. ?author bibo:Quote ?keywords }'
+                  + 'CONSTRUCT {?author foaf:name ?name. ?author uc:hasCluster ?clusterId. ?author rdfs:label ?label. ?author dcterms:subject ?keywords }'
                   + 'WHERE{ '
                   + '  { '
                   + '    SELECT DISTINCT ?author ?name ?clusterId ?label (group_concat(DISTINCT ?keyword; separator = ", ") as ?keywords) '
@@ -134,7 +135,8 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$timeout', '$scope', 'glob
                   + '          SELECT * {'
                   + '            GRAPH <' + globalData.centralGraph + '> {'
                   + '                ?author foaf:name ?name .'
-                  + '                ?publication bibo:Quote ?keyword.'
+                  + '                ?publication dcterms:subject ?keywordSubject. '
+                  + '                ?keywordSubject rdfs:label ?keyword. '
                   + '            }'
                   + '          } '
                   + '        }'
@@ -152,12 +154,12 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$timeout', '$scope', 'glob
                             var clusterIds = res["uc:hasCluster"];
                             var keywords = "";
                             /** Keywords come aggregated, so it not necessary to aggregate again.
-                            if (res["bibo:Quote"] != null && (res["bibo:Quote"].constructor === Array || res["bibo:Quote"] instanceof Array)) {
-                                for (i = 0; i < res["bibo:Quote"].length && i < 12; i++) {
-                                    keywords += (i == 0 ? res["bibo:Quote"][i] : ", " + res["bibo:Quote"][i]);
+                            if (res["dcterms:subject"] != null && (res["dcterms:subject"].constructor === Array || res["dcterms:subject"] instanceof Array)) {
+                                for (i = 0; i < res["dcterms:subject"].length && i < 12; i++) {
+                                    keywords += (i == 0 ? res["dcterms:subject"][i] : ", " + res["dcterms:subject"][i]);
                                 }
                             }**/
-                            keywords = res["bibo:Quote"];
+                            keywords = res["dct:subject"];
                             if (clusterIds != null && (clusterIds.constructor === Array || clusterIds instanceof Array)) {
                                 for (i = 0; i < clusterIds.length; i++) {
                                     model["IdAuthor"] = res["@id"];

@@ -177,7 +177,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
             function setChildrenAndUpdateForAuthor(node, right) {
                 var id = node.author["@id"];
                 var modelAuthor = {"foaf:name": {label: "Nombre:", containerType: "div"},
-                    "uc:fullName": {label: "IES: ", containerType: "div"},
+                    "uc:fullName": {label: "Institución: ", containerType: "div"},
                     "uc:city": {label: "Ciudad: ", containerType: "div"},
                     "uc:province": {label: "Provincia: ", containerType: "div"},
                     "dct:subject": {label: "Subjects: ", containerType: "div"}
@@ -197,14 +197,15 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                         + '         dct:provenance ?provenance; '
                         + '         OPTIONAL {  <' + id + '> foaf:topic_interest [rdfs:label ?subjects]. }'
                         + '         { '
-                        + '             SELECT DISTINCT * '
+                        + '             SELECT DISTINCT ?provenance ?city (STR(?pname) as ?provname) ?province '
                         + '             WHERE'
                         + '             {'
                         + '                 graph <' + globalData.endpointsGraph + '> '
                         + '                 { '
-                        + '                     ?provenance uc:fullName ?provname.'
+                        + '                     ?provenance uc:fullName ?pname.'
                         + '                     ?provenance uc:city ?city.'
                         + '                     ?provenance uc:province ?province.'
+                        + '                     FILTER (lang(?pname) = "es").'
                         + '                 }'
                         + '             }'
                         + '         }'

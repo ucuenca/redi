@@ -53,6 +53,7 @@ myApp.labels_es = {
 "Research Info": "Información del investigador",
 "Article Info": "Información de la publicación",
 "Open in": "Abrir en",
+"Try to Find": "Intentar buscar en",
 "Export pub": "Exportar investigador y publicaciones",
 "see.all":"Ver todos",
 "coauthor":"Coautores",

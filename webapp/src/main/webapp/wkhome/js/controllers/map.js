@@ -20,7 +20,8 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
                     + '         graph <'+globalData.centralGraph+'> {'
                     + '             ?subject foaf:publications ?pubs. '
                     //+ '           ?subject dct:subject ?key. '
-                    + '             ?pubs bibo:Quote ?key. '
+                    + '             ?pubs dcterms:subject ?keywordSubject. '
+                    + '             ?keywordSubject rdfs:label ?key. '
                     + '             BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
                     + '             BIND(IRI(?unickey) as ?keyword) '
                     + '         }'
@@ -62,7 +63,7 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
             waitingDialog.show("Consultando Ubicacion de Autores Relacionados con:  \"" + $scope.selectedTagItem + "\"");
             var queryBySource = globalData.PREFIX
                     + ' CONSTRUCT { '
-                    + '         ?urikeyword bibo:Quote "' + $scope.selectedTagItem + '". '
+                    + '         ?urikeyword dcterms:subject "' + $scope.selectedTagItem + '". '
                     + '         ?urikeyword uc:totalpublications ?cont. '
                     + '         ?urikeyword uc:name ?sourcename.  '
                     + '         ?urikeyword uc:lat ?lat. '
@@ -76,9 +77,10 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
                     + '     WHERE {'
                     + '         GRAPH <' + globalData.centralGraph + '>  {'
                     + '             ?subject foaf:publications ?object.'
-                    //+ '             ?object bibo:Quote "' + $scope.selectedTagItem + '".'
+                    //+ '             ?object dcterms:subject "' + $scope.selectedTagItem + '".'
                     //+ '             ?subject dct:subject ?key.'
-                    + '             ?object bibo:Quote ?key.'
+                    + '             ?object dcterms:subject ?keywordSubject. '
+                    + '             ?keywordSubject rdfs:label ?key.'
                     + '             FILTER (mm:fulltext-search(?key, "' + $scope.selectedTagItem + '")) .'
                     + '             ?subject dct:provenance ?provenance.'
                     + '             { '
@@ -117,7 +119,7 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
                             model["total"] = resource["uc:totalpublications"]["@value"];
                             model["lat"] = resource["uc:lat"];
                             model["long"] = resource["uc:long"];
-                            model["keyword"] = resource["bibo:Quote"];
+                            model["keyword"] = resource["dct:subject"];
                             model["city"] = resource["uc:city"];
                             model["province"] = resource["uc:province"];
                             if (model["id"])

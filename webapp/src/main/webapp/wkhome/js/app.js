@@ -29,15 +29,16 @@ wkhomeApp.service('searchData', function () {
     this.dataRequested = false;
 });
 
-wkhomeApp.service('globalData', function () {
+wkhomeApp.service('globalData', ['$window', function ($window) {
+    var baseURL = $window.location.origin + $window.location.pathname;
     this.language = "es";
     this.centralGraph = "http://ucuenca.edu.ec/wkhuska";
-    this.clustersGraph = "http://localhost:8080/context/clusters";
-    //this.clustersGraph = "http://redi.cedia.org.ec/context/clusters";
-    this.authorsGraph = "http://ucuenca.edu.ec/wkhuska/authors";
-    this.endpointsGraph = "http://localhost:8080/context/endpoints";
-    //this.endpointsGraph = "http://redi.cedia.org.ec/marmottatest/context/endpoints";
     this.externalAuthorsGraph = "http://ucuenca.edu.ec/wkhuska/externalauthors";
+    this.clustersGraph = baseURL + "context/clusters";
+    this.authorsGraph = baseURL + "context/authors";
+    //this.endpointsGraph = "http://localhost:8080/" + "context/endpoints";
+    this.endpointsGraph = baseURL + "context/endpoints";
+    //this.externalAuthorsGraph = baseURL + "/context/externalauthors";
     this.translateData = null;
     this.PREFIX = 'PREFIX bibo: <http://purl.org/ontology/bibo/>'
             + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>  '
@@ -45,6 +46,7 @@ wkhomeApp.service('globalData', function () {
             + ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> '
             + ' PREFIX uc: <http://ucuenca.edu.ec/ontology#>  '
             + ' PREFIX mm: <http://marmotta.apache.org/vocabulary/sparql-functions#> '
+            + ' PREFIX dcterms: <http://purl.org/dc/terms/>'
             ;
     this.CONTEXT = {
         "uc": "http://ucuenca.edu.ec/ontology#",
@@ -59,7 +61,7 @@ wkhomeApp.service('globalData', function () {
     this.urltofindinDBLP = 'http://dblp.uni-trier.de/search?q={0}';
     this.urltofindinSCOPUS = 'http://www.scopus.com/results/results.uri?numberOfFields=0&src=s&clickedLink=&edit=&editSaveSearch=&origin=searchbasic&authorTab=&affiliationTab=&advancedTab=&scint=1&menu=search&tablin=&searchterm1={0}&field1=TITLE&dateType=Publication_Date_Type&yearFrom=Before+1960&yearTo=Present&loadDate=7&documenttype=All&subjects=LFSC&_subjects=on&subjects=HLSC&_subjects=on&subjects=PHSC&_subjects=on&subjects=SOSC&_subjects=on&st1={1}&st2=&sot=b&sdt=b&sl=91&s=TITLE%28{2}%29';
     this.urltofindinACADEMICS = 'https://academic.microsoft.com/#/search?iq=@{0}@&q={1}&filters=&from=0&sort=0';
-});
+}]);
 
 wkhomeApp.config(['$routeProvider',
     function ($routeProvider) {

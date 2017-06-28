@@ -14,7 +14,7 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
                 model["title"] = pub["dct:title"];
                 model["abstract"] = pub["bibo:abstract"] ? pub["bibo:abstract"] : "";
                 model["uri"] = pub["bibo:uri"] ? pub["bibo:uri"]["@id"] : "";
-                model["keywords"] = pub["bibo:Quote"] ? pub["bibo:Quote"] : "";
+                model["keywords"] = pub["dcterms:subject"] ? pub["dcterms:subject"] : "";
 
                 $scope.todos.push({id: model["id"], title: model["title"], abstract: model["abstract"], uri: model["uri"], keywords: model["keywords"]});
 
@@ -81,7 +81,8 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
                     + '         graph <'+globalData.centralGraph+'> {'
                     + '             ?subject foaf:publications ?pubs. '
                     //+ '           ?subject dct:subject ?key. '
-                    + '             ?pubs bibo:Quote ?key. '
+                    + '             ?pubs dcterms:subject ?keywordSubject. '
+                    + '             ?keywordSubject rdfs:label ?key. '
                     + '             BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
                     + '             BIND(IRI(?unickey) as ?keyword) '
                     + '         }'
@@ -158,7 +159,8 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
                     + '   ?subject foaf:publications ?pubs . '
                     + '   ?subject foaf:name  ?nameauthor . '
                     //+ '   ?subject dct:subject ?keyword. '
-                    + '   ?pubs bibo:Quote ?keyword . '
+                    + '   ?pubs dcterms:subject ?keywordSubject. '
+                    + '   ?keywordSubject rdfs:label ?keyword. '
                     + '   ?subject dct:provenance ?provenance  '
                    + '    FILTER (mm:fulltext-search(?keyword, "'+value+'")) '
 //          

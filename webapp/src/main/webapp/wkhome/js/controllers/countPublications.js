@@ -28,7 +28,7 @@ wkhomeControllers.controller('countPublications', ['$window','$routeParams','$sc
                 + '                     SELECT * '
                 + '                     WHERE '
                 + '                     { '
-                + '                         graph <http://ucuenca.edu.ec/wkhuska/endpoints> '
+                + '                         graph <' + globalData.endpointsGraph + '> '
                 + '                         { '
                 + '           			?provenance uc:name ?sourcename '
                 + '                         } '

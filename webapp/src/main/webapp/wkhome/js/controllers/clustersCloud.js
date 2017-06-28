@@ -10,7 +10,7 @@ wkhomeControllers.controller('clustersCloud', ['$routeParams', '$scope', '$windo
                 //var keys = Object.keys(author);
                 model["id"] = obj["@id"];
                 model["name"] = obj["foaf:name"];
-                model["keywords"] = obj["bibo:Quote"];
+                model["keywords"] = obj["dcterms:subject"];
                 /*if (obj["bibo:uri"]) {
                  model["uri"] = obj["bibo:uri"]["@id"];
                  }*/

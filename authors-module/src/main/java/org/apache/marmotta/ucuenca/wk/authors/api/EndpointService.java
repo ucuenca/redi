@@ -15,21 +15,26 @@ import java.util.List;
 public interface EndpointService {
 
     /**
-     * Add Enpoint
-     *
-     * @param args http://localhost:8890/sparql
-     * @return
+     * Add Enpoint 
+     * @param name    //name of the endpoint
+     * @param endpointUrl    //sparql endpoint   example: http://localhost:8890/sparql
+     * @param graphUri       //Graph Store
+     * @return 
      */
+    String addEndpoint(String name, String endpointUrl, String graphUri);
+    
     String addEndpoint(String... args);
-
+  
+    
     SparqlEndpoint getEndpoint(String resourceId);
-
+    
     /**
-     *
-     * @return
+     * 
+     * @return 
      */
     List<SparqlEndpoint> listEndpoints();
-
+    
+    
     String removeEndpoint(String resourceid);
 
     String updateEndpoint(String resourceid, String oldstatus, String newstatus);

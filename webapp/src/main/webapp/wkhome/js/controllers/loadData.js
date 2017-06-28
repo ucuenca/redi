@@ -23,7 +23,8 @@ wkhomeControllers.controller('loadData', ['sparqlQuery', 'searchData', '$transla
                     + '         graph <' + globalData.centralGraph + '> {'
                     + '             ?subject foaf:publications ?pubs. '
                     //+ '           ?subject dct:subject ?key. '
-                    + '             ?pubs bibo:Quote ?key. '
+                    + '             ?pubs dcterms:subject ?keywordSubject. '
+                    + '             ?keywordSubject rdfs:label ?key. '
                     + '             BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
                     + '             BIND(IRI(?unickey) as ?keyword) '
                     + '         }'
@@ -66,7 +67,8 @@ wkhomeControllers.controller('loadData', ['sparqlQuery', 'searchData', '$transla
                 + '     SELECT ?keyword ?k (COUNT(DISTINCT(?subject)) AS ?totalPub) '
                 + '     WHERE { '
                 + '         ?person foaf:publications ?subject. '
-                + '         ?subject bibo:Quote ?k . '
+                + '         ?subject dcterms:subject ?keywordSubject. '
+                + '         ?keywordSubject rdfs:label ?k. '
                 + '         BIND(IRI(?k) AS ?keyword) . '
                 + '     } '
                 + '     GROUP BY ?keyword ?k '
@@ -107,7 +109,7 @@ wkhomeControllers.controller('loadData', ['sparqlQuery', 'searchData', '$transla
                         '  ?author foaf:name ?name. ' +
                         '  ?author uc:hasCluster ?clusterId. ' +
                         '  ?author rdfs:label ?label. ' +
-                        '  ?author bibo:Quote ?keywords ' +
+                        '  ?author dcterms:subject ?keywords ' +
                         '} ' +
                         'WHERE ' +
                         '{' +
@@ -123,7 +125,8 @@ wkhomeControllers.controller('loadData', ['sparqlQuery', 'searchData', '$transla
                         '          {' +
                         '              ?author foaf:name ?name.' +
                         '              ?author foaf:publications ?publicationUri.' +
-                        '              ?publicationUri bibo:Quote ?keywords.' +
+                        '              ?publicationUri dcterms:subject ?keywordSubject. ' +
+                        '              ?keywordSubject rdfs:label ?keywords.' +
                         '          }' +
                         '        } group by ?author ?name ?keywords ' +
                         '      }' +
@@ -137,9 +140,9 @@ wkhomeControllers.controller('loadData', ['sparqlQuery', 'searchData', '$transla
                             var model = {};
                             var clusterIds = res["uc:hasCluster"];
                             var keywords = "";
-                            if (res["bibo:Quote"] != null && (res["bibo:Quote"].constructor === Array || res["bibo:Quote"] instanceof Array)) {
-                                for (i = 0; i < res["bibo:Quote"].length && i < 12; i++) {
-                                    keywords += (i == 0 ? res["bibo:Quote"][i] : ", " + res["bibo:Quote"][i]);
+                            if (res["dcterms:subject"] != null && (res["dcterms:subject"].constructor === Array || res["dcterms:subject"] instanceof Array)) {
+                                for (i = 0; i < res["dcterms:subject"].length && i < 12; i++) {
+                                    keywords += (i == 0 ? res["dcterms:subject"][i] : ", " + res["dcterms:subject"][i]);
                                 }
                             }
                             if (clusterIds != null && (clusterIds.constructor === Array || clusterIds instanceof Array)) {

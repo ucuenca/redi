@@ -29,6 +29,7 @@ import org.simmetrics.metrics.JaccardSimilarity;
  *
  * @author Jose Luis Cullcay
  */
+@SuppressWarnings("PMD")
 @ApplicationScoped
 public class DistanceServiceImpl implements DistanceService {
 

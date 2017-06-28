@@ -8,6 +8,7 @@ package org.apache.marmotta.ucuenca.wk.provider.ak.util;
 //import java.io.InputStreamReader;
 //import java.net.URL;
 //import java.net.URLEncoder;
+import com.google.common.base.Joiner;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -132,7 +133,7 @@ public class MapPublications {
                 plainAbs[i] = key;
             }
         }
-        return String.join(" ", plainAbs);
+        return Joiner.on(" ").skipNulls().join(plainAbs);
     }
 
     public List<String> getJsonString(JSONObject jSONObject, String identifier) {

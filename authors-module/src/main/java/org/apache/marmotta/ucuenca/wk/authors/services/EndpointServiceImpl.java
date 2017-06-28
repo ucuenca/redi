@@ -40,16 +40,33 @@ public class EndpointServiceImpl implements EndpointService {
 
     @Inject
     private QueriesService queriesService;
-
+    
     @Inject
     private ConstantService constantService;
 
     private String endpointsGraph;
 
+    private String fullName = "fullName";
+    
     @PostConstruct
     public void init() {
         endpointsGraph = constantService.getEndpointsGraph();
     }
+
+    @Override
+    public String addEndpoint(String name, String endpointUrl, String graphUri) {
+
+        /*try {
+            String resourceHash = getHashCode(name, endpointUrl, graphUri);
+            addEndpointData(endpointsGraph, "name", name, resourceHash);
+            addEndpointData(endpointsGraph, "url", endpointUrl, resourceHash);
+            addEndpointData(endpointsGraph, "graph", graphUri, resourceHash);
+            return "Endpoint Insertado Correctamente";
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
+        return "AddEndpoint Error";
+    }    
 
     /**
      * Funcion que agrega un nuevo endpoint
@@ -65,6 +82,17 @@ public class EndpointServiceImpl implements EndpointService {
             String dec = "^^xsd:string";
             String bool = "^^xsd:boolean";
 
+            /*addEndpointData(endpointsGraph, "status", args[0], resourceHash, "^^xsd:boolean");
+            addEndpointData(endpointsGraph, "name", args[1], resourceHash, cad);
+            addEndpointData(endpointsGraph, "url", args[2], resourceHash,cad);
+            addEndpointData(endpointsGraph, "graph", args[3], resourceHash,cad);
+            addEndpointData(endpointsGraph, fullName, args[4], resourceHash,"@es");
+            addEndpointData(endpointsGraph, fullName, args[5], resourceHash,"@en");
+            addEndpointData(endpointsGraph, "city", args[6], resourceHash,cad);
+            addEndpointData(endpointsGraph, "province", args[7], resourceHash,cad);
+            addEndpointData(endpointsGraph, "latitude", args[8], resourceHash,dec);
+            addEndpointData(endpointsGraph, "longitude", args[9], resourceHash,dec);*/
+            
             //List of parameters to pass
             insertEndPoint(resourceHash, REDI.STATUS.toString(), args[0], bool);
             insertEndPoint(resourceHash, REDI.NAME.toString(), args[1], cad);
@@ -92,6 +120,15 @@ public class EndpointServiceImpl implements EndpointService {
             Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void addEndpointData(String... parameters) {
+        try {
+            String queryEndpoint = queriesService.getEndpointDataQuery(parameters);
+            sparqlService.update(QueryLanguage.SPARQL, queryEndpoint);
+        } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
+            Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     /**
      * Function that return a Hash Code to get a unique ID for resource URI
@@ -104,7 +141,7 @@ public class EndpointServiceImpl implements EndpointService {
      * @return
      * @throws NoSuchAlgorithmException
      */
-    private String getHashCode(String name, String url, String graph) throws NoSuchAlgorithmException {
+    public String getHashCode(String name, String url, String graph) throws NoSuchAlgorithmException {
         String plaintext = name + url + graph;
         MessageDigest m = MessageDigest.getInstance("MD5");
         m.reset();
@@ -126,7 +163,7 @@ public class EndpointServiceImpl implements EndpointService {
                 endpoint.setName(singleendpoint.get("name").stringValue());
                 endpoint.setEndpointUrl(singleendpoint.get("url").stringValue());
                 endpoint.setGraph(singleendpoint.get("graph").stringValue());
-                endpoint.setFullName(singleendpoint.get("fullName").stringValue());
+                endpoint.setFullName(singleendpoint.get(fullName).stringValue());
                 endpoint.setCity(singleendpoint.get("city").stringValue());
                 endpoint.setProvince(singleendpoint.get("province").stringValue());
                 endpoint.setLatitude(singleendpoint.get("latitude").stringValue());
@@ -150,7 +187,7 @@ public class EndpointServiceImpl implements EndpointService {
             endpoint.setName(endpointresult.get(0).get("name").stringValue());
             endpoint.setEndpointUrl(endpointresult.get(0).get("url").stringValue());
             endpoint.setGraph(endpointresult.get(0).get("graph").stringValue());
-            endpoint.setFullName(endpointresult.get(0).get("fullName").stringValue());
+            endpoint.setFullName(endpointresult.get(0).get(fullName).stringValue());
             endpoint.setCity(endpointresult.get(0).get("city").stringValue());
             endpoint.setProvince(endpointresult.get(0).get("province").stringValue());
             endpoint.setLatitude(endpointresult.get(0).get("latitude").stringValue());
@@ -177,7 +214,7 @@ public class EndpointServiceImpl implements EndpointService {
 
     @Override
     public String updateEndpoint(String resourceid, String oldstatus, String newstatus) {
-        try {
+         try {
             sparqlService.update(QueryLanguage.SPARQL, queriesService.getEndpointUpdateStatusQuery(endpointsGraph, resourceid, oldstatus, newstatus));
             return "Endpoint was UPDATE";
         } catch (MarmottaException | InvalidArgumentException | MalformedQueryException | UpdateExecutionException ex) {

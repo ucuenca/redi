@@ -19,10 +19,10 @@
     <modelVersion>4.0.0</modelVersion>
     
     <parent>
-        <groupId>org.apache.marmotta</groupId>
-        <artifactId>ucuenca</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-    </parent>
+	    <groupId>org.apache.marmotta</groupId>
+	    <artifactId>ucuenca</artifactId>
+	    <version>0.0.1-SNAPSHOT</version>
+  	</parent>
 
     <groupId>org.apache.marmotta.ucuenca.wk</groupId>
     <artifactId>authors-module</artifactId>
@@ -55,23 +55,23 @@
             </plugin>
             
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <version>3.4</version>
-                <executions>
-                    <execution>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <rulesets>
-                        <ruleset>..${file.separator}PMDRules.xml</ruleset>
-                    </rulesets>
-                </configuration>
-            </plugin>
+	        <groupId>org.apache.maven.plugins</groupId>
+	        <artifactId>maven-pmd-plugin</artifactId>
+	        <version>3.4</version>
+	        <executions>
+	          <execution>
+	          	<phase>verify</phase>
+	            <goals>
+	              <goal>check</goal>
+	            </goals>
+	          </execution>
+	        </executions>
+	        <configuration>
+	          <rulesets>
+	            <ruleset>..${file.separator}PMDRules.xml</ruleset>
+	          </rulesets>
+	        </configuration>
+	      </plugin>
         </plugins>
     </build>
 
@@ -82,7 +82,7 @@
             <version>${marmotta.version}</version>
         </dependency>
         <!-- Test dependencies -->
-        <dependency>
+ <dependency>
             <groupId>org.apache.marmotta</groupId>
             <artifactId>marmotta-core</artifactId>
             <version>${marmotta.version}</version>

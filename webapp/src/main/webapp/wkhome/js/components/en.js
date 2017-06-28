@@ -50,6 +50,7 @@ myApp.labels_en = {
 "Research Info": "Researcher Information",
 "Article Info": "Publication Information",
 "Open in": "Open in",
+"Try to Find": "Try to Find in",
 "Export pub": "Export Researcher Publications",
 "see.all":"See all",
 "coauthor":"Co-Authors",

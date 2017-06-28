@@ -18,7 +18,6 @@
     <exclude name="StdCyclomaticComplexity"/>
     <exclude name="ExcessiveClassLength"/>
     <exclude name="ExcessivePublicCount"/>
-    <exclude name="ExcessiveMethodLength"/>
   </rule>
   <rule ref="rulesets/java/naming.xml">
     <exclude name="ShortVariable"/>
@@ -47,7 +46,7 @@
     <exclude name="AssignmentToNonFinalStatic"/>
     <exclude name="CloseResource"/>
     <exclude name="FieldDeclarationsShouldBeAtStartOfClass"/>
-    <exclude name="GodClass"/>
+    <exclude name="GodClass">
   </rule>
   <!-- <rule ref="rulesets/java/migrating.xml">
   </rule> -->
