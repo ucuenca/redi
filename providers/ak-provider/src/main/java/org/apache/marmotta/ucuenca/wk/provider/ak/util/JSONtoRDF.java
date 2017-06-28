@@ -138,7 +138,7 @@ public class JSONtoRDF {
 
                 for (int iterator = 0; iterator < aux.size(); iterator++) {
                     JsonElement element = aux.get(iterator);
-                    model.add(factory.createStatement(factory.createURI(academicsUrl + element.getAsJsonObject().get("id").getAsString()),
+                    model.add(factory.createStatement(factory.createURI(ACADEMICS_URL + element.getAsJsonObject().get("id").getAsString()),
                         RDF.TYPE, factory.createURI(schema.get("entity::property::typePerson"))));
                 }
                 
