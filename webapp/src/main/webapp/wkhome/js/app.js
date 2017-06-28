@@ -37,7 +37,7 @@ wkhomeApp.service('globalData', ['$window', function ($window) {
     this.endpointsGraph = $window.location.origin + "/context/endpoints";
     this.externalAuthorsGraph = $window.location.origin + "/context/externalauthors";
     this.translateData = null;
-    this.PREFIX = ' PREFIX bibo: <http://purl.org/ontology/bibo/>'
+    this.PREFIX = 'PREFIX bibo: <http://purl.org/ontology/bibo/>'
             + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>  '
             + ' PREFIX dct: <http://purl.org/dc/terms/> '
             + ' PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> '
@@ -135,6 +135,10 @@ wkhomeApp.config(['$routeProvider',
                     redirectTo: '/es/'
                 })
                 ;
+    }]);
+
+    wkhomeApp.config(['$locationProvider', function($locationProvider) {
+      $locationProvider.hashPrefix('');
     }]);
 
     wkhomeApp.config(['$compileProvider', function ($compileProvider) {

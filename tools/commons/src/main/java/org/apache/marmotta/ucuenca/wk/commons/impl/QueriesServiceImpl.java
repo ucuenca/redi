@@ -953,5 +953,49 @@ public class QueriesServiceImpl implements QueriesService {
             return INSERTDATA + getGraphString(endpointsGraph) + "{<" + ENDPOINTPREFIX + resourceHash + ">  " + con.uc(parameter) + "   '" + newValue + "'" + type + " }}  ";
         }
     }
+    
+    @Override
+    public String getAuthorsCentralGraphSize() {
+        return PREFIXES
+                + "SELECT (COUNT(DISTINCT ?author) as ?tot) WHERE {"
+                + "   GRAPH <" + con.getCentralGraph() + "> {"
+                + "    ?author a foaf:Person;"
+                + " foaf:publications []."
+                + "    }"
+                + "}";
+    }
+
+    @Override
+    public String getAuthorsCentralGraph(int limit, int offset) {
+        return PREFIXES
+                + "SELECT DISTINCT ?author WHERE {"
+                + "   GRAPH <" + con.getCentralGraph() + ">  { "
+                + "    ?author a foaf:Person;"
+                + " foaf:publications []."
+                + "    }}"
+                + " LIMIT " + limit
+                + " OFFSET " + offset;
+    }
+
+    @Override
+    public String getSameAuthorsLvl2(String authorResource) {
+        return PREFIXES
+                + "SELECT * WHERE {{"
+                + "    SELECT * WHERE {"
+                + "      GRAPH <" + con.getCentralGraph() + ">  { "
+                + "        <" + authorResource + "> a foaf:Person; "
+                + "           owl:sameAs  ?other."
+                + "      }}}"
+                + "  ?other owl:sameAs ?general."
+                + "}";
+    }
+
+    @Override
+    public String getOptionalProperties(String sameAs, String property) {
+        return PREFIXES
+                + "SELECT ?attr WHERE {"
+                + "  OPTIONAL {<" + sameAs + "> " + property + " ?attr.}"
+                + "}";
+    }
 
 }

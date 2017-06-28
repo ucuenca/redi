@@ -56,6 +56,7 @@ public class PubWebService {
     public static final String GET_PUBLICATIONS_AK = "/publications_ak";
     public static final String GET_PUBLICATIONS_DSPACE = "/publications_dspace";
     public static final String LOAD_PUBLICATIONS = "/publications_provider_graph";
+    public static final String LOAD_AUTHOR_ATTR = "/author_attr";
     public static final String GET_AUTHOR_DATA = "/pubsearch";
     public static final String GET_REPORT = "/report";
     public static final String TRANSLATE = "/translate";
@@ -148,12 +149,17 @@ public class PubWebService {
     public Response loadPublicationsPost(@QueryParam("Endpoint") String resultType, @Context HttpServletRequest request) {
         String params = resultType;
         log.debug("Publications Task", params);
-        return runPublicationsTask(params);
-    }
-
-    private Response runPublicationsTask(String urisString) {
         String result = commonService.Data2GlobalGraph();
         return Response.ok().entity(result).build();
+    }
+
+    /*
+     * Get Publications Data from  Provider Graph and load into General Graph
+     */
+    @POST
+    @Path(LOAD_AUTHOR_ATTR)
+    public Response loadPublicationsPost() {
+        return Response.ok(commonService.authorAttrFromProviders()).build();
     }
 
     /**

@@ -16,7 +16,7 @@
           <ul>
             <li ng-repeat="publication in filterPublications">
               <div class="publicationList">
-                <h2 class="title"><a href="{{publication.uri.ur}}" target='_blank'>{{publication.title}}</a></h2>
+                <h2 class="title"><a href="{{publication.id}}" target='_blank'>{{publication.title}}</a></h2>
 
                 <div ng-show="publication.abstract">
                   <hm-read-more
@@ -54,9 +54,9 @@
         </center>
       </div>
       <div class="col-md-3">
-        <a ng-click="loadAuthorProfile()"><h2 style="margin: 0px 0px">{{author.name}}</h2></a>
-        <h5 style="margin: 0px 0px"><i>{{author.institution}}</i></h5>
-        <h6 style="margin: 0px 0px">{{author.province}}, {{author.city}}</h6>
+        <img ng-src="{{author.photo}}" class="img-responsive" alt="{{author.name}}">
+        <a ng-click="loadAuthorProfile()"><h3 style="margin: 0px 0px">{{author.name}}</h3></a>
+        <h5 style="margin: 0px 0px" ng-repeat="institution in author.institutions">{{institution.name}}, <small><i>{{institution.city}}</i></small></h5>
         <br>
         <div ng-show="author.areas">
           <b>{{ 'area.study' | translate }}: </b>
