@@ -940,6 +940,8 @@ public class QueriesServiceImpl implements QueriesService {
                 + "}} GROUP BY ?resource ?profile";
     }
 
+
+    @Override
     public String getEndpointDataQuery(String... arg) {
         String endpointsGraph = arg[0];
         String parameter = arg[1];
