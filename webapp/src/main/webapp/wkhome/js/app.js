@@ -38,7 +38,6 @@ wkhomeApp.service('globalData', ['$window', function ($window) {
     this.authorsGraph = baseURL + "context/authors";
     //this.endpointsGraph = "http://localhost:8080/" + "context/endpoints";
     this.endpointsGraph = baseURL + "context/endpoints";
-    //this.externalAuthorsGraph = baseURL + "/context/externalauthors";
     this.translateData = null;
     this.PREFIX = 'PREFIX bibo: <http://purl.org/ontology/bibo/>'
             + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>  '
