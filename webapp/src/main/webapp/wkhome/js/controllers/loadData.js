@@ -17,25 +17,23 @@ wkhomeControllers.controller('loadData', ['sparqlQuery', 'searchData', '$transla
             //only keywords that appear in more than 2 articles
             var queryKeywords = globalData.PREFIX
                     + ' CONSTRUCT { ?keyword rdfs:label ?key } '
+                    + '	FROM <' + globalData.centralGraph + '> '
                     + ' WHERE { '
-                    + '     SELECT  (count(?pubs) as ?total) ' //(SAMPLE(?keyword) as ?keywordp) (SAMPLE(?key) as ?keyp)  '
-                    + '     WHERE { '
-                    + '         graph <' + globalData.centralGraph + '> {'
-                    + '             ?subject foaf:publications ?pubs. '
-                    //+ '           ?subject dct:subject ?key. '
-                    + '             ?pubs dcterms:subject ?keywordSubject. '
-                    + '             ?keywordSubject rdfs:label ?key. '
+                    + '     SELECT  (count(?key) as ?k) ?key '
+                    + '         WHERE { '
+                    + '             ?subject foaf:publications ?pub. '
+                    + '             ?pub dcterms:subject ?keySub. '
+                    + '             ?keySub rdfs:label ?key. '
                     + '             BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
                     + '             BIND(IRI(?unickey) as ?keyword) '
-                    + '         }'
-                    + '     } '
+                    + '         } '
                     + '     GROUP BY ?keyword  ?key '
-                    //+ '     GROUP BY ?subject'
-
-                    + '     HAVING(?total > 4) ' //si la keyword aparece en mas de 5 publicaciones
+                    + '     HAVING(?k > 4) '
                     + '}';
             sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
-
+                var context = {
+                    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+                };
                 jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                     _.map(compacted["@graph"], function (pub) {
                         var model = {};
@@ -44,9 +42,11 @@ wkhomeControllers.controller('loadData', ['sparqlQuery', 'searchData', '$transla
                         $scope.themes.push({tag: model["tag"]});
                     });
                     $scope.$apply(function () {
-                        searchData.allkeywords = $scope.themes;
+                        searchData.allkeywordsList = $scope.themes;
+                        $scope.relatedthemes = searchData.allkeywordsList;
+                        $scope.selectedItem = "";
                     });
-                    waitingDialog.hide();
+
                 });
             });
         }

@@ -18,7 +18,7 @@ wkhomeControllers.controller('keywordsCloud', ['$translate', '$routeParams', '$s
                     + '             BIND(IRI(?unickey) as ?keyword) '
                     + '         } '
                     + '     GROUP BY ?keyword  ?key '
-                    + '     HAVING(?k > 1) '
+                    + '     HAVING(?k > 4) '
                     + '}';
             sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
                 var context = {

@@ -64,13 +64,17 @@ wkhomeServices.factory('d3JSON', ['$resource',
 
 wkhomeServices.factory('clustersQuery', ['$resource', '$http', '$window',
     function ($resource, $http, $window) {
+        
+        function successCallback(response){
+            return response.data;
+        };
+        function errorCallback(error) {
+            return error.data;
+        };
+        
         return $http.get('resources/datos_clustering.json')
-         .success(function(data) {
-           return data;
-         })
-         .error(function(data) {
-           return data;
-         });
+         .then(successCallback, errorCallback);
+         
     }]);
 
 wkhomeServices.factory('translateService', ['$resource', '$http', '$window', 'globalData',
