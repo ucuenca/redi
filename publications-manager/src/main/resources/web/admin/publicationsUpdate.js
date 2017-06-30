@@ -101,6 +101,7 @@ function runUpdatePublication(options) {
 
     var endpoint = "http://example";
     var graphuri = "http://example/data";
+    var update = document.getElementById('updateScopus').checked;
     var settings = {
         host: options
     }
@@ -114,7 +115,7 @@ function runUpdatePublication(options) {
         data: JSON.stringify(dataT),
         dataType: "text", //result data type
         contentType: "application/json", // send data type
-        url: settings.host + "pubman/publications",
+        url: settings.host + "pubman/publications?update=" + update,
         //    url:  "http://localhost:8079/marmotta/authors-module/update",
         success: function (Result) {
             document.getElementById("imgloading").style.visibility = "hidden";

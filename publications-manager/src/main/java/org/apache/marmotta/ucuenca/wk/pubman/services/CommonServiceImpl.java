@@ -60,8 +60,8 @@ public class CommonServiceImpl implements CommonService {
     AuthorAttributesImpl authorAttr;
 
     @Override
-    public String GetDataFromProvidersService() {
-
+    public String GetDataFromProvidersService(boolean update) {
+        providerServiceScopus.setUpdate(update);
         Thread ScopusThread = new Thread((Runnable) providerServiceScopus);
         ScopusThread.start();
 

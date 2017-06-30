@@ -121,13 +121,15 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
     private static int lowerLimitKey = upperLimitKey - 4; //Not less than 5 keywords
     private static double tolerance = 0.99; //Tolerance of the distance (if the distance is bigger, the author is not included in REDI)
     
+    private boolean update = false;
+    
     @Override
     public String runPublicationsTaskImpl(String param) {
         return null;
     }
 
     @Override
-    public String runPublicationsProviderTaskImpl(String param) {
+    public String runPublicationsProviderTaskImpl(boolean update) {
         try {
             uniNames = new ArrayList<>();
             ClientConfiguration conf = new ClientConfiguration();
@@ -198,13 +200,15 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                 }*/
                 
                 boolean ask = false;
-                if (!proccesAllAuthors) {
+                if (!proccesAllAuthors && !update) {
                     String askTripletQuery = queriesService.getAskProcessAlreadyAuthorProvider(constantService.getScopusGraph(), authorResource);
                     try {
 
                         ask = sparqlService.ask(QueryLanguage.SPARQL, askTripletQuery);                        
-                        if (ask || testAuthors(authorResource)) {
-                            continue;
+                        if (!update) {
+                            if (ask || testAuthors(authorResource)) {
+                                continue;
+                            }
                         }
                         
                     } catch (Exception ex) {
@@ -295,11 +299,26 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                                         + " <" + scopusAuthorUri + ">  <http://www.elsevier.com/xml/svapi/rdf/dtd/surname> ?lastName. "
                                         + " }";
                                 TupleQueryResult nameResult = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getScopusAuthorName).evaluate();
+                                boolean equalNames = true;
                                 while (nameResult.hasNext()) {
                                     BindingSet binding = nameResult.next();
                                     scopusfirstName = binding.getValue("firstName").stringValue();
                                     scopuslastName = binding.getValue("lastName").stringValue();
+                                    try {
+                                        if (distance.getEqualNames(scopusfirstName, scopuslastName, firstName, lastName)) {
+                                            equalNames = true;
+                                            break;
+                                        }
+                                    } catch (Exception e) {
+                                        continue;
+                                    }
+                                    equalNames = false;
                                 }
+                                
+                                if (!equalNames) {
+                                    continue;
+                                }
+                                
                                 //(Jose Luis) Test the affiliation of the researcher
                                 String getPublicationsAndTitleFromProviderQuery = queriesService.getSubjectAndObjectByPropertyQuery("dc:title");
                                 TupleQuery abstracttitlequery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationsAndTitleFromProviderQuery); //
@@ -422,6 +441,8 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                     
                     String scopusfullname = scopuslastName + ":" + scopusfirstName;
                     String localfullname = lastName + ":" + firstName;
+                    
+                    
 
 //                    if (localfullname.toUpperCase().contains("PIEDRA")) {
 //                        localfullname = localfullname.replace(".", "");
@@ -437,6 +458,8 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                         conUri.commit();
                         conUri.close();
                     //}
+                    
+                    
                     
                     
                   
@@ -658,9 +681,17 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
         }
     }
 
+    public boolean isUpdate() {
+        return update;
+    }
+
+    public void setUpdate(boolean update) {
+        this.update = update;
+    }
+    
     @Override
     public void run() {
-        runPublicationsProviderTaskImpl("uri");
+        runPublicationsProviderTaskImpl(update);
     }
 
     public void insertSubResources(RepositoryConnection conUri, TupleQueryResult tripletasResult, String providerGraph) {

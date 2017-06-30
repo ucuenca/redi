@@ -66,10 +66,9 @@ public class PubWebService {
      */
     @POST
     @Path(GET_PUBLICATIONS)
-    public Response readPublicationsPost(@QueryParam("Endpoint") String resultType) {
-        String params = resultType;
-        log.debug("Publications Task", params);
-        return runPublicationsProviderTask(params);
+    public Response readPublicationsPost(@QueryParam("update") Boolean update) {
+        log.debug("Publications Task, update {}", update);
+        return runPublicationsProviderTask(update);
     }
 
     /*
@@ -131,14 +130,14 @@ public class PubWebService {
         return Response.ok().entity(result).build();
     }
 
-    private Response runPublicationsProviderTask(String urisString) {
+    private Response runPublicationsProviderTask(boolean update) {
         //String result = publicationsService.runPublicationsMAProviderTaskImpl(urisString);
-        String result = runGetDataFromProvidersService();
+        String result = runGetDataFromProvidersService(update);
         return Response.ok().entity(result).build();
     }
 
-    private String runGetDataFromProvidersService() {
-        return commonService.GetDataFromProvidersService();
+    private String runGetDataFromProvidersService(boolean update) {
+        return commonService.GetDataFromProvidersService(update);
     }
 
     /*

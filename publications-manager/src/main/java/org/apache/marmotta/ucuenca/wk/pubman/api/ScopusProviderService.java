@@ -28,7 +28,7 @@ public interface ScopusProviderService {
      * @param param
      * @return 
      */
-    String runPublicationsProviderTaskImpl(String param);
+    String runPublicationsProviderTaskImpl(boolean param);
     
     
     
