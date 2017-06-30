@@ -30,12 +30,14 @@ wkhomeApp.service('searchData', function () {
 });
 
 wkhomeApp.service('globalData', ['$window', function ($window) {
+    var baseURL = $window.location.origin + $window.location.pathname;
     this.language = "es";
     this.centralGraph = "http://ucuenca.edu.ec/wkhuska";
-    this.clustersGraph = $window.location.origin + "/context/clusters";
-    this.authorsGraph = $window.location.origin + "/context/authors";
-    this.endpointsGraph = $window.location.origin + "/context/endpoints";
-    this.externalAuthorsGraph = $window.location.origin + "/context/externalauthors";
+    this.externalAuthorsGraph = "http://ucuenca.edu.ec/wkhuska/externalauthors";
+    this.clustersGraph = baseURL + "context/clusters";
+    this.authorsGraph = baseURL + "context/authors";
+    //this.endpointsGraph = "http://localhost:8080/" + "context/endpoints";
+    this.endpointsGraph = baseURL + "context/endpoints";
     this.translateData = null;
     this.PREFIX = 'PREFIX bibo: <http://purl.org/ontology/bibo/>'
             + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>  '
