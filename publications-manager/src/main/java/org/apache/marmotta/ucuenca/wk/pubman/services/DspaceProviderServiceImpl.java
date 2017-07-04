@@ -126,8 +126,8 @@ public class DspaceProviderServiceImpl implements DspaceProviderService, Runnabl
         
         try {
             uniNames = new ArrayList<>();
-            String allAuthorsQuery = //queriesService.getAuthors();
-                    "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX foaf: <http://xmlns.com/foaf/0.1/>  PREFIX owl: <http://www.w3.org/2002/07/owl#>  PREFIX dct: <http://purl.org/dc/terms/>  PREFIX mm: <http://marmotta.apache.org/vocabulary/sparql-functions#>  PREFIX dcat: <http://www.w3.org/ns/dcat#>  PREFIX bibo: <http://purl.org/ontology/bibo/> PREFIX dc: <http://purl.org/dc/elements/1.1/> prefix uc: <http://ucuenca.edu.ec/ontology#> "
+            String allAuthorsQuery = queriesService.getAuthors();
+                    /*"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX foaf: <http://xmlns.com/foaf/0.1/>  PREFIX owl: <http://www.w3.org/2002/07/owl#>  PREFIX dct: <http://purl.org/dc/terms/>  PREFIX mm: <http://marmotta.apache.org/vocabulary/sparql-functions#>  PREFIX dcat: <http://www.w3.org/ns/dcat#>  PREFIX bibo: <http://purl.org/ontology/bibo/> PREFIX dc: <http://purl.org/dc/elements/1.1/> prefix uc: <http://ucuenca.edu.ec/ontology#> "
                     + "SELECT distinct ?s WHERE {  "
                     + "GRAPH  <http://localhost:8080/context/authors> {     "
                     + " ?s a foaf:Person.    ?s dct:provenance ?endpoint."
@@ -138,7 +138,7 @@ public class DspaceProviderServiceImpl implements DspaceProviderService, Runnabl
                     + "            } "
                     + "        } "
                     + " }"
-                    + "}}";
+                    + "}}";*/
             Repository repository = new SPARQLRepository(constantService.getSPARQLEndpointURL());
             TupleQueryResult allAuthors = executeQuery(repository, allAuthorsQuery);
             
@@ -175,7 +175,7 @@ public class DspaceProviderServiceImpl implements DspaceProviderService, Runnabl
                                 articleId = nextArticle.getBinding("docu").getValue().stringValue();
 
                                 saveAuthor(repository, authorResource);
-                                saveArticleFromDspace(endpointTempRepo, repository, articleId, authorResource, ldClientEndpoint);
+                                saveArticleFromDspace(endpointTempRepo, repository, articleId, authorResource, endpointId, ldClientEndpoint);
                                 log.error("Dspace author: " + authorCount);
                             }
 
@@ -271,10 +271,10 @@ public class DspaceProviderServiceImpl implements DspaceProviderService, Runnabl
     }
     
     private void saveArticleFromDspace(Repository DspaceRepo, Repository localRepo, String articleId, 
-            String authorResource, LDClientService ldClientEndpoint) {
+            String authorResource, String endpointId, LDClientService ldClientEndpoint) {
         //TupleQueryResult result = executeQuery(endpointTemp, queriesService.getArticlesFromDspaceQuery(endpoint.getGraph(), author));
         try {
-
+            String base = authorResource.split("/resource/")[0];
             String askQuery = queriesService.getAskResourceQuery(constantService.getWkhuskaGraph(), articleId);
             if (!sparqlService.ask(QueryLanguage.SPARQL, askQuery)) {
                 //GRAPH
@@ -313,15 +313,17 @@ public class DspaceProviderServiceImpl implements DspaceProviderService, Runnabl
                 }
                 String publicationURI = "http://ucuenca.edu.ec/wkhuska/publication/" + firstTitle.replaceAll("[^A-Za-z0-9 ]", "").replaceAll(" ", "-");
 
+                String queryPublicationInsert = queriesService.buildInsertQuery(graphToSave, publicationURI, "http://purl.org/dc/terms/provenance", endpointId);
+                sparqlFunctionsService.updatePub(queryPublicationInsert);
+                
                 while (tripletasResult2.hasNext()) {
                     BindingSet tripletsResource = tripletasResult2.next();
                     String predicate = tripletsResource.getValue("y").stringValue();
                     String object = tripletsResource.getValue("z").stringValue();
-                    String queryPublicationInsert = "";
-
+                    
                     //Save creator and contributor
                     if ("http://purl.org/dc/terms/creator".equals(predicate)) {
-                        queryPublicationInsert = queriesService.buildInsertQuery(graphToSave, publicationURI, "dc:creator", object);
+                        queryPublicationInsert = queriesService.buildInsertQuery(graphToSave, publicationURI, "http://purl.org/dc/terms/creator", object);
                         sparqlFunctionsService.updatePub(queryPublicationInsert);
                     }
 
@@ -334,21 +336,35 @@ public class DspaceProviderServiceImpl implements DspaceProviderService, Runnabl
 
                     //Save Subjects
                     if ("http://schema.org/mentions".equals(predicate)) {
-                        queryPublicationInsert = queriesService.buildInsertQuery(
-                                graphToSave, publicationURI, "dct:subject", getSubject(object));
-                        sparqlFunctionsService.updatePub(queryPublicationInsert);
                         //dct:subject   	http://schema.org/mentions
+                        String keywordId = base + "/resource/subject" + getSubject(object).replace(" ", "-");
+                        queryPublicationInsert = queriesService.buildInsertQuery(
+                                graphToSave, publicationURI, "dct:subject", keywordId);
+                        sparqlFunctionsService.updatePub(queryPublicationInsert);
+                        queryPublicationInsert = queriesService.buildInsertQuery(
+                                graphToSave, keywordId, "http://www.w3.org/2000/01/rdf-schema#label", getSubject(object));
+                        sparqlFunctionsService.updatePub(queryPublicationInsert);
                     }
 
                     //Save Keywords
                     //http://purl.org/ontology/bibo/Quote
                     //IsPartOf
-                    if ("http://purl.org/dc/terms/isPartOf".equals(predicate)) {
+                    /*if ("http://purl.org/dc/terms/isPartOf".equals(predicate)) {
+                        //Journal
+                        String journalId = base + "/resource/journal/" + object.replace(" ", "-");
                         queryPublicationInsert = queriesService.buildInsertQuery(
-                                graphToSave, publicationURI, predicate, object);
+                                graphToSave, publicationURI, "http://purl.org/dc/terms/isPartOf", journalId);
+
+                        queryPublicationInsert = queriesService.buildInsertQuery(
+                                graphToSave, journalId, "rdf:type", "bibo:Journal");
                         sparqlFunctionsService.updatePub(queryPublicationInsert);
+
+                        queryPublicationInsert = queriesService.buildInsertQuery(
+                                graphToSave, journalId, "http://www.w3.org/2000/01/rdf-schema#label", object);
+                        sparqlFunctionsService.updatePub(queryPublicationInsert);
+
                         //dct:subject   	http://schema.org/mentions
-                    }
+                    }*/
 
                     //Save Abstract (Español e ingles)
                     //http://purl.org/ontology/bibo/abstract   	http://purl.org/ontology/bibo/abstract
@@ -385,13 +401,13 @@ public class DspaceProviderServiceImpl implements DspaceProviderService, Runnabl
                     //http://purl.org/dc/terms/issued (solo año)
                     if ("http://purl.org/dc/terms/issued".equals(predicate)) {
                         queryPublicationInsert = queriesService.buildInsertQuery(
-                                graphToSave, publicationURI, "dc:date", getYear(object));
+                                graphToSave, publicationURI, "http://schema.org/copyrightYear", getYear(object));
                         sparqlFunctionsService.updatePub(queryPublicationInsert);
                         queryPublicationInsert = queriesService.buildInsertQuery(
-                                graphToSave, publicationURI, "http://prismstandard.org/namespaces/basic/2.0/publicationYear", getYear(object));
+                                graphToSave, publicationURI, "http://purl.org/ontology/bibo/created", getYear(object));
                         sparqlFunctionsService.updatePub(queryPublicationInsert);
                         queryPublicationInsert = queriesService.buildInsertQuery(
-                                graphToSave, publicationURI, "http://prismstandard.org/namespaces/basic/2.0/copyrightYear", getYear(object));
+                                graphToSave, publicationURI, "http://purl.org/ontology/bibo/issue", getYear(object));
                         sparqlFunctionsService.updatePub(queryPublicationInsert);
                     }
 
@@ -399,18 +415,25 @@ public class DspaceProviderServiceImpl implements DspaceProviderService, Runnabl
                     //http://prismstandard.org/namespaces/basic/2.0/issn
                     if ("http://purl.org/ontology/bibo/issn".equals(predicate)) {
                         queryPublicationInsert = queriesService.buildInsertQuery(
-                                graphToSave, publicationURI, "http://prismstandard.org/namespaces/basic/2.0/issn", object);
+                                graphToSave, publicationURI, "http://purl.org/ontology/bibo/issn", object);
                         sparqlFunctionsService.updatePub(queryPublicationInsert);
                     }
                 }
 
+                //Properties of publications
+                
+                //Save Type
+                queryPublicationInsert = queriesService.buildInsertQuery(
+                        graphToSave, publicationURI, "rdf:type", "http://purl.org/ontology/bibo/AcademicArticle");
+                sparqlFunctionsService.updatePub(queryPublicationInsert);
+                
                 //Save Title
-                String queryPublicationInsert = queriesService.buildInsertQuery(
+                queryPublicationInsert = queriesService.buildInsertQuery(
                         graphToSave, publicationURI, "dct:title", firstTitle);
                 sparqlFunctionsService.updatePub(queryPublicationInsert);
 
                 //Save Creator
-                queryPublicationInsert = queriesService.buildInsertQuery(graphToSave, publicationURI, "dc:creator", authorResource);
+                queryPublicationInsert = queriesService.buildInsertQuery(graphToSave, publicationURI, "http://purl.org/dc/terms/creator", authorResource);
                 sparqlFunctionsService.updatePub(queryPublicationInsert);
 
                 queryPublicationInsert = queriesService.buildInsertQuery(graphToSave, authorResource, "foaf:publications", publicationURI);
@@ -428,15 +451,35 @@ public class DspaceProviderServiceImpl implements DspaceProviderService, Runnabl
                     queryPublicationInsert = queriesService.buildInsertQuery(
                             graphToSave, publicationURI, "http://purl.org/ontology/bibo/Journal", journal);
                     sparqlFunctionsService.updatePub(queryPublicationInsert);
+                    //Journal
+                    String journalId = base + "/resource/journal/" + journal.replace(" ", "-");
                     queryPublicationInsert = queriesService.buildInsertQuery(
-                            graphToSave, publicationURI, "http://prismstandard.org/namespaces/basic/2.0/publicationName", journal);
+                            graphToSave, publicationURI, "http://purl.org/dc/terms/isPartOf", journalId);
+                    
+                    queryPublicationInsert = queriesService.buildInsertQuery(
+                            graphToSave, journalId, "rdf:type", "http://purl.org/ontology/bibo/Journal");
+                    sparqlFunctionsService.updatePub(queryPublicationInsert);
+                    
+                    queryPublicationInsert = queriesService.buildInsertQuery(
+                            graphToSave, journalId, "http://www.w3.org/2000/01/rdf-schema#label", journal);
+                    sparqlFunctionsService.updatePub(queryPublicationInsert);
+                    
+                    //publisher
+                    String publisherId = base + "/resource/publisher/" + journal.replace(" ", "-");
+                    queryPublicationInsert = queriesService.buildInsertQuery(
+                            graphToSave, publicationURI, "http://purl.org/dc/terms/publisher", publisherId);
+                    sparqlFunctionsService.updatePub(queryPublicationInsert);
+                    //Data for publisher
+                    queryPublicationInsert = queriesService.buildInsertQuery(
+                            graphToSave, publisherId, "rdf:type", "http://xmlns.com/foaf/0.1/Organization");
+                    sparqlFunctionsService.updatePub(queryPublicationInsert);
+                    
+                    queryPublicationInsert = queriesService.buildInsertQuery(
+                            graphToSave, publisherId, "http://www.w3.org/2000/01/rdf-schema#label", journal);
                     sparqlFunctionsService.updatePub(queryPublicationInsert);
                 }
 
-                //Save Type
-                queryPublicationInsert = queriesService.buildInsertQuery(
-                        graphToSave, publicationURI, "rdf:type", "http://purl.org/ontology/bibo/Document");
-                sparqlFunctionsService.updatePub(queryPublicationInsert);
+                
 
                 //Save Origin
                 queryPublicationInsert = queriesService.buildInsertQuery(

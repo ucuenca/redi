@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface CommonService {
 
-    String GetDataFromProvidersService();
+    String GetDataFromProvidersService(boolean update);
 
     String Data2GlobalGraph();
 
