@@ -1,4 +1,4 @@
-# Watiqay Khuska - Ecuadorian Semantic Repository  #
+# REDI - Ecuadorian Semantic Repository  #
 [![Build Status](https://travis-ci.org/ucuenca/redi.svg?branch=master)](https://travis-ci.org/ucuenca/REDI)
 
 Ecuadorian Semantic Repository of Ecuadorian Academics that allows the discovery of common research areas. The platform is based on the Apache Marmotta Linked Data Platform.
@@ -7,7 +7,7 @@ Ecuadorian Semantic Repository of Ecuadorian Academics that allows the discovery
 
 **Quick summary**
 
-Watiqay Khuska is a quechua phrase that means "Research together". 
+REDI is the acronym for _Repositorio Ecuatoriano de Investigadores_. Before the project was called Watiqay Khuska, which is a quechua phrase that means "Research together". 
 
 **Version**
 
@@ -31,7 +31,10 @@ Computer Science Department - University of Cuenca
 
 **Summary of set up**
 
-Download, fork or clone the repository from the [Repo URL](https://santteegt@bitbucket.org/ecsemanticrep/watiqay-khuska-ecuadorian-semantic-repository-for-researchers.git)
+Download, fork or clone the repository from the [Repo URL](https://github.com/ucuenca/redi)
+
+```git
+ clone https://github.com/ucuenca/redi.git ```
 
 **Deployment instructions**
 
