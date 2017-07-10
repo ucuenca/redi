@@ -17,14 +17,26 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.api;
 
-public interface GoogleScholarProviderService {
+/**
+ * Interface used to extend new providers.
+ *
+ * @author Xavier Sumba <xavier.sumba93@ucuenca.ec>
+ */
+public interface ProviderService {
 
     /**
-     * Get publications data from source, and load into provider graph
+     * Execute transformation/task to extract publications from providers.
      *
      * @param update
      * @return
      */
-    String runPublicationsProviderTaskImpl(boolean update);
+    String extractPublications(boolean update);
+
+    /**
+     * Execute task to update information about extracted publications.
+     *
+     * @param update
+     */
+    void executeUpdateTask(boolean update);
 
 }

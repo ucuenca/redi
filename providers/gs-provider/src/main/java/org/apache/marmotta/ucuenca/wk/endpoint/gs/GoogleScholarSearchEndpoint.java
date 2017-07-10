@@ -20,6 +20,7 @@ package org.apache.marmotta.ucuenca.wk.endpoint.gs;
 import java.nio.charset.Charset;
 import org.apache.marmotta.commons.http.ContentType;
 import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
+import org.apache.marmotta.ucuenca.wk.commons.service.DistanceService;
 
 /**
  * Endpoint for accessing Google Scholar Data as RDF.
@@ -43,6 +44,7 @@ public class GoogleScholarSearchEndpoint extends Endpoint {
     private String resource;
     private String firstName;
     private String lastName;
+    private DistanceService distance;
 
     public GoogleScholarSearchEndpoint() {
         super("Google Scholar Search Endpoint",
@@ -110,6 +112,14 @@ public class GoogleScholarSearchEndpoint extends Endpoint {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public DistanceService getDistance() {
+        return this.distance;
+    }
+
+    public void setDistance(DistanceService distance) {
+        this.distance = distance;
     }
 
 }

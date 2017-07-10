@@ -10,8 +10,8 @@ import java.util.List;
 import javax.inject.Inject;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.DBLPProviderService;
-import org.apache.marmotta.ucuenca.wk.pubman.api.GoogleScholarProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.ReportsService;
+import org.apache.marmotta.ucuenca.wk.pubman.api.ProviderService;
 
 /**
  *
@@ -30,7 +30,7 @@ public class CommonServiceImpl implements CommonService {
     GoogleScholarProviderServiceImpl googleProviderService;
 
     @Inject
-    GoogleScholarProviderService googleService;
+    ProviderService googleService;
 
     @Inject
     ScopusProviderServiceImpl providerServiceScopus;
@@ -65,7 +65,7 @@ public class CommonServiceImpl implements CommonService {
         Thread ScopusThread = new Thread((Runnable) providerServiceScopus);
         ScopusThread.start();
 
-        //         return googleService.runPublicationsProviderTaskImpl("d");
+        //         return googleService.extractPublications("d");
 //        Thread googleProvider = new Thread(googleProviderService);
 //        googleProvider.start();
         return "Data Provider SCOPUS are extracted in background.   Please review main.log file for details";
@@ -95,7 +95,7 @@ public class CommonServiceImpl implements CommonService {
 
     @Override
     public String GetDataFromProvidersServiceGoogleScholar(boolean update) {
-        googleProviderService.setUpdate(update);
+        googleProviderService.executeUpdateTask(update);
         Thread GoogleProvider = new Thread(googleProviderService);
         GoogleProvider.start();
         return "Data Provider Google Scholar are extracted in background.   Please review main.log file for details";
