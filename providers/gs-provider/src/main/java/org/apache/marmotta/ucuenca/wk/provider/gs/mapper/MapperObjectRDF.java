@@ -9,6 +9,7 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.marmotta.ucuenca.wk.provider.gs.GoogleScholarSearchProvider;
 import org.apache.marmotta.ucuenca.wk.provider.gs.util.Author;
 import org.apache.marmotta.ucuenca.wk.provider.gs.util.Publication;
@@ -68,10 +69,12 @@ public class MapperObjectRDF {
     public Model map(Publication publication) throws IllegalArgumentException, IllegalAccessException {
         Model triples = new TreeModel();
 
-        URI publicationURI = generateURI(publicationResource, StringEscapeUtils.unescapeJava(publication.getTitle()
+        URI publicationURI = generateURI(publicationResource, StringUtils.stripAccents(StringEscapeUtils.unescapeJava(publication.getTitle())
                 .toUpperCase())
                 .replace("'", "")
                 .replace("\"", "")
+                .replace(">", "")
+                .replace("<", "")
         );
         // Parse common attributes
         parseObject(triples, publication, publicationURI);

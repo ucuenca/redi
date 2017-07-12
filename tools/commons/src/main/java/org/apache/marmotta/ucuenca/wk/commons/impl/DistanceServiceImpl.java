@@ -5,8 +5,6 @@
  */
 package org.apache.marmotta.ucuenca.wk.commons.impl;
 
-import org.apache.marmotta.ucuenca.wk.commons.function.SyntacticDistance;
-import org.apache.marmotta.ucuenca.wk.commons.function.SemanticDistance;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -15,15 +13,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import org.apache.marmotta.ucuenca.wk.commons.function.SemanticDistance;
+import org.apache.marmotta.ucuenca.wk.commons.function.SyntacticDistance;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.DistanceService;
+import org.simmetrics.StringMetric;
+import static org.simmetrics.StringMetricBuilder.with;
 import org.simmetrics.metrics.CosineSimilarity;
+import org.simmetrics.metrics.JaccardSimilarity;
 import org.simmetrics.metrics.Levenshtein;
 import org.simmetrics.simplifiers.Simplifiers;
 import org.simmetrics.tokenizers.Tokenizers;
-import org.simmetrics.StringMetric;
-import static org.simmetrics.StringMetricBuilder.with;
-import org.simmetrics.metrics.JaccardSimilarity;
 
 /**
  *
@@ -38,11 +38,9 @@ public class DistanceServiceImpl implements DistanceService {
 
     @Inject
     private CommonsServices commonService;
-    
+
     //private SemanticDistance dist;
-
-    private static int one = 1;
-
+//    private static int one = 1;
     @Override
     public boolean semanticComparison(List<String> listA, List<String> listB) {
         try {
@@ -59,7 +57,7 @@ public class DistanceServiceImpl implements DistanceService {
         }
         return false;
     }
-    
+
     @Override
     public Double semanticComparisonValue(List<String> listA, List<String> listB) {
         try {
@@ -135,7 +133,7 @@ public class DistanceServiceImpl implements DistanceService {
 
         return similarity;
     }
-    
+
     @Override
     public float jaccardDistance(String param1, String param2) {
         StringMetric metric2
@@ -149,11 +147,11 @@ public class DistanceServiceImpl implements DistanceService {
 
     @Override
     public Boolean getEqualNames(String nombresOrig, String apellidosOrig, String otherName) {
-        String otherGivenName; 
+        String otherGivenName;
         String otherLastName;
         Boolean equalNames = false;
         String[] split = otherName.split(" ");
-        for (int i = 0; i < split.length -1; i++) {
+        for (int i = 0; i < split.length - 1; i++) {
             String string = split[0];
             for (int j = 1; j <= i; j++) {
                 string = string + " " + split[j];
@@ -169,18 +167,19 @@ public class DistanceServiceImpl implements DistanceService {
                 break;
             }
         }
-        
+
         return equalNames;
     }
-    
+
     @Override
     public Boolean getEqualNames(String nombresOrig, String apellidosOrig, String otherGivenName, String otherLastName) {
-        
+        int one = 1;
+
         nombresOrig = commonService.cleanNameArticles(nombresOrig);
         apellidosOrig = commonService.cleanNameArticles(apellidosOrig);
         otherGivenName = commonService.cleanNameArticles(otherGivenName);
         otherLastName = commonService.cleanNameArticles(otherLastName);
-        
+
         boolean equal = false;
         //Getting the original names
         String givenName1 = commonService.removeAccents(nombresOrig.split(" ")[0]).toLowerCase().trim();
@@ -196,7 +195,7 @@ public class DistanceServiceImpl implements DistanceService {
         if (numberLastNames > one) {
             lastName2 = commonService.removeAccents(apellidosOrig.split(" ")[1]).toLowerCase().trim();
         }
-        
+
         //Getting the other names
         String otherGivenName1 = commonService.removeAccents(otherGivenName.split(" ")[0]).toLowerCase().trim();
         String otherGivenName2 = null;
@@ -209,15 +208,15 @@ public class DistanceServiceImpl implements DistanceService {
         if (otherLastName.split(" ").length > one) {
             otherLastName2 = commonService.removeAccents(otherLastName.split(" ")[1]).toLowerCase().trim();
         }
-        
-        if (lastName2!=null && lastName2.length() == one && otherLastName2!=null && otherLastName2.trim().length() >= one) {
+
+        if (lastName2 != null && lastName2.length() == one && otherLastName2 != null && otherLastName2.trim().length() >= one) {
             otherLastName2 = otherLastName2.trim().substring(0, 1);
         }
-        
+
         //Compare given names and surnames
-        equal = compareNames(givenName1, givenName2, lastName1, lastName2, 
+        equal = compareNames(givenName1, givenName2, lastName1, lastName2,
                 otherGivenName1, otherGivenName2, otherLastName1, otherLastName2);
-        
+
         // 1. Busca 4 nombres sin acentos
         // 2. primer nombre y apellidos
         // 3. segundo nombre y apellidos
@@ -227,17 +226,16 @@ public class DistanceServiceImpl implements DistanceService {
         // 7. primera inicial y primer apellido (si hay más de un apellido y el nombre no era solo inicial)
         // 8. segunda inicial y apellidos (si hay mas de un nombre)
         // 9. segunda inicial y primer apellido (si hay mas de un apellido)
-                
         return equal;
-        
+
     }
-    
-    public boolean compareNames(String givenName1, String givenName2, String lastName1, String lastName2, 
+
+    public boolean compareNames(String givenName1, String givenName2, String lastName1, String lastName2,
             String otherGivenName1, String otherGivenName2, String otherLastName1, String otherLastName2) {
         boolean result = false;
-        
-        if (givenName2 != null  && lastName2 != null) {
-            
+
+        if (givenName2 != null && lastName2 != null) {
+
             if (otherGivenName2 != null && otherLastName2 != null) {
                 if (compareExactStrings(givenName1, otherGivenName1) && compareExactStrings(givenName2, otherGivenName2)
                         && compareExactStrings(lastName1, otherLastName1) && compareExactStrings(lastName2, otherLastName2)) {
@@ -256,8 +254,8 @@ public class DistanceServiceImpl implements DistanceService {
             } else if (otherGivenName2 == null && otherLastName2 == null
                     && (compareExactStrings(otherGivenName1, givenName1) || compareExactStrings(otherGivenName1, givenName2))
                     && compareExactStrings(lastName1, otherLastName1)) {
-                    return true;
-                
+                return true;
+
             }
 
         } else if (givenName2 == null && lastName2 != null) {
@@ -273,15 +271,14 @@ public class DistanceServiceImpl implements DistanceService {
                 }
             } else if (otherGivenName2 == null && otherLastName2 != null) {
                 if (compareExactStrings(otherGivenName1, givenName1)
-                        && compareExactStrings(lastName1, otherLastName1) && compareExactStrings(lastName2, otherLastName2) 
-                   ) {
+                        && compareExactStrings(lastName1, otherLastName1) && compareExactStrings(lastName2, otherLastName2)) {
                     return true;
 
                 }
-            } else if (otherGivenName2 == null && otherLastName2 == null &&
-                    compareExactStrings(otherGivenName1, givenName1) && compareExactStrings(lastName1, otherLastName1)) {
-                    return true;
-                
+            } else if (otherGivenName2 == null && otherLastName2 == null
+                    && compareExactStrings(otherGivenName1, givenName1) && compareExactStrings(lastName1, otherLastName1)) {
+                return true;
+
             }
 
         } else if (givenName2 != null && lastName2 == null) {
@@ -290,11 +287,11 @@ public class DistanceServiceImpl implements DistanceService {
                         && compareExactStrings(lastName1, otherLastName1)) {
                     return true;
                 }
-            } else if (otherGivenName2 == null && 
-                    (compareExactStrings(otherGivenName1, givenName1) || compareExactStrings(otherGivenName1, givenName2))
-                        && compareExactStrings(lastName1, otherLastName1)) {
-                    return true;
-                
+            } else if (otherGivenName2 == null
+                    && (compareExactStrings(otherGivenName1, givenName1) || compareExactStrings(otherGivenName1, givenName2))
+                    && compareExactStrings(lastName1, otherLastName1)) {
+                return true;
+
             }
 
         } else if (givenName2 == null && lastName2 == null) {
@@ -303,16 +300,16 @@ public class DistanceServiceImpl implements DistanceService {
                         && compareExactStrings(lastName1, otherLastName1)) {
                     return true;
                 }
-            } else if (otherGivenName2 == null && compareExactStrings(otherGivenName1, givenName1) 
+            } else if (otherGivenName2 == null && compareExactStrings(otherGivenName1, givenName1)
                     && compareExactStrings(lastName1, otherLastName1)) {
-                    return true;
-                
+                return true;
+
             }
 
         }
         return result;
     }
-    
+
     public boolean compareExactStrings(String string1, String string2) {
         if (string1.length() == 1 || string2.length() == 1) {
             return string1.contains(string2) || string2.contains(string1);

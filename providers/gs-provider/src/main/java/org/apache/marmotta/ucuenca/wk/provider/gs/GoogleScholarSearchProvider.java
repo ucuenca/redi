@@ -30,7 +30,6 @@ import java.util.regex.Matcher;
 import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
 import org.apache.marmotta.ldclient.services.provider.AbstractHttpProvider;
-import org.apache.marmotta.ucuenca.wk.commons.impl.DistanceServiceImpl;
 import org.apache.marmotta.ucuenca.wk.commons.service.DistanceService;
 import org.apache.marmotta.ucuenca.wk.endpoint.gs.GoogleScholarSearchEndpoint;
 import org.apache.marmotta.ucuenca.wk.provider.gs.handler.IHandler;
@@ -60,12 +59,12 @@ import org.xml.sax.SAXException;
  */
 public class GoogleScholarSearchProvider extends AbstractHttpProvider {//NOPMD
 
-    private final DistanceService distance = new DistanceServiceImpl();
-    private static final Logger LOG = LoggerFactory.getLogger(GoogleScholarSearchProvider.class);
+    private DistanceService distance;
+    private Logger LOG = LoggerFactory.getLogger(GoogleScholarSearchProvider.class);
     public static final String SCHOLAR_GOOGLE = "https://scholar.google.com";
     public static final String URI_START_WITH = "http";
 
-    private MapperObjectRDF mapper = null;
+    private MapperObjectRDF mapper;
 
     private String[] cities;
     private String[] provinces;
@@ -73,7 +72,12 @@ public class GoogleScholarSearchProvider extends AbstractHttpProvider {//NOPMD
     private String lname;
     private String[] ies;
     private String[] domains;
-    private Author author = null;
+    private Author author;
+
+    public GoogleScholarSearchProvider() {
+        author = null;
+        mapper = null;
+    }
 
     public static final ConcurrentMap<String, URI> MAPPING_SCHEMA = new ConcurrentHashMap();
 
@@ -146,6 +150,7 @@ public class GoogleScholarSearchProvider extends AbstractHttpProvider {//NOPMD
             domains = gsEndpoint.getDomains();
             fname = gsEndpoint.getFirstName();
             lname = gsEndpoint.getLastName();
+            this.distance = gsEndpoint.getDistance();
             baseResource = gsEndpoint.getResource();
             LOG.info(Arrays.toString(cities));
             LOG.info(Arrays.toString(provinces));
@@ -159,6 +164,7 @@ public class GoogleScholarSearchProvider extends AbstractHttpProvider {//NOPMD
 
     @Override
     public List<String> parseResponse(String resource, String requestUrl, Model triples, InputStream input, String contentType) throws DataRetrievalException {//NOPMD
+        Preconditions.checkNotNull(distance, "Distance Service is null");
         List<String> urls = new ArrayList<>();
         try { //NOPMD
             LOG.debug("Request Successful to {0}", requestUrl);
@@ -253,7 +259,6 @@ public class GoogleScholarSearchProvider extends AbstractHttpProvider {//NOPMD
     }
 
     private Author chooseCorrectAuthor(List<Author> authors) {
-
         for (Author a : authors) {
 
             // If the authors domain correspond with IES domain, the author belongs to the IES

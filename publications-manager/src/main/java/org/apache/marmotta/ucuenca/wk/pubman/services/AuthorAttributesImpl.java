@@ -57,6 +57,8 @@ public class AuthorAttributesImpl implements AuthorAttributes, Runnable {
     private ConstantService constant;
     @Inject
     private SparqlService sparqlService;
+//    @Inject
+//    private SesameService service;
 
     private final static List<String> PROPERTIES = Arrays.asList("dct:provenance", "dct:subject", "foaf:img");
 

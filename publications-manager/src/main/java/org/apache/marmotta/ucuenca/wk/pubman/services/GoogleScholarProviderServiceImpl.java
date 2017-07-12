@@ -17,10 +17,6 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.services;
 
-//import info.aduna.iteration.Iterations;
-//import java.io.FileInputStream;
-//import java.io.FileNotFoundException;
-//import java.io.FileOutputStream;
 import com.google.common.base.Preconditions;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -50,10 +46,11 @@ import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
+import org.apache.marmotta.ucuenca.wk.commons.service.DistanceService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.endpoint.gs.GoogleScholarPublicationEndpoint;
 import org.apache.marmotta.ucuenca.wk.endpoint.gs.GoogleScholarSearchEndpoint;
-import org.apache.marmotta.ucuenca.wk.pubman.api.GoogleScholarProviderService;
+import org.apache.marmotta.ucuenca.wk.pubman.api.ProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
 import org.apache.marmotta.ucuenca.wk.pubman.exceptions.PubException;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
@@ -72,32 +69,30 @@ import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
 
 /**
- * Default Implementation of {@link PubVocabService} Get Data From Google
- * Scholar using Google Scholar Provider
+ * Default Implementation of {@link ProviderService} to get data from Google
+ * Scholar. Using {@link Goo
  *
  * Fernando Baculima CEDIA - Universidad de Cuenca
  *
  * @author Xavier Sumba <xavier.sumba93@ucuenca.ec>
  */
 @ApplicationScoped
-public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderService, Runnable {
+public class GoogleScholarProviderServiceImpl implements ProviderService, Runnable {
 
     @Inject
     private Logger log;
-
     @Inject
     private QueriesService queriesService;
-
     @Inject
     private CommonsServices commonsServices;
     @Inject
     private ConstantService constantService;
-
     @Inject
     private SparqlFunctionsService sparqlFunctionsService;
-
     @Inject
     private SparqlService sparqlService;
+    @Inject
+    private DistanceService distanceService;
 
     private String authorGraph;
     private String endpointsGraph;
@@ -105,7 +100,6 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
     private String resourceGoogle;
 
     private boolean update = false;
-
     private int processpercent = 0;
 
     @PostConstruct
@@ -117,7 +111,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
     }
 
     @Override
-    public String runPublicationsProviderTaskImpl(boolean update) {
+    public String extractPublications(boolean update) {
 
         try {
             ClientConfiguration conf = new ClientConfiguration();
@@ -152,8 +146,6 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                             boolean existNativeAuthor = false;
                             ClientResponse response = null;
                             nameToFind = commonsServices.removeAccents(priorityFindQueryBuilding(priorityToFind, firstName, lastName).replace("_", "+"));
-
-                            //String URL_TO_FIND = "https://scholar.google.com/scholar?start=0&q=author:%22" + nameToFind + "%22&hl=en&as_sdt=1%2C15&as_vis=1";
                             String url_to_find = "https://scholar.google.com/citations?mauthors=" + nameToFind + "&hl=en&view_op=search_authors";
 
                             existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(googleGraph, url_to_find));
@@ -183,6 +175,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                                     endpoint.setResource(resourceGoogle);
                                     endpoint.setFirstName(firstName);
                                     endpoint.setLastName(lastName);
+                                    endpoint.setDistance(distanceService);
                                 }
                                 //do {
                                 try {//waint 1  second between queries
@@ -251,7 +244,7 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
                         priorityToFind++;
                     } while (priorityToFind <= 3 && !dataretrieve);//end do while
                     writeResource(authorResource);
-                    printPercentProcess(processedPersons, allAuthors, "Google Scholar");
+                    printPercentageProgress(processedPersons, allAuthors, "Google Scholar");
                 } else if (sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskPublicationsURLGS(googleGraph, authorResource))) {
                     // ask if there are publications left to extract for authorresource
                     List<Map<String, Value>> publications = sparqlService.query(QueryLanguage.SPARQL, queriesService.getPublicationsURLGS(googleGraph, authorResource));
@@ -372,21 +365,25 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
         return String.format("%s authors have been updated.", authorsUpdated);
     }
 
-    public String priorityFindQueryBuilding(int priority, String firstName, String lastName) {
+    /**
+     * Build a name for an author based on three priorities. 1. Returns first
+     * name, middle name and last name. 2. Returns first name and last name. 3.
+     * Returns middle name and last name. If there isn't middle name, it returns
+     * only the last name.
+     *
+     * @param priority
+     * @param firstName
+     * @param lastName
+     * @return
+     */
+    private String priorityFindQueryBuilding(int priority, String firstName, String lastName) {
         String[] fnamelname = {"", "", "", "", "", ""};
         /**
          * fnamelname[0] is a firstName A, fnamelname[1] is a firstName B
          * fnamelname[2] is a lastName A, fnamelname[3] is a lastName B
-         *
          */
-
-        for (int i = 0; i < firstName.split(" ").length; i++) {
-            fnamelname[i] = firstName.split(" ")[i];
-        }
-
-        for (int i = 0; i < lastName.split(" ").length; i++) {
-            fnamelname[i + 2] = lastName.split(" ")[i];
-        }
+        System.arraycopy(firstName.split(" "), 0, fnamelname, 0, firstName.split(" ").length);
+        System.arraycopy(lastName.split(" "), 0, fnamelname, 2, lastName.split(" ").length);
 
         switch (priority) {
             case 3:
@@ -399,36 +396,45 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
         return "";
     }
 
-    /*
-     *   UPDATE - with SPARQL MODULE, to load triplet in marmotta plataform
-     *   
+    /**
+     * Execute query.
+     *
+     * @param query
+     * @return
      */
-    public String updatePub(String querytoUpdate) {
-
+    private boolean updatePub(String query) {
         try {
-            sparqlFunctionsService.updatePub(querytoUpdate);
+            sparqlFunctionsService.updatePub(query);
         } catch (PubException ex) {
-            log.error("No se pudo insertar: {}. EROR: {}", querytoUpdate, ex.getMessage());
+            log.error("Query cannot be executed. Query\n {}. \nEROR: {}", query, ex.getMessage());
+            return false;
         }
-        return "Correcto";
-
+        return true;
     }
 
-    /*
-     * 
-     * @param contAutoresNuevosEncontrados
+    /**
+     * Print progress of extraction task.
+     *
+     * @param processedPersons
      * @param allPersons
-     * @param endpointName 
+     * @param provider
      */
-    public void printPercentProcess(int processedPersons, int allPersons, String provider) {
-
+    private void printPercentageProgress(int processedPersons, int allPersons, String provider) {
         if ((processedPersons * 100 / allPersons) != processpercent) {
             processpercent = processedPersons * 100 / allPersons;
             log.info("Procesado el: " + processpercent + " % de " + provider);
         }
     }
 
-    //construyendo sparql query insert 
+    /**
+     * Build SPARQL query.
+     *
+     * @param grapfhProv
+     * @param sujeto
+     * @param predicado
+     * @param objeto
+     * @return
+     */
     public String buildInsertQuery(String grapfhProv, String sujeto, String predicado, String objeto) {
         if (commonsServices.isURI(objeto)) {
             return queriesService.getInsertDataUriQuery(grapfhProv, sujeto, predicado, objeto);
@@ -437,19 +443,25 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
         }
     }
 
-    public boolean isUpdate() {
-        return update;
-    }
-
-    public void setUpdate(boolean update) {
+    /**
+     * True to execute a task to check if there's new publications.
+     *
+     * @param update
+     */
+    public void executeUpdateTask(boolean update) {
         this.update = update;
     }
 
     @Override
     public void run() {
-        runPublicationsProviderTaskImpl(update);
+        extractPublications(update);
     }
 
+    /**
+     * Store author URI once its extracted.
+     *
+     * @param authorResource
+     */
     private void writeResource(String authorResource) {
         try {
             File f = new File(constantService.getHome(), "ProcessedGoogleScholarURIs");
@@ -462,6 +474,13 @@ public class GoogleScholarProviderServiceImpl implements GoogleScholarProviderSe
         }
     }
 
+    /**
+     * Check if a specific author is already extracted. URIs from extracted
+     * authors are stored in a file in marmotta.home.
+     *
+     * @param authorResource
+     * @return
+     */
     private boolean isProcessed(String authorResource) {
         try (Scanner scanner = new Scanner(new File(constantService.getHome(), "ProcessedGoogleScholarURIs"));) {
             while (scanner.hasNext()) {
