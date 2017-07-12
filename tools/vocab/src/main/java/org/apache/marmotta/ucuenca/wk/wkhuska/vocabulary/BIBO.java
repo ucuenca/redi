@@ -39,6 +39,7 @@ public class BIBO {
     public static final URI JOURNAL;
     public static final URI DOCUMENT;
     public static final URI ACADEMIC_ARTICLE;
+    public static final URI QUOTE;
 
     static {
         ValueFactory factory = ValueFactoryImpl.getInstance();
@@ -52,5 +53,6 @@ public class BIBO {
         JOURNAL = factory.createURI(NAMESPACE, "Journal");
         DOCUMENT = factory.createURI(NAMESPACE, "Document");
         ACADEMIC_ARTICLE = factory.createURI(NAMESPACE, "AcademicArticle");
+        QUOTE = factory.createURI(NAMESPACE, "Quote");
     }
 }
