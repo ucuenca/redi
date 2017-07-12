@@ -58,19 +58,17 @@ public class TranslateForSemanticDistance {
 
     //private Connection conn = null;
     //Statement stmt = null;
-
     private JsonObject config = null;
-    
+
     //load all languages:
     private List<LanguageProfile> languageProfiles = new LanguageProfileReader().readAllBuiltIn();
-    
+
     //build language detector:
     private LanguageDetector languageDetector = LanguageDetectorBuilder.create(NgramExtractors.standard())
-                    .withProfiles(languageProfiles)
-                    .build();
-    
-    //private Cache cache = Cache.getInstance();
+            .withProfiles(languageProfiles)
+            .build();
 
+    //private Cache cache = Cache.getInstance();
     public TranslateForSemanticDistance() throws IOException, ClassNotFoundException {
         JsonParser parser = new JsonParser();
         InputStream resourceAsStream = this.getClass().getResourceAsStream("/config.cnf");
@@ -165,13 +163,13 @@ public class TranslateForSemanticDistance {
         cache.kill();
         return ls;
     }
-    
+
     private String detectLanguage(String word) {
         String language = "es";
 
         //create a text object factory
         TextObjectFactory textObjectFactory = CommonTextObjectFactories.forDetectingShortCleanText();
-        
+
         //Text to query:
         TextObject textObject;
         textObject = textObjectFactory.forText(word.toLowerCase());
@@ -185,14 +183,17 @@ public class TranslateForSemanticDistance {
         return language;
 
     }
-    
+
     private String traductorYandex(String palabras) throws UnsupportedEncodingException, SQLException, IOException {
+        palabras = palabras.toLowerCase();
+        final String context_es = "contexto, ";
+        final String context_en = "context, ";
         String url = "https://translate.yandex.net/api/v1.5/tr.json/translate";
         //String url = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20160321T160516Z.43cfb95e23a69315.6c0a2ae19f56388c134615f4740fbb1d400f15d3&lang=en&text=" + URLEncoder.encode(palabras, "UTF-8");
         ConcurrentHashMap<String, String> mp = new ConcurrentHashMap<>();
         mp.put("key", "trnsl.1.1.20160321T160516Z.43cfb95e23a69315.6c0a2ae19f56388c134615f4740fbb1d400f15d3");
-        mp.put("lang", "en");
-        mp.put("text", palabras);
+        mp.put("lang", "es-en");
+        mp.put("text", context_es + palabras);
         mp.put("options", "1");
         boolean c = true;
         int i = 0;
@@ -210,6 +211,11 @@ public class TranslateForSemanticDistance {
                 JsonArray asArray = parse.get("text").getAsJsonArray();
                 res = asArray.get(0).getAsString();
                 palabras = res;
+                if (palabras.contains(context_en)) {
+                    palabras = palabras.replace(context_en, "");
+                } else if (palabras.contains(context_es)) {
+                    palabras = palabras.replace(context_es, "");
+                }
                 c = false;
             } catch (Exception e) {
                 e.printStackTrace(new PrintStream(System.out));
@@ -281,7 +287,7 @@ public class TranslateForSemanticDistance {
             Logger.getLogger(TranslateForSemanticDistance.class.getName()).log(Level.SEVERE, "Error while executing the sql in http2: " + sql + ". Message Translator: " + ex.getMessage() );
             
         }*/
-        
+
         String resp = "";
         /*if (rs!= null &&rs.next()) {
             resp = rs.getString("value");
@@ -291,24 +297,24 @@ public class TranslateForSemanticDistance {
             rs.close();
             stmt.close();*/
 
-            HttpClient client = new HttpClient();
-            PostMethod method = new PostMethod(s);
+        HttpClient client = new HttpClient();
+        PostMethod method = new PostMethod(s);
 
-            //Add any parameter if u want to send it with Post req.
-            for (Map.Entry<String, String> mcc : mp.entrySet()) {
-                method.addParameter(mcc.getKey(), mcc.getValue());
+        //Add any parameter if u want to send it with Post req.
+        for (Map.Entry<String, String> mcc : mp.entrySet()) {
+            method.addParameter(mcc.getKey(), mcc.getValue());
+        }
+        int statusCode = client.executeMethod(method);
+
+        if (statusCode != -1) {
+            InputStream in = method.getResponseBodyAsStream();
+            final Scanner reader = new Scanner(in, "UTF-8");
+            while (reader.hasNextLine()) {
+                final String line = reader.nextLine();
+                resp += line + "\n";
             }
-            int statusCode = client.executeMethod(method);
-
-            if (statusCode != -1) {
-                InputStream in = method.getResponseBodyAsStream();
-                final Scanner reader = new Scanner(in, "UTF-8");
-                while (reader.hasNextLine()) {
-                    final String line = reader.nextLine();
-                    resp += line + "\n";
-                }
-                reader.close();
-                /*try {
+            reader.close();
+            /*try {
                     JsonParser parser = new JsonParser();
                     parser.parse(resp);
                     PreparedStatement stmt2 = conn.prepareStatement("INSERT INTO cache (key, value) values (?, ?)");
@@ -319,7 +325,7 @@ public class TranslateForSemanticDistance {
                 } catch (Exception e) {
                     Logger.getLogger(TranslateForSemanticDistance.class.getName()).log(Level.SEVERE, "Error in the http2 Insert Function. Used by TraductorYandex. Possibly the database." + e.getMessage() );
                 }*/
-            }
+        }
         //}
 
         return resp;
