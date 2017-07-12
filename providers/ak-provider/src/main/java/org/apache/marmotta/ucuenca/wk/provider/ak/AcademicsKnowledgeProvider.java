@@ -19,15 +19,6 @@ package org.apache.marmotta.ucuenca.wk.provider.ak;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import java.io.BufferedReader;
-
-import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
-import org.apache.marmotta.ldclient.exception.DataRetrievalException;
-import org.apache.marmotta.ldclient.services.provider.AbstractHttpProvider;
-
-import org.openrdf.model.Model;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -40,10 +31,16 @@ import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.marmotta.commons.vocabulary.FOAF;
+import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
+import org.apache.marmotta.ldclient.exception.DataRetrievalException;
+import org.apache.marmotta.ldclient.services.provider.AbstractHttpProvider;
 import org.apache.marmotta.ucuenca.wk.provider.ak.util.JSONtoRDF;
 import org.apache.marmotta.ucuenca.wk.provider.ak.util.MapPublications;
 import org.apache.marmotta.ucuenca.wk.provider.ak.util.Publication;
 import org.json.simple.parser.ParseException;
+import org.openrdf.model.Model;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Support Google Scholar information as RDF
@@ -53,10 +50,11 @@ import org.json.simple.parser.ParseException;
 public class AcademicsKnowledgeProvider extends AbstractHttpProvider {
 
     public static final String NAME = "Academics Knowlodge Provider";
-    public static final String API = "https://api.projectoxford.ai/academic/v1.0/evaluate?expr=Composite(AA.AuN==%27victor%20saquicela%27)&attributes=Id,Ti,Y,D,CC,ECC,AA.AuN,AA.AuId,AA.AfN,AA.AfId,F.FN,F.FId,J.JN,J.JId,C.CN,C.CId,RId,W,E,D&E=DN,D,S,S.Ty,S.U,VFN,VSN,V,I,FP,LP,DOI&subscription-key=f66e8b1a39634d9591151a8efd80cfc2";
-    public static final String PATTERN = "https://api\\.projectoxford\\.ai/academic/(.*)";
+//    public static final String API = "https://api.projectoxford.ai/academic/v1.0/evaluate?expr=Composite(AA.AuN==%27victor%20saquicela%27)&attributes=Id,Ti,Y,D,CC,ECC,AA.AuN,AA.AuId,AA.AfN,AA.AfId,F.FN,F.FId,J.JN,J.JId,C.CN,C.CId,RId,W,E,D&E=DN,D,S,S.Ty,S.U,VFN,VSN,V,I,FP,LP,DOI&subscription-key=f66e8b1a39634d9591151a8efd80cfc2";
+    public static final String PATTERN = "https://westus\\.api\\.cognitive\\.microsoft\\.com/academic/v1\\.0/evaluate";
+//    public static final String PATTERN = "https://api\\.projectoxford\\.ai/academic/(.*)";
     //https://api\\.projectoxford\\.ai/academic/v1\\.0/evaluate?expr\\=Composite\\(AA\\.AuN==%27(.*)%27)\\&attributes=Id,Ti,Y,D,CC,ECC,AA.AuN,AA.AuId,AA.AfN,AA.AfId,F.FN,F.FId,J.JN,J.JId,C.CN,C.CId,RId,W,E,D\\&E=DN,D,S,S.Ty,S.U,VFN,VSN,V,I,FP,LP,DOI\\&subscription-key=(.*)\\&count=100$
-    public static final String PATTERNA = "http://academic\\.research\\.microsoft\\.com/json\\.svc/search\\?AppId\\=(.*)\\&AuthorQuery\\=(.*)\\&ResultObjects\\=Publication\\&PublicationContent\\=AllInfo\\&StartIdx\\=1\\&EndIdx\\=1(.*)$";
+//    public static final String PATTERNA = "http://academic\\.research\\.microsoft\\.com/json\\.svc/search\\?AppId\\=(.*)\\&AuthorQuery\\=(.*)\\&ResultObjects\\=Publication\\&PublicationContent\\=AllInfo\\&StartIdx\\=1\\&EndIdx\\=1(.*)$";
 
     private static String nsRedi = "http://redi.cedia.org.ec/namespace1_0/";
     private static Logger log = LoggerFactory.getLogger(AcademicsKnowledgeProvider.class);
@@ -155,9 +153,9 @@ public class AcademicsKnowledgeProvider extends AbstractHttpProvider {
             List<Publication> resultOutput = new ArrayList();
 
             resultOutput = mapPublications.getPublications(responseStrBuilder.toString());
-            if (resultOutput.size() == limitPublications) {
-                resultOutput = resultOutput.subList(0, 20);
-            }
+//            if (resultOutput.size() == limitPublications) {
+//                resultOutput = resultOutput.subList(0, 20);
+//            }
 
             Gson gson = new Gson();
             JsonArray json = new JsonArray();
