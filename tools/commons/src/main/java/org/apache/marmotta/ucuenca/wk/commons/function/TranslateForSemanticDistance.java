@@ -116,10 +116,10 @@ public class TranslateForSemanticDistance {
                     translated = cache.get(w.toLowerCase());
 
                     if (translated == null) {
-                        translated = traductorBing(w.trim()).trim().toLowerCase();
-                        if (translated.equals(w.trim().toLowerCase())) {
-                            translated = traductorYandex(w.trim()).toLowerCase();
-                        }
+                        translated = traductorYandex(w.trim()).toLowerCase();
+                        /*if (translated.equals(w.trim().toLowerCase())) {
+                            translated = traductorBing(w.trim()).trim().toLowerCase();
+                        }*/
 
                         cache.put(w.toLowerCase(), translated);
 
