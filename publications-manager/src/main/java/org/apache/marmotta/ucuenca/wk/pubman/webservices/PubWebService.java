@@ -60,6 +60,8 @@ public class PubWebService {
     public static final String GET_AUTHOR_DATA = "/pubsearch";
     public static final String GET_REPORT = "/report";
     public static final String TRANSLATE = "/translate";
+    public static final String INDEX_CENTRAL_GRAPH = "/indexing";
+    public static final String GET_SEARCH_QUERY = "/searchQuery";
 
     /*
      * Get Publications Data from Source and Load into Provider Graph
@@ -151,6 +153,15 @@ public class PubWebService {
         String result = commonService.Data2GlobalGraph();
         return Response.ok().entity(result).build();
     }
+    
+    @POST
+    @Path(INDEX_CENTRAL_GRAPH)
+    public Response IndexCentralGraphPost(@QueryParam("Endpoint") String resultType, @Context HttpServletRequest request) {
+        String params = resultType;
+        log.debug("Index Central Graph Task", params);
+        String result = commonService.IndexCentralGraph();
+        return Response.ok().entity(result).build();
+    } 
 
     /*
      * Get Publications Data from  Provider Graph and load into General Graph
@@ -222,6 +233,16 @@ public class PubWebService {
     @Produces("application/ld+json")
     public Response translate(@QueryParam("totranslate") String totranslate) {
         String result = traslateService.translate(totranslate).toString();
+        return Response.ok().entity(result).build();
+    }
+    
+    @POST
+    @Path(GET_SEARCH_QUERY)
+    public Response createSearchQuery(@FormParam("textSearch") String textSearch, @Context HttpServletRequest request) {
+        ServletContext context = request.getServletContext();
+        String realContextPath = context.getRealPath(request.getContextPath());
+        log.debug("Report Task");
+        String result = commonService.getSearchQuery(textSearch);
         return Response.ok().entity(result).build();
     }
 

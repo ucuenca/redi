@@ -1,6 +1,6 @@
 
-wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window', 'globalData', 'sparqlQuery', 'searchData',
-    function ($routeParams, $scope, $window, globalData, sparqlQuery, searchData) {
+wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window', 'globalData', 'sparqlQuery', 'searchData', 'searchQueryService',
+    function ($routeParams, $scope, $window, globalData, sparqlQuery, searchData, searchQueryService) {
         //$scope.sparqlQuery = sparqlQuery;
         String.format = function () {
             // The string containing the format items (e.g. "{0}")
@@ -33,7 +33,7 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
             if ($scope.searchText) {
                 console.log($scope.searchText);
                 waitingDialog.show();
-
+                
                 /**
                  * Firts Attempt, search text using fulltext function of marmotta
                  */
@@ -82,7 +82,7 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
                                         $window.location.hash = "/" + $routeParams.lang + "/w/search?" + $scope.searchText;
                                     } else {
                                         /**
-                                         * As a last attempt, the text will look for dct:SUBJECT
+                                         * As a third attempt, the text will look for dct:SUBJECT
                                          *  using fulltext
                                          */
                                         var querySearchKeyword = globalData.PREFIX
@@ -113,15 +113,40 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
                                                 }
                                                 else
                                                 {
-                                                    if ($routeParams.lang === "es") {
-                                                        alert("La información no se encuentra disponible en REDI en este momento.");
-                                                    } else {
-                                                        alert("The information is not available in REDI at the moment. Please try again later.");
-                                                    }
-                                                    waitingDialog.hide();
+                                                    var params = {textSearch: $scope.searchText};
+                                                    searchQueryService.querySrv(params, function (response) {
+                                                        var res = '';
+                                                        for (var i = 0; i < Object.keys(response).length - 2; i++) {
+                                                            res += response[i];
+                                                        }
+                                                        if (res && res !== '' && res !== 'undefinedundefinedundefinedundefined') {
+                                                            sparqlQuery.querySrv({query: res},
+                                                                    function (rdf) {
+                                                                        
+                                                                        jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
+                                                                            if (compacted["@graph"])
+                                                                            {
+                                                                                waitingDialog.hide();
+                                                                                searchData.publicationsSearch = compacted;
+                                                                                $window.location.hash = "/" + $routeParams.lang + "/w/listAllText";
+                                                                            } else
+                                                                            {
+                                                                                if ($routeParams.lang === "es") {
+                                                                                    alert("La información no se encuentra disponible en REDI en este momento.");
+                                                                                } else {
+                                                                                    alert("The information is not available in REDI at the moment. Please try again later.");
+                                                                                }
+                                                                                waitingDialog.hide();
+                                                                            }
+                                                                        });
+                                                                    }); // end of  sparqlQuery.querySrv({...}) fourth Attempt
+                                                        }
+                                                    });
+                                                    
+                                                    
                                                 }
                                             });
-                                        }); // end of  sparqlQuery.querySrv({...}) last Attempt
+                                        }); // end of  sparqlQuery.querySrv({...}) third Attempt
                                     } // end else of last attempt
                                 });
                             }); // end of  sparqlQuery.querySrv({...}) of second Attempt

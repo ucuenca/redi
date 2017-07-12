@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import org.apache.commons.io.IOUtils;
+import org.apache.lucene.analysis.util.CharArraySet;
 
 /**
  * @author Jose Luis Cullcay
@@ -119,7 +120,8 @@ public class KeywordGeneratorImpl {
     }
     
     public KeywordGeneratorImpl(Set<?> stopWords) {
-        analyzer = stopWords == null ? new StandardAnalyzer(Version.LUCENE_36)  : new StandardAnalyzer(Version.LUCENE_36,stopWords);
+        //analyzer = stopWords == null ? new StandardAnalyzer(Version.LUCENE_36)  : new StandardAnalyzer(Version.LUCENE_36,stopWords);
+        analyzer = stopWords == null ? new StandardAnalyzer() : new StandardAnalyzer((CharArraySet) stopWords);
         //stemmer = new PorterStemmer();
     }
 

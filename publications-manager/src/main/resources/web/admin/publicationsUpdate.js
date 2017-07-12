@@ -56,6 +56,38 @@ function runGeneralPublication(options) {
 
 }
 
+function runIndexacionPublications(options) {
+
+    document.getElementById("imgloading").style.visibility = "visible";
+
+    var endpoint = "http://example";
+    var graphuri = "http://example/data";
+    var settings = {
+        host: options
+    }
+    var dataT = {
+        "Endpoint": endpoint,
+        "GraphUri": graphuri
+    };
+
+    $.ajax({
+        type: "POST",
+        data: JSON.stringify(dataT),
+        dataType: "text", //result data type
+        contentType: "application/json", // send data type
+        url: settings.host + "pubman/indexing",
+        success: function (Result) {
+            document.getElementById("imgloading").style.visibility = "hidden";
+            alert(Result);
+        },
+        error: function (data) {
+            document.getElementById("imgloading").style.visibility = "hidden";
+            alert("Error" + data.responseText);
+        }
+    });
+
+}
+
 /*
  * Enrich author profile with attributes extracted from providers.
  */

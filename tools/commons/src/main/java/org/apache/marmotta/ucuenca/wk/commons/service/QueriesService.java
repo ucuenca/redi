@@ -292,4 +292,9 @@ public interface QueriesService {
     String getSameAuthorsLvl2(String authorResource);
 
     String getOptionalProperties(String sameAs, String property);
+    
+    String getPublicationsTitlesQuery();
+    
+    String getSearchQuery(String textSearch);
+    
 }

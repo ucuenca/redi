@@ -613,7 +613,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
+        <!--dependency>
+                <groupId>com.github.wikier</groupId>
+                <artifactId>marmotta-search</artifactId>
+                <version>3.3.0</version>
+        </dependency-->
     </dependencies>
 
 </project>

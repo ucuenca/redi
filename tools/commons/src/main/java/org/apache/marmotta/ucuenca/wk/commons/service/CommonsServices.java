@@ -26,5 +26,7 @@ public interface CommonsServices {
     String getMD5(String input);
     
     String readPropertyFromFile(String file,String property);
+    
+    String getIndexedPublicationsFilter(String text);
 
 }

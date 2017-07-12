@@ -999,5 +999,45 @@ public class QueriesServiceImpl implements QueriesService {
                 + "  OPTIONAL {<" + sameAs + "> " + property + " ?attr.}"
                 + "}";
     }
+    
+    @Override
+    public String getPublicationsTitlesQuery() {
+        return PREFIXES + " PREFIX dcterms: <http://purl.org/dc/terms/> "
+                + " SELECT ?pub ?title WHERE { "
+                + "  graph <http://ucuenca.edu.ec/wkhuska> "
+                + "     {   ?authorResource foaf:publications ?pub. "
+                + "       	 ?pub dcterms:title ?title.     }  }";
+    }
+    
+    @Override
+    public String getSearchQuery(String textSearch) {
+        return PREFIXES 
+                + " PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> PREFIX uc: <http://ucuenca.edu.ec/ontology#> PREFIX dcterms: <http://purl.org/dc/terms/> "
+                + "CONSTRUCT { "
+                + " ?keyword uc:publication ?publicationUri. "
+                + " ?publicationUri dct:contributors ?subject . "
+                + " ?subject foaf:name ?name . "
+                + " ?subject a foaf:Person . "
+                + " ?publicationUri a bibo:Document. "
+                + " ?publicationUri dct:title ?title. "
+                + " ?publicationUri bibo:abstract ?abstract. "
+                + " ?publicationUri bibo:uri ?uri. "
+                + "} "
+                + "WHERE { "
+                + " GRAPH <http://ucuenca.edu.ec/wkhuska> { "
+                + " ?subject foaf:publications ?publicationUri . "
+                + " ?subject foaf:name ?name . "
+                + " ?publicationUri dct:title ?title . "
+                + " OPTIONAL{ ?publicationUri bibo:abstract ?abstract. } "
+                + " OPTIONAL{ ?publicationUri bibo:uri ?uri. } "
+                //+ " #?publicationUri dcterms:subject ?keySub. "
+                //+ " #?keySub rdfs:label ?quote. "
+                //+ " #FILTER (mm:fulltext-search(?quote, \"population\" )) . "
+                + " FILTER(" + commonsServices.getIndexedPublicationsFilter(textSearch) + ")"
+                + " BIND(REPLACE( \"population\", \" \", \"_\", \"i\") AS ?key) . "
+                + " BIND(IRI(?key) as ?keyword) "
+                + " }"
+                + "}";
+    }
 
 }

@@ -31,6 +31,10 @@
                 runGeneralPublication(host);
             }
             function extractAuthorAttr(){authorsAttr(host);}
+            function runIndexacion()
+            {
+                runIndexacionPublications(host);
+            }
         </script>
         <!--###END_HEAD###-->
     </head>
@@ -72,6 +76,21 @@
                 <img src="img/ajax-loader-big.gif" alt="Loading Authors" height="120" width="120">
                 <p> Please wait until the reply message</p>
             </div>
+        </form>
+        
+        <h2> Indexacion de Publicaciones: Grafo Central </h2>
+
+        <p>
+            Indexacion de Publicaciones en el Grafo Central.
+        </p>
+        
+        <form> 
+            <button type="button"  onclick="runIndexacion()"  value="Activar Función">INDEXACION</button>
+            <div id="imgloading" style="visibility: hidden">
+                <img src="img/ajax-loader-big.gif" alt="Loading Authors" height="120" width="120">
+                <p> Please wait until the reply message</p>
+            </div>
+
         </form>
 
         <!--###END_CONTENT###-->

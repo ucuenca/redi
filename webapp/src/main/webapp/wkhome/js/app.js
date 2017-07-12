@@ -54,6 +54,7 @@ wkhomeApp.service('globalData', ['$window', function ($window) {
         "bibo": "http://purl.org/ontology/bibo/",
         "dc": "http://purl.org/dc/elements/1.1/",
         "dct": "http://purl.org/dc/terms/",
+        "dcterms": "http://purl.org/dc/terms/"
     };
 
     this.urltofindinGOOGLE = 'https://scholar.google.com/scholar?q={0}';
@@ -78,6 +79,9 @@ wkhomeApp.config(['$routeProvider',
                 }).
                 when('/:lang/w/author/:text', {//when user search an author in textbox
                     templateUrl: '/wkhome/partials/search.html',
+                }).
+                when('/:lang/w/listAllText', {
+                    templateUrl: '/wkhome/partials/listPublications.html', //'/wkhome/partials/searchListPublications.html',
                 }).
                 when('/:lang/w/cloud?:text', {
                     templateUrl: '/wkhome/partials/genericPageCloud.html',

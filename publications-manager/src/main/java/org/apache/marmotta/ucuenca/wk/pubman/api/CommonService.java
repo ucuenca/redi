@@ -35,5 +35,9 @@ public interface CommonService {
     JsonArray searchAuthor(String uri);
 
     String createReport(String hostname, String realPath, String name, String type, List<String> params);
+    
+    String IndexCentralGraph();
+    
+    String getSearchQuery(String textSearch);
 
 }

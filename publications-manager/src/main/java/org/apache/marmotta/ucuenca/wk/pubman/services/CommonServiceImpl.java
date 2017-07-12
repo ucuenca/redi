@@ -8,6 +8,7 @@ package org.apache.marmotta.ucuenca.wk.pubman.services;
 import com.google.gson.JsonArray;
 import java.util.List;
 import javax.inject.Inject;
+import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.DBLPProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.GoogleScholarProviderService;
@@ -58,6 +59,12 @@ public class CommonServiceImpl implements CommonService {
 
     @Inject
     AuthorAttributesImpl authorAttr;
+    
+    @Inject
+    IndexCentralGraphImpl indexingCentralGraphService;
+    
+    @Inject
+    private QueriesService queriesService;
 
     @Override
     public String GetDataFromProvidersService(boolean update) {
@@ -138,4 +145,17 @@ public class CommonServiceImpl implements CommonService {
         new Thread(authorAttr).start();
         return "Extracting attributes from authors. Task run in background.   Please review main.log file for details";
     }
+    
+    @Override
+    public String IndexCentralGraph() {
+        Thread indexingTask = new Thread(indexingCentralGraphService);
+        indexingTask.start();
+        return "Index Publications in Global Graph. Task run in background.   Please review main.log file for details";
+    }
+
+    @Override
+    public String getSearchQuery(String textSearch) {
+        return queriesService.getSearchQuery(textSearch);
+    }
+    
 }
