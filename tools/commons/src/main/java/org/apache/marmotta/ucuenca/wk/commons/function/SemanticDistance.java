@@ -13,11 +13,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
-//import java.sql.Connection;
-//import java.sql.DriverManager;
-//import java.sql.PreparedStatement;
 import java.sql.SQLException;
-//import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -32,7 +28,6 @@ import org.apache.commons.io.IOUtils;
 
 //import org.apache.marmotta.ucuenca.wk.commons.impl.CommonsServicesImpl;
 //import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
-
 /**
  *
  * @author bibliodigital
@@ -49,7 +44,6 @@ public class SemanticDistance {
 
     //private Connection conn = null;
     //Statement stmt = null;
-
     public SemanticDistance() throws IOException, ClassNotFoundException {
         JsonObject config = null;
         JsonParser parser = new JsonParser();
@@ -100,17 +94,17 @@ public class SemanticDistance {
                 }
                 double sum = 0;
                 double num = 0;
-                
+
                 for (String t1 : ka1) {
                     for (String t2 : ka2) {
                         num++;
                         String tt1 = t1;
                         String tt2 = t2;
                         double v = ngd(tt1, tt2);
-                        sum += v;
-                        }
+                        sum += 1 / v;
                     }
-                double prom = sum / num;
+                }
+                double prom = num / sum;
                 if (num == 0 && sum == 0) {
                     prom = 2;
                 }
@@ -124,7 +118,7 @@ public class SemanticDistance {
         //conn.close();
         return mapEntry(result);
     }
-    
+
     /**
      * @param args the command line arguments
      */
@@ -158,13 +152,13 @@ public class SemanticDistance {
                 }
                 double sum = 0;
                 double num = 0;
-                
-	        double min;
+
+                double min;
 
                 for (String t1 : ka1) {
                     min = 1.2;
                     for (String t2 : ka2) {
-                        
+
                         String tt1 = t1;
                         String tt2 = t2;
                         double v = ngd(tt1, tt2);
@@ -172,10 +166,10 @@ public class SemanticDistance {
                             min = v;
                         }
                     }
-                    sum += min;		
-	            num++;
+                    sum += 1 / min;
+                    num++;
                 }
-                double prom = sum / num;
+                double prom = num / sum;
                 if (num == 0 && sum == 0) {
                     prom = 2;
                 }
@@ -221,10 +215,10 @@ public class SemanticDistance {
         //TranslateForSemanticDistance trans = new TranslateForSemanticDistance();
         a = trans.traductor(a);//new LinkedList<String>(java.util.Arrays.asList(t1_.split("\\s\\|\\s")));
         a = trans.clean(a);
-            a = topT(a, (int) (2.0 * Math.log(a.size())));
+        a = topT(a, (int) (2.0 * Math.log(a.size())));
         return a;
     }
-    
+
     private List<String> formatList(List<String> a, Integer top) throws SQLException, IOException, ClassNotFoundException {
         //TranslateForSemanticDistance trans = new TranslateForSemanticDistance();
         a = trans.traductor(a);//new LinkedList<String>(java.util.Arrays.asList(t1_.split("\\s\\|\\s")));
@@ -289,13 +283,13 @@ public class SemanticDistance {
             rs = null;
             //log.error("Error while executing the sql in http2: " + sql + ". Message Translator: " + ex.getMessage() );
         }
-        */
-        
+         */
+
         Cache cache = new Cache();
         cache.getInstanceDBDistance();
-        
+
         Double dist = cache.getDistance(a, b);
-        
+
         if (dist == null) {
             int min = 0;
             int min2 = 1;
@@ -329,7 +323,7 @@ public class SemanticDistance {
             if (n0 == min || n1 == min || n2 == min) {
                 distance = 1;
             }
-            
+
             cache.putDistance(a, b, distance);
             cache.kill();
             return distance;
@@ -348,7 +342,7 @@ public class SemanticDistance {
         } catch (Exception e) {
             //log.error("Error in the http2 Insert Function. Used by TraductorYandex. Possibly the database." + e.getMessage());
         }
-        */
+         */
     }
 
     private double getResultsCount(String query) throws IOException, SQLException {
@@ -410,20 +404,20 @@ public class SemanticDistance {
         } else {
             rs.close();
             stmt.close();*/
-            final URL url = new URL(s);
-            final URLConnection connection = url.openConnection();
-            connection.setConnectTimeout(60000);
-            connection.setReadTimeout(60000);
-            connection.addRequestProperty("User-Agent", "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:44.0) Gecko/20100101 Firefox/44.0");
-            connection.addRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-            final Scanner reader = new Scanner(connection.getInputStream(), "UTF-8");
-            while (reader.hasNextLine()) {
-                final String line = reader.nextLine();
-                resp += line + "\n";
-            }
-            reader.close();
+        final URL url = new URL(s);
+        final URLConnection connection = url.openConnection();
+        connection.setConnectTimeout(60000);
+        connection.setReadTimeout(60000);
+        connection.addRequestProperty("User-Agent", "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:44.0) Gecko/20100101 Firefox/44.0");
+        connection.addRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+        final Scanner reader = new Scanner(connection.getInputStream(), "UTF-8");
+        while (reader.hasNextLine()) {
+            final String line = reader.nextLine();
+            resp += line + "\n";
+        }
+        reader.close();
 
-            /*try {
+        /*try {
                 JsonParser parser = new JsonParser();
                 parser.parse(resp);
                 PreparedStatement stmt2 = conn.prepareStatement("INSERT INTO cache (key, value) values (?, ?)");
@@ -435,7 +429,6 @@ public class SemanticDistance {
 
             }
         }*/
-
         return resp;
     }
 
