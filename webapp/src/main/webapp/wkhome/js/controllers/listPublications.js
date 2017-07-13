@@ -35,8 +35,10 @@ wkhomeControllers.controller('listPublications', ['$translate', '$routeParams', 
             //sparqlQuery.querySrv({query: sparqlPublications}, function (rdf) {
 
             //jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
-            var todos = [];
+            $scope.todos = [];
+            var allPubs = [];
             $scope.autores = [];
+            var authors = [];
             
                 if (compacted)
                 {
@@ -62,23 +64,28 @@ wkhomeControllers.controller('listPublications', ['$translate', '$routeParams', 
                             model["title"] = pub["dct:title"];
                         }
                         
+                        var author = pub["dct:contributor"];
+                        if (author !== undefined && (author.constructor === Array || author instanceof Array || Array.isArray(author))) {
+                            model["author"] = author[0];
+                        } else {
+                            model["author"] = pub["dct:contributor"];
+                        }
                         
-
-                        model["author"] = pub["dct:contributor"] ? pub["dct:contributor"] : [];
+                        //model["author"] = pub["dct:contributor"] ? pub["dct:contributor"] : [];
                         model["abstract"] = pub["bibo:abstract"] ? pub["bibo:abstract"] : "Sorry, still not found abstract for this publication.";
                         model["uri"] = pub["bibo:uri"] ? (pub["bibo:uri"]["@id"] ? pub["bibo:uri"]["@id"] : "") : "";
 
-                        $scope.autores = [];
+                        authors = [];
                         var cont = 0;
                         _.map(pub["dct:contributors"], function (authorid) {
                             cont = cont + 1;
                             var authorresource = authorid["@id"] ? (_.findWhere(autores, {"@id": authorid["@id"]})) : (_.findWhere(autores, {"@id": authorid}));
-                            $scope.autores.push({id: authorresource["@id"], name: authorresource["foaf:name"]});
+                            authors.push({id: authorresource["@id"], name: (authorresource["foaf:name"][1] ? authorresource["foaf:name"][1] : authorresource["foaf:name"])});
                         });
 
                         if (model["title"])
                         {
-                            todos.push({id: model["id"], title: model["title"], abstract: model["abstract"], uri: model["uri"], author: $scope.autores});
+                            allPubs.push({id: model["id"], title: model["title"], abstract: model["abstract"], uri: model["uri"], author: authors});
                         }
                     });
                     
@@ -89,10 +96,14 @@ wkhomeControllers.controller('listPublications', ['$translate', '$routeParams', 
                     $scope.$watch('currentPage + numPerPage', function () {
                     var begin = (($scope.currentPage - 1) * $scope.numPerPage)
                             , end = begin + $scope.numPerPage;
-                    $scope.filteredTodos = todos.slice(begin, end);
+                    $scope.filteredTodos = allPubs.slice(begin, end);
                     });
 
                 }
+                
+                $scope.todos = allPubs;
+                $scope.autores = authors;
+                
             //});
         //});
       
@@ -179,7 +190,7 @@ wkhomeControllers.controller('listPublications', ['$translate', '$routeParams', 
                     $scope.$apply(function () {
                         searchData.authorSearch = compacted;
                         //alert(author);
-                        //$window.location.hash = "/" + $routeParams.lang + "/w/search?" + id_author;
+                        $window.location.hash = "/" + $routeParams.lang + "/w/search?" + id_author;
                     });
                 });
             });

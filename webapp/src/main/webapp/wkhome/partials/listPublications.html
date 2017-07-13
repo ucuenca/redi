@@ -38,7 +38,8 @@
 
 
             <h3></h3>
-            <h4 style="padding: 20px" class="text-success"> {{'Total of Publications found'| translate }}: {{todos.length}} </h4>
+            
+            <h4 style="padding: 20px" class="text-success"> . </h4>
 
             <div id="list">
             <ul style="width: 100%;">
@@ -51,9 +52,9 @@
                             <h2 class="title">{{todo.title}}</h2>
                         </div>
                         <div class="body">
-                            Abstract: {{todo.abstract}}
+                            <b>Abstract:</b> {{todo.abstract}}
                             <br>
-                            Autores:
+                            <b>Autores:</b>
                             <ul>
 
                                 <li ng-repeat="author in todo.author">
@@ -64,7 +65,7 @@
                                 </li>
                             </ul>
                             <br>
-                            URL: <a href="{{todo.uri}}" target='_blank'>{{todo.uri}}</a>
+                            <!--URL: <a href="{{todo.uri}}" target='_blank'>{{todo.uri}}</a>-->
                         </div>
                     </div>
 
@@ -80,14 +81,14 @@
 
         <div class='col-md-3'>
 
-            <div style="padding-top: 30px; font-size: 20pt; color: #003769; padding-left: 1%; font-style: italic">AUTORES</div>
+            <!--div style="padding-top: 30px; font-size: 20pt; color: #003769; padding-left: 1%; font-style: italic">AUTORES</div>
             <div class="tree-node-author-info" style="height:100vh">
                 <div class="authorsByPublications">
-                    <!-- <span style="font-weigth:bold">Title: </span> -->
+                    
                     <div id="title" style="font-size:50pt"></div>
                     <a href="" target="_blank"></a>
                 </div>
-            </div>
+            </div-->
 
         </div>
     </div>
