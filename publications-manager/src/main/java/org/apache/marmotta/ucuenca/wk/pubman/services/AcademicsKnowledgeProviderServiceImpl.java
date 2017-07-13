@@ -17,15 +17,23 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.services;
 
+import com.google.common.base.Preconditions;
+import info.aduna.iteration.Iterations;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.marmotta.commons.sesame.model.ModelCommons;
 import org.apache.marmotta.commons.vocabulary.FOAF;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
@@ -33,9 +41,11 @@ import org.apache.marmotta.ldclient.model.ClientConfiguration;
 import org.apache.marmotta.ldclient.model.ClientResponse;
 import org.apache.marmotta.ldclient.services.ldclient.LDClient;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
+import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
+import org.apache.marmotta.ucuenca.wk.commons.service.DistanceService;
 import org.apache.marmotta.ucuenca.wk.commons.service.GetAuthorsGraphData;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.AcademicsKnowledgeProviderService;
@@ -43,7 +53,9 @@ import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
 import org.apache.marmotta.ucuenca.wk.pubman.exceptions.PubException;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.BIBO;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
+import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
@@ -64,23 +76,20 @@ public class AcademicsKnowledgeProviderServiceImpl implements AcademicsKnowledge
 
     @Inject
     private Logger log;
-
     @Inject
     private QueriesService queriesService;
-
     @Inject
     private CommonsServices commonsServices;
-
     @Inject
     private ConstantService constantService;
-
     @Inject
     private SparqlFunctionsService sparqlFunctionsService;
-
     @Inject
     private SparqlService sparqlService;
     @Inject
     private GetAuthorsGraphData getauthorsData;
+    @Inject
+    private DistanceService distanceService;
 
     private int processpercent = 0;
     private static final String ACADEMICSK_DETAIL = "https://academic.microsoft.com/#/detail/";
@@ -88,16 +97,13 @@ public class AcademicsKnowledgeProviderServiceImpl implements AcademicsKnowledge
     @Override
     public String runPublicationsProviderTaskImpl() {
         try {
-
             ClientConfiguration conf = new ClientConfiguration();
             LDClient ldClient = new LDClient(conf);
 
-            String nameToFind = "";
             String authorResource = "";
             List<Map<String, Value>> resultAllAuthors = getauthorsData.getListOfAuthors();
 
-
-            /*To Obtain Processed Percent*/
+            // To Obtain Processed Percent
             int allPersons = resultAllAuthors.size();
             int processedPersons = 0;
 
@@ -105,46 +111,50 @@ public class AcademicsKnowledgeProviderServiceImpl implements AcademicsKnowledge
             ClientResponse response = null;
 
             for (Map<String, Value> map : resultAllAuthors) {
-
                 processedPersons++;
                 log.info("Autores procesados con Academics Knowledge: " + processedPersons + " de " + allPersons);
                 authorResource = map.get("subject").stringValue();
                 String firstName = map.get("fname").stringValue();
                 String lastName = map.get("lname").stringValue();
                 String akresource = constantService.getAcademicsKnowledgeResource() + StringUtils.stripAccents(lastName + " " + firstName).replace(" ", "_");
-//                boolean AuthorDataisLoad = false;
-                // boolean ask = false;
-                String keysubscriptions = readPropertyFromFile("seachProperties.properties", "apiKey");
-//                String nameOfSource = readPropertyFromFile("seachProperties.properties", "source");
+//                String keysubscriptions = readPropertyFromFile("seachProperties.properties", "apiKey");
                 String authorSeachQuery = null;
-
+                Set<String> authorWords = getAuthorAreas(authorResource);
                 try {
-                    nameToFind = stripAccents(priorityFindQueryBuilding(firstName, lastName));
+//                    nameToFind = stripAccents(buildRequestURL(firstName, lastName));
 //                    String URL_TO_FIND_AK1 = "https://api.projectoxford.ai/academic/v1.0/evaluate?expr=And(Composite(AA.AuN==%27" + nameToFind + "%27),Composite(AA.AfN==%27" + nameOfSource.replace(" ", "%20") + "%27))&attributes=Id,Ti,Y,D,CC,ECC,AA.AuN,AA.AuId,AA.AfN,AA.AfId,F.FN,F.FId,J.JN,J.JId,C.CN,C.CId,RId,W,E,D&E=DN,D,S,S.Ty,S.U,VFN,VSN,V,I,FP,LP,DOI&subscription-key=" + keysubscriptions + "&count=100&sort=2";
-                    String URL_TO_FIND_AK2 = "https://api.projectoxford.ai/academic/v1.0/evaluate?expr=Composite(AA.AuN==%27" + nameToFind + "%27)&attributes=Id,Ti,Y,D,CC,ECC,AA.AuN,AA.AuId,AA.AfN,AA.AfId,F.FN,F.FId,J.JN,J.JId,C.CN,C.CId,RId,W,E,D&E=DN,D,S,S.Ty,S.U,VFN,VSN,V,I,FP,LP,DOI&subscription-key=" + keysubscriptions + "&count=100&sort=2";
-                    boolean dataretrievee = false;
+                    String urlToFIND = buildRequestURL(firstName, lastName);//"https://api.projectoxford.ai/academic/v1.0/evaluate?expr=Composite(AA.AuN==%27" + nameToFind + "%27)&attributes=Id,Ti,Y,D,CC,ECC,AA.AuN,AA.AuId,AA.AfN,AA.AfId,F.FN,F.FId,J.JN,J.JId,C.CN,C.CId,RId,W,E,D&E=DN,D,S,S.Ty,S.U,VFN,VSN,V,I,FP,LP,DOI&subscription-key=" + keysubscriptions + "&count=100&sort=2";
+                    boolean dataretrieve = false;
 
-                    String providerGraph = constantService.getAcademicsKnowledgeGraph();
+                    String academicsGraph = constantService.getAcademicsKnowledgeGraph();
 
-                    //Ask if already search query is in triple Store .
-                    if (!sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(providerGraph, URL_TO_FIND_AK2))) {
+                    // Ask if already search query is in triple Store .
+                    if (!sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(academicsGraph, urlToFIND))) {
 
                         try {
-                            response = ldClient.retrieveResource(URL_TO_FIND_AK2);
-                            if (!response.getData().isEmpty()) {
+                            response = ldClient.retrieveResource(urlToFIND);
+                            if (response.getHttpStatus() == 200 && !response.getData().isEmpty()) {
                                 //load retrieve triples in Sesame repository to make some searchs.
                                 conUri = ModelCommons.asRepository(response.getData()).getConnection();
                                 conUri.begin();
-                                dataretrievee = true;
+                                dataretrieve = true;
+                            } else if (response.getHttpStatus() == 200 && response.getData().isEmpty()) {
+                                log.info("No data retrieve for {} with query {}", authorResource, urlToFIND);
+                            } else if (response.getHttpStatus() == 403 || response.getHttpStatus() == 401) {
+                                log.error("Check your apikey, key subscription "
+                                        + "is not valid or you exceed the number of transactions. "
+                                        + "HTTP status {}", response.getHttpStatus());
+                                throw new DataRetrievalException("Try later.");
+                            } else {
+                                throw new DataRetrievalException("Cannot retrieve data. HTTP status" + response.getHttpStatus());
                             }
                         } catch (DataRetrievalException e) {
-//                            log.error("Data Retrieval emply to find: " + URL_TO_FIND_AK1 + " " + e.getMessage());
-                            dataretrievee = false;
-
+                            log.error("Cannot extract information to query {} from author {}.", urlToFIND, authorResource, e);
+                            dataretrieve = false;
                         } finally {
                             //Save the search query with success result in triple store
-                            authorSeachQuery = URL_TO_FIND_AK2;
-                            //Wait four seconds to do send other query
+                            authorSeachQuery = urlToFIND;
+                            //Wait four seconds to do send other query, api restrictions.
                             try {
                                 Thread.sleep(4000);
                             } catch (InterruptedException ex) {
@@ -191,31 +201,37 @@ public class AcademicsKnowledgeProviderServiceImpl implements AcademicsKnowledge
 //
 //                        }
 //</editor-fold>
-                        // Save triples if data retrieval is not null.
-                        if (dataretrievee) {
-
-                            boolean existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(providerGraph, authorResource));
-
-//                            String InsertQueryOneOf = buildInsertQuery(providerGraph, authorSeachQuery, OWL.ONE_OF, authorResource);
-//                            updatePub(InsertQueryOneOf);
-//                            if (existNativeAuthor) {
-                            String sameAsInsertQuery = buildInsertQuery(providerGraph, authorResource, OWL.SAME_AS, akresource);
+                        // Save triples if there's data.
+                        if (dataretrieve) {
+                            boolean existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(academicsGraph, authorResource));
+                            String sameAsInsertQuery = buildInsertQuery(academicsGraph, authorResource, OWL.SAME_AS, akresource);
                             updatePub(sameAsInsertQuery);
-                            sameAsInsertQuery = buildInsertQuery(providerGraph, akresource, REDI.ACADEMICS_KNOWLEDGE_URl.toString(), authorSeachQuery);
+                            sameAsInsertQuery = buildInsertQuery(academicsGraph, akresource, REDI.ACADEMICS_KNOWLEDGE_URl.toString(), authorSeachQuery);
                             updatePub(sameAsInsertQuery);
-//                            }
 
                             if (!existNativeAuthor) {
                                 //SPARQL obtain all publications of author
                                 String getPublicationsFromProviderQuery = queriesService.getResourceUriByType("dc:creator");
                                 TupleQuery pubquery = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getPublicationsFromProviderQuery); //
                                 TupleQueryResult tripletasResult = pubquery.evaluate();
+                                List<String> ownerOf = new ArrayList<>();
                                 while (tripletasResult.hasNext()) {
+                                    Set<String> publicationWords = new HashSet<>();
                                     BindingSet tripletsResource = tripletasResult.next();
                                     String authorSourceResource = tripletsResource.getValue("authorResource").toString();
                                     String publicationResource = tripletsResource.getValue("publicationResource").toString();
-                                    String publicationInsertQuery = buildInsertQuery(providerGraph, akresource, "http://xmlns.com/foaf/0.1/publications", publicationResource);
-                                    updatePub(publicationInsertQuery);
+                                    for (Statement statement : Iterations.asList(conUri.getStatements(ValueFactoryImpl.getInstance().createURI(publicationResource), BIBO.QUOTE, null, false))) {
+                                        publicationWords.add(statement.getObject().stringValue());
+                                    }
+                                    if (distanceService.semanticComparisonValue(new ArrayList<>(authorWords), new ArrayList<>(publicationWords)) < 1.1) {
+                                        String publicationInsertQuery = buildInsertQuery(academicsGraph, akresource, "http://xmlns.com/foaf/0.1/publications", publicationResource);
+                                        ownerOf.add(publicationResource);
+                                        updatePub(publicationInsertQuery);
+                                    } else {
+                                        int end = publicationResource.lastIndexOf('/') + 1;
+                                        log.info("Publication with id {} ignored.", publicationResource.substring(end));
+                                        log.warn("Author doesn't have common words. \nAuthor words {}. \nPublication words {}.", authorWords, publicationWords);
+                                    }
                                     //CODE TO SAVE A RELATION BETWEEN AUTOR URI AND CREATOR OF PUBLICATION    
                                     // String sameAsInsertQuery = buildInsertQuery(providerGraph, authorSourceResource, "http://www.w3.org/2002/07/owl#sameAs", authorResource);
                                     //updatePub(sameAsInsertQuery);
@@ -234,8 +250,10 @@ public class AcademicsKnowledgeProviderServiceImpl implements AcademicsKnowledge
                                         publicationValue = ACADEMICSK_DETAIL + publicationValue.substring(index);
                                     }
                                     ///insert sparql query, 
-                                    String publicationPropertiesInsertQuery = buildInsertQuery(providerGraph, publicationResource, publicationProperties, publicationValue);
-                                    updatePub(publicationPropertiesInsertQuery);
+                                    if (ownerOf.contains(publicationResource)) {
+                                        String publicationPropertiesInsertQuery = buildInsertQuery(academicsGraph, publicationResource, publicationProperties, publicationValue);
+                                        updatePub(publicationPropertiesInsertQuery);
+                                    }
                                 }
                                 // save authors' name.
                                 String getAuthorPropertiesQuery = queriesService.getResourceUriByType("foaf:name");
@@ -244,7 +262,7 @@ public class AcademicsKnowledgeProviderServiceImpl implements AcademicsKnowledge
                                     BindingSet tripletsResource = tripletasResult.next();
                                     String publicationResource = tripletsResource.getValue("publicationResource").stringValue();
                                     String publicationValue = tripletsResource.getValue("authorResource").stringValue();
-                                    String publicationPropertiesInsertQuery = buildInsertQuery(providerGraph, publicationResource, FOAF.name.stringValue(), publicationValue);
+                                    String publicationPropertiesInsertQuery = buildInsertQuery(academicsGraph, publicationResource, FOAF.name.stringValue(), publicationValue);
                                     updatePub(publicationPropertiesInsertQuery);
                                 }
                             }
@@ -265,20 +283,93 @@ public class AcademicsKnowledgeProviderServiceImpl implements AcademicsKnowledge
         } catch (InvalidArgumentException ex) {
             log.error("Marmotta Exception: " + ex);
 
+        } catch (MarmottaException ex) {
+            java.util.logging.Logger.getLogger(AcademicsKnowledgeProviderServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return "fail";
     }
 
+    private Set<String> getAuthorAreas(String authorResource) throws MarmottaException {
+        Set<String> words = new HashSet<>();
+        for (Map<String, Value> m : sparqlService.query(QueryLanguage.SPARQL, queriesService.getAuthorsKeywordsQuery(authorResource))) {
+            if (m.containsKey("keyword")) {
+                words.add(m.get("keyword").stringValue().toLowerCase());
+            }
+        }
+        if (!words.isEmpty()) {
+            return words;
+        }
+        for (Map<String, Value> m : sparqlService.query(QueryLanguage.SPARQL, queriesService.getAuthorSubjectQuery(authorResource))) {
+            if (m.containsKey("keyword")) {
+                words.add(m.get("keyword").stringValue().toLowerCase());
+            }
+        }
+        return words;
+    }
+
     /**
-     * @See method to build some combination names to search query
+     * Build url to request information from Microsoft Academics API.
+     *
+     * @see
+     * https://westus.dev.cognitive.microsoft.com/docs/services/56332331778daf02acc0a50b/operations/565d753be597ed16ac3ffc03
+     * @see
+     * https://docs.microsoft.com/es-es/azure/cognitive-services/academic-knowledge/queryexpressionsyntax
      * @param firstName
      * @param lastName
      * @return
      */
-    public String priorityFindQueryBuilding(String firstName, String lastName) {
+    private String buildRequestURL(String firstName, String lastName) throws URISyntaxException {
+        Preconditions.checkArgument(firstName != null && !"".equals(firstName.trim()));
+        Preconditions.checkArgument(lastName != null && !"".equals(lastName.trim()));
+        String apiKey = readPropertyFromFile("seachProperties.properties", "apiKey");
 
-        return (firstName + " " + lastName).replace(" ", "%20").toLowerCase();
+        firstName = StringUtils.stripAccents(firstName).trim().toLowerCase();
+        lastName = StringUtils.stripAccents(lastName).trim().toLowerCase();
+
+        StringBuilder expression = new StringBuilder("OR(");
+
+        String[] fName = splitName(firstName);
+        String[] lName = splitName(lastName);
+        for (int i = 0; i <= fName.length; i++) {
+            if (i == fName.length) {
+                expression.append("Composite(AA.AuN='")
+                        .append(firstName).append(' ').append(lName[0])
+                        .append("'...)");
+            } else {
+                expression.append("Composite(AA.AuN='")
+                        .append(fName[i]).append(' ').append(lName[0]);
+                expression.append("'...)");
+            }
+            if (i < fName.length) {
+                expression.append(',');
+            }
+        }
+
+        expression.append(")");
+
+        URIBuilder builder = new URIBuilder("https://westus.api.cognitive.microsoft.com/academic/v1.0/evaluate");
+        builder.setParameter("expr", expression.toString());
+        builder.setParameter("attributes", "Id,Ti,Y,D,CC,ECC,AA.AuN,AA.AuId,AA.AfN,AA.AfId,F.FN,F.FId,J.JN,J.JId,C.CN,C.CId,RId,W,E,D");
+        builder.setParameter("subscription-key", apiKey);
+        builder.setParameter("count", "500");
+
+        return builder.build().toString();
+    }
+
+    private String[] splitName(String name) {
+        int start = name.indexOf(' ');
+        String first = "";
+        String second = "";
+
+        if (start > 0) {
+            first = name.substring(0, start);
+            second = name.substring(start + 1);
+            return new String[]{first, second};
+        } else {
+            first = name.substring(0, start);
+            return new String[]{first};
+        }
     }
 
     /*

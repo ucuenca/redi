@@ -12,14 +12,10 @@ import org.apache.marmotta.ldclient.model.ClientResponse;
 import org.apache.marmotta.ldclient.services.ldclient.LDClient;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.rio.RDFHandler;
-import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.rdfxml.util.RDFXMLPrettyWriter;
 
 /**
  *
@@ -50,23 +46,15 @@ public class TestAK {
     // The methods must be annotated with annotation @Test. For example:
     //
     @Test
-   
+
     public void testMicrosoftAcademics() {
         ClientConfiguration config = new ClientConfiguration();
 
         LDClientService ldclient = new LDClient(config);
         try {
             ClientResponse res;
-            res = ldclient.retrieveResource("https://api.projectoxford.ai/academic/v1.0/evaluate?expr=Composite(AA.AuN==%27maria%20hallo%27)&attributes=Id,Ti,Y,D,CC,ECC,AA.AuN,AA.AuId,AA.AfN,AA.AfId,F.FN,F.FId,J.JN,J.JId,C.CN,C.CId,RId,W,E,D&E=DN,D,S,S.Ty,S.U,VFN,VSN,V,I,FP,LP,DOI&subscription-key=f66e8b1a39634d9591151a8efd80cfc2&count=100");
-            RDFHandler handler = new RDFXMLPrettyWriter(System.out);
-            
-            try {
-                res.getTriples().getConnection().export(handler);
-            } catch (RepositoryException e) {
-                //e.printStackTrace();
-            } catch (RDFHandlerException e) {
-                //e.printStackTrace();
-            }
+            res = ldclient.retrieveResource("https://westus.api.cognitive.microsoft.com/academic/v1.0/evaluate?expr=Composite(AA.AuN==%27maria%20hallo%27)&attributes=Id,Ti,Y,D,CC,ECC,AA.AuN,AA.AuId,AA.AfN,AA.AfId,F.FN,F.FId,J.JN,J.JId,C.CN,C.CId,RId,W,E,D&subscription-key=f66e8b1a39634d9591151a8efd80cfc2&count=100");
+            assertEquals("Size do not match.", 408, res.getData().size());
         } catch (DataRetrievalException e) {
             // TODO Auto-generated catch block
             //e.printStackTrace();

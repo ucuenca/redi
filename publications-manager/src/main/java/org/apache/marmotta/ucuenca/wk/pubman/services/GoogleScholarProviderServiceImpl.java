@@ -189,6 +189,7 @@ public class GoogleScholarProviderServiceImpl implements ProviderService, Runnab
                                         response = ldClient.retrieveResource(url_to_find);
                                         if (response.getHttpStatus() >= 500 || response.getHttpStatus() >= 503 || response.getHttpStatus() == 504) {
                                             retry = true;
+                                            log.warn("Cannot acces to Scholar. Waiting...");
                                             long retryAfter = 21600000 + response.getExpires().getTime() - new Date(System.currentTimeMillis()).getTime();
                                             if (retryAfter > 0) {
                                                 Thread.sleep(retryAfter);
