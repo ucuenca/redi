@@ -23,7 +23,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -123,7 +125,13 @@ public class AcademicsKnowledgeProviderServiceImpl implements AcademicsKnowledge
                 try {
 //                    nameToFind = stripAccents(buildRequestURL(firstName, lastName));
 //                    String URL_TO_FIND_AK1 = "https://api.projectoxford.ai/academic/v1.0/evaluate?expr=And(Composite(AA.AuN==%27" + nameToFind + "%27),Composite(AA.AfN==%27" + nameOfSource.replace(" ", "%20") + "%27))&attributes=Id,Ti,Y,D,CC,ECC,AA.AuN,AA.AuId,AA.AfN,AA.AfId,F.FN,F.FId,J.JN,J.JId,C.CN,C.CId,RId,W,E,D&E=DN,D,S,S.Ty,S.U,VFN,VSN,V,I,FP,LP,DOI&subscription-key=" + keysubscriptions + "&count=100&sort=2";
-                    String urlToFIND = buildRequestURL(firstName, lastName);//"https://api.projectoxford.ai/academic/v1.0/evaluate?expr=Composite(AA.AuN==%27" + nameToFind + "%27)&attributes=Id,Ti,Y,D,CC,ECC,AA.AuN,AA.AuId,AA.AfN,AA.AfId,F.FN,F.FId,J.JN,J.JId,C.CN,C.CId,RId,W,E,D&E=DN,D,S,S.Ty,S.U,VFN,VSN,V,I,FP,LP,DOI&subscription-key=" + keysubscriptions + "&count=100&sort=2";
+                    Set<String> ies = new HashSet<>();
+                    for (Map<String, Value> m : sparqlService.query(QueryLanguage.SPARQL, queriesService.getIESInfobyAuthor(authorResource))) {
+                        if (m.containsKey("ies")) {
+                            ies.addAll(Arrays.asList(m.get("ies").stringValue().split(",")));
+                        }
+                    }
+                    String urlToFIND = buildRequestURL(firstName, lastName, new ArrayList<>(ies));//"https://api.projectoxford.ai/academic/v1.0/evaluate?expr=Composite(AA.AuN==%27" + nameToFind + "%27)&attributes=Id,Ti,Y,D,CC,ECC,AA.AuN,AA.AuId,AA.AfN,AA.AfId,F.FN,F.FId,J.JN,J.JId,C.CN,C.CId,RId,W,E,D&E=DN,D,S,S.Ty,S.U,VFN,VSN,V,I,FP,LP,DOI&subscription-key=" + keysubscriptions + "&count=100&sort=2";
                     boolean dataretrieve = false;
 
                     String academicsGraph = constantService.getAcademicsKnowledgeGraph();
@@ -223,15 +231,16 @@ public class AcademicsKnowledgeProviderServiceImpl implements AcademicsKnowledge
                                     for (Statement statement : Iterations.asList(conUri.getStatements(ValueFactoryImpl.getInstance().createURI(publicationResource), BIBO.QUOTE, null, false))) {
                                         publicationWords.add(statement.getObject().stringValue());
                                     }
-                                    if (distanceService.semanticComparisonValue(new ArrayList<>(authorWords), new ArrayList<>(publicationWords)) < 1.1) {
-                                        String publicationInsertQuery = buildInsertQuery(academicsGraph, akresource, "http://xmlns.com/foaf/0.1/publications", publicationResource);
-                                        ownerOf.add(publicationResource);
-                                        updatePub(publicationInsertQuery);
-                                    } else {
-                                        int end = publicationResource.lastIndexOf('/') + 1;
-                                        log.info("Publication with id {} ignored.", publicationResource.substring(end));
-                                        log.warn("Author doesn't have common words. \nAuthor words {}. \nPublication words {}.", authorWords, publicationWords);
-                                    }
+                                    // Ignore semantic distance bc it takes too much to execute.
+//                                    if (distanceService.semanticComparisonValue(new ArrayList<>(authorWords), new ArrayList<>(publicationWords)) < 1.1) {
+                                    String publicationInsertQuery = buildInsertQuery(academicsGraph, akresource, "http://xmlns.com/foaf/0.1/publications", publicationResource);
+                                    ownerOf.add(publicationResource);
+                                    updatePub(publicationInsertQuery);
+//                                    } else {
+//                                        int end = publicationResource.lastIndexOf('/') + 1;
+//                                        log.info("Publication with id {} ignored.", publicationResource.substring(end));
+//                                        log.warn("Author doesn't have common words. \nAuthor words {}. \nPublication words {}.", authorWords, publicationWords);
+//                                    }
                                     //CODE TO SAVE A RELATION BETWEEN AUTOR URI AND CREATOR OF PUBLICATION    
                                     // String sameAsInsertQuery = buildInsertQuery(providerGraph, authorSourceResource, "http://www.w3.org/2002/07/owl#sameAs", authorResource);
                                     //updatePub(sameAsInsertQuery);
@@ -319,7 +328,7 @@ public class AcademicsKnowledgeProviderServiceImpl implements AcademicsKnowledge
      * @param lastName
      * @return
      */
-    private String buildRequestURL(String firstName, String lastName) throws URISyntaxException {
+    private String buildRequestURL(String firstName, String lastName, List<String> ies) throws URISyntaxException {
         Preconditions.checkArgument(firstName != null && !"".equals(firstName.trim()));
         Preconditions.checkArgument(lastName != null && !"".equals(lastName.trim()));
         String apiKey = readPropertyFromFile("seachProperties.properties", "apiKey");
@@ -327,7 +336,7 @@ public class AcademicsKnowledgeProviderServiceImpl implements AcademicsKnowledge
         firstName = StringUtils.stripAccents(firstName).trim().toLowerCase();
         lastName = StringUtils.stripAccents(lastName).trim().toLowerCase();
 
-        StringBuilder expression = new StringBuilder("OR(");
+        StringBuilder expression = new StringBuilder("AND(OR(");
 
         String[] fName = splitName(firstName);
         String[] lName = splitName(lastName);
@@ -345,9 +354,21 @@ public class AcademicsKnowledgeProviderServiceImpl implements AcademicsKnowledge
                 expression.append(',');
             }
         }
-
-        expression.append(")");
-
+        if (!ies.isEmpty()) {
+            expression.append("),OR(");
+            Iterator<String> it = ies.iterator();
+            while (it.hasNext()) {
+                expression.append("Composite(AA.AfN='")
+                        .append(it.next().toLowerCase())
+                        .append("')");
+                if (it.hasNext()) {
+                    expression.append(',');
+                }
+            }
+            expression.append("))");
+        } else {
+            expression.append("))");
+        }
         URIBuilder builder = new URIBuilder("https://westus.api.cognitive.microsoft.com/academic/v1.0/evaluate");
         builder.setParameter("expr", expression.toString());
         builder.setParameter("attributes", "Id,Ti,Y,D,CC,ECC,AA.AuN,AA.AuId,AA.AfN,AA.AfId,F.FN,F.FId,J.JN,J.JId,C.CN,C.CId,RId,W,E,D");
@@ -359,17 +380,14 @@ public class AcademicsKnowledgeProviderServiceImpl implements AcademicsKnowledge
 
     private String[] splitName(String name) {
         int start = name.indexOf(' ');
-        String first = "";
-        String second = "";
 
         if (start > 0) {
-            first = name.substring(0, start);
-            second = name.substring(start + 1);
+            String first = name.substring(0, start);
+            String second = name.substring(start + 1);
             return new String[]{first, second};
-        } else {
-            first = name.substring(0, start);
-            return new String[]{first};
         }
+        return new String[]{name};
+
     }
 
     /*
