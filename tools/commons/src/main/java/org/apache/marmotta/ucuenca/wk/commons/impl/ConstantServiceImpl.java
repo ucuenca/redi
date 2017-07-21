@@ -203,7 +203,7 @@ public class ConstantServiceImpl implements ConstantService {
 //    }
     @Override
     public String getProviderNsGraph() {
-        return (confService.getBaseContext() + getSelectedGraph("provider")).replace("\\//", "\\/");
+        return (confService.getBaseContext() + getSelectedGraph("provider")).replaceAll("\\//", "\\/");
     }
 
     @Override

@@ -216,6 +216,8 @@ public class DistanceServiceImpl implements DistanceService {
 
         //Compare given names and surnames
         equal = compareNames(givenName1, givenName2, lastName1, lastName2,
+                otherGivenName1, otherGivenName2, otherLastName1, otherLastName2) 
+                || compareNames(givenName2, givenName1, lastName1, lastName2,
                 otherGivenName1, otherGivenName2, otherLastName1, otherLastName2);
 
         // 1. Busca 4 nombres sin acentos
@@ -317,7 +319,9 @@ public class DistanceServiceImpl implements DistanceService {
 
         //Compare given names and surnames
         equal = compareNames(givenName1, givenName2, lastName1, lastName2,
-                otherGivenName1, otherGivenName2, otherLastName1, otherLastName2);
+                otherGivenName1, otherGivenName2, otherLastName1, otherLastName2) 
+                || compareNames(givenName2, givenName1, lastName1, lastName2,
+                otherGivenName1, otherGivenName2, otherLastName1, otherLastName2);;
 
         // 1. Busca 4 nombres sin acentos
         // 2. primer nombre y apellidos
@@ -340,8 +344,9 @@ public class DistanceServiceImpl implements DistanceService {
      */
     private String cleanNameArticles(String value) {
         value = value.replace(".", "").trim()
+                .replace("-"," ")
                 .replace("??", ".*")
-                .replace("?", ".*").toLowerCase()
+                .replace("?", ".*").toUpperCase().toLowerCase()
                 .replaceAll(" de ", " ")
                 .replaceAll("^del ", " ")
                 .replaceAll(" del ", " ")
@@ -439,7 +444,7 @@ public class DistanceServiceImpl implements DistanceService {
 
     public boolean compareExactStrings(String string1, String string2) {
         if (string1.length() == 1 || string2.length() == 1) {
-            return string1.contains(string2) || string2.contains(string1);
+            return string1.startsWith(string2) || string2.startsWith(string1);
         }
         return (string1.matches("^" + string2 + "$") || string2.matches("^" + string1 + "$") || jaccardDistance(string1, string2) > 0.85);
     }

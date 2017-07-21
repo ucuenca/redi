@@ -49,6 +49,8 @@ import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.KeywordsService;
 import org.apache.marmotta.ucuenca.wk.commons.service.GetAuthorsGraphData;
 
+import org.apache.marmotta.ucuenca.wk.commons.impl.DistanceServiceImpl;
+
 import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
 
 import org.apache.marmotta.ucuenca.wk.pubman.exceptions.PubException;
@@ -131,6 +133,7 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
     @Override
     public String runPublicationsProviderTaskImpl(boolean update) {
         try {
+            DistanceServiceImpl distancia = new DistanceServiceImpl();
             uniNames = new ArrayList<>();
             ClientConfiguration conf = new ClientConfiguration();
             LDClient ldClient = new LDClient(conf);
@@ -300,24 +303,21 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
                                         + " }";
                                 TupleQueryResult nameResult = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getScopusAuthorName).evaluate();
                                 boolean equalNames = true;
+                                
                                 while (nameResult.hasNext()) {
-                                    BindingSet binding = nameResult.next();
-                                    scopusfirstName = binding.getValue("firstName").stringValue();
-                                    scopuslastName = binding.getValue("lastName").stringValue();
                                     try {
-                                        if (distance.getEqualNames(scopusfirstName, scopuslastName, firstName, lastName)) {
-                                            equalNames = true;
-                                            break;
-                                        }
+                                        BindingSet binding = nameResult.next();
+                                        scopusfirstName = binding.getValue("firstName").stringValue().length() >  scopusfirstName.length() ? binding.getValue("firstName").stringValue() : scopusfirstName;
+                                        scopuslastName = binding.getValue("lastName").stringValue().length() >  scopuslastName.length() ? binding.getValue("lastName").stringValue() : scopuslastName;
                                     } catch (Exception e) {
-                                        continue;
+                                        
                                     }
-                                    equalNames = false;
+                                    
                                 }
                                 
-                                if (!equalNames) {
-                                    continue;
-                                }
+                                //if (!distancia.getEqualNamesWithoutInjects(scopusfirstName, scopuslastName, firstName, lastName)) {
+                                //    continue;
+                                //}
                                 
                                 //(Jose Luis) Test the affiliation of the researcher
                                 String getPublicationsAndTitleFromProviderQuery = queriesService.getSubjectAndObjectByPropertyQuery("dc:title");

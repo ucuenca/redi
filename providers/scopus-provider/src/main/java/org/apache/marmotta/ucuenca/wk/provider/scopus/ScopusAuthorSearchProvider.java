@@ -47,6 +47,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.enterprise.context.ApplicationScoped;
+import org.apache.marmotta.ucuenca.wk.commons.impl.DistanceServiceImpl;
 //import javax.inject.Inject;
 //import org.apache.marmotta.ucuenca.wk.commons.service.DistanceService;
 import org.jdom2.Namespace;
@@ -137,6 +138,7 @@ public class ScopusAuthorSearchProvider extends AbstractHttpProvider {
     public List<String> parseResponse(String resource, String requestUrl, Model triples, InputStream input, String contentType) throws DataRetrievalException {
         //log.debug("Request Successful to {0}", requestUrl);
         try {
+            DistanceServiceImpl distanceService = new DistanceServiceImpl();  
             FileWriter fw = new FileWriter(FILENAME, true);
             ValueFactory factory = ValueFactoryImpl.getInstance();
             final Document doc = new SAXBuilder(XMLReaders.NONVALIDATING).build(input);
@@ -169,9 +171,9 @@ public class ScopusAuthorSearchProvider extends AbstractHttpProvider {
                     String surname = preferredName.getChildText("surname", namespaceATOM).replace("-", " ");
                     String givenName = preferredName.getChildText("given-name", namespaceATOM);
                     
-                    double distance = 0.9; //distanceService.jaccardDistance(givenNameOrig + " " + surnameOrig, givenName + " " + surname); //distanceService != null ? distanceService.jaccardDistance(givenNameOrig + " " + surnameOrig, givenName + " " + surname) : 0.85;
+                    double distance = distanceService.jaccardDistance(givenNameOrig + " " + surnameOrig, givenName + " " + surname); //distanceService != null ? distanceService.jaccardDistance(givenNameOrig + " " + surnameOrig, givenName + " " + surname) : 0.85;
                     
-                    equalNames = true; //distanceService.getEqualNames(givenNameOrig, surnameOrig, givenName, surname);//distanceService != null ? distanceService.getEqualNames(givenNameOrig, surnameOrig, givenName, surname) : true;
+                    equalNames = distanceService.getEqualNamesWithoutInjects(givenNameOrig, surnameOrig, givenName, surname); //distanceService.getEqualNames(givenNameOrig, surnameOrig, givenName, surname);//distanceService != null ? distanceService.getEqualNames(givenNameOrig, surnameOrig, givenName, surname) : true;
                     
                     /*List<Element> nameVariants = element.getChildren("name-variant", namespaceATOM);
                     for (Element nameVariant : nameVariants) {
