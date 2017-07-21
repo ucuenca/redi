@@ -217,8 +217,8 @@ public class DistanceServiceImpl implements DistanceService {
         //Compare given names and surnames
         equal = compareNames(givenName1, givenName2, lastName1, lastName2,
                 otherGivenName1, otherGivenName2, otherLastName1, otherLastName2) 
-                || compareNames(givenName2, givenName1, lastName1, lastName2,
-                otherGivenName1, otherGivenName2, otherLastName1, otherLastName2);
+                || (givenName2 != null && compareNames(givenName2, givenName1, lastName1, lastName2,
+                otherGivenName1, otherGivenName2, otherLastName1, otherLastName2));
 
         // 1. Busca 4 nombres sin acentos
         // 2. primer nombre y apellidos
@@ -320,8 +320,8 @@ public class DistanceServiceImpl implements DistanceService {
         //Compare given names and surnames
         equal = compareNames(givenName1, givenName2, lastName1, lastName2,
                 otherGivenName1, otherGivenName2, otherLastName1, otherLastName2) 
-                || compareNames(givenName2, givenName1, lastName1, lastName2,
-                otherGivenName1, otherGivenName2, otherLastName1, otherLastName2);;
+                || (givenName2 != null && compareNames(givenName2, givenName1, lastName1, lastName2,
+                otherGivenName1, otherGivenName2, otherLastName1, otherLastName2));
 
         // 1. Busca 4 nombres sin acentos
         // 2. primer nombre y apellidos
