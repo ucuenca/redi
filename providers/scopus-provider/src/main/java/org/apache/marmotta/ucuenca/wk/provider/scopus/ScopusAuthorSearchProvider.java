@@ -171,22 +171,19 @@ public class ScopusAuthorSearchProvider extends AbstractHttpProvider {
                     String surname = preferredName.getChildText("surname", namespaceATOM).replace("-", " ");
                     String givenName = preferredName.getChildText("given-name", namespaceATOM);
                     
+                    List<Element> nameVariants = element.getChildren("name-variant", namespaceATOM);
+                    for (Element nameVariant : nameVariants) {
+                        try {
+                            surname = nameVariant.getChildText("surname", namespaceATOM).length() > surname.length() ? nameVariant.getChildText("surname", namespaceATOM).replace("-", " ") : surname;
+                            givenName = nameVariant.getChildText("given-name", namespaceATOM).length() > givenName.length() ? nameVariant.getChildText("given-name", namespaceATOM) : givenName;
+                        } catch (Exception e) {
+                        }
+                    }
+                    
                     double distance = distanceService.jaccardDistance(givenNameOrig + " " + surnameOrig, givenName + " " + surname); //distanceService != null ? distanceService.jaccardDistance(givenNameOrig + " " + surnameOrig, givenName + " " + surname) : 0.85;
                     
                     equalNames = distanceService.getEqualNamesWithoutInjects(givenNameOrig, surnameOrig, givenName, surname); //distanceService.getEqualNames(givenNameOrig, surnameOrig, givenName, surname);//distanceService != null ? distanceService.getEqualNames(givenNameOrig, surnameOrig, givenName, surname) : true;
-                    
-                    /*List<Element> nameVariants = element.getChildren("name-variant", namespaceATOM);
-                    for (Element nameVariant : nameVariants) {
-                        if (equalNames) {
-                            break;
-                        }
-                        surname = nameVariant.getChildText("surname", namespaceATOM).replace("-", " ");
-                        givenName = nameVariant.getChildText("given-name", namespaceATOM);
-
-                        equalNames = distanceService.getEqualNames(givenNameOrig, surnameOrig, givenName, surname);
-
-                    }*/
-                    
+                                     
                     fw.write(givenNameOrig + " "  + surnameOrig + "," + givenName + " " + surname + "," + equalNames + "," + distance + "\n"); 
                     if (equalNames || distance >= 0.85) {
                         //log.error(givenNameOrig + " "  + surnameOrig + "," + givenName + " " + surname + "," + equalNames + "," + distance);
