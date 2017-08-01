@@ -243,8 +243,10 @@ public class GoogleScholarProviderServiceImpl implements ProviderService, Runnab
                             log.error("ioexception " + e.toString());
                         }
                         priorityToFind++;
+                        if (dataretrieve || priorityToFind > 3) {
+                            writeResource(authorResource);
+                        }
                     } while (priorityToFind <= 3 && !dataretrieve);//end do while
-                    writeResource(authorResource);
                     printPercentageProgress(processedPersons, allAuthors, "Google Scholar");
                 } else if (sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskPublicationsURLGS(googleGraph, authorResource))) {
                     // ask if there are publications left to extract for authorresource
