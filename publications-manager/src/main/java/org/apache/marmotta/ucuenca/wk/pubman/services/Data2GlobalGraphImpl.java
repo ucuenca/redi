@@ -8,7 +8,9 @@ package org.apache.marmotta.ucuenca.wk.pubman.services;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -223,7 +225,7 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
                                 }
                                 String queryKeyPub = " SELECT DISTINCT ?publicationPropertyValue "
                                         + "WHERE {  "
-                                        + "  GRAPH <http://ucuenca.edu.ec/wkhuska/provider/ScopusProvider>  { "
+                                        + "  GRAPH <" + constant.getScopusGraph() + ">  { "
                                         + "    <" + publicationResource + "> <http://prismstandard.org/namespaces/basic/2.0/keyword> ?publicationPropertyValue.  } "
                                         + "} "
                                         + "Limit 10 ";
@@ -261,10 +263,35 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
                             
                             askPublication = sparqlService.ask(QueryLanguage.SPARQL, askTripletProcessPublicationQuery);
                             if (!askPublication || newInsert) {
+                                String insertPublicationPropQuery = buildInsertQuery(constant.getCentralGraph(), newInsert ? (constant.getPublicationResource() + publicationTitleCleaned) : bufferTitle == null ? (constant.getPublicationResource() + publicationTitleCleaned) : bufferTitle, RDF.TYPE, BIBO.ACADEMIC_ARTICLE.stringValue());
+                                try {
+                                    sparqlService.update(QueryLanguage.SPARQL, insertPublicationPropQuery);
+                                } catch (Exception ex) {
+                                    log.error("Exception Query:  " + insertPublicationPropQuery);
+                                }
+                                
                                 List<Map<String, Value>> resultPubProperties = sparqlService.query(QueryLanguage.SPARQL, queriesService.getPublicationsPropertiesQuery(providerGraph, publicationResource));
                                 resultPubProperties = resultPubProperties.size() > 150 ? resultPubProperties.subList(0, 150) : resultPubProperties;
+                                String queryKeyPub = "PREFIX dc: <http://purl.org/dc/elements/1.1/> "
+                                        + "PREFIX skos: <http://www.w3.org/2004/02/skos/core#> "
+                                        + "SELECT DISTINCT (\"http://prismstandard.org/namespaces/basic/2.0/keyword\" as ?publicationProperties) "
+                                        + "?publicationPropertyValue WHERE { "
+                                        + " graph<" + constant.getScopusGraph() + "> { "
+                                        + " 	<" + publicationResource + ">  dc:subject  ?subject.  "
+                                        + "   	{ "
+                                        + "      ?subject skos:altLabel ?publicationPropertyValue. "
+                                        + "    } "
+                                        + "   	UNION { "
+                                        + "      ?subject skos:prefLabel ?publicationPropertyValue. "
+                                        + "    }"
+                                        + " } "
+                                        + "}";
+                                        
+                                List<Map<String, Value>> keywordsPub = sparqlService.query(QueryLanguage.SPARQL, queryKeyPub);
+                                resultPubProperties.addAll(keywordsPub);
+                                
                                 for (Map<String, Value> pubproperty : resultPubProperties) {
-                                    String nativeProperty = pubproperty.get("publicationProperties").toString();
+                                    String nativeProperty = pubproperty.get("publicationProperties").stringValue();
                                     if (mapper.get(nativeProperty) != null) {
                                         String newPublicationProperty = mapper.get(nativeProperty);
                                         String publicacionPropertyValue = StringEscapeUtils.unescapeJava(pubproperty.get("publicationPropertyValue").stringValue());
@@ -307,9 +334,29 @@ public class Data2GlobalGraphImpl implements Data2GlobalGraph, Runnable {
                                         
                                         if (uri) {
                                             if (commonsServices.isURI(publicacionPropertyValue)) {
-                                                String name = sparqlService
-                                                        .query(QueryLanguage.SPARQL, queriesService.getObjectByPropertyQuery(providerGraph, publicacionPropertyValue, mapper.get(key + ".name.provider")))
-                                                        .get(0).get("object").stringValue();
+                                                
+                                                List<Map<String, Value>> namesList = sparqlService.query(QueryLanguage.SPARQL, queriesService.getObjectByPropertyQuery(providerGraph, publicacionPropertyValue, mapper.get(key + ".name.provider")));
+                                                String name = "";
+                                                if (!namesList.isEmpty()) {
+                                                    name = namesList.get(0).get("object").stringValue();
+                                                } else {
+                                                    List<Map<String, Value>> firstNameslist = sparqlService.query(QueryLanguage.SPARQL, queriesService.getObjectByPropertyQuery(providerGraph, publicacionPropertyValue, mapper.get(key + ".firstName.provider")));
+                                                    String firstName = "";
+                                                    Iterator<Map<String, Value>> iterator = firstNameslist.iterator();
+                                                    while (iterator.hasNext()) {
+                                                        String firstNameAux = iterator.next().get("object").stringValue();
+                                                        if (firstNameAux.length() > firstName.length()) {
+                                                            firstName = firstNameAux;
+                                                        }
+                                                    }
+                                                    String lastName = sparqlService.query(QueryLanguage.SPARQL, queriesService.getObjectByPropertyQuery(providerGraph, publicacionPropertyValue, mapper.get(key + ".lastName.provider"))).get(0).get("object").stringValue();
+                                                    name = firstName + " " + lastName;
+                                                    
+                                                    newuri = resource + cleanStringUri(name.replace(".", ""));
+                                                    sparqlService.update(QueryLanguage.SPARQL, buildInsertQuery(constant.getCentralGraph(), newuri, "http://xmlns.com/foaf/0.1/name", name));
+                                                    
+                                                }
+                                                    
                                                 newuri = resource + cleanStringUri(name.replace(".", ""));
                                                 
                                                 List<Map<String, Value>> resultAuthorName = sparqlService.query(QueryLanguage.SPARQL, queriesService.detailsOfProvenance(providerGraph, publicacionPropertyValue));
