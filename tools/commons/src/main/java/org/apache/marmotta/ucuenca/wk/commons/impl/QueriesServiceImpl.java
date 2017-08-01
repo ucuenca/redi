@@ -1003,10 +1003,11 @@ public class QueriesServiceImpl implements QueriesService {
     @Override
     public String getPublicationsTitlesQuery() {
         return PREFIXES + " PREFIX dcterms: <http://purl.org/dc/terms/> "
-                + " SELECT ?pub ?title WHERE { "
+                + " SELECT ?pub ?title ?abstract WHERE { "
                 + "  graph <http://ucuenca.edu.ec/wkhuska> "
                 + "     {   ?authorResource foaf:publications ?pub. "
-                + "       	 ?pub dcterms:title ?title.     }  }";
+                + "       	 ?pub dcterms:title ?title."
+                + "              OPTIONAL{ ?pub bibo:abstract ?abstract.}     }  }";
     }
     
     @Override

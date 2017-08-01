@@ -179,7 +179,7 @@ public class ConstantServiceImpl implements ConstantService {
 
     @Override
     public String getScopusGraph() {
-        return getWkhuskaGraph() + getSelectedGraph("scopus");
+        return confService.getBaseContext() + "provider/ScopusProvider";
     }
 
     @Override
