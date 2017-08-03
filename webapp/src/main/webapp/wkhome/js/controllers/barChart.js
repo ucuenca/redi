@@ -17,7 +17,7 @@ wkhomeControllers.controller('barChart', ['$scope', 'globalData', 'sparqlQuery',
                 + '         WHERE {'
                 + '             GRAPH <' + globalData.centralGraph + '> {'
                 + '                 ?s a foaf:Person.'
-                + '                 ?s foaf:name ?name.'
+                // + '                 ?s foaf:name ?name.'
                 + '                 ?s foaf:publications ?pub.'
                 + '                 ?pub dct:title ?title.'
                 + '                 ?s dct:provenance ?provenance.     '
