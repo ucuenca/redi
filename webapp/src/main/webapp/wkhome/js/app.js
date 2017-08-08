@@ -33,7 +33,7 @@ wkhomeApp.service('globalData', ['$window', function ($window) {
     // var baseURL = "http://localhost:8080/";
     var baseURL = $window.location.origin + $window.location.pathname;
     this.language = "es";
-    this.centralGraph = "http://ucuenca.edu.ec/wkhuska";
+    // this.centralGraph = "http://ucuenca.edu.ec/wkhuska";
     this.centralGraph = baseURL + "context/redi";
     this.externalAuthorsGraph = "http://ucuenca.edu.ec/wkhuska/externalauthors";
     this.clustersGraph = baseURL + "context/clusters";

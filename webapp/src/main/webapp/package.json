@@ -32,7 +32,8 @@
     "webdriver-manager": "~5.0.0"
   },
   "scripts": {
-    "postinstall": "bower install",
+    "install": "bower install",
+    "postinstall": "gulp",
     "prestart": "npm install",
     "start": "http-server -a 0.0.0.0 -p 8000",
     "pretest": "npm install",

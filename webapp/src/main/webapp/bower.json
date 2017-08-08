@@ -1,12 +1,12 @@
 {
   "name": "wkhome",
-  "description": "Watiqai Khuska Frontend",
+  "description": "Ecuadorian Semantic Repository",
   "version": "0.0.1",
-  "homepage": "https://santteegt@bitbucket.org/ecsemanticrep/watiqay-khuska-ecuadorian-semantic-repository-for-researchers.git",
+  "homepage": "http://redi.cedia.edu.ec",
   "license": "Apache License 2.0",
   "private": true,
   "authors": [
-    "University of Cuenca <hernan.gonzalezt@ucuenca.edu.ec>"
+    "University of Cuenca"
   ],
   "main": "index.html",
   "keywords": [

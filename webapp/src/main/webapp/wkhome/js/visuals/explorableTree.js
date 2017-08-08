@@ -286,7 +286,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                     ///if (infoBar) {
                     var id = node.author["@id"];
                     var author = _.findWhere(node.author.jsonld["@graph"], {"@id": id, "@type": "foaf:Person"});
-                    if (!(author['@id'].indexOf('localhost') > 0) && (node.author.jsonld["@graph"].length <= 1)) {
+                    if (!(author['@id'].indexOf($window.location.hostname) > 0) && (node.author.jsonld["@graph"].length <= 1)) {
                         //       infoBar.find('h4').text("Informacion del CoAutor");
                         //      infoBar = $('div.tree-node-info .entityInfo');
                         //infoBar.find('div#title').text('');
@@ -414,7 +414,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                       + " ?creatorURI foaf:name ?creator."
                       + " ?creatorURI foaf:img ?imgCreator."
                       + " ?isPartOfURI rdfs:label ?isPartOf. } "
-                      + "WHERE { GRAPH <http://ucuenca.edu.ec/wkhuska> { "
+                      + "WHERE { GRAPH <" + globalData.centralGraph + "> { "
                       + "  <" + id + "> dct:title ?title."
                       + "  OPTIONAL {<" + id + "> bibo:abstract ?abstract. }"
                       + "  OPTIONAL {<" + id + "> bibo:uri ?uri. }"
