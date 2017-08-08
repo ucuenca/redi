@@ -147,6 +147,10 @@ public class AcademicsKnowledgeProviderServiceImpl implements AcademicsKnowledge
                                 conUri.begin();
                                 dataretrieve = true;
                             } else if (response.getHttpStatus() == 200 && response.getData().isEmpty()) {
+                                String sameAs = buildInsertQuery(academicsGraph, authorResource, OWL.SAME_AS, akresource);
+                                updatePub(sameAs);
+                                String search = buildInsertQuery(academicsGraph, akresource, REDI.ACADEMICS_KNOWLEDGE_URl.toString(), urlToFIND);
+                                updatePub(search);
                                 log.info("No data retrieve for {} with query {}", authorResource, urlToFIND);
                             } else if (response.getHttpStatus() == 403 || response.getHttpStatus() == 401) {
                                 log.error("Check your apikey, key subscription "
