@@ -18,10 +18,10 @@ public class ConstantServiceImpl implements ConstantService {
 
     @Inject
     private ConfigurationService confService;
-    
+
     @Inject
     private CommonsServices commonService;
-    
+
     private final static String FOAFNS = "http://xmlns.com/foaf/0.1/";
     private final static String OWLNS = "http://www.w3.org/2002/07/owl#";
     private final static String LOGO_PATH = "./../wkhuska_webapps/ROOT/wkhome/images/logo_wk.png";
@@ -63,7 +63,8 @@ public class ConstantServiceImpl implements ConstantService {
 
     @Override
     public String getCentralGraph() {
-        return "http://ucuenca.edu.ec/wkhuska";
+        return confService.getBaseContext() + "redi";
+//        return "http://ucuenca.edu.ec/wkhuska";
     }
 
     @Override
