@@ -137,7 +137,7 @@ public class AcademicsKnowledgeProviderServiceImpl implements AcademicsKnowledge
                     String academicsGraph = constantService.getAcademicsKnowledgeGraph();
 
                     // Ask if already search query is in triple Store .
-                    if (!sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(academicsGraph, urlToFIND))) {
+                    if (!sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskObjectQuery(academicsGraph, urlToFIND))) {
 
                         try {
                             response = ldClient.retrieveResource(urlToFIND);
