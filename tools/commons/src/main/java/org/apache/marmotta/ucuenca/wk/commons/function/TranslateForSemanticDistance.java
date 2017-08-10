@@ -5,14 +5,11 @@
  */
 package org.apache.marmotta.ucuenca.wk.commons.function;
 
-import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.memetix.mst.language.Language;
-import com.memetix.mst.translate.Translate;
 import com.optimaize.langdetect.LanguageDetector;
 import com.optimaize.langdetect.LanguageDetectorBuilder;
 import com.optimaize.langdetect.i18n.LdLocale;
@@ -29,7 +26,6 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -184,16 +180,16 @@ public class TranslateForSemanticDistance {
 
     }
 
-    private String traductorYandex(String palabras) throws UnsupportedEncodingException, SQLException, IOException {
+    private String traductorYandex(String palabras) throws UnsupportedEncodingException, SQLException, IOException { //NOPMD
         palabras = palabras.toLowerCase();
-        final String context_es = "contexto, ";
-        final String context_en = "context, ";
+        String contextEs = "contexto, ";
+        String contextEn = "context, ";
         String url = "https://translate.yandex.net/api/v1.5/tr.json/translate";
         //String url = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20160321T160516Z.43cfb95e23a69315.6c0a2ae19f56388c134615f4740fbb1d400f15d3&lang=en&text=" + URLEncoder.encode(palabras, "UTF-8");
         ConcurrentHashMap<String, String> mp = new ConcurrentHashMap<>();
         mp.put("key", "trnsl.1.1.20160321T160516Z.43cfb95e23a69315.6c0a2ae19f56388c134615f4740fbb1d400f15d3");
         mp.put("lang", "es-en");
-        mp.put("text", context_es + palabras);
+        mp.put("text", contextEs + palabras);
         mp.put("options", "1");
         boolean c = true;
         int i = 0;
@@ -211,10 +207,10 @@ public class TranslateForSemanticDistance {
                 JsonArray asArray = parse.get("text").getAsJsonArray();
                 res = asArray.get(0).getAsString();
                 palabras = res;
-                if (palabras.contains(context_en)) {
-                    palabras = palabras.replace(context_en, "");
-                } else if (palabras.contains(context_es)) {
-                    palabras = palabras.replace(context_es, "");
+                if (palabras.contains(contextEn)) {
+                    palabras = palabras.replace(contextEn, "");
+                } else if (palabras.contains(contextEs)) {
+                    palabras = palabras.replace(contextEs, "");
                 }
                 c = false;
             } catch (Exception e) {
@@ -232,45 +228,47 @@ public class TranslateForSemanticDistance {
 
     }
 
-    private String traductorBing(String palabras) {
-        //boolean falsevalue = false;
-        double randomNum = Math.random();
-        double prob = 0.2;
-        if (randomNum < prob) {
-            Translate.setClientId("fedquest");
-            Translate.setClientSecret("ohCuvdnTlx8Sac4r7gfqyHy0xOJJpKK9duFC4tn9Sho=");
-        } else {
-            Translate.setClientId("karyabad");
-            Translate.setClientSecret("viz4JYZAD8samvwuoV6gJ5MczDig8cBHyP0NnY1gRF0=");
-        }
-
-        String translatedText;
-        try {
-            translatedText = Translate.execute(palabras, Language.ENGLISH);
-
-            return translatedText;
-        } catch (Exception ex) {
-
-            try {
-                String[] ls = palabras.split("\\s\\|\\s");
-                int chunk = ls.length / 2; // chunk size to divide
-                String pal = "";
-                for (int i = 0; i < ls.length; i += chunk) {
-                    String[] pr = java.util.Arrays.copyOfRange(ls, i, i + chunk);
-                    pr = clean2(pr);
-                    String u = Joiner.on(" | ").join(pr);
-                    u = traductorBing(u);
-                    pal += u + " ";
-
-                }
-                return pal;
-
-            } catch (Exception exx) {
-                exx.printStackTrace(new PrintStream(System.out));
-            }
-        }
-        return palabras;
-    }
+//<editor-fold defaultstate="collapsed" desc="unused for api-key">
+//    private String traductorBing(String palabras) {
+//        //boolean falsevalue = false;
+//        double randomNum = Math.random();
+//        double prob = 0.2;
+//        if (randomNum < prob) {
+//            Translate.setClientId("fedquest");
+//            Translate.setClientSecret("ohCuvdnTlx8Sac4r7gfqyHy0xOJJpKK9duFC4tn9Sho=");
+//        } else {
+//            Translate.setClientId("karyabad");
+//            Translate.setClientSecret("viz4JYZAD8samvwuoV6gJ5MczDig8cBHyP0NnY1gRF0=");
+//        }
+//        
+//        String translatedText;
+//        try {
+//            translatedText = Translate.execute(palabras, Language.ENGLISH);
+//            
+//            return translatedText;
+//        } catch (Exception ex) {
+//            
+//            try {
+//                String[] ls = palabras.split("\\s\\|\\s");
+//                int chunk = ls.length / 2; // chunk size to divide
+//                String pal = "";
+//                for (int i = 0; i < ls.length; i += chunk) {
+//                    String[] pr = java.util.Arrays.copyOfRange(ls, i, i + chunk);
+//                    pr = clean2(pr);
+//                    String u = Joiner.on(" | ").join(pr);
+//                    u = traductorBing(u);
+//                    pal += u + " ";
+//                    
+//                }
+//                return pal;
+//                
+//            } catch (Exception exx) {
+//                exx.printStackTrace(new PrintStream(System.out));
+//            }
+//        }
+//        return palabras;
+//    }
+//</editor-fold>
 
     private synchronized String http2(String s, Map<String, String> mp) throws SQLException, IOException {
         /*String md = s + mp.toString();
@@ -331,11 +329,11 @@ public class TranslateForSemanticDistance {
         return resp;
     }
 
-    private String[] clean2(final String... v) {
-        List<String> list = new ArrayList<String>(java.util.Arrays.asList(v));
-        list.removeAll(Collections.singleton(null));
-        return list.toArray(new String[list.size()]);
-    }
+//    private String[] clean2(final String... v) {
+//        List<String> list = new ArrayList<String>(java.util.Arrays.asList(v));
+//        list.removeAll(Collections.singleton(null));
+//        return list.toArray(new String[list.size()]);
+//    }
 
     public List<String> clean(List<String> ls) {
         List<String> al = ls;

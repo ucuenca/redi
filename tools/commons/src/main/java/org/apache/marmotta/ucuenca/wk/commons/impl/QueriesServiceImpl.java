@@ -154,7 +154,7 @@ public class QueriesServiceImpl implements QueriesService {
     @Override
     public String getLisEndpointsQuery() {
         return "SELECT DISTINCT ?id ?status ?name ?url ?graph (concat(?fName, \" - \", ?engName) as ?fullName) ?city ?province ?latitude ?longitude  WHERE {  "
-                + "   GRAPH <" + con.getEndpointsGraph() + ">"
+                + "   GRAPH  <" + con.getEndpointsGraph() + ">"
                 + " {"
                 + id + con.uc(status) + " ?status;"
                 + con.uc("name") + " ?name;"
@@ -856,7 +856,7 @@ public class QueriesServiceImpl implements QueriesService {
     @Override
     public String getEndPointUriByName(String nameEndpoint) {
         return "SELECT ?object  WHERE {"
-                + "  GRAPH <http://ucuenca.edu.ec/wkhuska/endpoints> {\n"
+                + "  GRAPH  <http://ucuenca.edu.ec/wkhuska/endpoints> {\n"
                 + "      	?object  <http://ucuenca.edu.ec/ontology#name> ?name "
                 + "             filter (regex(?name,\"" + nameEndpoint + "\")) "
                 + "  }    "

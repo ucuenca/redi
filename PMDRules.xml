@@ -46,7 +46,7 @@
     <exclude name="AssignmentToNonFinalStatic"/>
     <exclude name="CloseResource"/>
     <exclude name="FieldDeclarationsShouldBeAtStartOfClass"/>
-    <exclude name="GodClass">
+    <exclude name="GodClass"/>
   </rule>
   <!-- <rule ref="rulesets/java/migrating.xml">
   </rule> -->

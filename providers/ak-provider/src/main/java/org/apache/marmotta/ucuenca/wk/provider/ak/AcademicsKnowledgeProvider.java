@@ -61,7 +61,7 @@ public class AcademicsKnowledgeProvider extends AbstractHttpProvider {
     public String stringSearch = null, authorSearch = null, advancedSearch = null, appId = null;
     public static final ConcurrentMap<String, String> MAPPINGSCHEMA = new ConcurrentHashMap<String, String>();
     private MapPublications mapPublications = new MapPublications();
-    private int limitPublications = 100;
+//    private int limitPublications = 100;
 
     static {
         MAPPINGSCHEMA.put("entity::type", "http://purl.org/ontology/bibo/Document");

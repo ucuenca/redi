@@ -60,7 +60,7 @@ import org.xml.sax.SAXException;
 public class GoogleScholarSearchProvider extends AbstractHttpProvider {//NOPMD
 
     private DistanceService distance;
-    private Logger LOG = LoggerFactory.getLogger(GoogleScholarSearchProvider.class);
+    private Logger log = LoggerFactory.getLogger(GoogleScholarSearchProvider.class);
     public static final String SCHOLAR_GOOGLE = "https://scholar.google.com";
     public static final String URI_START_WITH = "http";
 
@@ -152,8 +152,8 @@ public class GoogleScholarSearchProvider extends AbstractHttpProvider {//NOPMD
             lname = gsEndpoint.getLastName();
             this.distance = gsEndpoint.getDistance();
             baseResource = gsEndpoint.getResource();
-            LOG.info(Arrays.toString(cities));
-            LOG.info(Arrays.toString(provinces));
+            log.info(Arrays.toString(cities));
+            log.info(Arrays.toString(provinces));
         }
         if (m.find()) {
             searchName = m.group(2);
@@ -167,7 +167,7 @@ public class GoogleScholarSearchProvider extends AbstractHttpProvider {//NOPMD
         Preconditions.checkNotNull(distance, "Distance Service is null");
         List<String> urls = new ArrayList<>();
         try { //NOPMD
-            LOG.debug("Request Successful to {0}", requestUrl);
+            log.debug("Request Successful to {0}", requestUrl);
 
             IHandler handler = null;
 
