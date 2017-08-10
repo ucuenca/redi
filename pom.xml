@@ -47,11 +47,12 @@
     <commonsio.version>2.4</commonsio.version>
     <logback.version>1.1.2</logback.version>
     <mallet.version>2.0.8</mallet.version>
+    <jax.doclets.version>0.10.1</jax.doclets.version>
   </properties>
   <modules>
     <module>tools</module>
     <module>providers</module>
-    <module>base-module</module>
+    <!--<module>base-module</module>-->
     <module>authors-module</module>
     <module>publications-manager</module>
     <module>webapp</module>

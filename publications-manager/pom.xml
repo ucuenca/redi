@@ -32,7 +32,6 @@
  
     <build>
         <plugins>
-            <!-- 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -42,7 +41,61 @@
                     <target>1.7</target>
                     <encoding>utf-8</encoding>
                 </configuration>
-            </plugin> -->
+            </plugin> 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <!--
+                    <execution>
+                        <id>aggregate</id>
+                        <goals>
+                            <goal>aggregate</goal>
+                        </goals>
+                        <phase>site</phase>
+                    </execution>
+                    -->
+                    <execution>
+                        <!-- configure how the REST API documentation will be produced -->
+                        <id>restapi</id>
+                        <configuration>
+                            <doclet>com.lunatech.doclets.jax.jaxrs.JAXRSDoclet</doclet>
+
+                            <name>REST API</name>
+                            <description>REST API for Marmotta Webservices</description>
+
+                            <outputDirectory>${project.build.outputDirectory}/doc</outputDirectory>
+                            <reportOutputDirectory>${project.build.outputDirectory}/web/doc</reportOutputDirectory>
+                            <destDir>rest</destDir>
+
+                            <docletArtifact>
+                                <groupId>com.lunatech.jax-doclets</groupId>
+                                <artifactId>doclets</artifactId>
+                                <version>${jax.doclets.version}</version>
+                            </docletArtifact>
+                            <additionalparam>
+                                -jaxrscontext {BASE}
+                                -charset UTF-8
+                            </additionalparam>
+
+                            <!--
+                                                        <stylesheetfile>${project.parent.basedir}/config/doc/doclet.css</stylesheetfile>
+                            -->
+
+                            <header><![CDATA[<!--###BEGIN_CONTENT###--><div class="javadoc">]]></header>
+                            <footer><![CDATA[</div><!--###END_CONTENT###-->]]></footer>
+                            <encoding>UTF-8</encoding>
+                            <detectOfflineLinks>false</detectOfflineLinks>
+
+                            <!-- For the project-reports page -->
+                        </configuration>
+                        <goals>
+                            <goal>javadoc</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -77,8 +130,8 @@
 
     <repositories>
         <repository>
-          <id>fdvsolution.public</id>
-          <url>http://nexus.fdvs.com.ar/content/groups/public/</url>
+            <id>fdvsolution.public</id>
+            <url>http://nexus.fdvs.com.ar/content/groups/public/</url>
         </repository>
     </repositories>
 
@@ -124,7 +177,7 @@
             <artifactId>scopus-provider</artifactId>
             <version>${project.version}</version>
         </dependency>
-          <dependency>
+        <dependency>
             <groupId>org.apache.marmotta.ucuenca.wk.provider</groupId>
             <artifactId>ak-provider</artifactId>
             <version>${project.version}</version>
@@ -207,7 +260,7 @@
         <dependency>
             <groupId>org.apache.marmotta</groupId>
             <artifactId>kiwi-versioning</artifactId>
-            <version>3.3.0</version>
+            <version>${marmotta.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.marmotta</groupId>
