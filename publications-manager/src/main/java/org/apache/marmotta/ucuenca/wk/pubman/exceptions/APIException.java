@@ -18,21 +18,21 @@
 package org.apache.marmotta.ucuenca.wk.pubman.exceptions;
 
 
-public class DoThisException extends Exception {
+public class APIException extends Exception {
 
-    public DoThisException() {
+    public APIException() {
         super();
     }
 
-    public DoThisException(String message) {
+    public APIException(String message) {
         super(message);
     }
 
-    public DoThisException(String message, Throwable cause) {
+    public APIException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public DoThisException(Throwable cause) {
+    public APIException(Throwable cause) {
         super(cause);
     }
 }

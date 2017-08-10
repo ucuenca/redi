@@ -42,6 +42,7 @@ import org.apache.marmotta.ldclient.exception.DataRetrievalException;
 import org.apache.marmotta.ldclient.model.ClientConfiguration;
 import org.apache.marmotta.ldclient.model.ClientResponse;
 import org.apache.marmotta.ldclient.services.ldclient.LDClient;
+import org.apache.marmotta.platform.core.api.config.ConfigurationService;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
@@ -52,6 +53,7 @@ import org.apache.marmotta.ucuenca.wk.commons.service.GetAuthorsGraphData;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.AcademicsKnowledgeProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
+import org.apache.marmotta.ucuenca.wk.pubman.exceptions.APIException;
 import org.apache.marmotta.ucuenca.wk.pubman.exceptions.PubException;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.BIBO;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
@@ -92,6 +94,8 @@ public class AcademicsKnowledgeProviderServiceImpl implements AcademicsKnowledge
     private GetAuthorsGraphData getauthorsData;
     @Inject
     private DistanceService distanceService;
+    @Inject
+    private ConfigurationService configurationService;
 
     private int processpercent = 0;
     private static final String ACADEMICSK_DETAIL = "https://academic.microsoft.com/#/detail/";
@@ -332,10 +336,17 @@ public class AcademicsKnowledgeProviderServiceImpl implements AcademicsKnowledge
      * @param lastName
      * @return
      */
-    private String buildRequestURL(String firstName, String lastName, List<String> ies) throws URISyntaxException {
+    private String buildRequestURL(String firstName, String lastName, List<String> ies) throws URISyntaxException, APIException {
         Preconditions.checkArgument(firstName != null && !"".equals(firstName.trim()));
         Preconditions.checkArgument(lastName != null && !"".equals(lastName.trim()));
-        String apiKey = readPropertyFromFile("seachProperties.properties", "apiKey");
+
+        Object o = configurationService.getConfiguration("publications.academics.apikey");
+
+        if (o == null) {
+            throw new APIException("There is not api-key.");
+        }
+        String apiKey = (String) o;
+//        String apiKey = readPropertyFromFile("seachProperties.properties", "apiKey");
 
         firstName = StringUtils.stripAccents(firstName).trim().toLowerCase();
         lastName = StringUtils.stripAccents(lastName).trim().toLowerCase();

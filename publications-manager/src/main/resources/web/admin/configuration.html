@@ -18,43 +18,40 @@
 
 -->
 <html>
-<head>
-<!--###BEGIN_HEAD###-->
-    <title>Base Module Configuration</title>
-    <script type="text/javascript" src="../../webjars/jquery/1.8.2/jquery.min.js"></script>
-    <script type="text/javascript" src="../../core/public/js/widgets/configurator/configurator.js"></script>
-    <link type="text/css" rel="stylesheet" href="../../core/public/js/widgets/configurator/style.css">
-    <script type="text/javascript">
-        jQuery(document).ready(function(){
-            var options = {
-                url : _SERVER_URL,
-                container : "configurator",
-                prefix : 'base-module',
-                blacklist: []
-            }
-            var configurator = new Configurator(options);
-        });
-    </script>
+    <head>
+        <!--###BEGIN_HEAD###-->
+        <title>Publications Configuration</title>
+        <script type="text/javascript" src="../../webjars/jquery/1.8.2/jquery.min.js"></script>
+        <script type="text/javascript" src="../../core/public/js/widgets/configurator/configurator.js"></script>
+        <link type="text/css" rel="stylesheet" href="../../core/public/js/widgets/configurator/style.css">
+        <script type="text/javascript">
+            jQuery(document).ready(function () {
+                var options = {
+                    url: _SERVER_URL,
+                    container: "configurator",
+                    prefix: 'publications',
+                    blacklist: []
+                }
+                var configurator = new Configurator(options);
+            });
+        </script>
 
-<!--###END_HEAD###-->
-</head>
-<body>
-<div id="main">
-<div id="contents">
-<!--###BEGIN_CONTENT###-->
-<h1>Base Module Configuration</h1>
-        <p>
-            Here you can configure the LMF Base Module Services.<br/>
-            The configuration contains:
-        </p>
-        <ul>
-            <li><a href="#configurator">Generic Parameter Configuration</a></li>
-        </ul>
-        <div id="configurator">
-            <h4>Loading configurator</h4>
+        <!--###END_HEAD###-->
+    </head>
+    <body>
+        <div id="main">
+            <div id="contents">
+                <!--###BEGIN_CONTENT###-->
+                <h1>Publications Configuration</h1>
+                <p>
+                    Here you can configure the publications Services.<br/>
+                    The configuration contains:
+                </p>
+                <div id="configurator">
+                    <h4>Loading configurator</h4>
+                </div>
+                <!--###END_CONTENT###-->
+            </div>
         </div>
-<!--###END_CONTENT###-->
-</div>
-</div>
-</body>
+    </body>
 </html>
