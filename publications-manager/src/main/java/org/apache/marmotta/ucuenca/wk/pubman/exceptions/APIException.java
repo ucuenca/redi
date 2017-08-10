@@ -15,25 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.marmotta.ucuenca.wk.basemodule.jaxrs;
+package org.apache.marmotta.ucuenca.wk.pubman.exceptions;
 
-import org.apache.marmotta.platform.core.jaxrs.exceptionmappers.CDIExceptionMapper;
 
-import javax.enterprise.context.Dependent;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.Provider;
+public class DoThisException extends Exception {
 
-import org.apache.marmotta.ucuenca.wk.basemodule.exceptions.DoThisException;
+    public DoThisException() {
+        super();
+    }
 
-/**
- * Map DoThisException to a HTTP Response
- */
-@Provider
-@Dependent
-public class DoThisExceptionMapper implements CDIExceptionMapper<DoThisException> {
+    public DoThisException(String message) {
+        super(message);
+    }
 
-    @Override
-    public Response toResponse(DoThisException exception) {
-        return Response.status(444).entity(exception.getMessage()).build();
+    public DoThisException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public DoThisException(Throwable cause) {
+        super(cause);
     }
 }

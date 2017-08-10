@@ -19,10 +19,10 @@
     <modelVersion>4.0.0</modelVersion>
     
     <parent>
-	    <groupId>org.apache.marmotta</groupId>
-	    <artifactId>ucuenca</artifactId>
-	    <version>0.0.1-SNAPSHOT</version>
-  	</parent>
+        <groupId>org.apache.marmotta</groupId>
+        <artifactId>ucuenca</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
 
     <groupId>org.apache.marmotta.ucuenca.wk</groupId>
     <artifactId>webapp</artifactId>
@@ -32,13 +32,13 @@
     <description>The Watiqay Khuska WAR bundle</description>
     
     <properties>
-    	<tomcat7-deploy>true</tomcat7-deploy>
+        <tomcat7-deploy>true</tomcat7-deploy>
     	
-   	    <!-- For deployment only -->
-	    <marmotta.home>${java.io.tmpdir}${file.separator}Watiqay Khuska</marmotta.home>
-	    <marmotta.context>/</marmotta.context>
-	    <marmotta.port>8080</marmotta.port>
-	    <marmotta.backend>kiwi</marmotta.backend>
+        <!-- For deployment only -->
+        <marmotta.home>${java.io.tmpdir}${file.separator}Watiqay Khuska</marmotta.home>
+        <marmotta.context>/</marmotta.context>
+        <marmotta.port>8080</marmotta.port>
+        <marmotta.backend>kiwi</marmotta.backend>
     </properties>
 
     <build>
@@ -127,120 +127,127 @@
                 </configuration>
             </plugin>
             <plugin>
-                 <groupId>org.codehaus.mojo</groupId>
-                 <artifactId>exec-maven-plugin</artifactId>
-                 <version>1.3.2</version>
-                 <executions>
-                     <execution>
-                         <phase>generate-sources</phase>
-                         <goals>
-                             <goal>exec</goal>
-                         </goals>
-                     </execution>
-                 </executions>
-                 <configuration>
-                     <executable>npm</executable>
-                     <arguments>
-                         <argument>install</argument>
-                     </arguments>
-                     <workingDirectory>${basedir}${file.separator}src${file.separator}main${file.separator}webapp</workingDirectory>
-                 </configuration>
-             </plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.3.2</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <executable>npm</executable>
+                    <arguments>
+                        <argument>install</argument>
+                    </arguments>
+                    <workingDirectory>${basedir}${file.separator}src${file.separator}main${file.separator}webapp</workingDirectory>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
     <profiles>
         
         <profile>
-        	<id>tomcat-run</id>
-        	<activation>
-        		<property><name>tomcat7-deploy</name><value>true</value></property>
-        	</activation>
-        	<build>
-        		<plugins>
-		            <plugin>
-		                <groupId>org.apache.maven.plugins</groupId>
-		                <artifactId>maven-compiler-plugin</artifactId>
-		            </plugin>
-		            <plugin>
-		                <groupId>org.apache.maven.plugins</groupId>
-		                <artifactId>maven-surefire-plugin</artifactId>
-		            </plugin> 
-		            <plugin>
-		                <groupId>org.apache.tomcat.maven</groupId>
-		                <artifactId>tomcat7-maven-plugin</artifactId>
-		                <executions>
-		                    <execution>
-		                        <id>tomcat-run</id>
-		                        <phase>pre-integration-test</phase>
-		                        <goals>
-		                            <goal>shutdown</goal>
-		                            <goal>run-war-only</goal>
-		                        </goals>
-		                        <configuration>
-		                            <fork>true</fork>
-		                        </configuration>
-		                    </execution>
-		                    <execution>
-		                        <id>shutdown</id>
-		                        <phase>post-integration-test</phase>
-		                        <goals><goal>shutdown</goal></goals>
-		                    </execution>
-		                </executions>
-		            </plugin>
-		            <plugin>
-		                <groupId>com.googlecode.maven-download-plugin</groupId>
-		                <artifactId>maven-download-plugin</artifactId>
-		                <version>1.1.0</version>
-		                <executions>
-		                    <execution>
-		                        <id>fetch-indexjsp</id>
-		                        <phase>integration-test</phase>
-		                        <goals>
-		                            <goal>wget</goal>
-		                        </goals>
-		                        <configuration>
-		                            <url>http://localhost:${marmotta.port}${marmotta.context}index.jsp</url>
-		                            <outputFileName>index.html</outputFileName>
-		                            <outputDirectory>${project.build.directory}/it/</outputDirectory>
-		                            <skipCache>true</skipCache>
-		                        </configuration>
-		                    </execution>
-		                    <execution>
-		                        <id>fetch-config</id>
-		                        <phase>integration-test</phase>
-		                        <goals>
-		                            <goal>wget</goal>
-		                        </goals>
-		                        <configuration>
-		                            <url>http://localhost:${marmotta.port}${marmotta.context}config/data/kiwi.version</url>
-		                            <outputFileName>kiwi-version.json</outputFileName>
-		                            <outputDirectory>${project.build.directory}/it/</outputDirectory>
-		                            <skipCache>true</skipCache>
-		                        </configuration>
-		                    </execution>
-		                </executions>
-		            </plugin>
-		            <plugin>
-		                <artifactId>maven-verifier-plugin</artifactId>
-		                <version>1.0</version>
-		                <executions>
-		                    <execution>
-		                        <id>check-files</id>
-		                        <phase>verify</phase>
-		                        <goals><goal>verify</goal></goals>
-		                        <configuration>
-		                            <basedir>${project.build.directory}/it/</basedir>
-		                            <verificationFile>${basedir}/src/test/resources/verification.xml</verificationFile>
-		                            <failOnError>true</failOnError>
-		                        </configuration>
-		                    </execution>
-		                </executions>
-		            </plugin>
-		            <plugin>
-		                <artifactId>maven-dependency-plugin</artifactId>
-		            </plugin>
-		        </plugins>
+            <id>tomcat-run</id>
+            <activation>
+                <property>
+                    <name>tomcat7-deploy</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                    </plugin> 
+                    <plugin>
+                        <groupId>org.apache.tomcat.maven</groupId>
+                        <artifactId>tomcat7-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>tomcat-run</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>shutdown</goal>
+                                    <goal>run-war-only</goal>
+                                </goals>
+                                <configuration>
+                                    <fork>true</fork>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>shutdown</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>shutdown</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.googlecode.maven-download-plugin</groupId>
+                        <artifactId>maven-download-plugin</artifactId>
+                        <version>1.1.0</version>
+                        <executions>
+                            <execution>
+                                <id>fetch-indexjsp</id>
+                                <phase>integration-test</phase>
+                                <goals>
+                                    <goal>wget</goal>
+                                </goals>
+                                <configuration>
+                                    <url>http://localhost:${marmotta.port}${marmotta.context}index.jsp</url>
+                                    <outputFileName>index.html</outputFileName>
+                                    <outputDirectory>${project.build.directory}/it/</outputDirectory>
+                                    <skipCache>true</skipCache>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>fetch-config</id>
+                                <phase>integration-test</phase>
+                                <goals>
+                                    <goal>wget</goal>
+                                </goals>
+                                <configuration>
+                                    <url>http://localhost:${marmotta.port}${marmotta.context}config/data/kiwi.version</url>
+                                    <outputFileName>kiwi-version.json</outputFileName>
+                                    <outputDirectory>${project.build.directory}/it/</outputDirectory>
+                                    <skipCache>true</skipCache>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-verifier-plugin</artifactId>
+                        <version>1.0</version>
+                        <executions>
+                            <execution>
+                                <id>check-files</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>verify</goal>
+                                </goals>
+                                <configuration>
+                                    <basedir>${project.build.directory}/it/</basedir>
+                                    <verificationFile>${basedir}/src/test/resources/verification.xml</verificationFile>
+                                    <failOnError>true</failOnError>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                    </plugin>
+                </plugins>
             </build>
         </profile>
         
@@ -468,10 +475,10 @@
         </profile>
         <profile>
             <!-- This profile is used for integration testing
-                 during the build of the archetype.
-                 In your target project you can safely remove
-                 this profile.
-              -->
+               during the build of the archetype.
+               In your target project you can safely remove
+               this profile.
+            -->
             <id>archetype-it</id>
             <properties>
                 <marmotta.port>59289</marmotta.port>
@@ -480,18 +487,18 @@
     </profiles>
 
     <dependencies>
-    	<!-- custom modules for Watiqai Khuska LODP -->
-	<dependency>
+        <!-- custom modules for Watiqai Khuska LODP -->
+<!--        <dependency>
             <groupId>org.apache.marmotta.ucuenca.wk</groupId>
             <artifactId>base-module</artifactId>
             <version>${project.version}</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.apache.marmotta.ucuenca.wk</groupId>
             <artifactId>authors-module</artifactId>
             <version>${project.version}</version>
         </dependency>
-<dependency>
+        <dependency>
             <groupId>org.apache.marmotta.ucuenca.wk</groupId>
             <artifactId>publications-manager</artifactId>
             <version>${project.version}</version>
@@ -502,7 +509,7 @@
             <artifactId>marmotta-core</artifactId>
             <version>${marmotta.version}</version>
         </dependency>
-	<dependency>
+        <dependency>
             <groupId>org.apache.marmotta</groupId>
             <artifactId>marmotta-ldp</artifactId>
             <version>${marmotta.version}</version>
