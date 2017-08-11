@@ -34,7 +34,8 @@ Computer Science Department - University of Cuenca
 Download, fork or clone the repository from the [Repo URL](https://github.com/ucuenca/redi)
 
 ```git
- clone https://github.com/ucuenca/redi.git ```
+ clone https://github.com/ucuenca/redi.git 
+ ```
 
 **Deployment instructions**
 
