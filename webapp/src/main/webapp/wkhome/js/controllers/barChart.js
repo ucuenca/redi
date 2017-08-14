@@ -2,93 +2,44 @@ wkhomeControllers.controller('barChart', ['$scope', 'globalData', 'sparqlQuery',
     function ($scope, globalData, sparqlQuery, clustersQuery, searchData, $window) {
 
         var dataToSend = [];
-        /**
-         * Getting source and count publications
-         */
-        var sparqlquery = globalData.PREFIX
-                + ' CONSTRUCT '
-                + ' {  '
-                + '     ?prov uc:total ?totalp.'
-                + '     ?prov uc:name ?sname.'
-                + ' } '
-                + ' WHERE {'
-                + ' {'
-                + '     SELECT DISTINCT (SAMPLE(?provenance)  as ?prov) (SAMPLE(?sourcename)  as ?sname)  (count(DISTINCT ?pub) as ?totalp)'
-                + '         WHERE {'
-                + '             GRAPH <' + globalData.centralGraph + '> {'
-                + '                 ?s a foaf:Person.'
-                // + '                 ?s foaf:name ?name.'
-                + '                 ?s foaf:publications ?pub.'
-                // + '                 ?pub dct:title ?title.'
-                + '                 ?s dct:provenance ?provenance.     '
-                + '                 { '
-                + '                     SELECT * '
-                + '                     WHERE '
-                + '                     { '
-                + '                         graph <' + globalData.endpointsGraph + '> '
-                + '                         { '
-                + '           			?provenance uc:name ?sourcename '
-                + '                         } '
-                + '                     } '
-                + '                 } '
-                + '             }'
-                + '         }group by ?provenance '
-                + ' } '
-                + ' }';
+        var totalQuery = globalData.PREFIX
+                        + "CONSTRUCT {"
+                        + "?provenance uc:totalPublications ?totalPub;"
+                        + "uc:totalAuthors ?totalAuthors;"
+                        + "uc:name ?name."
+                        + "}   WHERE { "
+                        +   "{"
+                        +     "SELECT DISTINCT ?provenance (SAMPLE(?ies) as ?name) (count(DISTINCT ?author) as ?totalAuthors) (COUNT(DISTINCT ?publications) as ?totalPub) "
+                        +     "WHERE {"
+                        +       "GRAPH <" + globalData.centralGraph + "> {"
+                        +         "?author a foaf:Person."
+                        +         "?author dct:provenance ?provenance."
+                        +         "?author foaf:publications ?publications."
+                        +         "GRAPH <" + globalData.endpointsGraph + "> {"
+                        +         	"?provenance uc:name ?ies."
+                        +         "}"
+                        +       "}"
+                        + "    } GROUP BY ?provenance ORDER BY DESC(?totalAuthors)"
+                        + "}"
+                        + "}";
 
-        sparqlQuery.query({query: sparqlquery}, function (result) {
+        sparqlQuery.query({query: totalQuery}, function (result) {
             jsonld.compact(result, globalData.CONTEXT, function (err, compacted) {
-                var sources = compacted["@graph"];
-                if (sources)
-                {
-                    _.map(sources, function (source) {
-                        var sourceid = source["@id"];
-                        var sourcename = source["uc:name"];
-                        var totalPubBySource = source["uc:total"]["@value"];
-                        /**
-                         * count authors of each source
-                         */
-                        var sparqlCountKeywords = globalData.PREFIX
-                                + ' CONSTRUCT '
-                                + ' {  <' + sourceid + '> uc:total ?totalAuthors.'
-                                + ' } '
-                                + ' WHERE {'
-                                + ' {'
-                                + '     SELECT DISTINCT (count(DISTINCT ?s) as ?totalAuthors)'
-                                + '     WHERE {'
-                                + '         GRAPH <' + globalData.centralGraph + '> {'
-                                + '             ?s foaf:publications ?pub.'
-                                + '             ?s dct:provenance <' + sourceid + '>. '
-                                + '       }'
-                                + '     }  '
-                                + ' } '
-                                + ' } ';
-                        sparqlQuery.query({query: sparqlCountKeywords}, function (result) {
-                            jsonld.compact(result, globalData.CONTEXT, function (err, compacted) {
-                                var source = compacted["@graph"][0];
-                                var totalAutBySource = source["uc:total"]["@value"];
-                                var id = source["@id"];
-                                dataToSend.push({Source: sourcename, freq: {Autores: totalAutBySource, Publicaciones: totalPubBySource, Salud: 0}});
-                                $scope.$apply(function () {
-                                    $scope.data = dataToSend;
-                                });
-                            });
-                        }); // end sparqlQuery of  Getting the first 10 keywords that most publications have of each source
+                var totalPubAut = compacted["@graph"];
+                if (totalPubAut) {
+                    _.map(totalPubAut, function (total) {
+                        var sourceid = total["@id"];
+                        var sourcename = total["uc:name"];
+                        var totalAuthors = total["uc:totalAuthors"]["@value"];
+                        var totalPublications = total["uc:totalPublications"]["@value"];
 
+                        dataToSend.push({Source: sourcename, freq: {Autores: totalAuthors, Publicaciones: totalPublications, Salud: 0}});
                     });
-                    // drawing(dataToSend);
+                    $scope.$apply(function () {
+                        $scope.data = dataToSend;
+                    });
                 }
 
             });
-        }); // end sparqlQuery of Getting source and count publications
-
-//        drawing = function (value) {
-//            $scope.data = value;
-//
-//        };
-
-
-
-        //$scope.data = dataToSend;
-
-    }]); //end barController
+        });
+    }]);

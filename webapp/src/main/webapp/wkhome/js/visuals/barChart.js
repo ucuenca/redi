@@ -55,7 +55,7 @@ barChart.directive('barChart', ["d3", "globalData", "sparqlQuery",
                 var y = d3.scale.linear().range([hGDim.h, 0])
                         .domain([0, d3.max(fD, function (d) {
                                 return d3.max(d.values, function (d){
-                                  return d.value;
+                                  return parseInt(d.value);
                                 });
                             })]);
 
@@ -117,7 +117,7 @@ barChart.directive('barChart', ["d3", "globalData", "sparqlQuery",
                     });
 
                     // call update functions of pie-chart and legend.
-                    pC.update(nD);
+                    //pC.update(nD);
                     leg.update(nD);
                 }
 
@@ -125,7 +125,7 @@ barChart.directive('barChart', ["d3", "globalData", "sparqlQuery",
                     // reset the pie-chart and legend.
                     $("h2.selected").text("");
                     $("h2.selected").text("Todas las Universidades");
-                    pC.update(tF);
+                    //pC.update(tF);
                     leg.update(tF);
                 }
 
@@ -251,10 +251,10 @@ barChart.directive('barChart', ["d3", "globalData", "sparqlQuery",
                         });
 
                 // create the fourth column for each segment.
-                tr.append("td").attr("class", 'legendPerc')
-                        .text(function (d) {
-                            return getLegend(d, lD);
-                        });
+                // tr.append("td").attr("class", 'legendPerc')
+                //         .text(function (d) {
+                //             return getLegend(d, lD);
+                //         });
 
                 // Utility function to be used to update the legend.
                 leg.update = function (nD) {
@@ -296,7 +296,7 @@ barChart.directive('barChart', ["d3", "globalData", "sparqlQuery",
             });
 
             var hG = histoGram(sF), // create the histogram.
-                    pC = pieChart(tF), // create the pie-chart.
+                    //pC = pieChart(tF), // create the pie-chart.
                     leg = legend(tF);  // create the legend.
         }
         return {
