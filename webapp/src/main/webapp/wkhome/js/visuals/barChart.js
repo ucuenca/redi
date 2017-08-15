@@ -9,7 +9,7 @@ barChart.factory('d3', function () {
 barChart.directive('barChart', ["d3", "globalData", "sparqlQuery",
     function (d3, globalData, sparqlQuery) {
 
-        function draw(id, fData) {
+        function draw(id, fData, w, h) {
             var allhtml = id;
             allhtml.html('');
             var barColor = 'steelblue';
@@ -30,8 +30,8 @@ barChart.directive('barChart', ["d3", "globalData", "sparqlQuery",
             // function to handle histogram.
             function histoGram(fD) {
                 var hG = {}, hGDim = {t: 60, r: 0, b: 30, l: 0};
-                hGDim.w = 700 - hGDim.l - hGDim.r,
-                        hGDim.h = 300 - hGDim.t - hGDim.b;
+                hGDim.w = w - hGDim.l - hGDim.r,
+                        hGDim.h = h - hGDim.t - hGDim.b;
 
                 //create svg for histogram.
                 var hGsvg = id.append("svg")
@@ -311,6 +311,8 @@ barChart.directive('barChart', ["d3", "globalData", "sparqlQuery",
                 var elementWidth = parseInt(element.css('width'));
                 var width = attrs.pcWidth ? attrs.pcWidth : elementWidth,
                         height = attrs.pcHeight;
+                var w = element.parent()[0].offsetWidth - 0.01*(element.parent()[0].offsetWidth),
+                    h = (2 * w) / 7;
                 //	Return	the	link	function
                 return	function (scope, element, attrs) {
                     //	Watch	the	data	attribute	of	the	scope
@@ -319,7 +321,7 @@ barChart.directive('barChart', ["d3", "globalData", "sparqlQuery",
                         var data = scope.data;
 
                         if (data) {
-                            draw(svg, data);
+                            draw(svg, data, w, h);
                         }
                     }, true);
 
