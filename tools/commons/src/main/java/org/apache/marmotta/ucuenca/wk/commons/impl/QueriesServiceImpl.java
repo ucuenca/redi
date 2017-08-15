@@ -32,15 +32,15 @@ public class QueriesServiceImpl implements QueriesService {
     private final static String INSERTDATA = "INSERT DATA { ";
 
     private final static String ENDPOINTPREFIX = "http://ucuenca.edu.ec/wkhuska/endpoint/";
-    
+
     private String id = " ?id ";
-    
+
     private String fullName = "fullName";
-    
+
     private String status = "status";
-    
+
     private String url = "url";
-    
+
     private String graph = "graph";
 
     @Override
@@ -126,6 +126,15 @@ public class QueriesServiceImpl implements QueriesService {
         return "ASK FROM  <" + graph + "> { ?s ?p <" + object + "> }";
     }
 
+    @Override
+    public String getAskAcademicsQuery(String graph, String object) {
+        object = object.substring(0, object.indexOf("subscription-key"));
+        return "ASK FROM  <" + graph + "> { "
+                + "?author <" + REDI.ACADEMICS_KNOWLEDGE_URl + "> ?s."
+                + "FILTER(STRSTARTS(?s, <" + object + ">))  "
+                + "}";
+    }
+
     /**
      * Return ASK property query for a resource
      */
@@ -137,7 +146,7 @@ public class QueriesServiceImpl implements QueriesService {
             return PREFIXES + "ASK FROM <" + graph + "> {  <" + resource + "> " + property + " ?o }";
         }
     }
-    
+
     @Override
     public String getInsertEndpointQuery(String resourceHash, String property, String object, String literal) {
         String graph = con.getEndpointsGraph();
@@ -149,8 +158,6 @@ public class QueriesServiceImpl implements QueriesService {
         }
     }
 
-    
-    
     @Override
     public String getLisEndpointsQuery() {
         return "SELECT DISTINCT ?id ?status ?name ?url ?graph (concat(?fName, \" - \", ?engName) as ?fullName) ?city ?province ?latitude ?longitude  WHERE {  "
@@ -190,7 +197,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + " FILTER (lang(?engName) = 'en') . "
                 + "}}";
     }
-    
+
     @Override
     public String getlistEndpointNamesQuery() {
         return "SELECT DISTINCT ?fullName WHERE {   GRAPH <http://ucuenca.edu.ec/wkhuska/endpoints>"
@@ -404,7 +411,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + " }  } ";
 
     }
-    
+
     @Override
     public String getAuthorProvenanceQuery(String authorUri) {
         authorUri = " <" + authorUri + "> ";
@@ -887,7 +894,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + "   <http://ucuenca.edu.ec/ontology#province> ?province; \n"
                 + "  OPTIONAL { ?p  <http://ucuenca.edu.ec/ontology#domain> ?domain.}  \n"
                 + "} GROUP BY ?p ?city ?province";
-}
+    }
 
     public String getAskPublicationsURLGS(String graphName, String authorResource) {
         return pubUrlsGS(graphName, authorResource, true);
@@ -940,7 +947,6 @@ public class QueriesServiceImpl implements QueriesService {
                 + "}} GROUP BY ?resource ?profile";
     }
 
-
     @Override
     public String getEndpointDataQuery(String... arg) {
         String endpointsGraph = arg[0];
@@ -955,7 +961,7 @@ public class QueriesServiceImpl implements QueriesService {
             return INSERTDATA + getGraphString(endpointsGraph) + "{<" + ENDPOINTPREFIX + resourceHash + ">  " + con.uc(parameter) + "   '" + newValue + "'" + type + " }}  ";
         }
     }
-    
+
     @Override
     public String getAuthorsCentralGraphSize() {
         return PREFIXES
@@ -999,7 +1005,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + "  OPTIONAL {<" + sameAs + "> " + property + " ?attr.}"
                 + "}";
     }
-    
+
     @Override
     public String getPublicationsTitlesQuery() {
         return PREFIXES + " PREFIX dcterms: <http://purl.org/dc/terms/> "
@@ -1009,10 +1015,10 @@ public class QueriesServiceImpl implements QueriesService {
                 + "       	 ?pub dcterms:title ?title."
                 + "              OPTIONAL{ ?pub bibo:abstract ?abstract.}     }  }";
     }
-    
+
     @Override
     public String getSearchQuery(String textSearch) {
-        return PREFIXES 
+        return PREFIXES
                 + " PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> PREFIX uc: <http://ucuenca.edu.ec/ontology#> PREFIX dcterms: <http://purl.org/dc/terms/> "
                 + "CONSTRUCT { "
                 + " ?keyword uc:publication ?publicationUri. "

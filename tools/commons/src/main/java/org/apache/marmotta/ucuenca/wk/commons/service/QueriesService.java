@@ -20,7 +20,7 @@ public interface QueriesService {
     String getAuthorDeleteQuery(String id);
 
     String getAuthorDataQuery(String authorUri);
-    
+
     String getAuthorProvenanceQuery(String authorUri);
 
     String getAuthorsByName(String graph, String firstName, String lastName);
@@ -106,6 +106,8 @@ public interface QueriesService {
 
     String getAskObjectQuery(String graph, String object);
 
+    String getAskAcademicsQuery(String graph, String object);
+
     /**
      * ASK is exist a triplet
      *
@@ -113,7 +115,6 @@ public interface QueriesService {
      * @return
      */
     String getAskQuery(String... args);
-
 
     String getEndpointDataQuery(String... arg);
 
@@ -124,7 +125,7 @@ public interface QueriesService {
     String getLisEndpointsQuery();
 
     String getlisEndpointsQuery(String endpointsGraph);
-    
+
     String getlistEndpointNamesQuery();
 
     String getEndpointByIdQuery(String endpointsGraph, String id);
@@ -292,9 +293,9 @@ public interface QueriesService {
     String getSameAuthorsLvl2(String authorResource);
 
     String getOptionalProperties(String sameAs, String property);
-    
+
     String getPublicationsTitlesQuery();
-    
+
     String getSearchQuery(String textSearch);
-    
+
 }
