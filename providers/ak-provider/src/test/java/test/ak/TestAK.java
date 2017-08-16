@@ -15,6 +15,7 @@ import org.junit.AfterClass;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -46,7 +47,7 @@ public class TestAK {
     // The methods must be annotated with annotation @Test. For example:
     //
     @Test
-
+    @Ignore
     public void testMicrosoftAcademics() {
         ClientConfiguration config = new ClientConfiguration();
 
