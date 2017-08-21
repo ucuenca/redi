@@ -54,7 +54,7 @@ public class TestAK {
         try {
             ClientResponse res;
             res = ldclient.retrieveResource("https://westus.api.cognitive.microsoft.com/academic/v1.0/evaluate?expr=Composite(AA.AuN==%27maria%20hallo%27)&attributes=Id,Ti,Y,D,CC,ECC,AA.AuN,AA.AuId,AA.AfN,AA.AfId,F.FN,F.FId,J.JN,J.JId,C.CN,C.CId,RId,W,E,D&subscription-key=f66e8b1a39634d9591151a8efd80cfc2&count=100");
-            assertEquals("Size do not match.", 408, res.getData().size(), 100);
+            assertEquals("Size do not match.", 408, res.getData().size(), 200);
         } catch (DataRetrievalException e) {
             // TODO Auto-generated catch block
             //e.printStackTrace();
