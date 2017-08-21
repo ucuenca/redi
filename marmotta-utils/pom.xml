@@ -1,0 +1,16 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.apache.marmotta</groupId>
+    <artifactId>ucuenca</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>marmotta-utils</artifactId>
+  <packaging>pom</packaging>
+  <name>Marmotta Util Collection</name>
+  <description>Container for general Utilities that might be interesting even without Marmotta</description>
+  <modules>
+    <module>solr</module>
+  </modules>
+  <groupId>org.apache.marmotta.util</groupId>
+</project>
