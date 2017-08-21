@@ -146,7 +146,7 @@ wkhomeControllers.controller('publicationsController', ['$scope', '$window', 'gl
       };
 
       $scope.loadAuthorProfile = function(){
-        $window.location.hash = "/" + $routeParams.lang + "/w/search?" + authorURI;
+        $window.location.hash = "/" + $routeParams.lang + "/w/author/" + authorURI;
       }
 
     }]);

@@ -1106,7 +1106,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                     //	Watch	the	data	attribute	of	the	scope
                     scope.$watch('data', function (newVal, oldVal, scope) {
                         //	Update	the	chart
-                        if (scope.data){
+                        if (scope.data && scope.data["@graph"]){
                           //&&
                             //    (JSON.stringify(newVal["@graph"]) != JSON.stringify(oldVal ? oldVal["@graph"] : oldVal))) {
                             var data = jQuery.extend({}, scope.data);

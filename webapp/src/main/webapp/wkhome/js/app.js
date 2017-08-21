@@ -79,7 +79,7 @@ wkhomeApp.config(['$routeProvider',
                     templateUrl: '/wkhome/partials/search.html',
                     //      controller: 'ExploreController'
                 }).
-                when('/:lang/w/author/:text', {//when user search an author in textbox
+                when('/:lang/w/author/:text*', {//when user search an author in textbox
                     templateUrl: '/wkhome/partials/search.html',
                 }).
                 when('/:lang/w/listAllText', {
