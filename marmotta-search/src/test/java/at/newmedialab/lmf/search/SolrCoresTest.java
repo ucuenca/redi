@@ -6,6 +6,9 @@ import at.newmedialab.lmf.search.exception.CoreAlreadyExistsException;
 import at.newmedialab.lmf.search.filters.LMFSearchFilter;
 import at.newmedialab.lmf.search.services.cores.SolrCoreConfiguration;
 import at.newmedialab.lmf.search.services.program.SolrProgramServiceImpl;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.marmotta.ldpath.exception.LDPathParseException;
@@ -14,24 +17,21 @@ import org.apache.marmotta.ldpath.model.programs.Program;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
 import org.apache.marmotta.platform.core.test.base.JettyMarmotta;
 import org.apache.solr.core.CoreContainer;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.openrdf.model.Value;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
-
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.not;
+import org.junit.AfterClass;
 import static org.junit.Assert.*;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.openrdf.model.Value;
 
 /**
  * This test verifies the functionality of creating/deleting solr cores and their configuration
  *
  * @author Sebastian Schaffert (sschaffert@apache.org)
  */
+@Ignore
 public class SolrCoresTest {
 
     private static final String CORE_NAME = "schema";
@@ -42,6 +42,7 @@ public class SolrCoresTest {
     private static LMFSearchFilter searchFilter;
 
     @BeforeClass
+    @Ignore
     public static void setUpBeforeClass() throws Exception {
         lmf = new JettyMarmotta("/");
         solrProgramService = lmf.getService(SolrProgramService.class);

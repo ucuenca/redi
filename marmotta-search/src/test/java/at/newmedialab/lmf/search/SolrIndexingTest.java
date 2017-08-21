@@ -6,6 +6,9 @@ import at.newmedialab.lmf.search.api.program.SolrProgramService;
 import at.newmedialab.lmf.search.exception.CoreAlreadyExistsException;
 import at.newmedialab.lmf.search.filters.LMFSearchFilter;
 import at.newmedialab.lmf.search.services.cores.SolrCoreConfiguration;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.Iterator;
 import org.apache.commons.io.IOUtils;
 import org.apache.marmotta.commons.sesame.filter.SesameFilter;
 import org.apache.marmotta.ldpath.exception.LDPathParseException;
@@ -19,18 +22,14 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import static org.hamcrest.CoreMatchers.hasItem;
 import org.junit.After;
+import static org.junit.Assert.*;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
-
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.Iterator;
-
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.junit.Assert.*;
 
 /**
  * This test verifies the indexing functionality of the SOLR cores by adding an example core and importing some test
@@ -38,6 +37,7 @@ import static org.junit.Assert.*;
  *
  * @author Sebastian Schaffert (sschaffert@apache.org)
  */
+@Ignore
 public class SolrIndexingTest {
 
     private static final String CORE_NAME = "schema";
@@ -50,6 +50,7 @@ public class SolrIndexingTest {
     private LMFSearchFilter searchFilter;
 
     @Before
+    @Ignore
     public void setUp() throws Exception {
         lmf = new JettyMarmotta("/");
         solrProgramService = lmf.getService(SolrProgramService.class);

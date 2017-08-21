@@ -5,19 +5,18 @@ import at.newmedialab.lmf.search.api.program.SolrProgramService;
 import at.newmedialab.lmf.search.exception.CoreAlreadyExistsException;
 import at.newmedialab.lmf.search.services.cores.SolrCoreConfiguration;
 import at.newmedialab.lmf.search.services.program.SolrProgramServiceImpl;
+import java.io.StringReader;
 import org.apache.marmotta.ldpath.exception.LDPathParseException;
 import org.apache.marmotta.ldpath.model.programs.Program;
 import org.apache.marmotta.platform.core.test.base.JettyMarmotta;
 import org.hamcrest.CoreMatchers;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openrdf.model.Value;
-
-import java.io.StringReader;
-
-import static org.junit.Assert.*;
-
+@Ignore
 public class SolrTemplatesTest {
 
     private static final String CORE_NAME = "schema";
@@ -26,6 +25,7 @@ public class SolrTemplatesTest {
     private static SolrCoreService solrCoreService;
     
     @BeforeClass
+    @Ignore
     public static void setUpBeforeClass() throws Exception {
         lmf = new JettyMarmotta("/");
         solrProgramService = lmf.getService(SolrProgramService.class);

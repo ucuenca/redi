@@ -8,6 +8,7 @@ import org.apache.marmotta.platform.core.test.base.EmbeddedMarmotta;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
@@ -21,6 +22,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Sebastian Schaffert (sschaffert@apache.org)
  */
+@Ignore
 public class WorkerServiceTest {
 
     private static Logger log = LoggerFactory.getLogger(WorkerServiceTest.class);
@@ -30,6 +32,7 @@ public class WorkerServiceTest {
     private static MockWorkerServiceImpl workerService;
 
     @BeforeClass
+    @Ignore
     public static void setupMarmotta() {
         marmotta = new EmbeddedMarmotta();
         workerService = marmotta.getService(MockWorkerServiceImpl.class);
