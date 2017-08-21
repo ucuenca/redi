@@ -10,7 +10,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -19,17 +18,10 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.queryparser.classic.ParseException;
-import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
@@ -77,14 +69,14 @@ public class IndexCentralGraphImpl implements IndexCentralGraph, Runnable {
 
             // Create path and index
             Path p1 = Paths.get("idxCentralGraph");
-            FSDirectory index = FSDirectory.open(p1);
+            FSDirectory index = FSDirectory.open(p1.toFile());
 
             //  Specify the analyzer for tokenizing text.
             //    The same analyzer should be used for indexing and searching
-            StandardAnalyzer analyzer = new StandardAnalyzer();
+            StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_43);
 
             // Create the index
-            IndexWriterConfig config = new IndexWriterConfig(analyzer);
+            IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_43, analyzer);
 
             IndexWriter w = new IndexWriter(index, config);
             

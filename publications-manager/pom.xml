@@ -299,11 +299,11 @@
             <artifactId>poi</artifactId>
             <version>3.10.1</version>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>1.5</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
@@ -335,20 +335,23 @@
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-core</artifactId>
-            <version>5.5.4</version>
+            <!--<version>5.5.4</version>-->
+            <version>4.3.1</version>
         </dependency>
         
         <!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-analyzers-common -->
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-analyzers-common</artifactId>
-            <version>5.5.4</version>
+            <!--<version>5.5.4</version>-->
+            <version>4.3.1</version>
         </dependency>
         
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-queryparser</artifactId>
-            <version>5.5.4</version>
+            <!--<version>5.5.4</version>-->
+            <version>4.3.1</version>
         </dependency>
     </dependencies>
 
