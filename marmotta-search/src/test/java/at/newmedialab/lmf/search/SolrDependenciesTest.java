@@ -41,6 +41,7 @@ import org.openrdf.repository.RepositoryException;
  *
  * @author Sebastian Schaffert (sschaffert@apache.org)
  */
+
 @Ignore
 public class SolrDependenciesTest {
 
@@ -55,7 +56,6 @@ public class SolrDependenciesTest {
     private LMFSearchFilter searchFilter;
 
     @Before
-    @Ignore
     public void setUp() throws Exception {
         lmf = new JettyMarmotta("/");
         solrProgramService = lmf.getService(SolrProgramService.class);

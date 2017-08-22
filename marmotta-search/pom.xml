@@ -35,7 +35,7 @@
         <project.build.encoding>UTF-8</project.build.encoding>
         <lmf.version>3.2.0-SNAPSHOT</lmf.version>
         <solr.version>4.3.1</solr.version>
-        <jetty.version>9.0.3.v20130506</jetty.version>
+        <jetty.version>9.2.1.v20140609</jetty.version>
     </properties>
 
     <dependencies>
@@ -123,12 +123,66 @@
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>${servlet.api.version}</version>
-            <type>jar</type>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <!--
+                    <execution>
+                        <id>aggregate</id>
+                        <goals>
+                            <goal>aggregate</goal>
+                        </goals>
+                        <phase>site</phase>
+                    </execution>
+                    -->
+                    <execution>
+                        <!-- configure how the REST API documentation will be produced -->
+                        <id>restapi</id>
+                        <configuration>
+                            <doclet>com.lunatech.doclets.jax.jaxrs.JAXRSDoclet</doclet>
+
+                            <name>REST API</name>
+                            <description>REST API for Marmotta Webservices</description>
+
+                            <outputDirectory>${project.build.outputDirectory}/doc</outputDirectory>
+                            <reportOutputDirectory>${project.build.outputDirectory}/web/doc</reportOutputDirectory>
+                            <destDir>rest</destDir>
+
+                            <docletArtifact>
+                                <groupId>com.lunatech.jax-doclets</groupId>
+                                <artifactId>doclets</artifactId>
+                                <version>${jax.doclets.version}</version>
+                            </docletArtifact>
+                            <additionalparam>
+                                -jaxrscontext {BASE}
+                                -charset UTF-8
+                            </additionalparam>
+
+                            <!--
+                                                        <stylesheetfile>${project.parent.basedir}/config/doc/doclet.css</stylesheetfile>
+                            -->
+
+                            <header><![CDATA[<!--###BEGIN_CONTENT###--><div class="javadoc">]]></header>
+                            <footer><![CDATA[</div><!--###END_CONTENT###-->]]></footer>
+                            <encoding>UTF-8</encoding>
+                            <detectOfflineLinks>false</detectOfflineLinks>
+
+                            <!-- For the project-reports page -->
+                        </configuration>
+                        <goals>
+                            <goal>javadoc</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.3</version>

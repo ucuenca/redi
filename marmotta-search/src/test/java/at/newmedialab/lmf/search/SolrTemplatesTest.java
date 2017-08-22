@@ -16,6 +16,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openrdf.model.Value;
+
 @Ignore
 public class SolrTemplatesTest {
 
@@ -25,7 +26,6 @@ public class SolrTemplatesTest {
     private static SolrCoreService solrCoreService;
     
     @BeforeClass
-    @Ignore
     public static void setUpBeforeClass() throws Exception {
         lmf = new JettyMarmotta("/");
         solrProgramService = lmf.getService(SolrProgramService.class);

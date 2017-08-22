@@ -37,7 +37,6 @@ import org.openrdf.model.Value;
  *
  * @author Sebastian Schaffert (sschaffert@apache.org)
  */
-@Ignore
 public class SolrIndexingTest {
 
     private static final String CORE_NAME = "schema";
@@ -50,7 +49,6 @@ public class SolrIndexingTest {
     private LMFSearchFilter searchFilter;
 
     @Before
-    @Ignore
     public void setUp() throws Exception {
         lmf = new JettyMarmotta("/");
         solrProgramService = lmf.getService(SolrProgramService.class);
@@ -77,6 +75,7 @@ public class SolrIndexingTest {
      * @throws IOException
      */
     @Test
+    @Ignore
     public void testCreateCore() throws CoreAlreadyExistsException, IOException, MarmottaImportException, InterruptedException, SolrServerException {
         String programString = IOUtils.toString(this.getClass().getResourceAsStream("books.ldpath"));
 

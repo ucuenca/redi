@@ -31,7 +31,6 @@ import org.openrdf.model.Value;
  *
  * @author Sebastian Schaffert (sschaffert@apache.org)
  */
-@Ignore
 public class SolrCoresTest {
 
     private static final String CORE_NAME = "schema";
@@ -42,7 +41,6 @@ public class SolrCoresTest {
     private static LMFSearchFilter searchFilter;
 
     @BeforeClass
-    @Ignore
     public static void setUpBeforeClass() throws Exception {
         lmf = new JettyMarmotta("/");
         solrProgramService = lmf.getService(SolrProgramService.class);
@@ -175,6 +173,7 @@ public class SolrCoresTest {
      * @throws Exception
      */
     @Test
+    @Ignore
     public void testCoreConfiguration() throws Exception {
 
         String programString = IOUtils.toString(this.getClass().getResourceAsStream("books.ldpath"));
