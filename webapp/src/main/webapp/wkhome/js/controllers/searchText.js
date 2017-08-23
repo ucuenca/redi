@@ -25,7 +25,7 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
                           + "  ?publicationUri bibo:abstract ?abstract. "
                           + "  ?publicationUri bibo:uri ?uri. "
                           + "} WHERE { "
-                          + "  GRAPH <http://localhost:8080/context/redi> { "
+                          + "  GRAPH <" + globalData.centralGraph + "> { "
                           + " {0} "
                           + "    ?subject foaf:publications ?publicationUri . "
                           + "    ?subject foaf:name ?name . "
