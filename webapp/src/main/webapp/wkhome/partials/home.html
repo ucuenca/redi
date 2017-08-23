@@ -81,7 +81,7 @@
                               <!-- Check why grid sys is not working -->
                               <td class="col-md-3"><a class="candidate" ng-click="selectedAuthor($event, author.id)" href="">{{author.name}}</a></td>
                               <td class="col-md-9" style="font-size: x-small">
-                                <p>{{author.keyword}}</p>
+                                <p>{{author.keyword | uppercase}}</p>
                               </td>
                             </tr>
                           </tbody>
