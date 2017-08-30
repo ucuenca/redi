@@ -64,6 +64,7 @@ myApp.labels_es = {
 "issue" : "Emitido",
 "volume" : "Volumen",
 "publisher" : "Editorial",
+"journal" : "Revista",
 
 //   GROUP BY  VIEW
 "Grouping Publications": "Agrupar autores por área e institución",

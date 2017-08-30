@@ -105,6 +105,8 @@
                 <small class="pub-issue" ng-show="publication.issue"><strong>{{'issue' | translate}}:</strong>{{publication.issue}}</small>
                 <small class="pub-volume" ng-show="publication.volume"><strong>{{'volume' | translate}}:</strong>{{publication.volume}}</small>
                 <small class="pub-publisher" ng-show="publication.publisher"><strong>{{'publisher' | translate}}:</strong>{{publication.publisher}}</small>
+                <br/>
+                <small class="jor-journal" ng-show="publication.journal.id"><strong>{{'journal' | translate}}:</strong><a target="_blank" href="{{publication.journal.journalURL}}">{{publication.journal.journalName}} <img ng-src="{{publication.journal.journalProvenanceIcon.img}}" ng-show="publication.journal.journalProvenanceIcon.img" alt="{{publication.journal.journalProvenanceIcon.label}}" width="75" height="20" class="img-rounded"/></a></small>
               </div>
               <div class="row pub-url" ng-show="publication.uri">
                 <a href="{{uri['@id']}}" target="_blank" class="btn btn-default btn-xs col-md-2" role="button" ng-repeat="uri in publication.uri">
