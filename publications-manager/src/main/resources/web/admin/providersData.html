@@ -50,6 +50,10 @@
             {
                 runUpdatePublicationDspace(host);
             }
+            function runLatindex()
+            {
+                runUpdateLatindex(host);
+            }
         </script>
         <!--###END_HEAD###-->
     </head>
@@ -106,6 +110,10 @@
             <p>
 
                 <button type="button"  onclick="runDspace()"  value="Activar Función">LOAD FROM DSPACE  </button>
+            <p>
+            
+            <p>
+                <button type="button"  onclick="runLatindex()"  value="Activar Función">DETECT LATINDEX JOURNALS/PUBLICATIONS</button>
             <p>
 
             <div id="imgloading" style="visibility: hidden">

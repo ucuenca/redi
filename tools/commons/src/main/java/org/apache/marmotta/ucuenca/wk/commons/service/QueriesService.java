@@ -298,4 +298,24 @@ public interface QueriesService {
 
     String getSearchQuery(String textSearch);
 
+    /**
+     * Returns a list of every Journal within the Central Graph .
+    */
+    String getJournalsCentralGraphQuery();
+    
+    
+    /**
+     * Returns a list of every Journal within the Latindex Graph .
+    */
+    String getJournalsLantindexGraphQuery();
+    
+    /**
+     * Returns a list of every Publication of a Journal.
+    */
+    String getPublicationsOfJournalCentralGraphQuery(String journalURI);
+    
+    /**
+     * Returns a list of every Publication.
+    */
+    String getPublicationsCentralGraphQuery();
 }
