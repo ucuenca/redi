@@ -55,6 +55,7 @@ public class PubWebService {
     public static final String GET_PUBLICATIONS_MA = "/publications_ma";
     public static final String GET_PUBLICATIONS_AK = "/publications_ak";
     public static final String GET_PUBLICATIONS_DSPACE = "/publications_dspace";
+    public static final String DETECT_LATINDEX_PUBLICATIONS = "/publications_latindex";
     public static final String LOAD_PUBLICATIONS = "/publications_provider_graph";
     public static final String LOAD_AUTHOR_ATTR = "/author_attr";
     public static final String GET_AUTHOR_DATA = "/pubsearch";
@@ -129,6 +130,18 @@ public class PubWebService {
         String params = resultType;
         log.debug("Publications Task", params);
         String result = commonService.GetDataFromProvidersServiceDspace();
+        return Response.ok().entity(result).build();
+    }
+    
+    /*
+     * Detect Latindex Journals
+     */
+    @POST
+    @Path(DETECT_LATINDEX_PUBLICATIONS)
+    public Response detectPostLatindex(@QueryParam("Endpoint") String resultType) {
+        String params = resultType;
+        log.debug("Publications Task", params);
+        String result = commonService.DetectLatindexPublications();
         return Response.ok().entity(result).build();
     }
 

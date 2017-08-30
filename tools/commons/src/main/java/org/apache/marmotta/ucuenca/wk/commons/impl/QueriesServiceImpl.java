@@ -1047,4 +1047,59 @@ public class QueriesServiceImpl implements QueriesService {
                 + "}";
     }
 
+    @Override
+    public String getJournalsCentralGraphQuery() {
+        return PREFIXES
+                + "SELECT DISTINCT ?JOURNAL ?NAME { "
+                    + "GRAPH  <"+con.getCentralGraph()+"> {    "
+                        + "?JOURNAL a bibo:Journal . "
+                        + "?JOURNAL rdfs:label ?NAME ."
+                    + "} "
+                + "}";
+        
+    }
+
+    //FIXME use prefixes
+    @Override
+    public String getJournalsLantindexGraphQuery() {
+        return PREFIXES
+                + "SELECT DISTINCT ?JOURNAL ?NAME ?TOPIC ?YEAR ?ISSN { "
+                    + " GRAPH <"+con.getLatindexJournalsGraph()+"> {   "
+                        + "?JOURNAL a <http://redi.cedia.edu.ec/ontology/journal> . "
+                        + "?JOURNAL <http://redi.cedia.edu.ec/ontology/tit_clave> ?NAME ."
+                        + "?JOURNAL <http://redi.cedia.edu.ec/ontology/subtema> ?TOPIC ."
+                        + "?JOURNAL <http://redi.cedia.edu.ec/ontology/ano_ini> ?YEAR ."
+                        + "?JOURNAL <http://redi.cedia.edu.ec/ontology/issn> ?ISSN ."
+                    + "} "
+                + "}";
+    }
+
+    @Override
+    public String getPublicationsOfJournalCentralGraphQuery(String journalURI) {
+                return PREFIXES
+                + "SELECT DISTINCT ?PUBLICATION ?TITLE ?ABSTRACT { "
+                    + "GRAPH   <"+con.getCentralGraph()+"> {  "
+                        + "?PUBLICATION <http://purl.org/dc/terms/isPartOf> <"+journalURI+"> . "
+                        + "?PUBLICATION <http://purl.org/dc/terms/title> ?TITLE ."
+                        + "OPTIONAL{"
+                            + "?PUBLICATION <http://purl.org/ontology/bibo/abstract> ?ABSTRACT ."
+                        + "}"
+                    + "} "
+                + "}";
+    }
+    
+    @Override
+    public String getPublicationsCentralGraphQuery() {
+                return PREFIXES
+                + "SELECT DISTINCT ?PUBLICATION ?TITLE ?ABSTRACT { "
+                    + "GRAPH   <"+con.getCentralGraph()+"> {  "
+                        + "?MOCKAUTHOR foaf:publications ?PUBLICATION . "
+                        + "?PUBLICATION <http://purl.org/dc/terms/title> ?TITLE ."
+                        + "OPTIONAL{"
+                            + "?PUBLICATION <http://purl.org/ontology/bibo/abstract> ?ABSTRACT ."
+                        + "}"
+                    + "} "
+                + "}";
+    }
+
 }
