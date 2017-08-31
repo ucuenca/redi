@@ -26,8 +26,8 @@ import org.apache.marmotta.ucuenca.wk.pubman.api.LatindexDetectionService;
 import org.apache.marmotta.ucuenca.wk.pubman.model.Journal;
 import org.apache.marmotta.ucuenca.wk.pubman.model.JournalLatindex;
 import org.apache.marmotta.ucuenca.wk.pubman.model.Publication;
-import org.apache.marmotta.ucuenca.wk.pubman.util.BingService;
-import org.apache.marmotta.ucuenca.wk.pubman.util.ModifiedJaccard;
+import org.apache.marmotta.ucuenca.wk.commons.util.BingService;
+import org.apache.marmotta.ucuenca.wk.commons.util.ModifiedJaccard;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.BIBO;
 import org.openrdf.model.Value;
 import org.openrdf.query.MalformedQueryException;
@@ -74,7 +74,7 @@ public class LantindexDetectionServiceImpl implements LatindexDetectionService {
                     try {
                         log.info("Starting Latindex detection process ...");
                         KnownJournalProcess();
-                        unKnownJournalProcess();
+                        //unKnownJournalProcess();
                     } catch (Exception ex) {
                         log.warn("Unknown error while detecting Latindex Journals, please check the catalina log for further details.");
                         ex.printStackTrace();
@@ -87,8 +87,8 @@ public class LantindexDetectionServiceImpl implements LatindexDetectionService {
         return State;
     }
 
-    //Beta
-    public Map<String, JournalLatindex> getLatindeJournals() throws MarmottaException {
+
+    public Map<String, JournalLatindex> getLatindexJournals() throws MarmottaException {
         //Extracting Latindex journals
         List<Map<String, Value>> allLatindexJournals = sparqlService.query(QueryLanguage.SPARQL, queriesService.getJournalsLantindexGraphQuery());
         Map<String, JournalLatindex> allLatindexJournalsObjects = new HashMap<>();
@@ -116,10 +116,13 @@ public class LantindexDetectionServiceImpl implements LatindexDetectionService {
         }
         return allLatindexJournalsObjects;
     }
-
+    
+    //Alpha - brute force implementation
+    //Optimization needed !!! ... probably a blocking method.
+    //
     public void unKnownJournalProcess() throws MarmottaException, IOException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
         log.info("Processing publications without journal information ...");
-        Map<String, JournalLatindex> allLatindexJournalsObjects = getLatindeJournals();
+        Map<String, JournalLatindex> allLatindexJournalsObjects = getLatindexJournals();
 
         Map<String, Publication> allPublicationsObjects = new HashMap<>();
 
@@ -163,7 +166,7 @@ public class LantindexDetectionServiceImpl implements LatindexDetectionService {
 
     public void KnownJournalProcess() throws MarmottaException, IOException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
         log.info("Processing publications with journal information ...");
-        Map<String, JournalLatindex> allLatindexJournalsObjects = getLatindeJournals();
+        Map<String, JournalLatindex> allLatindexJournalsObjects = getLatindexJournals();
         //Extracting CG journals
         List<Map<String, Value>> allJournalsCentralGraph = sparqlService.query(QueryLanguage.SPARQL, queriesService.getJournalsCentralGraphQuery());
 
@@ -313,13 +316,13 @@ public class LantindexDetectionServiceImpl implements LatindexDetectionService {
 
         BingService test = new BingService();
 
-        return test.Bing(query);
+        return test.queryBing(query);
     }
 
     public int len(String text) {
 
         ModifiedJaccard mod = new ModifiedJaccard();
-        List<String> Tokenizer = mod.Tokenizer(text.toLowerCase());
+        List<String> Tokenizer = mod.tokenizer(text.toLowerCase());
         List<String> TokenizerR = new ArrayList<>();
         for (String word : Tokenizer) {
             if (word.length() > 3) {
@@ -334,7 +337,7 @@ public class LantindexDetectionServiceImpl implements LatindexDetectionService {
 
         ModifiedJaccard mod = new ModifiedJaccard();
 
-        str = mod.Clean(str);
+        str = mod.specialCharactersClean(str);
 
         String[] sArr = str.split(" ");
         String firstStrs = "";
@@ -358,7 +361,7 @@ public class LantindexDetectionServiceImpl implements LatindexDetectionService {
 
     public boolean JournalNameComparison(String NameJournal1, String NameJournal2) {
         ModifiedJaccard SynDistance = new ModifiedJaccard();
-        double DistanceJournalName = SynDistance.DistanceJournalName(NameJournal1, NameJournal2);
+        double DistanceJournalName = SynDistance.distanceJournalName(NameJournal1, NameJournal2);
         return DistanceJournalName > 0.8;
     }
 }
