@@ -17,6 +17,14 @@
 package org.apache.marmotta.ucuenca.wk.provider.scopus;
 
 //import org.apache.marmotta.ucuenca.wk.provider.dblp.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.enterprise.context.ApplicationScoped;
 import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
 import org.apache.marmotta.ldclient.model.ClientConfiguration;
@@ -26,23 +34,12 @@ import org.apache.marmotta.ldclient.services.provider.AbstractHttpProvider;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
+import org.jdom2.Namespace;
 import org.jdom2.filter.ElementFilter;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.input.sax.XMLReaders;
 import org.jdom2.xpath.XPathFactory;
 import org.openrdf.model.Model;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.enterprise.context.ApplicationScoped;
-import org.jdom2.Namespace;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.model.vocabulary.FOAF;
@@ -57,7 +54,8 @@ public class ScopusPublicationSearchProvider extends AbstractHttpProvider {
 
     public static final String NAME = "Scopus  Search Publication Provider";
     public static final String API = "http://api.elsevier.com/content/search/scopus?query=&apiKey=";
-    public static final String PATTERN = "http://api\\.elsevier\\.com/content/search/scopus\\?query\\=au\\-id%28(.*)%29\\&apiKey\\=(.*)\\&httpAccept\\=application/xml\\&view\\=COMPLETE";
+//    public static final String PATTERN = "http://api\\.elsevier\\.com/content/search/scopus\\?query\\=au\\-id%28(.*)%29\\&apiKey\\=(.*)\\&httpAccept\\=application/xml\\&view\\=COMPLETE";
+    public static final String PATTERN = "://api\\.elsevier\\.com/content/search/scopus\\?query\\=au\\-id%28(.*)%29\\&apiKey\\=(.*)\\&httpAccept\\=application/xml\\&view\\=COMPLETE";
     public static final String URL_RESOURCE_PUBLICATION = "http://api.elsevier.com/content/abstract/doi/DOIParam?apiKey=apiKeyParam&httpAccept=application/rdf%2Bxml";
     public static final String URL_RESOURCE_PUBLICATIONPARAM = "http://api.elsevier.com/content/abstract/doi/DOIParam";
     //private static Logger log = LoggerFactory.getLogger(ScopusPublicationSearchProvider.class);
@@ -107,7 +105,7 @@ public class ScopusPublicationSearchProvider extends AbstractHttpProvider {
         String url = null;
         Matcher m = Pattern.compile(PATTERN).matcher(resource);
         if (m.find()) {
-            url = resource;
+            url = "http" + resource;
             apiKeyParam = m.group(2);
             authorIdParam = m.group(1);
         }
