@@ -502,7 +502,7 @@
             <groupId>org.apache.marmotta.ucuenca.wk</groupId>
             <artifactId>publications-manager</artifactId>
             <version>${project.version}</version>
-<!--            <exclusions>
+            <!--            <exclusions>
                 <exclusion>
             </exclusions>-->
         </dependency>
@@ -546,6 +546,13 @@
             <groupId>org.apache.marmotta</groupId>
             <artifactId>marmotta-security</artifactId>
             <version>${marmotta.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.tuckey</groupId>
+            <artifactId>urlrewritefilter</artifactId>
+            <version>4.0.3</version>
+            <!-- FIXME add turkey version variable-->
         </dependency>
 
         <!-- JavaEE / Servlet / CDI Environment -->
