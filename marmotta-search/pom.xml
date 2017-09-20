@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+~  Licensed under the Apache License, Version 2.0 (the "License");
+~  you may not use this file except in compliance with the License.
+~  You may obtain a copy of the License at
+~
+~      http://www.apache.org/licenses/LICENSE-2.0
+~
+~  Unless required by applicable law or agreed to in writing, software
+~  distributed under the License is distributed on an "AS IS" BASIS,
+~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~  See the License for the specific language governing permissions and
+~  limitations under the License.
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.apache.marmotta</groupId>
+        <artifactId>ucuenca</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.github.wikier</groupId>
+    <artifactId>marmotta-search</artifactId>
+    <packaging>jar</packaging>
+
+    <name>Marmotta Search</name>
+    <description>Marmotta module offering semantic search functionality using Apache Solr</description>
+
+    <properties>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+        <project.build.encoding>UTF-8</project.build.encoding>
+        <lmf.version>3.2.0-SNAPSHOT</lmf.version>
+        <solr.version>4.3.1</solr.version>
+        <jetty.version>9.2.1.v20140609</jetty.version>
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.apache.marmotta</groupId>
+            <artifactId>marmotta-core</artifactId>
+            <version>${marmotta.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.marmotta</groupId>
+            <artifactId>marmotta-ldpath</artifactId>
+            <version>${marmotta.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.marmotta</groupId>
+            <artifactId>marmotta-ldcache-kiwi</artifactId>
+            <version>${marmotta.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.marmotta</groupId>
+            <artifactId>marmotta-worker</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.marmotta.util</groupId>
+            <artifactId>solr</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.solr</groupId>
+            <artifactId>solr-solrj</artifactId>
+            <version>${solr.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.solr</groupId>
+            <artifactId>solr-core</artifactId>
+            <version>${solr.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.solr</groupId>
+            <artifactId>solr-clustering</artifactId>
+            <version>${solr.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.marmotta</groupId>
+            <artifactId>marmotta-core</artifactId>
+            <version>${marmotta.version}</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>${jetty.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlet</artifactId>
+            <version>${jetty.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.el</groupId>
+            <artifactId>javax.el-api</artifactId>
+            <version>${javax.el.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${servlet.api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <!--
+                    <execution>
+                        <id>aggregate</id>
+                        <goals>
+                            <goal>aggregate</goal>
+                        </goals>
+                        <phase>site</phase>
+                    </execution>
+                    -->
+                    <execution>
+                        <!-- configure how the REST API documentation will be produced -->
+                        <id>restapi</id>
+                        <configuration>
+                            <doclet>com.lunatech.doclets.jax.jaxrs.JAXRSDoclet</doclet>
+
+                            <name>REST API</name>
+                            <description>REST API for Marmotta Webservices</description>
+
+                            <outputDirectory>${project.build.outputDirectory}/doc</outputDirectory>
+                            <reportOutputDirectory>${project.build.outputDirectory}/web/doc</reportOutputDirectory>
+                            <destDir>rest</destDir>
+
+                            <docletArtifact>
+                                <groupId>com.lunatech.jax-doclets</groupId>
+                                <artifactId>doclets</artifactId>
+                                <version>${jax.doclets.version}</version>
+                            </docletArtifact>
+                            <additionalparam>
+                                -jaxrscontext {BASE}
+                                -charset UTF-8
+                            </additionalparam>
+
+                            <!--
+                                                        <stylesheetfile>${project.parent.basedir}/config/doc/doclet.css</stylesheetfile>
+                            -->
+
+                            <header><![CDATA[<!--###BEGIN_CONTENT###--><div class="javadoc">]]></header>
+                            <footer><![CDATA[</div><!--###END_CONTENT###-->]]></footer>
+                            <encoding>UTF-8</encoding>
+                            <detectOfflineLinks>false</detectOfflineLinks>
+
+                            <!-- For the project-reports page -->
+                        </configuration>
+                        <goals>
+                            <goal>javadoc</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.3</version>
+
+                <executions>
+                    <execution>
+                        <id>solrHomeZip</id>
+
+                        <configuration>
+                            <finalName>lmf-solr-data</finalName>
+                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <descriptors>
+                                <descriptor>conf/solrhome-assembly.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>solrCoreZip</id>
+
+                        <configuration>
+                            <finalName>lmf-solr-core</finalName>
+                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <descriptors>
+                                <descriptor>conf/solrcore-assembly.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>apache.releases</id>
+            <name>Apache Relesases Repository</name>
+            <url>https://repository.apache.org/content/repositories/releases/</url>
+        </repository>
+        <repository>
+            <id>apache.snapshots</id>
+            <name>Apache Snapshots Repository</name>
+            <url>https://repository.apache.org/content/repositories/snapshots/</url>
+        </repository>
+        <!--        <repository>
+            <id>snml.releases</id>
+            <name>Salzburg NewMediaLab Repository</name>
+            <url>http://devel.kiwi-project.eu:8080/nexus/content/repositories/public/</url>
+        </repository>
+        <repository>
+            <id>snml.snapshots</id>
+            <name>Salzburg NewMediaLab Repository</name>
+            <url>http://devel.kiwi-project.eu:8080/nexus/content/repositories/snapshots/</url>
+        </repository>-->
+    </repositories>
+
+</project>

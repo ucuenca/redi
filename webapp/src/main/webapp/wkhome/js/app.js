@@ -40,6 +40,7 @@ wkhomeApp.service('globalData', ['$window', function ($window) {
     this.authorsGraph = baseURL + "context/authors";
     //this.endpointsGraph = "http://localhost:8080/" + "context/endpoints";
     this.endpointsGraph = baseURL + "context/endpoints";
+    this.latindexGraph = baseURL + "context/latindex";
     this.translateData = null;
     this.PREFIX = 'PREFIX bibo: <http://purl.org/ontology/bibo/>'
             + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>  '
@@ -79,7 +80,7 @@ wkhomeApp.config(['$routeProvider',
                     templateUrl: '/wkhome/partials/search.html',
                     //      controller: 'ExploreController'
                 }).
-                when('/:lang/w/author/:text', {//when user search an author in textbox
+                when('/:lang/w/author/:text*', {//when user search an author in textbox
                     templateUrl: '/wkhome/partials/search.html',
                 }).
                 when('/:lang/w/listAllText', {

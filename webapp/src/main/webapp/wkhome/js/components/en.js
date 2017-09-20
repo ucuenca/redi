@@ -61,7 +61,7 @@ myApp.labels_en = {
 "issue" : "Issue",
 "volume" : "Volume",
 "publisher" : "Publisher",
-
+"journal" : "Journal",
 //   GROUP BY  VIEW
 "Grouping Publications": "Grouping Authors",
 "Group by":"Group by",

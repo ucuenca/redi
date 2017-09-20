@@ -1,80 +1,101 @@
-
-
 <div id="tooltip" class="" style="opacity:0;">
-    <p><strong></strong>
-    </p>
-    <p><span id="value"></span></p>
+  <p><strong></strong>
+  </p>
+  <p><span id="value"></span></p>
 </div>
 
 
 <div ng-controller="translate">
-    <div class="container-fluid" style=" background-color: #F2F2F2" >
-        <div class="row presentation">
-            <div class="col-md-12">
-                <div id="carousel" class="carousel slide" data-ride="carousel"  style="padding-top:50px; height: 80%">
-                    <ol class="carousel-indicators">
-                        <li data-target="#carousel" data-slide-to="0" class="active"></li>
-                        <li data-target="#carousel" data-slide-to="1"></li>
-                        <li data-target="#carousel" data-slide-to="2"></li>
-                    </ol>
-                    <div class="carousel-inner" role="listbox">
-                        <div class="item active">
-                            <center>
-                                <img src="wkhome/images/title2.png" style="padding-top: 30px;" width="25%">
-                                <div class="carousel-caption">
-                                    <h2 style="color: #ffffff; text-align: center;">{{'Ecuadorian Semantic Repository'| translate}}</h2>
-                                </div>
-                            </center>
-                        </div>
-
-                        <div class="item">
-                            <center>
-                                <img src="wkhome/images/network.png" style=" width: 37%;height: 10%; padding-top: 1%" class="img-rounded"/>
-                                <div class="carousel-caption">
-                                    <h3 style="color: #ffffff; text-align: center;" class='carousel-caption-text'>{{'Search related researchers'| translate}}</h3>
-                                    <!--p>Encuentra tu equipo de trabajo de manera fácil</p-->
-                                </div>
-                            </center>
-
-                        </div>
-                        <div class="item">
-                            <center>
-                                <img src="wkhome/images/search_ec2.png" style="width: 20%;">
-                                <div class="carousel-caption">
-                                    <h3 style="color: #ffffff; text-align: center;" class='carousel-caption-text'>{{'Search publications'| translate}}</h3>
-                                    <!--p>Encuentra tu equipo de trabajo de manera fácil</p-->
-                                </div>
-
-                            </center>
-                        </div>
-                    </div>
+  <div class="container-fluid" style=" background-color: #F2F2F2">
+    <div class="row presentation">
+      <div class="col-md-12">
+        <div id="carousel" class="carousel slide" data-ride="carousel" style="padding-top:20px; height: 80%">
+          <ol class="carousel-indicators">
+            <li data-target="#carousel" data-slide-to="0" class="active"></li>
+            <li data-target="#carousel" data-slide-to="1"></li>
+            <li data-target="#carousel" data-slide-to="2"></li>
+          </ol>
+          <div class="carousel-inner" role="listbox">
+            <div class="item active">
+              <center>
+                <img src="wkhome/images/title2.png" style="padding-top: 30px;" width="25%">
+                <div class="carousel-caption">
+                  <h2 style="color: #ffffff; text-align: center;">{{'Ecuadorian Semantic Repository'| translate}}</h2>
                 </div>
-
-                <div class="row" style="">
-                  <form   role="search" ng-submit="submit()" ng-controller="searchText">
-                    <div class="buscador form-group col-md-8 col-md-offset-2" >
-                            <div  style="text-align: center">
-                                <ul>
-                                    <li class="li-buscador col-md-11">
-                                        <input style=" border-color: #0000FF" name="searchText" ng-model="searchText" type="text" class="form-control input-lg " placeholder="{{'Search Author or Keyword'| translate}}..." >
-                                    </li>
-                                    <li class="li-buscador col-md-1">
-                                        <input type="image"  src="wkhome/images/search_logo2.png"  style="background-color: #004D77; border-color: #FFFFFF; border-width: 10px;" alt="Buscar" class="imagesubmit"/>
-                                    </li>
-                                </ul>
-                            </div>
-                    </div>
-                  </form>
-
-                    <div class="col-md-2 " >
-                    </div>
-                </div>
-        </div>
+              </center>
             </div>
 
-    <div class="home transition" >
-    </div>
+            <div class="item">
+              <center>
+                <img src="wkhome/images/network.png" style=" width: 37%;height: 10%; padding-top: 1%" class="img-rounded" />
+                <div class="carousel-caption">
+                  <h3 style="color: #ffffff; text-align: center;" class='carousel-caption-text'>{{'Search related researchers'| translate}}</h3>
+                </div>
+              </center>
 
-    <div class='row' ng-include="'/wkhome/partials/footnote.html'" style="background-color: #FFFFFF;"/>
+            </div>
+            <div class="item">
+              <center>
+                <img src="wkhome/images/search_ec2.png" style="width: 20%;">
+                <div class="carousel-caption">
+                  <h3 style="color: #ffffff; text-align: center;" class='carousel-caption-text'>{{'Search publications'| translate}}</h3>
+                </div>
+              </center>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" style="">
+          <form role="search" ng-submit="submit()" ng-controller="searchText">
+            <div class="buscador form-group col-md-8 col-md-offset-2">
+              <div style="text-align: center">
+                <ul>
+                  <li class="li-buscador col-md-11">
+                    <input style=" border-color: #0000FF" name="searchText" ng-model="searchText" type="text" class="form-control input-lg " placeholder="{{'Search Author or Keyword'| translate}}...">
+                  </li>
+                  <li class="li-buscador col-md-1">
+                    <input type="image" src="wkhome/images/search_logo2.png" style="background-color: #004D77; border-color: #FFFFFF; border-width: 10px;" alt="Buscar" class="imagesubmit" />
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="container">
+              <div id="searchResults" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="Search Results" aria-hidden="true">
+                <div class="modal-dialog  modal-lg" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                      <h4 class="modal-title" id="myModalLabel">Search Results <small>{{candidates.length}} resultados</small></h4>
+                    </div>
+                    <div class="modal-body">
+                      <div class="row table-responsive">
+                        <table class="table table-striped">
+                          <thead>
+                            <tr>
+                              <th>Authors</th>
+                              <th>Subjects</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr ng-repeat="author in candidates">
+                              <!-- Check why grid sys is not working -->
+                              <td class="col-md-3"><a class="candidate" ng-click="selectedAuthor($event, author.id)" href="">{{author.name}}</a></td>
+                              <td class="col-md-9" style="font-size: x-small">
+                                <p>{{author.keyword | uppercase}}</p>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
+<div class='row' ng-include="'/wkhome/partials/footnote.html'" style="background-color: #FFFFFF;" />

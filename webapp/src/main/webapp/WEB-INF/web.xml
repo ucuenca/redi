@@ -30,7 +30,7 @@
 
     <!-- enable CDI / Weld for dependency injection -->
     <listener>
-       <listener-class>org.jboss.weld.environment.servlet.Listener</listener-class>
+        <listener-class>org.jboss.weld.environment.servlet.Listener</listener-class>
     </listener>
 
     <!-- Initialise the KiWi system -->
@@ -40,7 +40,7 @@
 
     <!-- RESTeasy Webservices -->
     <listener>
-      <listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
+        <listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
     </listener>
 
     <!-- specifies the home directory; overridden by environment variable MARMOTTA_HOME or system property marmotta.home -->
@@ -50,6 +50,17 @@
     </context-param>
 
     <!-- handle OPTIONS requests -->
+    <filter>
+        <filter-name>UrlRewriteFilter</filter-name>
+        <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>UrlRewriteFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+
     <filter>
         <filter-name>MarmottaOptionsFilter</filter-name>
         <filter-class>org.apache.marmotta.platform.core.servlet.MarmottaOptionsFilter</filter-class>
@@ -107,27 +118,30 @@
 
     <!-- H2 Configuration -->
     <filter>
-      <filter-name>MarmottaH2ConsoleFilter</filter-name>
-      <filter-class>org.apache.marmotta.platform.core.servlet.MarmottaH2ConsoleFilter</filter-class>
+        <filter-name>MarmottaH2ConsoleFilter</filter-name>
+        <filter-class>org.apache.marmotta.platform.core.servlet.MarmottaH2ConsoleFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>MarmottaH2ConsoleFilter</filter-name>
         <url-pattern>/database/*</url-pattern>
     </filter-mapping>
-	<servlet>
-		<servlet-name>H2Console</servlet-name>
-		<servlet-class>org.h2.server.web.WebServlet</servlet-class>
-		<init-param> <param-name>webAllowOthers</param-name> <param-value>true</param-value> </init-param>
-		<!--	<init-param> <param-name>trace</param-name> <param-value></param-value> </init-param> -->
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>H2Console</servlet-name>
-		<url-pattern>/database/*</url-pattern>
-	</servlet-mapping>
+    <servlet>
+        <servlet-name>H2Console</servlet-name>
+        <servlet-class>org.h2.server.web.WebServlet</servlet-class>
+        <init-param> 
+            <param-name>webAllowOthers</param-name> 
+            <param-value>true</param-value> 
+        </init-param>
+        <!--	<init-param> <param-name>trace</param-name> <param-value></param-value> </init-param> -->
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>H2Console</servlet-name>
+        <url-pattern>/database/*</url-pattern>
+    </servlet-mapping>
 
     <mime-mapping>
-    	 <!-- per http://www.w3.org/TR/2006/PR-xslt20-20061121/ -->
+        <!-- per http://www.w3.org/TR/2006/PR-xslt20-20061121/ -->
         <extension>.xsl</extension>
         <mime-type>application/xslt+xml</mime-type>
     </mime-mapping>

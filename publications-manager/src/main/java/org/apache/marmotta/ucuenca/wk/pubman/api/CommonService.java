@@ -40,4 +40,5 @@ public interface CommonService {
     
     String getSearchQuery(String textSearch);
 
+    String DetectLatindexPublications();
 }

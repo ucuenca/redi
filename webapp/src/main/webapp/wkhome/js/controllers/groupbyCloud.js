@@ -33,27 +33,27 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
         $('html,body').animate({
             scrollTop: $("#scrollToTop").offset().top
         }, "slow");
-        $scope.$watch('searchData.areaSearch', function (newValue, oldValue, scope) {
+
+      //  $scope.$watch('searchData.areaSearch', function (newValue, oldValue, scope) {
 
             if (searchData.areaSearch) {
-                var areaSearch = searchData.areaSearch["@graph"];
-                if (areaSearch) {
-                    //    if (authorSearch.length > 1) {
-                    var candidates = _.map(areaSearch, function (area) {
-                        var model = {};
-                        //var keys = Object.keys(author);
-                        model["id"] = area["@id"];
-                        model["label"] = area["rdfs:label"];
-                        return model;
-                    });
-                    $scope.candidates = candidates;
+                var areaSearch = searchData.areaSearch;
+                if (areaSearch.length > 0) {
+                    // var candidates = _.map(areaSearch, function (area) {
+                    //     var model = {};
+                    //     //var keys = Object.keys(author);
+                    //     model["id"] = area["@id"];
+                    //     model["label"] = area["rdfs:label"];
+                    //     return model;
+                    // });
+                    $scope.candidates = areaSearch;
                     $scope.selectedAuthor = function ($event, label) {
                         $('#searchResults').modal('hide');
                         searchData.researchArea = label;
                         $scope.selectedItem = label;
                     };
                     waitingDialog.hide();
-                    $('#searchResults').modal('show');
+                    // $('#searchResults').modal('show');
                 }//End if(authorSearch)
                 else
                 {
@@ -64,7 +64,7 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
 
             }
 
-        }, true);
+        // }, true);
         if (!searchData.allkeywords)
         {
             $scope.themes = [];
@@ -89,7 +89,7 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
                     + '     } '
                     + '     GROUP BY ?keyword  ?key '
                     //+ '     GROUP BY ?subject'
-                    
+
                     + '     HAVING(?total > 4) ' //si la keyword aparece en mas de 5 publicaciones
                     + '}';
                 sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
@@ -143,7 +143,7 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
         function groupByResources(values, groupby)//grouByResources resources by ...
         {
             // executeDraw(values,groupby);
-            //this activity is cheking directly in cloudGroup.js 
+            //this activity is cheking directly in cloudGroup.js
         }//end grouByResources
 
         function loadResources(value, groupby)//load resources related with selected keyword
@@ -163,7 +163,7 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
                     + '   ?keywordSubject rdfs:label ?keyword. '
                     + '   ?subject dct:provenance ?provenance  '
                    + '    FILTER (mm:fulltext-search(?keyword, "'+value+'")) '
-//          
+//
 //                    + '   { '
 //                    + ' 	SELECT * '
 //                    + '         WHERE { '
@@ -283,7 +283,7 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
 
         $scope.loadRelatedAuthors = function (author) {
 
-      
+
 
             clickonRelatedauthor = function (author)
             {
@@ -307,15 +307,15 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
 
             };
 
-           
-         
-           
+
+
+
         };
-        
+
         //Function that displays the buttons to export the report
         $scope.exportReport = function (id) {
             $scope.author = id;
             $scope.showRepButtons = true;
         };
 
-    }]); //end groupTagsController 
+    }]); //end groupTagsController

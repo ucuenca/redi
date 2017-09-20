@@ -102,6 +102,24 @@ wkhomeServices.factory('reportService', ['$resource', '$http', '$window',
         });
     }]);
 
+wkhomeServices.factory('AuthorsService', ['$resource', '$http', '$window',
+    function ($resource, $http, $window) {
+        var serverInstance = 'http://' + $window.location.hostname
+                + ($window.location.port ? ':8080' : '') + '';
+        return $resource(serverInstance + '/solr/authors/select?q=:search&wt=json&fl=lmf.uri,name,topics', {search:'@id'});
+    }]);
+wkhomeServices.factory('PublicationsService', ['$resource', '$http', '$window',
+    function ($resource, $http, $window) {
+        var serverInstance = 'http://' + $window.location.hostname
+                + ($window.location.port ? ':8080' : '') + '';
+        return $resource(serverInstance + '/solr/publications/select?q=":search"&wt=json&fl=lmf.uri', {search:'@id'});
+    }]);
+wkhomeServices.factory('KeywordsService', ['$resource', '$http', '$window',
+    function ($resource, $http, $window) {
+        var serverInstance = 'http://' + $window.location.hostname
+                + ($window.location.port ? ':8080' : '') + '';
+        return $resource(serverInstance + '/solr/keywords/select?q=":search"&fl=lmf.uri,keyword&wt=json&', {search:'@id'});
+    }]);
 wkhomeServices.factory('searchQueryService', ['$resource', '$http', '$window',
     function ($resource, $http, $window) {
         $http.defaults.headers.common['content-type'] = 'application/x-www-form-urlencoded';

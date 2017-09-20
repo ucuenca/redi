@@ -413,6 +413,8 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                       + " ?contributorURI foaf:img ?imgContributor."
                       + " ?creatorURI foaf:name ?creator."
                       + " ?creatorURI foaf:img ?imgCreator."
+                      + " ?isPartOfURI a bibo:Journal."
+                      + " ?isPartOfURI bibo:uri ?eqJournalUri."
                       + " ?isPartOfURI rdfs:label ?isPartOf. } "
                       + "WHERE { GRAPH <" + globalData.centralGraph + "> { "
                       + "  <" + id + "> dct:title ?title."
@@ -434,13 +436,17 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                       + "  OPTIONAL {<" + id + "> dct:subject ?keywordURI. }"
                       + "  OPTIONAL {?keywordURI rdfs:label ?keyword}"
                       + "  OPTIONAL {<" + id + "> dct:isPartOf ?isPartOfURI. }"
+                      + "  OPTIONAL { ?isPartOfURI <http://www.w3.org/2002/07/owl#sameAs> ?eqJournal. }"
+                      + "  OPTIONAL {graph <"+globalData.latindexGraph+"> { ?eqJournal bibo:uri ?eqJournalUri. }  }"
                       + "  OPTIONAL {?isPartOfURI rdfs:label ?isPartOf}}}";
 
                     sparqlQuery.querySrv({query: query}, function (rdf) {
                         jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                           var authors = [];
                           var pubclean = {};
+                          var jouclean = {};
                           var publication = _.findWhere(compacted["@graph"], {"@type": "bibo:AcademicArticle"});
+                          var journal = _.findWhere(compacted["@graph"], {"@type": "bibo:Journal"});
                           var exportpath = location.protocol+ '//' + location.host + location.pathname + "resource?uri=" + publication["@id"] + "&format={0}";
                           var formats = [{url: String.format(exportpath,"application/rdf%2Bjson"), label: "RDF/JSON", img: "/wkhome/images/rdf-json.png"} ,
                           {url: String.format(exportpath, "application/rdf%2Bxml"), label: "RDF/XML", img: "/wkhome/images/rdf-xml.png"},
@@ -504,6 +510,10 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                               val["source"] = "research-gate";
                               val["label"] = "Research Gate";
                               val["img"] = "/wkhome/images/researchgate.png";
+                            }else if (url.indexOf("latindex.org") !== -1) {
+                              val["source"] = "latindex";
+                              val["label"] = "Latindex";
+                              val["img"] = "/wkhome/images/latindex.jpg";
                             } else if (url.indexOf("springer.com") !== -1) {
                               val["source"] = "springer";
                               val["label"] = "Springer";
@@ -533,6 +543,23 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                           pubclean.publisher = getStrVal(publication['dct:publisher']);
                           pubclean.uri = _.mapObject(publication["bibo:uri"], classifyURLS);
                           pubclean.subjects = publication['dct:subject'];
+                          
+                          if (journal && journal['@id']){
+                            jouclean.id = journal['@id'];
+                            jouclean.journalName = getStrVal(journal['rdfs:label']);
+                            if (journal['bibo:uri']){
+                                    jouclean.journalURL = getStrVal(journal['bibo:uri']['@id']);
+                                    jouclean.journalProvenanceIcon = _.mapObject(journal["bibo:uri"], classifyURLS);
+                                    if (jouclean.journalProvenanceIcon['@id']){
+                                        jouclean.journalProvenanceIcon=jouclean.journalProvenanceIcon['@id'];
+                                    }
+                            }else{
+                                jouclean.journalURL = jouclean.id;
+                            }
+                          }
+                          
+                          
+                          
 
                           _.each(publication["dct:contributor"],buildAuthor);
                           _.each(publication["dct:creator"], buildAuthor);
@@ -543,6 +570,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                           pubclean.formats = formats;
 
                           scope.publication = pubclean;
+                          scope.publication.journal = jouclean;
                           scope.$apply();
                           /** Used for validations and test purposes.
                           authors.push({"@id": node.parent.author["@id"], "foaf:name": "SAQUI", "@type": "foaf:Person"});
@@ -1106,7 +1134,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                     //	Watch	the	data	attribute	of	the	scope
                     scope.$watch('data', function (newVal, oldVal, scope) {
                         //	Update	the	chart
-                        if (scope.data){
+                        if (scope.data && scope.data["@graph"]){
                           //&&
                             //    (JSON.stringify(newVal["@graph"]) != JSON.stringify(oldVal ? oldVal["@graph"] : oldVal))) {
                             var data = jQuery.extend({}, scope.data);

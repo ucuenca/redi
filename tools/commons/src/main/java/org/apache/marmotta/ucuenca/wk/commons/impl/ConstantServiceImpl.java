@@ -260,5 +260,10 @@ public class ConstantServiceImpl implements ConstantService {
     public String getSelectedGraph(String type) {
         return commonService.readPropertyFromFile("parameters.properties", type);
     }
+    
+    @Override
+    public String getLatindexJournalsGraph() {
+        return confService.getBaseContext() + "latindex";
+    }
 
 }

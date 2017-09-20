@@ -61,6 +61,9 @@ public class CommonServiceImpl implements CommonService {
     AuthorAttributesImpl authorAttr;
     
     @Inject
+    LantindexDetectionServiceImpl LatindexImpl;
+    
+    @Inject
     IndexCentralGraphImpl indexingCentralGraphService;
     
     @Inject
@@ -156,6 +159,13 @@ public class CommonServiceImpl implements CommonService {
     @Override
     public String getSearchQuery(String textSearch) {
         return queriesService.getSearchQuery(textSearch);
+    }
+
+    @Override
+    public String DetectLatindexPublications() {
+        String startProcess = LatindexImpl.startProcess();
+        
+        return startProcess;
     }
     
 }

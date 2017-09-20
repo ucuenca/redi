@@ -1,9 +1,7 @@
 package org.apache.marmotta.ucuenca.wk.provider.scopus;
 
 import com.google.common.collect.ImmutableList;
-//import java.io.IOException;
 import java.io.InputStream;
-//import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -14,8 +12,8 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.enterprise.context.ApplicationScoped;
-//import javax.inject.Inject;
 import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
+import org.apache.marmotta.ldclient.api.provider.DataProvider;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
 import org.apache.marmotta.ldclient.model.ClientConfiguration;
 import org.apache.marmotta.ldclient.model.ClientResponse;
@@ -23,14 +21,7 @@ import org.apache.marmotta.ldclient.provider.xml.AbstractXMLDataProvider;
 import org.apache.marmotta.ldclient.provider.xml.mapping.XPathLiteralMapper;
 import org.apache.marmotta.ldclient.provider.xml.mapping.XPathValueMapper;
 import org.apache.marmotta.ldclient.services.ldclient.LDClient;
-import org.apache.marmotta.ldclient.api.provider.DataProvider;
-//import org.apache.marmotta.ucuenca.wk.commons.service.DistanceService;
-//import org.apache.marmotta.ucuenca.wk.commons.service.KeywordsService;
 import org.apache.marmotta.ucuenca.wk.endpoint.scopus.ScopusPublicationSearchEndpoint;
-//import static org.apache.marmotta.ucuenca.wk.provider.scopus.ScopusAuthorSearchProvider.NAMESPACE_DC;
-//import static org.apache.marmotta.ucuenca.wk.provider.scopus.ScopusAuthorSearchProvider.NAMESPACE_PRISM;
-//import org.jdom2.Content;
-//import org.jdom2.JDOMException;
 import org.jdom2.Namespace;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Model;
@@ -190,5 +181,6 @@ public class ScopusAuthorProvider
         scopusNamespaces.put("skos", "http://www.w3.org/2004/02/skos/core#");
         mediaOntMappings = new ConcurrentHashMap<String, XPathValueMapper>();
         mediaOntMappings.put("http://www.elsevier.com/xml/svapi/rdf/dtd/searchResults", (XPathValueMapper) new XPathLiteralMapper("/rdf:RDF/rdf:Description/api:searchResults/@rdf:resource", scopusNamespaces));
+        mediaOntMappings.put("http://www.elsevier.com/xml/svapi/rdf/dtd/orcid", (XPathValueMapper) new XPathLiteralMapper("/rdf:RDF/rdf:Description/api:orcid", scopusNamespaces));
     }
 }

@@ -116,4 +116,10 @@ public interface ConstantService {
 
     //String getAuthorsGraph();
     String getProviderNsGraph();
+    
+    /**
+     * Returns the URI of the Latindex Graph
+     * @return 
+     */
+    String getLatindexJournalsGraph();
 }

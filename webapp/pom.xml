@@ -488,7 +488,7 @@
 
     <dependencies>
         <!-- custom modules for Watiqai Khuska LODP -->
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>org.apache.marmotta.ucuenca.wk</groupId>
             <artifactId>base-module</artifactId>
             <version>${project.version}</version>
@@ -502,6 +502,9 @@
             <groupId>org.apache.marmotta.ucuenca.wk</groupId>
             <artifactId>publications-manager</artifactId>
             <version>${project.version}</version>
+            <!--            <exclusions>
+                <exclusion>
+            </exclusions>-->
         </dependency>
         <!-- Modules, include the ones needed by the application -->
         <dependency>
@@ -543,6 +546,13 @@
             <groupId>org.apache.marmotta</groupId>
             <artifactId>marmotta-security</artifactId>
             <version>${marmotta.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.tuckey</groupId>
+            <artifactId>urlrewritefilter</artifactId>
+            <version>4.0.3</version>
+            <!-- FIXME add turkey version variable-->
         </dependency>
 
         <!-- JavaEE / Servlet / CDI Environment -->
@@ -620,11 +630,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!--dependency>
-                <groupId>com.github.wikier</groupId>
-                <artifactId>marmotta-search</artifactId>
-                <version>3.3.0</version>
-        </dependency-->
+        <dependency>
+            <groupId>com.github.wikier</groupId>
+            <artifactId>marmotta-search</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 </project>

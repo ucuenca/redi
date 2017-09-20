@@ -185,6 +185,12 @@
             <version>2.13.0</version>
             <type>jar</type>
         </dependency>
+        
+        <dependency>
+            <groupId>com.github.mpkorstanje</groupId>
+            <artifactId>simmetrics-core</artifactId>
+            <version>3.2.1</version>
+        </dependency>
     </dependencies>
 
 </project>
