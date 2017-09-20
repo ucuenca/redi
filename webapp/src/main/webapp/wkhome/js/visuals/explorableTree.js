@@ -544,7 +544,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                           pubclean.uri = _.mapObject(publication["bibo:uri"], classifyURLS);
                           pubclean.subjects = publication['dct:subject'];
                           
-                          if (journal['@id']){
+                          if (journal && journal['@id']){
                             jouclean.id = journal['@id'];
                             jouclean.journalName = getStrVal(journal['rdfs:label']);
                             if (journal['bibo:uri']){
