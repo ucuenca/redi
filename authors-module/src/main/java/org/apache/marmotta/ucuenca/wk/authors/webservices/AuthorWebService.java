@@ -18,7 +18,11 @@
 package org.apache.marmotta.ucuenca.wk.authors.webservices;
 
 import com.google.common.io.CharStreams;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,14 +33,18 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.marmotta.platform.core.api.config.ConfigurationService;
 import org.apache.marmotta.ucuenca.wk.authors.api.AuthorService;
 import org.apache.marmotta.ucuenca.wk.authors.api.EndpointService;
 import org.apache.marmotta.ucuenca.wk.authors.api.SparqlEndpoint;
@@ -63,9 +71,12 @@ public class AuthorWebService {
 
     @Inject
     private EndpointService endpointService;
+    @Inject
+    private ConfigurationService configurationService;
 
     public static final String ADD_ENDPOINT = "/addendpoint";
     public static final String AUTHOR_SPLIT = "/split";
+    private static final int MAX_NUMBER_CSV_FIELDS = 3;
 
     /**
      * Add Endpoint Service
@@ -94,6 +105,41 @@ public class AuthorWebService {
     public Response addDomain(@QueryParam("id") String id, @QueryParam("domain") String domain) throws IOException {
         String result = endpointService.addDomain(id, domain);
         return Response.status(Status.CREATED).entity(result).build();
+    }
+
+    @POST
+    @Path("/upload")
+    public Response uploadAuthors(@HeaderParam(HttpHeaders.CONTENT_TYPE) String type, @Context HttpServletRequest request,
+            @QueryParam("org") String organization) throws IOException {
+        if (type == null || !"text/csv".equals(type.toLowerCase())) {
+            return Response.status(Status.BAD_REQUEST).entity("Incorrect file format.").build();
+        }
+        if (organization == null || organization.trim().length() <= 0) {
+            return Response.status(Status.BAD_REQUEST).entity("There is not institution name.").build();
+        }
+
+        List<String> lines;
+        try (InputStream in = request.getInputStream()) {
+            lines = IOUtils.readLines(in, StandardCharsets.UTF_8);
+            // Validate file structure.
+            for (String line : lines) {
+                int fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1).length;
+                if (fields != MAX_NUMBER_CSV_FIELDS) {
+                    return Response.status(Status.BAD_REQUEST).entity("File should have three fields.").build();
+                }
+            }
+        }
+        // Store authors
+        File f = new File(configurationService.getHome() + File.separator + "authors", organization + ".csv");
+        if (!f.exists()) {
+            f.getParentFile().mkdirs();
+            f.createNewFile();
+        }
+        try (FileOutputStream fos = new FileOutputStream(f)) {
+            IOUtils.writeLines(lines, null, fos, StandardCharsets.UTF_8);
+            log.info("File imported to {}.", f.getPath());
+        }   
+        return Response.ok().entity("Import Successfully.").build();
     }
 
     @DELETE

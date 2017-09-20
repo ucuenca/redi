@@ -71,8 +71,54 @@ function Importer(id, host) {
             alert('Select an endpoint.');
             return;
         }
-        console.log("importing...");
+
+        var data = file.get(0).files[0];
+        var org = endpoints.find('option:selected').text();
         loader.show();
+
+        requestUploadFile(host + "authors-module/upload?org=" + org, data, data.type,
+                {
+                    200: function () {
+                        loader.hide();
+                        file.val('');
+                        alert("Authors imported sucessfully.");
+                    },
+                    400: function (error) {
+                        loader.hide();
+                        file.val('');
+                        alert("Error " + error + "\nClient Error, check your file format.");
+                    },
+                    500: function (error) {
+                        loader.hide();
+                        file.val('');
+                        alert("Error " + error + "\nCannot process file.");
+                    }
+                });
+
+        function requestUploadFile(url, data, mime, callbacks) {
+            function createRequest() {
+                var request = null;
+                if (window.XMLHttpRequest) {
+                    request = new XMLHttpRequest();
+                } else if (window.ActiveXObject) {
+                    request = new ActiveXObject("Microsoft.XMLHTTP");
+                } else {
+                    throw "request object can not be created"
+                }
+                return request;
+            }
+            var request = createRequest();
+            request.onreadystatechange = function () {
+                if (request.readyState == 4) {
+                    if (callbacks.hasOwnProperty(request.status)) {
+                        callbacks[request.status](request.responseText, request);
+                    }
+                }
+            };
+            request.open('POST', url, true);
+            request.setRequestHeader("Content-Type", mime);
+            request.send(data);
+        }
     }
     init();
 }

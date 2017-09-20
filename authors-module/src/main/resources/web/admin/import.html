@@ -22,7 +22,6 @@
         <!--###BEGIN_HEAD###-->
         <title>Importer</title>
         <script type="text/javascript" src="../../webjars/jquery/1.8.2/jquery.min.js"></script>
-        <script type="text/javascript" src="../../webjars/marmotta.js"></script>
         <script type="text/javascript" src="js/widgets/importAuthors.js"></script>
         <script type="text/javascript">
             $(document).ready(function () {
@@ -35,7 +34,16 @@
         <!--###BEGIN_CONTENT###-->
         <h1>Authors Import</h1>
         <h2>File Structure</h2>
-        <p>Include something about file structure.  </p>
+        <p>Authors can be uploaded to REDI through a file. This file must be a CSV file
+            <strong>without header</strong> that contains three fields: family name, last name, and areas of interest; 
+            you can separate areas of interest using a colon (;). For example, next there 
+            is an example of a correct file structure.</p>
+        <i>dummy.csv</i>
+        <div style="border-style: groove">
+            <p>Victor Hugo,Saquicela Galarza,Semantic Web;Integration systems;GIS</p>
+            <p>Juan Pablo,Carvallo Vega,Software Requirements;iStar</p>
+            <p>Jorge,Espinoza Maldonado,Semantic Web;Digital TV</p>
+        </div>
         <div id="importer_div"></div>
         <!--###END_CONTENT###-->
     </body>
