@@ -543,7 +543,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                           pubclean.publisher = getStrVal(publication['dct:publisher']);
                           pubclean.uri = _.mapObject(publication["bibo:uri"], classifyURLS);
                           pubclean.subjects = publication['dct:subject'];
-                          
+
                           if (journal && journal['@id']){
                             jouclean.id = journal['@id'];
                             jouclean.journalName = getStrVal(journal['rdfs:label']);
@@ -557,9 +557,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                                 jouclean.journalURL = jouclean.id;
                             }
                           }
-                          
-                          
-                          
+
 
                           _.each(publication["dct:contributor"],buildAuthor);
                           _.each(publication["dct:creator"], buildAuthor);
