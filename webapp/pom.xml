@@ -499,6 +499,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>edu.ucuenca</groupId>
+            <artifactId>mongo-storage</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.marmotta.ucuenca.wk</groupId>
             <artifactId>publications-manager</artifactId>
             <version>${project.version}</version>
