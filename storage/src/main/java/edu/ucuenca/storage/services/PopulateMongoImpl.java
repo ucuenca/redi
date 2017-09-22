@@ -167,102 +167,11 @@ public class PopulateMongoImpl implements PopulateMongo {
     }
 
     public void statistics() {
-        String querybarchart = "PREFIX dct: <http://purl.org/dc/terms/>\n"
-                + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
-                + "PREFIX uc: <http://ucuenca.edu.ec/ontology#>\n"
-                + "CONSTRUCT {\n"
-                + "  ?provenance uc:totalPublications ?totalPub;\n"
-                + "              uc:totalAuthors ?totalAuthors;\n"
-                + "              uc:name ?name.\n"
-                + "}   WHERE {\n"
-                + "  {\n"
-                + "    SELECT DISTINCT ?provenance (SAMPLE(?ies) as ?name) (count(DISTINCT ?author) as ?totalAuthors) (COUNT(DISTINCT ?publications) as ?totalPub)\n"
-                + "    WHERE {\n"
-                + "      GRAPH <http://localhost:8080/context/redi> {\n"
-                + "        ?author a foaf:Person.\n"
-                + "        ?author dct:provenance ?provenance.\n"
-                + "        ?author foaf:publications ?publications.\n"
-                + "        GRAPH <http://localhost:8080/context/endpoints> {\n"
-                + "          ?provenance uc:name ?ies.\n"
-                + "        }\n"
-                + "      }\n"
-                + "    } GROUP BY ?provenance ORDER BY DESC(?totalAuthors)\n"
-                + "  }\n"
-                + "}";
-        String queryAuthors = "PREFIX dct: <http://purl.org/dc/terms/>\n"
-                + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
-                + "PREFIX uc: <http://ucuenca.edu.ec/ontology#>\n"
-                + "\n"
-                + "CONSTRUCT { \n"
-                + "?provenance a uc:Endpoint;\n"
-                + "              uc:name ?name;\n"
-                + "              uc:total ?total.\n"
-                + "} WHERE { \n"
-                + "  graph <http://localhost:8080/context/redi> { \n"
-                + "    SELECT ?provenance ?name (COUNT(DISTINCT(?author)) AS ?total) \n"
-                + "    WHERE { \n"
-                + "      ?author a foaf:Person;\n"
-                + "                foaf:publications ?pub;\n"
-                + "                dct:provenance ?provenance . \n"
-                + "\n"
-                + "      GRAPH <http://localhost:8080/context/endpoints> {\n"
-                + "        ?provenance uc:name ?name .\n"
-                + "      }\n"
-                + "    } GROUP BY ?provenance ?name \n"
-                + "  } \n"
-                + "} ";
-        String querypublications = "PREFIX dct: <http://purl.org/dc/terms/>\n"
-                + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
-                + "PREFIX uc: <http://ucuenca.edu.ec/ontology#>\n"
-                + "\n"
-                + "CONSTRUCT {  \n"
-                + "     ?provenance uc:total ?totalp.\n"
-                + "     ?provenance uc:name ?sname.\n"
-                + "} WHERE {\n"
-                + "  {\n"
-                + "    SELECT DISTINCT ?provenance (SAMPLE(?sourcename)  as ?sname)  (count(DISTINCT ?pub) as ?totalp)\n"
-                + "    WHERE {\n"
-                + "      GRAPH <http://localhost:8080/context/redi> {\n"
-                + "        ?author a foaf:Person;\n"
-                + "             foaf:publications ?pub;\n"
-                + "             dct:provenance ?provenance.\n"
-                + "\n"
-                + "        graph <http://localhost:8080/context/endpoints> {\n"
-                + "          ?provenance uc:name ?sourcename \n"
-                + "        }\n"
-                + "      }\n"
-                + "    } group by ?provenance \n"
-                + "  } \n"
-                + "}";
-        String queryareas = "PREFIX dct: <http://purl.org/dc/terms/>\n"
-                + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
-                + "PREFIX uc: <http://ucuenca.edu.ec/ontology#>\n"
-                + "\n"
-                + "CONSTRUCT { \n"
-                + "     ?keyword a uc:ResearchArea;\n"
-                + "                uc:name ?label;\n"
-                + "                uc:total ?total.\n"
-                + "} WHERE {  \n"
-                + "  {\n"
-                + "    SELECT DISTINCT ?keyword (SAMPLE(?k) as ?label) (COUNT(?keyword) AS ?total) \n"
-                + "    WHERE {\n"
-                + "      GRAPH <http://localhost:8080/context/redi> {\n"
-                + "        ?author foaf:publications ?publications.\n"
-                + "        ?publications dct:subject ?keyword.\n"
-                + "        ?keyword rdfs:label ?k.\n"
-                + "      }\n"
-                + "    }\n"
-                + "    GROUP BY ?keyword\n"
-                + "    ORDER BY DESC(?total) \n"
-                + "    LIMIT 15 \n"
-                + "  }\n"
-                + "}";
-
         HashMap<String, String> queries = new HashMap<>();
-        queries.put("barchar", querybarchart);
-        queries.put("count_authors", queryAuthors);
-        queries.put("count_publications", querypublications);
-        queries.put("count_research_areas", queryareas);
+        queries.put("barchar", queriesService.getBarcharDataQuery());
+        queries.put("count_authors", queriesService.getAggreggationAuthors());
+        queries.put("count_publications", queriesService.getAggregationPublications());
+        queries.put("count_research_areas", queriesService.getAggregationAreas());
         loadEstadistics(MongoService.Collection.STATISTICS.getValue(), queries);
 
     }
