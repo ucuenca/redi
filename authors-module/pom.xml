@@ -214,7 +214,7 @@
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>${servlet.api.version}</version>
-            <type>jar</type>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
