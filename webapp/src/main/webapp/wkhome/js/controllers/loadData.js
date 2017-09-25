@@ -11,7 +11,6 @@ wkhomeControllers.controller('loadData', ['sparqlQuery', 'searchData', '$transla
         /*************************************************************/
         /*query to get the keywords in memory */
         /*************************************************************/
-        debugger;
         loadAllKeyword();
         $scope.themes = [];
         function loadAllKeyword() {

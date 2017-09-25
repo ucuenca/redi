@@ -242,8 +242,9 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
                                 if (value["rdfs:label"] && value["uc:total"]["@value"])
                                 {
                                     var anchor = $("<a class='relatedauthors' target='blank' onclick = 'clickonRelatedauthor(\"" + value["@id"] + "\")'  >").text("");
-                                    //anchor.append('<img src="/wkhome/images/author-ec.png" class="img-rounded" alt="Logo Cedia" width="20" height="20"        >');
-                                    anchor.append(value["rdfs:label"] + "(" + value["uc:total"]["@value"] + ")");
+                                    //anchor.append('<img src="/wkhome/images/author-ec.png" class="img-rounded" alt="Logo Cedia" width="20" height="20"        >');4
+                                    var name = typeof value["rdfs:label"] === 'string' ? value["rdfs:label"] : _(value["rdfs:label"] ).first();
+                                    anchor.append(name + "(" + value["uc:total"]["@value"] + ")");
                                     div.append(anchor);
                                     div.append("</br>");
                                     return anchor;
@@ -332,8 +333,9 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
                 sparqlQuery.querySrv({query: sparqlPublications}, function (rdf) {
 
                     jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
-                        if (compacted)
-                        {
+                      waitingDialog.show("Searching publications with the keyword: " + keyword);
+
+                        if (compacted){
                             var entity = compacted["@graph"];
                             //var final_entity = _.where(entity, {"@type": "bibo:Document"});
                             var final_entity = entity;
@@ -342,8 +344,7 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
                             scope.ctrlFn({value: entity});
                             waitingDialog.hide();
 
-                        }
-                        else
+                        } else
                         {
                             waitingDialog.hide();
                         }
