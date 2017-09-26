@@ -117,7 +117,7 @@ cloudGroup.directive('cloudGroup', ["$routeParams", "d3", 'sparqlQuery', 'global
             /*function getCategory(type, d) {
              var max = d3.max(_.pluck(dataMapping, type));
              var val = d[type] / max;
-             
+
              if (val > 0.4)
              return 'Top';
              else if (val > 0.1)
@@ -468,10 +468,11 @@ cloudGroup.directive('cloudGroup', ["$routeParams", "d3", 'sparqlQuery', 'global
                                 authorInfo.append(div);
                                 _.map(values, function (value) {
                                     var datastring = JSON.stringify(value);
-                                    var anchor = $("<a class='relatedauthors' target='blank' onclick = 'return clickonRelatedauthor(\"" + value["@id"] + "\")'  >").text("");
+                                    // var anchor = $("<a class='relatedauthors' target='blank' onclick = 'return clickonRelatedauthor(\"" + value["@id"] + "\")'  >").text("");
+                                    var anchor = $("<a class='relatedauthors' href = '#/es/w/author/" + value["@id"] + "'  >").text("");
                                     //anchor.append('<img src="/wkhome/images/author-ec.png" class="img-rounded" alt="Logo Cedia" width="20" height="20"        >');
-
-                                    anchor.append(value["rdfs:label"]);
+                                    var name  = typeof value["rdfs:label"] === 'string' ? value["rdfs:label"] : _(value["rdfs:label"]).first();
+                                    anchor.append(name);
                                     div.append(anchor);
                                     div.append("</br>");
                                     return anchor;
@@ -519,9 +520,9 @@ cloudGroup.directive('cloudGroup', ["$routeParams", "d3", 'sparqlQuery', 'global
                      x: d.time,
                      y: d.visitors
                      }
-                     
+
                      });
-                     
+
                      draw(svg, width, height, data);
                      },	true);*/
                     scope.$watch('data', function (newVal, oldVal, scope) {
@@ -556,4 +557,3 @@ cloudGroup.directive('cloudGroup', ["$routeParams", "d3", 'sparqlQuery', 'global
             }
         };
     }]);
-
