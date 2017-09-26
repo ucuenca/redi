@@ -638,6 +638,14 @@
             <version>1.0</version>
             <scope>runtime</scope>
         </dependency>
+        <!--Override dependency of Jasper. It's using a wrong version that gives 
+        Marmotta an unexpected behaviour in the users module. 
+        Error fixed: NoClassDefFoundError: JsonPropertyDescription-->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
     </dependencies>
 
 </project>
