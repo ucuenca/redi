@@ -93,11 +93,12 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
                 }, function(result) {
                   if (result.response.docs.length > 0) {
                     var publications = result.response.docs;
-                    var template = " BIND(<{0}> as ?publicationUri) ";
-                    var search = String.format(template, publications[0]["lmf.uri"]);
-                    for(i=1; i<publications.length; i++){
-                      search = search + "UNION" + String.format(template, publications[i]["lmf.uri"]);
+                    var template = " <{0}> ";
+                    var search = "values ?publicationUri {";
+                    for(i=0; i<publications.length; i++){
+                      search += String.format(template, publications[i]["lmf.uri"]);
                     }
+                    search += '}';
                     var res = String.format(queryPublications, search);
                     sparqlQuery.querySrv({
                         query: res
