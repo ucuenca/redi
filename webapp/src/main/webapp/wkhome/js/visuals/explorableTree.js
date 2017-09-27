@@ -17,10 +17,11 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                 + 'CONSTRUCT {  <http://ucuenca.edu.ec/wkhuska/resultTitle> a uc:pagetitle.'
                 + ' <http://ucuenca.edu.ec/wkhuska/resultTitle> uc:viewtitle "Authors Related With {0}".'
                 + ' ?subject rdfs:label ?name.'
+                + ' ?subject foaf:img ?img .'
                 + '?subject uc:total ?totalPub } '
                 + 'WHERE {'
                 + '  {'
-                + '    SELECT ?subject ?name (COUNT(DISTINCT ?relpublication) as ?totalPub)'
+                + '    SELECT ?subject (MAX(str(?name_)) as ?name) (COUNT(DISTINCT ?relpublication) as ?totalPub) (MAX(str(?img_)) as ?imgm) (IRI (?imgm) as ?img)'
                 + '    WHERE {'
                 + '        GRAPH <' + globalData.clustersGraph + '> {'
                 + '          ?cluster foaf:publications ?publication .'
@@ -28,16 +29,17 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                 + '          ?cluster foaf:publications ?relpublication .'
                 + '          ?relpublication uc:hasPerson ?subject .'
                 + '          {'
-                + '            SELECT ?name {'
+                + '            SELECT ?name_ ?img_ {'
                 + '              GRAPH <' + globalData.centralGraph + '> { '
-                + '                ?subject foaf:name ?name .'
+                + '                ?subject foaf:name ?name_ .'
+                + '                OPTIONAL{?subject  foaf:img ?img_. }'
                 + '              }'
                 + '            }'
                 + '          }'
                 + '          FILTER (?subject != <{1}>)'
                 + '        }'
                 + '    }'
-                + '    GROUP BY ?subject ?name'
+                + '    GROUP BY ?subject order by desc(?totalPub) limit 20'
                 + '  }'
                 + '}';
 
@@ -49,14 +51,14 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                 + '  ?subject uc:total ?totalPub .'
                 + '  ?subject foaf:img ?img .'
                 + '} WHERE  {'
-                + '  SELECT ?subject ?name (COUNT(?pub) as ?totalPub) ?img'
+                + '  SELECT ?subject (MAX(str(?name_)) as ?name) (COUNT( DISTINCT ?pub) as ?totalPub) (MAX(str(?img_)) as ?imgm) (IRI (?imgm) as ?img)'
                 + '  WHERE { GRAPH <' + globalData.centralGraph + '> {'
                 + '    <{1}> foaf:publications ?pub.'
                 + '    ?subject foaf:publications ?pub;'
-                + '             foaf:name ?name.'
-                + '     OPTIONAL{?subject  foaf:img ?img.}'
+                + '             foaf:name ?name_.'
+                + '     OPTIONAL{?subject  foaf:img ?img_.}'
                 + '    FILTER(<{1}> != ?subject)'
-                + '  }} GROUP BY ?subject ?name ?img'
+                + '  }} GROUP BY ?subject  order by desc(?totalPub) limit 20'
                 + '}';
 
         var draw = function draw(svg, width, height, data, scope) {
@@ -393,55 +395,97 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
             function setChildrenAndUpdateForPub(node) {
                 var id = node.publication["@id"];
                 if (id) {
-                    var query = globalData.PREFIX
-                      + "CONSTRUCT {"
-                      + "  <" + id + "> a bibo:AcademicArticle ;"
-                      + "								dct:title ?title; "
-                      + "								bibo:abstract ?abstract; "
-                      + "								bibo:uri ?uri; "
-                      + "								bibo:doi ?doi; "
-                      + "								bibo:pages ?pages; "
-                      + "								bibo:created ?created; "
-                      + "								bibo:issue ?issue; "
-                      + "								bibo:volume ?volumne; "
-                      + "								dct:contributor ?contributorURI; "
-                      + "								dct:creator ?creatorURI; "
-                      + "								dct:publisher ?publisher; "
-                      + "								dct:subject ?keyword; "
-                      + "								dct:isPartOf ?isPartOfURI. "
-                      + " ?contributorURI foaf:name ?contributor."
-                      + " ?contributorURI foaf:img ?imgContributor."
-                      + " ?creatorURI foaf:name ?creator."
-                      + " ?creatorURI foaf:img ?imgCreator."
-                      + " ?isPartOfURI a bibo:Journal."
-                      + " ?isPartOfURI bibo:uri ?eqJournalUri."
-                      + " ?isPartOfURI rdfs:label ?isPartOf. } "
-                      + "WHERE { GRAPH <" + globalData.centralGraph + "> { "
-                      + "  <" + id + "> dct:title ?title."
-                      + "  OPTIONAL {<" + id + "> bibo:abstract ?abstract. }"
-                      + "  OPTIONAL {<" + id + "> bibo:uri ?uri. }"
-                      + "  OPTIONAL {<" + id + "> bibo:doi ?doi. }"
-                      + "  OPTIONAL {<" + id + "> bibo:pages ?pages. }"
-                      + "  OPTIONAL {<" + id + "> bibo:created ?created. }"
-                      + "  OPTIONAL {<" + id + "> bibo:issue ?issue. }"
-                      + "  OPTIONAL {<" + id + "> bibo:volume ?volumne. }"
-                      + "  OPTIONAL {<" + id + "> dct:contributor ?contributorURI. }"
-                      + "  OPTIONAL {?contributorURI foaf:name ?contributor. }"
-                      + "  OPTIONAL {?contributorURI foaf:img ?imgContributor. }"
-                      + "  OPTIONAL {<" + id + "> dct:creator ?creatorURI. }"
-                      + "  OPTIONAL {?creatorURI foaf:name ?creator.}"
-                      + "  OPTIONAL {?creatorURI foaf:img ?imgCreator.}"
-                      + "  OPTIONAL {<" + id + "> dct:publisher ?publisherURI.}"
-                      + "  OPTIONAL {?publisherURI rdfs:label ?publisher. }"
-                      + "  OPTIONAL {<" + id + "> dct:subject ?keywordURI. }"
-                      + "  OPTIONAL {?keywordURI rdfs:label ?keyword}"
-                      + "  OPTIONAL {<" + id + "> dct:isPartOf ?isPartOfURI. }"
-                      + "  OPTIONAL { ?isPartOfURI <http://www.w3.org/2002/07/owl#sameAs> ?eqJournal. }"
-                      + "  OPTIONAL {graph <"+globalData.latindexGraph+"> { ?eqJournal bibo:uri ?eqJournalUri. }  }"
-                      + "  OPTIONAL {?isPartOfURI rdfs:label ?isPartOf}}}";
+//                    Old Version
+//                    var query = globalData.PREFIX
+//                      + "CONSTRUCT {"
+//                      + "  <" + id + "> a bibo:AcademicArticle ;"
+//                      + "								dct:title ?title; "
+//                      + "								bibo:abstract ?abstract; "
+//                      + "								bibo:uri ?uri; "
+//                      + "								bibo:doi ?doi; "
+//                      + "								bibo:pages ?pages; "
+//                      + "								bibo:created ?created; "
+//                      + "								bibo:issue ?issue; "
+//                      + "								bibo:volume ?volumne; "
+//                      + "								dct:contributor ?contributorURI; "
+//                      + "								dct:creator ?creatorURI; "
+//                      + "								dct:publisher ?publisher; "
+//                      + "								dct:subject ?keyword; "
+//                      + "								dct:isPartOf ?isPartOfURI. "
+//                      + " ?contributorURI foaf:name ?contributor."
+//                      + " ?contributorURI foaf:img ?imgContributor."
+//                      + " ?creatorURI foaf:name ?creator."
+//                      + " ?creatorURI foaf:img ?imgCreator."
+//                      + " ?isPartOfURI a bibo:Journal."
+//                      + " ?isPartOfURI bibo:uri ?eqJournalUri."
+//                      + " ?isPartOfURI rdfs:label ?isPartOf. } "
+//                      + "WHERE { GRAPH <" + globalData.centralGraph + "> { "
+//                      + "  <" + id + "> dct:title ?title."
+//                      + "  OPTIONAL {<" + id + "> bibo:abstract ?abstract. }"
+//                      + "  OPTIONAL {<" + id + "> bibo:uri ?uri. }"
+//                      + "  OPTIONAL {<" + id + "> bibo:doi ?doi. }"
+//                      + "  OPTIONAL {<" + id + "> bibo:pages ?pages. }"
+//                      + "  OPTIONAL {<" + id + "> bibo:created ?created. }"
+//                      + "  OPTIONAL {<" + id + "> bibo:issue ?issue. }"
+//                      + "  OPTIONAL {<" + id + "> bibo:volume ?volumne. }"
+//                      + "  OPTIONAL {<" + id + "> dct:contributor ?contributorURI. }"
+//                      + "  OPTIONAL {?contributorURI foaf:name ?contributor. }"
+//                      + "  OPTIONAL {?contributorURI foaf:img ?imgContributor. }"
+//                      + "  OPTIONAL {<" + id + "> dct:creator ?creatorURI. }"
+//                      + "  OPTIONAL {?creatorURI foaf:name ?creator.}"
+//                      + "  OPTIONAL {?creatorURI foaf:img ?imgCreator.}"
+//                      + "  OPTIONAL {<" + id + "> dct:publisher ?publisherURI.}"
+//                      + "  OPTIONAL {?publisherURI rdfs:label ?publisher. }"
+//                      + "  OPTIONAL {<" + id + "> dct:subject ?keywordURI. }"
+//                      + "  OPTIONAL {?keywordURI rdfs:label ?keyword}"
+//                      + "  OPTIONAL {<" + id + "> dct:isPartOf ?isPartOfURI. }"
+//                      + "  OPTIONAL { ?isPartOfURI <http://www.w3.org/2002/07/owl#sameAs> ?eqJournal. }"
+//                      + "  OPTIONAL {graph <"+globalData.latindexGraph+"> { ?eqJournal bibo:uri ?eqJournalUri. }  }"
+//                      + "  OPTIONAL {?isPartOfURI rdfs:label ?isPartOf}}}";
+
+
+                     var query = globalData.PREFIX+" construct { ?a a bibo:AcademicArticle . ?a ?b ?c .   ?c ?d ?e .   ?c ?p ?v . } where ";
+
+                      query += "{  bind (<"+id+"> as ?a) . "
+                            +"  	?a ?b ?c ."
+                            +" filter (?b = dct:isPartOf ||"
+                            +" ?b = dct:subject ||"
+                            +" ?b = dct:publisher ||"
+                            +" ?b = dct:creator ||"
+                            +" ?b = dct:contributor ||"
+                            +" ?b = bibo:pages ||"
+                            +" ?b = bibo:issue ||"
+                            +" ?b = bibo:created ||"
+                            +" ?b = dct:title ||"
+                            +" ?b = bibo:abstract ||"
+                            +" ?b = bibo:uri ||"
+                            +" ?b = bibo:doi ||"
+                            +" ?b = <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>   ) ."
+                            +"  optional {"
+                            +"  	select * {"
+                            +"              ?c ?d ?e ."
+                            +"              filter (?d = foaf:name || "
+                            +"                      ?d = <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> || "
+                            +"                      ?d = foaf:img || "
+                            +"                      ?d = rdfs:label  "
+                            +"                      ) ."
+                            +"          }"
+                            +"  }"
+                            +"  optional {"
+                            +"  	select * { "
+                            +"              ?c <http://www.w3.org/2002/07/owl#sameAs> ?eq ."
+                            +"              ?eq a <http://redi.cedia.edu.ec/ontology/journal> ."
+                            +"              ?eq ?p ?v. "
+                            +"              filter ( ?p=rdfs:label || ?p=bibo:uri || (?p=<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> && ?v = bibo:Journal) ). "
+                            +"          }"
+                            +"  }"
+                            +" }";
+
+                      waitingDialog.show("Searching ...");
 
                     sparqlQuery.querySrv({query: query}, function (rdf) {
                         jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
+                       	  waitingDialog.hide();
                           var authors = [];
                           var pubclean = {};
                           var jouclean = {};
@@ -529,7 +573,17 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                             }
                             return val;
                           };
-
+						  /**
+                          * Get string literals from subject resources.
+                          */
+                          var getSubjects = function(val, key) {
+                              try{
+                                var publication = _.findWhere(compacted["@graph"], {"@id": val['@id']});
+                                return publication['rdfs:label'];
+                              }catch(ex){
+                                return "";
+                              }
+                          };
 
 
                           pubclean.id = publication['@id'];
@@ -542,7 +596,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                           pubclean.volume = getStrVal(publication['bibo:volume']);
                           pubclean.publisher = getStrVal(publication['dct:publisher']);
                           pubclean.uri = _.mapObject(publication["bibo:uri"], classifyURLS);
-                          pubclean.subjects = publication['dct:subject'];
+                          pubclean.subjects = _.mapObject(publication["dct:subject"],getSubjects);
 
                           if (journal && journal['@id']){
                             jouclean.id = journal['@id'];
