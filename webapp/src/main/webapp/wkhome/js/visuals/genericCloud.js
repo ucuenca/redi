@@ -370,7 +370,8 @@ genericCloud.directive('genericCloud', ["d3", 'globalData','sparqlQuery',
                                 if (keyword["rdfs:label"])
                                 {
                                   var pubsvalue =  keyword[fields[1]]["@value"] > 50 ?  "+50" : keyword[fields[1]]["@value"];
-                                    mappedData.push({id:keyword["@id"], label: keyword[fields[0]], value: pubsvalue});
+                                  var name = typeof keyword[fields[0]] === 'string' ? keyword[fields[0]] : _(keyword[fields[0]]).first();
+                                  mappedData.push({id:keyword["@id"], label: name, value: pubsvalue});
                                 }
                             });
                             var pageTitle = "";
