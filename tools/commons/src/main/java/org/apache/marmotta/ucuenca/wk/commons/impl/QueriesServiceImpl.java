@@ -1198,4 +1198,21 @@ public class QueriesServiceImpl implements QueriesService {
                 + "}";
     }
 
+    @Override
+    public String getKeywordsFrequencyPub() {
+        return PREFIXES
+                + "CONSTRUCT { ?keyword rdfs:label ?key }"
+                + "WHERE {"
+                + "  SELECT  (count(?pubs) as ?total)"
+                + "  WHERE {"
+                + "    GRAPH <" + con.getCentralGraph() + "> {"
+                + "      ?subject foaf:publications ?pubs."
+                + "      ?pubs dct:subject ?keyword."
+                + "      ?keyword rdfs:label ?key."
+                + "    }"
+                + "  } GROUP BY ?keyword  ?key"
+                + "  HAVING(?total > 4)"
+                + "}";
+    }
+
 }

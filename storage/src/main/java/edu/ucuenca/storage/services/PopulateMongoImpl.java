@@ -55,11 +55,12 @@ public class PopulateMongoImpl implements PopulateMongo {
     private static final Map context = new HashMap();
 
     static {
-        context.put("dcterms", "http://purl.org/dc/terms/");
+        context.put("dct", "http://purl.org/dc/terms/");
         context.put("owl", "http://www.w3.org/2002/07/owl#");
         context.put("foaf", "http://xmlns.com/foaf/0.1/");
         context.put("uc", "http://ucuenca.edu.ec/ontology#");
         context.put("bibo", "http://purl.org/ontology/bibo/");
+        context.put("rdfs", "http://www.w3.org/2000/01/rdf-schema#");
     }
 
     /**
@@ -155,15 +156,16 @@ public class PopulateMongoImpl implements PopulateMongo {
 
     @Override
     public void authors() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 
-        String queryCandidates = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
-                + "SELECT DISTINCT ?subject\n"
-                + "FROM <http://localhost:8080/context/redi> \n"
-                + "WHERE {                  \n"
-                + "  ?subject foaf:publications []. \n"
-                + "}";
-        String queryDescribe = "DESCRIBE <{}> FROM <http://localhost:8080/context/redi>";
-        loadResources(queryCandidates, queryDescribe, MongoService.Collection.AUTHORS.getValue());
+//        String queryCandidates = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+//                + "SELECT DISTINCT ?subject\n"
+//                + "FROM <http://localhost:8080/context/redi> \n"
+//                + "WHERE {                  \n"
+//                + "  ?subject foaf:publications []. \n"
+//                + "}";
+//        String queryDescribe = "DESCRIBE <{}> FROM <http://localhost:8080/context/redi>";
+//        loadResources(queryCandidates, queryDescribe, MongoService.Collection.AUTHORS.getValue());
     }
 
     public void statistics() {
@@ -172,6 +174,7 @@ public class PopulateMongoImpl implements PopulateMongo {
         queries.put("count_authors", queriesService.getAggreggationAuthors());
         queries.put("count_publications", queriesService.getAggregationPublications());
         queries.put("count_research_areas", queriesService.getAggregationAreas());
+        queries.put("keywords_frequencypub_gt4", queriesService.getKeywordsFrequencyPub());
         loadEstadistics(MongoService.Collection.STATISTICS.getValue(), queries);
 
     }

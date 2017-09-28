@@ -326,4 +326,6 @@ public interface QueriesService {
     String getAggregationPublications();
 
     String getAggregationAreas();
+
+    String getKeywordsFrequencyPub();
 }
