@@ -17,6 +17,7 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.services;
 
+import com.google.common.base.Joiner;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
@@ -39,6 +40,7 @@ import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
+import org.apache.marmotta.ucuenca.wk.commons.function.Cache;
 import org.apache.marmotta.ucuenca.wk.commons.impl.ConstantServiceImpl;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
@@ -84,16 +86,25 @@ public class ReportsImpl implements ReportsService {
     @Override
     public String createReport(String hostname, String realPath, String name, String type, List<String> params) {
 
-        TEMP_PATH = realPath + "/tmp";
+        String hash =hostname+"|"+realPath+"|"+name+"|"+type+"|"+Joiner.on(",").join(params);
+        hash = Cache.getMD5(hash);
+        
+        
+        TEMP_PATH = "/tmp/redi_reports";
         REPORTS_FOLDER = realPath + "/reports/";
         // Make sure the output directory exists.
         File outDir = new File(TEMP_PATH);
         outDir.mkdirs();
         //Name of the file
-        SimpleDateFormat format = new SimpleDateFormat("ddMMyyyy_HHmmss");
-        String nameFile = name + "_" + format.format(new Date());
+        //SimpleDateFormat format = new SimpleDateFormat("ddMMyyyy_HHmmss");
+        String nameFile = "redi_reports_"+hash;//name + "_" + format.format(new Date());
         String pathFile = TEMP_PATH + "/" + nameFile + "." + type;
         try {
+            //Cache
+            if (new File(pathFile).exists()){
+                return "/pubman/reportDownload?file=" + hash + "." + type;
+            }
+            
             // Compile jrxml file.
             JasperReport jasperReport = JasperCompileManager
                     .compileReport(REPORTS_FOLDER + name + ".jrxml");
@@ -200,7 +211,7 @@ public class ReportsImpl implements ReportsService {
 
                 }
                 // Return the relative online path for the report
-                return "/tmp/" + nameFile + "." + type;
+                return "/pubman/reportDownload?file=" + hash + "." + type;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -225,14 +236,14 @@ public class ReportsImpl implements ReportsService {
             Integer cont = 0;
             //Query
             getQuery = ConstantServiceImpl.PREFIX
-                    + " SELECT DISTINCT ?name ?title ?abstract ?authorsName WHERE { "
-                    + "  <" + author + "> foaf:name ?name. "
+                    + " SELECT ?publications ?authors ( max(str(?name_)) as ?name) (max(str(?title_)) as ?title) (max(str(?abstract_)) as ?abstract) ( max(str(?authorsName_)) as ?authorsName) WHERE { "
+                    + " graph <"+constant.getCentralGraph()+"> { <" + author + "> foaf:name ?name_. "
                     + "  <" + author + "> foaf:publications  ?publications. "
-                    + "  ?publications dct:title ?title. "
-                    + "  OPTIONAL {?publications bibo:abstract ?abstract} "
-                    + "  ?authors foaf:publications ?publications. "
-                    + "  ?authors foaf:name ?authorsName. "
-                    + "}";
+                    + "  ?publications dct:title ?title_. "
+                    + "  OPTIONAL {?publications bibo:abstract ?abstract_ .} "
+                    + "  ?publications dct:creator|dct:contributor ?authors. "
+                    + "  ?authors foaf:name ?authorsName_. "
+                    + "} } group by ?publications ?authors ";
 
             log.info("Buscando Informacion de: " + author);
             Repository repo = new SPARQLRepository(hostname + "/sparql/select");
@@ -250,22 +261,22 @@ public class ReportsImpl implements ReportsService {
                 JSONObject coauthors = new JSONObject();
                 while (resulta.hasNext()) {
                     BindingSet binding = resulta.next();
-                    name = String.valueOf(binding.getValue("name")).replace("\"", "").replace("^^", "").split("<")[0];
+                    name = binding.getValue("name").stringValue();
                     //authorJson.put("name", name);
-                    String pubTitle = String.valueOf(binding.getValue("title")).replace("\"", "").replace("^^", "").split("<")[0];
+                    String pubTitle = binding.getValue("title").stringValue();
                     if (!pubMap.containsKey(pubTitle)) {
                         pubMap.put(pubTitle, new JSONObject());
                         pubMap.get(pubTitle).put("title", pubTitle);
                         cont++;
                         if (binding.getValue("abstract") != null) {
-                            pubMap.get(pubTitle).put("abstract", String.valueOf(binding.getValue("abstract")).replace("\"", "").replace("^^", "").split("<")[0]);
+                            pubMap.get(pubTitle).put("abstract", binding.getValue("abstract").stringValue());
                         }
                         //Coauthors
                         coautMap.put(pubTitle, new JSONArray());
-                        coautMap.get(pubTitle).add(String.valueOf(binding.getValue("authorsName")).replace("\"", "").replace("^^", "").split("<")[0]);
+                        coautMap.get(pubTitle).add(binding.getValue("authorsName").stringValue());
                         //pubMap.get(pubTitle).put("title", pubTitle);
                     } else {
-                        coautMap.get(pubTitle).add(String.valueOf(binding.getValue("authorsName")).replace("\"", "").replace("^^", "").split("<")[0]);
+                        coautMap.get(pubTitle).add(binding.getValue("authorsName").stringValue());
                     }
                 }
 
@@ -316,7 +327,7 @@ public class ReportsImpl implements ReportsService {
                     + "    	select DISTINCT ?subject ?author ?keywords "
                     + "        where "
                     + "        { "
-                    + "        	graph <" + constant.getWkhuskaGraph() + "> "
+                    + "        	graph <" + constant.getCentralGraph()+ "> "
                     + "            { "
                     + "                 ?subject foaf:name ?author. "
                     + "                 ?subject foaf:publications ?publicationUri. "
@@ -396,7 +407,7 @@ public class ReportsImpl implements ReportsService {
                     + " SELECT ?provenance ?name (COUNT(DISTINCT(?s)) AS ?total) (count(DISTINCT ?pub) as ?totalp) "
                     + " WHERE "
                     + "    { "
-                    + "    	GRAPH <" + constant.getWkhuskaGraph() + "> { "
+                    + "    	GRAPH <" + constant.getCentralGraph()+ "> { "
                     + "          ?s a foaf:Person. "
                     + "          ?s foaf:publications ?pub . "
                     + "          ?s dct:provenance ?provenance . "
@@ -404,8 +415,9 @@ public class ReportsImpl implements ReportsService {
                     + "              SELECT ?name "
                     + "              WHERE { "
                     + "                  GRAPH <" + constant.getEndpointsGraph() + "> { "
-                    + "                       ?provenance uc:fullName ?name . "
-                    + "                       FILTER (lang(?name) = \"es\")."
+                    + "                       ?provenance uc:fullName ?namex . "
+                    + "                       bind (str(?namex) as ?name ) . "
+                    + "                       FILTER (lang(?namex) = \"es\")."
                     + "                  } "
                     + "              } "
                     + "          } "
@@ -484,7 +496,7 @@ public class ReportsImpl implements ReportsService {
                             + "SELECT ?researcher (count(DISTINCT ?pub) as ?totalp) "
                             + "WHERE "
                             + "{ "
-                            + "  GRAPH <" + constant.getWkhuskaGraph() + "> "
+                            + "  GRAPH <" + constant.getCentralGraph()+ "> "
                             + "        { "
                             + "          ?s a foaf:Person. "
                             + "          ?s foaf:name ?researcher. "
@@ -555,7 +567,7 @@ public class ReportsImpl implements ReportsService {
                     + "Select ?publicationUri (GROUP_CONCAT(distinct ?name;separator='; ') as ?names) ?title ?abstract ?uri ?provname "
                     + "WHERE "
                     + "{ "
-                    + "  GRAPH <http://ucuenca.edu.ec/wkhuska> "
+                    + "  GRAPH <"+constant.getCentralGraph()+"> "
                     + "  { "
                     + "      ?subject foaf:publications ?publicationUri . "
                     + "      ?subject foaf:name ?name . "
@@ -571,7 +583,7 @@ public class ReportsImpl implements ReportsService {
                     + "             SELECT DISTINCT ?provenance (STR(?pname) as ?provname)"
                     + "             WHERE"
                     + "             {                                                                                                                                                                                                                                                                                                                     "
-                    + "                graph <http://ucuenca.edu.ec/wkhuska/endpoints> "
+                    + "                graph <"+constant.getEndpointsGraph()+"> "
                     + "                { "
                     + "                  ?provenance uc:fullName ?pname. "
                     + "                  FILTER (lang(?pname) = \"es\"). "
@@ -673,7 +685,7 @@ public class ReportsImpl implements ReportsService {
                     + " ?title ?abstract ?uri (GROUP_CONCAT(distinct ?quote;separator='; ') as ?keywords) "
                     + "WHERE "
                     + "{"
-                    + "  GRAPH <http://ucuenca.edu.ec/wkhuska>"
+                    + "  GRAPH <"+constant.getCentralGraph()+">"
                     + "  {"
                     + "      <" + author + "> foaf:publications ?publicationUri ."
                     + "      <" + author + "> foaf:name ?name ."
@@ -738,7 +750,7 @@ public class ReportsImpl implements ReportsService {
             String queryAuthors = ConstantServiceImpl.PREFIX
                     + "SELECT ?name (COUNT(*) as ?totalPub)"
                     + "WHERE {  "
-                    + "  GRAPH <" + constant.getWkhuskaGraph() + ">  {"
+                    + "  GRAPH <" + constant.getCentralGraph()+ ">  {"
                     + "    ?author foaf:publications ?publication ;"
                     + "       dct:provenance ?endpoint ."
                     + "    ?author foaf:name ?name ."
@@ -841,7 +853,7 @@ public class ReportsImpl implements ReportsService {
                 + " select * { "
                 + "SELECT  distinct ?name ?title ?year (group_concat(?orig; separator = \" \") AS ?origin)  "
                 + "WHERE {   "
-                + "  GRAPH <http://ucuenca.edu.ec/wkhuska>  {  "
+                + "  GRAPH <"+constant.getCentralGraph()+">  {  "
                 + "    ?author foaf:publications ?publication.  "
                 + "    ?author foaf:name ?name .  "
                 + "    ?author dct:provenance ?endpoint.  "
@@ -851,7 +863,7 @@ public class ReportsImpl implements ReportsService {
                 + "   	filter(xsd:integer(?year) > 2010).  "
                 + "    {      "
                 + "      SELECT * {         	  "
-                + "      GRAPH <http://ucuenca.edu.ec/wkhuska/endpoints>   "
+                + "      GRAPH <"+constant.getEndpointsGraph()+">   "
                 + "            {                 "
                 + "              ?endpoint uc:name \"UCUENCA\"^^xsd:string .               "
                 + "            }           "
@@ -935,10 +947,11 @@ public class ReportsImpl implements ReportsService {
                     + "            SELECT DISTINCT ?keyword (COUNT(DISTINCT ?s) AS ?total) "
                     + "            WHERE "
                     + "            { "
-                    + "              GRAPH <http://ucuenca.edu.ec/wkhuska> "
+                    + "              GRAPH <"+constant.getCentralGraph()+"> "
                     + "              { "
                     + "                ?s foaf:publications ?publications. "
-                    + "                ?publications bibo:Quote ?keyword. "
+                    + "                ?publications dct:subject ?keyword_. "//bibo:Quote
+                    + "                ?keyword_ rdfs:label ?keyword. "
                     //+ "                #?s dct:subject ?keyword. "
                     + "              } "
                     + "            } "
