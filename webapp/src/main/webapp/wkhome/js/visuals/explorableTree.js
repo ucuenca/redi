@@ -446,7 +446,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
 
                      var query = globalData.PREFIX+" construct { ?a a bibo:AcademicArticle . ?a ?b ?c .   ?c ?d ?e .   ?c ?p ?v . } where ";
 
-                      query += "{  bind (<"+id+"> as ?a) . "
+                      query += "{  graph <"+globalData.centralGraph+"> { bind (<"+id+"> as ?a) . "
                             +"  	?a ?b ?c ."
                             +" filter (?b = dct:isPartOf ||"
                             +" ?b = dct:subject ||"
@@ -474,12 +474,14 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                             +"  optional {"
                             +"  	select * { "
                             +"              ?c <http://www.w3.org/2002/07/owl#sameAs> ?eq ."
+                            +"  	graph <"+globalData.latindexGraph+"> { "
                             +"              ?eq a <http://redi.cedia.edu.ec/ontology/journal> ."
                             +"              ?eq ?p ?v. "
                             +"              filter ( ?p=rdfs:label || ?p=bibo:uri || (?p=<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> && ?v = bibo:Journal) ). "
                             +"          }"
+                            +"          }"
                             +"  }"
-                            +" }";
+                            +" } }";
 
                       waitingDialog.show("Searching ...");
 
