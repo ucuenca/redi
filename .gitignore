@@ -22,6 +22,7 @@ node_modules/
 bower_components/
 npm-debug.log
 jsmin/
+cssmin/
 
 #ignore Netbeans files
 nbactions.xml

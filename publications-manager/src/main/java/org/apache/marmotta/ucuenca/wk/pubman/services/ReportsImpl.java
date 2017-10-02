@@ -236,7 +236,7 @@ public class ReportsImpl implements ReportsService {
             Integer cont = 0;
             //Query
             getQuery = ConstantServiceImpl.PREFIX
-                    + " SELECT ?publications ?authors ( max(str(?name_)) as ?name) (max(str(?title_)) as ?title) (max(str(?abstract_)) as ?abstract) ( max(str(?authorsName_)) as ?authorsName) WHERE { "
+                    + " SELECT ?publications ?authors ( sample(str(?name_)) as ?name) (sample(str(?title_)) as ?title) (sample(str(?abstract_)) as ?abstract) ( sample(str(?authorsName_)) as ?authorsName) WHERE { "
                     + " graph <"+constant.getCentralGraph()+"> { <" + author + "> foaf:name ?name_. "
                     + "  <" + author + "> foaf:publications  ?publications. "
                     + "  ?publications dct:title ?title_. "
@@ -748,12 +748,12 @@ public class ReportsImpl implements ReportsService {
 
         try {
             String queryAuthors = ConstantServiceImpl.PREFIX
-                    + "SELECT ?name (COUNT(*) as ?totalPub)"
+                    + "SELECT ?author (sample(str(?name_)) as ?name ) (COUNT(distinct ?publication ) as ?totalPub)"
                     + "WHERE {  "
                     + "  GRAPH <" + constant.getCentralGraph()+ ">  {"
                     + "    ?author foaf:publications ?publication ;"
                     + "       dct:provenance ?endpoint ."
-                    + "    ?author foaf:name ?name ."
+                    + "    ?author foaf:name ?name_ ."
                     + "    {"
                     + "    	SELECT ?endpoint {"
                     + "        	GRAPH <" + constant.getEndpointsGraph() + "> {"
@@ -764,7 +764,7 @@ public class ReportsImpl implements ReportsService {
                     + "    }"
                     + "  }"
                     + "} "
-                    + "GROUP BY ?author ?name "
+                    + "GROUP BY ?author "
                     + "ORDER BY DESC(?totalPub)";
 
             String queryIES = ConstantServiceImpl.PREFIX
