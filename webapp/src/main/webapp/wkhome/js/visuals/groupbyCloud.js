@@ -45,6 +45,7 @@ cloudGroup.directive('cloudGroup', ["$routeParams", "d3", 'sparqlQuery', 'global
       var fill = d3.scale.ordinal().range(['#FF00CC', '#FF00CC', '#00FF00', '#00FF00', '#FFFF00', '#FF0000', '#FF0000', '#FF0000', '#FF0000', '#7F0000']);
       //var svg = d3.select("#chart").append("svg")
       var pubInfo = svgElement;
+
       pubInfo.html('');
       var svg = svgElement.append("svg")
         .attr("width", width)
@@ -79,9 +80,19 @@ cloudGroup.directive('cloudGroup', ["$routeParams", "d3", 'sparqlQuery', 'global
         return centers;
       };
 
+      var tip = d3.tip().attr('class', 'd3-tip')
+      .html(
+        function(d) {
+          if (d.name != null && (d.name.constructor === Array || d.name instanceof Array))
+            d.name = d.name[0];
+          return "<strong>Nombre: </strong>" + d.name + "<br />" +
+            "<strong>Institucion: </strong>" + d.organization + "<br />";
+        });
       var nodes = svg.selectAll("circle")
         .data(dataMapping);
 
+
+      svg.call(tip); // Invoke the tip in the context of the visualization
       nodes.enter().append("circle")
         .attr("class", "node")
         .attr("cx", function(d) {
@@ -96,12 +107,8 @@ cloudGroup.directive('cloudGroup', ["$routeParams", "d3", 'sparqlQuery', 'global
         .style("fill", function(d, i) {
           return colors['default'];
         })
-        .on("mouseover", function(d) {
-          showPopover.call(this, d);
-        })
-        .on("mouseout", function(d) {
-          removePopovers();
-        })
+        .on("mouseover",tip.show)
+        .on("mouseout", tip.hide)
         .on("click", click);;
 
       function getDataMapping(dataM, vname) {
@@ -249,28 +256,6 @@ cloudGroup.directive('cloudGroup', ["$routeParams", "d3", 'sparqlQuery', 'global
           .attr("transform", function(d) {
             return "translate(" + (d.x + (d.dx / 2) - 40) + ", " + (d.y + 20) + ")";
           });
-      }
-
-      function removePopovers() {
-        $('.popover').each(function() {
-          $(this).remove();
-        });
-      }
-
-      function showPopover(d) {
-        $(this).popover({
-          placement: 'auto top',
-          container: 'body',
-          trigger: 'manual',
-          html: true,
-          content: function() {
-            if (d.name != null && (d.name.constructor === Array || d.name instanceof Array))
-              d.name = d.name[0];
-            return "<strong>Nombre: </strong>" + d.name + "<br />" +
-              "<strong>Institucion: </strong>" + d.organization + "<br />";
-          }
-        });
-        $(this).popover('show')
       }
 
       function collide(alpha) {
