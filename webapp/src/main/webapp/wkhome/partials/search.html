@@ -34,35 +34,6 @@
                 <div class="col-md-12">
                     <explorable-tree data="data" class="tree-main-container" style="display:block; height:100vh; background-color: #F7F8E0"  ifright-Click="ifrightClick(value)"  clickon-Relatedauthor="clickonRelatedauthor(value)" ng-model="value" publication="publication"></explorable-tree>
                 </div>
-
-            </div>
-
-            <div class="modal fade" id="searchResults" tabindex="-1" role="dialog" aria-labelledby="Search Results" aria-hidden="true">
-                <div class="modal-dialog  modal-md">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                            <h4 class="modal-title" id="myModalLabel">Search Results</h4>
-                        </div>
-
-                        <div class="modal-body" id="author-select">
-                            <table class="table table-striped ">
-                                <thead>
-                                    <tr>
-                                        <th>Authors</th>
-                                        <th>Subjects</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr ng-repeat="author in candidates">
-                                        <td style="width: 50%"><a class="candidate" ng-click="selectedAuthor($event, author.id)" href="">{{author.name}}</a></td>
-                                        <td style="width: 50%; font-size: x-small" >{{author.keyword}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

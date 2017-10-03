@@ -1,5 +1,5 @@
-wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window', 'globalData', 'sparqlQuery', 'searchData', 'searchQueryService', 'AuthorsService', 'KeywordsService','PublicationsService',
-  function($routeParams, $scope, $window, globalData, sparqlQuery, searchData, searchQueryService, AuthorsService, KeywordsService,PublicationsService) {
+wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window', 'globalData', 'sparqlQuery', 'searchData', 'searchQueryService', '$location', 'AuthorsService', 'KeywordsService', 'PublicationsService',
+  function($routeParams, $scope, $window, globalData, sparqlQuery, searchData, searchQueryService, $location, AuthorsService, KeywordsService, PublicationsService) {
     String.format = function() {
       // The string containing the format items (e.g. "{0}")
       // will and always has to be the first argument.
@@ -14,26 +14,44 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
       return theString;
     };
 
-    var queryPublications = globalData.PREFIX
-                          + "CONSTRUCT {"
-                          + "  ?keyword uc:publication ?publicationUri."
-                          + "  ?publicationUri dct:contributors ?subject . "
-                          + "  ?subject foaf:name ?name ."
-                          + "  ?subject a foaf:Person . "
-                          + "  ?publicationUri a bibo:Document. "
-                          + "  ?publicationUri dct:title ?title."
-                          + "  ?publicationUri bibo:abstract ?abstract. "
-                          + "  ?publicationUri bibo:uri ?uri. "
-                          + "} WHERE { "
-                          + "  GRAPH <" + globalData.centralGraph + "> { "
-                          + " {0} "
-                          + "    ?subject foaf:publications ?publicationUri . "
-                          + "    ?subject foaf:name ?name . "
-                          + "    ?publicationUri dct:title ?title . "
-                          + "    OPTIONAL{ ?publicationUri bibo:abstract ?abstract. } "
-                          + "    OPTIONAL{ ?publicationUri bibo:uri ?uri. }"
-                          + "  }"
-                          + "}";
+    $scope.selectedOption = function($event, path, param, paramsQuery) {
+      $('#searchResults').modal('hide');
+      $('#searchResults').on('hidden.bs.modal', function() {
+        $window.location.hash = "/" + $routeParams.lang + path + param;
+      });
+    };
+
+    $scope.showSubjects = function(values) {
+      return _.some(values, 'desc');
+    }
+
+    function Candidate(id, val, desc, path) {
+      this.id = id;
+      this.val = val;
+      this.desc = desc;
+      this.path = path;
+    }
+
+    var queryPublications = globalData.PREFIX +
+      "CONSTRUCT {" +
+      "  ?keyword uc:publication ?publicationUri." +
+      "  ?publicationUri dct:contributors ?subject . " +
+      "  ?subject foaf:name ?name ." +
+      "  ?subject a foaf:Person . " +
+      "  ?publicationUri a bibo:Document. " +
+      "  ?publicationUri dct:title ?title." +
+      "  ?publicationUri bibo:abstract ?abstract. " +
+      "  ?publicationUri bibo:uri ?uri. " +
+      "} WHERE { " +
+      "  GRAPH <" + globalData.centralGraph + "> { " +
+      " {0} " +
+      "    ?subject foaf:publications ?publicationUri . " +
+      "    ?subject foaf:name ?name . " +
+      "    ?publicationUri dct:title ?title . " +
+      "    OPTIONAL{ ?publicationUri bibo:abstract ?abstract. } " +
+      "    OPTIONAL{ ?publicationUri bibo:uri ?uri. }" +
+      "  }" +
+      "}";
 
     $scope.submit = function() {
       if ($scope.searchText) {
@@ -44,26 +62,22 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
           if (result.response.docs.length > 0) {
             var authors = result.response.docs;
             if (authors.length > 1) {
+              var path = "/w/author/";
               var candidates = _.map(authors, function(author) {
-                var model = {};
-                model["id"] = author["lmf.uri"];
-                model["name"] = _.max(author.name, function(name) {
+                var id = author["lmf.uri"];
+                var name = _.max(author.name, function(name) {
                   return name.length
                 });
-                model["keyword"] = _.chain(author.topics)
+                var topics = _.chain(author.topics)
                   .uniq()
                   .first(10)
                   .value()
                   .join(", ");
-                return model;
+                var candidate = new Candidate(id, name, topics, path);
+
+                return candidate;
               });
               $scope.candidates = candidates;
-              $scope.selectedAuthor = function($event, uri) {
-                $('#searchResults').modal('hide');
-                $('#searchResults').on('hidden.bs.modal', function() {
-                  $window.location.hash = "/" + $routeParams.lang + "/w/author/" + uri;
-                });
-              };
               waitingDialog.hide();
               $('#searchResults').modal('show');
             } else if (authors.length === 1) {
@@ -75,18 +89,25 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
             KeywordsService.get({
               search: $scope.searchText
             }, function(result) {
-              if (result.response.docs.length > 0) {
-                var keywords = result.response.docs;
+              var keywords = _.uniq(result.response.docs, function(item) {
+                return item['lmf.uri'];
+              });
+              if (keywords.length > 1) {
                 var candidates = _.map(keywords, function(keyword) {
-                  var model = {};
-                  model["id"] = keyword["lmf.uri"];
-                  model["label"] = _.first(keyword.keyword);
-                  return model;
+                  var label = _.first(keyword.keyword);
+                  var candidate = new Candidate(label, label, undefined, "/cloud/group-by?area=");
+                  return candidate;
                 });
+                $scope.candidates = candidates;
                 waitingDialog.hide();
-                searchData.areaSearch = candidates;
-                // $location.url("/" + $routeParams.lang + "/cloud/group-by");
-                $window.location.hash = "/" + $routeParams.lang + "/cloud/group-by";
+                $('#searchResults').modal('show');
+              } else if (keywords.length === 1) {
+                var keyword = _(keywords[0].keyword).first();
+                waitingDialog.hide();
+                $location.path($routeParams.lang + "/cloud/group-by/").search({
+                  area: keyword
+                });
+                $window.location.hash = "/" + $routeParams.lang + "/cloud/group-by?area=" + keyword;
               } else {
                 PublicationsService.get({
                   search: $scope.searchText
@@ -95,7 +116,7 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
                     var publications = result.response.docs;
                     var template = " <{0}> ";
                     var search = "values ?publicationUri {";
-                    for(i=0; i<publications.length; i++){
+                    for (i = 0; i < publications.length; i++) {
                       search += String.format(template, publications[i]["lmf.uri"]);
                     }
                     search += '}';

@@ -65,23 +65,23 @@
                   <div class="modal-content">
                     <div class="modal-header">
                       <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                      <h4 class="modal-title" id="myModalLabel">Search Results <small>{{candidates.length}} resultados</small></h4>
+                      <h4 class="modal-title" id="myModalLabel">{{'search results'|translate}} <small>{{candidates.length}} resultados</small></h4>
                     </div>
                     <div class="modal-body">
                       <div class="row table-responsive">
                         <table class="table table-striped">
                           <thead>
                             <tr>
-                              <th>Authors</th>
-                              <th>Subjects</th>
+                              <th>{{'name'|translate}}</th>
+                              <th ng-show="showSubjects(candidates)">{{'palabras clave'|translate}}</th>
                             </tr>
                           </thead>
                           <tbody>
-                            <tr ng-repeat="author in candidates">
-                              <!-- Check why grid sys is not working -->
-                              <td class="col-md-3"><a class="candidate" ng-click="selectedAuthor($event, author.id)" href="">{{author.name}}</a></td>
+                            <tr ng-repeat="candidate in candidates">
+                              <!--TODO: Check why grid sys is not working -->
+                              <td class="col-md-3"><a class="candidate" ng-click="selectedOption($event, candidate.path, candidate.id)" href="">{{candidate.val}}</a></td>
                               <td class="col-md-9" style="font-size: x-small">
-                                <p>{{author.keyword | uppercase}}</p>
+                                <p>{{candidate.desc | uppercase}}</p>
                               </td>
                             </tr>
                           </tbody>

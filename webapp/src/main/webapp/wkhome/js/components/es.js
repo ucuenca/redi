@@ -18,6 +18,8 @@ myApp.labels_es = {
 "contact":"Contacto",
 "Search":"Buscar",
 "sources": "Fuentes de Información",
+'search results':"Resultados de búsqueda",
+'results':"resultados",
 
 //HELP PAGE
 "Descargar Manual": "Descargar el manual de usuario para REDI",
@@ -72,9 +74,12 @@ myApp.labels_es = {
 "Select Research Area":"Área de conocimiento",
 "Keywords":"¿Conoces las palabras claves?",
 "No match":"No existe la palabra clave",
+"Palabra Clave":"Palabra Clave",
 //"All" - from cloud cluster view
 "Author":"Autor",
 "Source":"Institución",
+"palabras clave":"Palabras Clave",
+"abstract":"Resumen",
 
 // MAP VIEW
 "Research Area":"Área de conocimiento",

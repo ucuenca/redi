@@ -38,7 +38,7 @@
     position: absolute;
     display: none;
     background-color: #222A0A;
-    
+
     font-family: Arial, sans-serif;
     font-size: 14px;
     //min-width: 150px;
@@ -46,7 +46,7 @@
     color: #F2F2F2;
     z-index:1200;
     opacity: 0.8;
-    
+
 
 
 }
@@ -68,17 +68,6 @@
     color: #fefefe;
 }
 
-
-
-/* Important part */
-.modal-dialog{
-    overflow-y: initial !important
-}
-#author-select{
-    height: 300px;
-    overflow-y: auto;
-}
-
 .search.subtitulo{
     color: #003cb3;
     font-family: inherit;
@@ -87,11 +76,11 @@
 
 
 .search.left.col-md-2{
-    
+
     border-right-color: #F6F6F6;
     border-right-width: 2px;
-   border-right-style: ridge; 
-   
+   border-right-style: ridge;
+
 }
 
 h4.search{
@@ -110,10 +99,10 @@ span.label-author{
       text-decoration-color: #4677f8;
       text-align: left;
       font-weight: bold;
-      
+
 }
 
 
 .panelderecho{
-    
+
 }
