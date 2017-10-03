@@ -22,7 +22,7 @@ wkhomeApp.service('searchData', function () {
     this.authorSearch = null;
     this.areaSearch = null;
     this.genericData = null;
-    this.researchArea = "Semantic Web";
+    this.defaultArea = "Semantic Web";
     this.selectedTagItem = "Semantic Web";
     this.globalauthor = null;
     this.clustersAuthors = null;
@@ -110,6 +110,9 @@ wkhomeApp.config(['$routeProvider',
                 }).
                 when('/:lang/d3/:geoId.json', {
                     templateUrl: '/wkhome/partials/phone-detail.html',
+                }).
+                when('/:lang/cloud/group-by?area=:area', {
+                    templateUrl: '/wkhome/partials/groupbyCloud.html',
                 }).
                 when('/:lang/cloud/group-by', {
                     templateUrl: '/wkhome/partials/groupbyCloud.html',
