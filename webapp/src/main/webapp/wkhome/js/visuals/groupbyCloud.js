@@ -368,7 +368,6 @@ cloudGroup.directive('cloudGroup', ["$routeParams", "d3", 'sparqlQuery', 'global
               } else {
                 waitingDialog.hide();
               }
-              removePopovers();
             });
           });
         }
