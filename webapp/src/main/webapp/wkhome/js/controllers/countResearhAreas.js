@@ -2,8 +2,7 @@ wkhomeControllers.controller('countResearchAreas', ['$routeParams', '$scope', 'g
   function($routeParams, $scope, globalData, sparqlQuery, searchData, $window, Statistics) {
     //if click in pie-chart (Research Areas)
     $scope.ifClick = function(value) {
-      searchData.researchArea = value;
-      $window.location.hash = "/" + $routeParams.lang + "/cloud/group-by";
+      $window.location.hash = "/" + $routeParams.lang + "/cloud/group-by?area="+value;
     };
 
     Statistics.query({
