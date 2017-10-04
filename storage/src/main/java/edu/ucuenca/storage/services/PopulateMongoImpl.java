@@ -114,7 +114,7 @@ public class PopulateMongoImpl implements PopulateMongo {
         }
     }
 
-    private void loadEstadistics(String c, HashMap<String, String> queries) {
+    private void loadStadistics(String c, HashMap<String, String> queries) {
         try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));
                 StringWriter writter = new StringWriter();) {
             RepositoryConnection conn = sesameService.getConnection();
@@ -175,7 +175,7 @@ public class PopulateMongoImpl implements PopulateMongo {
         queries.put("count_publications", queriesService.getAggregationPublications());
         queries.put("count_research_areas", queriesService.getAggregationAreas());
         queries.put("keywords_frequencypub_gt4", queriesService.getKeywordsFrequencyPub());
-        loadEstadistics(MongoService.Collection.STATISTICS.getValue(), queries);
+        loadStadistics(MongoService.Collection.STATISTICS.getValue(), queries);
 
     }
 
