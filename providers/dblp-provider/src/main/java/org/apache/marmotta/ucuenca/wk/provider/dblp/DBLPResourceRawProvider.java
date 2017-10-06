@@ -17,10 +17,8 @@
  */
 package org.apache.marmotta.ucuenca.wk.provider.dblp;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.marmotta.commons.sesame.model.ModelCommons;
 
-import com.google.common.base.Preconditions;
 
 import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
@@ -35,8 +33,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Support DBLP Resource Data as RDF
@@ -45,14 +41,15 @@ import java.util.regex.Pattern;
  */
 public class DBLPResourceRawProvider extends AbstractHttpProvider {
 
-	public static final String NAME = "DBLP Resource Raw Provider";
-    public static final String PATTERN = "(http://dblp\\.dagstuhl\\.de\\.de/rec/)(.*)";
-    public static final String LEGACY_PATTERN = "(http://dblp\\.uni\\-trier\\.de/rec/)(.*)";
+    public static final String NAME = "DBLP Resource Raw Provider";
+    public static final String PATTERN = "(http://dblp\\.org/rec/)(.*)";
+    //public static final String LEGACY_PATTERN = "(http://dblp\\.uni\\-trier\\.de/rec/)(.*)";
 
     private static Logger log = LoggerFactory.getLogger(DBLPResourceRawProvider.class);
 
     /**
-     * Return the name of this data provider. To be used e.g. in the configuration and in log messages.
+     * Return the name of this data provider. To be used e.g. in the
+     * configuration and in log messages.
      *
      * @return
      */
@@ -68,15 +65,17 @@ public class DBLPResourceRawProvider extends AbstractHttpProvider {
      */
     @Override
     public String[] listMimeTypes() {
-        return new String[] {
-        		"application/rdf+xml"
+        return new String[]{
+            "application/rdf+xml"
         };
     }
 
     /**
-     * Build the URL to use to call the webservice in order to retrieve the data for the resource passed as argument.
-     * In many cases, this will just return the URI of the resource (e.g. Linked Data), but there might be data providers
-     * that use different means for accessing the data for a resource, e.g. SPARQL or a Cache.
+     * Build the URL to use to call the webservice in order to retrieve the data
+     * for the resource passed as argument. In many cases, this will just return
+     * the URI of the resource (e.g. Linked Data), but there might be data
+     * providers that use different means for accessing the data for a resource,
+     * e.g. SPARQL or a Cache.
      *
      *
      * @param resource
@@ -85,31 +84,24 @@ public class DBLPResourceRawProvider extends AbstractHttpProvider {
      */
     @Override
     public List<String> buildRequestUrl(String resource, Endpoint endpoint) {
-    	String uri = "http://dblp.dagstuhl.de/rec/rdf/";
-    	Matcher m = Pattern.compile(LEGACY_PATTERN).matcher(resource);
-    	if(!m.find()) {
-    		m = Pattern.compile(PATTERN).matcher(resource);
-        	Preconditions.checkState(StringUtils.isNotBlank(resource) && m.find());
-    	}
-    	uri += m.group(2);
-        return Collections.singletonList(uri);
+        return Collections.singletonList(resource.replaceFirst("/html/", "/rdf/").concat(".rdf"));
     }
-    
+
     @Override
     public List<String> parseResponse(final String resource, String requestUrl, Model triples, InputStream input, String contentType) throws DataRetrievalException {
-    	log.debug("Request {0} succesful", requestUrl);
-    	RDFFormat format = RDFFormat.forMIMEType(contentType);
-    	try {
-			ModelCommons.add(triples, input, resource, format);
-			/*ValueFactory factory = ValueFactoryImpl.getInstance();
+        log.debug("Request {0} succesful", requestUrl);
+        RDFFormat format = RDFFormat.forMIMEType(contentType);
+        try {
+            ModelCommons.add(triples, input, resource, format);
+            /*ValueFactory factory = ValueFactoryImpl.getInstance();
 			Resource subject = triples.subjects().iterator().next();
 			triples.add(subject, OWL.SAMEAS, factory.createURI(resource));*/
-		} catch (RDFParseException e) {
-			throw new DataRetrievalException("Error while parsing response", e);
-		} catch (IOException e) {
-			throw new DataRetrievalException("I/O error while parsing response", e);
-		}
+        } catch (RDFParseException e) {
+            throw new DataRetrievalException("Error while parsing response", e);
+        } catch (IOException e) {
+            throw new DataRetrievalException("I/O error while parsing response", e);
+        }
         return Collections.emptyList();
-	}
-    
+    }
+
 }

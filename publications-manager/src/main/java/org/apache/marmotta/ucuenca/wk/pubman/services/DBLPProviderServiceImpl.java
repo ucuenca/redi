@@ -19,7 +19,6 @@ package org.apache.marmotta.ucuenca.wk.pubman.services;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -28,12 +27,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
 import org.slf4j.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.marmotta.commons.sesame.model.ModelCommons;
 import org.apache.marmotta.kiwi.model.rdf.KiWiUriResource;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
@@ -49,7 +47,6 @@ import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
 
 import org.apache.marmotta.ucuenca.wk.pubman.exceptions.PubException;
-import org.apache.marmotta.ucuenca.wk.commons.impl.ConstantServiceImpl;
 import org.apache.marmotta.ucuenca.wk.commons.service.DistanceService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.DBLPProviderService;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
@@ -353,14 +350,21 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
                             TupleQueryResult membersResult = conUri.prepareTupleQuery(QueryLanguage.SPARQL, getMembersQuery).evaluate();
                             //  allMembers = Iterations.asList(membersResult).size();
                             String dblpfullname = "";
-                            String localfullname = "";
+                            //String localfullname = "";
+                            String bdlpfn="";
+                            String bdlpln="";
                             while (membersResult.hasNext()) {
                                 allMembers++;
                                 BindingSet bindingCount = membersResult.next();
                                 authorNativeResource = bindingCount.getValue("object").toString();
                                 existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, queriesService.getAskResourceQuery(providerGraph, authorNativeResource));
                                 dblpfullname = authorNativeResource.substring(authorNativeResource.lastIndexOf('/') + 1);
-                                localfullname = lastName + ":" + firstName;
+                                List<String> extractFirstLastName = extractFirstLastName(conUri, dblpfullname);
+                                
+                                bdlpfn=extractFirstLastName.get(1);
+                                bdlpln=extractFirstLastName.get(0);
+                                //dblpfullname = extractFirstLastName.get(0) + ":" + extractFirstLastName.get(1);
+                                //localfullname = lastName + ":" + firstName;
                             }
                             //the author data was already loaded into the repository, only a sameAs property is associated 
                             if (allMembers == 1 && existNativeAuthor) {
@@ -374,7 +378,7 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
 
                             try {
                                 if (allMembers == 1 && !existNativeAuthor
-                                        && distance.syntacticComparisonNames("local", localfullname, "dblp", dblpfullname)) {
+                                        && distance.syntacticComparisonNames2(firstName,lastName,bdlpfn,bdlpln )) {
 
                                     priorityToFind = 5;
 
@@ -470,6 +474,31 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
             log.error("Exception: " + ex);
         }
         return "fail";
+    }
+
+    private List<String> extractFirstLastName(RepositoryConnection data, String coddedName) throws RepositoryException, MalformedQueryException, QueryEvaluationException {
+
+        String stopK = "\\=|\\-|\\_|\\.|\\||\\&|\\?";
+        List<String> names = new ArrayList<>();
+        String DecodedName = StringEscapeUtils.unescapeHtml4(coddedName.replaceAll("\\=([^=:]{2,})\\=", "&$1;")).replaceAll(stopK, " ").replaceAll("(\\s+)", " ");
+        String LastName = DecodedName.split(":")[0];
+        String FirstName = DecodedName.split(":")[1];
+        String getMembersQuery = "select distinct ?n { ?a a ?c . { ?a <http://dblp.org/rdf/schema-2017-04-18#primaryFullPersonName> ?n . } union { ?a <http://dblp.org/rdf/schema-2017-04-18#otherFullPersonName> ?n . } filter (regex(str(?a), '/" + coddedName + "', 'i') ) . } limit 1";
+        //otherFullPersonName
+        TupleQueryResult membersResult = data.prepareTupleQuery(QueryLanguage.SPARQL, getMembersQuery).evaluate();
+        if (membersResult.hasNext()) {
+            BindingSet next = membersResult.next();
+            String value = next.getValue("n").stringValue().replaceAll(stopK, " ").replaceAll("(\\s+)", " ");
+            int indexOf = value.indexOf(LastName);
+            if (indexOf != -1) {
+                LastName = value.substring(indexOf);
+                FirstName = value.substring(0, indexOf);
+            }
+            membersResult.close();
+        }
+        names.add(LastName.trim());
+        names.add(FirstName.trim());
+        return names;
     }
 
     @Override

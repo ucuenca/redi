@@ -118,15 +118,15 @@ public class DistanceServiceImpl implements DistanceService {
 
         StringMetric metric
                 = with(new CosineSimilarity<String>())
-                .simplify(Simplifiers.toLowerCase())
-                .simplify(Simplifiers.removeNonWord()).simplifierCache()
-                .tokenize(Tokenizers.qGram(3)).tokenizerCache().build();
+                        .simplify(Simplifiers.toLowerCase())
+                        .simplify(Simplifiers.removeNonWord()).simplifierCache()
+                        .tokenize(Tokenizers.qGram(3)).tokenizerCache().build();
         float compare = metric.compare(a, b);
 
         StringMetric metric2
                 = with(new Levenshtein())
-                .simplify(Simplifiers.removeDiacritics())
-                .simplify(Simplifiers.toLowerCase()).build();
+                        .simplify(Simplifiers.removeDiacritics())
+                        .simplify(Simplifiers.toLowerCase()).build();
 
         float compare2 = metric2.compare(a, b);
 
@@ -139,9 +139,9 @@ public class DistanceServiceImpl implements DistanceService {
     public float jaccardDistance(String param1, String param2) {
         StringMetric metric2
                 = with(new JaccardSimilarity<String>())
-                .simplify(Simplifiers.removeDiacritics())
-                .simplify(Simplifiers.toLowerCase())
-                .tokenize(Tokenizers.qGram(2)).tokenizerCache().build();
+                        .simplify(Simplifiers.removeDiacritics())
+                        .simplify(Simplifiers.toLowerCase())
+                        .tokenize(Tokenizers.qGram(2)).tokenizerCache().build();
 
         return metric2.compare(param1, param2);
     }
@@ -216,9 +216,9 @@ public class DistanceServiceImpl implements DistanceService {
 
         //Compare given names and surnames
         equal = compareNames(givenName1, givenName2, lastName1, lastName2,
-                otherGivenName1, otherGivenName2, otherLastName1, otherLastName2) 
+                otherGivenName1, otherGivenName2, otherLastName1, otherLastName2)
                 || (givenName2 != null && compareNames(givenName2, givenName1, lastName1, lastName2,
-                otherGivenName1, otherGivenName2, otherLastName1, otherLastName2));
+                        otherGivenName1, otherGivenName2, otherLastName1, otherLastName2));
 
         // 1. Busca 4 nombres sin acentos
         // 2. primer nombre y apellidos
@@ -319,9 +319,9 @@ public class DistanceServiceImpl implements DistanceService {
 
         //Compare given names and surnames
         equal = compareNames(givenName1, givenName2, lastName1, lastName2,
-                otherGivenName1, otherGivenName2, otherLastName1, otherLastName2) 
+                otherGivenName1, otherGivenName2, otherLastName1, otherLastName2)
                 || (givenName2 != null && compareNames(givenName2, givenName1, lastName1, lastName2,
-                otherGivenName1, otherGivenName2, otherLastName1, otherLastName2));
+                        otherGivenName1, otherGivenName2, otherLastName1, otherLastName2));
 
         // 1. Busca 4 nombres sin acentos
         // 2. primer nombre y apellidos
@@ -344,7 +344,7 @@ public class DistanceServiceImpl implements DistanceService {
      */
     private String cleanNameArticles(String value) {
         value = value.replace(".", "").trim()
-                .replace("-"," ")
+                .replace("-", " ")
                 .replace("??", ".*")
                 .replace("?", ".*").toUpperCase().toLowerCase()
                 .replaceAll(" de ", " ")
@@ -447,5 +447,17 @@ public class DistanceServiceImpl implements DistanceService {
             return string1.startsWith(string2) || string2.startsWith(string1);
         }
         return (string1.matches("^" + string2 + "$") || string2.matches("^" + string1 + "$") || jaccardDistance(string1, string2) > 0.85);
+    }
+
+    @Override
+    public boolean syntacticComparisonNames2(String af, String al, String bf, String bl) {
+        SyntacticDistance me = new SyntacticDistance();
+        me.wOrder = false;
+        double Distance = me.dDistance(af, bf);
+        me.wOrder = true;
+        double Distance1 = me.dDistance(al, bl);
+
+        double prom = (Distance + Distance1) / 2;
+        return prom > 0.9;
     }
 }
