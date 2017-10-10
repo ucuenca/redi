@@ -59,39 +59,6 @@
                 </ul>
               </div>
             </div>
-            <div class="container">
-              <div id="searchResults" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="Search Results" aria-hidden="true">
-                <div class="modal-dialog  modal-lg" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                      <h4 class="modal-title" id="myModalLabel">{{'search results'|translate}} <small>{{candidates.length}} resultados</small></h4>
-                    </div>
-                    <div class="modal-body">
-                      <div class="row table-responsive">
-                        <table class="table table-striped">
-                          <thead>
-                            <tr>
-                              <th>{{'name'|translate}}</th>
-                              <th ng-show="showSubjects(candidates)">{{'palabras clave'|translate}}</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr ng-repeat="candidate in candidates">
-                              <!--TODO: Check why grid sys is not working -->
-                              <td class="col-md-3"><a class="candidate" ng-click="selectedOption($event, candidate.path, candidate.id)" href="">{{candidate.val}}</a></td>
-                              <td class="col-md-9" style="font-size: x-small">
-                                <p>{{candidate.desc | uppercase}}</p>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
           </form>
         </div>
       </div>

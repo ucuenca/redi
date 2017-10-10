@@ -1,5 +1,5 @@
-wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window', 'globalData', 'sparqlQuery', 'searchData', 'searchQueryService', '$location', 'AuthorsService', 'KeywordsService', 'PublicationsService',
-  function($routeParams, $scope, $window, globalData, sparqlQuery, searchData, searchQueryService, $location, AuthorsService, KeywordsService, PublicationsService) {
+wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window', 'globalData', 'sparqlQuery', 'searchData', 'searchQueryService', '$location', 'AuthorsService', 'KeywordsService', 'PublicationsService','searchTextResultsService',
+  function($routeParams, $scope, $window, globalData, sparqlQuery, searchData, searchQueryService, $location, AuthorsService, KeywordsService, PublicationsService, searchTextResultsService) {
     String.format = function() {
       // The string containing the format items (e.g. "{0}")
       // will and always has to be the first argument.
@@ -14,16 +14,7 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
       return theString;
     };
 
-    $scope.selectedOption = function($event, path, param, paramsQuery) {
-      $('#searchResults').modal('hide');
-      $('#searchResults').on('hidden.bs.modal', function() {
-        $window.location.hash = "/" + $routeParams.lang + path + param;
-      });
-    };
-
-    $scope.showSubjects = function(values) {
-      return _.some(values, 'desc');
-    }
+    
 
     function Candidate(id, val, desc, path) {
       this.id = id;
@@ -78,6 +69,7 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
                 return candidate;
               });
               $scope.candidates = candidates;
+              searchTextResultsService.saveData(candidates);
               waitingDialog.hide();
               $('#searchResults').modal('show');
             } else if (authors.length === 1) {
@@ -99,6 +91,7 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
                   return candidate;
                 });
                 $scope.candidates = candidates;
+                searchTextResultsService.saveData(candidates);
                 waitingDialog.hide();
                 $('#searchResults').modal('show');
               } else if (keywords.length === 1) {

@@ -152,3 +152,14 @@ wkhomeServices.factory('Statistics', ['$resource', '$http', '$window',
             });
           }
         ]);
+wkhomeServices.service('searchTextResultsService', function($rootScope, $log){
+    this.bucket = {};
+    this.saveData = function(data){
+        this.bucket['data']=data;
+        $rootScope.$broadcast('saveData');
+    }
+    this.getData = function(){
+        return this.bucket['data'];
+    }
+    return this;
+});
