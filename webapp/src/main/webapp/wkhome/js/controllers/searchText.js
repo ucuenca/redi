@@ -146,6 +146,7 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
             });
           }
         });
+        $scope.searchText='';
       }
     }
   }

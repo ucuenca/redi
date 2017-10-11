@@ -10,6 +10,7 @@ wkhomeControllers.controller('searchTextResults', ['$scope', '$window', '$routeP
             $('#searchResults').modal('hide');
             $('#searchResults').on('hidden.bs.modal', function () {
                 $window.location.hash = "/" + $routeParams.lang + path + param;
+                $('#searchResults').off('hidden.bs.modal');
             });
         };
 

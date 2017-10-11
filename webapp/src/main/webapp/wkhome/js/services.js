@@ -152,7 +152,7 @@ wkhomeServices.factory('Statistics', ['$resource', '$http', '$window',
             });
           }
         ]);
-wkhomeServices.service('searchTextResultsService', function($rootScope, $log){
+wkhomeServices.service('searchTextResultsService', ['$rootScope',function($rootScope){
     this.bucket = {};
     this.saveData = function(data){
         this.bucket['data']=data;
@@ -162,4 +162,4 @@ wkhomeServices.service('searchTextResultsService', function($rootScope, $log){
         return this.bucket['data'];
     }
     return this;
-});
+}]);
