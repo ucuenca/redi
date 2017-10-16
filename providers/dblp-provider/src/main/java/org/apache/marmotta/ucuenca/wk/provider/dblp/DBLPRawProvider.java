@@ -48,6 +48,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.marmotta.ucuenca.wk.commons.function.Cache;
 
 /**
  * Support DBLP Author information as RDF
@@ -118,6 +119,7 @@ public class DBLPRawProvider extends AbstractHttpProvider{
     		final Document doc = new SAXBuilder(XMLReaders.NONVALIDATING).build(input);
 	    	for(Element element: queryElements(doc, "/result/hits/hit/info/url")) {
 	    		String candidate = element.getText();
+                        candidate = Cache.getFinalURL(candidate);
 	    		triples.add(factory.createStatement(factory.createURI( resource ), FOAF.member, factory.createURI( candidate ) ));
 	    		candidates.add(candidate);
 	    	}

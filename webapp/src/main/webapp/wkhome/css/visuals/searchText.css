@@ -1,0 +1,4 @@
+div#searchResults > div.modal-dialog > div.modal-content{
+  height:350px;
+  overflow:auto !important;
+}

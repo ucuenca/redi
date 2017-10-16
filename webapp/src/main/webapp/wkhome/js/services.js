@@ -136,3 +136,30 @@ wkhomeServices.factory('searchQueryService', ['$resource', '$http', '$window',
             querySrv: {method: 'POST', isArray: false, transformRequest: transform, headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}}
         });
     }]);
+
+wkhomeServices.factory('Statistics', ['$resource', '$http', '$window',
+          function($resource, $http, $window) {
+            var serverInstance = 'http://' + $window.location.hostname
+                    + ($window.location.port ? ':8080' : '') + '';
+            return $resource(serverInstance + '/mongo/statistics?id=:id', {}, {
+              query: {
+                method: 'GET',
+                params: {id: 'id'},
+                isArray: false,
+                cache: true,
+                headers: {'Accept':'application/json'}
+              }
+            });
+          }
+        ]);
+wkhomeServices.service('searchTextResultsService', ['$rootScope',function($rootScope){
+    this.bucket = {};
+    this.saveData = function(data){
+        this.bucket['data']=data;
+        $rootScope.$broadcast('saveData');
+    }
+    this.getData = function(){
+        return this.bucket['data'];
+    }
+    return this;
+}]);

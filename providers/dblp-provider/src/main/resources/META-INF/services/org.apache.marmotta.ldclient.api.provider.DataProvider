@@ -1,7 +1,3 @@
-org.apache.marmotta.ucuenca.wk.provider.dblp.DBLPProvider
 org.apache.marmotta.ucuenca.wk.provider.dblp.DBLPRawProvider
-org.apache.marmotta.ucuenca.wk.provider.dblp.DBLPAuthorProvider
 org.apache.marmotta.ucuenca.wk.provider.dblp.DBLPAuthorRawProvider
-org.apache.marmotta.ucuenca.wk.provider.dblp.DBLPResourceProvider
 org.apache.marmotta.ucuenca.wk.provider.dblp.DBLPResourceRawProvider
-#org.apache.marmotta.ucuenca.wk.provider.dblp.DBLPCandidatesProvider

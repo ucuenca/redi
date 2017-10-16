@@ -86,7 +86,11 @@
             <artifactId>marmotta-model-vocabs</artifactId>
             <version>${marmotta.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.marmotta.ucuenca.wk.tools</groupId>
+            <artifactId>commons</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

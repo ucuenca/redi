@@ -488,23 +488,20 @@
 
     <dependencies>
         <!-- custom modules for Watiqai Khuska LODP -->
-        <!--        <dependency>
-            <groupId>org.apache.marmotta.ucuenca.wk</groupId>
-            <artifactId>base-module</artifactId>
-            <version>${project.version}</version>
-        </dependency>-->
         <dependency>
             <groupId>org.apache.marmotta.ucuenca.wk</groupId>
             <artifactId>authors-module</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>edu.ucuenca</groupId>
+            <artifactId>mongo-storage</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.marmotta.ucuenca.wk</groupId>
             <artifactId>publications-manager</artifactId>
             <version>${project.version}</version>
-            <!--            <exclusions>
-                <exclusion>
-            </exclusions>-->
         </dependency>
         <!-- Modules, include the ones needed by the application -->
         <dependency>
@@ -634,6 +631,20 @@
             <groupId>com.github.wikier</groupId>
             <artifactId>marmotta-search</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.mahout</groupId>
+            <artifactId>mahout-collections</artifactId>
+            <version>1.0</version>
+            <scope>runtime</scope>
+        </dependency>
+        <!--Override dependency of Jasper. It's using a wrong version that gives 
+        Marmotta an unexpected behaviour in the users module. 
+        Error fixed: NoClassDefFoundError: JsonPropertyDescription-->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
     </dependencies>
 

@@ -22,6 +22,8 @@ public interface DistanceService {
      * @return
      */
     boolean syntacticComparisonNames(String... args);
+    
+    boolean syntacticComparisonNames2(String af,String al,String bf,String bl);
 
     boolean semanticComparison(List<String> listA, List<String> listB);
 

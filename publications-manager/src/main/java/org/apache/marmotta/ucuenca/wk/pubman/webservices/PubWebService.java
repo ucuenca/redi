@@ -18,18 +18,22 @@
 package org.apache.marmotta.ucuenca.wk.pubman.webservices;
 
 import com.google.gson.JsonArray;
+import java.io.File;
 import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import org.apache.marmotta.ucuenca.wk.commons.service.TranslationService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
 import org.slf4j.Logger;
@@ -60,6 +64,7 @@ public class PubWebService {
     public static final String LOAD_AUTHOR_ATTR = "/author_attr";
     public static final String GET_AUTHOR_DATA = "/pubsearch";
     public static final String GET_REPORT = "/report";
+    public static final String GET_REPORT_DOWNLOAD = "/reportDownload";
     public static final String TRANSLATE = "/translate";
     public static final String INDEX_CENTRAL_GRAPH = "/indexing";
     public static final String GET_SEARCH_QUERY = "/searchQuery";
@@ -132,7 +137,7 @@ public class PubWebService {
         String result = commonService.GetDataFromProvidersServiceDspace();
         return Response.ok().entity(result).build();
     }
-    
+
     /*
      * Detect Latindex Journals
      */
@@ -166,7 +171,7 @@ public class PubWebService {
         String result = commonService.Data2GlobalGraph();
         return Response.ok().entity(result).build();
     }
-    
+
     @POST
     @Path(INDEX_CENTRAL_GRAPH)
     public Response IndexCentralGraphPost(@QueryParam("Endpoint") String resultType, @Context HttpServletRequest request) {
@@ -174,7 +179,7 @@ public class PubWebService {
         log.debug("Index Central Graph Task", params);
         String result = commonService.IndexCentralGraph();
         return Response.ok().entity(result).build();
-    } 
+    }
 
     /*
      * Get Publications Data from  Provider Graph and load into General Graph
@@ -231,11 +236,35 @@ public class PubWebService {
     @POST
     @Path(GET_REPORT)
     public Response createReport(@FormParam("hostname") String host, @FormParam("report") String report, @FormParam("type") String type, @FormParam("param1") List<String> param1, @Context HttpServletRequest request) {
+        if (!type.equals("pdf") && !type.equals("xls")){
+            return Response.ok("Invalid format").build();
+        }
+        
         ServletContext context = request.getServletContext();
         String realContextPath = context.getRealPath(request.getContextPath());
         log.debug("Report Task");
         String result = commonService.createReport(host, realContextPath, report, type, param1);
         return Response.ok().entity(result).build();
+    }
+
+    /**
+     * @Author José Ortiz. Service used to create download reports
+     * @param file Name of the report
+     * @return Data Stream
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @Path(GET_REPORT_DOWNLOAD)
+    public Response DownloadReport(@QueryParam("file") String report) {
+
+        if (!report.matches("[a-fA-F0-9]{32}\\.(pdf|xls)")){
+            return Response.ok("Invalid File").build();
+        }
+        
+        File file = new File("/tmp/redi_reports/redi_reports_"+report);
+        ResponseBuilder response = Response.ok((Object) file);
+        response.header("Content-Disposition", "attachment; filename=Report_"+report);
+        return response.build();
     }
 
     /**
@@ -248,7 +277,7 @@ public class PubWebService {
         String result = traslateService.translate(totranslate).toString();
         return Response.ok().entity(result).build();
     }
-    
+
     @POST
     @Path(GET_SEARCH_QUERY)
     public Response createSearchQuery(@FormParam("textSearch") String textSearch, @Context HttpServletRequest request) {

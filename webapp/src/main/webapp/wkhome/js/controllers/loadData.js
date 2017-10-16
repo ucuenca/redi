@@ -1,10 +1,10 @@
-/* 
+/*
  * Controller to load the data the first time
  */
 
 wkhomeControllers.controller('loadData', ['sparqlQuery', 'searchData', '$translate', '$routeParams', '$scope', '$window', 'translateService', 'globalData',
     function (sparqlQuery, searchData, $translate, $routeParams, $scope, $window, translateService, globalData) {
-        
+
         /**
          * Loading DATA in Memory
          */
@@ -86,52 +86,41 @@ wkhomeControllers.controller('loadData', ['sparqlQuery', 'searchData', '$transla
                 });
             });
         });
-        
-        
+
+
         //***************************************************//
         //Load clusters
         //***************************************************//
-        
+
         if (!searchData.dataRequested) {
             loadClusters();
             searchData.dataRequested = true;
         }
-        
+
         $scope.clusters = [];
         function loadClusters() {
             if (searchData.clustersAuthors == null || searchData.clustersAuthors.length == 0) {
                 $scope.clusters = [];
                 var authors = [];
                 var myArray = new Array();
-                var queryClusters = globalData.PREFIX +
-                        ' CONSTRUCT ' +
-                        '{ ' +
-                        '  ?author foaf:name ?name. ' +
-                        '  ?author uc:hasCluster ?clusterId. ' +
-                        '  ?author rdfs:label ?label. ' +
-                        '  ?author dcterms:subject ?keywords ' +
-                        '} ' +
-                        'WHERE ' +
-                        '{' +
-                        '    graph <' + globalData.clustersGraph + '> ' +
-                        '    { ' +
-                        '      ?clusterId uc:hasPerson ?author.' +
-                        '      ?clusterId rdfs:label ?label.' +
-                        '      { ' +
-                        '        select DISTINCT ?author ?name ?keywords ' +
-                        '        where ' +
-                        '        {' +
-                        '          graph <' + globalData.centralGraph + '> ' +
-                        '          {' +
-                        '              ?author foaf:name ?name.' +
-                        '              ?author foaf:publications ?publicationUri.' +
-                        '              ?publicationUri dcterms:subject ?keywordSubject. ' +
-                        '              ?keywordSubject rdfs:label ?keywords.' +
-                        '          }' +
-                        '        } group by ?author ?name ?keywords ' +
-                        '      }' +
-                        '    }' +
-                        '}';
+                var queryClusters = globalData.PREFIX
+                        + 'CONSTRUCT {'
+                        + '  ?author foaf:name ?name;'
+                        + '          uc:hasCluster ?clusterId;'
+                        + '          rdfs:label ?label;'
+                        + '          dct:subject ?keywords.'
+                        + '} WHERE {'
+                        + '  GRAPH <' + globalData.clustersGraph + '> {'
+                        + '    ?clusterId foaf:publications ?publication;'
+                        + '               rdfs:label ?label.'
+                        + '    ?publication uc:hasPerson ?author.'
+                        + '    GRAPH <' + globalData.centralGraph + '>  {'
+                        + '      ?author foaf:name ?name.'
+                        + '      ?publication dct:subject [rdfs:label ?keywords].'
+                        + '    }'
+                        + ' '
+                        + '  }'
+                        + '}';
 
                 sparqlQuery.querySrv({query: queryClusters}, function (rdf) {
 
@@ -192,8 +181,7 @@ wkhomeControllers.controller('loadData', ['sparqlQuery', 'searchData', '$transla
                 });
             }
         }
-        
-        
+
+
 
     }]); //end controller
-

@@ -18,6 +18,8 @@ myApp.labels_en = {
 "contact":"Contact",
 "Search":"Search",
 "sources": "Data Sources",
+'search results':"Search Results",
+'results':"results",
 
 //HELP PAGE
 "Descargar Manual": "Download User Manual for REDI",
@@ -65,12 +67,15 @@ myApp.labels_en = {
 //   GROUP BY  VIEW
 "Grouping Publications": "Grouping Authors",
 "Group by":"Group by",
-"Select Research Area":"Select knowledge Area:",
+"Select Research Area":"Select knowledge Area",
 "Keywords":"Do you know the keywords?",
 "No match":"No keywords match with the text",
+"Palabra Clave":"Type a keyword",
 //"All" - from cloud cluster view
 "Author":"Author",
 "Source":"Source",
+"palabras clave":"Keywords",
+"abstract":"Abstract",
 
 // MAP VIEW
 "Research Area":"knowledge Area",

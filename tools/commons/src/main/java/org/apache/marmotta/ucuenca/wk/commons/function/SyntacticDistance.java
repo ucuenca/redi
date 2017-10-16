@@ -6,18 +6,142 @@
 package org.apache.marmotta.ucuenca.wk.commons.function;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.apache.marmotta.ucuenca.wk.commons.impl.CommonsServicesImpl;
+import static org.simmetrics.StringMetricBuilder.with;
+import org.simmetrics.metrics.JaroWinkler;
+import org.simmetrics.simplifiers.Simplifiers;
 
 /**
  *
  * @author FernandoBac
  */
 public class SyntacticDistance {
-    
-   private CommonsServicesImpl commonservices = new CommonsServicesImpl();
+
+    private CommonsServicesImpl commonservices = new CommonsServicesImpl();
     private static String empty = "null";
-    private static double threshold = 0.95;
+    private static double threshold = 0.90;
+
+    public boolean wOrder = false;
+
+    public double dDistance(String nName1, String nName2) {
+
+        List<String> tTks1 = tTokenizer(nName1.toLowerCase().replaceAll("(\\p{Lu})(\\p{Lu})", "$1 $2"));
+        List<String> tTks2 = tTokenizer(nName2.toLowerCase().replaceAll("(\\p{Lu})(\\p{Lu})", "$1 $2"));
+
+        Object[] prefc = cCountFullMatchs(tTks1, tTks2);
+
+        Object[] prefc2 = cCountAbvMatchs(tTks1, tTks2);
+
+        double c = (double) prefc[0];
+        double c2 = (double) prefc2[0];
+
+        double i = (int) prefc[1];
+        double i2 = (int) prefc2[1];
+
+        double mx = Math.min(tTks1.size(), tTks2.size());
+
+        //System.out.println("a"+c);
+        //System.out.println("b"+c2);
+        //System.out.println("c"+c2);
+        //mx = Tks1.size()+ Tks2.size();
+        return ((c + c2) / (i + i2 + mx));
+    }
+
+    private Object[] cCountAbvMatchs(List<String> tk1, List<String> tk2) {
+        double cCount = 0;
+        int cCount2 = 0;
+        List<Integer> uUsedT1 = new ArrayList<>();
+        List<Integer> uUsedT2 = new ArrayList<>();
+        for (int i = 0; i < tk1.size(); i++) {
+            for (int j = 0; j < tk2.size(); j++) {
+                if (!uUsedT1.contains(i) && !uUsedT2.contains(j)) {
+                    String t1 = tk1.get(i);
+                    String t2 = tk2.get(j);
+                    boolean abv = (t1.length() < 3 && t2.length() >= 3) || (t2.length() < 3 && t1.length() >= 3);
+                    boolean startsw = t1.startsWith(t2) || t2.startsWith(t1);
+                    if (abv && startsw) {
+
+                        double ix = tk1.size() - i;
+                        double jx = tk2.size() - j;
+                        ix = ix / (tk1.size() + 0.0);
+                        jx = jx / (tk2.size() + 0.0);
+                        double ij = Math.min(ix, jx) / Math.max(ix, jx);
+
+                        cCount += wOrder ? ij * 0.90 : 0.90;
+                        cCount2++;
+                        uUsedT1.add(i);
+                        uUsedT2.add(j);
+                    }
+                }
+            }
+        }
+        Collections.sort(uUsedT1, Collections.reverseOrder());
+        Collections.sort(uUsedT2, Collections.reverseOrder());
+
+        for (int i : uUsedT1) {
+            tk1.remove(i);
+        }
+        for (int i : uUsedT2) {
+            tk2.remove(i);
+        }
+        return new Object[]{cCount, cCount2};
+    }
+
+    private Object[] cCountFullMatchs(List<String> tk1, List<String> tk2) {
+        double cCount = 0;
+        int cCount2 = 0;
+        List<Integer> uUsedT1 = new ArrayList<>();
+        List<Integer> uUsedT2 = new ArrayList<>();
+        for (int i = 0; i < tk1.size(); i++) {
+            for (int j = 0; j < tk2.size(); j++) {
+                if (!uUsedT1.contains(i) && !uUsedT2.contains(j)) {
+                    String t1 = tk1.get(i);
+                    String t2 = tk2.get(j);
+                    double sim = sSim(t1, t2);
+                    if (sim > threshold) {
+                        double ix = tk1.size() - i;
+                        double jx = tk2.size() - j;
+                        ix = ix / (tk1.size() + 0.0);
+                        jx = jx / (tk2.size() + 0.0);
+                        double ij = Math.min(ix, jx) / Math.max(ix, jx);
+                        cCount += wOrder ? ij * sim : sim;
+                        cCount2++;
+                        uUsedT1.add(i);
+                        uUsedT2.add(j);
+                    }
+                }
+            }
+        }
+        Collections.sort(uUsedT1, Collections.reverseOrder());
+        Collections.sort(uUsedT2, Collections.reverseOrder());
+
+        for (int i : uUsedT1) {
+            tk1.remove(i);
+        }
+        for (int i : uUsedT2) {
+            tk2.remove(i);
+        }
+        return new Object[]{cCount, cCount2};
+    }
+
+    public double sSim(String t1, String t2) {
+        return with(new JaroWinkler()).simplify(Simplifiers.removeDiacritics()).build().compare(t2, t1);
+    }
+
+    private String cClean(String n) {
+        return n.replace(",", " ").replace(".", " ").replace("\"", " ").replace("'", " ").replace("-", " ");
+    }
+
+    private List<String> tTokenizer(String n) {
+        n = cClean(n);
+        String[] tokens = n.split(" ");
+        List<String> list = new ArrayList<String>(Arrays.asList(tokens));
+        list.removeAll(Arrays.asList("", null));
+        return list;
+    }
 
     public boolean compareNames(String... args) {
         List<String> sourcenames = getSplitNames(args[0], args[1]);
@@ -79,13 +203,13 @@ public class SyntacticDistance {
     }
 
     /**
-     * for local | scopus : syntax =  LastName:FirstName
+     * for local | scopus : syntax = LastName:FirstName
+     *
      * @param source
      * @param fullname
-     * @return 
+     * @return
      */
     public List getSplitNames(String source, String fullname) {
-     
 
         ArrayList<String> names = new ArrayList<String>();
 
@@ -206,9 +330,10 @@ public class SyntacticDistance {
             // Find the pairs of characters
             String[] pairsInWord = letterPairs(words[w]);
             if (pairsInWord != null) {
-            for (int p = 0; p < pairsInWord.length; p++) {
-                allPairs.add(pairsInWord[p]);
-            }}
+                for (int p = 0; p < pairsInWord.length; p++) {
+                    allPairs.add(pairsInWord[p]);
+                }
+            }
         }
         return allPairs;
     }
@@ -217,18 +342,17 @@ public class SyntacticDistance {
      * @return an array of adjacent letter pairs contained in the input string
      */
     private String[] letterPairs(String str) {
-       try{
-        int numPairs = str.length() - 1;
-        String[] pairs = new String[numPairs];
-        for (int i = 0; i < numPairs; i++) {
-            pairs[i] = str.substring(i, i + 2);
+        try {
+            int numPairs = str.length() - 1;
+            String[] pairs = new String[numPairs];
+            for (int i = 0; i < numPairs; i++) {
+                pairs[i] = str.substring(i, i + 2);
+            }
+            return pairs;
+        } catch (Exception e) {
+            return null;
         }
-        return pairs;
-       }
-       catch(Exception e){
-          return null;
-       }
-        
+
     }
 
 }

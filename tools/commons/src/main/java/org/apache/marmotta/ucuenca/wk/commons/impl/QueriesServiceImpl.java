@@ -14,6 +14,7 @@ import org.openrdf.model.vocabulary.RDF;
  * @author Xavier Sumba
  * @author Jose Cullcay
  */
+@SuppressWarnings("PMD")
 public class QueriesServiceImpl implements QueriesService {
 
     @Inject
@@ -27,7 +28,9 @@ public class QueriesServiceImpl implements QueriesService {
             + " PREFIX dct: <http://purl.org/dc/terms/> "
             + " PREFIX mm: <http://marmotta.apache.org/vocabulary/sparql-functions#> "
             + " PREFIX dcat: <http://www.w3.org/ns/dcat#> "
-            + " PREFIX bibo: <http://purl.org/ontology/bibo/> PREFIX dc: <http://purl.org/dc/elements/1.1/> ";
+            + " PREFIX bibo: <http://purl.org/ontology/bibo/> "
+            + " PREFIX dc: <http://purl.org/dc/elements/1.1/> "
+            + " PREFIX uc: <http://ucuenca.edu.ec/ontology#> ";
 
     private final static String OWLSAMEAS = "<http://www.w3.org/2002/07/owl#sameAs>";
 
@@ -1287,6 +1290,116 @@ public class QueriesServiceImpl implements QueriesService {
                 + "?PUBLICATION <http://purl.org/ontology/bibo/abstract> ?ABSTRACT ."
                 + "}"
                 + "} "
+                + "}";
+    }
+
+    @Override
+    public String getBarcharDataQuery() {
+        return PREFIXES
+                + "CONSTRUCT {"
+                + "  ?provenance uc:totalPublications ?totalPub;"
+                + "              uc:totalAuthors ?totalAuthors;"
+                + "              uc:name ?name."
+                + "}   WHERE {"
+                + "  {"
+                + "    SELECT DISTINCT ?provenance (SAMPLE(?ies) as ?name) (count(DISTINCT ?author) as ?totalAuthors) (COUNT(DISTINCT ?publications) as ?totalPub)"
+                + "    WHERE {"
+                + "      GRAPH <" + con.getCentralGraph() + "> {"
+                + "        ?author a foaf:Person."
+                + "        ?author dct:provenance ?provenance."
+                + "        ?author foaf:publications ?publications."
+                + "        GRAPH <" + con.getEndpointsGraph() + "> {"
+                + "          ?provenance uc:name ?ies."
+                + "        }"
+                + "      }"
+                + "    } GROUP BY ?provenance ORDER BY DESC(?totalAuthors)"
+                + "  }"
+                + "}";
+    }
+
+    @Override
+    public String getAggreggationAuthors() {
+        return PREFIXES
+                + "CONSTRUCT { "
+                + "?provenance a uc:Endpoint;"
+                + "              uc:name ?name;"
+                + "              uc:total ?total."
+                + "} WHERE { "
+                + "  GRAPH <" + con.getCentralGraph() + "> { "
+                + "    SELECT ?provenance ?name (COUNT(DISTINCT(?author)) AS ?total)"
+                + "    WHERE { "
+                + "      ?author a foaf:Person;"
+                + "                foaf:publications ?pub;"
+                + "                dct:provenance ?provenance . "
+                + "      GRAPH <" + con.getEndpointsGraph() + "> {"
+                + "        ?provenance uc:name ?name ."
+                + "      }"
+                + "    } GROUP BY ?provenance ?name "
+                + "  } "
+                + "} ";
+    }
+
+    @Override
+    public String getAggregationPublications() {
+        return PREFIXES
+                + "CONSTRUCT { "
+                + "     ?provenance uc:total ?totalp."
+                + "     ?provenance uc:name ?sname."
+                + "} WHERE {"
+                + "  {"
+                + "    SELECT DISTINCT ?provenance (SAMPLE(?sourcename)  as ?sname)  (count(DISTINCT ?pub) as ?totalp)"
+                + "    WHERE {"
+                + "      GRAPH <" + con.getCentralGraph() + "> {"
+                + "        ?author a foaf:Person;"
+                + "             foaf:publications ?pub;"
+                + "             dct:provenance ?provenance."
+                + "        GRAPH <" + con.getEndpointsGraph() + "> {"
+                + "          ?provenance uc:name ?sourcename."
+                + "        }"
+                + "      }"
+                + "    } group by ?provenance "
+                + "  }"
+                + "}";
+    }
+
+    @Override
+    public String getAggregationAreas() {
+        return PREFIXES
+                + "CONSTRUCT {"
+                + "     ?keyword a uc:ResearchArea;"
+                + "                uc:name ?label;"
+                + "                uc:total ?total."
+                + "} WHERE { "
+                + "  {"
+                + "    SELECT DISTINCT ?keyword (SAMPLE(?k) as ?label) (COUNT(?keyword) AS ?total) "
+                + "    WHERE {"
+                + "      GRAPH <" + con.getCentralGraph() + "> {"
+                + "        ?author foaf:publications ?publications."
+                + "        ?publications dct:subject ?keyword."
+                + "        ?keyword rdfs:label ?k."
+                + "      }"
+                + "    }"
+                + "    GROUP BY ?keyword"
+                + "    ORDER BY DESC(?total)"
+                + "    LIMIT 15 "
+                + "  }"
+                + "}";
+    }
+
+    @Override
+    public String getKeywordsFrequencyPub() {
+        return PREFIXES
+                + "CONSTRUCT { ?keyword rdfs:label ?key }"
+                + "WHERE {"
+                + "  SELECT  (count(?pubs) as ?total)"
+                + "  WHERE {"
+                + "    GRAPH <" + con.getCentralGraph() + "> {"
+                + "      ?subject foaf:publications ?pubs."
+                + "      ?pubs dct:subject ?keyword."
+                + "      ?keyword rdfs:label ?key."
+                + "    }"
+                + "  } GROUP BY ?keyword  ?key"
+                + "  HAVING(?total > 4)"
                 + "}";
     }
 

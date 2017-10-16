@@ -16,10 +16,7 @@
  */
 package org.apache.marmotta.ucuenca.wk.provider.dblp;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.marmotta.commons.sesame.model.ModelCommons;
-
-import com.google.common.base.Preconditions;
 
 import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
@@ -46,8 +43,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.apache.marmotta.ucuenca.wk.commons.function.Cache;
 
 /**
  * Support DBLP Author data lookup
@@ -59,12 +55,12 @@ public class DBLPAuthorRawProvider extends AbstractHttpProvider {
     public static final String NS_AUTHOR = "http://rdf.dblp.com/ns/author/";
     public static final String NAME = "DBLP Author Raw Provider";
     public static final String PATTERN = "(http://dblp\\.org/pers/)(.*)";
-    public static final String LEGACY_PATTERN = "(http://dblp\\.(.*)\\.de/pers/)(.*)";
+    //public static final String LEGACY_PATTERN = "(http://dblp\\.(.*)\\.de/pers/)(.*)";
 
     private static ConcurrentMap<String, String> dblpNamespaces = new ConcurrentHashMap<String, String>();
 
     static {
-        dblpNamespaces.put("dblp", "dblp.dagstuhl.de/rdf/schema-2015-01-26#");
+        dblpNamespaces.put("dblp", "http://dblp.org/rdf/schema-2017-04-18#");
         dblpNamespaces.put("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
         dblpNamespaces.put("owl", "http://www.w3.org/2002/07/owl#");
         dblpNamespaces.put("dcterms", "http://purl.org/dc/terms/");
@@ -111,18 +107,7 @@ public class DBLPAuthorRawProvider extends AbstractHttpProvider {
      */
     @Override
     public List<String> buildRequestUrl(String resource, Endpoint endpoint) {
-        String uri = "http://dblp.dagstuhl.de/pers/";
-        Matcher m = Pattern.compile(LEGACY_PATTERN).matcher(resource);
-        Boolean isLegacy = Boolean.TRUE;
-        if (!m.find()) {
-            isLegacy = Boolean.FALSE;
-            m = Pattern.compile(PATTERN).matcher(resource);
-            Preconditions.checkState(StringUtils.isNotBlank(resource) && m.find());
-        }
-
-        uri += isLegacy ? (m.group(3).replaceFirst("^hd/", "xr/").concat(".rdf")) : ("xr/" + m.group(2)).concat(".rdf");
-//        uri += isLegacy ? ("xr/" + m.group(2)) : ("xr/" + m.group(2));
-        return Collections.singletonList(uri);
+        return Collections.singletonList(resource.replaceFirst("/hd/", "/xr/").concat(".rdf"));
     }
 
     @Override
@@ -142,7 +127,7 @@ public class DBLPAuthorRawProvider extends AbstractHttpProvider {
             throw new DataRetrievalException("I/O error while parsing response", e);
         }
         Model publications = triples.filter(null,
-                factory.createURI("http://"+dblpNamespaces.get("dblp") + "authorOf"), null);
+                factory.createURI(dblpNamespaces.get("dblp") + "authorOf"), null);
         Resource subject = publications.subjects().iterator().next();
         triples.add(factory.createURI(resource), OWL.SAMEAS, subject);
         Set<Value> resources = publications.objects();
@@ -150,6 +135,7 @@ public class DBLPAuthorRawProvider extends AbstractHttpProvider {
             Model resourceModel = null;
             for (Value dblpResource : resources) {
                 String resourceDoc = ((Resource) dblpResource).stringValue();
+                resourceDoc = Cache.getFinalURL(resourceDoc);
                 ClientResponse response = ldClient.retrieveResource(resourceDoc);
                 Model rsModel = response.getData();
                 if (resourceModel == null) {

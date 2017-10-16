@@ -37,7 +37,7 @@
         <script src="../bower_components/angular-read-more/dist/readmore.min.js"></script>
 
         <!-- DESARROLLO/DEBUG -->
-        <!--<link rel="stylesheet" href="wkhome/css/animations.css">
+<!--        <link rel="stylesheet" href="wkhome/css/animations.css">
         <link rel="stylesheet" href="wkhome/css/visuals/general.css">
         <link rel="stylesheet" href="wkhome/css/visuals/home.css">
         <link rel="stylesheet" href="wkhome/css/visuals/pieChart.css">
@@ -53,6 +53,7 @@
         <link rel="stylesheet" href="wkhome/css/visuals/source.css">
         <link rel="stylesheet" href="wkhome/css/visuals/lists.css">
         <link rel="stylesheet" href="wkhome/css/visuals/footnote.css">
+        <link rel="stylesheet" href="wkhome/css/visuals/searchText.css">
         <link rel="stylesheet" href="wkhome/css/app.css">
 
         <script src="wkhome/js/app.js"></script>
@@ -82,6 +83,7 @@
         <script src="wkhome/js/controllers/analytics.js"></script>
         <script src="wkhome/js/controllers/dataCube.js"></script>
         <script src="wkhome/js/controllers/publications.js"></script>
+        <script src="wkhome/js/controllers/searchTextResults.js"></script>
 
         <script src="wkhome/js/services.js"></script>
 
@@ -106,7 +108,7 @@
         <script src="wkhome/js/visuals/map.js"></script>-->
 
         <!-- APP PRODUCCION -->
-        <link rel="stylesheet" href="wkhome/cssmin/animations.min.css">
+       <link rel="stylesheet" href="wkhome/cssmin/animations.min.css">
         <link rel="stylesheet" href="wkhome/cssmin/visuals/general.min.css">
         <link rel="stylesheet" href="wkhome/cssmin/visuals/home.min.css">
         <link rel="stylesheet" href="wkhome/cssmin/visuals/pieChart.min.css">
@@ -122,6 +124,7 @@
         <link rel="stylesheet" href="wkhome/cssmin/visuals/source.min.css">
         <link rel="stylesheet" href="wkhome/cssmin/visuals/lists.min.css">
         <link rel="stylesheet" href="wkhome/cssmin/visuals/footnote.min.css">
+        <link rel="stylesheet" href="wkhome/cssmin/visuals/searchText.min.css">
         <link rel="stylesheet" href="wkhome/cssmin/app.min.css">
 
         <script src="wkhome/jsmin/app.min.js"></script>
@@ -151,6 +154,7 @@
         <script src="wkhome/jsmin/controllers/analytics.min.js"></script>
         <script src="wkhome/jsmin/controllers/dataCube.min.js"></script>
         <script src="wkhome/jsmin/controllers/publications.min.js"></script>
+        <script src="wkhome/jsmin/controllers/searchTextResults.min.js"></script>
 
         <script src="wkhome/jsmin/services.min.js"></script>
 
@@ -262,6 +266,42 @@
                 </ul>
             </div>
     </nav>
+<!--        Fulltext search results modal-->
+            <div class="container" ng-controller="searchTextResults" >
+              <div id="searchResults" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="Search Results" aria-hidden="true">
+                <div class="modal-dialog  modal-lg" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                      <h4 class="modal-title" id="myModalLabel">{{'search results'|translate}} <small>{{candidates.length}} resultados</small></h4>
+                    </div>
+                    <div class="modal-body">
+                      <div class="row table-responsive">
+                        <table class="table table-striped">
+                          <thead>
+                            <tr>
+                              <th>{{'name'|translate}}</th>
+                              <th ng-show="showSubjects(candidates)">{{'palabras clave'|translate}}</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr ng-repeat="candidate in candidates">
+                              <!--TODO: Check why grid sys is not working -->
+                              <td class="col-md-3"><a class="candidate" ng-click="selectedOption($event, candidate.path, candidate.id)" href="">{{candidate.val}}</a></td>
+                              <td class="col-md-9" style="font-size: x-small">
+                                <p>{{candidate.desc | uppercase}}</p>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+        
     <!-- <div ng-view class="view-frame"></div> -->
 </body>
 </html>
