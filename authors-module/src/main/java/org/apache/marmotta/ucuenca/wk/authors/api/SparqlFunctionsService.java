@@ -5,8 +5,11 @@
  */
 package org.apache.marmotta.ucuenca.wk.authors.api;
 
+import java.util.List;
+import java.util.Map;
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.AskException;
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.UpdateException;
+import org.openrdf.model.Value;
 import org.openrdf.repository.RepositoryConnection;
 
 /**
@@ -52,5 +55,5 @@ public interface SparqlFunctionsService {
       */
      boolean askAuthorVersioning(String resource);
   
-
+     List<Map<String, Value>>  querylocal (String query);
 }

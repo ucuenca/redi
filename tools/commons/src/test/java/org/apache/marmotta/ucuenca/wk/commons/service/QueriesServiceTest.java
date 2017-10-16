@@ -55,7 +55,7 @@ public class QueriesServiceTest {
         QueriesService instance = new QueriesServiceImpl();
         String wkhuskagraph = "http://ucuenca.edu.ec/wkhuska";
         String expResult = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> PREFIX owl: <http://www.w3.org/2002/07/owl#> SELECT DISTINCT ?s WHERE { GRAPH <"+wkhuskagraph+"> { ?s rdf:type foaf:Person }}";
-        String result = instance.getAuthorsQuery(wkhuskagraph);
+        String result = instance.getAuthorsQuery(wkhuskagraph, "1");
         Assert.assertEquals(expResult, result);
     }
 

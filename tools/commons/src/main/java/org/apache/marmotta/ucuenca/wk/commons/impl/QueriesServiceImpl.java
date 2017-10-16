@@ -1,11 +1,13 @@
 package org.apache.marmotta.ucuenca.wk.commons.impl;
 
+import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import javax.inject.Inject;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
+import org.openrdf.model.vocabulary.RDF;
 
 /**
  * @author Fernando Baculima
@@ -44,7 +46,7 @@ public class QueriesServiceImpl implements QueriesService {
     private String graph = "graph";
 
     @Override
-    public String getAuthorsQuery(String datagraph) {
+    public String getAuthorsQuery(String datagraph, String num) {
         return PREFIXES
                 + " SELECT ?s WHERE { " + getGraphString(datagraph) + "{"
                 + " ?doc rdf:type bibo:Document ;"
@@ -52,7 +54,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + "?s a foaf:Person."
                 + "} }"
                 + " GROUP BY ?s"
-                + " HAVING (count(?doc)>1)";
+                + " HAVING (count(?doc)>" + num + ")";
     }
 
     @Override
@@ -91,6 +93,7 @@ public class QueriesServiceImpl implements QueriesService {
      * @param varargs
      */
     @Override
+    @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
     public String getInsertDataUriQuery(String... varargs) {
         String graphSentence = getGraphString(varargs[0]);
         String subjectSentence = "<" + varargs[1] + ">";
@@ -122,6 +125,7 @@ public class QueriesServiceImpl implements QueriesService {
     }
 
     @Override
+    @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
     public String getAskObjectQuery(String graph, String object) {
         return "ASK FROM  <" + graph + "> { ?s ?p <" + object + "> }";
     }
@@ -148,6 +152,7 @@ public class QueriesServiceImpl implements QueriesService {
     }
 
     @Override
+    @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
     public String getInsertEndpointQuery(String resourceHash, String property, String object, String literal) {
         String graph = con.getEndpointsGraph();
         String resource = con.getEndpointResource() + resourceHash;
@@ -159,6 +164,29 @@ public class QueriesServiceImpl implements QueriesService {
     }
 
     @Override
+    public String getInsertOrganizationQuery(String resourceHash, String property, String object, String literal) {
+        String graph = con.getOrganizationsGraph();
+        String resource = con.getOrganizationBaseUri() + resourceHash;
+        if (isURI(object)) {
+            return INSERTDATA + getGraphString(graph) + "{<" + resource + ">  <" + property + ">  <" + object + "> }}";
+        } else {
+            return INSERTDATA + getGraphString(graph) + "{<" + resource + ">  <" + property + "> '" + object + "'" + literal + " }}  ";
+        }
+    }
+
+    @Override
+    public String getInsertGeneric(String graph, String resource, String property, String object, String literal) {
+       // String graph = con.getOrganizationsGraph();
+        // String resource = con.getOrganizationBaseUri() + resourceHash;
+        if (isURI(object)) {
+            return INSERTDATA + getGraphString(graph) + "{<" + resource + ">  <" + property + ">  <" + object + "> }}";
+        } else {
+            return INSERTDATA + getGraphString(graph) + "{<" + resource + ">  <" + property + "> '" + object + "'" + literal + " }}  ";
+        }
+    }
+
+    @Override
+    @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
     public String getLisEndpointsQuery() {
         return "SELECT DISTINCT ?id ?status ?name ?url ?graph (concat(?fName, \" - \", ?engName) as ?fullName) ?city ?province ?latitude ?longitude  WHERE {  "
                 + "   GRAPH  <" + con.getEndpointsGraph() + ">"
@@ -177,6 +205,92 @@ public class QueriesServiceImpl implements QueriesService {
                 + "}}";
     }
 
+    @Override
+    @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
+    public String getListOrganizationQuery() {
+        return "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
+                + "PREFIX REDI: <http://ucuenca.edu.ec/ontology#>"
+                + "select DISTINCT ?URI ?name ?fullNameEn  ?fullNameEs  ?country ?province ?city ?type ?lang ?long "
+                + "FROM <" + con.getOrganizationsGraph() + ">"
+                + " where "
+                + " {   ?URI <"+RDF.TYPE.toString()+"> <"+FOAF.Organization.toString()+">  . "
+                + "?URI  <" + REDI.NAME.toString() + "> ?name  ."
+                + "OPTIONAL { ?URI  <" + REDI.FULLNAME.toString() + "> ?fullNameEs . "
+                + "FILTER (langMatches(lang(?fullNameEs), 'es')) } ."
+                + "OPTIONAL { ?URI  <" + REDI.FULLNAME.toString() + "> ?fullNameEn  ."
+                + "FILTER (langMatches(lang(?fullNameEn), 'en')) } ."
+                + "OPTIONAL { ?URI <" + REDI.COUNTRY.toString() + "> ?country } . "
+                + "OPTIONAL { ?URI <" + REDI.PROVINCE.toString() + "> ?province } ."
+                + "OPTIONAL { ?URI <" + REDI.CITY.toString() + "> ?city } . "
+                + "OPTIONAL { ?URI <" + REDI.TYPE.toString() + "> ?type } ."
+                + "OPTIONAL { ?URI <" + REDI.LATITUDE.toString() + "> ?lang } . "
+                + "OPTIONAL { ?URI <" + REDI.LONGITUDE.toString() + "> ?long } . "
+                + "}";
+              //  + "FILTER (langMatches(lang(?fullNameEn), 'en') && langMatches(lang(?fullNameEs), 'es'))    } ";
+
+    }
+
+    @Override
+    @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
+    public String getOrgByUri(String uri) {
+        return "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
+                + "PREFIX REDI: <http://ucuenca.edu.ec/ontology#>"
+                + "select DISTINCT ?URI ?name ?fullNameEn  ?fullNameEs  ?country ?province ?city ?type ?lang ?long "
+                + "FROM <" + con.getOrganizationsGraph() + ">"
+                + " where "
+                + "{   <" + uri + "> <"+RDF.TYPE.toString()+"> <"+FOAF.Organization.toString()+"> . "
+                + "<" + uri + ">  <" + REDI.NAME.toString() + "> ?name  ."
+                + "OPTIONAL { <" + uri + ">  <" + REDI.FULLNAME.toString() + "> ?fullNameEs . "
+                + "FILTER (langMatches(lang(?fullNameEs), 'es')) } ."
+                + "OPTIONAL { <" + uri + ">  <" + REDI.FULLNAME.toString() + "> ?fullNameEn . "
+                + "FILTER (langMatches(lang(?fullNameEn), 'en')) } ."
+                + "OPTIONAL { <" + uri + "> <" + REDI.COUNTRY.toString() + "> ?country } . "
+                + "OPTIONAL { <" + uri + "> <" + REDI.PROVINCE.toString() + "> ?province } ."
+                + "OPTIONAL { <" + uri + "> <" + REDI.CITY.toString() + "> ?city } . "
+                + "OPTIONAL { <" + uri + "> <" + REDI.TYPE.toString() + "> ?type } ."
+                + "OPTIONAL { <" + uri + "> <" + REDI.LATITUDE.toString() + "> ?lang } . "
+                + "OPTIONAL { <" + uri + "> <" + REDI.LONGITUDE.toString() + "> ?long } . "
+                + "} ";
+
+    }
+    
+    @Override
+    @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
+    public String getListEndpoints () {
+    return  "PREFIX REDI: <http://ucuenca.edu.ec/ontology#>"+
+            "SELECT DISTINCT ?URI ?status ?url ?graph ?type ?org ?date"+
+            " FROM <"+con.getEndpointsGraph()+"> " +
+            "WHERE {"+
+            "?URI <"+RDF.TYPE.toString()+">  <"+REDI.ENDPOINT.toString()+"> ."+
+            "OPTIONAL { ?URI    <"+REDI.STATUS.toString()+"> ?status } ."+
+            "OPTIONAL { ?URI   <"+REDI.URL.toString()+">    ?url } ."+	
+            "OPTIONAL { ?URI   <"+REDI.GRAPH.toString()+">   ?graph } ."+
+            "OPTIONAL { ?URI   <"+REDI.TYPE.toString()+">   ?type } ."+
+            "OPTIONAL { ?URI   <"+REDI.BELONGTO.toString()+">  ?org } . "+  
+            "OPTIONAL { ?URI   <"+REDI.EXTRACTIONDATE.toString()+">  ?date }"+
+            "}";
+    }
+    
+    
+    @Override
+    @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
+    public String getListEndpointsByUri (String uri) {
+    return  "PREFIX REDI: <http://ucuenca.edu.ec/ontology#>"+
+            "SELECT DISTINCT  ?status ?url ?graph ?type ?org ?date"+
+            " FROM <"+con.getEndpointsGraph()+"> " +
+            "WHERE {"+
+            "<"+uri+"> <"+RDF.TYPE.toString()+">  <"+REDI.ENDPOINT.toString()+"> ."+
+            "OPTIONAL { <"+uri+">   <"+REDI.STATUS.toString()+"> ?status } ."+
+            "OPTIONAL { <"+uri+">  <"+REDI.URL.toString()+">    ?url } ."+	
+            "OPTIONAL { <"+uri+">   <"+REDI.GRAPH.toString()+">   ?graph } ."+
+            "OPTIONAL { <"+uri+">   <"+REDI.TYPE.toString()+">   ?type } ."+
+            "OPTIONAL { <"+uri+">   <"+REDI.BELONGTO.toString()+">  ?org } . "+  
+            "OPTIONAL { <"+uri+">   <"+REDI.EXTRACTIONDATE.toString()+">  ?date }"+
+            "} limit 1";
+    }
+  
     @Override
     public String getlisEndpointsQuery(String endpointsGraph) {
         return "SELECT DISTINCT ?id ?status ?name ?url ?graph (concat(?fName, \" - \", ?engName) as ?fullName) ?city ?province ?latitude ?longitude  WHERE {  "
@@ -229,6 +343,7 @@ public class QueriesServiceImpl implements QueriesService {
     }
 
     @Override
+    @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
     public String getEndpointDeleteQuery(String endpointsGraph, String id) {
         return "DELETE { ?id ?p ?o } "
                 + "WHERE { "
@@ -255,6 +370,72 @@ public class QueriesServiceImpl implements QueriesService {
                 + "             FILTER (regex(?status,'" + args[2] + "')) "
                 + " }   } ";
     }
+
+    @Override
+    @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
+    public String updateGeneric(String graph, String resource, String property, String object, String literal) {
+
+        if (isURI(object)) {
+            return "WITH  <" + graph+">"
+                    + " DELETE  {<" + resource + ">  <" + property + ">  ?o  }"
+                    + " INSERT {<" + resource + ">  <" + property + ">  <" + object + "> }"
+                    + " WHERE {<" + resource + ">  <" + property + ">  ?o  }";
+        } else {
+            return "WITH  <" + graph+">"
+                    + " DELETE  {<" + resource + ">  <" + property + ">  ?o  }"
+                    + " INSERT {<" + resource + ">  <" + property + ">  '" + object + "'" + literal + " }"
+                    + " WHERE {<" + resource + ">  <" + property + ">  ?o ."
+                    + " BIND( lang(?o) as  ?la  ) . FILTER (  !Bound(?la) || langMatches(?la , '"+literal.replace("@", "")+"'  ) )"
+                    + " }";
+        }
+
+    }
+    
+    
+    @Override
+    @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
+    public String removeGeneric(String graph, String resource, String property, String object, String literal) {
+
+            return  " WITH <"+graph+"> "
+                    + "DELETE { ?subject ?property ?object .     ?subject2  ?property2 ?subject }"
+                    + "WHERE {" 
+                    + "  ?subject  <"+property+">   <"+object+"> . "
+                    + " FILTER ( ?subject = <"+resource+">) ."
+                    + "    ?subject ?property  ?object ."
+                    + "OPTIONAL { ?subject2  ?property2 ?subject }   "
+                    + " }";
+             
+    
+    }
+    
+    @Override
+    @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
+    public String removeGenericType (String graph, String type, String resource) {
+
+            return   
+                     "WITH <"+graph+">"+
+                     " DELETE { ?a ?b ?c  }\n" +
+                     "WHERE { " +
+                     "?a a  <"+type+"> ." +
+                     "?a ?b ?c .\n" +
+                     "FILTER ( ?a = <"+resource+"> )}";
+                 
+    }
+    
+    
+      @Override
+    @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
+    public String removeGenericRelation (String graph, String relation, String resource) {
+
+            return  "WITH <"+graph+">"+
+                    "DELETE { ?a ?b ?c }\n" +
+                    "WHERE { ?a  <"+relation+"> ?e  . " +
+                    " ?a ?b ?c  . " +
+                    "FILTER ( ?e = <"+resource+"> )} ";
+                 
+    }
+    
+    
 
     @Override
     public String getAuthors() {
@@ -287,7 +468,7 @@ public class QueriesServiceImpl implements QueriesService {
     }
 
     @Override
-    public String getCountPersonQuery(String graph) {
+    public String getCountPersonQuery(String graph, String num) {
         return PREFIXES
                 + " SELECT (COUNT(DISTINCT ?s) as ?count) WHERE {"
                 + " SELECT DISTINCT ?s WHERE {" + getGraphString(graph) + "{ "
@@ -296,7 +477,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + " ?s a foaf:Person."
                 + " } }"
                 + " GROUP BY ?s"
-                + " HAVING (count(?docu)>1)}";
+                + " HAVING (count(?docu)>" + num + ")}";
     }
 
     @Override
@@ -500,6 +681,13 @@ public class QueriesServiceImpl implements QueriesService {
     public String getPublicationsPropertiesQuery(String publicationResource) {
         return " SELECT DISTINCT ?property ?value WHERE { "
                 + " <" + publicationResource + ">  ?property ?value. "
+                + " }";
+    }
+
+    @Override
+    public String getAuthorsPropertiesQuery(String uriAuthor) {
+        return " SELECT  ?property ?object WHERE { "
+                + " <" + uriAuthor + ">  ?property ?object  "
                 + " }";
     }
 
@@ -1051,12 +1239,12 @@ public class QueriesServiceImpl implements QueriesService {
     public String getJournalsCentralGraphQuery() {
         return PREFIXES
                 + "SELECT DISTINCT ?JOURNAL ?NAME { "
-                    + "GRAPH  <"+con.getCentralGraph()+"> {    "
-                        + "?JOURNAL a bibo:Journal . "
-                        + "?JOURNAL rdfs:label ?NAME ."
-                    + "} "
+                + "GRAPH  <" + con.getCentralGraph() + "> {    "
+                + "?JOURNAL a bibo:Journal . "
+                + "?JOURNAL rdfs:label ?NAME ."
+                + "} "
                 + "}";
-        
+
     }
 
     //FIXME use prefixes
@@ -1064,41 +1252,41 @@ public class QueriesServiceImpl implements QueriesService {
     public String getJournalsLantindexGraphQuery() {
         return PREFIXES
                 + "SELECT DISTINCT ?JOURNAL ?NAME ?TOPIC ?YEAR ?ISSN { "
-                    + " GRAPH <"+con.getLatindexJournalsGraph()+"> {   "
-                        + "?JOURNAL a <http://redi.cedia.edu.ec/ontology/journal> . "
-                        + "?JOURNAL <http://redi.cedia.edu.ec/ontology/tit_clave> ?NAME ."
-                        + "?JOURNAL <http://redi.cedia.edu.ec/ontology/subtema> ?TOPIC ."
-                        + "?JOURNAL <http://redi.cedia.edu.ec/ontology/ano_ini> ?YEAR ."
-                        + "?JOURNAL <http://redi.cedia.edu.ec/ontology/issn> ?ISSN ."
-                    + "} "
+                + " GRAPH <" + con.getLatindexJournalsGraph() + "> {   "
+                + "?JOURNAL a <http://redi.cedia.edu.ec/ontology/journal> . "
+                + "?JOURNAL <http://redi.cedia.edu.ec/ontology/tit_clave> ?NAME ."
+                + "?JOURNAL <http://redi.cedia.edu.ec/ontology/subtema> ?TOPIC ."
+                + "?JOURNAL <http://redi.cedia.edu.ec/ontology/ano_ini> ?YEAR ."
+                + "?JOURNAL <http://redi.cedia.edu.ec/ontology/issn> ?ISSN ."
+                + "} "
                 + "}";
     }
 
     @Override
     public String getPublicationsOfJournalCentralGraphQuery(String journalURI) {
-                return PREFIXES
+        return PREFIXES
                 + "SELECT DISTINCT ?PUBLICATION ?TITLE ?ABSTRACT { "
-                    + "GRAPH   <"+con.getCentralGraph()+"> {  "
-                        + "?PUBLICATION <http://purl.org/dc/terms/isPartOf> <"+journalURI+"> . "
-                        + "?PUBLICATION <http://purl.org/dc/terms/title> ?TITLE ."
-                        + "OPTIONAL{"
-                            + "?PUBLICATION <http://purl.org/ontology/bibo/abstract> ?ABSTRACT ."
-                        + "}"
-                    + "} "
+                + "GRAPH   <" + con.getCentralGraph() + "> {  "
+                + "?PUBLICATION <http://purl.org/dc/terms/isPartOf> <" + journalURI + "> . "
+                + "?PUBLICATION <http://purl.org/dc/terms/title> ?TITLE ."
+                + "OPTIONAL{"
+                + "?PUBLICATION <http://purl.org/ontology/bibo/abstract> ?ABSTRACT ."
+                + "}"
+                + "} "
                 + "}";
     }
-    
+
     @Override
     public String getPublicationsCentralGraphQuery() {
-                return PREFIXES
+        return PREFIXES
                 + "SELECT DISTINCT ?PUBLICATION ?TITLE ?ABSTRACT { "
-                    + "GRAPH   <"+con.getCentralGraph()+"> {  "
-                        + "?MOCKAUTHOR foaf:publications ?PUBLICATION . "
-                        + "?PUBLICATION <http://purl.org/dc/terms/title> ?TITLE ."
-                        + "OPTIONAL{"
-                            + "?PUBLICATION <http://purl.org/ontology/bibo/abstract> ?ABSTRACT ."
-                        + "}"
-                    + "} "
+                + "GRAPH   <" + con.getCentralGraph() + "> {  "
+                + "?MOCKAUTHOR foaf:publications ?PUBLICATION . "
+                + "?PUBLICATION <http://purl.org/dc/terms/title> ?TITLE ."
+                + "OPTIONAL{"
+                + "?PUBLICATION <http://purl.org/ontology/bibo/abstract> ?ABSTRACT ."
+                + "}"
+                + "} "
                 + "}";
     }
 

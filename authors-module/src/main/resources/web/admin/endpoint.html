@@ -1,0 +1,138 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements. See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership. The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<html>
+        <head>
+        <!--###BEGIN_HEAD###-->
+        <title>Endpoint Manager</title>
+        <script type="text/javascript" src="../../webjars/jquery/1.8.2/jquery.min.js"></script> 
+        <script type="text/javascript" src="../../webjars/marmotta.js"></script>
+        <script type="text/javascript" src="js/widgets/endpointsManager.js"></script>
+        <script type="text/javascript" src="http://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+                <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $("tr.sparql_form").css("display","block");
+                $("tr.file_form").css("display","none");
+                $("tr.OAI_form").css("display","none");
+                
+                $("select#endpoint_type").val("sparql");
+                console.log(_SERVER_URL);
+                getOrg();
+                loadTables();
+                
+                 $('input[type=checkbox]').on( 'click', function () {
+                 $(this).parents('tr').toggleClass('selected');   } );
+    
+            });
+
+        </script>
+        
+         <style type="text/css">
+
+           
+            
+            #endpoint_status {
+                background-color: red;
+                border-radius: 10px 10px 10px 10px;
+                display: inline-block;
+                float: right;
+                height: 20px;
+                width: 20px;
+            }
+            
+           #endpoint_status.active_endpoint {
+                background-color: darkGreen;
+            }
+
+        </style>
+          <!--###END_HEAD###-->
+        </head>
+    <body>
+        <!--###BEGIN_CONTENT###-->
+        <h1> Endpoint Configuration </h1>
+        <h2> Description </h2>
+        <p> It allows you to register different types of endpoints containing author data   </p>
+        
+         <h2> Endpoint Management    </h2>
+            <table id="endpoinTable" class="display" width="90%">
+                <thead>
+                    <tr>
+                        <th>Selection</th>
+                        <th>Status</th>
+                        <th>Access</th>
+                        <th>Organization</th>
+                        <th>Type</th>
+                        <th>Operations</th>
+                        <th>Extraction Date</th>
+                    </tr> 
+                </thead> 
+            </table>
+          <h2> Endpoint Operations    </h2>
+          <input type="button" id="button_end_extract" value="Extract Selected Endpoints"  onclick="extractEndpoints()">
+          <input type="button" id="button_end_create" value="Create Local Authors"  onclick="createLocal()">
+         <h2> Registration </h2>
+            <table>
+                 <tr> 
+                    <td> Organization </td>
+                    <td>   <select id="endpoint_org" >
+                        </select> 
+                    </td>
+                </tr>
+                <tr> 
+                    <td> Tipo </td>
+                    <td>   <select id="endpoint_type" onchange="selectEndpoint(this.value)" >
+                            <option value="sparql">SPARQL</option>
+                            <option value="file">FILE</option>
+                            <option value="oai-pmh">OAI-PMH</option>
+                        </select> 
+                    </td>
+
+                </tr>
+            </table>
+            <table >
+                <tr class="sparql_form"> 
+                    <td style="width: 150px;"> SPARQL URL  </td>
+                    <td>  <input type="text" style="width: 400px;" id="endpoint_url"> </td>
+                </tr>
+                <tr class="sparql_form"> 
+                    <td style="width: 150px;"> Graph </td>
+                    <td>  <input type="text" style="width: 400px;" id="endpoint_graph"> </td>
+                </tr>
+
+                <tr class="file_form"> 
+                    <td style="width: 75px;"> File CSV </td>
+                    <td>  <input type="file" id="endpoint_file"> </td>
+                </tr>
+                  <tr class="OAI_form"> 
+                    <td style="width: 150px;"> OAI-PMH URL </td>
+                    <td>  <input type="text" style="width: 400px;" id="endpoint_oai"> </td>
+                </tr>
+                 <tr>
+                    <td> <br> </td>
+
+                </tr>
+                <tr>
+                    <td> <input type="button" id="button_end_reg" value="Register"  onclick="newEndpoint()"> </td>
+                </tr>  
+            </table>
+         
+     <!--###END_CONTENT###-->     
+    </body>
+</html>

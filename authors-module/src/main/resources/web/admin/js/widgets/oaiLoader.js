@@ -15,30 +15,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.marmotta.ucuenca.wk.authors.api;
 
-import org.apache.marmotta.ucuenca.wk.authors.exceptions.DaoException;
-import org.apache.marmotta.ucuenca.wk.authors.exceptions.UpdateException;
 
-public interface AuthorService {
-
-    /**
-     * Run update with all Active EndPoints MultipleEP
-     *
-     * @return
-     * @throws DaoException
-     * @throws UpdateException
-     */
-    String extractAuthors() throws DaoException, UpdateException;
-
-    String extractSubjects();
-
-    String searchDuplicates();
+function extractAuthorsOAI () {
+    var host = _SERVER_URL;
+    var name = $("#oai_endpoint_name").val();
+    var endpoint = $("#endpoint").val();
+    alert (name);
     
-    String extractOAI (String name , String endpoint);
     
-    String extractFile (String name , String endpoint);
+    $.ajax({
+        type: "POST",
+        dataType: "text", //result data type
+        url: host + "authors-module/oaiExtraction?name="+name+"&endpoint="+endpoint,
+        success: function (Result) {
+            //document.getElementById("imgloading").style.visibility = "hidden";
+            alert("Correcto: " + Result);
+        },
+        error: function (data) {
+            //document.getElementById("imgloading").style.visibility = "hidden";
+            alert("Error" + data.responseText);
+        }
+    });
     
-    String extractAuthorsGeneric (String... endpoints);
-
 }

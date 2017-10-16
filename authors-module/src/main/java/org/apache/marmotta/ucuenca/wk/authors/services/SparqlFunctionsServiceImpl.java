@@ -9,6 +9,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
@@ -33,6 +35,7 @@ import org.apache.marmotta.platform.versioning.services.VersioningSailProvider;
 import org.apache.marmotta.platform.core.api.triplestore.SesameService;
 
 import org.openrdf.model.URI;
+import org.openrdf.model.Value;
 import org.openrdf.sail.SailException;
 import org.openrdf.query.resultio.text.csv.SPARQLResultsCSVWriter;
 /**
@@ -73,6 +76,18 @@ public class SparqlFunctionsServiceImpl implements SparqlFunctionsService {
              log.error("Fail to Insert Triplet: " + querytoUpdate);
             return false;
         }
+    }
+    
+      @Override
+    public List<Map<String, Value>> querylocal (String query){
+       
+        try {         
+            return sparqlService.query(QueryLanguage.SPARQL, query);
+        } catch (MarmottaException ex) {
+            log.error("Excepcion: Fallo al ejecutar consulta ASK sobre: " + query);
+            Logger.getLogger(SparqlFunctionsServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
     
     @Override

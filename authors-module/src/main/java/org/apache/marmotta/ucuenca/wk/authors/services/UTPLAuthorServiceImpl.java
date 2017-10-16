@@ -37,6 +37,7 @@ import org.openrdf.repository.sparql.SPARQLRepository;
 /**
  * Default Implementation of {@link UTPLAuthorService} Fernando B. CEDIA
  */
+@Deprecated
 @ApplicationScoped
 public class UTPLAuthorServiceImpl implements UTPLAuthorService {
 

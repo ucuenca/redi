@@ -33,6 +33,7 @@ import org.openrdf.query.UpdateExecutionException;
  * @author Satellite
  * @author Xavier Sumba
  */
+@Deprecated
 public class EndpointServiceImpl implements EndpointService {
 
     @Inject

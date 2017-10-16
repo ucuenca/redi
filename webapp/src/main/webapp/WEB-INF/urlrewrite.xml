@@ -1,10 +1,10 @@
 
 <urlrewrite>
- <rule>
+ <!--<rule>
         <name>Domain Name Check</name>
         <condition name="host" operator="notequal">redi.cedia.edu.ec</condition>
         <from>^(.*)$</from>
         <to type="redirect">http://redi.cedia.edu.ec$1</to>
     </rule>
-
+-->
 </urlrewrite>

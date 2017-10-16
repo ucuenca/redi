@@ -68,6 +68,12 @@ public interface ConstantService {
     String getAcademicsKnowledgeResource();
 
     String getEndpointResource();
+    
+    String getOrganizationBaseUri();
+    
+    String getEndpointBaseUri();
+    
+    String getOrganizationsGraph();
 
     String getBaseResource();
 

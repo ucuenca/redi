@@ -50,6 +50,11 @@ public class ConstantServiceImpl implements ConstantService {
     public String getEndpointsGraph() {
         return confService.getBaseContext() + "endpoints";
     }
+    
+    @Override
+    public String getOrganizationsGraph() {
+        return confService.getBaseContext() + "organization";
+    }
 
     @Override
     public String getGoogleScholarGraph() {
@@ -129,6 +134,16 @@ public class ConstantServiceImpl implements ConstantService {
 
     @Override
     public String getEndpointResource() {
+        return getBaseResource() + "endpoint/";
+    }
+    
+    @Override
+    public String getOrganizationBaseUri() {
+        return getBaseResource() + "organization/";
+    }
+    
+     @Override
+    public String getEndpointBaseUri() {
         return getBaseResource() + "endpoint/";
     }
 

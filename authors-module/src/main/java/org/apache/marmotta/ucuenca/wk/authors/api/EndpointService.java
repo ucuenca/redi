@@ -12,6 +12,7 @@ import java.util.List;
  * @author Satellite
  * @author Xavier Sumba
  */
+@Deprecated
 public interface EndpointService {
 
     /**

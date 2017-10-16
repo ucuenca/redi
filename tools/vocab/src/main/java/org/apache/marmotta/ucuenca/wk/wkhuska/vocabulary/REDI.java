@@ -19,6 +19,8 @@ public class REDI {
     public static final String NAMESPACE = "http://ucuenca.edu.ec/ontology#";
 
     // Properties
+    
+    public static final URI ENDPOINT;
     public static final URI CITATION_COUNT;
     public static final URI GSCHOLAR_URl;
     public static final URI ACADEMICS_KNOWLEDGE_URl;
@@ -32,6 +34,10 @@ public class REDI {
     public static final URI LATITUDE;
     public static final URI LONGITUDE;
     public static final URI DOMAIN;
+    public static final URI COUNTRY;
+    public static final URI TYPE;
+    public static final URI BELONGTO;
+    public static final URI EXTRACTIONDATE;
 
     static {
         ValueFactory factory = ValueFactoryImpl.getInstance();
@@ -49,6 +55,11 @@ public class REDI {
         LATITUDE = factory.createURI(REDI.NAMESPACE, "latitude");
         LONGITUDE = factory.createURI(REDI.NAMESPACE, "longitude");
         DOMAIN = factory.createURI(REDI.NAMESPACE, "domain");
+        COUNTRY = factory.createURI (REDI.NAMESPACE , "country");
+        TYPE = factory.createURI (REDI.NAMESPACE , "type");
+        ENDPOINT = factory.createURI (REDI.NAMESPACE , "Endpoint");
+        BELONGTO = factory.createURI (REDI.NAMESPACE , "belongTo");
+        EXTRACTIONDATE = factory.createURI (REDI.NAMESPACE , "extractionDate");
 
     }
 }
