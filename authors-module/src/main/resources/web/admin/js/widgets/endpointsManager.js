@@ -18,7 +18,7 @@
  * 
  */
 
-var _SERVER_URL = "http://localhost:8080/";
+//var _SERVER_URL = "http://localhost:8080/";
 var host = _SERVER_URL;
 var table;
    

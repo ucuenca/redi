@@ -122,7 +122,7 @@ public class AuthorWebService {
     @Path("/upload")
     @SuppressWarnings({"PMD.ExcessiveMethodLength", "PMD.AvoidDuplicateLiterals"})
     public Response uploadAuthors(@HeaderParam(HttpHeaders.CONTENT_TYPE) String type, @Context HttpServletRequest request,
-            @QueryParam("org") String organization, @QueryParam("type") String typ) throws IOException {
+            @QueryParam("org") String organization, @QueryParam("type") String endpointType) throws IOException {
         if (type == null || !"text/csv".equals(type.toLowerCase())) {
             return Response.status(Status.BAD_REQUEST).entity("Incorrect file format.").build();
         }
@@ -150,7 +150,7 @@ public class AuthorWebService {
         try (FileOutputStream fos = new FileOutputStream(f)) {
             IOUtils.writeLines(lines, null, fos, StandardCharsets.UTF_8);
             log.info("File imported to {}.", f.getPath());
-            String resultado = endpointsService.registerFile(typ, organization, f.getPath());
+            String resultado = endpointsService.registerFile(endpointType, organization, f.getPath());
 
             //String resultado = endpointService.addEndpoint("true", organization, f.getPath(), "-", "-", "-", "-", "-", "-", "-");
             //authorService.extractFile (organization, f.getPath());
@@ -392,7 +392,7 @@ public class AuthorWebService {
         }
     }
 
-    @Deprecated
+
     @POST
     @Path("/endpointSparqlRegister")
     public Response endpointSparqlRegister(@QueryParam("type") String type, @QueryParam("org") String org, @QueryParam("url") String url, @QueryParam("graph") String graph) {
@@ -402,7 +402,7 @@ public class AuthorWebService {
         //return  Response.status(Status.BAD_REQUEST).entity("Incorrect file format.").build();
     }
 
-    @Deprecated
+
     @POST
     @Path("/endpointOAIRegister")
     public Response endpointOAIRegister(@QueryParam("type") String type, @QueryParam("org") String org, @QueryParam("url") String url) {

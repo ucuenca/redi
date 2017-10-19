@@ -50,13 +50,14 @@
         <mysql.version>5.1.21</mysql.version>
         <jetty.version>9.2.1.v20140609</jetty.version>
         <resteasy.version>3.0.10.Final</resteasy.version>
-        <jackson.version>2.3.3</jackson.version>
+        <jackson.version>2.5.0</jackson.version>
         <titan.version>0.4.2</titan.version>
         <commonsio.version>2.4</commonsio.version>
         <logback.version>1.1.2</logback.version>
         <mallet.version>2.0.8</mallet.version>
         <jax.doclets.version>0.10.1</jax.doclets.version>
-        <mongo.version>3.5.0</mongo.version>
+        <mongo.version>3.5.0</mongo.version>        
+        <pentaho.kettle.version>5.1.preview.506</pentaho.kettle.version>
     </properties>
     <modules>
         <module>tools</module>
