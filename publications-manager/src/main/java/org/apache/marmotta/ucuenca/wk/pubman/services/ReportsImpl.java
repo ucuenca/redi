@@ -236,7 +236,7 @@ public class ReportsImpl implements ReportsService {
             Integer cont = 0;
             //Query
             getQuery = ConstantServiceImpl.PREFIX
-                    + " SELECT ?publications ?authors ( sample(str(?name_)) as ?name) (sample(str(?title_)) as ?title) (sample(str(?abstract_)) as ?abstract) ( sample(str(?authorsName_)) as ?authorsName) WHERE { "
+                    + " SELECT ?publications ?authors ( max(str(?name_)) as ?name) (max(str(?title_)) as ?title) (max(str(?abstract_)) as ?abstract) ( max(str(?authorsName_)) as ?authorsName) WHERE { "
                     + " graph <"+constant.getCentralGraph()+"> { <" + author + "> foaf:name ?name_. "
                     + "  <" + author + "> foaf:publications  ?publications. "
                     + "  ?publications dct:title ?title_. "
@@ -748,7 +748,7 @@ public class ReportsImpl implements ReportsService {
 
         try {
             String queryAuthors = ConstantServiceImpl.PREFIX
-                    + "SELECT ?author (sample(str(?name_)) as ?name ) (COUNT(distinct ?publication ) as ?totalPub)"
+                    + "SELECT ?author (max(str(?name_)) as ?name ) (COUNT(distinct ?publication ) as ?totalPub)"
                     + "WHERE {  "
                     + "  GRAPH <" + constant.getCentralGraph()+ ">  {"
                     + "    ?author foaf:publications ?publication ;"
