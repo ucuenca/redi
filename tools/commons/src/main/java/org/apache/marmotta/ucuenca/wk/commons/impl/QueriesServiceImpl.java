@@ -179,7 +179,7 @@ public class QueriesServiceImpl implements QueriesService {
 
     @Override
     public String getInsertGeneric(String graph, String resource, String property, String object, String literal) {
-       // String graph = con.getOrganizationsGraph();
+        // String graph = con.getOrganizationsGraph();
         // String resource = con.getOrganizationBaseUri() + resourceHash;
         if (isURI(object)) {
             return INSERTDATA + getGraphString(graph) + "{<" + resource + ">  <" + property + ">  <" + object + "> }}";
@@ -217,7 +217,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + "select DISTINCT ?URI ?name ?fullNameEn  ?fullNameEs  ?country ?province ?city ?type ?lang ?long "
                 + "FROM <" + con.getOrganizationsGraph() + ">"
                 + " where "
-                + " {   ?URI <"+RDF.TYPE.toString()+"> <"+FOAF.Organization.toString()+">  . "
+                + " {   ?URI <" + RDF.TYPE.toString() + "> <" + FOAF.Organization.toString() + ">  . "
                 + "?URI  <" + REDI.NAME.toString() + "> ?name  ."
                 + "OPTIONAL { ?URI  <" + REDI.FULLNAME.toString() + "> ?fullNameEs . "
                 + "FILTER (langMatches(lang(?fullNameEs), 'es')) } ."
@@ -230,7 +230,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + "OPTIONAL { ?URI <" + REDI.LATITUDE.toString() + "> ?lang } . "
                 + "OPTIONAL { ?URI <" + REDI.LONGITUDE.toString() + "> ?long } . "
                 + "}";
-              //  + "FILTER (langMatches(lang(?fullNameEn), 'en') && langMatches(lang(?fullNameEs), 'es'))    } ";
+        //  + "FILTER (langMatches(lang(?fullNameEn), 'en') && langMatches(lang(?fullNameEs), 'es'))    } ";
 
     }
 
@@ -243,7 +243,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + "select DISTINCT ?URI ?name ?fullNameEn  ?fullNameEs  ?country ?province ?city ?type ?lang ?long "
                 + "FROM <" + con.getOrganizationsGraph() + ">"
                 + " where "
-                + "{   <" + uri + "> <"+RDF.TYPE.toString()+"> <"+FOAF.Organization.toString()+"> . "
+                + "{   <" + uri + "> <" + RDF.TYPE.toString() + "> <" + FOAF.Organization.toString() + "> . "
                 + "<" + uri + ">  <" + REDI.NAME.toString() + "> ?name  ."
                 + "OPTIONAL { <" + uri + ">  <" + REDI.FULLNAME.toString() + "> ?fullNameEs . "
                 + "FILTER (langMatches(lang(?fullNameEs), 'es')) } ."
@@ -258,42 +258,41 @@ public class QueriesServiceImpl implements QueriesService {
                 + "} ";
 
     }
-    
+
     @Override
     @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
-    public String getListEndpoints () {
-    return  "PREFIX REDI: <http://ucuenca.edu.ec/ontology#>"+
-            "SELECT DISTINCT ?URI ?status ?url ?graph ?type ?org ?date"+
-            " FROM <"+con.getEndpointsGraph()+"> " +
-            "WHERE {"+
-            "?URI <"+RDF.TYPE.toString()+">  <"+REDI.ENDPOINT.toString()+"> ."+
-            "OPTIONAL { ?URI    <"+REDI.STATUS.toString()+"> ?status } ."+
-            "OPTIONAL { ?URI   <"+REDI.URL.toString()+">    ?url } ."+	
-            "OPTIONAL { ?URI   <"+REDI.GRAPH.toString()+">   ?graph } ."+
-            "OPTIONAL { ?URI   <"+REDI.TYPE.toString()+">   ?type } ."+
-            "OPTIONAL { ?URI   <"+REDI.BELONGTO.toString()+">  ?org } . "+  
-            "OPTIONAL { ?URI   <"+REDI.EXTRACTIONDATE.toString()+">  ?date }"+
-            "}";
+    public String getListEndpoints() {
+        return "PREFIX REDI: <http://ucuenca.edu.ec/ontology#>"
+                + "SELECT DISTINCT ?URI ?status ?url ?graph ?type ?org ?date"
+                + " FROM <" + con.getEndpointsGraph() + "> "
+                + "WHERE {"
+                + "?URI <" + RDF.TYPE.toString() + ">  <" + REDI.ENDPOINT.toString() + "> ."
+                + "OPTIONAL { ?URI    <" + REDI.STATUS.toString() + "> ?status } ."
+                + "OPTIONAL { ?URI   <" + REDI.URL.toString() + ">    ?url } ."
+                + "OPTIONAL { ?URI   <" + REDI.GRAPH.toString() + ">   ?graph } ."
+                + "OPTIONAL { ?URI   <" + REDI.TYPE.toString() + ">   ?type } ."
+                + "OPTIONAL { ?URI   <" + REDI.BELONGTO.toString() + ">  ?org } . "
+                + "OPTIONAL { ?URI   <" + REDI.EXTRACTIONDATE.toString() + ">  ?date }"
+                + "}";
     }
-    
-    
+
     @Override
     @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
-    public String getListEndpointsByUri (String uri) {
-    return  "PREFIX REDI: <http://ucuenca.edu.ec/ontology#>"+
-            "SELECT DISTINCT  ?status ?url ?graph ?type ?org ?date"+
-            " FROM <"+con.getEndpointsGraph()+"> " +
-            "WHERE {"+
-            "<"+uri+"> <"+RDF.TYPE.toString()+">  <"+REDI.ENDPOINT.toString()+"> ."+
-            "OPTIONAL { <"+uri+">   <"+REDI.STATUS.toString()+"> ?status } ."+
-            "OPTIONAL { <"+uri+">  <"+REDI.URL.toString()+">    ?url } ."+	
-            "OPTIONAL { <"+uri+">   <"+REDI.GRAPH.toString()+">   ?graph } ."+
-            "OPTIONAL { <"+uri+">   <"+REDI.TYPE.toString()+">   ?type } ."+
-            "OPTIONAL { <"+uri+">   <"+REDI.BELONGTO.toString()+">  ?org } . "+  
-            "OPTIONAL { <"+uri+">   <"+REDI.EXTRACTIONDATE.toString()+">  ?date }"+
-            "} limit 1";
+    public String getListEndpointsByUri(String uri) {
+        return "PREFIX REDI: <http://ucuenca.edu.ec/ontology#>"
+                + "SELECT DISTINCT  ?status ?url ?graph ?type ?org ?date"
+                + " FROM <" + con.getEndpointsGraph() + "> "
+                + "WHERE {"
+                + "<" + uri + "> <" + RDF.TYPE.toString() + ">  <" + REDI.ENDPOINT.toString() + "> ."
+                + "OPTIONAL { <" + uri + ">   <" + REDI.STATUS.toString() + "> ?status } ."
+                + "OPTIONAL { <" + uri + ">  <" + REDI.URL.toString() + ">    ?url } ."
+                + "OPTIONAL { <" + uri + ">   <" + REDI.GRAPH.toString() + ">   ?graph } ."
+                + "OPTIONAL { <" + uri + ">   <" + REDI.TYPE.toString() + ">   ?type } ."
+                + "OPTIONAL { <" + uri + ">   <" + REDI.BELONGTO.toString() + ">  ?org } . "
+                + "OPTIONAL { <" + uri + ">   <" + REDI.EXTRACTIONDATE.toString() + ">  ?date }"
+                + "} limit 1";
     }
-  
+
     @Override
     public String getlisEndpointsQuery(String endpointsGraph) {
         return "SELECT DISTINCT ?id ?status ?name ?url ?graph (concat(?fName, \" - \", ?engName) as ?fullName) ?city ?province ?latitude ?longitude  WHERE {  "
@@ -379,66 +378,60 @@ public class QueriesServiceImpl implements QueriesService {
     public String updateGeneric(String graph, String resource, String property, String object, String literal) {
 
         if (isURI(object)) {
-            return "WITH  <" + graph+">"
+            return "WITH  <" + graph + ">"
                     + " DELETE  {<" + resource + ">  <" + property + ">  ?o  }"
                     + " INSERT {<" + resource + ">  <" + property + ">  <" + object + "> }"
                     + " WHERE {<" + resource + ">  <" + property + ">  ?o  }";
         } else {
-            return "WITH  <" + graph+">"
+            return "WITH  <" + graph + ">"
                     + " DELETE  {<" + resource + ">  <" + property + ">  ?o  }"
                     + " INSERT {<" + resource + ">  <" + property + ">  '" + object + "'" + literal + " }"
                     + " WHERE {<" + resource + ">  <" + property + ">  ?o ."
-                    + " BIND( lang(?o) as  ?la  ) . FILTER (  !Bound(?la) || langMatches(?la , '"+literal.replace("@", "")+"'  ) )"
+                    + " BIND( lang(?o) as  ?la  ) . FILTER (  !Bound(?la) || langMatches(?la , '" + literal.replace("@", "") + "'  ) )"
                     + " }";
         }
 
     }
-    
-    
+
     @Override
     @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
     public String removeGeneric(String graph, String resource, String property, String object, String literal) {
 
-            return  " WITH <"+graph+"> "
-                    + "DELETE { ?subject ?property ?object .     ?subject2  ?property2 ?subject }"
-                    + "WHERE {" 
-                    + "  ?subject  <"+property+">   <"+object+"> . "
-                    + " FILTER ( ?subject = <"+resource+">) ."
-                    + "    ?subject ?property  ?object ."
-                    + "OPTIONAL { ?subject2  ?property2 ?subject }   "
-                    + " }";
-             
-    
+        return " WITH <" + graph + "> "
+                + "DELETE { ?subject ?property ?object .     ?subject2  ?property2 ?subject }"
+                + "WHERE {"
+                + "  ?subject  <" + property + ">   <" + object + "> . "
+                + " FILTER ( ?subject = <" + resource + ">) ."
+                + "    ?subject ?property  ?object ."
+                + "OPTIONAL { ?subject2  ?property2 ?subject }   "
+                + " }";
+
     }
-    
+
     @Override
     @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
-    public String removeGenericType (String graph, String type, String resource) {
+    public String removeGenericType(String graph, String type, String resource) {
 
-            return   
-                     "WITH <"+graph+">"+
-                     " DELETE { ?a ?b ?c  }\n" +
-                     "WHERE { " +
-                     "?a a  <"+type+"> ." +
-                     "?a ?b ?c .\n" +
-                     "FILTER ( ?a = <"+resource+"> )}";
-                 
+        return "WITH <" + graph + ">"
+                + " DELETE { ?a ?b ?c  }\n"
+                + "WHERE { "
+                + "?a a  <" + type + "> ."
+                + "?a ?b ?c .\n"
+                + "FILTER ( ?a = <" + resource + "> )}";
+
     }
-    
-    
-      @Override
+
+    @Override
     @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
-    public String removeGenericRelation (String graph, String relation, String resource) {
+    public String removeGenericRelation(String graph, String relation, String resource) {
 
-            return  "WITH <"+graph+">"+
-                    "DELETE { ?a ?b ?c }\n" +
-                    "WHERE { ?a  <"+relation+"> ?e  . " +
-                    " ?a ?b ?c  . " +
-                    "FILTER ( ?e = <"+resource+"> )} ";
-                 
+        return "WITH <" + graph + ">"
+                + "DELETE { ?a ?b ?c }\n"
+                + "WHERE { ?a  <" + relation + "> ?e  . "
+                + " ?a ?b ?c  . "
+                + "FILTER ( ?e = <" + resource + "> )} ";
+
     }
-    
-    
 
     @Override
     public String getAuthors() {
@@ -520,50 +513,66 @@ public class QueriesServiceImpl implements QueriesService {
     }
 
     @Override
-    public String getAuthorsDataQuery(String graph, String endpointsgraph) {
+    public String getAuthorsDataQuery(String graph, String endpointsgraph, String... organizations) {
+        for (int i = 0; i < organizations.length; i++) {
+            organizations[i] = "<" + organizations[i] + ">";
+        }
         return PREFIXES
-                + " SELECT distinct *"
-                + " WHERE { " + getGraphString(graph) + " { "
-                + " ?subject a foaf:Person. "
-                + " ?subject foaf:name ?name."
-                + " ?subject foaf:firstName ?fname. "
-                + " ?subject foaf:lastName ?lname. "
-                + " ?subject dct:provenance ?provenance. "
-                //<editor-fold defaultstate="collapsed" desc="authors for test purposes">
-                //                                + "{"
-                //                                + " filter (regex(UCASE(?subject), \"SAQUICELA\"))"
-                //                                + "filter (regex(UCASE(?subject), \"GALARZA\"))  "
-                //                                + "    }"
-                //                                + "UNION "
-                //                                + "{"
-                //                                + "filter (regex(UCASE(?subject), \"ESPINOZA\")) "
-                //                                + "filter (regex(UCASE(?subject), \"MAURICIO\")) "
-                //                                + "}"
-                //                                + "UNION {"
-                //                                + "filter (regex(UCASE(?subject), \"CARVALLO\"))  "
-                //                                + "filter (regex(UCASE(?subject), \"JUAN\"))     "
-                //                                + "}"
-                //                                + " UNION {"
-                //                                + " filter (regex(UCASE(?subject), \"FELIPE\"))  "
-                //                                + "filter (regex(UCASE(?subject), \"CISNEROS\"))   "
-                //                                + "  } UNION"
-                //                                + " {"
-                //                                + "  filter (regex(UCASE(?subject), \"NELSON\"))  "
-                //                                + "  filter (regex(UCASE(?subject), \"PIEDRA\"))   "
-                //                                + " } UNION"
-                //                                + " {"
-                //                                + " filter (regex(UCASE(?subject), \"LIZANDRO\"))  "
-                //                                + "  filter (regex(UCASE(?subject), \"SOLANO\"))     "
-                //                                + "} "
-                //</editor-fold>
-                + " { select ?status "
-                + "     where { " + getGraphString(endpointsgraph) + " {"
-                + "     ?provenance <http://ucuenca.edu.ec/ontology#status> ?status. "
-                //+ "     ?provenance <http://ucuenca.edu.ec/ontology#name> \"UCUENCA\"^^xsd:string ."
-                + " }}} filter (regex(?status,\"true\")) "
-                //+ "filter (mm:fulltext-search(?name,\"Víctor Saquicela\")) "
-                //                + "filter (mm:fulltext-search(?name,\"Juan Pablo Carvallo\")) "
-                + "                }} ";
+                + "SELECT DISTINCT * WHERE {"
+                + "  VALUES ?organization {" + organizations + "}"
+                + "  GRAPH <" + con.getEndpointsGraph() + ">  {"
+                + "      ?provenance uc:belongTo ?organization."
+                + "  }"
+                + "  GRAPH <" + con.getAuthorsGraph() + ">  {"
+                + "    ?subject a foaf:Person;"
+                + "               foaf:name ?name;"
+                + "               foaf:firstName ?fname;"
+                + "               foaf:lastName ?lname;"
+                + "               dct:provenance ?provenance."
+                + "  }"
+                + "}";
+//                + " SELECT distinct *"
+//                + " WHERE { " + getGraphString(graph) + " { "
+//                + " ?subject a foaf:Person. "
+//                + " ?subject foaf:name ?name."
+//                + " ?subject foaf:firstName ?fname. "
+//                + " ?subject foaf:lastName ?lname. "
+//                + " ?subject dct:provenance ?provenance. "
+//                //<editor-fold defaultstate="collapsed" desc="authors for test purposes">
+//                //                                + "{"
+//                //                                + " filter (regex(UCASE(?subject), \"SAQUICELA\"))"
+//                //                                + "filter (regex(UCASE(?subject), \"GALARZA\"))  "
+//                //                                + "    }"
+//                //                                + "UNION "
+//                //                                + "{"
+//                //                                + "filter (regex(UCASE(?subject), \"ESPINOZA\")) "
+//                //                                + "filter (regex(UCASE(?subject), \"MAURICIO\")) "
+//                //                                + "}"
+//                //                                + "UNION {"
+//                //                                + "filter (regex(UCASE(?subject), \"CARVALLO\"))  "
+//                //                                + "filter (regex(UCASE(?subject), \"JUAN\"))     "
+//                //                                + "}"
+//                //                                + " UNION {"
+//                //                                + " filter (regex(UCASE(?subject), \"FELIPE\"))  "
+//                //                                + "filter (regex(UCASE(?subject), \"CISNEROS\"))   "
+//                //                                + "  } UNION"
+//                //                                + " {"
+//                //                                + "  filter (regex(UCASE(?subject), \"NELSON\"))  "
+//                //                                + "  filter (regex(UCASE(?subject), \"PIEDRA\"))   "
+//                //                                + " } UNION"
+//                //                                + " {"
+//                //                                + " filter (regex(UCASE(?subject), \"LIZANDRO\"))  "
+//                //                                + "  filter (regex(UCASE(?subject), \"SOLANO\"))     "
+//                //                                + "} "
+//                //</editor-fold>
+//                + " { select ?status "
+//                + "     where { " + getGraphString(endpointsgraph) + " {"
+//                + "     ?provenance <http://ucuenca.edu.ec/ontology#status> ?status. "
+//                //+ "     ?provenance <http://ucuenca.edu.ec/ontology#name> \"UCUENCA\"^^xsd:string ."
+//                + " }}} filter (regex(?status,\"true\")) "
+//                //+ "filter (mm:fulltext-search(?name,\"Víctor Saquicela\")) "
+//                //                + "filter (mm:fulltext-search(?name,\"Juan Pablo Carvallo\")) "
+//                + "                }} ";
 
     }
 

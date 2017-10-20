@@ -117,7 +117,7 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
     }
 
     @Override
-    public String runPublicationsProviderTaskImpl(boolean update) {
+    public String runPublicationsProviderTaskImpl(boolean update, String[] organizations) {
         try {
             DistanceServiceImpl distancia = new DistanceServiceImpl();
             uniNames = new ArrayList<>();
@@ -132,7 +132,7 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
             String getEndpointsQuery = queriesService.getlistEndpointNamesQuery();
             uniNames = sparqlService.query(QueryLanguage.SPARQL, getEndpointsQuery);
 
-            List<Map<String, Value>> resultAllAuthors = getauthorsData.getListOfAuthors();
+            List<Map<String, Value>> resultAllAuthors = getauthorsData.getListOfAuthors(organizations);
 
             /*To Obtain Processed Percent*/
             int allPersons = resultAllAuthors.size();
@@ -677,7 +677,8 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
 
     @Override
     public void run() {
-        runPublicationsProviderTaskImpl(update);
+        String[] organizations = null;
+        runPublicationsProviderTaskImpl(update,organizations);
     }
 
     public void insertSubResources(RepositoryConnection conUri, TupleQueryResult tripletasResult, String providerGraph) {
@@ -700,5 +701,9 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
             java.util.logging.Logger.getLogger(ScopusProviderServiceImpl.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    void setOrganizations(String[] organizations) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

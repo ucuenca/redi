@@ -21,30 +21,29 @@ import com.google.gson.JsonArray;
 
 public interface ScopusProviderService {
 
-
-    
     /**
      * Get publications data from source, and load into provider graph
+     *
      * @param param
-     * @return 
+     * @return
      */
-    String runPublicationsProviderTaskImpl(boolean param);
-    
-    
-    
+    String runPublicationsProviderTaskImpl(boolean param, String[] organizations);
+
     /**
-     * Load publications:  Provider Graph to General Graph
+     * Load publications: Provider Graph to General Graph
+     *
      * @param param
-     * @return 
+     * @return
      */
     String runPublicationsTaskImpl(String param);
-    
+
     /**
-     * Function to Search 1 Author ( param ) in DBLP,  Insert in DBLP Graph and Return in JSONLD
+     * Function to Search 1 Author ( param ) in DBLP, Insert in DBLP Graph and
+     * Return in JSONLD
+     *
      * @param url
-     * @return 
+     * @return
      */
     JsonArray SearchAuthorTaskImpl(String url);
-    
-    
+
 }

@@ -76,7 +76,9 @@ public class PubWebService {
     @Path(GET_PUBLICATIONS)
     public Response readPublicationsPost(@QueryParam("update") Boolean update) {
         log.debug("Publications Task, update {}", update);
-        return runPublicationsProviderTask(update);
+        String[] organizations = {};
+        String result = commonService.GetDataFromProvidersService(update, organizations);
+        return Response.ok().entity(result).build();
     }
 
     /*
@@ -148,16 +150,6 @@ public class PubWebService {
         log.debug("Publications Task", params);
         String result = commonService.DetectLatindexPublications();
         return Response.ok().entity(result).build();
-    }
-
-    private Response runPublicationsProviderTask(boolean update) {
-        //String result = publicationsService.runPublicationsMAProviderTaskImpl(urisString);
-        String result = runGetDataFromProvidersService(update);
-        return Response.ok().entity(result).build();
-    }
-
-    private String runGetDataFromProvidersService(boolean update) {
-        return commonService.GetDataFromProvidersService(update);
     }
 
     /*
@@ -236,10 +228,10 @@ public class PubWebService {
     @POST
     @Path(GET_REPORT)
     public Response createReport(@FormParam("hostname") String host, @FormParam("report") String report, @FormParam("type") String type, @FormParam("param1") List<String> param1, @Context HttpServletRequest request) {
-        if (!type.equals("pdf") && !type.equals("xls")){
+        if (!type.equals("pdf") && !type.equals("xls")) {
             return Response.ok("Invalid format").build();
         }
-        
+
         ServletContext context = request.getServletContext();
         String realContextPath = context.getRealPath(request.getContextPath());
         log.debug("Report Task");
@@ -257,13 +249,13 @@ public class PubWebService {
     @Path(GET_REPORT_DOWNLOAD)
     public Response DownloadReport(@QueryParam("file") String report) {
 
-        if (!report.matches("[a-fA-F0-9]{32}\\.(pdf|xls)")){
+        if (!report.matches("[a-fA-F0-9]{32}\\.(pdf|xls)")) {
             return Response.ok("Invalid File").build();
         }
-        
-        File file = new File("/tmp/redi_reports/redi_reports_"+report);
+
+        File file = new File("/tmp/redi_reports/redi_reports_" + report);
         ResponseBuilder response = Response.ok((Object) file);
-        response.header("Content-Disposition", "attachment; filename=Report_"+report);
+        response.header("Content-Disposition", "attachment; filename=Report_" + report);
         return response.build();
     }
 

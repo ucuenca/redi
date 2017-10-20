@@ -13,7 +13,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import org.slf4j.Logger;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
@@ -28,6 +27,7 @@ import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.UpdateExecutionException;
+import org.slf4j.Logger;
 
 /**
  *
@@ -58,7 +58,7 @@ public class GetAuthorsGraphDataImpl implements GetAuthorsGraphData {
      * @return
      */
     @Override
-    public List<Map<String, Value>> getListOfAuthors() {
+    public List<Map<String, Value>> getListOfAuthors(String[] organizations) {
 
         List<Map<String, Value>> resultAllAuthors = null;
         List<Map<String, Value>> resultFilterAuthors = new LinkedList<Map<String, Value>>();
@@ -69,7 +69,7 @@ public class GetAuthorsGraphDataImpl implements GetAuthorsGraphData {
         String dspaceName = "";
         String fileName = "";
         try {
-            String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(constantService.getAuthorsGraph(), constantService.getEndpointsGraph());
+            String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(constantService.getAuthorsGraph(), constantService.getEndpointsGraph(), organizations);
             resultAllAuthors = sparqlService.query(QueryLanguage.SPARQL, getAllAuthorsDataQuery);
 
             /**

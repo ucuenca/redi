@@ -11,8 +11,8 @@ import javax.inject.Inject;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.DBLPProviderService;
-import org.apache.marmotta.ucuenca.wk.pubman.api.ReportsService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.ProviderService;
+import org.apache.marmotta.ucuenca.wk.pubman.api.ReportsService;
 
 /**
  *
@@ -59,19 +59,20 @@ public class CommonServiceImpl implements CommonService {
 
     @Inject
     AuthorAttributesImpl authorAttr;
-    
+
     @Inject
     LantindexDetectionServiceImpl LatindexImpl;
-    
+
     @Inject
     IndexCentralGraphImpl indexingCentralGraphService;
-    
+
     @Inject
     private QueriesService queriesService;
 
     @Override
-    public String GetDataFromProvidersService(boolean update) {
+    public String GetDataFromProvidersService(boolean update, String[] organizations) {
         providerServiceScopus.setUpdate(update);
+        providerServiceScopus.setOrganizations(organizations);
         Thread ScopusThread = new Thread((Runnable) providerServiceScopus);
         ScopusThread.start();
 
@@ -148,7 +149,7 @@ public class CommonServiceImpl implements CommonService {
         new Thread(authorAttr).start();
         return "Extracting attributes from authors. Task run in background.   Please review main.log file for details";
     }
-    
+
     @Override
     public String IndexCentralGraph() {
         Thread indexingTask = new Thread(indexingCentralGraphService);
@@ -164,8 +165,8 @@ public class CommonServiceImpl implements CommonService {
     @Override
     public String DetectLatindexPublications() {
         String startProcess = LatindexImpl.startProcess();
-        
+
         return startProcess;
     }
-    
+
 }

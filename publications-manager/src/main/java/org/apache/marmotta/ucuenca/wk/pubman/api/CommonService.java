@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface CommonService {
 
-    String GetDataFromProvidersService(boolean update);
+    String GetDataFromProvidersService(boolean update, String[] organizations);
 
     String Data2GlobalGraph();
 
@@ -35,9 +35,9 @@ public interface CommonService {
     JsonArray searchAuthor(String uri);
 
     String createReport(String hostname, String realPath, String name, String type, List<String> params);
-    
+
     String IndexCentralGraph();
-    
+
     String getSearchQuery(String textSearch);
 
     String DetectLatindexPublications();
