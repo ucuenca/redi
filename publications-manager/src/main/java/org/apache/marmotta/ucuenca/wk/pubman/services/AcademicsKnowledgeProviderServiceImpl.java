@@ -107,7 +107,7 @@ public class AcademicsKnowledgeProviderServiceImpl implements AcademicsKnowledge
             LDClient ldClient = new LDClient(conf);
 
             String authorResource = "";
-            List<Map<String, Value>> resultAllAuthors = getauthorsData.getListOfAuthors();
+            List<Map<String, Value>> resultAllAuthors = getauthorsData.getListOfAuthors(new String[]{});
 
             // To Obtain Processed Percent
             int allPersons = resultAllAuthors.size();

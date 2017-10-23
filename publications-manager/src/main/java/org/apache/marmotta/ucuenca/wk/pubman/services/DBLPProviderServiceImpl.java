@@ -27,8 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import org.slf4j.Logger;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -41,39 +39,35 @@ import org.apache.marmotta.ldclient.services.ldclient.LDClient;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
-import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
-import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
-
-import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
-
-import org.apache.marmotta.ucuenca.wk.pubman.exceptions.PubException;
-import org.apache.marmotta.ucuenca.wk.commons.service.DistanceService;
-import org.apache.marmotta.ucuenca.wk.pubman.api.DBLPProviderService;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
+import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
+import org.apache.marmotta.ucuenca.wk.commons.service.DistanceService;
 import org.apache.marmotta.ucuenca.wk.commons.service.GetAuthorsGraphData;
 import org.apache.marmotta.ucuenca.wk.commons.service.KeywordsService;
-
+import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
+import org.apache.marmotta.ucuenca.wk.pubman.api.DBLPProviderService;
+import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
+import org.apache.marmotta.ucuenca.wk.pubman.exceptions.PubException;
 import org.openrdf.model.Model;
 import org.openrdf.model.Statement;
+import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
+import org.openrdf.query.GraphQueryResult;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.QueryResults;
-
 import org.openrdf.query.TupleQuery;
 import org.openrdf.query.TupleQueryResult;
-import org.openrdf.query.GraphQueryResult;
-
+import org.openrdf.query.UpdateExecutionException;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
-import org.openrdf.model.Value;
-import org.openrdf.query.UpdateExecutionException;
 import org.semarglproject.vocab.OWL;
+import org.slf4j.Logger;
 
 /**
  * Default Implementation of {@link PubVocabService}
@@ -231,7 +225,7 @@ public class DBLPProviderServiceImpl implements DBLPProviderService, Runnable {
             String nameToFind = "";
             String authorResource = "";
             int priorityToFind = 0;
-            List<Map<String, Value>> resultAllAuthors = getauthorsData.getListOfAuthors();
+            List<Map<String, Value>> resultAllAuthors = getauthorsData.getListOfAuthors(new String[]{});
             /*To Obtain Processed Percent*/
             int allPersons = resultAllAuthors.size();
             int processedPersons = 0;
