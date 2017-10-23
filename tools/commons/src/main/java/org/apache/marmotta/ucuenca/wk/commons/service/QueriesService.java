@@ -11,7 +11,7 @@ package org.apache.marmotta.ucuenca.wk.commons.service;
  */
 public interface QueriesService {
 
-    String getAuthorsDataQuery(String graph, String endpointsgraph, String... organizations);
+    String getAuthorsDataQuery(String... organizations);
 
     String getAuthors();
     

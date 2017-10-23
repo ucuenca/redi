@@ -69,7 +69,7 @@ public class GetAuthorsGraphDataImpl implements GetAuthorsGraphData {
         String dspaceName = "";
         String fileName = "";
         try {
-            String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(constantService.getAuthorsGraph(), constantService.getEndpointsGraph(), organizations);
+            String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(organizations);
             resultAllAuthors = sparqlService.query(QueryLanguage.SPARQL, getAllAuthorsDataQuery);
 
             /**

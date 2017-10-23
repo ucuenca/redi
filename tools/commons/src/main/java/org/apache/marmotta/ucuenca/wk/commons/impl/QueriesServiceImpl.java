@@ -513,13 +513,13 @@ public class QueriesServiceImpl implements QueriesService {
     }
 
     @Override
-    public String getAuthorsDataQuery(String graph, String endpointsgraph, String... organizations) {
+    public String getAuthorsDataQuery(String... organizations) {
         for (int i = 0; i < organizations.length; i++) {
             organizations[i] = "<" + organizations[i] + ">";
         }
         return PREFIXES
                 + "SELECT DISTINCT * WHERE {"
-                + "  VALUES ?organization {" + organizations + "}"
+                + "  VALUES ?organization {" + String.join(" ", organizations) + "}"
                 + "  GRAPH <" + con.getEndpointsGraph() + ">  {"
                 + "      ?provenance uc:belongTo ?organization."
                 + "  }"
