@@ -3,6 +3,7 @@ package org.apache.marmotta.ucuenca.wk.commons.impl;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import javax.inject.Inject;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
@@ -519,7 +520,7 @@ public class QueriesServiceImpl implements QueriesService {
         }
         return PREFIXES
                 + "SELECT DISTINCT * WHERE {"
-                + "  VALUES ?organization {" + String.join(" ", organizations) + "}"
+                + "  VALUES ?organization {" + StringUtils.join(organizations, " ") + "}"
                 + "  GRAPH <" + con.getEndpointsGraph() + ">  {"
                 + "      ?provenance uc:belongTo ?organization."
                 + "  }"
