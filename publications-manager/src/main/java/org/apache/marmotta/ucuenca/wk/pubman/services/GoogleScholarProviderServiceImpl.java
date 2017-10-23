@@ -50,7 +50,6 @@ import org.apache.marmotta.ucuenca.wk.commons.service.DistanceService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.endpoint.gs.GoogleScholarPublicationEndpoint;
 import org.apache.marmotta.ucuenca.wk.endpoint.gs.GoogleScholarSearchEndpoint;
-import org.apache.marmotta.ucuenca.wk.pubman.api.ProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
 import org.apache.marmotta.ucuenca.wk.pubman.exceptions.PubException;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
@@ -67,9 +66,10 @@ import org.openrdf.query.UpdateExecutionException;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
+import org.apache.marmotta.ucuenca.wk.pubman.api.ProviderServiceGoogleScholar;
 
 /**
- * Default Implementation of {@link ProviderService} to get data from Google
+ * Default Implementation of {@link ProviderServiceGoogleScholar} to get data from Google
  * Scholar. Using {@link Goo
  *
  * Fernando Baculima CEDIA - Universidad de Cuenca
@@ -77,7 +77,7 @@ import org.slf4j.Logger;
  * @author Xavier Sumba <xavier.sumba93@ucuenca.ec>
  */
 @ApplicationScoped
-public class GoogleScholarProviderServiceImpl implements ProviderService, Runnable {
+public class GoogleScholarProviderServiceImpl implements ProviderServiceGoogleScholar, Runnable {
 
     @Inject
     private Logger log;
