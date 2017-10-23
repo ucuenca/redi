@@ -58,7 +58,7 @@ public class GetAuthorsGraphDataImpl implements GetAuthorsGraphData {
      * @return
      */
     @Override
-    public List<Map<String, Value>> getListOfAuthors(String[] organizations) {
+    public List<Map<String, Value>> getListOfAuthors(String... organizations) {
 
         List<Map<String, Value>> resultAllAuthors = null;
         List<Map<String, Value>> resultFilterAuthors = new LinkedList<Map<String, Value>>();

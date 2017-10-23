@@ -14,5 +14,5 @@ import org.openrdf.model.Value;
  * @author Satellite
  */
 public interface GetAuthorsGraphData {
-    List<Map<String, Value>> getListOfAuthors(String[] organizations) ;
+    List<Map<String, Value>> getListOfAuthors(String... organizations) ;
 }
