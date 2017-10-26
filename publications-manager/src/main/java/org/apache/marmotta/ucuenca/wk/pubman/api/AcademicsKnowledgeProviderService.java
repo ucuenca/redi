@@ -26,7 +26,7 @@ public interface AcademicsKnowledgeProviderService {
      * @param param
      * @return 
      */
-    String runPublicationsProviderTaskImpl();
+    String runPublicationsProviderTaskImpl(String[] organizations);
     
     
     

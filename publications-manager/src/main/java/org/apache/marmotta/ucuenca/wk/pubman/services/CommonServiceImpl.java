@@ -7,12 +7,21 @@ package org.apache.marmotta.ucuenca.wk.pubman.services;
 
 import com.google.gson.JsonArray;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
 import javax.inject.Inject;
+import org.apache.marmotta.platform.core.exception.MarmottaException;
+import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
+import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.DBLPProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.ProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.ReportsService;
+import org.json.JSONException;
+import org.openrdf.model.Value;
+import org.openrdf.query.QueryLanguage;
+import org.slf4j.Logger;
 
 /**
  *
@@ -20,6 +29,9 @@ import org.apache.marmotta.ucuenca.wk.pubman.api.ReportsService;
  *
  */
 public class CommonServiceImpl implements CommonService {
+    
+    @Inject
+    private Logger log;
 
     @Inject
     MicrosoftAcadProviderServiceImpl microsoftAcadProviderService;
@@ -68,6 +80,13 @@ public class CommonServiceImpl implements CommonService {
 
     @Inject
     private QueriesService queriesService;
+    
+   @Inject
+    private SparqlService sparqlService;
+     
+    
+    @Inject
+    private CommonsServices com;
 
     @Override
     public String GetDataFromProvidersService(boolean update, String[] organizations) {
@@ -91,8 +110,9 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public String GetDataFromProvidersServiceAcademicsKnowledge() {
-        Thread AKProvider = new Thread(academicsKnowledgeProviderService);
+    public String GetDataFromProvidersServiceAcademicsKnowledge(String[] organizations) {
+         academicsKnowledgeProviderService.setOrganizations(organizations); 
+        Thread AKProvider = new Thread((Runnable) academicsKnowledgeProviderService);
         AKProvider.start();
         return "Data Provider AK are extracted in background.   Please review main.log file for details";
     }
@@ -168,5 +188,24 @@ public class CommonServiceImpl implements CommonService {
 
         return startProcess;
     }
+    
+    @Override
+    public String organizationListExtracted () {
+        String queryOrg =  queriesService.getExtractedOrgList();
+        List<Map<String, Value>> response;
+        try {
+            response = sparqlService.query(QueryLanguage.SPARQL, queryOrg);
+            return com.listmapTojson (response);
+        } catch (MarmottaException ex) {
+            java.util.logging.Logger.getLogger(CommonServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+         return null;
+    }
+    
+         
+         
+         
+    
 
 }

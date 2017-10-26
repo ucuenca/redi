@@ -68,6 +68,7 @@ public class PubWebService {
     public static final String TRANSLATE = "/translate";
     public static final String INDEX_CENTRAL_GRAPH = "/indexing";
     public static final String GET_SEARCH_QUERY = "/searchQuery";
+    public static final String APPLICATIONJSON = "application/json";
 
     /*
      * Get Publications Data from Source and Load into Provider Graph
@@ -109,11 +110,26 @@ public class PubWebService {
      */
     @POST
     @Path(GET_PUBLICATIONS_AK)
-    public Response readPublicationsPostAK(@QueryParam("Endpoint") String resultType) {
+    public Response readPublicationsPostAK(@QueryParam("Endpoint") String resultType  ) {
         String params = resultType;
         log.debug("Publications Task", params);
-        String result = commonService.GetDataFromProvidersServiceAcademicsKnowledge();
+        String[] organizations = {};
+        String result = commonService.GetDataFromProvidersServiceAcademicsKnowledge(organizations);
         return Response.ok().entity(result).build();
+    }
+    
+        @POST
+    @Path("pubman/publicationsAkByOrg")
+    @Produces(APPLICATIONJSON)
+    public Response readPublicationsPostAK (@Context HttpServletRequest request) {
+
+
+        String[] org = request.getParameterMap().get("data[]");
+        String result = commonService.GetDataFromProvidersServiceAcademicsKnowledge(org);
+      //  String output = authorService.extractAuthorsGeneric(get);
+
+        return Response.ok().entity(result).build();
+        //return  Response.status(Status.BAD_REQUEST).entity("Incorrect file format.").build();
     }
 
     /*
@@ -138,6 +154,17 @@ public class PubWebService {
         log.debug("Publications Task", params);
         String result = commonService.GetDataFromProvidersServiceDspace();
         return Response.ok().entity(result).build();
+    }
+    
+      @GET
+    @Path("publication/organization/list")
+    @Produces(APPLICATIONJSON)
+    public Response listExtractedOrganization() {
+
+        String result = commonService.organizationListExtracted ();
+      //  result = organizationService.listOrganization();
+        return Response.ok().entity(result).build();
+
     }
 
     /*

@@ -13,6 +13,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -32,7 +34,12 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
+//import org.json.simple.JSONArray;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
+import org.openrdf.model.Value;
 
 /**
  *
@@ -42,6 +49,8 @@ public class CommonsServicesImpl implements CommonsServices {
 
     @Inject
     private Logger log;
+    
+    
        
     /**
      * Función que elimina acentos y caracteres especiales
@@ -145,6 +154,39 @@ public class CommonsServicesImpl implements CommonsServices {
         return mapping.get(property);
     }
 
+    @Override
+     public String listmapTojson(List<Map<String, Value>> list) 
+     {       
+         JSONObject jsonh1 =new JSONObject();
+         
+    JSONArray jsonArr = new JSONArray();
+    for (Map<String, Value> map : list) {
+        JSONObject jsonObj=new JSONObject();
+        for (Map.Entry<String, Value> entry : map.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue().stringValue();
+            try {
+                jsonObj.put(key,value);
+            } catch (JSONException ex) {
+                java.util.logging.Logger.getLogger(CommonsServicesImpl.class.getName()).log(Level.SEVERE, null, ex);
+               return null;
+            }
+            
+                                
+        }
+        jsonArr.put(jsonObj);
+    }
+        try {
+            //return jsonArr.toString();
+            return jsonh1.put("data", jsonArr).toString();
+        } catch (JSONException ex) {
+            java.util.logging.Logger.getLogger(CommonsServicesImpl.class.getName()).log(Level.SEVERE, null, ex);
+             return null;
+        }
+       
+}
+    
+    
     @Override
     public String getIndexedPublicationsFilter(String querystr) {
         

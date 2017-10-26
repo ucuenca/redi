@@ -99,15 +99,16 @@ public class AcademicsKnowledgeProviderServiceImpl implements AcademicsKnowledge
 
     private int processpercent = 0;
     private static final String ACADEMICSK_DETAIL = "https://academic.microsoft.com/#/detail/";
+    private String[] organizations;
 
     @Override
-    public String runPublicationsProviderTaskImpl() {
+    public String runPublicationsProviderTaskImpl(String [] organizations) {
         try {
             ClientConfiguration conf = new ClientConfiguration();
             LDClient ldClient = new LDClient(conf);
 
             String authorResource = "";
-            List<Map<String, Value>> resultAllAuthors = getauthorsData.getListOfAuthors(new String[]{});
+            List<Map<String, Value>> resultAllAuthors = getauthorsData.getListOfAuthors( organizations);
 
             // To Obtain Processed Percent
             int allPersons = resultAllAuthors.size();
@@ -446,7 +447,7 @@ public class AcademicsKnowledgeProviderServiceImpl implements AcademicsKnowledge
 
     @Override
     public void run() {
-        runPublicationsProviderTaskImpl();
+        runPublicationsProviderTaskImpl(this.organizations);
         // runPublicationsProviderTaskImpl("uri");
     }
 
@@ -505,6 +506,10 @@ public class AcademicsKnowledgeProviderServiceImpl implements AcademicsKnowledge
             }
         }
         return mapping.get(property);
+    }
+    
+    public  void setOrganizations ( String[] organizations) {
+      this.organizations = organizations;
     }
 
 }

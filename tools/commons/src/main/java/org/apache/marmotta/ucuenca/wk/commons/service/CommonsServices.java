@@ -5,6 +5,10 @@
  */
 package org.apache.marmotta.ucuenca.wk.commons.service;
 
+import java.util.List;
+import java.util.Map;
+import org.openrdf.model.Value;
+
 
 /**
  *
@@ -28,5 +32,7 @@ public interface CommonsServices {
     String readPropertyFromFile(String file,String property);
     
     String getIndexedPublicationsFilter(String text);
+    
+    String listmapTojson(List<Map<String, Value>> list);
 
 }

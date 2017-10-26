@@ -316,6 +316,19 @@ public class QueriesServiceImpl implements QueriesService {
     }
 
     @Override
+    public String getExtractedOrgList() {
+       return   "SELECT DISTINCT ?uri ?name"
+                + "FROM  <"+con.getEndpointsGraph()+"> "
+                + "FROM  <"+con.getOrganizationsGraph()+">"
+                + "WHERE  {"
+                + "  ?subject  <"+REDI.BELONGTO.toString()+"> ?uri ."
+                + "  ?uri  <"+REDI.NAME.toString()+">  ?name ."
+                + "  ?subject   <"+REDI.EXTRACTIONDATE.toString()+">  ?date ."
+                + "  FILTER ( STR(?date)  != '')"
+                + "}";
+    }
+
+    @Override
     public String getlistEndpointNamesQuery() {
         return "SELECT DISTINCT ?fullName WHERE {   GRAPH <http://ucuenca.edu.ec/wkhuska/endpoints>"
                 + "	{"

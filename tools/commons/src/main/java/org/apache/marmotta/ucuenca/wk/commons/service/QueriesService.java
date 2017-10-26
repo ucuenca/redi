@@ -61,7 +61,7 @@ public interface QueriesService {
     
     String getListEndpointsByUri (String uri);
     
-
+    String getExtractedOrgList();
 
     /**
      * return query to obtain all subject ( keywords ) of an author , using

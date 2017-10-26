@@ -28,7 +28,7 @@ public interface CommonService {
 
     String GetDataFromProvidersServiceGoogleScholar(boolean update);
 
-    String GetDataFromProvidersServiceAcademicsKnowledge();
+    String GetDataFromProvidersServiceAcademicsKnowledge(String[] organizations);
 
     String GetDataFromProvidersServiceDspace();
 
@@ -41,4 +41,6 @@ public interface CommonService {
     String getSearchQuery(String textSearch);
 
     String DetectLatindexPublications();
+    
+    String organizationListExtracted ();
 }
