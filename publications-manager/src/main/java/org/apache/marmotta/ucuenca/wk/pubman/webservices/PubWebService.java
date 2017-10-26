@@ -76,9 +76,8 @@ public class PubWebService {
     @POST
     @Path(GET_PUBLICATIONS)
     public Response readPublicationsPost(@QueryParam("update") Boolean update) {
-        log.debug("Publications Task, update {}", update);
-        String[] organizations = {};
-        String result = commonService.GetDataFromProvidersService(update, organizations);
+        String[] organizations = {"http://redi.cedia.edu.ec/resource/organization/UCUENCA"};
+        String result = commonService.getDataFromProvidersService(organizations);
         return Response.ok().entity(result).build();
     }
 

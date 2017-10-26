@@ -16,7 +16,7 @@ import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.DBLPProviderService;
-import org.apache.marmotta.ucuenca.wk.pubman.api.ProviderService;
+import org.apache.marmotta.ucuenca.wk.pubman.api.ProviderServiceGoogleScholar;
 import org.apache.marmotta.ucuenca.wk.pubman.api.ReportsService;
 import org.json.JSONException;
 import org.openrdf.model.Value;
@@ -43,10 +43,11 @@ public class CommonServiceImpl implements CommonService {
     GoogleScholarProviderServiceImpl googleProviderService;
 
     @Inject
-    ProviderService googleService;
+    ProviderServiceGoogleScholar googleService;
 
     @Inject
     ScopusProviderServiceImpl providerServiceScopus;
+
     @Inject
     AcademicsKnowledgeProviderServiceImpl academicsKnowledgeProviderService;
 
@@ -56,7 +57,6 @@ public class CommonServiceImpl implements CommonService {
     @Inject
     CountPublicationsServiceImpl countPublicationsService;
 
-//
     @Inject
     DBLPProviderService dblpProviderServiceInt;
 
@@ -88,16 +88,24 @@ public class CommonServiceImpl implements CommonService {
     @Inject
     private CommonsServices com;
 
-    @Override
-    public String GetDataFromProvidersService(boolean update, String[] organizations) {
-        providerServiceScopus.setUpdate(update);
-        providerServiceScopus.setOrganizations(organizations);
-        Thread ScopusThread = new Thread((Runnable) providerServiceScopus);
-        ScopusThread.start();
+    @Inject
+    private ScopusProviderService providerServiceScopus1;
+    private Thread scopuThread;
 
-        //         return googleService.extractPublications("d");
-//        Thread googleProvider = new Thread(googleProviderService);
-//        googleProvider.start();
+    @Override
+    public String getDataFromProvidersService(final String[] organizations) {
+        // Find a way to execute thread and get response information.
+        if (scopuThread != null && scopuThread.isAlive()) {
+            return "Process is executing.";
+        }
+
+        scopuThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                providerServiceScopus1.extractAuthors(organizations);
+            }
+        });
+        scopuThread.start();
         return "Data Provider SCOPUS are extracted in background.   Please review main.log file for details";
 
     }

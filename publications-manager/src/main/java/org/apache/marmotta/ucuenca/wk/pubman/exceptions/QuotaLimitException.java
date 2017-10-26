@@ -15,27 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.marmotta.ucuenca.wk.pubman.api;
+package org.apache.marmotta.ucuenca.wk.pubman.exceptions;
 
-import com.google.gson.JsonArray;
 
-public interface ScopusProviderService {
+public class QuotaLimitException extends Exception {
 
-    /**
-     * Get publications data from source, and load into provider graph
-     *
-     * @param param
-     * @return
-     */
-    String runPublicationsProviderTaskImpl(boolean param, String[] organizations);
+    public QuotaLimitException() {
+        super();
+    }
 
-    /**
-     * Function to Search 1 Author ( param ) in DBLP, Insert in DBLP Graph and
-     * Return in JSONLD
-     *
-     * @param url
-     * @return
-     */
-    JsonArray SearchAuthorTaskImpl(String url);
+    public QuotaLimitException(String message) {
+        super(message);
+    }
 
+    public QuotaLimitException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public QuotaLimitException(Throwable cause) {
+        super(cause);
+    }
 }

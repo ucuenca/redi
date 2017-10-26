@@ -18,25 +18,17 @@
 package org.apache.marmotta.ucuenca.wk.pubman.api;
 
 /**
- * Interface used to extend new providers.
  *
  * @author Xavier Sumba <xavier.sumba93@ucuenca.ec>
  */
 public interface ProviderService {
 
     /**
-     * Execute transformation/task to extract publications from providers.
+     * Execute process to extract authors/publications for a group of
+     * organizations and store into its respective provider graph
      *
-     * @param update
-     * @return
+     * @param organizations resources of organizations to extract.
      */
-    String extractPublications(boolean update);
-
-    /**
-     * Execute task to update information about extracted publications.
-     *
-     * @param update
-     */
-    void executeUpdateTask(boolean update);
+    void extractAuthors(String[] organizations);
 
 }
