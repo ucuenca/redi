@@ -110,12 +110,7 @@ public class ScopusProviderServiceImpl implements ScopusProviderService, Runnabl
     private static double tolerance = 0.99; //Tolerance of the distance (if the distance is bigger, the author is not included in REDI)
 
     private boolean update = false;
-
-    @Override
-    public String runPublicationsTaskImpl(String param) {
-        return null;
-    }
-
+    
     @Override
     public String runPublicationsProviderTaskImpl(boolean update, String[] organizations) {
         try {

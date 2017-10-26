@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface CommonService {
 
-    String GetDataFromProvidersService(boolean update, String[] organizations);
+    String getDataFromProvidersService(final String[] organizations);
 
     String Data2GlobalGraph();
 
