@@ -25,6 +25,7 @@ import org.apache.marmotta.ucuenca.wk.provider.scopus.ScopusPublicationProvider;
  *
  * @author Jose Luis Cullcay
  */
+@Deprecated
 public class ScopusPublicationEndpoint extends Endpoint {
 
     public ScopusPublicationEndpoint() {

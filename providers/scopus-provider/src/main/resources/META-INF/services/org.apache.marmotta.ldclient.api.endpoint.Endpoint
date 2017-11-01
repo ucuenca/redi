@@ -1,4 +1,5 @@
-org.apache.marmotta.ucuenca.wk.endpoint.scopus.ScopusAuthorEndpoint
-org.apache.marmotta.ucuenca.wk.endpoint.scopus.ScopusAuthorSearchEndpoint
-org.apache.marmotta.ucuenca.wk.endpoint.scopus.ScopusPublicationEndpoint
-org.apache.marmotta.ucuenca.wk.endpoint.scopus.ScopusPublicationSearchEndpoint
+#org.apache.marmotta.ucuenca.wk.endpoint.scopus.ScopusAuthorEndpoint
+#org.apache.marmotta.ucuenca.wk.endpoint.scopus.ScopusAuthorSearchEndpoint
+#org.apache.marmotta.ucuenca.wk.endpoint.scopus.ScopusPublicationEndpoint
+#org.apache.marmotta.ucuenca.wk.endpoint.scopus.ScopusPublicationSearchEndpoint
+ec.edu.cedia.redi.endpoints.ScopusAuthorEndpoint

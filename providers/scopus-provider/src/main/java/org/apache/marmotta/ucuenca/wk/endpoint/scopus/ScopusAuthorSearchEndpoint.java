@@ -27,6 +27,7 @@ import org.apache.marmotta.ucuenca.wk.provider.scopus.ScopusAuthorSearchProvider
  *
  * @author Jose Luis Cullcay
  */
+@Deprecated
 public class ScopusAuthorSearchEndpoint extends Endpoint {
 
     public ScopusAuthorSearchEndpoint() {

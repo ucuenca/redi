@@ -50,6 +50,7 @@ import org.openrdf.model.vocabulary.FOAF;
  * @author Freddy Sumba
  */
 @ApplicationScoped
+@Deprecated
 public class ScopusPublicationSearchProvider extends AbstractHttpProvider {
 
     public static final String NAME = "Scopus  Search Publication Provider";

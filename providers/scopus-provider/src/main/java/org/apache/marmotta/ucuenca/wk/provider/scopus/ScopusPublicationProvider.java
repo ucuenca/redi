@@ -19,6 +19,7 @@ import org.openrdf.rio.RDFParseException;
 //import org.slf4j.LoggerFactory;
 
 @ApplicationScoped
+@Deprecated
 public class ScopusPublicationProvider
         extends AbstractHttpProvider {
 
