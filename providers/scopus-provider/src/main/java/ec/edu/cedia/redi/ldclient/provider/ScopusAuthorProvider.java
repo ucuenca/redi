@@ -14,7 +14,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package ec.edu.cedia.redi.provider;
+package ec.edu.cedia.redi.ldclient.provider;
 
 import com.google.common.collect.ImmutableList;
 import java.io.BufferedReader;

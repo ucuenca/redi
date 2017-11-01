@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ec.edu.cedia.redi.endpoints;
+package ec.edu.cedia.redi.ldclient.endpoints;
 
-import ec.edu.cedia.redi.provider.ScopusAuthorProvider;
+import ec.edu.cedia.redi.ldclient.provider.ScopusAuthorProvider;
 import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
 
 /**

@@ -16,15 +16,15 @@
 # limitations under the License.
 #
 
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX uc: <http://ucuenca.edu.ec/ontology#>
+PREFIX : <http://api.elsevier.com/content/author/author_id/>
+
 ASK {
-
-
-<http://api.elsevier.com/content/author/author_id/36624403800> <http://www.w3.org/2002/07/owl#sameAs> <http://api.elsevier.com/content/search/author?query=au-id%2836624403800%29> .
-
-<http://api.elsevier.com/content/author/author_id/36624403800> <http://http://api.elsevier.com/content/rdf/schema-2015-01-26#authorOf> <http://api.elsevier.com/content/rec/conf/agile/BlazquezSC12>; 
-	<http://api.elsevier.com/content/schema-2015-01-26#personLastModifiedDate> "Tue, 03 Feb 2015 17:31:44 +0100" ;
-	<http://api.elsevier.com/content/schema-2015-01-26#primaryFullPersonName> "Victor Saquicela" ;
-	<http://purl.org/dc/terms/license> <http://www.opendatacommons.org/licenses/by/> ;
-	a <http://api.elsevier.com/content/schema-2015-01-26#Person> .
-
+    :54894361600 rdf:type uc:ScopusProvider.
+    :56371191200 rdf:type uc:ScopusProvider.
+    :56963644500 rdf:type uc:ScopusProvider.
+    :57193429229 rdf:type uc:ScopusProvider.
+    :7004827658 rdf:type uc:ScopusProvider.
+    :9248002800 rdf:type uc:ScopusProvider.
 }

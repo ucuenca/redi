@@ -2,4 +2,4 @@
 #org.apache.marmotta.ucuenca.wk.endpoint.scopus.ScopusAuthorSearchEndpoint
 #org.apache.marmotta.ucuenca.wk.endpoint.scopus.ScopusPublicationEndpoint
 #org.apache.marmotta.ucuenca.wk.endpoint.scopus.ScopusPublicationSearchEndpoint
-ec.edu.cedia.redi.endpoints.ScopusAuthorEndpoint
+ec.edu.cedia.redi.ldclient.endpoints.ScopusAuthorEndpoint
