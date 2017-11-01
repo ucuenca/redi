@@ -13,7 +13,10 @@
     <packaging>jar</packaging>
 
     <name>LDClient Provider: Scopus RDF Access</name>
-    <description>Implements Linked Data model over Scopus data.</description>
+    <description>
+        This package enables the Linked Data Client to access the metadata of 
+        Scopus Search by mapping the Scopus APIs.
+    </description>
     
     <build>
         <plugins>
@@ -47,15 +50,7 @@
         </plugins>
     </build>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
     <dependencies>
-        <dependency>
-            <groupId>org.apache.marmotta</groupId>
-            <artifactId>ldclient-api</artifactId>
-            <version>${marmotta.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.apache.marmotta</groupId>
             <artifactId>ldclient-core</artifactId>
@@ -63,18 +58,13 @@
         </dependency>
         <dependency>
             <groupId>org.apache.marmotta</groupId>
+            <artifactId>ldclient-api</artifactId>
+            <version>${marmotta.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.marmotta</groupId>
             <artifactId>ldclient-provider-xml</artifactId>
-            <version>3.3.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-rio-turtle</artifactId>
-            <version>${sesame.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-rio-rdfxml</artifactId>
-            <version>${sesame.version}</version>
+            <version>${marmotta.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.marmotta</groupId>
@@ -82,11 +72,17 @@
             <version>${marmotta.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.marmotta</groupId>
-            <artifactId>marmotta-model-vocabs</artifactId>
-            <version>${marmotta.version}</version>
+            <groupId>org.apache.marmotta.ucuenca.wk.tools</groupId>
+            <artifactId>commons</artifactId>
+            <version>${project.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.marmotta.ucuenca.wk.tools</groupId>
+            <artifactId>vocab</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <!--Testing dependencies-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -99,37 +95,6 @@
             <version>${marmotta.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${commonsio.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.marmotta.ucuenca.wk.tools</groupId>
-            <artifactId>commons</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <exclusions>
-                <exclusion> 
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
-                </exclusion>
-                <exclusion> 
-                    <groupId>log4j</groupId>
-                    <artifactId>log4j</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.marmotta.ucuenca.wk.tools</groupId>
-            <artifactId>vocab</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
