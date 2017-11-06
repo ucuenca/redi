@@ -9,13 +9,13 @@
     [ "UCUENCA", "", "", "12/12/12", "2011/07/25", "50/81/90" ],
     [ "UTPL", "", "", "", "2009/01/12", "" ]
     ];*/
-
+  var host = "http://localhost:8080/";
 
 function loadTables () {
-    var host = "http://localhost:8080/";
+  
     console.log ("Graficando");
    $('#provTable').DataTable({
-            ajax: host + "publication/organization/list",
+            ajax: host + "pubman/publication/organization/list",
                        columns: [
             { "data" : "Selection" },
             { "data" : "name"} ,
@@ -27,7 +27,7 @@ function loadTables () {
               {
                 "render": function(data, type, row) {
                   
-                    return   '<input id="'+row["name"]+'" type="checkbox" name="selection" value="'+row["URI"]+'">';
+                    return   '<input id="'+row["name"]+'" type="checkbox" name="selection" value="'+row["uri"]+'">';
              
                 },
                 targets: 0
@@ -63,11 +63,11 @@ function loadTables () {
         data:  listPublications  ,
         dataType: "text", //result data type
         //contentType : "application/x-www-form-urlencoded; charset=UTF-8" ,
-        url: host + "pubman/publicationsAkByOrg",
+        url: host + "pubman/pubman/publicationsAkByOrg",
         success: function(Result) {
           // table.ajax.reload( null, false );
             var resultados = JSON.parse(Result);
-            console.log(JSON.parse(Result));
+            console.log(Result);
             for (var key in resultados) {
               console.log (key+""+resultados[key]);
              //$('span#'+key+'').text(resultados[key]);

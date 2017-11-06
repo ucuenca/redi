@@ -317,9 +317,9 @@ public class QueriesServiceImpl implements QueriesService {
 
     @Override
     public String getExtractedOrgList() {
-       return   "SELECT DISTINCT ?uri ?name"
+       return   "SELECT DISTINCT ?uri ?name "
                 + "FROM  <"+con.getEndpointsGraph()+"> "
-                + "FROM  <"+con.getOrganizationsGraph()+">"
+                + "FROM  <"+con.getOrganizationsGraph()+"> "
                 + "WHERE  {"
                 + "  ?subject  <"+REDI.BELONGTO.toString()+"> ?uri ."
                 + "  ?uri  <"+REDI.NAME.toString()+">  ?name ."
