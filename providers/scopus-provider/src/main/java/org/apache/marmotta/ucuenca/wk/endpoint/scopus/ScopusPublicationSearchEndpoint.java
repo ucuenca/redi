@@ -19,13 +19,13 @@ package org.apache.marmotta.ucuenca.wk.endpoint.scopus;
 import org.apache.marmotta.commons.http.ContentType;
 import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
 import org.apache.marmotta.ucuenca.wk.provider.scopus.ScopusPublicationSearchProvider;
-import org.apache.marmotta.ucuenca.wk.provider.scopus.ScopusPublicationSearchProvider;
 
 /**
  * Endpoint for accessing Scopus Data as XML.
  *
  * @author Jose Luis Cullcay
  */
+@Deprecated
 public class ScopusPublicationSearchEndpoint extends Endpoint {
 
     public ScopusPublicationSearchEndpoint() {

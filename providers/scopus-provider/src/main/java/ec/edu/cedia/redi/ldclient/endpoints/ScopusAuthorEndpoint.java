@@ -15,27 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.marmotta.ucuenca.wk.endpoint.scopus;
+package ec.edu.cedia.redi.ldclient.endpoints;
 
-import org.apache.marmotta.commons.http.ContentType;
+import ec.edu.cedia.redi.ldclient.provider.ScopusAuthorProvider;
 import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
-import org.apache.marmotta.ucuenca.wk.provider.scopus.ScopusAuthorProvider;
-
 
 /**
  * Endpoint for accessing Scopus Data as XML.
  *
  * @author Jose Luis Cullcay
  */
-@Deprecated
 public class ScopusAuthorEndpoint extends Endpoint {
 
     public ScopusAuthorEndpoint() {
-    	super(ScopusAuthorProvider.NAME, ScopusAuthorProvider.NAME, ScopusAuthorProvider.PATTERN, null, 86400L);
+        super(ScopusAuthorProvider.NAME, ScopusAuthorProvider.NAME, ScopusAuthorProvider.PATTERN, null, 86400L);
         setPriority(PRIORITY_MEDIUM);
-        addContentType(new ContentType("text", "turtle", 1.0));
-        addContentType(new ContentType("text", "plain", 0.2));
-        addContentType(new ContentType("*", "*", 0.1));
     }
-
 }

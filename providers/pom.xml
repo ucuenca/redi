@@ -16,6 +16,5 @@
         <module>gs-provider</module>
         <module>scopus-provider</module>
         <module>ak-provider</module>
-
     </modules>
 </project>

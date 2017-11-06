@@ -20,7 +20,6 @@ package org.apache.marmotta.ucuenca.wk.pubman.services;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
-import org.apache.commons.httpclient.auth.AuthenticationException;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
 import org.apache.marmotta.ldclient.model.ClientConfiguration;
 import org.apache.marmotta.ldclient.model.ClientResponse;
@@ -46,7 +45,7 @@ import org.semarglproject.vocab.OWL;
 import org.slf4j.Logger;
 
 /**
- * Default Implementation of {@link PubVocabService}
+ * Default Implementation of {@link ProviderService}
  *
  * @author Xavier Sumba
  */
@@ -114,11 +113,10 @@ public abstract class AbstractProviderService implements ProviderService {
             task.updateTotalSteps(totalAuthors);
 
             for (Map<String, Value> map : resultAllAuthors) {
-                // Author information.
-                // Alternate, fname and lname. Fix info uploaded from file.
+                // Local author information.
                 String authorResource = map.get("subject").stringValue();
-                String lastName = map.get("fname").stringValue().trim().toLowerCase();
-                String firstName = map.get("lname").stringValue().trim().toLowerCase();
+                String firstName = map.get("fname").stringValue().trim().toLowerCase();
+                String lastName = map.get("lname").stringValue().trim().toLowerCase();
 
                 for (String reqResource : buildURLs(firstName, lastName)) {
                     boolean existNativeAuthor = sparqlService.ask(
@@ -129,18 +127,13 @@ public abstract class AbstractProviderService implements ProviderService {
                     }
                     try {
                         ClientResponse response = ldClient.retrieveResource(reqResource);
+
                         switch (response.getHttpStatus()) {
                             // Manage only HTTP 200 responses, otherwise error. Which error? Stop or continue with next resource.
                             case 200:
                                 break;
-                            case 401:
-                                log.error("Authentication Error: check your credentials.", new AuthenticationException());
-                                return;
-                            case 429:
-                                log.error("Requester has exceeded the quota limits associated with their API Key.", new QuotaLimitException());
-                                return;
                             default:
-                                log.error("Invalid request/unexpected error for '{}', skipping resource; response with HTTP {}.",
+                                log.error("Invalid request/unexpected error for '{}', skipping resource; response with HTTP {} code status.",
                                         reqResource, response.getHttpStatus(), new QuotaLimitException());
                                 continue;
                         }
@@ -150,13 +143,15 @@ public abstract class AbstractProviderService implements ProviderService {
                         RepositoryConnection connection = sesameService.getConnection();
                         try {
                             Model data = response.getData();
+                            log.info("Writing {} triples in context {} for request '{}'.", data.size(), getProviderGraph(), reqResource);
                             Resource providerContext = connection.getValueFactory().createURI(getProviderGraph());
                             connection.add(data, providerContext);
                         } finally {
                             connection.close();
                         }
                     } catch (DataRetrievalException dre) {
-                        log.error("Cannot retieve RDF for the given resource: '{}'", reqResource, dre);
+                        log.error("Cannot retieve RDF for the given resource: '{}'", reqResource);
+                        throw new RuntimeException(dre);
                     }
                 }
                 // Update statistics.
@@ -197,7 +192,7 @@ public abstract class AbstractProviderService implements ProviderService {
      */
     private void printprogress(int actual, int total, String name) {
         int processpercent = actual * 100 / total;
-        log.info("{}: processed authors ({}) {} of {}.", name, processpercent, actual, total);
+        log.info("{}: processed authors ({}%) {} of {}.", name, processpercent, actual, total);
     }
 
     //construyendo sparql query insert 

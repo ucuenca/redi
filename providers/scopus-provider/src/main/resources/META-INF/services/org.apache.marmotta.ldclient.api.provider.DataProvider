@@ -1,4 +1,5 @@
-org.apache.marmotta.ucuenca.wk.provider.scopus.ScopusAuthorProvider
-org.apache.marmotta.ucuenca.wk.provider.scopus.ScopusAuthorSearchProvider
-org.apache.marmotta.ucuenca.wk.provider.scopus.ScopusPublicationProvider
-org.apache.marmotta.ucuenca.wk.provider.scopus.ScopusPublicationSearchProvider
+#org.apache.marmotta.ucuenca.wk.provider.scopus.ScopusAuthorProvider
+#org.apache.marmotta.ucuenca.wk.provider.scopus.ScopusAuthorSearchProvider
+#org.apache.marmotta.ucuenca.wk.provider.scopus.ScopusPublicationProvider
+#org.apache.marmotta.ucuenca.wk.provider.scopus.ScopusPublicationSearchProvider
+ec.edu.cedia.redi.ldclient.provider.ScopusAuthorProvider
