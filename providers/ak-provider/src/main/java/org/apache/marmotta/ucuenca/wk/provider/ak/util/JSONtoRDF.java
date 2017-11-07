@@ -12,6 +12,7 @@ import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.model.vocabulary.RDF;
 
+@Deprecated
 public class JSONtoRDF {
 
     private final JsonArray data;
@@ -139,11 +140,9 @@ public class JSONtoRDF {
                 for (int iterator = 0; iterator < aux.size(); iterator++) {
                     JsonElement element = aux.get(iterator);
                     model.add(factory.createStatement(factory.createURI(ACADEMICS_URL + element.getAsJsonObject().get("id").getAsString()),
-                        RDF.TYPE, factory.createURI(schema.get("entity::property::typePerson"))));
+                            RDF.TYPE, factory.createURI(schema.get("entity::property::typePerson"))));
                 }
-                
-                
-                
+
                 break;
             case "entity::property:contributor":
                 aux = json.get("authors").getAsJsonArray();

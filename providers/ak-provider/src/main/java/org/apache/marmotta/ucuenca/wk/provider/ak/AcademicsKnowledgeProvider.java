@@ -47,6 +47,7 @@ import org.slf4j.LoggerFactory;
  * <p/>
  * Author: Santiago Gonzalez
  */
+@Deprecated
 public class AcademicsKnowledgeProvider extends AbstractHttpProvider {
 
     public static final String NAME = "Academics Knowlodge Provider";

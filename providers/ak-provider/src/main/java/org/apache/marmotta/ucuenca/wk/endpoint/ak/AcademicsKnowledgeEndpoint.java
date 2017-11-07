@@ -19,8 +19,6 @@ package org.apache.marmotta.ucuenca.wk.endpoint.ak;
 
 import org.apache.marmotta.commons.http.ContentType;
 import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
-
-
 import org.apache.marmotta.ucuenca.wk.provider.ak.AcademicsKnowledgeProvider;
 
 
@@ -29,6 +27,7 @@ import org.apache.marmotta.ucuenca.wk.provider.ak.AcademicsKnowledgeProvider;
  *
  * @author Santiago Gonzalez
  */
+@Deprecated
 public class AcademicsKnowledgeEndpoint extends Endpoint {
 
     public AcademicsKnowledgeEndpoint() {

@@ -22,6 +22,7 @@ import org.json.simple.parser.ParseException;
  *
  * @author Freddy Sumba
  */
+@Deprecated
 public class MapPublications {
 
     public List<Publication> getPublications(String json) throws ParseException {

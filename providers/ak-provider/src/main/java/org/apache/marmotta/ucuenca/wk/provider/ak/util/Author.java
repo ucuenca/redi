@@ -9,6 +9,7 @@ package org.apache.marmotta.ucuenca.wk.provider.ak.util;
  *
  * @author Freddy Sumba
  */
+@Deprecated
 public class Author {
     
     private long id;

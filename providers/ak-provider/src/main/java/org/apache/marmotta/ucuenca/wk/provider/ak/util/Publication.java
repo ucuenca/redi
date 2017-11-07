@@ -11,6 +11,7 @@ import java.util.List;
  *
  * @author Freddy Sumba
  */
+@Deprecated
 public class Publication {
 
     private String source;
@@ -54,7 +55,6 @@ public class Publication {
     public void setEstimatedCitationcount(String estimatedCitationcount) {
         this.estimatedCitationcount = estimatedCitationcount;
     }
-
 
     public String getAbstractt() {
         return abstractt;
@@ -120,7 +120,6 @@ public class Publication {
         this.type = type;
     }
 
-  
     public String getCitationCount() {
         return citationCount;
     }
@@ -144,7 +143,6 @@ public class Publication {
     public void setSource(String source) {
         this.source = source;
     }
-
 
     public String getTitle() {
         return title;
