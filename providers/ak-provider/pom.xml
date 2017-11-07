@@ -51,23 +51,8 @@
         </dependency>
         <dependency>
             <groupId>org.apache.marmotta</groupId>
-            <artifactId>ldclient-core</artifactId>
-            <version>${marmotta.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.marmotta</groupId>
             <artifactId>marmotta-commons</artifactId>
             <version>${marmotta.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.marmotta</groupId>
-            <artifactId>marmotta-model-vocabs</artifactId>
-            <version>${marmotta.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.3.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.marmotta.ucuenca.wk.tools</groupId>
@@ -93,11 +78,6 @@
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>1.1</version>
-            <type>jar</type>
-        </dependency>
+
     </dependencies>
 </project>
