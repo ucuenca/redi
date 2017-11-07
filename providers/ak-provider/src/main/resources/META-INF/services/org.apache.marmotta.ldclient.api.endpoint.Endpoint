@@ -1,1 +1,2 @@
-org.apache.marmotta.ucuenca.wk.endpoint.ak.AcademicsKnowledgeEndpoint
+#org.apache.marmotta.ucuenca.wk.endpoint.ak.AcademicsKnowledgeEndpoint
+ec.edu.cedia.redi.ldclient.endpoint.ak.AcademicsKnowledgeEndpoint
