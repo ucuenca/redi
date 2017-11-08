@@ -150,7 +150,7 @@ public abstract class AbstractProviderService implements ProviderService {
                             connection.close();
                         }
                     } catch (DataRetrievalException dre) {
-                        log.error("Cannot retieve RDF for the given resource: '{}'", reqResource);
+                        log.error("Cannot retieve RDF for the given resource: '{}'", reqResource, dre);
                         throw new RuntimeException(dre);
                     }
                 }

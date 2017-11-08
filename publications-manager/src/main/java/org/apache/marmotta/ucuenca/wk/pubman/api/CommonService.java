@@ -16,6 +16,8 @@ public interface CommonService {
 
     String getDataFromProvidersService(final String[] organizations);
 
+    String GetDataFromProvidersServiceAcademicsKnowledge(final String[] organizations);
+
     String Data2GlobalGraph();
 
     String authorAttrFromProviders();
@@ -27,8 +29,6 @@ public interface CommonService {
     String GetDataFromProvidersServiceMicrosoftAcademics();
 
     String GetDataFromProvidersServiceGoogleScholar(boolean update);
-
-    String GetDataFromProvidersServiceAcademicsKnowledge();
 
     String GetDataFromProvidersServiceDspace();
 
