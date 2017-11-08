@@ -127,6 +127,10 @@ public class AcademicsKnowledgeProvider extends AbstractJSONDataProvider impleme
 
     @Override
     protected List<String> parseResponse(String resource, String requestUrl, Model triples, InputStream input, String contentType) throws DataRetrievalException {
+        try {                            //Wait to send other request, api restrictions.
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+        }
         if (Pattern.matches(PATTERN_PUBLICATION, requestUrl)) {
             return parsePublications(input, requestUrl, triples, contentType);
         } else if (Pattern.matches(PATTERN_AUTHOR, requestUrl)) {

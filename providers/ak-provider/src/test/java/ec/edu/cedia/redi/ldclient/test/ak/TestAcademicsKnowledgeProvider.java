@@ -43,7 +43,7 @@ public class TestAcademicsKnowledgeProvider extends ProviderTestBase {
      * @throws Exception
      */
     @Test
-    public void testMicrosoftAcademics() throws Exception {
+    public void testAcademicsKnowledgeAPI() throws Exception {
 
         String uri = "https://westus.api.cognitive.microsoft.com/academic/v1.0/evaluate?"
                 + "expr=And(Ty=%271%27,%20AuN=%27mauricio%20espinoza%27)&"
