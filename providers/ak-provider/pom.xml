@@ -10,10 +10,10 @@
     <groupId>org.apache.marmotta.ucuenca.wk.provider</groupId>
     <artifactId>ak-provider</artifactId>
     <packaging>jar</packaging>
-    <name>LDClient Provider: ACADEMICS KNOWLEDGE - JSON ACCES</name>
+    <name>LDClient Provider: Academics Knowledge - JSON ACCESS</name>
     <build>
         <plugins>
-             <plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.12.4</version>
@@ -43,9 +43,6 @@
         </plugins>
     </build>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>org.apache.marmotta</groupId>
@@ -59,38 +56,23 @@
         </dependency>
         <dependency>
             <groupId>org.apache.marmotta</groupId>
-            <artifactId>ldclient-provider-xml</artifactId>
-            <version>3.3.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-rio-turtle</artifactId>
-            <version>${sesame.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-rio-rdfxml</artifactId>
-            <version>${sesame.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.marmotta</groupId>
             <artifactId>marmotta-commons</artifactId>
             <version>${marmotta.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.marmotta</groupId>
-            <artifactId>marmotta-model-vocabs</artifactId>
-            <version>${marmotta.version}</version>
+            <groupId>org.apache.marmotta.ucuenca.wk.tools</groupId>
+            <artifactId>vocab</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.ccil.cowan.tagsoup</groupId>
-            <artifactId>tagsoup</artifactId>
-            <version>1.2</version>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>2.3.0</version>
         </dependency>
         <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.3.1</version>
+            <groupId>ec.edu.cedia.redi</groupId>
+            <artifactId>ldclient-provider-json</artifactId>
+            <version>1.0.0</version>
         </dependency>
         
         <dependency>
@@ -107,21 +89,17 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${commonsio.version}</version>
-        </dependency>
-        <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
+            <version>1.2.3</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>1.1</version>
-            <type>jar</type>
-        </dependency>
     </dependencies>
+    
+    <repositories>
+        <repository>
+            <id>ldclient-provider-json</id>
+            <url>https://raw.github.com/ucuenca/ldclient-provider-json/repository/</url>
+        </repository>
+    </repositories>
 </project>

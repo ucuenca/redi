@@ -15,28 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.marmotta.ucuenca.wk.endpoint.ak;
+package ec.edu.cedia.redi.ldclient.endpoint.ak;
 
-import org.apache.marmotta.commons.http.ContentType;
+import ec.edu.cedia.redi.ldclient.provider.ak.AcademicsKnowledgeProvider;
 import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
 
-
-import org.apache.marmotta.ucuenca.wk.provider.ak.AcademicsKnowledgeProvider;
-
-
 /**
- * Endpoint for accessing Google Scholar Data as RDF.
+ * Endpoint for accessing Academics Knowledge Data as RDF.
  *
- * @author Santiago Gonzalez
+ * @author Xavier Sumba
  */
 public class AcademicsKnowledgeEndpoint extends Endpoint {
 
     public AcademicsKnowledgeEndpoint() {
-    	super(AcademicsKnowledgeProvider.NAME, AcademicsKnowledgeProvider.NAME, AcademicsKnowledgeProvider.PATTERN, null, 86400L);
+        super(AcademicsKnowledgeProvider.NAME, AcademicsKnowledgeProvider.NAME, AcademicsKnowledgeProvider.PATTERN_AUTHOR, null, 86400L);
         setPriority(PRIORITY_MEDIUM);
-        addContentType(new ContentType("text", "turtle", 1.0));
-        addContentType(new ContentType("text", "plain", 0.2));
-        addContentType(new ContentType("*", "*", 0.1));
     }
 
 }

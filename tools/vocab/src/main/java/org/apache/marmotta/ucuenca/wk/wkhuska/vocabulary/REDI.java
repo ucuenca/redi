@@ -1,7 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with this
+ * work for additional information regarding copyright ownership. The ASF
+ * licenses this file to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary;
 
@@ -20,6 +31,7 @@ public class REDI {
     // Classes
     public static final URI ENDPOINT;
     public static final URI SCOPUS_PROVIDER;
+    public static final URI ACADEMICS_PROVIDER;
 
     // Properties
     public static final URI CITATION_COUNT;
@@ -40,6 +52,7 @@ public class REDI {
     public static final URI BELONGTO;
     public static final URI EXTRACTIONDATE;
     public static final URI SCOPUS_AUTHOR_ID;
+    public static final URI ACADEMICS_ID;
     public static final URI ORCID;
     public static final URI SUBJECT_AREA;
     public static final URI EID;
@@ -47,14 +60,25 @@ public class REDI {
     public static final URI GIVEN_NAME;
     public static final URI INITIALS;
     public static final URI AFFILIATION_NAME;
-     public static final URI PROVIDER;
-     public static final URI MAIN;
+    public static final URI PROVIDER;
+    public static final URI MAIN;
+    public static final URI AFFILIATION_ID;
+    public static final URI DISPLAY_NAME;
+    public static final URI YEAR;
+    public static final URI ESTIMATED_CITATION_COUNT;
+    public static final URI ACADEMICS_REFERENCE_ID;
+    public static final URI CONFERENCE_ID;
+    public static final URI CONFERENCE_NAME;
+    public static final URI POSITION;
+    public static final URI VENUE_FULL_NAME;
+    public static final URI VENUE_SHORT_NAME;
 
     static {
         ValueFactory factory = ValueFactoryImpl.getInstance();
         // Classes
         ENDPOINT = factory.createURI(REDI.NAMESPACE, "Endpoint");
         SCOPUS_PROVIDER = factory.createURI(REDI.NAMESPACE, "ScopusProvider");
+        ACADEMICS_PROVIDER = factory.createURI(REDI.NAMESPACE, "AcademicsKnowledgeProvider");
 
         // Properties
         CITATION_COUNT = factory.createURI(REDI.NAMESPACE, "citationCount");
@@ -75,6 +99,7 @@ public class REDI {
         BELONGTO = factory.createURI(REDI.NAMESPACE, "belongTo");
         EXTRACTIONDATE = factory.createURI(REDI.NAMESPACE, "extractionDate");
         SCOPUS_AUTHOR_ID = factory.createURI(REDI.NAMESPACE, "scopusAuthorId");
+        ACADEMICS_ID = factory.createURI(REDI.NAMESPACE, "academicsId");
         ORCID = factory.createURI(REDI.NAMESPACE, "orcid");
         SUBJECT_AREA = factory.createURI(REDI.NAMESPACE, "subjectArea");
         EID = factory.createURI(REDI.NAMESPACE, "eid");
@@ -82,8 +107,17 @@ public class REDI {
         SURNAME = factory.createURI(REDI.NAMESPACE, "surname");
         INITIALS = factory.createURI(REDI.NAMESPACE, "initilias");
         AFFILIATION_NAME = factory.createURI(REDI.NAMESPACE, "affiliationName");
-        PROVIDER   = factory.createURI(REDI.NAMESPACE, "Provider");
-        MAIN   = factory.createURI(REDI.NAMESPACE, "main");
-
+        PROVIDER = factory.createURI(REDI.NAMESPACE, "Provider");
+        MAIN = factory.createURI(REDI.NAMESPACE, "main");
+        AFFILIATION_ID = factory.createURI(REDI.NAMESPACE, "affiliationId");
+        DISPLAY_NAME = factory.createURI(REDI.NAMESPACE, "displayName");
+        YEAR = factory.createURI(REDI.NAMESPACE, "year");
+        ESTIMATED_CITATION_COUNT = factory.createURI(REDI.NAMESPACE, "estimatedCitationCount");
+        ACADEMICS_REFERENCE_ID = factory.createURI(REDI.NAMESPACE, "academicsReferenceId");
+        CONFERENCE_ID = factory.createURI(REDI.NAMESPACE, "conferenceId");
+        CONFERENCE_NAME = factory.createURI(REDI.NAMESPACE, "conferenceName");
+        POSITION = factory.createURI(REDI.NAMESPACE, "position");
+        VENUE_FULL_NAME = factory.createURI(REDI.NAMESPACE, "venueFullName");
+        VENUE_SHORT_NAME = factory.createURI(REDI.NAMESPACE, "venueShortName");
     }
 }

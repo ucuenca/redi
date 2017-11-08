@@ -141,10 +141,10 @@ public class PubWebService {
      */
     @POST
     @Path(GET_PUBLICATIONS_AK)
-    public Response readPublicationsPostAK(@QueryParam("Endpoint") String resultType  ) {
+    public Response readPublicationsPostAK(@QueryParam("Endpoint") String resultType) {
+        String[] organizations = {"http://redi.cedia.edu.ec/resource/organization/UCUENCA"};
         String params = resultType;
         log.debug("Publications Task", params);
-        String[] organizations = {};
         String result = commonService.GetDataFromProvidersServiceAcademicsKnowledge(organizations);
         return Response.ok().entity(result).build();
     }

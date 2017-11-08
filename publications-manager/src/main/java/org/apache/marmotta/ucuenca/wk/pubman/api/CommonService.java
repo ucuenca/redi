@@ -16,6 +16,8 @@ public interface CommonService {
 
     String getDataFromProvidersService(final String[] organizations);
 
+    String GetDataFromProvidersServiceAcademicsKnowledge(final String[] organizations);
+
     String Data2GlobalGraph();
 
     String authorAttrFromProviders();
@@ -28,8 +30,6 @@ public interface CommonService {
 
     String GetDataFromProvidersServiceGoogleScholar(boolean update);
 
-    String GetDataFromProvidersServiceAcademicsKnowledge(String[] organizations);
-
     String GetDataFromProvidersServiceDspace();
 
     JsonArray searchAuthor(String uri);
@@ -41,6 +41,6 @@ public interface CommonService {
     String getSearchQuery(String textSearch);
 
     String DetectLatindexPublications();
-    
-    String organizationListExtracted ();
+
+    String organizationListExtracted();
 }

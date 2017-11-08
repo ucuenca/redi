@@ -46,10 +46,10 @@ public class CommonServiceImpl implements CommonService {
     ProviderServiceGoogleScholar googleService;
 
     @Inject
-    ScopusProviderServiceImpl providerServiceScopus;
+    ScopusProviderServiceImpl scopusService;
 
     @Inject
-    AcademicsKnowledgeProviderServiceImpl academicsKnowledgeProviderService;
+    AcademicsKnowledgeProviderService academicsKnowledgeService;
 
     @Inject
     Data2GlobalGraphImpl data2GlobalGraphService;
@@ -90,24 +90,40 @@ public class CommonServiceImpl implements CommonService {
 
     @Inject
     private ScopusProviderService providerServiceScopus1;
-    private Thread scopuThread;
+    private Thread scopusThread;
+    private Thread academicsThread;
 
     @Override
     public String getDataFromProvidersService(final String[] organizations) {
         // Find a way to execute thread and get response information.
-        if (scopuThread != null && scopuThread.isAlive()) {
+        if (scopusThread != null && scopusThread.isAlive()) {
             return "Process is executing.";
         }
 
-        scopuThread = new Thread(new Runnable() {
+        scopusThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 providerServiceScopus1.extractAuthors(organizations);
             }
         });
-        scopuThread.start();
+        scopusThread.start();
         return "Data Provider SCOPUS are extracted in background.   Please review main.log file for details";
 
+    }
+
+    @Override
+    public String GetDataFromProvidersServiceAcademicsKnowledge(final String[] organizations) {
+        if (academicsThread != null && academicsThread.isAlive()) {
+            return "Process is executing.";
+        }
+        academicsThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                academicsKnowledgeService.extractAuthors(organizations);
+            }
+        });
+        academicsThread.start();
+        return "Data Provider AK are extracted in background.   Please review main.log file for details";
     }
 
     @Override
@@ -117,13 +133,6 @@ public class CommonServiceImpl implements CommonService {
         return "Data Provider DBLP are extracted in background.   Please review main.log file for details";
     }
 
-    @Override
-    public String GetDataFromProvidersServiceAcademicsKnowledge(String[] organizations) {
-         academicsKnowledgeProviderService.setOrganizations(organizations); 
-        Thread AKProvider = new Thread((Runnable) academicsKnowledgeProviderService);
-        AKProvider.start();
-        return "Data Provider AK are extracted in background.   Please review main.log file for details";
-    }
 
     @Override
     public String GetDataFromProvidersServiceMicrosoftAcademics() {
