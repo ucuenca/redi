@@ -37,6 +37,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.io.IOUtils;
 import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
+import org.apache.marmotta.ldclient.api.provider.DataProvider;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.BIBO;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
@@ -53,10 +54,15 @@ import org.openrdf.model.vocabulary.RDFS;
 /**
  * Support Academics Knowledge information as JSON. Be aware that the provider
  * makes extra calls to retrieve publications of each author found.
+ * <p>
+ * See the
+ * <a href="https://docs.microsoft.com/en-us/azure/cognitive-services/academic-knowledge/home">documentation
+ * guide</a> for more information about the information returned by the Academic
+ * Knowledge API.
  *
  * @author Xavier Sumba
  */
-public class AcademicsKnowledgeProvider extends AbstractJSONDataProvider {
+public class AcademicsKnowledgeProvider extends AbstractJSONDataProvider implements DataProvider {
 
     public static final String NAME = "Academics Knowledge Provider";
     public static final String PATTERN_AUTHOR = "https://westus\\.api\\.cognitive\\.microsoft\\.com/academic/v1\\.0/evaluate.+subscription-key=(.*).*";
@@ -120,19 +126,19 @@ public class AcademicsKnowledgeProvider extends AbstractJSONDataProvider {
     }
 
     @Override
-    protected List<String> parseResponse(String resource, String requestUrl, Model triples, InputStream in, String contentType) throws DataRetrievalException {
+    protected List<String> parseResponse(String resource, String requestUrl, Model triples, InputStream input, String contentType) throws DataRetrievalException {
         if (Pattern.matches(PATTERN_PUBLICATION, requestUrl)) {
-            return parsePublications(in, requestUrl, triples, contentType);
+            return parsePublications(input, requestUrl, triples, contentType);
         } else if (Pattern.matches(PATTERN_AUTHOR, requestUrl)) {
-            return parseAuthors(in, requestUrl, triples, contentType);
+            return parseAuthors(input, requestUrl, triples, contentType);
         } else {
             throw new DataRetrievalException("Cannot parse information for request " + requestUrl);
         }
     }
 
-    private List<String> parseAuthors(InputStream in, String requestUrl, Model triples, String contentType) throws DataRetrievalException {
+    private List<String> parseAuthors(InputStream input, String requestUrl, Model triples, String contentType) throws DataRetrievalException {
         try {
-            byte[] data = IOUtils.toByteArray(in); // keep data for some reads
+            byte[] data = IOUtils.toByteArray(input); // keep data for some reads
             List<String> authors = new ArrayList<>();
             ValueFactory vf = ValueFactoryImpl.getInstance();
 
@@ -141,8 +147,8 @@ public class AcademicsKnowledgeProvider extends AbstractJSONDataProvider {
                     .parse(new ByteArrayInputStream(data), getConfiguration())
                     .read("$.entities[*].Id");
             for (int i = 0; i < ids.size(); i++) {
-                String authorResource = ACADEMICS_URL + String.valueOf(ids.get(i));
-                String authorUrl = String.format(templatePublication, String.valueOf(ids.get(i)), apiKey);
+                String authorResource = ACADEMICS_URL + ids.get(i);
+                String authorUrl = String.format(templatePublication, ids.get(i), apiKey);
                 setMappings(i, Type.AUTHOR);
                 authors.add(authorUrl);
                 triples.add(vf.createURI(authorResource), OWL.ONEOF, vf.createURI(requestUrl));
@@ -156,9 +162,9 @@ public class AcademicsKnowledgeProvider extends AbstractJSONDataProvider {
         }
     }
 
-    private List<String> parsePublications(InputStream in, String requestUrl, Model triples, String contentType) throws DataRetrievalException {
+    private List<String> parsePublications(InputStream input, String requestUrl, Model triples, String contentType) throws DataRetrievalException {
         try {
-            byte[] data = IOUtils.toByteArray(in); // keep data for some reads
+            byte[] data = IOUtils.toByteArray(input); // keep data for some reads
 
             // build auhtor resource URI
             ValueFactory vf = ValueFactoryImpl.getInstance();
@@ -176,7 +182,7 @@ public class AcademicsKnowledgeProvider extends AbstractJSONDataProvider {
                     .parse(new ByteArrayInputStream(data), getConfiguration())
                     .read("$.entities[*].Id");
             for (int i = 0; i < publicationIds.size(); i++) {
-                String publicationResource = ACADEMICS_URL + String.valueOf(publicationIds.get(i));
+                String publicationResource = ACADEMICS_URL + publicationIds.get(i);
                 triples.add(authorResource, FOAF.PUBLICATIONS, vf.createURI(publicationResource));
                 triples.add(vf.createURI(publicationResource), DCTERMS.PROVENANCE, REDI.ACADEMICS_PROVIDER);
                 triples.add(vf.createURI(publicationResource), RDF.TYPE, BIBO.ACADEMIC_ARTICLE);
@@ -185,9 +191,9 @@ public class AcademicsKnowledgeProvider extends AbstractJSONDataProvider {
                 // Iterate authors and trasform to RDF
                 List contributorsIds = JsonPath
                         .parse(new ByteArrayInputStream(data), getConfiguration())
-                        .read("$.entities[" + i + "].AA[*].AuId");
+                        .read(String.format("$.entities[%d].AA[*].AuId", i));
                 for (int j = 0; j < contributorsIds.size(); j++) {
-                    String contributorResource = ACADEMICS_URL + String.valueOf(contributorsIds.get(j));
+                    String contributorResource = ACADEMICS_URL + contributorsIds.get(j);
                     setMappings(i, j, Type.CONTRIBUTOR);
                     triples.add(vf.createURI(publicationResource), DCTERMS.CONTRIBUTOR, vf.createURI(contributorResource));
                     triples.add(vf.createURI(contributorResource), DCTERMS.PROVENANCE, REDI.ACADEMICS_PROVIDER);
@@ -197,9 +203,9 @@ public class AcademicsKnowledgeProvider extends AbstractJSONDataProvider {
                 // Iterate fields and transform to RDF
                 List fieldsIds = JsonPath
                         .parse(new ByteArrayInputStream(data), getConfiguration())
-                        .read("$.entities[" + i + "].F[*].FId");
+                        .read(String.format("$.entities[%d].F[*].FId", i));
                 for (int j = 0; j < fieldsIds.size(); j++) {
-                    String fieldResource = ACADEMICS_URL + String.valueOf(fieldsIds.get(j));
+                    String fieldResource = ACADEMICS_URL + fieldsIds.get(j);
                     setMappings(i, j, Type.FIELD);
                     triples.add(vf.createURI(publicationResource), FOAF.TOPIC_INTEREST, vf.createURI(fieldResource));
                     super.parseResponse(fieldResource, requestUrl, triples, new ByteArrayInputStream(data), contentType);
@@ -222,44 +228,44 @@ public class AcademicsKnowledgeProvider extends AbstractJSONDataProvider {
         } else {
             Preconditions.checkArgument(j == -1);
         }
-
+        String integerDatatype = "integer";
         String root;
         ontologyMapping.clear();
         switch (type) {
             case AUTHOR:
-                root = "$.entities[" + i + "]";
-                ontologyMapping.put(REDI.ACADEMICS_ID.stringValue(), new JsonPathLiteralMapper(root + ".Id", "integer"));
+                root = String.format("$.entities[%d]", i);
+                ontologyMapping.put(REDI.ACADEMICS_ID.stringValue(), new JsonPathLiteralMapper(root + ".Id", integerDatatype));
                 ontologyMapping.put(FOAF.NAME.stringValue(), new JsonPathLiteralMapper(root + ".AuN"));
                 ontologyMapping.put(REDI.DISPLAY_NAME.stringValue(), new JsonPathLiteralMapper(root + ".DAuN"));
-                ontologyMapping.put(REDI.CITATION_COUNT.stringValue(), new JsonPathLiteralMapper(root + ".CC", "integer"));
+                ontologyMapping.put(REDI.CITATION_COUNT.stringValue(), new JsonPathLiteralMapper(root + ".CC", integerDatatype));
                 ontologyMapping.put(REDI.AFFILIATION_NAME.stringValue(), new ScopusExtendedMetaLiteraldataMapper(root + ".E", "$.LKA.AfN"));
-                ontologyMapping.put(REDI.AFFILIATION_ID.stringValue(), new ScopusExtendedMetaLiteraldataMapper(root + ".E", "$.LKA.AfId", "integer"));
+                ontologyMapping.put(REDI.AFFILIATION_ID.stringValue(), new ScopusExtendedMetaLiteraldataMapper(root + ".E", "$.LKA.AfId", integerDatatype));
                 break;
             case CONTRIBUTOR:
-                root = "$.entities[" + i + "].AA[" + j + "]";
-                ontologyMapping.put(REDI.ACADEMICS_ID.stringValue(), new JsonPathLiteralMapper(root + ".AuId", "integer"));
+                root = String.format("$.entities[%d].AA[%d]", i, j);
+                ontologyMapping.put(REDI.ACADEMICS_ID.stringValue(), new JsonPathLiteralMapper(root + ".AuId", integerDatatype));
                 ontologyMapping.put(FOAF.NAME.stringValue(), new JsonPathLiteralMapper(root + ".AuN"));
-                ontologyMapping.put(REDI.AFFILIATION_ID.stringValue(), new JsonPathLiteralMapper(root + ".AfId", "integer"));
+                ontologyMapping.put(REDI.AFFILIATION_ID.stringValue(), new JsonPathLiteralMapper(root + ".AfId", integerDatatype));
                 ontologyMapping.put(REDI.AFFILIATION_NAME.stringValue(), new JsonPathLiteralMapper(root + ".AfN"));
-                ontologyMapping.put(REDI.POSITION.stringValue(), new JsonPathLiteralMapper(root + ".S", "integer"));
+                ontologyMapping.put(REDI.POSITION.stringValue(), new JsonPathLiteralMapper(root + ".S", integerDatatype));
                 break;
             case FIELD:
                 root = "$.entities[" + i + "].F[" + j + "]";
                 ontologyMapping.put(RDFS.LABEL.stringValue(), new JsonPathLiteralMapper(root + ".FN"));
-                ontologyMapping.put(REDI.ACADEMICS_ID.stringValue(), new JsonPathLiteralMapper(root + ".FId", "integer"));
+                ontologyMapping.put(REDI.ACADEMICS_ID.stringValue(), new JsonPathLiteralMapper(root + ".FId", integerDatatype));
                 break;
             case PUBLICATION:
                 root = "$.entities[" + i + "]";
-                ontologyMapping.put(REDI.ACADEMICS_ID.stringValue(), new JsonPathLiteralMapper(root + ".Id", "integer"));
+                ontologyMapping.put(REDI.ACADEMICS_ID.stringValue(), new JsonPathLiteralMapper(root + ".Id", integerDatatype));
                 ontologyMapping.put(DCTERMS.TITLE.stringValue(), new JsonPathLiteralMapper(root + ".Ti"));
                 ontologyMapping.put(DCTERMS.LANGUAGE.stringValue(), new JsonPathLiteralMapper(root + ".L"));
                 ontologyMapping.put(REDI.YEAR.stringValue(), new JsonPathLiteralMapper(root + ".Y"));
                 ontologyMapping.put(DCTERMS.CREATED.stringValue(), new ScopusDateMapper(root + ".D"));
-                ontologyMapping.put(REDI.CITATION_COUNT.stringValue(), new JsonPathLiteralMapper(root + ".CC", "integer"));
-                ontologyMapping.put(REDI.ESTIMATED_CITATION_COUNT.stringValue(), new JsonPathLiteralMapper(root + ".ECC", "integer"));
-                ontologyMapping.put(REDI.ACADEMICS_REFERENCE_ID.stringValue(), new JsonPathLiteralMapper(root + ".RId[*]", "integer"));
+                ontologyMapping.put(REDI.CITATION_COUNT.stringValue(), new JsonPathLiteralMapper(root + ".CC", integerDatatype));
+                ontologyMapping.put(REDI.ESTIMATED_CITATION_COUNT.stringValue(), new JsonPathLiteralMapper(root + ".ECC", integerDatatype));
+                ontologyMapping.put(REDI.ACADEMICS_REFERENCE_ID.stringValue(), new JsonPathLiteralMapper(root + ".RId[*]", integerDatatype));
                 ontologyMapping.put(FOAF.TOPIC.stringValue(), new JsonPathLiteralMapper(root + ".W[*]"));
-                ontologyMapping.put(REDI.CONFERENCE_ID.stringValue(), new JsonPathLiteralMapper(root + ".C.CId", "integer"));
+                ontologyMapping.put(REDI.CONFERENCE_ID.stringValue(), new JsonPathLiteralMapper(root + ".C.CId", integerDatatype));
                 ontologyMapping.put(REDI.CONFERENCE_NAME.stringValue(), new JsonPathLiteralMapper(root + ".C.CN"));
                 ontologyMapping.put(BIBO.ABSTRACT.stringValue(), new ScopusExtendedAbstractMapper(root + ".E", "$.IA"));
                 ontologyMapping.put(BIBO.DOI.stringValue(), new ScopusExtendedMetaLiteraldataMapper(root + ".E", "$.DOI"));

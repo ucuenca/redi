@@ -59,11 +59,11 @@ public class ScopusExtendedMetaLiteraldataMapper extends JsonPathValueMapper {
         Value value;
         Configuration conf = Configuration.defaultConfiguration().addOptions(Option.SUPPRESS_EXCEPTIONS);
         ReadContext ctx = JsonPath.parse(selectedValue, conf);
-        String value_str = cleanValue(ctx);
-        if (datatype != null && value_str != null) {
-            value = factory.createLiteral(value_str, factory.createURI(XMLSchema.NAMESPACE + datatype));
-        } else if (value_str != null) {
-            value = factory.createLiteral(value_str);
+        String valueStr = cleanValue(ctx);
+        if (datatype != null && valueStr != null) {
+            value = factory.createLiteral(valueStr, factory.createURI(XMLSchema.NAMESPACE + datatype));
+        } else if (valueStr != null) {
+            value = factory.createLiteral(valueStr);
         } else {
             return Collections.emptyList();
         }

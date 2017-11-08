@@ -51,6 +51,11 @@
         </dependency>
         <dependency>
             <groupId>org.apache.marmotta</groupId>
+            <artifactId>ldclient-core</artifactId>
+            <version>${marmotta.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.marmotta</groupId>
             <artifactId>marmotta-commons</artifactId>
             <version>${marmotta.version}</version>
         </dependency>
@@ -60,9 +65,14 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+        <dependency>
             <groupId>ec.edu.cedia.redi</groupId>
             <artifactId>ldclient-provider-json</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0.0</version>
         </dependency>
         
         <dependency>
@@ -78,6 +88,12 @@
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
+    
+    <repositories>
+        <repository>
+            <id>ldclient-provider-json</id>
+            <url>https://raw.github.com/ucuenca/ldclient-provider-json/repository/</url>
+        </repository>
+    </repositories>
 </project>
