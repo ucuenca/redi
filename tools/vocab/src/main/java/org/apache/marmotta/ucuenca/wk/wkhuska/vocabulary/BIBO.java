@@ -40,19 +40,26 @@ public class BIBO {
     public static final URI DOCUMENT;
     public static final URI ACADEMIC_ARTICLE;
     public static final URI QUOTE;
+    public static final URI DOI;
+    public static final URI PAGE_START;
+    public static final URI PAGE_END;
 
     static {
         ValueFactory factory = ValueFactoryImpl.getInstance();
-        ABSTRACT = factory.createURI(NAMESPACE, "abstract");
-        PAGES = factory.createURI(NAMESPACE, "pages");
-        CONFERENCE = factory.createURI(NAMESPACE, "Conference");
-        VOLUME = factory.createURI(NAMESPACE, "volume");
-        ISSUE = factory.createURI(NAMESPACE, "issue");
         BOOK = factory.createURI(NAMESPACE, "Book");
-        URI = factory.createURI(NAMESPACE, "uri");
+        CONFERENCE = factory.createURI(NAMESPACE, "Conference");
         JOURNAL = factory.createURI(NAMESPACE, "Journal");
         DOCUMENT = factory.createURI(NAMESPACE, "Document");
         ACADEMIC_ARTICLE = factory.createURI(NAMESPACE, "AcademicArticle");
         QUOTE = factory.createURI(NAMESPACE, "Quote");
+        
+        ABSTRACT = factory.createURI(NAMESPACE, "abstract");
+        PAGES = factory.createURI(NAMESPACE, "pages");
+        VOLUME = factory.createURI(NAMESPACE, "volume");
+        ISSUE = factory.createURI(NAMESPACE, "issue");
+        URI = factory.createURI(NAMESPACE, "uri");
+        DOI = factory.createURI(NAMESPACE, "doi");
+        PAGE_START = factory.createURI(NAMESPACE, "pageStart");
+        PAGE_END = factory.createURI(NAMESPACE, "pageEnd");
     }
 }
