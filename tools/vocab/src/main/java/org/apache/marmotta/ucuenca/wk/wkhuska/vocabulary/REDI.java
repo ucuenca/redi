@@ -47,6 +47,8 @@ public class REDI {
     public static final URI GIVEN_NAME;
     public static final URI INITIALS;
     public static final URI AFFILIATION_NAME;
+     public static final URI PROVIDER;
+     public static final URI MAIN;
 
     static {
         ValueFactory factory = ValueFactoryImpl.getInstance();
@@ -80,6 +82,8 @@ public class REDI {
         SURNAME = factory.createURI(REDI.NAMESPACE, "surname");
         INITIALS = factory.createURI(REDI.NAMESPACE, "initilias");
         AFFILIATION_NAME = factory.createURI(REDI.NAMESPACE, "affiliationName");
+        PROVIDER   = factory.createURI(REDI.NAMESPACE, "Provider");
+        MAIN   = factory.createURI(REDI.NAMESPACE, "main");
 
     }
 }

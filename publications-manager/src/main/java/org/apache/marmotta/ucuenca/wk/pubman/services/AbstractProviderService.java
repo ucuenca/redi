@@ -19,6 +19,7 @@ package org.apache.marmotta.ucuenca.wk.pubman.services;
 
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import javax.inject.Inject;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
 import org.apache.marmotta.ldclient.model.ClientConfiguration;
@@ -27,21 +28,28 @@ import org.apache.marmotta.ldclient.services.ldclient.LDClient;
 import org.apache.marmotta.platform.core.api.task.Task;
 import org.apache.marmotta.platform.core.api.task.TaskManagerService;
 import org.apache.marmotta.platform.core.api.triplestore.SesameService;
+import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
+import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.ProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
 import org.apache.marmotta.ucuenca.wk.pubman.exceptions.PubException;
 import org.apache.marmotta.ucuenca.wk.pubman.exceptions.QuotaLimitException;
+import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
 import org.openrdf.model.Model;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
+import org.openrdf.model.vocabulary.RDF;
+import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryLanguage;
+import org.openrdf.query.UpdateExecutionException;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.semarglproject.vocab.OWL;
+import org.semarglproject.vocab.RDFS;
 import org.slf4j.Logger;
 
 /**
@@ -71,6 +79,12 @@ public abstract class AbstractProviderService implements ProviderService {
 
     @Inject
     private SesameService sesameService;
+    
+     @Inject
+    private ConstantService constantService;
+     
+      private final static String STR = "^^xsd:string";
+      private final static String BOL = "^^xsd:boolean";
 
     /**
      * Build a list of URLs to request authors with {@link LDClient}.
@@ -79,6 +93,7 @@ public abstract class AbstractProviderService implements ProviderService {
      * @param lastname
      * @return
      */
+    
     protected abstract List<String> buildURLs(String firstname, String lastname);
 
     /**
@@ -99,6 +114,7 @@ public abstract class AbstractProviderService implements ProviderService {
 
     @Override
     public void extractAuthors(String[] organizations) {
+        createProvider (getProviderName ());
         Task task = taskManagerService.createSubTask(String.format("%s Extraction", getProviderName()), "Publication Extractor");
         task.updateMessage(String.format("Extracting publications from %s Provider", getProviderName()));
         task.updateDetailMessage("Graph", getProviderGraph());
@@ -201,6 +217,43 @@ public abstract class AbstractProviderService implements ProviderService {
             return queriesService.getInsertDataUriQuery(getProviderGraph(), sujeto, predicado, objeto);
         } else {
             return queriesService.getInsertDataLiteralQuery(getProviderGraph(), sujeto, predicado, objeto);
+        }
+    }
+
+    private String createProvider(String providerName) {
+        String providerUri = constantService.getProviderBaseUri()+"/"+providerName.toUpperCase().replace(" ", "_");
+        String queryProvider = queriesService.getAskResourceQuery(getProviderGraph(), providerUri);
+        try {
+             Boolean result =  sparqlService.ask(QueryLanguage.SPARQL, queryProvider);
+             
+             if (!result) {
+                 insertStatement(providerUri, RDF.TYPE.toString() ,REDI.PROVIDER.toString()  , STR);
+                 insertStatement(providerUri, RDFS.LABEL.toString() ,providerName , STR);
+            // insertStatement(providerUri, RDF.TYPE.toString(),  , STR);
+                 if ("SCOPUS".equals(providerName)) {
+                 insertStatement(providerUri, REDI.MAIN.toString() ,"True" , BOL);
+                 }else {
+                  insertStatement(providerUri,REDI.MAIN.toString() ,"False" , BOL);
+                 }
+             }
+             
+            return providerUri;
+            // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        } catch (MarmottaException | UpdateExecutionException ex) {
+            java.util.logging.Logger.getLogger(AbstractProviderService.class.getName()).log(Level.SEVERE, null, ex);
+            return "";
+        }
+    }
+    
+          private String  insertStatement(String... parameters) throws UpdateExecutionException {
+        try {
+           // String queryInsertEndpoint = queriesService.getInsertEndpointQuery(parameters[0], parameters[1], parameters[2], parameters[3]);
+          String queryInsertOrg = queriesService.getInsertGeneric (getProviderGraph()  ,  parameters[0], parameters[1], parameters[2], parameters[3] );
+            sparqlService.update(QueryLanguage.SPARQL, queryInsertOrg);
+            return "Successfully Registration";
+        } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
+            java.util.logging.Logger.getLogger(FindRootAuthor.class.getName()).log(Level.SEVERE, null, ex);
+            return "Fail Insert";
         }
     }
 

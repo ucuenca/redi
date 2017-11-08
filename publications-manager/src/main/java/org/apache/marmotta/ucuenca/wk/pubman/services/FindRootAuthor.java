@@ -41,6 +41,7 @@ import org.openrdf.query.UpdateExecutionException;
 import org.simmetrics.StringMetric;
 import static org.simmetrics.StringMetricBuilder.with;
 import org.simmetrics.metrics.CosineSimilarity;
+import org.simmetrics.metrics.JaccardSimilarity;
 import org.simmetrics.metrics.Levenshtein;
 import org.simmetrics.simplifiers.Simplifiers;
 import org.simmetrics.tokenizers.Tokenizers;
@@ -77,17 +78,17 @@ public class FindRootAuthor {
        listaTest.add(maptest);
        
        Map <String, String> maptest2 = new HashMap ();
-       maptest.put("firstName", "Victor Hugo" );
-       maptest.put("lastName", "Saquicela Galarza" );
-       maptest.put("Afiliation", "Universidad de Cataluña" );
-       maptest.put("Keywords", "Computer Science, Data mining, RDF " );
+       maptest2.put("firstName", "Victor Hugo" );
+       maptest2.put("lastName", "Saquicela Galarza" );
+       maptest2.put("Afiliation", "Universidad de Cataluña" );
+       maptest2.put("Keywords", "Computer Science, Data mining, RDF " );
         listaTest.add(maptest2);
         
        Map <String, String> maptest3 = new HashMap ();
-       maptest.put("firstName", "Victor H." );
-       maptest.put("lastName", "Saquicela" );
-       maptest.put("Afiliation", "University of Cuenca" );
-       maptest.put("keywords", "Big data , Integracion de datos, Clustering" );
+       maptest3.put("firstName", "Victor H." );
+       maptest3.put("lastName", "Saquicela" );
+       maptest3.put("Afiliation", "CEDIA" );
+       maptest3.put("keywords", "Computer Science, Mineria de datos, RDF , Big data , Data Integration , Integracion de datos, Clustering" );
         listaTest.add(maptest3);
        
        return listaTest;
@@ -99,56 +100,75 @@ public class FindRootAuthor {
         maptest.put("uri", "123456" );
        maptest.put("firstName", "Victor" );
        maptest.put("lastName", "Saquicela" );
-       maptest.put("Keywords", "Web semantica, Mineria de datos, RDF " );
+       maptest.put("keywords", "Web semantica, Mineria de datos, RDF " );
        listaTest.add(maptest);
        
        Map <String, String> maptest2 = new HashMap ();
-       maptest.put("uri", "789456123" );
-       maptest.put("firstName", "Victor Hugo" );
-       maptest.put("lastName", "Saquicela Galarza" );
-       maptest.put("Keywords", "Computer Science, Data mining, RDF " );
+       maptest2.put("uri", "789456123" );
+       maptest2.put("firstName", "Victor Hugo" );
+       maptest2.put("lastName", "Saquicela Galarza" );
+       maptest2.put("keywords", "Computer Science, Data mining, RDF " );
         listaTest.add(maptest2);
         
        Map <String, String> maptest3 = new HashMap ();
-       maptest.put("uri", "00000001" );
-       maptest.put("firstName", "Victor H." );
-       maptest.put("lastName", "Saquicela" );
-       maptest.put("keywords", "Semantic Web, Data Integration, Linked data, Web Services,semantic annotations" );
+       maptest3.put("uri", "00000001" );
+       maptest3.put("firstName", "Victor H." );
+       maptest3.put("lastName", "Saquicela" );
+       maptest3.put("keywords", "Semantic Web, Data Integration, Linked data, Web Services,semantic annotations" );
         listaTest.add(maptest3);
        
        return listaTest;
    }
     
-    public void  findAuthor (String [] organizations) { 
-    List<Map<String, Value>> resultAllAuthors = getauthorsData.getListOfAuthors( organizations);
+    public String   findAuthor (String [] organizations) { 
+   // List<Map<String, Value>> resultAllAuthors = getauthorsData.getListOfAuthors( organizations);
+        String [] organizationmodif= organizations.clone(); 
+        String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(organizationmodif);
+       List<Map<String, Value>>   resultAllAuthors = new ArrayList();
+        try {
+            resultAllAuthors = sparqlService.query(QueryLanguage.SPARQL, getAllAuthorsDataQuery);
+        } catch (MarmottaException ex) {
+            Logger.getLogger(FindRootAuthor.class.getName()).log(Level.SEVERE, null, ex);
+        }
     
     Map <String ,Map<String, Value>> orgmap = getOrgsData ( organizations);
     
       for (Map<String, Value> authorMap : resultAllAuthors) {
             
-                String firstName = authorMap.get("fname").stringValue();
-                String lastName = authorMap.get("lname").stringValue();
-                String organization = authorMap.get("organization").stringValue();
+                String firstName = getMap(authorMap , "fname");
+                String lastName =  getMap(authorMap , "lname");
+                String organization = getMap(authorMap , "organization");
+                      //  authorMap.get("fname").stringValue();
+                //String lastName = authorMap.get("lname").stringValue();
+                //String organization = authorMap.get("organization").stringValue();
                
                 Map<String, Value> organizationmap =  orgmap.get(organization);
-                String OrgNameEs = organizationmap.get("fullNameEs").stringValue();
+                
+                String OrgNameEs = getMap (organizationmap , "fullNameEs" );
+                String OrgNameEn = getMap (organizationmap , "fullNameEn" );
+                String OrgPrefix = getMap (organizationmap , "name" );
+                /*String OrgNameEs = organizationmap.get("fullNameEs").stringValue();
                 String OrgNameEn = organizationmap.get("fullNameEn").stringValue();
-                String OrgPrefix = organizationmap.get("name").stringValue();
+                String OrgPrefix = organizationmap.get("name").stringValue();*/
                     
                 List<Map<String, String>> Ltest = testData ();
                 List <Map<String, String>> candidates = new ArrayList();
-                String OriginalUri = (firstName+"_"+lastName).toUpperCase();
+                String OriginalUri = (firstName+"_"+lastName).replace(" ","_").toUpperCase();
                 
                 for (Map<String, String> maptest : Ltest ) {
-                    String organizationCandidate = maptest.get("Afiliation");
+                    String organizationCandidate = getMap (maptest , "Afiliation" );
                 if (compareAffiliation (OrgNameEs , organizationCandidate , 0.9 ) || compareAffiliation (OrgNameEn ,organizationCandidate , 0.9 ) || compareAffiliation (OrgPrefix , organizationCandidate , 0.9 ) )
                 {  String [] original = {firstName, lastName};
-                   String [] candidate = { maptest.get("firstName") , maptest.get("lastName")};
-                   boolean authorRoot = compareAuthorsNames (original , candidate , 0.8);
+                   
+                   String cfname = getMap (maptest , "firstName" ); 
+                   String clastname = getMap (maptest , "lastName" );  
+                   
+                   String [] candidate = { cfname , clastname };
+                   boolean authorRoot = compareAuthorsNames (original , candidate , 0.6);
                    
                    if (authorRoot) {
                    candidates.add(maptest);
-                    String candidateUri =   maptest.get("firstName")+"_"+maptest.get("lastName") ;
+                    String candidateUri =   (cfname+"_"+clastname).replace(" ", "_") ;
                             
                      if (candidateUri.length() > OriginalUri.length() ) {
                                 OriginalUri = candidateUri;
@@ -164,10 +184,10 @@ public class FindRootAuthor {
                     try {
                         // Inserto datos de original
                         String authorURI = buildURI (OriginalUri , OrgPrefix);
-                        if (askAuthor (authorURI)){
+                        if (!askAuthor (authorURI)){
                         insertStatement(authorURI, RDF.TYPE.toString(), FOAF.Person.toString() , STR);
   
-                        insertStatement(authorURI, RDFS.LABEL.toString(), OriginalUri.replace("_", ", ") , STR);
+                        insertStatement(authorURI, RDFS.LABEL.toString(), OriginalUri.replace("_", " ") , STR);
                         }
                         
                         insertStatement(authorURI, FOAF.givenName.toString() , firstName , STR);
@@ -177,10 +197,10 @@ public class FindRootAuthor {
                         List <String> keywordsGlobal = new ArrayList ();
                         for (Map<String, String> mapcandidates : candidates ) {
                             
-                             insertStatement(authorURI, FOAF.givenName.toString() , mapcandidates.get("firstName") , STR);
-                             insertStatement(authorURI, FOAF.familyName.toString(), mapcandidates.get("lastName") , STR);
+                             insertStatement(authorURI, FOAF.givenName.toString() , getMap (mapcandidates , "firstName"), STR) ;
+                             insertStatement(authorURI, FOAF.familyName.toString(),  getMap (mapcandidates , "lastName")  , STR);
                            
-                            List <String>  keywordsList = Arrays.asList( mapcandidates.get("keywords").toUpperCase().split(","));
+                            List <String>  keywordsList = Arrays.asList( getMap (mapcandidates , "keywords").toUpperCase().split(","));
                             keywordsGlobal.addAll(keywordsList);
                             //List<String> newList = new ArrayList<String>(new HashSet<String>(keywords));
                             
@@ -189,9 +209,11 @@ public class FindRootAuthor {
                          generateSubjects (keywordsGlobal ,authorURI );
                      
                         publicationsEnrichment (authorMap , keywordsGlobal ,authorURI );
+                        return "Success";
                         
                     }  catch (UpdateExecutionException ex) {
                         Logger.getLogger(FindRootAuthor.class.getName()).log(Level.SEVERE, null, ex);
+                        return "Fail"+ex;
                     }
                         
                 }
@@ -199,6 +221,7 @@ public class FindRootAuthor {
                 
               
     } 
+        return "Fail";
     }
     
     public  List<Map<String, Value>> getOrgData (String organization) {
@@ -213,16 +236,17 @@ public class FindRootAuthor {
     }
     
     public Map <String ,Map<String, Value>> getOrgsData (String [] organizations) {
-        Map <String ,Map<String, Value>> orgMap = null;
+        Map <String ,Map<String, Value>> orgMap = new HashMap();
         for (String org: organizations) {
-          Map<String, Value> orgResponse = getOrgData ( org).get(0);
+          Map<String, Value> orgResponse = getOrgData (org).get(0);
           orgMap.put(org, orgResponse);
         }
     return orgMap;
     }
     
     public boolean compareAffiliation (String original , String candidate , double umbral) {
-          String a = original;
+        if (original != null && candidate != null){
+        String a = original;
         String b = candidate;
 
         StringMetric metric
@@ -233,14 +257,25 @@ public class FindRootAuthor {
         float compare = metric.compare(a, b);  
         
      return  compare > umbral ;
+        }else { return false;}
     }
 
     private boolean compareAuthorsNames(String[] original, String[] candidate, double d) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+     
+        StringMetric metric
+                = with(new JaccardSimilarity<String>())
+                .simplify(Simplifiers.toLowerCase()).tokenize(Tokenizers.whitespace())
+		.build();
+              float compare1 = metric.compare(original[0], candidate[0]);  
+              float compare2 = metric.compare(original[1], candidate[1]);
+              float result = (compare1+compare2) / 2;
+              return  result > d ;
+        
+// throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     private String buildURI(String OriginalUri, String OrgPrefix) {
-       return constantService.getAuthorResource()+"/"+OrgPrefix+"/"+OriginalUri;    
+       return constantService.getAuthorResource()+OrgPrefix+"/"+OriginalUri;    
     //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
@@ -267,7 +302,7 @@ public class FindRootAuthor {
     }
     
     private String buildURISubject (String subject) {
-       return constantService.getSubjectResource()+StringUtils.stripAccents(subject.toUpperCase());
+       return constantService.getSubjectResource()+StringUtils.stripAccents(subject.trim().toUpperCase().replace(" ", "_"));
     }
     
         public boolean  askAuthor (String uri )  {
@@ -285,27 +320,27 @@ public class FindRootAuthor {
 
 
     private void publicationsEnrichment(Map<String, Value> authorMap, List<String> keywordsGlobal, String authorURI) throws UpdateExecutionException {
-                String firstName = authorMap.get("fname").stringValue();
-                String lastName = authorMap.get("lname").stringValue();
-                String organization = authorMap.get("organization").stringValue();
+                String firstName = getMap (authorMap, "fname" );
+                String lastName = getMap (authorMap, "lname" ); 
+                String organization = getMap (authorMap, "organization" ); 
                 
                List<Map<String, String>> mapOthersProviderList = testDataPub();
                List<Map<String, String>> publicationListGlobal = new ArrayList(); 
                for ( Map<String, String> mapEnrichment : mapOthersProviderList ){
                    String [] original = {firstName, lastName};
-                   String [] candidate = { mapEnrichment.get("firstName") , mapEnrichment.get("lastName")};
-                   boolean authorCandidateName = compareAuthorsNames (original , candidate , 0.8);
+                   String [] candidate = {getMap (mapEnrichment, "firstName" )  , getMap (mapEnrichment, "lastName" ) };
+                   boolean authorCandidateName = compareAuthorsNames (original , candidate , 0.5);
                    if (authorCandidateName) {
                        
-                    boolean subjectsim = compareSubjectSimilarity ( keywordsGlobal , Arrays.asList(mapEnrichment.get("keywords").toUpperCase().split(",")), 0.8);
+                    boolean subjectsim = compareSubjectSimilarity ( keywordsGlobal , Arrays.asList(getMap (mapEnrichment, "keywords").toUpperCase().split(",")), 0.2);
                     
                     if (subjectsim) {
                        
-                            insertStatement(authorURI, FOAF.givenName.toString() , mapEnrichment.get("firstName") , STR);
-                            insertStatement(authorURI, FOAF.familyName.toString(), mapEnrichment.get("lastName") , STR);
+                            insertStatement(authorURI, FOAF.givenName.toString() , getMap(mapEnrichment,"firstName") , STR);
+                            insertStatement(authorURI, FOAF.familyName.toString(), getMap(mapEnrichment, "lastName") , STR);
                        
-                          List <Map<String, String>> publicationList = publicationsQuery (mapEnrichment.get("uri"));
-                          publicationListGlobal.addAll(publicationListGlobal);  
+                          List <Map<String, String>> publicationList = publicationsQuery (getMap(mapEnrichment,"uri"));
+                          publicationListGlobal.addAll(publicationList);  
                     } 
                    }
                }
@@ -314,7 +349,24 @@ public class FindRootAuthor {
     }
 
     private boolean compareSubjectSimilarity(List<String> keywordsGlobal, List<String> asList, double d) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         StringMetric metric
+                = with(new JaccardSimilarity<String>())
+                .simplify(Simplifiers.toLowerCase()).tokenize(Tokenizers.whitespace())
+		.build();
+                float result = 0;
+               for (String key1 :keywordsGlobal) {
+                    for (String key2 : asList ) {
+                      float compare1 = metric.compare(key1, key2); 
+                         result += compare1;
+                               }
+               }  
+               int umbral = 0  ;
+               umbral = keywordsGlobal.size() > asList.size() ?  keywordsGlobal.size()  :  asList.size() ;
+                    
+               
+            //  float compare1 = metric.compare(keywordsGlobal, asList);  
+              return  result/umbral > d ;
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     private List <Map<String, String>> publicationsQuery(String uriProfile) {
@@ -322,25 +374,28 @@ public class FindRootAuthor {
        Map <String, String> maptest = new HashMap ();
         maptest.put("uri", "123456" );
        maptest.put("title", "Plataforma de anotacion ...." );
-       maptest.put("snn", "50221" );
-       maptest.put("Keywords", "Web semantica, Mineria de datos, RDF " );
+       maptest.put("sbn", "50221" );
+       maptest.put("abstract", "mi tesis" );
+       maptest.put("keywords", "Web semantica, Mineria de datos, RDF " );
        maptest.put("relType", "creator" );
        listaTest.add(maptest);
        
        Map <String, String> maptest2 = new HashMap ();
-       maptest.put("uri", "789456123" );
-       maptest.put("title", "Patito Lee" );
-       maptest.put("snn", "147852" );
-       maptest.put("Keywords", "Computer Science, Data mining, RDF " );
-       maptest.put("relType", "contributor" );
+       maptest2.put("uri", "789456123" );
+       maptest2.put("title", "Patito Lee" );
+       maptest2.put("sbn", "147852" );
+       maptest2.put("keywords", "Computer Science, Data mining, RDF " );
+       maptest2.put("abstract", "Libro de patitos" );
+       maptest2.put("relType", "contributor" );
         listaTest.add(maptest2);
         
        Map <String, String> maptest3 = new HashMap ();
-       maptest.put("uri", "00000001" );
-       maptest.put("title", "Che guevata" );
-       maptest.put("snn", "8998878" );
-       maptest.put("keywords", "Semantic Web, Data Integration, Linked data, Web Services,semantic annotations" );
-       maptest.put("relType", "contributor" );
+       maptest3.put("uri", "00000001" );
+       maptest3.put("title", "Che guevata" );
+       maptest3.put("sbn", "8998878" );
+       maptest3.put("abstract", "robolucionario" );
+       maptest3.put("keywords", "Semantic Web, Data Integration, Linked data, Web Services,semantic annotations" );
+       maptest3.put("relType", "contributor" );
         listaTest.add(maptest3);
        
        return listaTest;
@@ -350,15 +405,15 @@ public class FindRootAuthor {
          for ( int i = 0 ; i < publicationListGlobal.size() ; i++) {
              try {
                  Map<String, String> actual = publicationListGlobal.get(i);
-                 String title1 = actual.get("title");
+                 String title1 = getMap(actual, "title");
                  String pubURI = getPublicationURI (title1);
                  createPublication (pubURI , actual , authorURI);
                  for ( int j = 1; j < publicationListGlobal.size() ;j++) {
-                     Map<String, String> next = publicationListGlobal.get(i);
-                     String title2 = next.get("title");
+                     Map<String, String> next = publicationListGlobal.get(j);
+                     String title2 = getMap(next,"title");
                      
                      if (compareTitlePublicationWithSimmetrics (title1 , title2)) {
-                         createPublication (pubURI , actual , authorURI);
+                         createPublication (pubURI , next , authorURI);
                          publicationListGlobal.remove(j);
                      }
                  }
@@ -397,7 +452,7 @@ public class FindRootAuthor {
     }
 
     private String  getPublicationURI(String title1) {
-        return constantService.getPublicationResource()+title1.toUpperCase().replace(" ", "_");
+        return constantService.getPublicationResource()+title1.trim().toUpperCase().replace(" ", "_");
        // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -405,12 +460,12 @@ public class FindRootAuthor {
          insertStatement(pubURI, RDF.TYPE.toString() , BIBO.ACADEMIC_ARTICLE.toString() , STR);
        //  insertStatement(pubURI,  DCTERMS.title.toString(), actual.get("title") , STR);
          
-          Map<String, String> mapper = loadProperties("File");
+          Map<String, String> mapper = loadProperties("publicationConfig");
          
          for (Entry prop : actual.entrySet()) {
            //  prop.
             if (mapper.containsKey(prop.getKey())){
-                insertStatement(pubURI,mapper.get(prop.getKey()) , actual.get(prop) , STR);
+                insertStatement(pubURI,mapper.get(prop.getKey()) , getMap(actual, prop.getKey().toString() ) , STR);
             //Asocia las publicaciones con los autores
             }else if ("relType".equals(prop.getKey())) {
                 if ("creator".equals(prop.getValue())) {
@@ -418,6 +473,16 @@ public class FindRootAuthor {
             } else if ("contributor".equals(prop.getValue())) {
             insertStatement(authorURI, DCTERMS.contributor.toString() , pubURI , STR);
             }
+            } else if ("keywords".equals(prop.getKey())) {
+                List <String> keyList = new ArrayList();
+                String keywords =  getMap(actual, prop.getKey().toString() );
+                if (keywords.contains(",")){ 
+                keyList = Arrays.asList(keywords.split(",")) ;
+                }else {
+                keyList.add(keywords);
+                }
+               
+                generateSubjects( keyList ,  pubURI);
             }
               
          }
@@ -441,6 +506,24 @@ public class FindRootAuthor {
             log.error("Error: check the properties file. {}", ex);
         }
         return mapping;
+    }
+    
+    
+    private String  getMap (Map m , String atr) {
+        
+         Object result =   m.get(atr);
+         
+         if (result != null){
+             if (result instanceof Value) {
+                return ((Value)result).stringValue();
+             }else
+             {
+             return result.toString();
+             }
+         }else  {
+         return "";
+         }
+     
     }
 
 }

@@ -86,3 +86,88 @@ function loadTables () {
         
         
     }
+    
+    
+        function ExtractScopus()  {
+         var publications = [];
+         $('tbody tr input:checked').each(function (index) { 
+             console.log ($(this).val())
+             publications.push($(this).val());
+         })
+         
+         console.log (publications);
+         
+           if (publications.length < 1) {
+             alert ("No providers selected");
+         }else {
+             var listPublications = { "data": publications };
+        $.ajax({
+        type: "POST",
+        data:  listPublications  ,
+        dataType: "text", //result data type
+        //contentType : "application/x-www-form-urlencoded; charset=UTF-8" ,
+        url: host + "pubman/publicationsScopusByOrg",
+        success: function(Result) {
+            console.log (Result);
+          // table.ajax.reload( null, false );
+           /* var resultados = JSON.parse(Result);
+            console.log(Result);
+            for (var key in resultados) {
+              console.log (key+""+resultados[key]);*/
+             //$('span#'+key+'').text(resultados[key]);
+            // $("span[id='"+key+"']").text(resultados[key]);
+ 
+            //}
+          // alert (Result);
+
+        },
+        error: function(data ) {
+            //document.getElementById("imgloading").style.visibility = "hidden";
+            alert("Error" + data.responseText);
+         } });
+             
+         }
+        
+        
+    }
+    
+    
+    function unifiedProviders () {
+         var publications = [];
+         $('tbody tr input:checked').each(function (index) { 
+             console.log ($(this).val())
+             publications.push($(this).val());
+         })
+         
+         console.log (publications);
+         
+           if (publications.length < 1) {
+             alert ("No providers selected");
+         }else {
+             var listPublications = { "data": publications };
+        $.ajax({
+        type: "POST",
+        data:  listPublications  ,
+        dataType: "text", //result data type
+        //contentType : "application/x-www-form-urlencoded; charset=UTF-8" ,
+        url: host + "pubman/publicationsUnified",
+        success: function(Result) {
+          // table.ajax.reload( null, false );
+            var resultados = JSON.parse(Result);
+            console.log(Result);
+            for (var key in resultados) {
+              console.log (key+""+resultados[key]);
+
+ 
+            }
+        },
+        error: function(data ) {
+            //document.getElementById("imgloading").style.visibility = "hidden";
+            alert("Error" + data.responseText);
+         } });
+             
+         }
+        
+        
+        
+    }

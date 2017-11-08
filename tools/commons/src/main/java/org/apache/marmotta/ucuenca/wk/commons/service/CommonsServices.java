@@ -34,5 +34,7 @@ public interface CommonsServices {
     String getIndexedPublicationsFilter(String text);
     
     String listmapTojson(List<Map<String, Value>> list);
+    
+    String mapTojson(Map<String, String> map);
 
 }

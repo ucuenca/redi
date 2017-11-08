@@ -185,7 +185,24 @@ public class CommonsServicesImpl implements CommonsServices {
         }
        
 }
-    
+      @Override
+      public String mapTojson(Map<String, String> map) 
+     {       
+        JSONObject jsonObj =new JSONObject();
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            
+            try {
+                jsonObj.put(key,value);
+            
+            } catch (org.json.JSONException ex) {
+                java.util.logging.Logger.getLogger(CommonsServicesImpl.class.getName()).log(Level.SEVERE, null, ex);
+                return "";
+            }                           
+        }
+        return jsonObj.toString();
+     }
     
     @Override
     public String getIndexedPublicationsFilter(String querystr) {

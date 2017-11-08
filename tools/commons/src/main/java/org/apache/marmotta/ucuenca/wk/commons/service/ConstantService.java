@@ -123,6 +123,8 @@ public interface ConstantService {
     //String getAuthorsGraph();
     String getProviderNsGraph();
     
+    String getProviderBaseUri();
+    
     /**
      * Returns the URI of the Latindex Graph
      * @return 

@@ -65,6 +65,11 @@ public class ConstantServiceImpl implements ConstantService {
     public String getAcademicsKnowledgeGraph() {
         return confService.getBaseContext() + "provider/AcademicsKnowledgeProvider";
     }
+    
+    @Override
+    public String getProviderBaseUri() {
+        return confService.getBaseContext() + "provider";
+    }
 
     @Override
     public String getCentralGraph() {

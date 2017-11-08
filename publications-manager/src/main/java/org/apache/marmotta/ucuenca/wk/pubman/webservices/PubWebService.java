@@ -36,6 +36,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import org.apache.marmotta.ucuenca.wk.commons.service.TranslationService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
+import org.apache.marmotta.ucuenca.wk.pubman.services.FindRootAuthor;
 import org.slf4j.Logger;
 
 @Path("/pubman")
@@ -50,6 +51,9 @@ public class PubWebService {
 
     @Inject
     private TranslationService traslateService;
+    
+    @Inject
+    private FindRootAuthor fd;
 
     private static final int MAX_TURNS = 100;
     private static final int MIN_TURNS = 0;
@@ -73,12 +77,40 @@ public class PubWebService {
     /*
      * Get Publications Data from Source and Load into Provider Graph
      */
+    
+    @POST
+    @Path("/publicationsUnified")
+   // @Produces(APPLICATIONJSON)
+    public Response unifiedProvidersData (@Context HttpServletRequest request) {
+
+
+        String[] org = request.getParameterMap().get("data[]");
+         String result =   fd.findAuthor(org);
+      //  String output = authorService.extractAuthorsGeneric(get);
+
+        return Response.ok().entity(result).build();
+        //return  Response.status(Status.BAD_REQUEST).entity("Incorrect file format.").build();
+    }
+    
     @POST
     @Path(GET_PUBLICATIONS)
     public Response readPublicationsPost(@QueryParam("update") Boolean update) {
         String[] organizations = {"http://redi.cedia.edu.ec/resource/organization/UCUENCA"};
         String result = commonService.getDataFromProvidersService(organizations);
         return Response.ok().entity(result).build();
+    }
+    
+    @POST
+    @Path("/publicationsScopusByOrg")
+    public Response readPublicationsPostScopus (@Context HttpServletRequest request) {
+
+
+        String[] org = request.getParameterMap().get("data[]");
+        String result = commonService.getDataFromProvidersService(org);
+      //  String output = authorService.extractAuthorsGeneric(get);
+
+        return Response.ok().entity(result).build();
+        //return  Response.status(Status.BAD_REQUEST).entity("Incorrect file format.").build();
     }
 
     /*
@@ -117,7 +149,7 @@ public class PubWebService {
         return Response.ok().entity(result).build();
     }
     
-        @POST
+    @POST
     @Path("pubman/publicationsAkByOrg")
     @Produces(APPLICATIONJSON)
     public Response readPublicationsPostAK (@Context HttpServletRequest request) {
