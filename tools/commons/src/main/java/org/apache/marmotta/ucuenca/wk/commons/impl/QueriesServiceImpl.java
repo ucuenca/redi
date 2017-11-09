@@ -78,9 +78,9 @@ public class QueriesServiceImpl implements QueriesService {
     public String getInsertDataLiteralQuery(String graph, String subject, String predicate, String object, String datatype) {
         String subjectSentence = "<" + subject + ">";
         if (datatype != null) {
-            object += "^^xsd:" + datatype;
+            object = "\"" + object + "\"^^xsd:" + datatype;
         } else {
-            object += "^^xsd:string";
+            object += "\"" + object + "\"^^xsd:string";
         }
 
         if (isURI(predicate)) {
