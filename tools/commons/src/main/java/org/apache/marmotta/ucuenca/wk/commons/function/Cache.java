@@ -9,8 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -143,23 +141,4 @@ public final class Cache {
         }
 
     }
-
-    public static String getFinalURL(String url) {
-        try {
-            HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
-            con.setInstanceFollowRedirects(false);
-            con.connect();
-            con.getInputStream();
-
-            if (con.getResponseCode() == HttpURLConnection.HTTP_MOVED_PERM || con.getResponseCode() == HttpURLConnection.HTTP_MOVED_TEMP
-                    || con.getResponseCode() == HttpURLConnection.HTTP_SEE_OTHER) {
-                String redirectUrl = con.getHeaderField("Location");
-                return getFinalURL(redirectUrl);
-            }
-
-        } catch (Exception ex) {
-        }
-        return url;
-    }
-
 }

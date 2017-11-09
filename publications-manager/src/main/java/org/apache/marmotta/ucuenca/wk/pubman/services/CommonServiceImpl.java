@@ -86,9 +86,12 @@ public class CommonServiceImpl implements CommonService {
     private CommonsServices com;
 
     @Inject
+    private org.apache.marmotta.ucuenca.wk.pubman.services.DBLPProviderService providerServiceDblp1;
+    @Inject
     private ScopusProviderService providerServiceScopus1;
     private Thread scopusThread;
     private Thread academicsThread;
+    private Thread dblpThread;
 
     @Override
     public String getDataFromProvidersService(final String[] organizations) {
@@ -124,9 +127,17 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public String GetDataFromProvidersServiceDBLP() {
-        Thread DblpProvider = new Thread(dblpProviderService);
-        DblpProvider.start();
+    public String GetDataFromProvidersServiceDBLP(final String[] organizations) {
+        if (dblpThread != null && dblpThread.isAlive()) {
+            return "Process is executing.";
+        }
+        dblpThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                providerServiceDblp1.extractAuthors(organizations);
+            }
+        });
+        dblpThread.start();
         return "Data Provider DBLP are extracted in background.   Please review main.log file for details";
     }
 

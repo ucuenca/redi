@@ -48,24 +48,26 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.marmotta.ucuenca.wk.commons.function.Cache;
+import org.apache.marmotta.ucuenca.wk.commons.function.Delay;
+import org.apache.marmotta.ucuenca.wk.commons.function.URLUtils;
 
 /**
  * Support DBLP Author information as RDF
  * <p/>
  * Author: Santiago Gonzalez
  */
-public class DBLPRawProvider extends AbstractHttpProvider{
-	
+public class DBLPRawProvider extends AbstractHttpProvider {
+
     public static final String NAME = "DBLP Raw Provider";
     public static final String API = "http://dblp.uni-trier.de/search/author/api?q=%s&format=xml";
     public static final String SERVICE_PATTERN = "http://dblp\\.uni\\-trier\\.de/search/author/api\\?q\\=(.*)(\\&format\\=xml)?$";
     public static final String PATTERN = "http(s?)://rdf\\.dblp\\.com/ns/search/.*";
-    
+
     private static Logger log = LoggerFactory.getLogger(DBLPRawProvider.class);
 
     /**
-     * Return the name of this data provider. To be used e.g. in the configuration and in log messages.
+     * Return the name of this data provider. To be used e.g. in the
+     * configuration and in log messages.
      *
      * @return
      */
@@ -81,15 +83,17 @@ public class DBLPRawProvider extends AbstractHttpProvider{
      */
     @Override
     public String[] listMimeTypes() {
-        return new String[] {
-                "text/xml"
+        return new String[]{
+            "text/xml"
         };
     }
 
     /**
-     * Build the URL to use to call the webservice in order to retrieve the data for the resource passed as argument.
-     * In many cases, this will just return the URI of the resource (e.g. Linked Data), but there might be data providers
-     * that use different means for accessing the data for a resource, e.g. SPARQL or a Cache.
+     * Build the URL to use to call the webservice in order to retrieve the data
+     * for the resource passed as argument. In many cases, this will just return
+     * the URI of the resource (e.g. Linked Data), but there might be data
+     * providers that use different means for accessing the data for a resource,
+     * e.g. SPARQL or a Cache.
      *
      *
      * @param resource
@@ -98,56 +102,58 @@ public class DBLPRawProvider extends AbstractHttpProvider{
      */
     @Override
     public List<String> buildRequestUrl(String resource, Endpoint endpoint) {
-    	String url = null;
-    	Matcher m = Pattern.compile(SERVICE_PATTERN).matcher(resource);
-    	if(m.find()) {
-    		url = resource;
-    	} else {
-	    	Preconditions.checkState(StringUtils.isNotBlank(resource));
-	        String id = resource.substring(resource.lastIndexOf('/') + 1);
-	        url = String.format(API, id.replace('_', '+'));
-    	}
+        String url = null;
+        Matcher m = Pattern.compile(SERVICE_PATTERN).matcher(resource);
+        if (m.find()) {
+            url = resource;
+        } else {
+            Preconditions.checkState(StringUtils.isNotBlank(resource));
+            String id = resource.substring(resource.lastIndexOf('/') + 1);
+            url = String.format(API, id.replace('_', '+'));
+        }
+        Delay.call();
         return Collections.singletonList(url);
     }
-    
+
     @Override
     public List<String> parseResponse(String resource, String requestUrl, Model triples, InputStream input, String contentType) throws DataRetrievalException {
-    	log.debug("Request Successful to {0}", requestUrl);
-    	try {
-    		List<String> candidates = new ArrayList<String>();
-    		ValueFactory factory = ValueFactoryImpl.getInstance();
-    		final Document doc = new SAXBuilder(XMLReaders.NONVALIDATING).build(input);
-	    	for(Element element: queryElements(doc, "/result/hits/hit/info/url")) {
-	    		String candidate = element.getText();
-                        candidate = Cache.getFinalURL(candidate);
-	    		triples.add(factory.createStatement(factory.createURI( resource ), FOAF.member, factory.createURI( candidate ) ));
-	    		candidates.add(candidate);
-	    	}
-	    	ClientConfiguration conf = new ClientConfiguration();
-	        LDClient ldClient = new LDClient(conf);
-	        if(!candidates.isEmpty()) {
-		        Model candidateModel = null;
-		    	for(String author: candidates) {
-		    		ClientResponse response = ldClient.retrieveResource(author);
-		        	Model authorModel = response.getData();
-		        	if(candidateModel == null) {
-		        		candidateModel = authorModel;
-		        	} else {
-		        		candidateModel.addAll(authorModel);
-		        	}
-		    	}
-		    	triples.addAll(candidateModel);
-	        }
-    	}catch (IOException e) {
+        log.debug("Request Successful to {0}", requestUrl);
+        try {
+            List<String> candidates = new ArrayList<String>();
+            ValueFactory factory = ValueFactoryImpl.getInstance();
+            final Document doc = new SAXBuilder(XMLReaders.NONVALIDATING).build(input);
+            for (Element element : queryElements(doc, "/result/hits/hit/info/url")) {
+                String candidate = element.getText();
+                candidate = candidate.replaceFirst("pid", "rec/pid");
+                candidate = URLUtils.getFinalURL(candidate, 0);
+                triples.add(factory.createStatement(factory.createURI(resource), FOAF.member, factory.createURI(candidate)));
+                candidates.add(candidate);
+            }
+            ClientConfiguration conf = new ClientConfiguration();
+            LDClient ldClient = new LDClient(conf);
+            if (!candidates.isEmpty()) {
+                Model candidateModel = null;
+                for (String author : candidates) {
+                    ClientResponse response = DBLPAuthorRawProvider.retryLDClient(ldClient, author, 2, 60);
+                    Model authorModel = response.getData();
+                    if (candidateModel == null) {
+                        candidateModel = authorModel;
+                    } else {
+                        candidateModel.addAll(authorModel);
+                    }
+                }
+                triples.addAll(candidateModel);
+            }
+        } catch (IOException e) {
             throw new DataRetrievalException("I/O error while parsing HTML response", e);
-        }catch (JDOMException e) {
+        } catch (JDOMException e) {
             throw new DataRetrievalException("could not parse XML response. It is not in proper XML format", e);
         }
-    	return Collections.emptyList();
+        return Collections.emptyList();
     }
-    
+
     protected static List<Element> queryElements(Document n, String query) {
         return XPathFactory.instance().compile(query, new ElementFilter()).evaluate(n);
     }
-    
+
 }
