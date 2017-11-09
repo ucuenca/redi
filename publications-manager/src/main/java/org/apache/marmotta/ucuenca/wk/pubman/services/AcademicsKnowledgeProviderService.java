@@ -9,8 +9,6 @@ import com.google.common.base.Preconditions;
 import edu.emory.mathcs.backport.java.util.Collections;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
@@ -95,11 +93,11 @@ public class AcademicsKnowledgeProviderService extends AbstractProviderService {
 
     @Override
     protected List<String> buildURLs(String firstname, String lastname) {
-        List urls = null;
+        List urls = Collections.emptyList();
         try {
             urls = Collections.singletonList(buildRequestURL(firstname, lastname));
         } catch (URISyntaxException | APIException ex) {
-            Logger.getLogger(AcademicsKnowledgeProviderService.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException("Invalid API Key");
         }
         return urls;
     }

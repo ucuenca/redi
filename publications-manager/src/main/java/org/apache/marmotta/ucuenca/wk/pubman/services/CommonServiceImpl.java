@@ -46,9 +46,6 @@ public class CommonServiceImpl implements CommonService {
     ProviderServiceGoogleScholar googleService;
 
     @Inject
-    ScopusProviderServiceImpl scopusService;
-
-    @Inject
     AcademicsKnowledgeProviderService academicsKnowledgeService;
 
     @Inject
