@@ -5,7 +5,6 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.api;
 
-import com.google.gson.JsonArray;
 import java.util.List;
 
 /**
@@ -31,8 +30,6 @@ public interface CommonService {
     String GetDataFromProvidersServiceGoogleScholar(boolean update);
 
     String GetDataFromProvidersServiceDspace();
-
-    JsonArray searchAuthor(String uri);
 
     String createReport(String hostname, String realPath, String name, String type, List<String> params);
 

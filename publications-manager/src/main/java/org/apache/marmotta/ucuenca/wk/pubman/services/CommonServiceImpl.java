@@ -9,8 +9,6 @@ import org.apache.marmotta.ucuenca.wk.pubman.services.providers.ScopusProviderSe
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.MicrosoftAcadProviderServiceImpl;
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.GoogleScholarProviderServiceImpl;
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.AcademicsKnowledgeProviderService;
-import org.apache.marmotta.ucuenca.wk.pubman.services.providers.DBLPProviderServiceImpl;
-import com.google.gson.JsonArray;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -20,10 +18,9 @@ import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
-import org.apache.marmotta.ucuenca.wk.pubman.api.DBLPProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.ProviderServiceGoogleScholar;
 import org.apache.marmotta.ucuenca.wk.pubman.api.ReportsService;
-import org.json.JSONException;
+import org.apache.marmotta.ucuenca.wk.pubman.services.providers.DBLPProviderService;
 import org.openrdf.model.Value;
 import org.openrdf.query.QueryLanguage;
 import org.slf4j.Logger;
@@ -34,15 +31,12 @@ import org.slf4j.Logger;
  *
  */
 public class CommonServiceImpl implements CommonService {
-    
+
     @Inject
     private Logger log;
 
     @Inject
     MicrosoftAcadProviderServiceImpl microsoftAcadProviderService;
-
-    @Inject
-    DBLPProviderServiceImpl dblpProviderService;
 
     @Inject
     GoogleScholarProviderServiceImpl googleProviderService;
@@ -82,16 +76,15 @@ public class CommonServiceImpl implements CommonService {
 
     @Inject
     private QueriesService queriesService;
-    
-   @Inject
+
+    @Inject
     private SparqlService sparqlService;
-     
-    
+
     @Inject
     private CommonsServices com;
 
     @Inject
-    private org.apache.marmotta.ucuenca.wk.pubman.services.DBLPProviderService providerServiceDblp1;
+    private org.apache.marmotta.ucuenca.wk.pubman.services.providers.DBLPProviderService providerServiceDblp1;
     @Inject
     private ScopusProviderService providerServiceScopus1;
     private Thread scopusThread;
@@ -146,7 +139,6 @@ public class CommonServiceImpl implements CommonService {
         return "Data Provider DBLP are extracted in background.   Please review main.log file for details";
     }
 
-
     @Override
     public String GetDataFromProvidersServiceMicrosoftAcademics() {
         Thread MicrosofProvider = new Thread(microsoftAcadProviderService);
@@ -183,11 +175,11 @@ public class CommonServiceImpl implements CommonService {
         return "Count Publications from Providers and  Global Graph. Task run in background.   Please review main.log file for details";
     }
 
-    @Override
-    public JsonArray searchAuthor(String uri) {
-
-        return dblpProviderServiceInt.SearchAuthorTaskImpl(uri);
-    }
+//    @Override
+//    public JsonArray searchAuthor(String uri) {
+//
+//        return dblpProviderServiceInt.SearchAuthorTaskImpl(uri);
+//    }
 
     @Override
     public String createReport(String hostname, String realPath, String name, String type, List<String> params) {
@@ -218,24 +210,19 @@ public class CommonServiceImpl implements CommonService {
 
         return startProcess;
     }
-    
+
     @Override
-    public String organizationListExtracted () {
-        String queryOrg =  queriesService.getExtractedOrgList();
+    public String organizationListExtracted() {
+        String queryOrg = queriesService.getExtractedOrgList();
         List<Map<String, Value>> response;
         try {
             response = sparqlService.query(QueryLanguage.SPARQL, queryOrg);
-            return com.listmapTojson (response);
+            return com.listmapTojson(response);
         } catch (MarmottaException ex) {
             java.util.logging.Logger.getLogger(CommonServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-         return null;
+
+        return null;
     }
-    
-         
-         
-         
-    
 
 }

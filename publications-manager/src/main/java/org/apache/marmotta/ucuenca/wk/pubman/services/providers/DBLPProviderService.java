@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.apache.marmotta.ucuenca.wk.pubman.services;
+package org.apache.marmotta.ucuenca.wk.pubman.services.providers;
 
 import edu.emory.mathcs.backport.java.util.Collections;
-import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
+import org.apache.marmotta.ucuenca.wk.pubman.api.AbstractProviderService;
 
 /**
  *
