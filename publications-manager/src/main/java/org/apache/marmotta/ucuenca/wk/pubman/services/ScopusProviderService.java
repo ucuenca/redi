@@ -5,9 +5,13 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.services;
 
+import com.google.common.base.Preconditions;
 import edu.emory.mathcs.backport.java.util.Collections;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 import javax.inject.Inject;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 
@@ -26,16 +30,28 @@ public class ScopusProviderService extends AbstractProviderService {
     private final String expressionTemplate = "authfirst(%s) OR authfirst(%s) AND authlast(%s)";
 
     @Override
-
     protected List<String> buildURLs(String firstname, String lastname) {
-        String apikey = configurationService.getStringConfiguration("publications.scopus.apikey", "");
+        Preconditions.checkArgument(firstname != null && !"".equals(firstname.trim()));
+        Preconditions.checkArgument(lastname != null && !"".equals(lastname.trim()));
+
+        String apikey = configurationService.getStringConfiguration("publications.scopus.apikey");
+
+        if (apikey == null) {
+            throw new RuntimeException("Invalid apikey");
+        }
+
+        firstname = StringUtils.stripAccents(firstname).trim().toLowerCase();
+        lastname = StringUtils.stripAccents(lastname).trim().toLowerCase();
 
         String[] names = firstname.split(" ").length == 2 ? firstname.split(" ") : new String[]{firstname};
-        String lastNameSearch2 = lastname.split(" ").length > 1 ? lastname.split(" ")[0] : lastname;
+        lastname = lastname.split(" ").length > 1 ? lastname.split(" ")[0] : lastname;
 
-        String expression = String.format(expressionTemplate, names[0], names[1], lastNameSearch2);
-        String url = String.format(requestTemplate, expression, apikey);
-        return Collections.singletonList(url);
+        String expression = String.format(expressionTemplate, names[0], names[1], lastname);
+        try {
+            expression = URLEncoder.encode(expression, "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+        }
+        return Collections.singletonList(String.format(requestTemplate, expression, apikey));
     }
 
     private String cleanNameAuthor(String value) {
