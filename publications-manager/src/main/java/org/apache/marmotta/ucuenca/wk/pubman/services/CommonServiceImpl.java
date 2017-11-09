@@ -5,6 +5,11 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.services;
 
+import org.apache.marmotta.ucuenca.wk.pubman.services.providers.ScopusProviderService;
+import org.apache.marmotta.ucuenca.wk.pubman.services.providers.MicrosoftAcadProviderServiceImpl;
+import org.apache.marmotta.ucuenca.wk.pubman.services.providers.GoogleScholarProviderServiceImpl;
+import org.apache.marmotta.ucuenca.wk.pubman.services.providers.AcademicsKnowledgeProviderService;
+import org.apache.marmotta.ucuenca.wk.pubman.services.providers.DBLPProviderServiceImpl;
 import com.google.gson.JsonArray;
 import java.util.List;
 import java.util.Map;

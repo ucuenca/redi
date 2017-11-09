@@ -14,8 +14,8 @@ public interface QueriesService {
     String getAuthorsDataQuery(String... organizations);
 
     String getAuthors();
-    
-    String getAuthorsPropertiesQuery (String authorURI);
+
+    String getAuthorsPropertiesQuery(String authorURI);
 
     String getAuthorsTuplesQuery(String subject);
 
@@ -31,7 +31,7 @@ public interface QueriesService {
 
     String getSameAsAuthors(String graph, String authorResource);
 
-    String getCountPersonQuery(String graph , String num);
+    String getCountPersonQuery(String graph, String num);
 
     String getCountAuthors();
 
@@ -48,19 +48,19 @@ public interface QueriesService {
     String getAskPublicationsURLGS(String graphName, String authorResource);
 
     String getPublicationsURLGS(String graphName, String authorResource);
-    
-    String getInsertGeneric(String graph , String resource, String property, String object, String literal);
-    
-    String removeGenericType (String graph, String type, String resource);
-    
-    String removeGenericRelation (String graph, String relation, String resource);
-    
-    String getListOrganizationQuery ();
-    
-    String  getListEndpoints ();
-    
-    String getListEndpointsByUri (String uri);
-    
+
+    String getInsertGeneric(String graph, String resource, String property, String object, String literal);
+
+    String removeGenericType(String graph, String type, String resource);
+
+    String removeGenericRelation(String graph, String relation, String resource);
+
+    String getListOrganizationQuery();
+
+    String getListEndpoints();
+
+    String getListEndpointsByUri(String uri);
+
     String getExtractedOrgList();
 
     /**
@@ -78,7 +78,7 @@ public interface QueriesService {
      * @param num
      * @return
      */
-    String getAuthorsQuery(String wkhuskagraph , String num);
+    String getAuthorsQuery(String wkhuskagraph, String num);
 
     /**
      * return query to obtain all properties of a resource using LDC ( Linked
@@ -94,7 +94,9 @@ public interface QueriesService {
      * @param args
      * @return
      */
-    String getInsertDataLiteralQuery(String... args);
+    String getInsertDataLiteralQuery(String graph, String subject, String predicate, String object, String datatype);
+
+    String getInsertDataLiteralQuery(String graph, String subject, String predicate, String object);
 
     /**
      * Return a INSERT QUERY when object is a URI
@@ -165,7 +167,7 @@ public interface QueriesService {
     String getPublicationForExternalAuthorFromProviderQuery(String property);
 
     String getPublicationPropertiesQuery(String property);
-    
+
     String getInsertOrganizationQuery(String resourceHash, String property, String object, String literal);
 
     //Microsoft Academics
@@ -336,11 +338,11 @@ public interface QueriesService {
      * Returns a list of every Publication.
      */
     String getPublicationsCentralGraphQuery();
-    
-    String getOrgByUri (String uri);
-    
-    String updateGeneric(String graph , String resource, String property, String object, String literal);
-    
+
+    String getOrgByUri(String uri);
+
+    String updateGeneric(String graph, String resource, String property, String object, String literal);
+
     String removeGeneric(String graph, String resource, String property, String object, String literal);
 
     // Queries for used with MongoDB
