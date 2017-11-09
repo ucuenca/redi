@@ -195,7 +195,7 @@ public class ConstantServiceImpl implements ConstantService {
 
     @Override
     public String getDBLPGraph() {
-        return getWkhuskaGraph() + getSelectedGraph("dblp");
+        return confService.getBaseContext() + "provider/DBLPProvider";
     }
 
     @Override

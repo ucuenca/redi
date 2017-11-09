@@ -130,9 +130,10 @@ public class PubWebService {
     @POST
     @Path(GET_PUBLICATIONS_DBLP)
     public Response readPublicationsPostDBLP(@QueryParam("Endpoint") String resultType) {
+        String[] organizations = {"http://redi.cedia.edu.ec/resource/organization/UCUENCA"};
         String params = resultType;
         log.debug("Publications Task", params);
-        String result = commonService.GetDataFromProvidersServiceDBLP();
+        String result = commonService.GetDataFromProvidersServiceDBLP(organizations);
         return Response.ok().entity(result).build();
     }
 
