@@ -1,8 +1,8 @@
 package org.apache.marmotta.ucuenca.wk.commons.impl;
 
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
+import java.util.Arrays;
 import javax.inject.Inject;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
@@ -66,24 +66,27 @@ public class QueriesServiceImpl implements QueriesService {
         return "SELECT ?x ?y ?z WHERE { ?x ?y ?z }";
     }
 
+    @Override
+    public String getInsertDataLiteralQuery(String graph, String subject, String predicate, String object) {
+        return getInsertDataLiteralQuery(graph, subject, predicate, object, null);
+    }
+
     /**
      * Return a INSERT QUERY when object is a LITERAL
      */
     @Override
-    public String getInsertDataLiteralQuery(String... varargs) {
-        String graphSentence = getGraphString(varargs[0]);
-        String subjectSentence = "<" + varargs[1] + ">";
-        String object = null;
-        if (varargs[3].contains("^^")) {
-            object = "\"" + StringEscapeUtils.escapeJava(varargs[3].substring(1, varargs[3].indexOf("^^") - 1)) + "\"" + varargs[3].substring(varargs[3].indexOf("^^"));
+    public String getInsertDataLiteralQuery(String graph, String subject, String predicate, String object, String datatype) {
+        String subjectSentence = "<" + subject + ">";
+        if (datatype != null) {
+            object = "\"" + object + "\"^^xsd:" + datatype;
         } else {
-            object = String.format("\"%s\"%s", StringEscapeUtils.escapeJava(varargs[3]), (varargs.length > 4 ? varargs[4] != null ? "^^xsd:" + varargs[4] : "^^xsd:string" : "^^xsd:string"));
+            object += "\"" + object + "\"^^xsd:string";
         }
 
-        if (isURI(varargs[2])) {
-            return INSERTDATA + graphSentence + "  { " + subjectSentence + " <" + varargs[2] + "> " + object + " }}";
+        if (isURI(predicate)) {
+            return INSERTDATA + graph + "  { " + subjectSentence + " <" + predicate + "> " + object + " }}";
         } else {
-            return PREFIXES + INSERTDATA + graphSentence + "  { " + subjectSentence + " " + varargs[2] + " " + object + " }}";
+            return PREFIXES + INSERTDATA + graph + "  { " + subjectSentence + " " + predicate + " " + object + " }}";
         }
     }
 
@@ -317,13 +320,13 @@ public class QueriesServiceImpl implements QueriesService {
 
     @Override
     public String getExtractedOrgList() {
-       return   "SELECT DISTINCT ?uri ?name "
-                + "FROM  <"+con.getEndpointsGraph()+"> "
-                + "FROM  <"+con.getOrganizationsGraph()+"> "
+        return "SELECT DISTINCT ?uri ?name "
+                + "FROM  <" + con.getEndpointsGraph() + "> "
+                + "FROM  <" + con.getOrganizationsGraph() + "> "
                 + "WHERE  {"
-                + "  ?subject  <"+REDI.BELONGTO.toString()+"> ?uri ."
-                + "  ?uri  <"+REDI.NAME.toString()+">  ?name ."
-                + "  ?subject   <"+REDI.EXTRACTIONDATE.toString()+">  ?date ."
+                + "  ?subject  <" + REDI.BELONGTO.toString() + "> ?uri ."
+                + "  ?uri  <" + REDI.NAME.toString() + ">  ?name ."
+                + "  ?subject   <" + REDI.EXTRACTIONDATE.toString() + ">  ?date ."
                 + "  FILTER ( STR(?date)  != '')"
                 + "}";
     }
@@ -528,12 +531,13 @@ public class QueriesServiceImpl implements QueriesService {
 
     @Override
     public String getAuthorsDataQuery(String... organizations) {
-        for (int i = 0; i < organizations.length; i++) {
-            organizations[i] = "<" + organizations[i] + ">";
+        String[] orgs = Arrays.copyOf(organizations, organizations.length);
+        for (int i = 0; i < orgs.length; i++) {
+            orgs[i] = "<" + orgs[i] + ">";
         }
         return PREFIXES
                 + "SELECT DISTINCT * WHERE {"
-                + "  VALUES ?organization {" + StringUtils.join(organizations, " ") + "}"
+                + "  VALUES ?organization {" + StringUtils.join(orgs, " ") + "}"
                 + "  GRAPH <" + con.getEndpointsGraph() + ">  {"
                 + "      ?provenance uc:belongTo ?organization."
                 + "  }"
@@ -543,7 +547,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + "               foaf:firstName ?fname;"
                 + "               foaf:lastName ?lname;"
                 + "               dct:provenance ?provenance."
-//                + "filter (mm:fulltext-search(?name,\"Saquicela\")) "
+                //                + "filter (mm:fulltext-search(?name,\"Saquicela\")) "
                 + "  }"
                 + "}";
     }

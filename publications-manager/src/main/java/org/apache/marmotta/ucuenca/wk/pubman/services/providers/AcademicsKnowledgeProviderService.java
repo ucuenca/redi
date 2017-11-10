@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.apache.marmotta.ucuenca.wk.pubman.services;
+package org.apache.marmotta.ucuenca.wk.pubman.services.providers;
 
 import com.google.common.base.Preconditions;
 import edu.emory.mathcs.backport.java.util.Collections;
@@ -15,6 +15,7 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.pubman.exceptions.APIException;
+import org.apache.marmotta.ucuenca.wk.pubman.api.AbstractProviderService;
 
 /**
  *

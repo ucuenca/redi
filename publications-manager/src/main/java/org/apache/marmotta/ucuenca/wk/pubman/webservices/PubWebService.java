@@ -17,7 +17,6 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.webservices;
 
-import com.google.gson.JsonArray;
 import java.io.File;
 import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
@@ -130,9 +129,10 @@ public class PubWebService {
     @POST
     @Path(GET_PUBLICATIONS_DBLP)
     public Response readPublicationsPostDBLP(@QueryParam("Endpoint") String resultType) {
+        String[] organizations = {"http://redi.cedia.edu.ec/resource/organization/UCUENCA"};
         String params = resultType;
         log.debug("Publications Task", params);
-        String result = commonService.GetDataFromProvidersServiceDBLP();
+        String result = commonService.GetDataFromProvidersServiceDBLP(organizations);
         return Response.ok().entity(result).build();
     }
 
@@ -240,19 +240,19 @@ public class PubWebService {
         return Response.ok(commonService.authorAttrFromProviders()).build();
     }
 
-    /**
-     * Service to get data related with especific author.
-     *
-     * @param uri //url to find
-     */
-    @POST
-    @Path(GET_AUTHOR_DATA)
-    @Produces("application/ld+json")
-    public Response searchAuthor(@FormParam("resource") String uri, @Context HttpServletRequest request) {
-        JsonArray resultjson = commonService.searchAuthor(uri);
-        String result = resultjson.toString();
-        return Response.ok().entity(result).build();
-    }
+//    /**
+//     * Service to get data related with especific author.
+//     *
+//     * @param uri //url to find
+//     */
+//    @POST
+//    @Path(GET_AUTHOR_DATA)
+//    @Produces("application/ld+json")
+//    public Response searchAuthor(@FormParam("resource") String uri, @Context HttpServletRequest request) {
+//        JsonArray resultjson = commonService.searchAuthor(uri);
+//        String result = resultjson.toString();
+//        return Response.ok().entity(result).build();
+//    }
     public static final String COUNT_PUBLICATIONS = "/count_publications_graph";
 
     /**

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.marmotta.ucuenca.wk.pubman.services;
+package org.apache.marmotta.ucuenca.wk.pubman.api;
 
 import java.util.List;
 import java.util.Map;
@@ -28,27 +28,20 @@ import org.apache.marmotta.ldclient.services.ldclient.LDClient;
 import org.apache.marmotta.platform.core.api.task.Task;
 import org.apache.marmotta.platform.core.api.task.TaskManagerService;
 import org.apache.marmotta.platform.core.api.triplestore.SesameService;
-import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
-import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
-import org.apache.marmotta.ucuenca.wk.pubman.api.ProviderService;
-import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
-import org.apache.marmotta.ucuenca.wk.pubman.exceptions.PubException;
 import org.apache.marmotta.ucuenca.wk.pubman.exceptions.QuotaLimitException;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
 import org.openrdf.model.Model;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
-import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.UpdateExecutionException;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.semarglproject.vocab.OWL;
+import org.semarglproject.vocab.RDF;
 import org.semarglproject.vocab.RDFS;
 import org.slf4j.Logger;
 
@@ -66,25 +59,19 @@ public abstract class AbstractProviderService implements ProviderService {
     private QueriesService queriesService;
 
     @Inject
-    private CommonsServices commonsServices;
+    private SparqlFunctionsService sparqlFunctionsService;
 
     @Inject
     private TaskManagerService taskManagerService;
-
-    @Inject
-    private SparqlFunctionsService sparqlFunctionsService;
 
     @Inject
     private SparqlService sparqlService;
 
     @Inject
     private SesameService sesameService;
-    
-     @Inject
+
+    @Inject
     private ConstantService constantService;
-     
-      private final static String STR = "^^xsd:string";
-      private final static String BOL = "^^xsd:boolean";
 
     /**
      * Build a list of URLs to request authors with {@link LDClient}.
@@ -93,7 +80,6 @@ public abstract class AbstractProviderService implements ProviderService {
      * @param lastname
      * @return
      */
-    
     protected abstract List<String> buildURLs(String firstname, String lastname);
 
     /**
@@ -114,7 +100,7 @@ public abstract class AbstractProviderService implements ProviderService {
 
     @Override
     public void extractAuthors(String[] organizations) {
-        createProvider (getProviderName ());
+        createProvider(getProviderName());
         Task task = taskManagerService.createSubTask(String.format("%s Extraction", getProviderName()), "Publication Extractor");
         task.updateMessage(String.format("Extracting publications from %s Provider", getProviderName()));
         task.updateDetailMessage("Graph", getProviderGraph());
@@ -154,8 +140,7 @@ public abstract class AbstractProviderService implements ProviderService {
                                 continue;
                         }
                         // store search query.
-                        String oneOfQuery = buildInsertQuery(reqResource.replace(" ", ""), OWL.ONE_OF, authorResource);
-                        updatePub(oneOfQuery);
+                        sparqlFunctionsService.executeInsert(getProviderGraph(), reqResource.replace(" ", ""), OWL.ONE_OF, authorResource);
                         RepositoryConnection connection = sesameService.getConnection();
                         try {
                             Model data = response.getData();
@@ -185,21 +170,6 @@ public abstract class AbstractProviderService implements ProviderService {
     }
 
     /**
-     * UPDATE - with SPARQL MODULE, to load triplet in marmotta plataform
-     *
-     * @param querytoUpdate
-     * @return
-     */
-    private String updatePub(String querytoUpdate) {
-        try {
-            sparqlFunctionsService.updatePub(querytoUpdate);
-        } catch (PubException ex) {
-            log.error("No se pudo insertar: " + querytoUpdate);
-        }
-        return "Correcto";
-    }
-
-    /**
      * Log information about the progress of extraction process.
      *
      * @param actual
@@ -211,49 +181,27 @@ public abstract class AbstractProviderService implements ProviderService {
         log.info("{}: processed authors ({}%) {} of {}.", name, processpercent, actual, total);
     }
 
-    //construyendo sparql query insert 
-    private String buildInsertQuery(String sujeto, String predicado, String objeto) {
-        if (commonsServices.isURI(objeto)) {
-            return queriesService.getInsertDataUriQuery(getProviderGraph(), sujeto, predicado, objeto);
-        } else {
-            return queriesService.getInsertDataLiteralQuery(getProviderGraph(), sujeto, predicado, objeto);
-        }
-    }
-
     private String createProvider(String providerName) {
-        String providerUri = constantService.getProviderBaseUri()+"/"+providerName.toUpperCase().replace(" ", "_");
+        String providerUri = constantService.getProviderBaseUri() + "/" + providerName.toUpperCase().replace(" ", "_");
         String queryProvider = queriesService.getAskResourceQuery(getProviderGraph(), providerUri);
         try {
-             Boolean result =  sparqlService.ask(QueryLanguage.SPARQL, queryProvider);
-             
-             if (!result) {
-                 insertStatement(providerUri, RDF.TYPE.toString() ,REDI.PROVIDER.toString()  , STR);
-                 insertStatement(providerUri, RDFS.LABEL.toString() ,providerName , STR);
-            // insertStatement(providerUri, RDF.TYPE.toString(),  , STR);
-                 if ("SCOPUS".equals(providerName)) {
-                 insertStatement(providerUri, REDI.MAIN.toString() ,"True" , BOL);
-                 }else {
-                  insertStatement(providerUri,REDI.MAIN.toString() ,"False" , BOL);
-                 }
-             }
-             
+            boolean result = sparqlService.ask(QueryLanguage.SPARQL, queryProvider);
+
+            if (!result) {
+                sparqlFunctionsService.executeInsert(getProviderGraph(), providerUri, RDF.TYPE, REDI.PROVIDER.toString());
+                sparqlFunctionsService.executeInsert(getProviderGraph(), providerUri, RDFS.LABEL, providerName, "string");
+                // insertStatement(providerUri, RDF.TYPE.toString(),  , STR);
+                if ("SCOPUS".equals(providerName)) {
+                    sparqlFunctionsService.executeInsert(getProviderGraph(), providerUri, REDI.MAIN.toString(), "True", "boolean");
+                } else {
+                    sparqlFunctionsService.executeInsert(getProviderGraph(), providerUri, REDI.MAIN.toString(), "False", "boolean");
+                }
+            }
+
             return providerUri;
-            // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        } catch (MarmottaException | UpdateExecutionException ex) {
+        } catch (MarmottaException ex) {
             java.util.logging.Logger.getLogger(AbstractProviderService.class.getName()).log(Level.SEVERE, null, ex);
             return "";
-        }
-    }
-    
-          private String  insertStatement(String... parameters) throws UpdateExecutionException {
-        try {
-           // String queryInsertEndpoint = queriesService.getInsertEndpointQuery(parameters[0], parameters[1], parameters[2], parameters[3]);
-          String queryInsertOrg = queriesService.getInsertGeneric (getProviderGraph()  ,  parameters[0], parameters[1], parameters[2], parameters[3] );
-            sparqlService.update(QueryLanguage.SPARQL, queryInsertOrg);
-            return "Successfully Registration";
-        } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
-            java.util.logging.Logger.getLogger(FindRootAuthor.class.getName()).log(Level.SEVERE, null, ex);
-            return "Fail Insert";
         }
     }
 
