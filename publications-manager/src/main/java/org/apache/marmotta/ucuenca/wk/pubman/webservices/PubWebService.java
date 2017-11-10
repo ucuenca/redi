@@ -111,6 +111,41 @@ public class PubWebService {
         return Response.ok().entity(result).build();
         //return  Response.status(Status.BAD_REQUEST).entity("Incorrect file format.").build();
     }
+    
+    @POST
+    @Path("/publicationsDBLPByOrg")
+    public Response readPublicationsPostDBLP (@Context HttpServletRequest request) {
+
+        String[] org = request.getParameterMap().get("data[]");
+        String result = commonService.GetDataFromProvidersServiceDBLP(org);
+
+        return Response.ok().entity(result).build();
+    }
+    
+    @POST
+    @Path("/publicationsGSchoolarByOrg")
+    public Response readPublicationsPostGSchoolar (@Context HttpServletRequest request) {
+
+        String[] org = request.getParameterMap().get("data[]");
+       // String result = commonService.GetDataFromProvidersServiceDBLP(org);
+
+        return Response.ok().entity("Not implement yet").build();
+    }
+    
+    @POST
+    @Path("/publicationsAkByOrg")
+  //  @Produces(APPLICATIONJSON)
+    public Response readPublicationsPostAK (@Context HttpServletRequest request) {
+
+
+        String[] org = request.getParameterMap().get("data[]");
+        String result = commonService.GetDataFromProvidersServiceAcademicsKnowledge(org);
+      //  String output = authorService.extractAuthorsGeneric(get);
+
+        return Response.ok().entity(result).build();
+        //return  Response.status(Status.BAD_REQUEST).entity("Incorrect file format.").build();
+    }
+    
 
     /*
      * Get Publications Data from Source and Load into Provider Graph
@@ -149,19 +184,7 @@ public class PubWebService {
         return Response.ok().entity(result).build();
     }
     
-    @POST
-    @Path("pubman/publicationsAkByOrg")
-    @Produces(APPLICATIONJSON)
-    public Response readPublicationsPostAK (@Context HttpServletRequest request) {
 
-
-        String[] org = request.getParameterMap().get("data[]");
-        String result = commonService.GetDataFromProvidersServiceAcademicsKnowledge(org);
-      //  String output = authorService.extractAuthorsGeneric(get);
-
-        return Response.ok().entity(result).build();
-        //return  Response.status(Status.BAD_REQUEST).entity("Incorrect file format.").build();
-    }
 
     /*
      * Get Publications Data from Source and Load into Provider Graph

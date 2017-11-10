@@ -63,7 +63,7 @@ function loadTables () {
         data:  listPublications  ,
         dataType: "text", //result data type
         //contentType : "application/x-www-form-urlencoded; charset=UTF-8" ,
-        url: host + "pubman/pubman/publicationsAkByOrg",
+        url: host + "pubman/publicationsAkByOrg",
         success: function(Result) {
           // table.ajax.reload( null, false );
             var resultados = JSON.parse(Result);
@@ -129,6 +129,70 @@ function loadTables () {
          }
         
         
+    }
+    
+    
+           function ExtractDBLP ()  {
+         var publications = [];
+         $('tbody tr input:checked').each(function (index) { 
+             console.log ($(this).val())
+             publications.push($(this).val());
+         })
+         
+         console.log (publications);
+         
+           if (publications.length < 1) {
+             alert ("No providers selected");
+         }else {
+             var listPublications = { "data": publications };
+        $.ajax({
+        type: "POST",
+        data:  listPublications  ,
+        dataType: "text", //result data type
+        //contentType : "application/x-www-form-urlencoded; charset=UTF-8" ,
+        url: host + "pubman/publicationsDBLPByOrg",
+        success: function(Result) {
+            console.log (Result);
+
+        },
+        error: function(data ) {
+            //document.getElementById("imgloading").style.visibility = "hidden";
+            alert("Error" + data.responseText);
+         } });
+             
+         } 
+    }
+    
+    
+           function ExtractGoogleSchoolar()  {
+         var publications = [];
+         $('tbody tr input:checked').each(function (index) { 
+             console.log ($(this).val())
+             publications.push($(this).val());
+         })
+         
+         console.log (publications);
+         
+           if (publications.length < 1) {
+             alert ("No providers selected");
+         }else {
+             var listPublications = { "data": publications };
+        $.ajax({
+        type: "POST",
+        data:  listPublications  ,
+        dataType: "text", //result data type
+        //contentType : "application/x-www-form-urlencoded; charset=UTF-8" ,
+        url: host + "pubman/publicationsGSchoolarByOrg",
+        success: function(Result) {
+            console.log (Result);
+
+        },
+        error: function(data ) {
+            //document.getElementById("imgloading").style.visibility = "hidden";
+            alert("Error" + data.responseText);
+         } });
+             
+         } 
     }
     
     
