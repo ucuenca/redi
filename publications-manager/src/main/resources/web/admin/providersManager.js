@@ -9,8 +9,8 @@
     [ "UCUENCA", "", "", "12/12/12", "2011/07/25", "50/81/90" ],
     [ "UTPL", "", "", "", "2009/01/12", "" ]
     ];*/
-  var host = "http://localhost:8080/";
-
+ // var host = "http://localhost:8080/";
+ var host = _SERVER_URL;
 function loadTables () {
   
     console.log ("Graficando");
