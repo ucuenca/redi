@@ -17,6 +17,8 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.api;
 
+import com.google.common.base.Optional;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -167,6 +169,18 @@ public abstract class AbstractProviderService implements ProviderService {
         } finally {
             taskManagerService.endTask(task);
         }
+    }
+
+    /**
+     * Returns an {@link InputStream} of the mapping file if exists, otherwise
+     * it returns an optional empty, meaning the file is not found.
+     *
+     * @return
+     */
+    protected Optional<InputStream> getMappingFile() {
+        String filename = getProviderName().toLowerCase()
+                .replace(' ', '_').trim();
+        return Optional.of(this.getClass().getClassLoader().getResourceAsStream(String.format("mapping/%s", filename)));
     }
 
     /**

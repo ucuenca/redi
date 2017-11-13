@@ -1,0 +1,12 @@
+@prefix r2r: <http://www4.wiwiss.fu-berlin.de/bizer/r2r/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+@prefix uc: <http://ucuenca.edu.ec/ontology#> .  
+
+uc:mapColl1 a r2r:MappingCollection;
+    r2r:prefixDefinitions "foaf: <http://xmlns.com/foaf/0.1/> " .
+
+uc:mapping1 a r2r:Mapping ;
+    r2r:partOfMappingCollection p:mapColl1 .
