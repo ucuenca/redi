@@ -17,7 +17,6 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.api;
 
-import com.google.common.base.Optional;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
@@ -146,6 +145,7 @@ public abstract class AbstractProviderService implements ProviderService {
                         RepositoryConnection connection = sesameService.getConnection();
                         try {
                             Model data = response.getData();
+//                            data = OntologyMapper.map(data, getMappingPathFile(), getVocabulary());
                             log.info("Writing {} triples in context {} for request '{}'.", data.size(), getProviderGraph(), reqResource);
                             Resource providerContext = connection.getValueFactory().createURI(getProviderGraph());
                             connection.add(data, providerContext);
@@ -177,10 +177,15 @@ public abstract class AbstractProviderService implements ProviderService {
      *
      * @return
      */
-    protected Optional<InputStream> getMappingFile() {
-        String filename = getProviderName().toLowerCase()
+    protected InputStream getMappingPathFile() {
+        String name = getProviderName().toLowerCase()
                 .replace(' ', '_').trim();
-        return Optional.of(this.getClass().getClassLoader().getResourceAsStream(String.format("mapping/%s", filename)));
+        String resource = String.format("/mapping/%s.ttl", name);
+        return this.getClass().getResourceAsStream(resource);
+    }
+
+    protected String getVocabulary() {
+        return "";
     }
 
     /**

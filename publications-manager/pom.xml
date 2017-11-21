@@ -182,6 +182,11 @@
             <artifactId>ak-provider</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.avengerpenguin</groupId>
+            <artifactId>r2r_2.11.1</artifactId>
+            <version>0.0.0</version>
+        </dependency>
         <!-- Test dependencies -->
         <dependency>
             <groupId>org.apache.marmotta</groupId>
