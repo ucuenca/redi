@@ -6,7 +6,14 @@
 @prefix uc: <http://ucuenca.edu.ec/ontology#> .  
 
 uc:mapColl1 a r2r:MappingCollection;
-    r2r:prefixDefinitions "foaf: <http://xmlns.com/foaf/0.1/> " .
+    r2r:prefixDefinitions "foaf: <http://xmlns.com/foaf/0.1/> uc: <http://ucuenca.edu.ec/ontology#>" .
 
-uc:mapping1 a r2r:Mapping ;
-    r2r:partOfMappingCollection p:mapColl1 .
+uc:name a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:targetPattern "?SUBJ foaf:name ?name" ;
+    r2r:sourcePattern "?SUBJ foaf:name ?name" .
+
+uc:aff a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:targetPattern "?SUBJ uc:affiliationName ?aff";
+    r2r:sourcePattern "?SUBJ uc:affiliationName ?aff" .
