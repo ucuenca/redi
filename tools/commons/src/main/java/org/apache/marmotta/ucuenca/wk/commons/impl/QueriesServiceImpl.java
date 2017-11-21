@@ -77,6 +77,7 @@ public class QueriesServiceImpl implements QueriesService {
     @Override
     public String getInsertDataLiteralQuery(String graph, String subject, String predicate, String object, String datatype) {
         String subjectSentence = "<" + subject + ">";
+        String graphSentence = "GRAPH <" + graph + ">";
         if (datatype != null) {
             object = "\"" + object + "\"^^xsd:" + datatype;
         } else {
@@ -84,9 +85,9 @@ public class QueriesServiceImpl implements QueriesService {
         }
 
         if (isURI(predicate)) {
-            return INSERTDATA + graph + "  { " + subjectSentence + " <" + predicate + "> " + object + " }}";
+            return INSERTDATA + graphSentence + "  { " + subjectSentence + " <" + predicate + "> " + object + " }}";
         } else {
-            return PREFIXES + INSERTDATA + graph + "  { " + subjectSentence + " " + predicate + " " + object + " }}";
+            return PREFIXES + INSERTDATA + graphSentence + "  { " + subjectSentence + " " + predicate + " " + object + " }}";
         }
     }
 
@@ -547,7 +548,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + "               foaf:firstName ?fname;"
                 + "               foaf:lastName ?lname;"
                 + "               dct:provenance ?provenance."
-                //                + "filter (mm:fulltext-search(?name,\"Saquicela\")) "
+//                + "filter (mm:fulltext-search(?name,\"Saquicela\")) "
                 + "  }"
                 + "}";
     }
