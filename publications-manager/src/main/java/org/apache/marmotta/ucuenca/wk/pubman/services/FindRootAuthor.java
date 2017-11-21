@@ -65,6 +65,9 @@ public class FindRootAuthor {
     @Inject
     private org.slf4j.Logger log;
     
+   @Inject
+    private InterfaceProviders interProv;
+    
     
     private final static String STR = "^^xsd:string";
     
@@ -119,6 +122,20 @@ public class FindRootAuthor {
        
        return listaTest;
    }
+    
+    public String testAuthor (String [] organizations) {
+    
+         Map<String, AuthorsInfo> response = interProv.interfaceAK("http://redi.cedia.edu.ec/resource/authors/UCUENCA/file/UCUENCA%3A_SAQUICELA_GALARZA_____VICTOR_HUGO_");
+         
+         for (String uri : response.keySet()) {
+            log.info(uri+" "+response.get(uri).getIdentifier()+response.get(uri).getAfiliation()[0]);
+            log.info(uri+" "+response.get(uri).getName()[0]);
+            log.info(uri+" "+response.get(uri).getCoautors()[0]);
+            log.info(uri+" "+response.get(uri).getTopics()[0]);
+         }
+         
+        return "Success";
+    }
     
     public String   findAuthor (String [] organizations) { 
    // List<Map<String, Value>> resultAllAuthors = getauthorsData.getListOfAuthors( organizations);

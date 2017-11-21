@@ -84,7 +84,8 @@ public class PubWebService {
 
 
         String[] org = request.getParameterMap().get("data[]");
-         String result =   fd.findAuthor(org);
+        // String result =   fd.findAuthor(org);
+        String result = fd.testAuthor(org);
       //  String output = authorService.extractAuthorsGeneric(get);
 
         return Response.ok().entity(result).build();
