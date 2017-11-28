@@ -174,8 +174,12 @@ public abstract class AbstractProviderService implements ProviderService {
     }
 
     /**
-     * Returns an {@link InputStream} of the mapping file if exists, otherwise
-     * it returns an optional empty, meaning the file is not found.
+     * Returns an {@link InputStream} of the mapping file if exists. The mapping
+     * is expressed using
+     * <a href="http://wifo5-03.informatik.uni-mannheim.de/bizer/r2r/spec/">R2R
+     * Mapping Language</a>. See some
+     * <a href="http://wifo5-03.informatik.uni-mannheim.de/bizer/r2r/#quickstart">examples</a>
+     * of R2R Mapping Framework.
      *
      * @return
      */
@@ -186,6 +190,12 @@ public abstract class AbstractProviderService implements ProviderService {
         return this.getClass().getResourceAsStream(resource);
     }
 
+    /**
+     * Returns the target vocabulary to map using the {@see InputStream} returned by {@see #getMappingPathFile}. 
+     * The vocabulary returned is specified in the target properties of the mapping file, 
+     * <a href="http://wifo5-03.informatik.uni-mannheim.de/bizer/r2r/spec/#targetvocabulary">see the specification</a>.
+     * @return
+     */
     protected String getVocabularyMapper() {
         return "@prefix foaf: <http://xmlns.com/foaf/0.1/> ."
                 + "@prefix uc: <http://ucuenca.edu.ec/ontology#> ."
