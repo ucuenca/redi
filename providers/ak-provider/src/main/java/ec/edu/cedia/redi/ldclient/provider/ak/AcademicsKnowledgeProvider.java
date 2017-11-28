@@ -20,6 +20,7 @@ import com.google.common.base.Preconditions;
 import com.jayway.jsonpath.JsonPath;
 import ec.edu.cedia.redi.ldclient.provider.ak.mapping.ScopusDateMapper;
 import ec.edu.cedia.redi.ldclient.provider.ak.mapping.ScopusExtendedAbstractMapper;
+import ec.edu.cedia.redi.ldclient.provider.ak.mapping.ScopusExtendedMetaLiteralListMapper;
 import ec.edu.cedia.redi.ldclient.provider.ak.mapping.ScopusExtendedMetaLiteraldataMapper;
 import ec.edu.cedia.redi.ldclient.provider.json.AbstractJSONDataProvider;
 import ec.edu.cedia.redi.ldclient.provider.json.mappers.JsonPathLiteralMapper;
@@ -275,7 +276,7 @@ public class AcademicsKnowledgeProvider extends AbstractJSONDataProvider impleme
                 ontologyMapping.put(BIBO.DOI.stringValue(), new ScopusExtendedMetaLiteraldataMapper(root + ".E", "$.DOI"));
                 ontologyMapping.put(BIBO.PAGE_START.stringValue(), new ScopusExtendedMetaLiteraldataMapper(root + ".E", "$.FP"));
                 ontologyMapping.put(BIBO.PAGE_END.stringValue(), new ScopusExtendedMetaLiteraldataMapper(root + ".E", "$.LP"));
-                ontologyMapping.put(BIBO.URI.stringValue(), new ScopusExtendedMetaLiteraldataMapper(root + ".E", "$.S[*].U"));
+                ontologyMapping.put(BIBO.URI.stringValue(), new ScopusExtendedMetaLiteralListMapper(root + ".E", "$.S[*].U"));
                 ontologyMapping.put(REDI.DISPLAY_NAME.stringValue(), new ScopusExtendedMetaLiteraldataMapper(root + ".E", "$.DN"));
                 ontologyMapping.put(BIBO.VOLUME.stringValue(), new ScopusExtendedMetaLiteraldataMapper(root + ".E", "$.V"));
                 ontologyMapping.put(BIBO.ISSUE.stringValue(), new ScopusExtendedMetaLiteraldataMapper(root + ".E", "$.I"));
