@@ -88,7 +88,7 @@ public class OntologyMapperTest {
      */
     @Test
     public void testAcademicsKnowledgeOntologyMapping() {
-        int expSize = 1238;
+        int expSize = 1233;
         Model result = OntologyMapper.map(academicsKnowledgeModel, academicsKnowledgeMapper, vocabulary);
         assertEquals(result.size(), expSize);
     }

@@ -45,7 +45,7 @@ uc:authorAffiliation a r2r:Mapping ;
     r2r:targetPattern "?SUBJ schema:memberOf ?<affIRI>" ;
     r2r:targetPattern "?affIRI a foaf:Organization" ;
     r2r:targetPattern "?affIRI foaf:name ?'affName'^^xsd:string" ;
-    r2r:targetPattern "?affIRI uc:academicsID ?affId" .
+    r2r:targetPattern "?affIRI uc:academicsId ?affId" .
 
 uc:authorPublications a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
@@ -117,7 +117,7 @@ uc:publicationLinks a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:classMappingRef uc:publicationType ;
     r2r:sourcePattern "?SUBJ bibo:uri ?uri" ;
-    r2r:targetPattern "?SUBJ bibo:uri ?uri" .
+    r2r:targetPattern "?SUBJ bibo:uri ?<uri>" .
 
 uc:publicationQuotes a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;

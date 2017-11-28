@@ -198,7 +198,7 @@ public abstract class AbstractProviderService implements ProviderService {
                 + " foaf:holdsAccount,"
                 + " uc:citationCount,"
                 + " schema:memberOf,"
-                + " uc:academicsID,"
+                + " uc:academicsId,"
                 + " dct:title,"
                 + " dct:language,"
                 + " nature:coverDate,"
@@ -217,7 +217,9 @@ public abstract class AbstractProviderService implements ProviderService {
                 + " dct:contributor,"
                 + " foaf:publications,"
                 + " dct:provenance,"
-                + " owl:oneOf"
+                + " owl:oneOf,"
+                + " rdfs:label,"
+                + " foaf:name"
                 + ")";
     }
 
