@@ -1,0 +1,1224 @@
+@prefix context: <http://redi.cedia.org.ec/context/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix fn: <http://www.w3.org/2005/xpath-functions#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sesame: <http://www.openrdf.org/schema/sesame#> .
+@prefix : <http://ucuenca.edu.ec/ontology#> .
+
+<http://redi.cedia.edu.ec/context/provider/ACADEMICS_KNOWLEDGE> a :Provider ;
+	rdfs:label "Academics Knowledge"^^xsd:string ;
+	:main "false"^^xsd:boolean .
+
+<https://westus.api.cognitive.microsoft.com/academic/v1.0/evaluate?expr=AND%28Ty%3D%271%27%2COR%28AuN%3D%27victor+saquicela%27%2CAuN%3D%27hugo+saquicela%27%2CAuN%3D%27victor+hugo+saquicela%27%29%29&attributes=Id%2CAuN%2CDAuN%2CCC%2CECC%2CE&subscription-key=806f4d73014c440aad539c9a0cd6ca66> owl:oneOf <http://redi.cedia.edu.ec/resource/authors/UCUENCA/file/UCUENCA%3A_SAQUICELA_GALARZA_____VICTOR_HUGO_> .
+
+<https://academic.microsoft.com/#/detail/2100261339> <http://xmlns.com/foaf/0.1/topic> "restful" ;
+	:academicsReferenceId "2161228485"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "geospatial" ;
+	:year "2012" ;
+	:academicsReferenceId "1506217276"^^xsd:integer ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider ;
+	<http://purl.org/dc/terms/language> "en@@@es" ;
+	:academicsReferenceId "1577231857"^^xsd:integer ;
+	:displayName "Adding Semantic Annotations into Geospatial RESTful Services" ;
+	:academicsReferenceId "2161460560"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/41008148> ;
+	:academicsReferenceId "2129753341"^^xsd:integer , "1488012158"^^xsd:integer ;
+	<http://purl.org/dc/terms/created> "2012-03-31T19:00:00.000-05:00"^^xsd:dateTime ;
+	:academicsReferenceId "2074554657"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/136764020> ;
+	:academicsReferenceId "2161536823"^^xsd:integer ;
+	<http://purl.org/ontology/bibo/pageStart> "51" ;
+	:academicsReferenceId "2163201741"^^xsd:integer , "1528358771"^^xsd:integer , "2097094515"^^xsd:integer , "2135177518"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/130745260> ;
+	:academicsReferenceId "1557644259"^^xsd:integer , "2106782232"^^xsd:integer , "2095612098"^^xsd:integer ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/703301073> ;
+	:citationCount "5"^^xsd:integer ;
+	:academicsReferenceId "1513611537"^^xsd:integer , "2189169867"^^xsd:integer ;
+	<http://purl.org/ontology/bibo/pageEnd> "71" ;
+	:venueFullName "International Journal on Semantic Web and Information Systems" ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2063064146> ;
+	<http://xmlns.com/foaf/0.1/topic> "adding" , "annotations" ;
+	:academicsReferenceId "2119896671"^^xsd:integer ;
+	<http://purl.org/ontology/bibo/volume> "8" ;
+	:academicsReferenceId "2008896880"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "semantic" ;
+	:academicsReferenceId "2121267713"^^xsd:integer , "1805758951"^^xsd:integer , "1938016043"^^xsd:integer ;
+	<http://purl.org/ontology/bibo/abstract> "In this paper the authors present an approach for the semantic annotation of RESTful services in the geospatial domain. Their approach automates some stages of the annotation process, by using a combination of resources and services: a cross-domain knowledge base like DBpedia, two domain ontologies like GeoNames and the WGS84 vocabulary, and suggestion and synonym services. The authors' approach has been successfully evaluated with a set of geospatial RESTful services obtained from ProgrammableWeb.com, where geospatial services account for a third of the total amount of services available in this registry." ;
+	<http://purl.org/ontology/bibo/doi> "10.4018/jswis.2012040103" ;
+	:estimatedCitationCount "5"^^xsd:integer ;
+	:academicsReferenceId "1587798222"^^xsd:integer , "2073311652"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/23123220> ;
+	:academicsId "2100261339"^^xsd:integer ;
+	:academicsReferenceId "2035072056"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "services" ;
+	:academicsReferenceId "1593317353"^^xsd:integer , "2150365753"^^xsd:integer , "2626780064"^^xsd:integer , "1809074097"^^xsd:integer , "2002323847"^^xsd:integer ;
+	<http://purl.org/dc/terms/title> "adding semantic annotations into geospatial restful services" ;
+	:academicsReferenceId "2102412066"^^xsd:integer ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2021415645> ;
+	<http://purl.org/ontology/bibo/issue> "2" ;
+	:academicsReferenceId "2157401363"^^xsd:integer , "156831226"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/77088390> .
+
+<https://academic.microsoft.com/#/detail/511149849> rdfs:label "semantic computing" ;
+	:academicsId "511149849"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/2043479320> <http://xmlns.com/foaf/0.1/name> "boris villazonterrazas" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "4"^^xsd:integer , "2"^^xsd:integer ;
+	:affiliationName "technical university of madrid" ;
+	:affiliationId "88060688"^^xsd:integer ;
+	:academicsId "2043479320"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/2226943429> <http://xmlns.com/foaf/0.1/name> "luis m vilches" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "3"^^xsd:integer ;
+	:affiliationName "technical university of madrid" ;
+	:affiliationId "88060688"^^xsd:integer ;
+	:academicsId "2226943429"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/2668759288> <http://xmlns.com/foaf/0.1/name> "xavier riofrio" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "6"^^xsd:integer ;
+	:academicsId "2668759288"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/142362112> rdfs:label "art" ;
+	:academicsId "142362112"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/2116633237> <http://xmlns.com/foaf/0.1/name> "janneth chicaiza" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "2"^^xsd:integer ;
+	:affiliationName "universidad tecnica particular de loja" ;
+	:affiliationId "100205273"^^xsd:integer ;
+	:academicsId "2116633237"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/201995342> rdfs:label "systems engineering" ;
+	:academicsId "201995342"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/588778535> <http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider ;
+	<http://purl.org/dc/terms/language> "en" ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2434545123> ;
+	:academicsReferenceId "2404734944"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/41008148> ;
+	:year "2015" ;
+	<http://xmlns.com/foaf/0.1/topic> "images" ;
+	:estimatedCitationCount "3"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "ization" ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2123280068> ;
+	<http://purl.org/dc/terms/created> "2014-12-31T19:00:00.000-05:00"^^xsd:dateTime ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/77088390> ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2126875334> , <https://academic.microsoft.com/#/detail/2527174907> ;
+	<http://xmlns.com/foaf/0.1/topic> "cloud" ;
+	<http://purl.org/ontology/bibo/pageStart> "757" ;
+	<http://purl.org/dc/terms/title> "rdf ization of dicom medical images towards linked health data cloud" ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> ;
+	<http://xmlns.com/foaf/0.1/topic> "linked" ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/23123220> ;
+	:academicsReferenceId "2168457611"^^xsd:integer ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/1665431955> ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/136764020> ;
+	<http://xmlns.com/foaf/0.1/topic> "towards" , "data" ;
+	<http://purl.org/ontology/bibo/pageEnd> "760" ;
+	:citationCount "3"^^xsd:integer ;
+	:academicsReferenceId "71900649"^^xsd:integer ;
+	<http://purl.org/ontology/bibo/doi> "10.1007/978-3-319-13117-7_193" ;
+	<http://xmlns.com/foaf/0.1/topic> "dicom" , "rdf" , "medical" ;
+	:academicsReferenceId "634356513"^^xsd:integer ;
+	:academicsId "588778535"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "health" ;
+	:displayName "RDF-ization of DICOM medical images towards linked health data cloud" .
+
+<https://academic.microsoft.com/#/detail/1964643177> <http://xmlns.com/foaf/0.1/name> "joos vandewalle" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "4"^^xsd:integer ;
+	:affiliationName "katholieke universiteit leuven" ;
+	:affiliationId "99464096"^^xsd:integer ;
+	:academicsId "1964643177"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/554144382> rdfs:label "performance art" ;
+	:academicsId "554144382"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/50382505> rdfs:label "owl s" ;
+	:academicsId "50382505"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/2017855606> <http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/703301073> ;
+	<http://purl.org/ontology/bibo/pageEnd> "344" ;
+	:conferenceName "eswc" ;
+	:estimatedCitationCount "7"^^xsd:integer ;
+	:conferenceId "2755653720"^^xsd:integer ;
+	:academicsReferenceId "1809074097"^^xsd:integer ;
+	:venueShortName "ESWC" ;
+	<http://xmlns.com/foaf/0.1/topic> "ful" ;
+	:academicsReferenceId "2129753341"^^xsd:integer , "2109464129"^^xsd:integer ;
+	<http://purl.org/dc/terms/language> "en@@@es" ;
+	:academicsReferenceId "1805758951"^^xsd:integer , "1577231857"^^xsd:integer , "2150365753"^^xsd:integer ;
+	:displayName "Lightweight semantic annotation of geospatial REST ful services" ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2021415645> ;
+	:academicsReferenceId "2491530509"^^xsd:integer , "2135177518"^^xsd:integer , "2035072056"^^xsd:integer ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> ;
+	:year "2011" ;
+	:academicsReferenceId "1506217276"^^xsd:integer , "2002323847"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/124101348> ;
+	:academicsId "2017855606"^^xsd:integer ;
+	<http://purl.org/ontology/bibo/pageStart> "330" ;
+	<http://xmlns.com/foaf/0.1/topic> "services" ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/77265313> ;
+	:academicsReferenceId "2097094515"^^xsd:integer ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2063064146> ;
+	<http://xmlns.com/foaf/0.1/topic> "geospatial" ;
+	:venueFullName "Extended Semantic Web Conference" ;
+	<http://xmlns.com/foaf/0.1/topic> "rest" ;
+	:academicsReferenceId "1513611537"^^xsd:integer , "2074554657"^^xsd:integer ;
+	:citationCount "7"^^xsd:integer ;
+	:academicsReferenceId "2161460560"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "semantic" ;
+	<http://purl.org/dc/terms/title> "lightweight semantic annotation of geospatial rest ful services" ;
+	:academicsReferenceId "1593317353"^^xsd:integer , "2483235136"^^xsd:integer , "1488012158"^^xsd:integer , "1587798222"^^xsd:integer ;
+	<http://purl.org/ontology/bibo/abstract> "RESTful services are increasingly gaining traction over WS-* ones. As with WS-* services, their semantic annotation can provide benefits in tasks related to their discovery, composition and mediation. In this paper we present an approach to automate the semantic annotation of RESTful services using a cross-domain ontology like DBpedia, domain ontologies like GeoNames, and additional external resources (suggestion and synonym services). We also present a preliminary evaluation in the geospatial domain that proves the feasibility of our approach in a domain where RESTful services are increasingly appearing and highlights that it is possible to carry out this semantic annotation with satisfactory results." ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/136764020> ;
+	:academicsReferenceId "2189169867"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider ;
+	<http://purl.org/dc/terms/created> "2011-05-28T19:00:00.000-05:00"^^xsd:dateTime ;
+	<http://purl.org/ontology/bibo/doi> "10.1007/978-3-642-21064-8_23" ;
+	<http://xmlns.com/foaf/0.1/topic> "annotation" ;
+	:academicsReferenceId "1938016043"^^xsd:integer , "2008896880"^^xsd:integer , "2121267713"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/77088390> ;
+	<http://xmlns.com/foaf/0.1/topic> "lightweight" ;
+	:academicsReferenceId "2157401363"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/41008148> ;
+	:academicsReferenceId "2163201741"^^xsd:integer , "2161228485"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/2151670560> <http://xmlns.com/foaf/0.1/name> "dirk cattrysse" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "5"^^xsd:integer , "3"^^xsd:integer ;
+	:affiliationName "katholieke universiteit leuven" ;
+	:affiliationId "99464096"^^xsd:integer ;
+	:academicsId "2151670560"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/107826830> rdfs:label "environmental resource management" ;
+	:academicsId "107826830"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/147497476> rdfs:label "rdf" ;
+	:academicsId "147497476"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/42475967> rdfs:label "operations research" ;
+	:academicsId "42475967"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/162005631> rdfs:label "data web" ;
+	:academicsId "162005631"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/148792806> rdfs:label "semantic analytics" ;
+	:academicsId "148792806"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/167379230> rdfs:label "semantic web stack" ;
+	:academicsId "167379230"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/108827166> rdfs:label "internet privacy" ;
+	:academicsId "108827166"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/2339217180> :academicsReferenceId "1558803136"^^xsd:integer , "1952054437"^^xsd:integer ;
+	<http://purl.org/ontology/bibo/pageStart> "55" ;
+	<http://xmlns.com/foaf/0.1/topic> "web" ;
+	:year "2015" ;
+	<http://xmlns.com/foaf/0.1/topic> "trabajo" ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/1665431955> ;
+	<http://xmlns.com/foaf/0.1/topic> "para" ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2164218965> ;
+	<http://purl.org/ontology/bibo/pageEnd> "70" ;
+	<http://xmlns.com/foaf/0.1/topic> "integracion" ;
+	:academicsReferenceId "1547990517"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "basado" ;
+	<http://purl.org/dc/terms/title> "marco de trabajo para la integracion de recursos digitales basado en un enfoque de web semantica" ;
+	<http://xmlns.com/foaf/0.1/topic> "marco" ;
+	<http://purl.org/dc/terms/language> "es" ;
+	:venueFullName "RISTI: Revista Ibérica de Sistemas e Tecnologias de Informação" ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/124101348> ;
+	:citationCount "4"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "digitales" ;
+	<http://purl.org/ontology/bibo/abstract> "From the point of view of access to metadata from distributed repositories, the Open Archives Initiative (OAI) proposed a protocol for the interchange and harvesting of metadata called OAI-PMH. This protocol provide a low degree of interoperability, however, with an approach based on semantic technologies, the interoperability of data can reach a higher level; thus, each digital library can retain their specific local qualities and will not require reassign them in order to standardize the exchange, re-use or harvesting of digital resources. In this paper, the process for the extraction of metadata, generation and publishing linked data in order to improve integration and interoperability between resources stored" ;
+	:academicsReferenceId "2089318688"^^xsd:integer ;
+	:academicsId "2339217180"^^xsd:integer ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2138526200> , <https://academic.microsoft.com/#/detail/2161767721> , <https://academic.microsoft.com/#/detail/2116633237> ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/77088390> ;
+	:academicsReferenceId "1993977866"^^xsd:integer , "1992673035"^^xsd:integer , "1768289352"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/136764020> ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2123280068> ;
+	:estimatedCitationCount "4"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "enfoque" , "recursos" ;
+	:academicsReferenceId "78119719"^^xsd:integer ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> ;
+	:displayName "Marco de Trabajo para la Integración de Recursos Digitales Basado en un Enfoque de Web Semántica" ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2113828231> ;
+	:academicsReferenceId "2616619872"^^xsd:integer , "35645256"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "semantica" ;
+	:academicsReferenceId "2129211330"^^xsd:integer ;
+	<http://purl.org/dc/terms/created> "2015-02-28T19:00:00.000-05:00"^^xsd:dateTime ;
+	<http://purl.org/ontology/bibo/doi> "10.17013/risti.e3.55-70" ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2300935017> ;
+	:academicsReferenceId "2075133769"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/2294546673> :academicsReferenceId "588778535"^^xsd:integer ;
+	<http://purl.org/dc/terms/language> "en" ;
+	<http://purl.org/dc/terms/title> "an automatic method for the enrichment of dicom metadata using biomedical ontologies" ;
+	<http://purl.org/ontology/bibo/volume> "2015" ;
+	:academicsReferenceId "90362830"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "metadata" ;
+	:academicsReferenceId "2163670493"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/136764020> ;
+	<http://purl.org/ontology/bibo/doi> "10.1109/EMBC.2015.7318912" ;
+	:academicsReferenceId "71900649"^^xsd:integer ;
+	:year "2015" ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider ;
+	:academicsReferenceId "2039386673"^^xsd:integer ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/1665431955> , <https://academic.microsoft.com/#/detail/2434545123> ;
+	:academicsReferenceId "2035930147"^^xsd:integer , "2113029162"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/77088390> , <https://academic.microsoft.com/#/detail/23123220> ;
+	<http://xmlns.com/foaf/0.1/topic> "enrichment" ;
+	:academicsReferenceId "1147992873"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "biomedical" ;
+	<http://purl.org/dc/terms/created> "2015-07-31T19:00:00.000-05:00"^^xsd:dateTime ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> ;
+	:displayName "An automatic method for the enrichment of DICOM metadata using biomedical ontologies." ;
+	:academicsReferenceId "2269487093"^^xsd:integer ;
+	<http://purl.org/ontology/bibo/pageStart> "2551" ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2527174907> ;
+	<http://xmlns.com/foaf/0.1/topic> "automatic" ;
+	:estimatedCitationCount "3"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "dicom" ;
+	:academicsId "2294546673"^^xsd:integer ;
+	:conferenceId "2232857946"^^xsd:integer ;
+	:citationCount "3"^^xsd:integer ;
+	:academicsReferenceId "509898"^^xsd:integer , "2114063639"^^xsd:integer , "2014918341"^^xsd:integer ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2721858007> ;
+	<http://xmlns.com/foaf/0.1/topic> "ontologies" ;
+	:venueFullName "International Conference of the IEEE Engineering in Medicine and Biology Society" ;
+	<http://purl.org/ontology/bibo/pageEnd> "2554" ;
+	:conferenceName "embc" ;
+	:academicsReferenceId "2123019989"^^xsd:integer ;
+	:venueShortName "EMBC" ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2126875334> .
+
+<https://academic.microsoft.com/#/detail/2021415645> :affiliationName "technical university of madrid" , "Technical University of Madrid" ;
+	:affiliationId "88060688"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/publications> <https://academic.microsoft.com/#/detail/31067544> ;
+	:position "1"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/publications> <https://academic.microsoft.com/#/detail/2017855606> , <https://academic.microsoft.com/#/detail/2462480318> , <https://academic.microsoft.com/#/detail/2073927345> ;
+	:position "2"^^xsd:integer ;
+	:citationCount "59"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/publications> <https://academic.microsoft.com/#/detail/49718213> ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider ;
+	<http://xmlns.com/foaf/0.1/publications> <https://academic.microsoft.com/#/detail/1574098285> ;
+	:displayName "Victor Saquicela" ;
+	:position "3"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/name> "victor saquicela" ;
+	<http://xmlns.com/foaf/0.1/publications> <https://academic.microsoft.com/#/detail/2100261339> ;
+	:academicsId "2021415645"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/publications> <https://academic.microsoft.com/#/detail/2155357634> ;
+	owl:oneOf <https://westus.api.cognitive.microsoft.com/academic/v1.0/evaluate?expr=AND%28Ty%3D%271%27%2COR%28AuN%3D%27victor+saquicela%27%2CAuN%3D%27hugo+saquicela%27%2CAuN%3D%27victor+hugo+saquicela%27%29%29&attributes=Id%2CAuN%2CDAuN%2CCC%2CECC%2CE&subscription-key=806f4d73014c440aad539c9a0cd6ca66> ;
+	a <http://xmlns.com/foaf/0.1/Person> .
+
+<https://academic.microsoft.com/#/detail/2721858007> <http://xmlns.com/foaf/0.1/name> "wilson perez" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "1"^^xsd:integer ;
+	:affiliationName "university of cuenca" ;
+	:affiliationId "189914110"^^xsd:integer ;
+	:academicsId "2721858007"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/534406577> rdfs:label "social semantic web" ;
+	:academicsId "534406577"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/2714043441> <http://xmlns.com/foaf/0.1/name> "mauricio espinozamejia" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "2"^^xsd:integer ;
+	:affiliationName "university of cuenca" ;
+	:affiliationId "189914110"^^xsd:integer ;
+	:academicsId "2714043441"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/71695816> rdfs:label "semantic web rule language" ;
+	:academicsId "71695816"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/56739046> rdfs:label "knowledge management" ;
+	:academicsId "56739046"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/39424602> rdfs:label "use case" ;
+	:academicsId "39424602"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/130745260> rdfs:label "geospatial pdf" ;
+	:academicsId "130745260"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/77088390> rdfs:label "database" ;
+	:academicsId "77088390"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/49774154> rdfs:label "multimedia" ;
+	:academicsId "49774154"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/23123220> rdfs:label "information retrieval" ;
+	:academicsId "23123220"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/2672018897> <http://xmlns.com/foaf/0.1/name> "freddy sumba" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "2"^^xsd:integer ;
+	:affiliationName "university of cuenca" ;
+	:affiliationId "189914110"^^xsd:integer ;
+	:academicsId "2672018897"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/2155357634> <http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/539667460> ;
+	<http://purl.org/ontology/bibo/doi> "10.1145/1869790.1869858" ;
+	<http://xmlns.com/foaf/0.1/topic> "application" ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2247736927> ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/77088390> ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> ;
+	:displayName "GeoLinked data and INSPIRE through an application case" ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/41008148> ;
+	<http://xmlns.com/foaf/0.1/topic> "geolinked" , "inspire" ;
+	:academicsId "2155357634"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/124101348> ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2063064146> , <https://academic.microsoft.com/#/detail/703301073> ;
+	:academicsReferenceId "2015191210"^^xsd:integer ;
+	<http://purl.org/ontology/bibo/pageStart> "446" ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/69075417> , <https://academic.microsoft.com/#/detail/147497476> , <https://academic.microsoft.com/#/detail/2522767166> ;
+	:academicsReferenceId "2165928641"^^xsd:integer ;
+	:conferenceName "gis" ;
+	<http://purl.org/dc/terms/title> "geolinked data and inspire through an application case" ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/205649164> ;
+	:academicsReferenceId "2288778924"^^xsd:integer , "142874589"^^xsd:integer ;
+	:venueFullName "Advances in Geographic Information Systems" ;
+	<http://purl.org/dc/terms/created> "2010-11-01T19:00:00.000-05:00"^^xsd:dateTime ;
+	:academicsReferenceId "2029718927"^^xsd:integer ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2043479320> ;
+	:academicsReferenceId "1483669204"^^xsd:integer ;
+	:estimatedCitationCount "24"^^xsd:integer ;
+	<http://purl.org/ontology/bibo/abstract> "In this paper we present the process that has been followed for the development of an application that makes use of several heterogeneous Spanish public datasets that are related to three themes of INSPIRE Directive, specifically Administrative Units, Hydrography, and Statistical Units. Our application aims at analysing existing relations between the Spanish coastal area and different statistical variables such as population, unemployment, dwelling, industry, and building trade. Besides providing methodological guidelines for the generation, publishing and exploitation of Linked Data from such datasets, we provide an important innovation with respect to other similar processes followed in other initiatives by dealing with the geometrical information of features." ;
+	:year "2010" ;
+	:conferenceId "1140348717"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider ;
+	:venueShortName "GIS" ;
+	<http://xmlns.com/foaf/0.1/topic> "case" ;
+	:academicsReferenceId "2101906686"^^xsd:integer ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2150116440> ;
+	<http://purl.org/ontology/bibo/pageEnd> "449" ;
+	<http://xmlns.com/foaf/0.1/topic> "data" ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/58640448> ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2021415645> ;
+	<http://purl.org/dc/terms/language> "en@@@es" ;
+	:academicsReferenceId "1754959153"^^xsd:integer , "1575138747"^^xsd:integer ;
+	:citationCount "24"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/58640448> rdfs:label "cartography" ;
+	:academicsId "58640448"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/2273716818> <http://xmlns.com/foaf/0.1/name> "mauricio espinoza mejia" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "2"^^xsd:integer , "1"^^xsd:integer ;
+	:affiliationName "university of cuenca" ;
+	:affiliationId "189914110"^^xsd:integer ;
+	:academicsId "2273716818"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/41008148> rdfs:label "computer science" ;
+	:academicsId "41008148"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/69075417> rdfs:label "linked data" ;
+	:academicsId "69075417"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/166423231> rdfs:label "semantic search" ;
+	:academicsId "166423231"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/103692084> rdfs:label "semantic grid" ;
+	:academicsId "103692084"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/2462480318> <http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/703301073> ;
+	:academicsReferenceId "2157401363"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "resources" ;
+	:year "2012" ;
+	<http://purl.org/ontology/bibo/pageEnd> "171" ;
+	:academicsReferenceId "2121267713"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider ;
+	<http://xmlns.com/foaf/0.1/topic> "restful" ;
+	:estimatedCitationCount "0"^^xsd:integer ;
+	:academicsReferenceId "2163201741"^^xsd:integer , "1536641338"^^xsd:integer ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2063064146> ;
+	:citationCount "0"^^xsd:integer ;
+	:academicsReferenceId "2097094515"^^xsd:integer , "2035072056"^^xsd:integer , "1488012158"^^xsd:integer ;
+	<http://purl.org/dc/terms/language> "en" ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> ;
+	:displayName "Semantic Annotation of Geospatial RESTful Services Using External Resources" ;
+	:academicsReferenceId "2074554657"^^xsd:integer ;
+	:academicsId "2462480318"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "geospatial" ;
+	<http://purl.org/ontology/bibo/doi> "10.4018/978-1-4666-0945-7.ch008" ;
+	:academicsReferenceId "2161228485"^^xsd:integer , "2103896334"^^xsd:integer , "1593317353"^^xsd:integer , "2129753341"^^xsd:integer , "2008896880"^^xsd:integer ;
+	<http://purl.org/dc/terms/title> "semantic annotation of geospatial restful services using external resources" ;
+	:academicsReferenceId "2543396135"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "annotation" ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2021415645> ;
+	<http://xmlns.com/foaf/0.1/topic> "external" , "services" , "semantic" ;
+	:academicsReferenceId "2135177518"^^xsd:integer ;
+	<http://purl.org/dc/terms/created> "2011-12-31T19:00:00.000-05:00"^^xsd:dateTime ;
+	<http://purl.org/ontology/bibo/pageStart> "156" .
+
+<https://academic.microsoft.com/#/detail/2138526200> <http://xmlns.com/foaf/0.1/name> "edmundo tovar" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "8"^^xsd:integer ;
+	:affiliationName "technical university of madrid" ;
+	:affiliationId "88060688"^^xsd:integer ;
+	:academicsId "2138526200"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/2164218965> <http://xmlns.com/foaf/0.1/name> "elizabeth cadme" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "5"^^xsd:integer ;
+	:affiliationName "universidad tecnica particular de loja" ;
+	:affiliationId "100205273"^^xsd:integer ;
+	:academicsId "2164218965"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/2309348715> <http://xmlns.com/foaf/0.1/name> "johnny avila" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "5"^^xsd:integer ;
+	:academicsId "2309348715"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/2167581793> <http://xmlns.com/foaf/0.1/name> "x riofrio" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "2"^^xsd:integer ;
+	:affiliationName "university of cuenca" ;
+	:affiliationId "189914110"^^xsd:integer ;
+	:academicsId "2167581793"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/2161767721> <http://xmlns.com/foaf/0.1/name> "nelson piedra" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "1"^^xsd:integer ;
+	:affiliationName "universidad tecnica particular de loja" ;
+	:affiliationId "100205273"^^xsd:integer ;
+	:academicsId "2161767721"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/2073927345> <http://xmlns.com/foaf/0.1/topic> "case" , "geographical" ;
+	:academicsReferenceId "2029718927"^^xsd:integer ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> ;
+	:academicsReferenceId "1542806489"^^xsd:integer ;
+	:citationCount "15"^^xsd:integer ;
+	:academicsReferenceId "1483669204"^^xsd:integer ;
+	<http://purl.org/dc/terms/title> "geographical linked data a spanish use case" ;
+	<http://purl.org/dc/terms/language> "en@@@es" ;
+	:academicsId "2073927345"^^xsd:integer ;
+	<http://purl.org/ontology/bibo/doi> "10.1145/1839707.1839753" ;
+	:academicsReferenceId "15498311"^^xsd:integer ;
+	<http://purl.org/ontology/bibo/pageStart> "36" ;
+	:academicsReferenceId "2015191210"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/39424602> ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2043479320> , <https://academic.microsoft.com/#/detail/2150116440> , <https://academic.microsoft.com/#/detail/2021415645> ;
+	:displayName "Geographical linked data: a Spanish use case" ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/703301073> ;
+	:academicsReferenceId "2288778924"^^xsd:integer , "142874589"^^xsd:integer ;
+	<http://purl.org/dc/terms/created> "2010-08-31T19:00:00.000-05:00"^^xsd:dateTime ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/124101348> , <https://academic.microsoft.com/#/detail/41008148> ;
+	:venueFullName "International Conference on Semantic Systems" ;
+	:academicsReferenceId "2124851202"^^xsd:integer ;
+	:conferenceName "i semantics" ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/42475967> ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2303112934> ;
+	<http://xmlns.com/foaf/0.1/topic> "data" ;
+	:academicsReferenceId "1575138747"^^xsd:integer ;
+	:estimatedCitationCount "15"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/136764020> , <https://academic.microsoft.com/#/detail/69075417> ;
+	:conferenceId "2625637742"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider ;
+	<http://xmlns.com/foaf/0.1/topic> "linked" ;
+	:year "2010" ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2226943429> ;
+	<http://purl.org/ontology/bibo/abstract> "We present the process that has been followed for the development of an application that makes use of several heterogeneous Spanish public datasets that are related to administrative, hydrographic, and statistical domains. Our application aims at analysing existing relations between the Spanish coastal area and different statistical variables such as unemployment, population, dwelling, industry, and building trade. Moreover, we provide an important innovation with respect to other similar processes followed in other initiatives by dealing with the geometrical information of features." ;
+	<http://xmlns.com/foaf/0.1/topic> "spanish" ;
+	:venueShortName "I-SEMANTICS" ;
+	:academicsReferenceId "2165928641"^^xsd:integer , "2101906686"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/136764020> rdfs:label "world wide web" ;
+	:academicsId "136764020"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/2526175397> :academicsReferenceId "188145693"^^xsd:integer ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2438874218> ;
+	<http://xmlns.com/foaf/0.1/topic> "support" ;
+	<http://purl.org/dc/terms/language> "en" ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/1665431955> ;
+	<http://purl.org/ontology/bibo/pageEnd> "12" ;
+	<http://xmlns.com/foaf/0.1/topic> "evaluation" ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/56739046> ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2151670560> ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/127413603> ;
+	:academicsReferenceId "1971960938"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/201995342> ;
+	:year "2014" ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/107826830> ;
+	<http://xmlns.com/foaf/0.1/topic> "integrated" ;
+	:academicsReferenceId "1533029779"^^xsd:integer ;
+	<http://purl.org/dc/terms/title> "design of an integrated decision support system for library holistic evaluation" ;
+	<http://xmlns.com/foaf/0.1/topic> "library" ;
+	:citationCount "1"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "system" ;
+	:academicsReferenceId "2073775196"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "decision" ;
+	:academicsReferenceId "2108971776"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "design" ;
+	:displayName "Design of an integrated Decision Support System for library holistic evaluation" ;
+	:academicsReferenceId "823977920"^^xsd:integer , "2146962504"^^xsd:integer ;
+	:estimatedCitationCount "1"^^xsd:integer ;
+	:academicsReferenceId "1608587633"^^xsd:integer ;
+	<http://purl.org/ontology/bibo/pageStart> "1" ;
+	:academicsReferenceId "2123520575"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "holistic" ;
+	<http://purl.org/dc/terms/created> "2013-12-31T19:00:00.000-05:00"^^xsd:dateTime ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> ;
+	:academicsId "2526175397"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/1665431955> <http://xmlns.com/foaf/0.1/publications> <https://academic.microsoft.com/#/detail/1633709961> ;
+	:position "2"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/publications> <https://academic.microsoft.com/#/detail/2339217180> , <https://academic.microsoft.com/#/detail/992652367> ;
+	:affiliationName "university of cuenca" ;
+	<http://xmlns.com/foaf/0.1/publications> <https://academic.microsoft.com/#/detail/2566913041> ;
+	:position "5"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/publications> <https://academic.microsoft.com/#/detail/2139348279> ;
+	:position "6"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/name> "victor saquicela" ;
+	<http://xmlns.com/foaf/0.1/publications> <https://academic.microsoft.com/#/detail/2526175397> , <https://academic.microsoft.com/#/detail/588778535> ;
+	owl:oneOf <https://westus.api.cognitive.microsoft.com/academic/v1.0/evaluate?expr=AND%28Ty%3D%271%27%2COR%28AuN%3D%27victor+saquicela%27%2CAuN%3D%27hugo+saquicela%27%2CAuN%3D%27victor+hugo+saquicela%27%29%29&attributes=Id%2CAuN%2CDAuN%2CCC%2CECC%2CE&subscription-key=806f4d73014c440aad539c9a0cd6ca66> ;
+	:affiliationId "189914110"^^xsd:integer ;
+	:displayName "Víctor Saquicela" ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider ;
+	:position "3"^^xsd:integer ;
+	:academicsId "1665431955"^^xsd:integer ;
+	:position "4"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/publications> <https://academic.microsoft.com/#/detail/2133899802> ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:citationCount "31"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/publications> <https://academic.microsoft.com/#/detail/2294546673> , <https://academic.microsoft.com/#/detail/2067413869> ;
+	:position "1"^^xsd:integer ;
+	:affiliationName "University of Cuenca" .
+
+<https://academic.microsoft.com/#/detail/2434545123> <http://xmlns.com/foaf/0.1/name> "alexandra la cruz" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "5"^^xsd:integer , "2"^^xsd:integer ;
+	:affiliationName "university of cuenca" ;
+	:affiliationId "189914110"^^xsd:integer ;
+	:academicsId "2434545123"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/2461487220> <http://xmlns.com/foaf/0.1/name> "lm vilchesblazquez" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "1"^^xsd:integer ;
+	:affiliationName "technical university of madrid" ;
+	:affiliationId "88060688"^^xsd:integer ;
+	:academicsId "2461487220"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/992652367> :academicsReferenceId "2089824453"^^xsd:integer , "561380108"^^xsd:integer ;
+	:academicsId "992652367"^^xsd:integer ;
+	:academicsReferenceId "2125070741"^^xsd:integer , "2107250715"^^xsd:integer , "1991814047"^^xsd:integer , "1749441524"^^xsd:integer ;
+	<http://purl.org/ontology/bibo/doi> "10.1016/j.acalib.2015.06.007" ;
+	:academicsReferenceId "2237982142"^^xsd:integer , "2134332934"^^xsd:integer , "1968001853"^^xsd:integer , "2069035097"^^xsd:integer , "1583141510"^^xsd:integer , "1991385399"^^xsd:integer ;
+	<http://purl.org/dc/terms/title> "literature review of data mining applications in academic libraries" ;
+	:academicsReferenceId "2018854626"^^xsd:integer , "1996683976"^^xsd:integer ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2306635715> ;
+	:academicsReferenceId "1975555018"^^xsd:integer ;
+	:citationCount "7"^^xsd:integer ;
+	:academicsReferenceId "2170120259"^^xsd:integer , "1977408081"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "mining" ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/136764020> ;
+	:academicsReferenceId "2500996420"^^xsd:integer , "1983690005"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/2522767166> ;
+	:academicsReferenceId "2147953360"^^xsd:integer , "2042097349"^^xsd:integer , "2030305608"^^xsd:integer , "2028876984"^^xsd:integer , "1985890218"^^xsd:integer ;
+	<http://purl.org/ontology/bibo/pageStart> "499" ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/161191863> ;
+	:academicsReferenceId "2070852212"^^xsd:integer ;
+	<http://purl.org/ontology/bibo/abstract> """This article provides a comprehensive literature review and classification method for data mining techniques applied to academic libraries. To achieve this, forty-one practical contributions over the period 1998–2014 were identified and reviewed for their direct relevance. Each article was categorized according to the main data mining functions: clustering, association, classification, and regression; and their application in the four main library aspects: services, quality, collection, and usage behavior. Findings indicate that both collection and usage behavior analyses have received most of the research attention, especially related to collection development and usability of websites and online services respectively. Furthermore, classification and regression models are the two most commonly used data mining functions applied in library settings.
+
+Additionally, results indicate that the top 6 journals of articles published on the application of data mining techniques in academic libraries are: College and Research Libraries, Journal of Academic Librarianship, Information Processing and Management, Library Hi Tech, International Journal of Knowledge, Culture and Change Management, and The Electronic Library. Scopus is the multidisciplinary database that provides the best coverage of journal articles identified. To our knowledge, this study represents the first systematic, identifiable and comprehensive academic literature review of data mining techniques applied to academic libraries.""" ;
+	<http://purl.org/ontology/bibo/pageEnd> "510" ;
+	:estimatedCitationCount "7"^^xsd:integer ;
+	:academicsReferenceId "2028823771"^^xsd:integer , "128613736"^^xsd:integer , "1524552037"^^xsd:integer , "2033626294"^^xsd:integer ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2508467031> ;
+	<http://purl.org/dc/terms/language> "en" ;
+	<http://xmlns.com/foaf/0.1/topic> "applications" ;
+	:academicsReferenceId "1494093767"^^xsd:integer , "75194040"^^xsd:integer , "2138965487"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "review" ;
+	:displayName "Literature Review of Data Mining Applications in Academic Libraries" ;
+	:academicsReferenceId "2492907864"^^xsd:integer , "1514174278"^^xsd:integer , "2737276361"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "literature" ;
+	:academicsReferenceId "2027989150"^^xsd:integer , "2004236713"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/124101348> ;
+	<http://purl.org/ontology/bibo/volume> "41" ;
+	:academicsReferenceId "174873391"^^xsd:integer , "173795648"^^xsd:integer , "2249756996"^^xsd:integer , "2035147384"^^xsd:integer , "2022783990"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "data" ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2151670560> ;
+	:academicsReferenceId "2055214003"^^xsd:integer , "1483428028"^^xsd:integer , "2129303780"^^xsd:integer , "823977920"^^xsd:integer , "2410128037"^^xsd:integer , "2135988998"^^xsd:integer , "2099418876"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider ;
+	:academicsReferenceId "1970108898"^^xsd:integer , "989636473"^^xsd:integer , "2084192517"^^xsd:integer , "2482303101"^^xsd:integer , "2073775196"^^xsd:integer , "2072175761"^^xsd:integer , "1985744124"^^xsd:integer , "1983232000"^^xsd:integer , "67166965"^^xsd:integer ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> ;
+	<http://purl.org/dc/terms/created> "2015-01-06T19:00:00.000-05:00"^^xsd:dateTime ;
+	:academicsReferenceId "2009675159"^^xsd:integer , "1965210240"^^xsd:integer ;
+	:year "2015" ;
+	:academicsReferenceId "1527138798"^^xsd:integer ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/1964643177> ;
+	<http://xmlns.com/foaf/0.1/topic> "academic" , "libraries" ;
+	:academicsReferenceId "2085353024"^^xsd:integer , "2000375638"^^xsd:integer , "2152064955"^^xsd:integer ;
+	:venueFullName "The Journal of Academic Librarianship" ;
+	<http://purl.org/ontology/bibo/issue> "4" ;
+	:academicsReferenceId "1968643799"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/41008148> ;
+	:academicsReferenceId "2091924276"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/23123220> ;
+	:academicsReferenceId "2140190241"^^xsd:integer , "2092033811"^^xsd:integer ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/1665431955> .
+
+<https://academic.microsoft.com/#/detail/703301073> <http://xmlns.com/foaf/0.1/name> "oscar corcho" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "6"^^xsd:integer , "5"^^xsd:integer , "3"^^xsd:integer ;
+	:affiliationName "technical university of madrid" ;
+	:affiliationId "88060688"^^xsd:integer ;
+	:academicsId "703301073"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/192028432> rdfs:label "query language" ;
+	:academicsId "192028432"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/2129575> rdfs:label "semantic web" ;
+	:academicsId "2129575"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/154945302> rdfs:label "artificial intelligence" ;
+	:academicsId "154945302"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/2436430385> <http://xmlns.com/foaf/0.1/name> "j avila" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "1"^^xsd:integer ;
+	:affiliationName "university of cuenca" ;
+	:affiliationId "189914110"^^xsd:integer ;
+	:academicsId "2436430385"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/2113828231> <http://xmlns.com/foaf/0.1/name> "jorge lopez" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "6"^^xsd:integer ;
+	:affiliationName "universidad tecnica particular de loja" ;
+	:affiliationId "100205273"^^xsd:integer ;
+	:academicsId "2113828231"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/544335954> rdfs:label "web intelligence" ;
+	:academicsId "544335954"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/127413603> rdfs:label "engineering" ;
+	:academicsId "127413603"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/161191863> rdfs:label "library science" ;
+	:academicsId "161191863"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/6881194> rdfs:label "semantic technology" ;
+	:academicsId "6881194"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/2247736927> <http://xmlns.com/foaf/0.1/name> "asuncion gomezperez" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "6"^^xsd:integer ;
+	:affiliationName "technical university of madrid" ;
+	:affiliationId "88060688"^^xsd:integer ;
+	:academicsId "2247736927"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/2123280068> <http://xmlns.com/foaf/0.1/name> "mauricio espinoza" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "7"^^xsd:integer , "5"^^xsd:integer , "4"^^xsd:integer ;
+	:affiliationName "university of cuenca" ;
+	:affiliationId "189914110"^^xsd:integer ;
+	:academicsId "2123280068"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/2566913041> <http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/41008148> ;
+	:estimatedCitationCount "1"^^xsd:integer ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2528860109> ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/2129575> ;
+	:academicsReferenceId "2116655493"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/2522767166> ;
+	<http://xmlns.com/foaf/0.1/topic> "areas" ;
+	<http://purl.org/ontology/bibo/pageEnd> "167" ;
+	<http://purl.org/ontology/bibo/volume> "329" ;
+	:academicsReferenceId "2053549370"^^xsd:integer , "1980266847"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "similar" ;
+	:academicsReferenceId "400792836"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "semantic" ;
+	:academicsReferenceId "2081580037"^^xsd:integer ;
+	<http://purl.org/dc/terms/created> "2016-12-08T19:00:00.000-05:00"^^xsd:dateTime ;
+	:academicsReferenceId "2097184821"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "knowledge" ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/1665431955> ;
+	<http://purl.org/dc/terms/language> "en" ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2566959739> ;
+	:citationCount "1"^^xsd:integer ;
+	:academicsReferenceId "95524657"^^xsd:integer ;
+	:displayName "Detecting Similar Areas of Knowledge Using Semantic and Data Mining Technologies" ;
+	:academicsReferenceId "1880262756"^^xsd:integer , "2396413738"^^xsd:integer , "2280024988"^^xsd:integer ;
+	:venueFullName "Electronic Notes in Theoretical Computer Science" ;
+	<http://purl.org/ontology/bibo/pageStart> "149" ;
+	:academicsReferenceId "1569531029"^^xsd:integer ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> ;
+	<http://xmlns.com/foaf/0.1/topic> "technologies" ;
+	<http://purl.org/ontology/bibo/doi> "10.1016/j.entcs.2016.12.009" ;
+	:academicsReferenceId "2024932032"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "detecting" ;
+	<http://purl.org/dc/terms/title> "detecting similar areas of knowledge using semantic and data mining technologies" ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2123280068> ;
+	:academicsId "2566913041"^^xsd:integer ;
+	:academicsReferenceId "2007628822"^^xsd:integer , "2065259291"^^xsd:integer ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2527174907> ;
+	:academicsReferenceId "1574901103"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/69075417> ;
+	<http://xmlns.com/foaf/0.1/topic> "data" ;
+	:academicsReferenceId "293390933"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/72634772> ;
+	:academicsReferenceId "1964879903"^^xsd:integer ;
+	<http://purl.org/ontology/bibo/abstract> "Searching for scientific publications online is an essential task for researchers working on a certain topic. However, the extremely large amount of scientific publications found in the web turns the process of finding a publication into a very difficult task whereas, locating peers interested in collaborating on a specific topic or reviewing literature is even more challenging. In this paper, we propose a novel architecture to join multiple bibliographic sources, with the aim of identifying common research areas and potential collaboration networks, through a combination of ontologies, vocabularies, and Linked Data technologies for enriching a base data model. Furthermore, we implement a prototype to provide a centralized repository with bibliographic sources and to find similar knowledge areas using data mining techniques in the domain of Ecuadorian researchers community." ;
+	:year "2016" ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/23123220> ;
+	<http://xmlns.com/foaf/0.1/topic> "mining" ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/192028432> ;
+	:academicsReferenceId "2255722756"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/124101348> ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2672018897> ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider ;
+	:academicsReferenceId "2155814345"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/539667460> rdfs:label "management science" ;
+	:academicsId "539667460"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/1969997080> <http://xmlns.com/foaf/0.1/name> "kenneth samuel palacio baus" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "3"^^xsd:integer , "1"^^xsd:integer ;
+	:affiliationName "university of cuenca" ;
+	:affiliationId "189914110"^^xsd:integer ;
+	:academicsId "1969997080"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/2508467031> <http://xmlns.com/foaf/0.1/name> "elina avilaordonez" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "3"^^xsd:integer ;
+	:affiliationName "university of cuenca" ;
+	:affiliationId "189914110"^^xsd:integer ;
+	:academicsId "2508467031"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/2300935017> <http://xmlns.com/foaf/0.1/name> "pricila quichimbo" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "3"^^xsd:integer ;
+	:affiliationName "universidad tecnica particular de loja" ;
+	:affiliationId "100205273"^^xsd:integer ;
+	:academicsId "2300935017"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/77265313> rdfs:label "rest" ;
+	:academicsId "77265313"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/2063064146> <http://xmlns.com/foaf/0.1/name> "luis m vilchesblazquez" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "2"^^xsd:integer , "1"^^xsd:integer ;
+	:affiliationName "technical university of madrid" ;
+	:affiliationId "88060688"^^xsd:integer ;
+	:academicsId "2063064146"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/2194932763> <http://xmlns.com/foaf/0.1/name> "m espinozamejia" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "4"^^xsd:integer ;
+	:affiliationName "university of cuenca" ;
+	:affiliationId "189914110"^^xsd:integer ;
+	:academicsId "2194932763"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/72634772> rdfs:label "data integration" ;
+	:academicsId "72634772"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/2306635715> <http://xmlns.com/foaf/0.1/name> "lorena siguenzaguzman" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "1"^^xsd:integer ;
+	:affiliationName "university of cuenca" ;
+	:affiliationId "189914110"^^xsd:integer ;
+	:academicsId "2306635715"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/2126875334> <http://xmlns.com/foaf/0.1/name> "mariaesther vidal" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "5"^^xsd:integer , "4"^^xsd:integer ;
+	:affiliationName "simon bolivar university" ;
+	:affiliationId "629287"^^xsd:integer ;
+	:academicsId "2126875334"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/2139348279> <http://xmlns.com/foaf/0.1/topic> "recomendacion" ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2309348715> ;
+	:citationCount "3"^^xsd:integer ;
+	<http://purl.org/ontology/bibo/abstract> "Resumen:Este articulo propone un procedimiento para la evaluacion del impacto que tiene la inclusion de determinadaspropiedades semanticas y sus combinaciones en la estimacion de recomendaciones de contenidos audiovisuales,generadas por un sistema de recomendacion semantico para usuarios en el domino de la Television Digital. Este trabajo parte de la hipotesis de que el incremento moderado del numero de propiedades involucradas en el calculo delas predicciones mejora paulatinamente su precision y que cada propiedad semantica tiene una influencia especifica.Los resultados experimentales demuestran que el uso de diferentes combinaciones de propiedades semanticas, tiende areducir el error promedio en distinta proporcion. Abstract: This paper presents an evaluation procedure focused on analyzing the impact of the inclusion of determinedsemantic properties and their combinations, on the audiovisual content recommendation estimation performed by asemantic recommender system to users in the domain of Digital Television. This work is based on the assumption that byincreasing the number of semantic properties involved in the prediction estimation, its accuracy will be improved giventhat each semantic property has a determined influence. The obtained results show that the use of different semanticproperties combinations leads, in general, to a specific reduction of the average estimation error" ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/1969997080> ;
+	<http://xmlns.com/foaf/0.1/topic> "analisis" ;
+	:academicsReferenceId "2171960770"^^xsd:integer , "1690919088"^^xsd:integer , "1570159982"^^xsd:integer ;
+	<http://purl.org/ontology/bibo/volume> "34" ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2273716818> ;
+	<http://purl.org/dc/terms/title> "analisis de la influencia de las propiedades semanticas en los sistemas de recomendacion" ;
+	<http://xmlns.com/foaf/0.1/topic> "semanticas" ;
+	:academicsReferenceId "2098146087"^^xsd:integer , "2105953200"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider ;
+	:estimatedCitationCount "3"^^xsd:integer ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/1665431955> , <https://academic.microsoft.com/#/detail/2165184860> ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> ;
+	<http://purl.org/ontology/bibo/pageStart> "71" ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2668759288> ;
+	:academicsReferenceId "2133109597"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "sistemas" ;
+	:academicsReferenceId "2133899802"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/554144382> ;
+	:displayName "Análisis de la Influencia de las Propiedades Semánticas en los Sistemas de Recomendación" ;
+	<http://purl.org/dc/terms/created> "2014-08-30T19:00:00.000-05:00"^^xsd:dateTime ;
+	<http://purl.org/dc/terms/language> "en@@@es" ;
+	<http://xmlns.com/foaf/0.1/topic> "propiedades" ;
+	:academicsId "2139348279"^^xsd:integer ;
+	:academicsReferenceId "2124591829"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/58640448> ;
+	:academicsReferenceId "1599562392"^^xsd:integer ;
+	:year "2014" ;
+	<http://xmlns.com/foaf/0.1/topic> "influencia" ;
+	<http://purl.org/ontology/bibo/issue> "2" .
+
+<https://academic.microsoft.com/#/detail/31067544> <http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider ;
+	:estimatedCitationCount "0"^^xsd:integer ;
+	:academicsReferenceId "1536641338"^^xsd:integer , "2090656662"^^xsd:integer ;
+	:displayName "Anotación semántica de Web Feature Services" ;
+	:academicsId "31067544"^^xsd:integer ;
+	<http://purl.org/dc/terms/language> "es" ;
+	<http://xmlns.com/foaf/0.1/topic> "web" ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2461487220> ;
+	<http://xmlns.com/foaf/0.1/topic> "anotacion" ;
+	:citationCount "0"^^xsd:integer ;
+	:academicsReferenceId "2109219889"^^xsd:integer ;
+	<http://purl.org/dc/terms/title> "anotacion semantica de web feature services" ;
+	<http://purl.org/ontology/bibo/abstract> "Los servicios WFS permiten recuperar informacion geografica de features. La anotacion semantica de estos servicios proporciona beneficios en tareas relacionadas con el descubrimiento, composicion y mediacion de servicios. La principal contribucion de este trabajo consiste en proponer un proceso para la automatizacion de la anotacion semantica de servicios WFS. Para estas anotaciones se utilizan diversos recursos, tales como: ontologias y conjuntos de datos presentes en la nube de Linked Data" ;
+	:academicsReferenceId "2115462633"^^xsd:integer ;
+	:year "2011" ;
+	<http://xmlns.com/foaf/0.1/topic> "semantica" , "services" ;
+	<http://purl.org/dc/terms/created> "2010-12-31T19:00:00.000-05:00"^^xsd:dateTime ;
+	<http://xmlns.com/foaf/0.1/topic> "feature" ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/703301073> , <https://academic.microsoft.com/#/detail/2021415645> ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> .
+
+<https://academic.microsoft.com/#/detail/124101348> rdfs:label "data mining" ;
+	:academicsId "124101348"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/2150116440> <http://xmlns.com/foaf/0.1/name> "alexander de leon" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "4"^^xsd:integer , "1"^^xsd:integer ;
+	:affiliationName "technical university of madrid" ;
+	:affiliationId "88060688"^^xsd:integer ;
+	:academicsId "2150116440"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/2527174907> <http://xmlns.com/foaf/0.1/name> "andres tello" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "3"^^xsd:integer , "2"^^xsd:integer , "1"^^xsd:integer ;
+	:affiliationName "university of cuenca" ;
+	:affiliationId "189914110"^^xsd:integer ;
+	:academicsId "2527174907"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/205649164> rdfs:label "geography" ;
+	:academicsId "205649164"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/2303112934> <http://xmlns.com/foaf/0.1/name> "freddy priyatna" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "5"^^xsd:integer ;
+	:affiliationName "technical university of madrid" ;
+	:affiliationId "88060688"^^xsd:integer ;
+	:academicsId "2303112934"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/2193777092> <http://xmlns.com/foaf/0.1/name> "kenneth palaciobaus" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "3"^^xsd:integer ;
+	:affiliationName "university of cuenca" ;
+	:affiliationId "189914110"^^xsd:integer ;
+	:academicsId "2193777092"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/49718213> <http://xmlns.com/foaf/0.1/topic> "web" ;
+	<http://purl.org/ontology/bibo/doi> "10.1007/978-3-642-29063-3_7" ;
+	:academicsReferenceId "2108991785"^^xsd:integer ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> ;
+	:estimatedCitationCount "3"^^xsd:integer ;
+	:displayName "Interlinking Geospatial Information in the Web of Data" ;
+	:academicsReferenceId "2027641243"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "information" , "data" ;
+	:academicsReferenceId "2029718927"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider ;
+	:academicsId "49718213"^^xsd:integer ;
+	<http://purl.org/dc/terms/created> "2011-12-31T19:00:00.000-05:00"^^xsd:dateTime ;
+	:academicsReferenceId "2407280095"^^xsd:integer , "2025785578"^^xsd:integer , "2155357634"^^xsd:integer , "2156730765"^^xsd:integer , "2405571848"^^xsd:integer , "2104511295"^^xsd:integer , "1483669204"^^xsd:integer ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2063064146> ;
+	:academicsReferenceId "2167411502"^^xsd:integer , "2101006331"^^xsd:integer ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2021415645> ;
+	:academicsReferenceId "119562039"^^xsd:integer , "2138041207"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "interlinking" ;
+	<http://purl.org/dc/terms/title> "interlinking geospatial information in the web of data" ;
+	:conferenceName "agile" ;
+	:academicsReferenceId "1555453389"^^xsd:integer , "2295240344"^^xsd:integer ;
+	:venueShortName "AGILE" ;
+	:academicsReferenceId "1518864151"^^xsd:integer , "1547556487"^^xsd:integer , "1887232924"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/130745260> ;
+	:academicsReferenceId "192652968"^^xsd:integer ;
+	:conferenceId "2622355266"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/168820927> ;
+	<http://purl.org/ontology/bibo/pageStart> "119" ;
+	<http://purl.org/ontology/bibo/pageEnd> "139" ;
+	:year "2012" ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/703301073> ;
+	:academicsReferenceId "1430534423"^^xsd:integer ;
+	:venueFullName "Agile Conference" ;
+	:academicsReferenceId "2142787640"^^xsd:integer , "2073471108"^^xsd:integer , "2110609845"^^xsd:integer , "2609075193"^^xsd:integer , "1569881385"^^xsd:integer , "1854015338"^^xsd:integer , "1612155886"^^xsd:integer , "2113473098"^^xsd:integer , "1607526536"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "geospatial" ;
+	:academicsReferenceId "1993977866"^^xsd:integer ;
+	<http://purl.org/dc/terms/language> "en" ;
+	:academicsReferenceId "1797897953"^^xsd:integer ;
+	:citationCount "3"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/168820927> rdfs:label "web coverage service" ;
+	:academicsId "168820927"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/1574098285> <http://xmlns.com/foaf/0.1/topic> "resources" ;
+	:academicsId "1574098285"^^xsd:integer ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/148792806> , <https://academic.microsoft.com/#/detail/6881194> , <https://academic.microsoft.com/#/detail/167379230> ;
+	:venueFullName "International Conference on Web Engineering" ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/703301073> ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/154945302> ;
+	:academicsReferenceId "2129753341"^^xsd:integer ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2021415645> ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/41008148> ;
+	<http://xmlns.com/foaf/0.1/topic> "restful" ;
+	:academicsReferenceId "2121267713"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "services" ;
+	:academicsReferenceId "2035072056"^^xsd:integer , "1809074097"^^xsd:integer , "2008896880"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/166423231> ;
+	:academicsReferenceId "1938016043"^^xsd:integer , "2150365753"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider ;
+	:academicsReferenceId "2163201741"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/2129575> ;
+	:academicsReferenceId "2161460560"^^xsd:integer , "2108650858"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/534406577> , <https://academic.microsoft.com/#/detail/511149849> ;
+	<http://purl.org/dc/terms/language> "en@@@es" ;
+	:academicsReferenceId "2074554657"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/71695816> ;
+	:citationCount "5"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "annotation" ;
+	<http://purl.org/ontology/bibo/pageEnd> "276" ;
+	:estimatedCitationCount "5"^^xsd:integer ;
+	:academicsReferenceId "1488012158"^^xsd:integer , "2161228485"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/103692084> ;
+	:academicsReferenceId "2002323847"^^xsd:integer , "1506217276"^^xsd:integer , "1805758951"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/77088390> , <https://academic.microsoft.com/#/detail/162005631> ;
+	<http://purl.org/dc/terms/title> "semantic annotation of restful services using external resources" ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/23123220> ;
+	:academicsReferenceId "2109464129"^^xsd:integer ;
+	:year "2010" ;
+	:academicsReferenceId "2157401363"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/50382505> ;
+	:venueShortName "ICWE" ;
+	<http://purl.org/ontology/bibo/pageStart> "266" ;
+	:academicsReferenceId "2491530509"^^xsd:integer ;
+	:conferenceName "icwe" ;
+	<http://xmlns.com/foaf/0.1/topic> "semantic" ;
+	<http://purl.org/ontology/bibo/doi> "10.1007/978-3-642-16985-4_24" ;
+	:academicsReferenceId "2135177518"^^xsd:integer ;
+	:conferenceId "1186729694"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "external" ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2063064146> ;
+	<http://purl.org/dc/terms/created> "2010-07-04T19:00:00.000-05:00"^^xsd:dateTime ;
+	:academicsReferenceId "1587798222"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/136764020> ;
+	<http://purl.org/ontology/bibo/abstract> """Since the advent of Web 2.0, RESTful services have become an increasing phenomenon. Currently, Semantic Web technologies are being integrated into Web 2.0 services for both to leverage each other strengths. The need to take advantage of data available in RESTful services in the scope of Semantic Web evidences the difficulties to cope with syntactic and semantic description of the services.
+
+In this paper we present an approach to tackle the problem of automatic the semantic annotation of RESTful services using a cross-domain ontology, a semantic resource (DBpedia) and additional external resources (suggestion and synonyms services) to annotate the parameters of the RESTful services. We also present a preliminary evaluation that proves the feasibility of our approach and highlights that it is possible to carry out this semantic annotation with satisfactory results.""" ;
+	:academicsReferenceId "1513611537"^^xsd:integer , "2097094515"^^xsd:integer , "1593317353"^^xsd:integer ;
+	:displayName "Semantic annotation of RESTful services using external resources" ;
+	:academicsReferenceId "2189169867"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/2566959739> <http://xmlns.com/foaf/0.1/name> "xavier sumba" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "1"^^xsd:integer ;
+	:affiliationName "university of cuenca" ;
+	:affiliationId "189914110"^^xsd:integer ;
+	:academicsId "2566959739"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/2528860109> <http://xmlns.com/foaf/0.1/name> "fernando baculima" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "4"^^xsd:integer ;
+	:affiliationName "university of cuenca" ;
+	:affiliationId "189914110"^^xsd:integer ;
+	:academicsId "2528860109"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/2438874218> <http://xmlns.com/foaf/0.1/name> "lorena siguenza guzman" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "1"^^xsd:integer ;
+	:academicsId "2438874218"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/2522767166> rdfs:label "data science" ;
+	:academicsId "2522767166"^^xsd:integer .
+
+<https://academic.microsoft.com/#/detail/1633709961> <http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/136764020> ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2194932763> , <https://academic.microsoft.com/#/detail/2167581793> ;
+	:academicsReferenceId "2050942713"^^xsd:integer ;
+	:citationCount "2"^^xsd:integer ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2436430385> ;
+	<http://xmlns.com/foaf/0.1/topic> "semantic" ;
+	:academicsReferenceId "1542300987"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "digital" ;
+	:academicsReferenceId "1690919088"^^xsd:integer , "2067413869"^^xsd:integer ;
+	<http://purl.org/ontology/bibo/abstract> "Compared to analog transmissions, Digital Television (DTV) standards allows a higher number of available TV stations and consequently, a larger entertainment offer. In this context, Recommender Systems (RS) support users in choosing entertainment content by narrowing their options to a reduced set based on their preferences an interests. However, new users or those having incomplete profiles prevent the system to produce accurate recommendations, which is more noticeable in early stages of the RS. This paper proposes the use of a demographic stereotyping approach based on minimal user attributes acquired during user registration. Furthermore, we propose an experimental procedure that can be used to compare the system accuracy for the created stereotypes and for users making extensive use of the system." ;
+	<http://xmlns.com/foaf/0.1/topic> "recommender" , "personalized" ;
+	:estimatedCitationCount "2"^^xsd:integer ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/1665431955> ;
+	:academicsReferenceId "2124278963"^^xsd:integer ;
+	<http://purl.org/dc/terms/title> "semantic recommender systems for digital tv from demographic stereotyping to personalized recommendations" ;
+	<http://purl.org/ontology/bibo/pageStart> "392" ;
+	<http://purl.org/ontology/bibo/doi> "10.1109/APCASE.2015.76" ;
+	:academicsId "1633709961"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "tv" ;
+	:academicsReferenceId "2132488407"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "systems" , "stereotyping" ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider ;
+	<http://purl.org/dc/terms/created> "2015-06-30T19:00:00.000-05:00"^^xsd:dateTime ;
+	:academicsReferenceId "2041556604"^^xsd:integer ;
+	<http://purl.org/ontology/bibo/pageEnd> "396" ;
+	:academicsReferenceId "2155201359"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/41008148> ;
+	<http://xmlns.com/foaf/0.1/topic> "recommendations" ;
+	:academicsReferenceId "2049847915"^^xsd:integer , "2098146087"^^xsd:integer ;
+	:year "2015" ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/108827166> ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2193777092> ;
+	:academicsReferenceId "1988184747"^^xsd:integer ;
+	:displayName "Semantic Recommender Systems for Digital TV: From Demographic Stereotyping to Personalized Recommendations" ;
+	:academicsReferenceId "2154018800"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "demographic" ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/49774154> ;
+	<http://purl.org/dc/terms/language> "en" .
+
+<https://academic.microsoft.com/#/detail/2551097457> <http://xmlns.com/foaf/0.1/name> "kenneth palacio" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "3"^^xsd:integer ;
+	:affiliationName "university of cuenca" ;
+	:affiliationId "189914110"^^xsd:integer ;
+	:academicsId "2551097457"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/2133899802> :academicsId "2133899802"^^xsd:integer ;
+	:academicsReferenceId "2096130203"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/142362112> ;
+	:academicsReferenceId "200512936"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "extraccion" ;
+	:academicsReferenceId "18146528"^^xsd:integer , "1665997306"^^xsd:integer ;
+	<http://purl.org/ontology/bibo/pageStart> "63" ;
+	<http://purl.org/ontology/bibo/issue> "2" ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider ;
+	:academicsReferenceId "1969890816"^^xsd:integer ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/1665431955> ;
+	:academicsReferenceId "1621792343"^^xsd:integer ;
+	:citationCount "2"^^xsd:integer ;
+	:academicsReferenceId "1967686486"^^xsd:integer ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2165184860> ;
+	:year "2014" ;
+	<http://purl.org/dc/terms/language> "es" ;
+	<http://purl.org/ontology/bibo/volume> "34" ;
+	<http://xmlns.com/foaf/0.1/topic> "redes" , "preferencias" ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/58640448> ;
+	:academicsReferenceId "2039535197"^^xsd:integer ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/1969997080> , <https://academic.microsoft.com/#/detail/2273716818> ;
+	:estimatedCitationCount "2"^^xsd:integer ;
+	<http://purl.org/dc/terms/title> "extraccion de preferencias televisivas desde los perfiles de redes sociales" ;
+	:academicsReferenceId "2139348279"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "perfiles" ;
+	:academicsReferenceId "2067413869"^^xsd:integer ;
+	:displayName "Extracción de Preferencias Televisivas desde los Perfiles de Redes Sociales" ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> ;
+	:academicsReferenceId "2133155002"^^xsd:integer , "2166390741"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/554144382> ;
+	<http://purl.org/dc/terms/created> "2014-08-30T19:00:00.000-05:00"^^xsd:dateTime ;
+	:academicsReferenceId "1969562898"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "televisivas" ;
+	<http://purl.org/ontology/bibo/abstract> "Resumen: El objetivo final de un sistema de recomendacion es satisfacer las necesidades de informacion de un usuario. En el caso de la TV digital los sistemas de recomendacion han mostrado ser una excelente alternativa para hacer frente a la sobrecarga de informacion y sugerir la seleccion de los programas mas interesantes para ver. Sin embargo, para que esto ocurra se requiere que estos sistemas consideren en su diseno los intereses y preferencias del usuario. Con el fin de proporcionar un enfoque mas robusto para la modelacion del perfil de un usuario, se propone el uso de tecnologias de laWeb semantica junto con laWeb social. La idea de juntar ambos campos es convertir las declaraciones implicitas de las preferencias televisivas de un usuario en la Web social, a expresiones de la forma sujeto-predicado- objeto (conocidas en terminos semanticos como tripletes). Esta combinacion permitira anadir significado a los datos capturados con el fin de que el perfil pueda ser aprovechado de forma sencilla por una maquina. El sistema propuesto confia en un grupo de ontologias de diferentes dominios y se basa en una arquitectura generica que permite capturar manipular, y serializar el perfil de un usuario de TV digital. Abstract: The final goal of a recommender system is to satisfy the user’s information needs. In the case of digital TV, the recommender systems have proven to be an excellent alternative to address the information overload and facilitate the selection of the most interesting programs to watch. However, for this to occur it is required that these systems consider at their design the user interests and preferences. In order to provide a more robust approach for modeling the user profile, we propose the use of the Semantic Web technologies together with the Social Web. The idea of merge both fields is to convert the implicit declarations of the user’s television preferences on the social Web, to expressions of the shape: subject-predicate-object (known in semantic terms as triplets). This combination will add meaning to the captured data so that the profile can easily be exploited by a machine. The proposed system relies on a set of ontologies for different domains and a generic architecture to capture, manipulate, and serialize the profile of a digital TV user." ;
+	:academicsReferenceId "2102775690"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "desde" ;
+	:academicsReferenceId "2165623208"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic> "sociales" .
+
+<https://academic.microsoft.com/#/detail/2067413869> :academicsReferenceId "1999452875"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/136764020> ;
+	:academicsReferenceId "1967686486"^^xsd:integer ;
+	:estimatedCitationCount "4"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/511149849> , <https://academic.microsoft.com/#/detail/23123220> ;
+	:academicsReferenceId "1972482772"^^xsd:integer ;
+	<http://purl.org/dc/terms/language> "en" ;
+	<http://xmlns.com/foaf/0.1/topic> "program" ;
+	:year "2014" ;
+	:academicsReferenceId "2137542411"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/166423231> ;
+	<http://xmlns.com/foaf/0.1/topic> "external" ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> ;
+	<http://purl.org/ontology/bibo/doi> "10.1109/CLEI.2014.6965173" ;
+	:academicsReferenceId "2123758055"^^xsd:integer , "2101397084"^^xsd:integer ;
+	<http://purl.org/ontology/bibo/pageEnd> "8" ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/1665431955> ;
+	<http://xmlns.com/foaf/0.1/topic> "technologies" ;
+	:citationCount "4"^^xsd:integer ;
+	:academicsReferenceId "2054890044"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/534406577> , <https://academic.microsoft.com/#/detail/544335954> ;
+	:displayName "Enriching Electronic Program Guides using semantic technologies and external resources" ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/2129575> ;
+	:academicsReferenceId "2100261339"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/148792806> , <https://academic.microsoft.com/#/detail/162005631> ;
+	:academicsId "2067413869"^^xsd:integer ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/103692084> ;
+	<http://purl.org/ontology/bibo/pageStart> "1" ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/77088390> ;
+	<http://xmlns.com/foaf/0.1/topic> "semantic" , "guides" ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/167379230> ;
+	<http://xmlns.com/foaf/0.1/topic> "electronic" ;
+	<http://purl.org/dc/terms/title> "enriching electronic program guides using semantic technologies and external resources" ;
+	<http://purl.org/dc/terms/created> "2014-08-31T19:00:00.000-05:00"^^xsd:dateTime ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2165184860> ;
+	:academicsReferenceId "2137079713"^^xsd:integer ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2714043441> ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/71695816> ;
+	<http://xmlns.com/foaf/0.1/topic> "enriching" ;
+	<http://xmlns.com/foaf/0.1/topic_interest> <https://academic.microsoft.com/#/detail/41008148> ;
+	<http://xmlns.com/foaf/0.1/topic> "resources" ;
+	<http://purl.org/dc/terms/contributor> <https://academic.microsoft.com/#/detail/2551097457> ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
+
+<https://academic.microsoft.com/#/detail/2165184860> <http://xmlns.com/foaf/0.1/name> "humberto alban" ;
+	a <http://xmlns.com/foaf/0.1/Person> ;
+	:position "4"^^xsd:integer ;
+	:affiliationName "university of cuenca" ;
+	:affiliationId "189914110"^^xsd:integer ;
+	:academicsId "2165184860"^^xsd:integer ;
+	<http://purl.org/dc/terms/provenance> :AcademicsKnowledgeProvider .
