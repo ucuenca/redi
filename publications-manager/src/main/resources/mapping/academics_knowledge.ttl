@@ -1,19 +1,149 @@
 @prefix r2r: <http://www4.wiwiss.fu-berlin.de/bizer/r2r/> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-
 @prefix uc: <http://ucuenca.edu.ec/ontology#> .  
 
 uc:mapColl1 a r2r:MappingCollection;
-    r2r:prefixDefinitions "foaf: <http://xmlns.com/foaf/0.1/> uc: <http://ucuenca.edu.ec/ontology#>" .
+    r2r:prefixDefinitions " foaf: <http://xmlns.com/foaf/0.1/> . uc: <http://ucuenca.edu.ec/ontology#> . redi: <http://redi.cedia.edu.ec/resource/> . schema: <http://schema.org/> . bibo: <http://purl.org/ontology/bibo/> . dct: <http://purl.org/dc/terms/> . nature: <http://ns.nature.com/terms/> ." .
 
-uc:name a r2r:Mapping ;
-    r2r:partOfMappingCollection uc:mapColl1 ;
-    r2r:targetPattern "?SUBJ foaf:name ?name" ;
-    r2r:sourcePattern "?SUBJ foaf:name ?name" .
+# AUTHOR INFORMATION
 
-uc:aff a r2r:Mapping ; 
+uc:authorType a r2r:Mapping ; 
     r2r:partOfMappingCollection uc:mapColl1 ;
-    r2r:targetPattern "?SUBJ uc:affiliationName ?aff";
-    r2r:sourcePattern "?SUBJ uc:affiliationName ?aff" .
+    r2r:sourcePattern "?SUBJ a foaf:Person" ;
+    r2r:targetPattern "?SUBJ a foaf:Person" ;
+    r2r:targetPattern "?SUBJ dct:provenance uc:AcademicsKnowledgeProvider" .
+
+uc:authorSearch a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ owl:oneOf ?search" ;
+    r2r:targetPattern "?SUBJ owl:oneOf ?search" .
+
+uc:authorName a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:authorType ;
+    r2r:sourcePattern "?SUBJ foaf:name ?name" ;
+    r2r:targetPattern "?SUBJ foaf:name ?name" .
+
+uc:authorAcademicsID a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:authorType ;
+    r2r:sourcePattern "?SUBJ uc:academicsId ?id. ?SUBJ a foaf:Person" ;
+    r2r:transformation "?academicsAccount=concat('https://academic.microsoft.com/#/detail/', replaceAll(' ', '', ?id))" ;
+    r2r:targetPattern "?SUBJ foaf:holdsAccount ?<academicsAccount>" ;
+    r2r:targetPattern "?academicsAccount a foaf:OnlineAccount" .
+
+uc:authorCitationCount a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:authorType ;
+    r2r:sourcePattern "?SUBJ uc:citationCount ?total " ;
+    r2r:targetPattern "?SUBJ uc:citationCount ?total" .
+
+uc:authorAffiliation a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:authorType ;
+    r2r:sourcePattern "?SUBJ uc:affiliationId ?affId; uc:affiliationName ?affName." ;
+    r2r:transformation "?affIRI=concat('https://academic.microsoft.com/#/detail/', replaceAll(' ', '', ?affId))" ;
+    r2r:targetPattern "?SUBJ schema:memberOf ?<affIRI>" ;
+    r2r:targetPattern "?affIRI a foaf:Organization" ;
+    r2r:targetPattern "?affIRI foaf:name ?'affName'^^xsd:string" ;
+    r2r:targetPattern "?affIRI uc:academicsID ?affId" .
+
+uc:authorPublications a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:authorType ;
+    r2r:sourcePattern "?SUBJ foaf:publications ?publication" ;
+    r2r:targetPattern "?SUBJ foaf:publications ?publication" .
+
+# PUBLICATION INFORMATION
+
+uc:publicationType a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ a bibo:AcademicArticle" ;
+    r2r:targetPattern "?SUBJ a bibo:AcademicArticle" ;
+    r2r:targetPattern "?SUBJ dct:provenance uc:AcademicsKnowledgeProvider" .
+
+uc:publicationTitle a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:publicationType ;
+    r2r:sourcePattern "?SUBJ dct:title ?name; uc:displayName ?dname" ;
+    r2r:targetPattern "?SUBJ dct:title ?'title'^^xsd:string" ;
+    r2r:transformation "?title=[replaceAll(' ', '', ?dname) != '' ? ?dname : ?name]" .
+
+uc:publicationLanguage a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:publicationType ;
+    r2r:sourcePattern "?SUBJ dct:language ?lang" ;
+    r2r:targetPattern "?SUBJ dct:language ?'lang'^^xsd:string" .
+
+uc:publicationDates a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:publicationType ;
+    r2r:sourcePattern "?SUBJ uc:year ?year; dct:created ?created; bibo:issue ?issue" ;
+    r2r:targetPattern "?SUBJ nature:coverDate ?'year'^^xsd:integer" ;
+    r2r:targetPattern "?SUBJ bibo:created ?'created'^^xsd:dateTime" ;
+    r2r:targetPattern "?SUBJ bibo:issue ?'issue'^^xsd:integer" .
+
+uc:publicationCitationCount a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:publicationType ;
+    r2r:sourcePattern "?SUBJ uc:citationCount ?count" ;
+    r2r:targetPattern "?SUBJ uc:citationCount ?'count'^^xsd:integer" .
+
+uc:publicationConference a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:publicationType ;
+    r2r:sourcePattern "?SUBJ uc:conferenceId ?id; uc:venueFullName ?name; uc:conferenceName ?altName; uc:venueShortName ?shortName" ;
+    r2r:transformation "?confIRI=concat('https://academic.microsoft.com/#/detail/', replaceAll(' ', '', ?id))" ;
+    r2r:targetPattern "?SUBJ dct:isPartOf ?<confIRI>" ;
+    r2r:targetPattern "?confIRI a bibo:Conference" ;
+    r2r:targetPattern "?confIRI rdfs:label ?name" ;
+    r2r:targetPattern "?confIRI uc:academicsId ?id" .
+
+uc:publicationAbstract a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:publicationType ;
+    r2r:sourcePattern "?SUBJ bibo:abstract ?abstract" ;
+    r2r:targetPattern "?SUBJ bibo:abstract ?'abstract'^^xsd:string" .
+
+uc:publicationInfo a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:publicationType ;
+    r2r:sourcePattern "?SUBJ bibo:doi ?doi; bibo:pageStart ?start; bibo:pageEnd ?end; bibo:volume ?volume" ;
+    r2r:targetPattern "?SUBJ bibo:doi ?'doi'^^xsd:string" ;
+    r2r:targetPattern "?SUBJ bibo:pageStart ?'start'^^xsd:integer" ;
+    r2r:targetPattern "?SUBJ bibo:pageEnd ?'end'^^xsd:integer" ;
+    r2r:targetPattern "?SUBJ bibo:volume ?'volume'^^xsd:integer" .
+
+uc:publicationLinks a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:publicationType ;
+    r2r:sourcePattern "?SUBJ bibo:uri ?uri" ;
+    r2r:targetPattern "?SUBJ bibo:uri ?uri" .
+
+uc:publicationQuotes a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:publicationType ;
+    r2r:sourcePattern "?SUBJ foaf:topic ?topic" ;
+    r2r:transformation "?topicIRI=concat('http://redi.cedia.edu.ec/resource/quote/', replaceAll(' ', '-', ?topic))" ;
+    r2r:targetPattern "?SUBJ bibo:quote ?<topicIRI>" ;
+    r2r:targetPattern "?topicIRI rdfs:label ?'topic'^^xsd:string" .
+
+uc:publicationCites a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:publicationType ;
+    r2r:sourcePattern "?SUBJ uc:academicsReferenceId ?citeId" ;
+    r2r:transformation "?citeIRI=concat('https://academic.microsoft.com/#/detail/', replaceAll(' ', '', ?citeId))" ;
+    r2r:targetPattern "?SUBJ bibo:cites ?<citeIRI>" ;
+    r2r:targetPattern "?citeIRI a bibo:AcademicArticle" .
+
+uc:publicationTopics a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:publicationType ;
+    r2r:sourcePattern "?SUBJ foaf:topic_interest ?topicIRI. ?topicIRI rdfs:label ?name" ;
+    r2r:targetPattern "?SUBJ foaf:topic_interest ?topicIRI" ;
+    r2r:targetPattern "?topicIRI rdfs:label ?name" .
+
+uc:publicationContributor a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:publicationType ;
+    r2r:sourcePattern "?SUBJ dct:contributor ?contributor" ;
+    r2r:targetPattern "?SUBJ dct:contributor ?contributor" .

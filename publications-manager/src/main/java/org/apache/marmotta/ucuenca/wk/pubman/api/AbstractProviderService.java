@@ -34,6 +34,7 @@ import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.pubman.exceptions.QuotaLimitException;
+import org.apache.marmotta.ucuenca.wk.pubman.utils.OntologyMapper;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
 import org.openrdf.model.Model;
 import org.openrdf.model.Resource;
@@ -144,9 +145,10 @@ public abstract class AbstractProviderService implements ProviderService {
                         sparqlFunctionsService.executeInsert(getProviderGraph(), reqResource.replace(" ", ""), OWL.ONE_OF, authorResource);
                         RepositoryConnection connection = sesameService.getConnection();
                         try {
+                            // store triples with new vocabulary of central graph
                             Model data = response.getData();
-//                            data = OntologyMapper.map(data, getMappingPathFile(), getVocabulary());
-                            log.info("Writing {} triples in context {} for request '{}'.", data.size(), getProviderGraph(), reqResource);
+                            data = OntologyMapper.map(data, getMappingPathFile(), getVocabularyMapper());
+                            log.info("After ontology mapper: writing {} triples in context {} for request '{}'.", data.size(), getProviderGraph(), reqResource);
                             Resource providerContext = connection.getValueFactory().createURI(getProviderGraph());
                             connection.add(data, providerContext);
                         } finally {
@@ -184,8 +186,39 @@ public abstract class AbstractProviderService implements ProviderService {
         return this.getClass().getResourceAsStream(resource);
     }
 
-    protected String getVocabulary() {
-        return "";
+    protected String getVocabularyMapper() {
+        return "@prefix foaf: <http://xmlns.com/foaf/0.1/> ."
+                + "@prefix uc: <http://ucuenca.edu.ec/ontology#> ."
+                + "@prefix schema: <http://schema.org/> ."
+                + "@prefix bibo: <http://purl.org/ontology/bibo/> ."
+                + "@prefix dct: <http://purl.org/dc/terms/> ."
+                + "@prefix nature: <http://ns.nature.com/terms/> ."
+                + "("
+                + " rdf:type,"
+                + " foaf:holdsAccount,"
+                + " uc:citationCount,"
+                + " schema:memberOf,"
+                + " uc:academicsID,"
+                + " dct:title,"
+                + " dct:language,"
+                + " nature:coverDate,"
+                + " bibo:created,"
+                + " bibo:issue,"
+                + " dct:isPartOf,"
+                + " bibo:abstract,"
+                + " bibo:doi,"
+                + " bibo:pageStart,"
+                + " bibo:pageEnd,"
+                + " bibo:volume,"
+                + " bibo:uri,"
+                + " bibo:quote,"
+                + " bibo:cites,"
+                + " foaf:topic_interest,"
+                + " dct:contributor,"
+                + " foaf:publications,"
+                + " dct:provenance,"
+                + " owl:oneOf"
+                + ")";
     }
 
     /**

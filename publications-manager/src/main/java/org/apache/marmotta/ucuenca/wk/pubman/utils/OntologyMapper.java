@@ -43,10 +43,11 @@ public class OntologyMapper {
         Repository tempRepository = new Repository(new InputStreamSource(inputMapping, ""));
 
         Mapper.transform(in, out, tempRepository, vocabulary);
+        Model sesameOut = new LinkedHashModel(JenaSesameUtils.asSesameGraph(jenaModelOut));
         try {
             out.close();
         } catch (IOException ex) {
         }
-        return new LinkedHashModel(JenaSesameUtils.asSesameGraph(jenaModelIn));
+        return sesameOut;
     }
 }
