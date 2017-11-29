@@ -43,9 +43,9 @@ public class OntologyMapper {
     /**
      * Maps a sesame model using a file using the R2R Mapping Language.
      *
-     * @param model contains triples to be mapped
+     * @param model        contains triples to be mapped
      * @param inputMapping file written using the R2R Mapping Language.
-     * @param vocabulary see which vocabularies to include in the
+     * @param vocabulary   see which vocabularies to include in the
      * <a href="http://wifo5-03.informatik.uni-mannheim.de/bizer/r2r/spec/#targetvocabulary">specification</a>.
      * @return
      */

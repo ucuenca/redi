@@ -48,7 +48,8 @@ import org.semarglproject.vocab.RDFS;
 import org.slf4j.Logger;
 
 /**
- * Default Implementation of {@link ProviderService}
+ * Default Implementation of {@link ProviderService}. Each provider
+ * implementation extends this class.
  *
  * @author Xavier Sumba
  */
@@ -85,8 +86,8 @@ public abstract class AbstractProviderService implements ProviderService {
     protected abstract List<String> buildURLs(String firstname, String lastname);
 
     /**
-     * Graph of provider to store the return RDF from {@link LDClient}.
-     *
+     * Provider's graph to store triples using {@link LDClient}.
+     * <p>
      * For example: http://redi.cedia.edu.ec/context/provider/DummyProvider
      *
      * @return
@@ -94,7 +95,7 @@ public abstract class AbstractProviderService implements ProviderService {
     protected abstract String getProviderGraph();
 
     /**
-     * Name of the provider.
+     * Name of the provider being used.
      *
      * @return
      */
@@ -191,9 +192,13 @@ public abstract class AbstractProviderService implements ProviderService {
     }
 
     /**
-     * Returns the target vocabulary to map using the {@see InputStream} returned by {@see #getMappingPathFile}. 
-     * The vocabulary returned is specified in the target properties of the mapping file, 
-     * <a href="http://wifo5-03.informatik.uni-mannheim.de/bizer/r2r/spec/#targetvocabulary">see the specification</a>.
+     * Returns the target vocabulary to map using the {@link InputStream}
+     * returned by {@link #getMappingPathFile}. The vocabulary returned is
+     * specified in the target properties of the mapping file,
+     * <a href="http://wifo5-03.informatik.uni-mannheim.de/bizer/r2r/spec/#targetvocabulary">see
+     * the specification</a>.
+     *
+     * @see #getMappingPathFile
      * @return
      */
     protected String getVocabularyMapper() {
@@ -238,7 +243,7 @@ public abstract class AbstractProviderService implements ProviderService {
      *
      * @param actual
      * @param total
-     * @param name of the provider.
+     * @param name   of the provider.
      */
     private void printprogress(int actual, int total, String name) {
         int processpercent = actual * 100 / total;
