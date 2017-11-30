@@ -1,0 +1,47 @@
+@prefix foaf: <http://xmlns.com/foaf/0.1/> . 
+@prefix owl: <http://www.w3.org/2002/07/owl#> . 
+@prefix schema: <http://schema.org/> .
+@prefix scoro: <http://purl.org/spar/scoro/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix bibo: <ttp://purl.org/ontology/bibo/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix nature: <http://ns.nature.com/terms/> .
+@prefix uc: <http://ucuenca.edu.ec/ontology#> .
+
+foaf:Person+(foaf:Person, foaf:name, foaf:givenName, foaf:familyName, schema:memberOf, owl:sameAs, scoro:hasORCID, foaf:homepage, foaf:publications)
+(owl:oneOf)
+bibo:AcademicArticle+(bibo:AcademicArticle, dct:title, dct:isPartOf, bibo:uri, bibo:doi, bibo:pages, bibo:created, bibo:isbn, dct:publisher, bibo:volume, bibo:issue)
+foaf:Organization+(foaf:Organization, foaf:name)
+bibo:Proceedings+(bibo:Proceedings, rdfs:label)
+bibo:Journal+(bibo:Journal, rdfs:label)
+bibo:Thesis+(bibo:Thesis, rdfs:label)
+bibo:Collection+(bibo:Collection, rdfs:label)
+
+                (
+                 rdf:type,
+                 foaf:holdsAccount,
+                 uc:citationCount,
+                 schema:memberOf,
+                 uc:academicsId,
+                 dct:title,
+                 dct:language,
+                 nature:coverDate,
+                 bibo:created,
+                 bibo:issue,
+                 dct:isPartOf,
+                 bibo:abstract,
+                 bibo:doi,
+                 bibo:pageStart,
+                 bibo:pageEnd,
+                 bibo:volume,
+                 bibo:uri,
+                 bibo:quote,
+                 bibo:cites,
+                 foaf:topic_interest,
+                 dct:contributor,
+                 foaf:publications,
+                 dct:provenance,
+                 owl:oneOf,
+                 rdfs:label,
+                 foaf:name
+                )

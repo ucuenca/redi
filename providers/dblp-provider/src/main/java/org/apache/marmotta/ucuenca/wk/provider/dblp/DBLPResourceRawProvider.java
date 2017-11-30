@@ -36,7 +36,11 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.marmotta.ldclient.model.ClientConfiguration;
+import org.apache.marmotta.ldclient.model.ClientResponse;
+import org.apache.marmotta.ldclient.services.ldclient.LDClient;
 import org.apache.marmotta.ucuenca.wk.commons.function.Delay;
+import static org.apache.marmotta.ucuenca.wk.provider.dblp.DBLPAuthorRawProvider.dblpNamespaces;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
@@ -101,6 +105,8 @@ public class DBLPResourceRawProvider extends AbstractHttpProvider {
         log.debug("Request {0} succesful", requestUrl);
         RDFFormat format = RDFFormat.forMIMEType(contentType);
         try {
+            ClientConfiguration conf = new ClientConfiguration();
+            LDClient ldClient = new LDClient(conf);
             ValueFactory factory = ValueFactoryImpl.getInstance();
             ModelCommons.add(triples, input, resource, format);
             /*ValueFactory factory = ValueFactoryImpl.getInstance();
@@ -109,9 +115,11 @@ public class DBLPResourceRawProvider extends AbstractHttpProvider {
             //Optional Add coauthors names
             try {
                 Model unmodifiable = triples.unmodifiable();
-                Model coauthors = unmodifiable.filter(null, factory.createURI(DBLPAuthorRawProvider.dblpNamespaces.get("dblp") + "authoredBy"), null);
+                Model coauthors = unmodifiable.filter(null, factory.createURI(DBLPAuthorRawProvider.dblpNamespaces.get(DBLP) + "authoredBy"), null);
                 Set<Value> coauthorsList = coauthors.objects();
-                ConcurrentHashMap<String, String> ls = new ConcurrentHashMap();
+                ConcurrentHashMap<String, String> lfn = new ConcurrentHashMap();
+                ConcurrentHashMap<String, String> lln = new ConcurrentHashMap();
+                ConcurrentHashMap<String, String> lffn = new ConcurrentHashMap();
                 if (!coauthorsList.isEmpty()) {
                     for (Value coauthorURI : coauthorsList) {
                         String coauthorURIS = ((Resource) coauthorURI).stringValue();
@@ -119,12 +127,39 @@ public class DBLPResourceRawProvider extends AbstractHttpProvider {
                         String[] decodedName = extractNameDBLP(codedName);
                         String lastName = decodedName[0];
                         String firstName = decodedName[1];
-                        ls.put(coauthorURI.stringValue(), lastName + ", " + firstName);
+                        lfn.put(coauthorURI.stringValue(), firstName);
+                        lln.put(coauthorURI.stringValue(), lastName);
+                        lffn.put(coauthorURI.stringValue(), lastName + "," + firstName);
                     }
                 }
-                for (Entry<String, String> en : ls.entrySet()) {
-                    triples.add(factory.createURI(en.getKey()), factory.createURI(DBLPAuthorRawProvider.dblpNamespaces.get("dblp") + "otherFullPersonName"), factory.createLiteral(en.getValue()));
+                for (Entry<String, String> en : lfn.entrySet()) {
+                    triples.add(factory.createURI(en.getKey()), factory.createURI(DBLPAuthorRawProvider.dblpNamespaces.get(DBLP) + "firstName"), factory.createLiteral(en.getValue()));
                 }
+                for (Entry<String, String> en : lln.entrySet()) {
+                    triples.add(factory.createURI(en.getKey()), factory.createURI(DBLPAuthorRawProvider.dblpNamespaces.get(DBLP) + "lastName"), factory.createLiteral(en.getValue()));
+                }
+                for (Entry<String, String> en : lffn.entrySet()) {
+                    triples.add(factory.createURI(en.getKey()), factory.createURI(DBLPAuthorRawProvider.dblpNamespaces.get(DBLP) + "otherFullPersonName"), factory.createLiteral(en.getValue()));
+                }
+                Model superpublication = unmodifiable.filter(null, factory.createURI(dblpNamespaces.get(DBLP) + "publishedAsPartOf"), null);
+                Set<Value> pubList = superpublication.objects();
+                if (!pubList.isEmpty()) {
+                    Model resourceModel = null;
+                    for (Value superp : pubList) {
+                        String supURI = ((Resource) superp).stringValue();
+                        if (supURI.compareTo(resource) != 0) {
+                            ClientResponse response = DBLPAuthorRawProvider.retryLDClient(ldClient, supURI, 2, 60);
+                            Model rsModel = response.getData();
+                            if (resourceModel == null) {
+                                resourceModel = rsModel;
+                            } else {
+                                resourceModel.addAll(rsModel);
+                            }
+                        }
+                    }
+                    triples.addAll(resourceModel);
+                }
+
             } catch (Exception oi) {
                 log.debug(oi.toString());
             }
@@ -135,6 +170,7 @@ public class DBLPResourceRawProvider extends AbstractHttpProvider {
         }
         return Collections.emptyList();
     }
+    private static final String DBLP = "dblp";
 
     private String[] extractNameDBLP(String name) {
         String[] result = name.split(":");
@@ -144,7 +180,7 @@ public class DBLPResourceRawProvider extends AbstractHttpProvider {
     }
 
     private String unEscapeHTML4(String name) {
-        char eq='=';
+        char eq = '=';
         String finalResult = "";
         boolean betweenEqs = false;
         String partialText = "";
@@ -157,7 +193,7 @@ public class DBLPResourceRawProvider extends AbstractHttpProvider {
                 } else {
                     String unescapeText = partialText.replaceAll("\\=([^=:]{1,})\\=", "&$1;");
                     String escapeText = StringEscapeUtils.unescapeHtml4(unescapeText);
-                    if (!escapeText.equals(unescapeText) ) {
+                    if (!escapeText.equals(unescapeText)) {
                         finalResult += escapeText;
                         betweenEqs = false;
                         partialText = "";

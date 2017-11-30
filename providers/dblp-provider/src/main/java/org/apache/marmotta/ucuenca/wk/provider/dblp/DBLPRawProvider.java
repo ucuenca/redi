@@ -18,7 +18,6 @@
 package org.apache.marmotta.ucuenca.wk.provider.dblp;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.marmotta.commons.vocabulary.FOAF;
 
 import com.google.common.base.Preconditions;
 
@@ -50,6 +49,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.marmotta.ucuenca.wk.commons.function.Delay;
 import org.apache.marmotta.ucuenca.wk.commons.function.URLUtils;
+import org.openrdf.model.vocabulary.OWL;
 
 /**
  * Support DBLP Author information as RDF
@@ -126,7 +126,7 @@ public class DBLPRawProvider extends AbstractHttpProvider {
                 String candidate = element.getText();
                 candidate = candidate.replaceFirst("pid", "rec/pid");
                 candidate = URLUtils.getFinalURL(candidate, 0);
-                triples.add(factory.createStatement(factory.createURI(resource), FOAF.member, factory.createURI(candidate)));
+                triples.add(factory.createStatement(factory.createURI(candidate) , OWL.ONEOF,factory.createURI(resource) ));
                 candidates.add(candidate);
             }
             ClientConfiguration conf = new ClientConfiguration();

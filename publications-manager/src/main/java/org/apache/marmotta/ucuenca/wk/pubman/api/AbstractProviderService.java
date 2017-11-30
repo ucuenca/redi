@@ -17,6 +17,7 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.api;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import javax.inject.Inject;
+import org.apache.commons.io.IOUtils;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
 import org.apache.marmotta.ldclient.model.ClientConfiguration;
 import org.apache.marmotta.ldclient.model.ClientResponse;
@@ -155,6 +157,7 @@ public abstract class AbstractProviderService implements ProviderService {
                             log.info("After ontology mapper: writing {} triples in context {} for request '{}'.", data.size(), getProviderGraph(), reqResource);
                             Resource providerContext = connection.getValueFactory().createURI(getProviderGraph());
                             connection.add(data, providerContext);
+                        } catch (IOException ex) {
                         } finally {
                             connection.close();
                         }
@@ -205,41 +208,10 @@ public abstract class AbstractProviderService implements ProviderService {
         return this.getClass().getResourceAsStream(resource);
     }
 
-    protected String getVocabularyMapper() {
-        return "@prefix foaf: <http://xmlns.com/foaf/0.1/> ."
-                + "@prefix uc: <http://ucuenca.edu.ec/ontology#> ."
-                + "@prefix schema: <http://schema.org/> ."
-                + "@prefix bibo: <http://purl.org/ontology/bibo/> ."
-                + "@prefix dct: <http://purl.org/dc/terms/> ."
-                + "@prefix nature: <http://ns.nature.com/terms/> ."
-                + "("
-                + " rdf:type,"
-                + " foaf:holdsAccount,"
-                + " uc:citationCount,"
-                + " schema:memberOf,"
-                + " uc:academicsId,"
-                + " dct:title,"
-                + " dct:language,"
-                + " nature:coverDate,"
-                + " bibo:created,"
-                + " bibo:issue,"
-                + " dct:isPartOf,"
-                + " bibo:abstract,"
-                + " bibo:doi,"
-                + " bibo:pageStart,"
-                + " bibo:pageEnd,"
-                + " bibo:volume,"
-                + " bibo:uri,"
-                + " bibo:quote,"
-                + " bibo:cites,"
-                + " foaf:topic_interest,"
-                + " dct:contributor,"
-                + " foaf:publications,"
-                + " dct:provenance,"
-                + " owl:oneOf,"
-                + " rdfs:label,"
-                + " foaf:name"
-                + ")";
+    protected String getVocabularyMapper() throws IOException {
+        InputStream resourceAsStream = this.getClass().getResourceAsStream("/mapping/redi.ttl");
+        String toString = IOUtils.toString(resourceAsStream);
+        return toString;
     }
 
     /**
