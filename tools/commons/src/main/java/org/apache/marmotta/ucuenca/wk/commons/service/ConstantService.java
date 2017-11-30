@@ -130,4 +130,5 @@ public interface ConstantService {
      * @return 
      */
     String getLatindexJournalsGraph();
+    String getEndpointBaseEvent();
 }

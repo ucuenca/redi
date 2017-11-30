@@ -17,11 +17,15 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.api;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import javax.inject.Inject;
+import org.apache.commons.io.IOUtils;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
 import org.apache.marmotta.ldclient.model.ClientConfiguration;
 import org.apache.marmotta.ldclient.model.ClientResponse;
@@ -103,7 +107,7 @@ public abstract class AbstractProviderService implements ProviderService {
 
     @Override
     public void extractAuthors(String[] organizations) {
-        createProvider(getProviderName());
+        String providerUri = createProvider(getProviderName());
         Task task = taskManagerService.createSubTask(String.format("%s Extraction", getProviderName()), "Publication Extractor");
         task.updateMessage(String.format("Extracting publications from %s Provider", getProviderName()));
         task.updateDetailMessage("Graph", getProviderGraph());
@@ -116,12 +120,14 @@ public abstract class AbstractProviderService implements ProviderService {
             int totalAuthors = resultAllAuthors.size();
             int processedAuthors = 0;
             task.updateTotalSteps(totalAuthors);
-
+            String lastorg = "";
             for (Map<String, Value> map : resultAllAuthors) {
+
                 // Local author information.
                 String authorResource = map.get("subject").stringValue();
                 String firstName = map.get("fname").stringValue().trim().toLowerCase();
                 String lastName = map.get("lname").stringValue().trim().toLowerCase();
+                String org = map.get("organization").stringValue().trim().toLowerCase();
 
                 for (String reqResource : buildURLs(firstName, lastName)) {
                     boolean existNativeAuthor = sparqlService.ask(
@@ -152,6 +158,7 @@ public abstract class AbstractProviderService implements ProviderService {
                             log.info("After ontology mapper: writing {} triples in context {} for request '{}'.", data.size(), getProviderGraph(), reqResource);
                             Resource providerContext = connection.getValueFactory().createURI(getProviderGraph());
                             connection.add(data, providerContext);
+                        } catch (IOException ex) {
                         } finally {
                             connection.close();
                         }
@@ -164,12 +171,27 @@ public abstract class AbstractProviderService implements ProviderService {
                 processedAuthors++;
                 printprogress(processedAuthors, totalAuthors, getProviderName());
                 task.updateProgress(processedAuthors);
+                if (!lastorg.equals(org)) {
+                    if (!"".equals(lastorg)) {
+
+                        Date date = new Date();
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+                        String uriEvent = createExtractEventUri(getProviderName(), org);
+                        sparqlFunctionsService.executeInsert(getProviderGraph(), uriEvent, RDF.TYPE, REDI.EXTRACTION_EVENT.toString());
+                        sparqlFunctionsService.executeInsert(getProviderGraph(), providerUri, REDI.BELONGTO.toString(), uriEvent);
+                        sparqlFunctionsService.executeInsert(constantService.getOrganizationsGraph(), org, REDI.BELONGTO.toString(), uriEvent);
+                        sparqlFunctionsService.executeInsert(getProviderGraph(), uriEvent, REDI.EXTRACTIONDATE.toString(), dateFormat.format(date));
+
+                    }
+                    lastorg = org;
+                }
             }
         } catch (MarmottaException me) {
             log.error("Cannot query.", me);
         } catch (RepositoryException re) {
             log.error("Cannot store data retrieved.", re);
         } finally {
+
             taskManagerService.endTask(task);
         }
     }
@@ -201,28 +223,10 @@ public abstract class AbstractProviderService implements ProviderService {
      * @see #getMappingPathFile
      * @return
      */
-    protected String getVocabularyMapper() {
-        return "@prefix foaf: <http://xmlns.com/foaf/0.1/>."
-                + "@prefix uc: <http://ucuenca.edu.ec/ontology#>."
-                + "@prefix schema: <http://schema.org/>."
-                + "@prefix bibo: <http://purl.org/ontology/bibo/>."
-                + "@prefix dct: <http://purl.org/dc/terms/>."
-                + "@prefix nature: <http://ns.nature.com/terms/>."
-                + "@prefix scoro: <http://purl.org/spar/scoro/>."
-                + "@prefix skos: <http://www.w3.org/2004/02/skos/core#>."
-                + "("
-                + "owl:oneOf,"
-                + "skos:altLabel,"
-                + "rdf:type,"
-                + "rdfs:label,"
-                + "schema:memberOf,schema:copyrightYear,"
-                + "nature:coverDate,"
-                + "scoro:hasOrcid,scoro:hasPersonalIdentifier,"
-                + "uc:academicsId,uc:scopusId,uc:citationCount,uc:h-index,uc:citedbyCount,uc:pubmedId,"
-                + "foaf:holdsAccount,foaf:topic_interest,foaf:publications,foaf:name,foaf:givenName,foaf:familyName,"
-                + "dct:contributor,dct:creator,dct:provenance,dct:identifier,dct:language,dct:title,dct:isPartOf,dct:subject,dct:publisher," 
-                + "bibo:created,bibo:issue,bibo:abstract,bibo:doi,bibo:pageStart,bibo:pageEnd,bibo:volume,bibo:uri,bibo:quote,bibo:cites,bibo:isbn,bibo:issn,bibo:pages"
-                + ")";
+    protected String getVocabularyMapper() throws IOException {
+        InputStream resourceAsStream = this.getClass().getResourceAsStream("/mapping/redi.ttl");
+        String toString = IOUtils.toString(resourceAsStream);
+        return toString;
     }
 
     /**
@@ -259,6 +263,13 @@ public abstract class AbstractProviderService implements ProviderService {
             java.util.logging.Logger.getLogger(AbstractProviderService.class.getName()).log(Level.SEVERE, null, ex);
             return "";
         }
+    }
+
+    private String createExtractEventUri(String providerName, String org) {
+        String orgName = org.substring(org.lastIndexOf("/") + 1);
+
+        return constantService.getEndpointBaseEvent() + providerName + "_" + orgName;
+
     }
 
 }

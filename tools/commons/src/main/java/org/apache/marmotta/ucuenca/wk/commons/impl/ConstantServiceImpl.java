@@ -151,6 +151,11 @@ public class ConstantServiceImpl implements ConstantService {
     public String getEndpointBaseUri() {
         return getBaseResource() + "endpoint/";
     }
+    
+    @Override
+    public String getEndpointBaseEvent() {
+        return getBaseResource() + "event/";
+    }
 
     @Override
     public String getPubProperty() {
