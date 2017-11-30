@@ -17,6 +17,7 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.utils;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import static org.junit.Assert.assertEquals;
@@ -37,60 +38,68 @@ import org.slf4j.LoggerFactory;
 public class OntologyMapperTest {
 
     private final String vocabulary
-            = "@prefix foaf: <http://xmlns.com/foaf/0.1/> ."
-            + "@prefix uc: <http://ucuenca.edu.ec/ontology#> ."
-            + "@prefix schema: <http://schema.org/> ."
-            + "@prefix bibo: <http://purl.org/ontology/bibo/> ."
-            + "@prefix dct: <http://purl.org/dc/terms/> ."
-            + "@prefix nature: <http://ns.nature.com/terms/> ."
+            = "@prefix foaf: <http://xmlns.com/foaf/0.1/>."
+            + "@prefix uc: <http://ucuenca.edu.ec/ontology#>."
+            + "@prefix schema: <http://schema.org/>."
+            + "@prefix bibo: <http://purl.org/ontology/bibo/>."
+            + "@prefix dct: <http://purl.org/dc/terms/>."
+            + "@prefix nature: <http://ns.nature.com/terms/>."
+            + "@prefix scoro: <http://purl.org/spar/scoro/>."
+            + "@prefix skos: <http://www.w3.org/2004/02/skos/core#>."
             + "("
-            + " rdf:type,"
-            + " foaf:holdsAccount,"
-            + " uc:citationCount,"
-            + " schema:memberOf,"
-            + " uc:academicsID,"
-            + " dct:title,"
-            + " dct:language,"
-            + " nature:coverDate,"
-            + " bibo:created,"
-            + " bibo:issue,"
-            + " dct:isPartOf,"
-            + " bibo:abstract,"
-            + " bibo:doi,"
-            + " bibo:pageStart,"
-            + " bibo:pageEnd,"
-            + " bibo:volume,"
-            + " bibo:uri,"
-            + " bibo:quote,"
-            + " bibo:cites,"
-            + " foaf:topic_interest,"
-            + " dct:contributor,"
-            + " foaf:publications,"
-            + " dct:provenance,"
-            + " owl:oneOf"
+            + "owl:oneOf,"
+            + "skos:altLabel,"
+            + "rdf:type,"
+            + "rdfs:label,"
+            + "schema:memberOf,schema:copyrightYear,"
+            + "nature:coverDate,"
+            + "scoro:hasOrcid,scoro:hasPersonalIdentifier,"
+            + "uc:academicsId,uc:scopusId,uc:citationCount,uc:h-index,uc:citedbyCount,uc:pubmedId,"
+            + "foaf:holdsAccount,foaf:topic_interest,foaf:publications,foaf:name,foaf:givenName,foaf:familyName,"
+            + "dct:contributor,dct:creator,dct:provenance,dct:identifier,dct:language,dct:title,dct:isPartOf,dct:subject,dct:publisher,"
+            + "bibo:created,bibo:issue,bibo:abstract,bibo:doi,bibo:pageStart,bibo:pageEnd,bibo:volume,bibo:uri,bibo:quote,bibo:cites,bibo:isbn,bibo:issn,bibo:pages"
             + ")";
     private static Model academicsKnowledgeModel;
+    private static Model scopusModel;
     private static InputStream academicsKnowledgeMapper;
+    private static InputStream scopusMapper;
+    private static InputStream emptyMapper;
     private static final Logger log = LoggerFactory.getLogger(OntologyMapperTest.class);
 
     @BeforeClass
     public static void setUpClass() {
         try {
             academicsKnowledgeModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/academics_knowledge.n3"), "", RDFFormat.N3);
+            scopusModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/scopus.n3"), "", RDFFormat.N3);
         } catch (IOException | RDFParseException | UnsupportedRDFormatException ex) {
-            log.error("cannot read file.");
+            log.error("cannot read file.", ex);
         }
         academicsKnowledgeMapper = OntologyMapper.class.getResourceAsStream("/mapping/academics_knowledge.ttl");
+        scopusMapper = OntologyMapper.class.getResourceAsStream("/mapping/scopus.ttl");
+        emptyMapper = new ByteArrayInputStream(new byte[]{});
     }
 
     /**
-     * Test of the mapping of academics knowledge Mapping.
+     * Test ontology mapping of academics knowledge vocabulary.
      */
     @Test
     public void testAcademicsKnowledgeOntologyMapping() {
-        int expSize = 1233;
-        Model result = OntologyMapper.map(academicsKnowledgeModel, academicsKnowledgeMapper, vocabulary);
-        assertEquals(result.size(), expSize);
+        assertEquals(academicsKnowledgeModel.size(), 1305);
+        Model resultWithMapperFile = OntologyMapper.map(academicsKnowledgeModel, academicsKnowledgeMapper, vocabulary);
+        Model resultEmptyMapperFile = OntologyMapper.map(academicsKnowledgeModel, emptyMapper, vocabulary);
+        assertEquals(resultWithMapperFile.size(), 1468);
+        assertEquals(resultEmptyMapperFile.size(), 0);
     }
 
+    /**
+     * Test ontology mapping of Scopus vocabulary.
+     */
+    @Test
+    public void testScopusOntologyMapping() {
+        assertEquals(scopusModel.size(), 3911);
+        Model resultWithMapperFile = OntologyMapper.map(scopusModel, scopusMapper, vocabulary);
+        Model resultEmptyMapperFile = OntologyMapper.map(scopusModel, emptyMapper, vocabulary);
+        assertEquals(resultWithMapperFile.size(), 2600);
+        assertEquals(resultEmptyMapperFile.size(), 0);
+    }
 }
