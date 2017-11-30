@@ -89,8 +89,12 @@ uc:publications a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ dblp:authorOf ?b" ;
     r2r:targetPattern "?SUBJ foaf:publications ?b";
-    r2r:targetPattern "?b dct:creator ?SUBJ " .
+    r2r:targetPattern "?b dct:contributor ?SUBJ " .
 
+uc:publicationscreator a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblp:creator ?b" ;
+    r2r:targetPattern "?SUBJ dct:creator ?b".
 
 uc:articles a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;

@@ -10,7 +10,7 @@
 
 foaf:Person+(foaf:Person, foaf:name, foaf:givenName, foaf:familyName, schema:memberOf, owl:sameAs, scoro:hasORCID, foaf:homepage, foaf:publications)
 (owl:oneOf)
-bibo:AcademicArticle+(bibo:AcademicArticle, dct:title, dct:isPartOf, bibo:uri, bibo:doi, bibo:pages, bibo:created, bibo:isbn, dct:publisher, bibo:volume, bibo:issue)
+bibo:AcademicArticle+(dct:creator, dct:contributor, bibo:AcademicArticle, dct:title, dct:isPartOf, bibo:uri, bibo:doi, bibo:pages, bibo:created, bibo:isbn, dct:publisher, bibo:volume, bibo:issue)
 foaf:Organization+(foaf:Organization, foaf:name)
 bibo:Proceedings+(bibo:Proceedings, rdfs:label)
 bibo:Journal+(bibo:Journal, rdfs:label)
