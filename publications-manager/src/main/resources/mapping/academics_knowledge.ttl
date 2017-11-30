@@ -29,6 +29,7 @@ uc:authorAcademicsID a r2r:Mapping ;
     r2r:sourcePattern "?SUBJ uc:academicsId ?id. ?SUBJ a foaf:Person" ;
     r2r:transformation "?academicsAccount=concat('https://academic.microsoft.com/#/detail/', replaceAll(' ', '', ?id))" ;
     r2r:targetPattern "?SUBJ foaf:holdsAccount ?<academicsAccount>" ;
+    r2r:targetPattern "?academicsAccount a uc:AcademicsKnowledgeAccount" ;
     r2r:targetPattern "?academicsAccount a foaf:OnlineAccount" .
 
 uc:authorCitationCount a r2r:Mapping ;
@@ -78,7 +79,7 @@ uc:publicationDates a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:classMappingRef uc:publicationType ;
     r2r:sourcePattern "?SUBJ uc:year ?year; dct:created ?created; bibo:issue ?issue" ;
-    r2r:targetPattern "?SUBJ nature:coverDate ?'year'^^xsd:integer" ;
+    r2r:targetPattern "?SUBJ schema:copyrightYear ?'year'^^xsd:integer" ;
     r2r:targetPattern "?SUBJ bibo:created ?'created'^^xsd:dateTime" ;
     r2r:targetPattern "?SUBJ bibo:issue ?'issue'^^xsd:integer" .
 
