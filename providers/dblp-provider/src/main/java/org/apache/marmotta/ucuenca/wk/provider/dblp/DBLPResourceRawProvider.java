@@ -42,6 +42,7 @@ import org.apache.marmotta.ldclient.services.ldclient.LDClient;
 import org.apache.marmotta.ucuenca.wk.commons.function.Delay;
 import static org.apache.marmotta.ucuenca.wk.provider.dblp.DBLPAuthorRawProvider.dblpNamespaces;
 import org.openrdf.model.Resource;
+import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.ValueFactoryImpl;
@@ -56,6 +57,7 @@ public class DBLPResourceRawProvider extends AbstractHttpProvider {
     public static final String NAME = "DBLP Resource Raw Provider";
     public static final String PATTERN = "(http://dblp\\.org/rec/)(.*)";
     //public static final String LEGACY_PATTERN = "(http://dblp\\.uni\\-trier\\.de/rec/)(.*)";
+    private ValueFactory factory;
 
     private static Logger log = LoggerFactory.getLogger(DBLPResourceRawProvider.class);
 
@@ -107,7 +109,7 @@ public class DBLPResourceRawProvider extends AbstractHttpProvider {
         try {
             ClientConfiguration conf = new ClientConfiguration();
             LDClient ldClient = new LDClient(conf);
-            ValueFactory factory = ValueFactoryImpl.getInstance();
+            factory = ValueFactoryImpl.getInstance();
             ModelCommons.add(triples, input, resource, format);
             /*ValueFactory factory = ValueFactoryImpl.getInstance();
 			Resource subject = triples.subjects().iterator().next();
@@ -132,6 +134,7 @@ public class DBLPResourceRawProvider extends AbstractHttpProvider {
                         lffn.put(coauthorURI.stringValue(), lastName + "," + firstName);
                     }
                 }
+                addCreator(triples);
                 for (Entry<String, String> en : lfn.entrySet()) {
                     triples.add(factory.createURI(en.getKey()), factory.createURI(DBLPAuthorRawProvider.dblpNamespaces.get(DBLP) + "firstName"), factory.createLiteral(en.getValue()));
                 }
@@ -170,6 +173,25 @@ public class DBLPResourceRawProvider extends AbstractHttpProvider {
         }
         return Collections.emptyList();
     }
+
+    private void addCreator(Model triples) {
+
+        Model unmodifiable = triples.unmodifiable();
+        Model coauthors = unmodifiable.filter(null, factory.createURI(DBLPAuthorRawProvider.dblpNamespaces.get(DBLP) + "authoredBy"), null);
+        String creator = null;
+        String document = null;
+        for (Statement one : coauthors) {
+            document = ((Resource) one.getSubject()).stringValue();
+            creator = ((Resource) one.getObject()).stringValue();
+            if (document != null && creator != null) {
+                break;
+            }
+        }
+        if (creator != null && document != null) {
+            triples.add(factory.createURI(document), factory.createURI(DBLPAuthorRawProvider.dblpNamespaces.get(DBLP) + "creator"), factory.createURI(creator));
+        }
+    }
+
     private static final String DBLP = "dblp";
 
     private String[] extractNameDBLP(String name) {
