@@ -227,7 +227,7 @@ public abstract class AbstractProviderService implements ProviderService {
      * @return
      */
     protected String getVocabularyMapper() throws IOException {
-        InputStream resourceAsStream = this.getClass().getResourceAsStream("/mapping/redi.ttl");
+        InputStream resourceAsStream = this.getClass().getResourceAsStream("/mapping/redi.r2r");
         String toString = IOUtils.toString(resourceAsStream);
         return toString;
     }
