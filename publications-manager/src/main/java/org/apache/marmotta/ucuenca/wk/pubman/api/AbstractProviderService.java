@@ -119,6 +119,7 @@ public abstract class AbstractProviderService implements ProviderService {
 
             int totalAuthors = resultAllAuthors.size();
             int processedAuthors = 0;
+            int orgAuthors = 0;
             task.updateTotalSteps(totalAuthors);
             String lastorg = "";
             for (Map<String, Value> map : resultAllAuthors) {
@@ -167,25 +168,27 @@ public abstract class AbstractProviderService implements ProviderService {
                         throw new RuntimeException(dre);
                     }
                 }
+
                 // Update statistics.
                 processedAuthors++;
                 printprogress(processedAuthors, totalAuthors, getProviderName());
                 task.updateProgress(processedAuthors);
                 if (!lastorg.equals(org)) {
                     if (!"".equals(lastorg)) {
-
-                        Date date = new Date();
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
-                        String uriEvent = createExtractEventUri(getProviderName(), org);
-                        sparqlFunctionsService.executeInsert(getProviderGraph(), uriEvent, RDF.TYPE, REDI.EXTRACTION_EVENT.toString());
-                        sparqlFunctionsService.executeInsert(getProviderGraph(), providerUri, REDI.BELONGTO.toString(), uriEvent);
-                        sparqlFunctionsService.executeInsert(constantService.getOrganizationsGraph(), org, REDI.BELONGTO.toString(), uriEvent);
-                        sparqlFunctionsService.executeInsert(getProviderGraph(), uriEvent, REDI.EXTRACTIONDATE.toString(), dateFormat.format(date));
+                        registerDate(org, providerUri);
 
                     }
                     lastorg = org;
+                    orgAuthors = 0;
+                } else {
+                    orgAuthors++;
                 }
             }
+
+            if (!resultAllAuthors.isEmpty() && orgAuthors > 0) {
+                registerDate(lastorg, providerUri);
+            }
+
         } catch (MarmottaException me) {
             log.error("Cannot query.", me);
         } catch (RepositoryException re) {
@@ -269,6 +272,17 @@ public abstract class AbstractProviderService implements ProviderService {
         String orgName = org.substring(org.lastIndexOf("/") + 1);
 
         return constantService.getEndpointBaseEvent() + providerName + "_" + orgName;
+
+    }
+
+    private void registerDate(String org, String providerUri) {
+        Date date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+        String uriEvent = createExtractEventUri(getProviderName(), org);
+        sparqlFunctionsService.executeInsert(getProviderGraph(), uriEvent, RDF.TYPE, REDI.EXTRACTION_EVENT.toString());
+        sparqlFunctionsService.executeInsert(getProviderGraph(), providerUri, REDI.BELONGTO.toString(), uriEvent);
+        sparqlFunctionsService.executeInsert(constantService.getOrganizationsGraph(), org, REDI.BELONGTO.toString(), uriEvent);
+        sparqlFunctionsService.executeInsert(getProviderGraph(), uriEvent, REDI.EXTRACTIONDATE.toString(), dateFormat.format(date));
 
     }
 
