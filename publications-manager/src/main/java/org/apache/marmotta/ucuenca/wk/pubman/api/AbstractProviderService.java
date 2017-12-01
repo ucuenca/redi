@@ -191,7 +191,6 @@ public abstract class AbstractProviderService implements ProviderService {
         } catch (RepositoryException re) {
             log.error("Cannot store data retrieved.", re);
         } finally {
-
             taskManagerService.endTask(task);
         }
     }
@@ -220,6 +219,7 @@ public abstract class AbstractProviderService implements ProviderService {
      * <a href="http://wifo5-03.informatik.uni-mannheim.de/bizer/r2r/spec/#targetvocabulary">see
      * the specification</a>.
      *
+     * @throws java.io.IOException
      * @see #getMappingPathFile
      * @return
      */

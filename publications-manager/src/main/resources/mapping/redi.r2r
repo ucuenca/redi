@@ -1,12 +1,11 @@
-@prefix foaf: <http://xmlns.com/foaf/0.1/> . 
-@prefix owl: <http://www.w3.org/2002/07/owl#> . 
-@prefix schema: <http://schema.org/> .
-@prefix scoro: <http://purl.org/spar/scoro/> .
-@prefix dct: <http://purl.org/dc/terms/> .
-@prefix bibo: <ttp://purl.org/ontology/bibo/> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix nature: <http://ns.nature.com/terms/> .
-@prefix uc: <http://ucuenca.edu.ec/ontology#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix schema: <http://schema.org/>.
+@prefix scoro: <http://purl.org/spar/scoro/>.
+@prefix dct: <http://purl.org/dc/terms/>.
+@prefix bibo: <http://purl.org/ontology/bibo/>.
+@prefix nature: <http://ns.nature.com/terms/>.
+@prefix uc: <http://ucuenca.edu.ec/ontology#>.
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
 
 foaf:Person+(foaf:Person, foaf:name, foaf:givenName, foaf:familyName, schema:memberOf, owl:sameAs, scoro:hasORCID, foaf:homepage, foaf:publications)
 (owl:oneOf)
@@ -17,31 +16,16 @@ bibo:Journal+(bibo:Journal, rdfs:label)
 bibo:Thesis+(bibo:Thesis, rdfs:label)
 bibo:Collection+(bibo:Collection, rdfs:label)
 
-                (
-                 rdf:type,
-                 foaf:holdsAccount,
-                 uc:citationCount,
-                 schema:memberOf,
-                 uc:academicsId,
-                 dct:title,
-                 dct:language,
-                 nature:coverDate,
-                 bibo:created,
-                 bibo:issue,
-                 dct:isPartOf,
-                 bibo:abstract,
-                 bibo:doi,
-                 bibo:pageStart,
-                 bibo:pageEnd,
-                 bibo:volume,
-                 bibo:uri,
-                 bibo:quote,
-                 bibo:cites,
-                 foaf:topic_interest,
-                 dct:contributor,
-                 foaf:publications,
-                 dct:provenance,
-                 owl:oneOf,
-                 rdfs:label,
-                 foaf:name
-                )
+(
+    owl:oneOf,
+    skos:altLabel,
+    rdf:type,
+    rdfs:label,
+    schema:memberOf,schema:copyrightYear,
+    nature:coverDate,
+    scoro:hasOrcid,scoro:hasPersonalIdentifier,
+    uc:academicsId,uc:scopusId,uc:citationCount,uc:h-index,uc:citedbyCount,uc:pubmedId,
+    foaf:holdsAccount,foaf:topic_interest,foaf:publications,foaf:name,foaf:givenName,foaf:familyName,
+    dct:contributor,dct:creator,dct:provenance,dct:identifier,dct:language,dct:title,dct:isPartOf,dct:subject,dct:publisher,
+    bibo:created,bibo:issue,bibo:abstract,bibo:doi,bibo:pageStart,bibo:pageEnd,bibo:volume,bibo:uri,bibo:quote,bibo:cites,bibo:isbn,bibo:issn,bibo:pages
+)
