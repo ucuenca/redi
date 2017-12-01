@@ -278,7 +278,7 @@ public abstract class AbstractProviderService implements ProviderService {
     private String createExtractEventUri(String providerName, String org) {
         String orgName = org.substring(org.lastIndexOf("/") + 1);
 
-        return constantService.getEndpointBaseEvent() + providerName + "_" + orgName;
+        return constantService.getEndpointBaseEvent() + providerName.replace(' ', '_') + "_" + orgName.replace(' ', '_');
 
     }
 
