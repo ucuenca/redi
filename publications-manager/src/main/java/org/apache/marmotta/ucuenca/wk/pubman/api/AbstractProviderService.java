@@ -105,88 +105,95 @@ public abstract class AbstractProviderService implements ProviderService {
      */
     protected abstract String getProviderName();
 
+    /**
+     * Extract authors from a particular provider.
+     *
+     * @param organizations URLs of organizations to extract authors.
+     */
     @Override
     public void extractAuthors(String[] organizations) {
         String providerUri = createProvider(getProviderName());
         Task task = taskManagerService.createSubTask(String.format("%s Extraction", getProviderName()), "Publication Extractor");
         task.updateMessage(String.format("Extracting publications from %s Provider", getProviderName()));
         task.updateDetailMessage("Graph", getProviderGraph());
-
         LDClient ldClient = new LDClient(new ClientConfiguration());
         try {
-            List<Map<String, Value>> resultAllAuthors = sparqlService.query(
-                    QueryLanguage.SPARQL, queriesService.getAuthorsDataQuery(organizations));
+            for (String organization : organizations) {
+                List<Map<String, Value>> resultAllAuthors = sparqlService.query(
+                        QueryLanguage.SPARQL, queriesService.getAuthorsDataQuery(organization));
 
-            int totalAuthors = resultAllAuthors.size();
-            int processedAuthors = 0;
-            int orgAuthors = 0;
-            task.updateTotalSteps(totalAuthors);
-            String lastorg = "";
-            for (Map<String, Value> map : resultAllAuthors) {
+                int totalAuthors = resultAllAuthors.size();
+                int processedAuthors = 0;
+                task.updateTotalSteps(totalAuthors);
+                String lastorg = "";
+                for (Map<String, Value> map : resultAllAuthors) {
 
-                // Local author information.
-                String authorResource = map.get("subject").stringValue();
-                String firstName = map.get("fname").stringValue().trim().toLowerCase();
-                String lastName = map.get("lname").stringValue().trim().toLowerCase();
-                String org = map.get("organization").stringValue().trim().toLowerCase();
+                    // Information of local author.
+                    String authorResource = map.get("subject").stringValue();
+                    String firstName = map.get("fname").stringValue().trim().toLowerCase();
+                    String lastName = map.get("lname").stringValue().trim().toLowerCase();
 
-                for (String reqResource : buildURLs(firstName, lastName)) {
-                    boolean existNativeAuthor = sparqlService.ask(
-                            QueryLanguage.SPARQL,
-                            queriesService.getAskResourceQuery(getProviderGraph(), reqResource.replace(" ", "")));
-                    if (existNativeAuthor) {
-                        continue;
-                    }
-                    try {
-                        ClientResponse response = ldClient.retrieveResource(reqResource);
-
-                        switch (response.getHttpStatus()) {
-                            // Manage only HTTP 200 responses, otherwise error. Which error? Stop or continue with next resource.
-                            case 200:
-                                break;
-                            default:
-                                log.error("Invalid request/unexpected error for '{}', skipping resource; response with HTTP {} code status.",
-                                        reqResource, response.getHttpStatus(), new QuotaLimitException());
-                                continue;
+                    for (String reqResource : buildURLs(firstName, lastName)) {
+                        boolean existNativeAuthor = sparqlService.ask(
+                                QueryLanguage.SPARQL,
+                                queriesService.getAskResourceQuery(getProviderGraph(), reqResource.replace(" ", "")));
+                        if (existNativeAuthor) {
+                            continue;
                         }
-                        // store search query.
-                        sparqlFunctionsService.executeInsert(getProviderGraph(), reqResource.replace(" ", ""), OWL.ONE_OF, authorResource);
-                        RepositoryConnection connection = sesameService.getConnection();
                         try {
-                            // store triples with new vocabulary of central graph
-                            Model data = response.getData();
-                            data = OntologyMapper.map(data, getMappingPathFile(), getVocabularyMapper());
-                            log.info("After ontology mapper: writing {} triples in context {} for request '{}'.", data.size(), getProviderGraph(), reqResource);
-                            Resource providerContext = connection.getValueFactory().createURI(getProviderGraph());
-                            connection.add(data, providerContext);
-                        } catch (IOException ex) {
-                        } finally {
-                            connection.close();
+                            ClientResponse response = ldClient.retrieveResource(reqResource);
+
+                            switch (response.getHttpStatus()) {
+                                // Manage only HTTP 200 responses, otherwise error. Which error? Stop or continue with next resource.
+                                case 200:
+                                    break;
+                                default:
+                                    log.error("Invalid request/unexpected error for '{}', skipping resource; response with HTTP {} code status.",
+                                            reqResource, response.getHttpStatus(), new QuotaLimitException());
+                                    continue;
+                            }
+                            // store search query.
+                            sparqlFunctionsService.executeInsert(getProviderGraph(), reqResource.replace(" ", ""), OWL.ONE_OF, authorResource);
+                            RepositoryConnection connection = sesameService.getConnection();
+                            try {
+                                // store triples with new vocabulary
+                                Model data = response.getData();
+                                data = OntologyMapper.map(data, getMappingPathFile(), getVocabularyMapper());
+                                log.info("After ontology mapper: writing {} triples in context {} for request '{}'.", data.size(), getProviderGraph(), reqResource);
+                                Resource providerContext = connection.getValueFactory().createURI(getProviderGraph());
+                                connection.add(data, providerContext);
+                            } catch (IOException ex) {
+                                log.error("cannot store data", ex);
+                            } finally {
+                                connection.close();
+                            }
+                        } catch (DataRetrievalException dre) {
+                            log.error("Cannot retieve RDF for the given resource: '{}'", reqResource, dre);
+                            throw new RuntimeException(dre);
                         }
-                    } catch (DataRetrievalException dre) {
-                        log.error("Cannot retieve RDF for the given resource: '{}'", reqResource, dre);
-                        throw new RuntimeException(dre);
+                    }
+
+                    // Update statistics.
+                    processedAuthors++;
+                    printprogress(processedAuthors, totalAuthors, getProviderName(), organization);
+                    task.updateProgress(processedAuthors);
+
+                    // Update date of execution
+                    if (!lastorg.equals(organization)) {
+                        if (!"".equals(lastorg)) {
+                            registerDate(organization, providerUri);
+
+                        }
+                        lastorg = organization;
+                        processedAuthors = 0;
+                    } else {
+                        processedAuthors++;
                     }
                 }
 
-                // Update statistics.
-                processedAuthors++;
-                printprogress(processedAuthors, totalAuthors, getProviderName());
-                task.updateProgress(processedAuthors);
-                if (!lastorg.equals(org)) {
-                    if (!"".equals(lastorg)) {
-                        registerDate(org, providerUri);
-
-                    }
-                    lastorg = org;
-                    orgAuthors = 0;
-                } else {
-                    orgAuthors++;
+                if (!resultAllAuthors.isEmpty() && processedAuthors > 0) {
+                    registerDate(lastorg, providerUri);
                 }
-            }
-
-            if (!resultAllAuthors.isEmpty() && orgAuthors > 0) {
-                registerDate(lastorg, providerUri);
             }
 
         } catch (MarmottaException me) {
@@ -227,7 +234,7 @@ public abstract class AbstractProviderService implements ProviderService {
      * @return
      */
     protected String getVocabularyMapper() throws IOException {
-        InputStream resourceAsStream = this.getClass().getResourceAsStream("/mapping/redi.ttl");
+        InputStream resourceAsStream = this.getClass().getResourceAsStream("/mapping/redi.r2r");
         String toString = IOUtils.toString(resourceAsStream);
         return toString;
     }
@@ -239,9 +246,9 @@ public abstract class AbstractProviderService implements ProviderService {
      * @param total
      * @param name   of the provider.
      */
-    private void printprogress(int actual, int total, String name) {
+    private void printprogress(int actual, int total, String name, String org) {
         int processpercent = actual * 100 / total;
-        log.info("{}: processed authors ({}%) {} of {}.", name, processpercent, actual, total);
+        log.info("{}: processed authors ({}%) {} of {} for organization {}.", name, processpercent, actual, total, org);
     }
 
     private String createProvider(String providerName) {

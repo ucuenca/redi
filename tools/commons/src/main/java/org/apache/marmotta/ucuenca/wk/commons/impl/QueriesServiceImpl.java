@@ -548,9 +548,15 @@ public class QueriesServiceImpl implements QueriesService {
                 + "               foaf:firstName ?fname;"
                 + "               foaf:lastName ?lname;"
                 + "               dct:provenance ?provenance."
-//                + "filter (mm:fulltext-search(?name,\"Saquicela\")) "
+//                                + "filter (mm:fulltext-search(?name,\"Saquicela\")) "
                 + "  }"
                 + "}";
+    }
+
+    @Override
+    public String getAuthorsDataQuery(String organization) {
+        String[] orgs = new String[]{organization};
+        return getAuthorsDataQuery(orgs);
     }
 
     @Override
