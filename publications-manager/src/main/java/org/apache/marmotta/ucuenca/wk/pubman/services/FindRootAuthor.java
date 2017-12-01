@@ -125,7 +125,7 @@ public class FindRootAuthor {
     
     public String testAuthor (String [] organizations) {
     
-         Map<String, AuthorsInfo> response = interProv.interfaceAK("http://redi.cedia.edu.ec/resource/authors/UCUENCA/file/UCUENCA%3A_SAQUICELA_GALARZA_____VICTOR_HUGO_");
+         Map<String, AuthorsInfo> response = interProv.interfaceProvider("http://redi.cedia.edu.ec/resource/authors/REDCEDIA/oai-pmh/SAQUICELA__VICTOR" , "http://redi.cedia.edu.ec/context/provider/AcademicsKnowledgeProvider");
          
          for (String uri : response.keySet()) {
             log.info(uri+" "+response.get(uri).getIdentifier()+response.get(uri).getAfiliation()[0]);

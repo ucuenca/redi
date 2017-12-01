@@ -45,6 +45,7 @@ public class AuthorsInfo {
     }
 
     public void setName(String[] name) {
+        
         this.name = name;
     }
 
@@ -80,6 +81,9 @@ public class AuthorsInfo {
         this.articles = articles;
     }
     
+    public void addName () {
+       this.getName() [this.getName().length+1] = "";
+    }
    
     
 }
