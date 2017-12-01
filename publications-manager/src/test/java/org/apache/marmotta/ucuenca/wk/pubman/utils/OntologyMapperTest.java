@@ -23,7 +23,6 @@ import java.io.InputStream;
 import org.apache.commons.io.IOUtils;
 import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openrdf.model.Model;
 import org.openrdf.rio.RDFFormat;
@@ -76,7 +75,7 @@ public class OntologyMapperTest {
         try {
             academicsKnowledgeModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/academics_knowledge.n3"), "", RDFFormat.N3);
             scopusModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/scopus.n3"), "", RDFFormat.N3);
-//            scopusModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/scopus.n3"), "", RDFFormat.N3);
+            dblpModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/dblp.ttl"), "", RDFFormat.TURTLE);
         } catch (IOException | RDFParseException | UnsupportedRDFormatException ex) {
             log.error("cannot read file.", ex);
         }
@@ -122,12 +121,11 @@ public class OntologyMapperTest {
      * Test ontology mapping of DBLP vocabulary.
      */
     @Test
-    @Ignore
     public void testDBLPOntologyMapping() {
-        assertEquals(dblpModel.size(), 0);
+        assertEquals(dblpModel.size(), 229307);
         Model resultWithMapperFile = OntologyMapper.map(dblpModel, dblpMapper, vocabulary);
         Model resultEmptyMapperFile = OntologyMapper.map(dblpModel, emptyMapper, vocabulary);
-        assertEquals(resultWithMapperFile.size(), 0);
+        assertEquals(resultWithMapperFile.size(), 89503);
         assertEquals(resultEmptyMapperFile.size(), 0);
     }
 }
