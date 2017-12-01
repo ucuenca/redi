@@ -1,0 +1,252 @@
+@prefix r2r: <http://www4.wiwiss.fu-berlin.de/bizer/r2r/> .
+@prefix uc: <http://ucuenca.edu.ec/ontology#> .  
+
+uc:mapColl1 a r2r:MappingCollection;
+    r2r:prefixDefinitions " elsevier: <http://www.elsevier.com/xml/svapi/rdf/dtd/> . foaf: <http://xmlns.com/foaf/0.1/> . uc: <http://ucuenca.edu.ec/ontology#> . redi: <http://redi.cedia.edu.ec/resource/> . schema: <http://schema.org/> . bibo: <http://purl.org/ontology/bibo/> . dct: <http://purl.org/dc/terms/> . dc: <http://purl.org/dc/elements/1.1/> . nature: <http://ns.nature.com/terms/> . scoro: <http://purl.org/spar/scoro/> . skos: <http://www.w3.org/2004/02/skos/core#> . prism: <http://prismstandard.org/namespaces/basic/2.0/> . " .
+
+# AUTHOR INFORMATION
+
+uc:authorType a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ a elsevier:Author" ;
+    r2r:targetPattern "?SUBJ a foaf:Person" ;
+    r2r:targetPattern "?SUBJ dct:provenance uc:ScopusProvider" .
+
+uc:authorSearch a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ owl:oneOf ?search" ;
+    r2r:targetPattern "?SUBJ owl:oneOf ?search" .
+
+uc:authorPublications a r2r:Mapping;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:authorType ;
+    r2r:sourcePattern "?SUBJ foaf:publications ?publication" ;
+    r2r:targetPattern "?SUBJ foaf:publications ?publication" ;
+    r2r:targetPattern "?publication a foaf:AcademicArticle" ;
+    r2r:targetPattern "?publication dct:provenance uc:ScopusProvider" .
+
+uc:authorIdentifier a r2r:Mapping;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:authorType ;
+    r2r:sourcePattern "?SUBJ dct:identifier ?id." ;
+    r2r:targetPattern "?SUBJ dct:identifier ?'id'^^xsd:string" .
+
+uc:authorElectronicIdentifier a r2r:Mapping;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:authorType ;
+    r2r:sourcePattern "?SUBJ elsevier:eid ?eid" ;
+    r2r:targetPattern "?SUBJ scoro:hasPersonalIdentifier ?'eid'^^xsd:string" .
+
+uc:authorOrcid a r2r:Mapping;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:authorType ;
+    r2r:sourcePattern "?SUBJ elsevier:orcid ?orcid" ;
+    r2r:targetPattern "?SUBJ scoro:hasOrcid ?'orcid'^^xsd:string" .
+
+uc:authorHIndex a r2r:Mapping;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:authorType ;
+    r2r:sourcePattern "?SUBJ elsevier:h-index ?hindex" ;
+    r2r:targetPattern "?SUBJ uc:h-index ?'hindex'^^xsd:integer" .
+
+uc:authorProfileURL a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:authorType ;
+    r2r:sourcePattern "?SUBJ elsevier:scopusAuthor ?profile; a elsevier:Author; elsevier:authorId ?id;" ;
+    r2r:targetPattern "?SUBJ foaf:holdsAccount ?<profile>" ;
+    r2r:targetPattern "?profile uc:scopusId ?'id'^^xsd:integer" ;
+    r2r:targetPattern "?profile a uc:ScopusAccount" ;
+    r2r:targetPattern "?profile a foaf:OnlineAccount" .
+
+uc:authorCitationCount a r2r:Mapping;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:authorType ;
+    r2r:sourcePattern "?SUBJ elsevier:citationCount ?count" ;
+    r2r:targetPattern "?SUBJ uc:citationCount ?'count'^^xsd:integer" .
+
+uc:authorCitationByCount a r2r:Mapping;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:authorType ;
+    r2r:sourcePattern "?SUBJ elsevier:citedbyCount ?count" ;
+    r2r:targetPattern "?SUBJ uc:citedbyCount ?'count'^^xsd:integer" .
+
+uc:authorName a r2r:Mapping;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:authorType ;
+    r2r:sourcePattern "?SUBJ elsevier:givenName ?gname; elsevier:surname ?sname" ;
+    r2r:transformation "?name=concat(?gname, ', ', ?sname)" ;
+    r2r:targetPattern "?SUBJ foaf:givenName ?'gname'^^xsd:string" ;
+    r2r:targetPattern "?SUBJ foaf:familyName ?'sname'^^xsd:string" ;
+    r2r:targetPattern "?SUBJ foaf:name ?'name'^^xsd:string" .
+
+uc:authorTopicsRDF a r2r:Mapping;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:authorType ;
+    r2r:sourcePattern "?SUBJ elsevier:writesAbout ?topic. ?topic skos:prefLabel ?label; skos:altLabel ?alternative; elsevier:code ?id." ;
+    r2r:targetPattern "?SUBJ foaf:topic_interest ?<topic>";
+    r2r:targetPattern "?topic rdfs:label ?'label'^^xsd:string" ;
+    r2r:targetPattern "?topic uc:scopusId ?'id'^^xsd:integer" ;
+    r2r:targetPattern "?topic skos:altLabel ?'alternative'^^xsd:string" .
+
+uc:authorTopicsSearch a r2r:Mapping;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:authorType ;
+    r2r:sourcePattern "?SUBJ uc:subjectArea ?topic." ;
+    r2r:transformation "?t=replaceAll(' [(]all[)]', '', ?topic)",
+                       "?topicURL=concat('http://redi.cedia.edu.ec/resource/topic/', replaceAll(' ', '-', replaceAll(' [(]all[)]','',?topic)))" ;
+    r2r:targetPattern "?SUBJ foaf:topic_interest ?<topicURL>";
+    r2r:targetPattern "?topicURL rdfs:label ?'t'^^xsd:string".
+
+uc:authorAffiliation a r2r:Mapping;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:authorType ;
+    r2r:sourcePattern "?SUBJ elsevier:affiliation ?aff. ?aff skos:prefLabel ?affName." ;
+    r2r:targetPattern "?SUBJ schema:memberOf ?aff" ;
+    r2r:targetPattern "?aff a foaf:Organization" ;
+    r2r:targetPattern "?aff rdfs:label ?'affName'^^xsd:string" .
+
+# PUBLICATION INFORMATION
+
+uc:publicationTitle a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dc:title ?title; prism:contentType 'Abstract'" ;
+    r2r:targetPattern "?SUBJ dct:title ?'title'^^xsd:string" .
+
+uc:publicationISSN a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ prism:issn ?issn; prism:contentType 'Abstract'" ;
+    r2r:targetPattern "?SUBJ bibo:issn ?'issn'^^xsd:integer" .
+
+uc:publicationISBN a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ prism:isbn ?isbn; prism:contentType 'Abstract'" ;
+    r2r:targetPattern "?SUBJ bibo:isbn ?'isbn'^^xsd:integer" .
+
+uc:publicationDOI a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ prism:doi ?doi; prism:contentType 'Abstract'" ;
+    r2r:targetPattern "?SUBJ bibo:doi ?'doi'^^xsd:string" .
+
+uc:publicationPages a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ prism:pageRange ?pages; prism:contentType 'Abstract'" ;
+    r2r:targetPattern "?SUBJ bibo:pages ?'pages'^^xsd:string" .
+
+uc:publicationPageEnd a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ prism:endingPage ?endPage; prism:contentType 'Abstract'" ;
+    r2r:targetPattern "?SUBJ bibo:pageEnd ?'endPage'^^xsd:integer" .
+
+uc:publicationPageStart a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ prism:startingPage ?startPage; prism:contentType 'Abstract'" ;
+    r2r:targetPattern "?SUBJ bibo:pageStart ?'startPage'^^xsd:integer" .
+
+uc:publicationCoverDate a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ prism:coverDate ?coverData; prism:contentType 'Abstract'" ;
+    r2r:targetPattern "?SUBJ nature:coverDate ?'coverData'^^xsd:dateTime" .
+
+uc:publicationCopyrightYear a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ prism:copyrightYear ?year; prism:contentType 'Abstract'" ;
+    r2r:targetPattern "?SUBJ schema:copyrightYear ?'year'^^xsd:integer" .
+
+uc:publicationVolume a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ prism:volume ?volume; prism:contentType 'Abstract'" ;
+    r2r:targetPattern "?SUBJ bibo:volume ?'volume'^^xsd:string" .
+
+uc:publicationSubject a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ prism:keyword ?keyword; prism:contentType 'Abstract'" ;
+    r2r:transformation "?keywordURI=concat('http://redi.cedia.edu.ec/resource/subject/', replaceAll(' ', '-', xpath:lower-case(?keyword)))" ;
+    r2r:targetPattern "?SUBJ dct:subject ?<keywordURI>" ;
+    r2r:targetPattern "?keywordURI rdfs:label ?'keyword'^^xsd:string" .
+
+uc:publicationTopic a r2r:Mapping;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dc:subject ?topic; prism:contentType 'Abstract'. ?topic skos:prefLabel ?label; skos:altLabel ?alternative; elsevier:code ?id. " ;
+    r2r:targetPattern "?SUBJ foaf:topic_interest ?<topic>";
+    r2r:targetPattern "?topic rdfs:label ?'label'^^xsd:string" ;
+    r2r:targetPattern "?topic uc:scopusId ?'id'^^xsd:integer" ;
+    r2r:targetPattern "?topic skos:altLabel ?'alternative'^^xsd:string" .
+
+uc:publicationPage a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ elsevier:scopusPage ?uri; prism:contentType 'Abstract'" ;
+    r2r:targetPattern "?SUBJ bibo:uri ?<uri>" .
+
+uc:publicationCitationCount a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ elsevier:citedbyCount ?count; prism:contentType 'Abstract'" ;
+    r2r:targetPattern "?SUBJ uc:citationCount ?'count'^^xsd:integer" .
+
+uc:publicationScopusId a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ elsevier:scopusId ?id; prism:contentType 'Abstract'" ;
+    r2r:targetPattern "?SUBJ uc:scopusId ?'id'^^xsd:integer" .
+
+uc:publicationIdentifier a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ elsevier:eid ?id; prism:contentType 'Abstract'" ;
+    r2r:targetPattern "?SUBJ dct:identifier ?'id'^^xsd:string" .
+
+uc:publicationPubmedId a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ elsevier:pubmedId ?pubmedId; prism:contentType 'Abstract'" ;
+    r2r:targetPattern "?SUBJ uc:pubmedId ?'pubmedId'^^xsd:string" .
+
+uc:publicationCites a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ elsevier:reference ?publication; prism:contentType 'Abstract'. ?publication dc:title ?title; elsevier:scopusId ?id." ;
+    r2r:targetPattern "?SUBJ bibo:cites ?<publication>" ;
+    r2r:targetPattern "?publication a bibo:AcademicArticle" ;
+    r2r:targetPattern "?publication dct:title ?'title'^^xsd:string" ;
+    r2r:targetPattern "?publication uc:scopusId ?'id'^^xsd:integer" .
+    
+uc:publicationCreator a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dc:creator ?node; prism:contentType 'Abstract'. ?node rdf:_1 ?author; a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq>." ;
+    r2r:targetPattern "?SUBJ dct:creator ?<author>" .
+
+uc:publicationContributor a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    # Query all members from sequence.
+    # https://lists.w3.org/Archives/Public/public-owl-dev/2009OctDec/0027.html 
+    #r2r:sourcePattern "?SUBJ dc:creator ?node; prism:contentType 'Abstract'. ?node rdfs:member ?author; a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq>." ;
+    # It is not possible to use a variable as a property. Solution: First 10 authors are assigned as contributors.
+    r2r:sourcePattern "{?SUBJ dc:creator ?node; prism:contentType 'Abstract'. ?node rdf:_2 ?author; a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq>.} UNION {?SUBJ dc:creator ?node; prism:contentType 'Abstract'. ?node rdf:_3 ?author; a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq>.} UNION {?SUBJ dc:creator ?node; prism:contentType 'Abstract'. ?node rdf:_4 ?author; a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq>.} UNION {?SUBJ dc:creator ?node; prism:contentType 'Abstract'. ?node rdf:_5 ?author; a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq>.} UNION {?SUBJ dc:creator ?node; prism:contentType 'Abstract'. ?node rdf:_6 ?author; a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq>.} UNION {?SUBJ dc:creator ?node; prism:contentType 'Abstract'. ?node rdf:_7 ?author; a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq>.} UNION {?SUBJ dc:creator ?node; prism:contentType 'Abstract'. ?node rdf:_8 ?author; a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq>.} UNION {?SUBJ dc:creator ?node; prism:contentType 'Abstract'. ?node rdf:_9 ?author; a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq>.} UNION {?SUBJ dc:creator ?node; prism:contentType 'Abstract'. ?node rdf:_10 ?author; a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq>.}" ;
+    r2r:targetPattern "?SUBJ dct:contributor ?<author>" .
+
+uc:publicationPublisher a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dc:publisher ?publisher" ;
+    r2r:transformation "?uri=concat('http://redi.cedia.edu.ec/publisher/', replaceAll(' ', '-', xpath:lower-case(?publisher)))" ;
+    r2r:targetPattern "?SUBJ dct:publisher ?<uri>" ;
+    r2r:targetPattern "?uri rdfs:label ?'publisher'^^xsd:string" ;
+    r2r:targetPattern "?uri a foaf:Organization" . 
+    
+uc:publicationConference a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ prism:aggregationType ?type; prism:publicationName ?conference; prism:contentType 'Abstract'. FILTER (?type='Conference Proceeding')" ;
+    r2r:transformation "?conferenceURI=concat('http://redi.cedia.edu.ec/conference/', replaceAll(' ', '-', xpath:lower-case(?conference)))" ;
+    r2r:targetPattern "?SUBJ dct:isPartOf ?<conferenceURI>" ;
+    r2r:targetPattern "?conferenceURI a bibo:Conference" ;
+    r2r:targetPattern "?conferenceURI rdfs:label ?'conference'^^xsd:string" .
+    
+uc:publicationJournal a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ prism:aggregationType ?type; prism:publicationName ?journal; prism:contentType 'Abstract'. FILTER (?type='Journal')" ;
+    r2r:transformation "?journalURI=concat('http://redi.cedia.edu.ec/journal/', replaceAll(' ', '-', xpath:lower-case(?journal)))" ;
+    r2r:targetPattern "?SUBJ dct:isPartOf ?<journalURI>" ;
+    r2r:targetPattern "?journalURI a bibo:Journal" ;
+    r2r:targetPattern "?journalURI rdfs:label ?'journal'^^xsd:string" .
+    
+uc:publicationBook a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ prism:aggregationType ?type; prism:publicationName ?book; prism:contentType 'Abstract'. FILTER (?type='Book' || ?type='Book Series')" ;
+    r2r:transformation "?bookURI=concat('http://redi.cedia.edu.ec/book/', replaceAll(' ', '-', xpath:lower-case(?book)))" ;
+    r2r:targetPattern "?SUBJ dct:isPartOf ?<bookURI>" ;
+    r2r:targetPattern "?bookURI a bibo:Proceedings" ;
+    r2r:targetPattern "?bookURI rdfs:label ?'book'^^xsd:string" .

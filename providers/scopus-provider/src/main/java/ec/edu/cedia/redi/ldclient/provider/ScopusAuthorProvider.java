@@ -310,7 +310,7 @@ public class ScopusAuthorProvider extends AbstractXMLDataProvider {
                 String authorsResource = auhtorsFound.get(i).getValue();
                 super.parseResponse(authorsResource, requestUrl, triples, new ByteArrayInputStream(response), contentType);
                 authorsFound.add(authorsResource + "?apiKey=" + apiKey + "&httpAccept=application/rdf%2Bxml&view=ENHANCED");
-                triples.add(vf.createURI(resource), OWL.ONEOF, vf.createURI(authorsResource));
+                triples.add(vf.createURI(authorsResource), OWL.ONEOF, vf.createURI(resource));
             }
             return authorsFound;
         } catch (JDOMException | IOException | DataRetrievalException ex) {

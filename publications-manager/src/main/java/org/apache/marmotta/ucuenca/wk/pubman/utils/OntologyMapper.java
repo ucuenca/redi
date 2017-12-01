@@ -30,11 +30,25 @@ import org.openrdf.model.Model;
 import org.openrdf.model.impl.LinkedHashModel;
 
 /**
+ * Maps a dataset with other ontology using the
+ * <a href="http://wifo5-03.informatik.uni-mannheim.de/bizer/r2r/spec/#targetvocabulary">R2R
+ * Mapping Language</a>. See some
+ * <a href="http://wifo5-03.informatik.uni-mannheim.de/bizer/r2r/">examples</a>
+ * of the R2R Mapping Framework.
  *
  * @author Xavier Sumba <xavier.sumba93@ucuenca.ec>
  */
 public class OntologyMapper {
 
+    /**
+     * Maps a sesame model using a file using the R2R Mapping Language.
+     *
+     * @param model        contains triples to be mapped
+     * @param inputMapping file written using the R2R Mapping Language.
+     * @param vocabulary   see which vocabularies to include in the
+     * <a href="http://wifo5-03.informatik.uni-mannheim.de/bizer/r2r/spec/#targetvocabulary">specification</a>.
+     * @return
+     */
     public static Model map(Model model, InputStream inputMapping, String vocabulary) {
         com.hp.hpl.jena.rdf.model.Model jenaModelIn = JenaSesameUtils.asJenaModel(model);
         com.hp.hpl.jena.rdf.model.Model jenaModelOut = ModelFactory.createDefaultModel();

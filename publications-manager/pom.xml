@@ -103,7 +103,7 @@
                 <configuration>
                     <useSystemClassLoader>false</useSystemClassLoader>
                     <forkMode>always</forkMode>
-                    <argLine>-disableassertions</argLine>
+                    <enableAssertions>false</enableAssertions>
                 </configuration>
             </plugin>
             <!-- 

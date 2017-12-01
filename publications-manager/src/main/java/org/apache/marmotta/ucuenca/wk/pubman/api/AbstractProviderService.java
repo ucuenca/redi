@@ -17,6 +17,7 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.api;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import javax.inject.Inject;
+import org.apache.commons.io.IOUtils;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
 import org.apache.marmotta.ldclient.model.ClientConfiguration;
 import org.apache.marmotta.ldclient.model.ClientResponse;
@@ -50,7 +52,8 @@ import org.semarglproject.vocab.RDFS;
 import org.slf4j.Logger;
 
 /**
- * Default Implementation of {@link ProviderService}
+ * Default Implementation of {@link ProviderService}. Each provider
+ * implementation extends this class.
  *
  * @author Xavier Sumba
  */
@@ -87,8 +90,8 @@ public abstract class AbstractProviderService implements ProviderService {
     protected abstract List<String> buildURLs(String firstname, String lastname);
 
     /**
-     * Graph of provider to store the return RDF from {@link LDClient}.
-     *
+     * Provider's graph to store triples using {@link LDClient}.
+     * <p>
      * For example: http://redi.cedia.edu.ec/context/provider/DummyProvider
      *
      * @return
@@ -96,7 +99,7 @@ public abstract class AbstractProviderService implements ProviderService {
     protected abstract String getProviderGraph();
 
     /**
-     * Name of the provider.
+     * Name of the provider being used.
      *
      * @return
      */
@@ -156,6 +159,7 @@ public abstract class AbstractProviderService implements ProviderService {
                             log.info("After ontology mapper: writing {} triples in context {} for request '{}'.", data.size(), getProviderGraph(), reqResource);
                             Resource providerContext = connection.getValueFactory().createURI(getProviderGraph());
                             connection.add(data, providerContext);
+                        } catch (IOException ex) {
                         } finally {
                             connection.close();
                         }
@@ -196,8 +200,12 @@ public abstract class AbstractProviderService implements ProviderService {
     }
 
     /**
-     * Returns an {@link InputStream} of the mapping file if exists, otherwise
-     * it returns an optional empty, meaning the file is not found.
+     * Returns an {@link InputStream} of the mapping file if exists. The mapping
+     * is expressed using
+     * <a href="http://wifo5-03.informatik.uni-mannheim.de/bizer/r2r/spec/">R2R
+     * Mapping Language</a>. See some
+     * <a href="http://wifo5-03.informatik.uni-mannheim.de/bizer/r2r/#quickstart">examples</a>
+     * of R2R Mapping Framework.
      *
      * @return
      */
@@ -208,41 +216,20 @@ public abstract class AbstractProviderService implements ProviderService {
         return this.getClass().getResourceAsStream(resource);
     }
 
-    protected String getVocabularyMapper() {
-        return "@prefix foaf: <http://xmlns.com/foaf/0.1/> ."
-                + "@prefix uc: <http://ucuenca.edu.ec/ontology#> ."
-                + "@prefix schema: <http://schema.org/> ."
-                + "@prefix bibo: <http://purl.org/ontology/bibo/> ."
-                + "@prefix dct: <http://purl.org/dc/terms/> ."
-                + "@prefix nature: <http://ns.nature.com/terms/> ."
-                + "("
-                + " rdf:type,"
-                + " foaf:holdsAccount,"
-                + " uc:citationCount,"
-                + " schema:memberOf,"
-                + " uc:academicsId,"
-                + " dct:title,"
-                + " dct:language,"
-                + " nature:coverDate,"
-                + " bibo:created,"
-                + " bibo:issue,"
-                + " dct:isPartOf,"
-                + " bibo:abstract,"
-                + " bibo:doi,"
-                + " bibo:pageStart,"
-                + " bibo:pageEnd,"
-                + " bibo:volume,"
-                + " bibo:uri,"
-                + " bibo:quote,"
-                + " bibo:cites,"
-                + " foaf:topic_interest,"
-                + " dct:contributor,"
-                + " foaf:publications,"
-                + " dct:provenance,"
-                + " owl:oneOf,"
-                + " rdfs:label,"
-                + " foaf:name"
-                + ")";
+    /**
+     * Returns the target vocabulary to map using the {@link InputStream}
+     * returned by {@link #getMappingPathFile}. The vocabulary returned is
+     * specified in the target properties of the mapping file,
+     * <a href="http://wifo5-03.informatik.uni-mannheim.de/bizer/r2r/spec/#targetvocabulary">see
+     * the specification</a>.
+     *
+     * @see #getMappingPathFile
+     * @return
+     */
+    protected String getVocabularyMapper() throws IOException {
+        InputStream resourceAsStream = this.getClass().getResourceAsStream("/mapping/redi.ttl");
+        String toString = IOUtils.toString(resourceAsStream);
+        return toString;
     }
 
     /**
@@ -250,7 +237,7 @@ public abstract class AbstractProviderService implements ProviderService {
      *
      * @param actual
      * @param total
-     * @param name of the provider.
+     * @param name   of the provider.
      */
     private void printprogress(int actual, int total, String name) {
         int processpercent = actual * 100 / total;
