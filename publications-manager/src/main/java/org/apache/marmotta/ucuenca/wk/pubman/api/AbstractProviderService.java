@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -112,6 +113,7 @@ public abstract class AbstractProviderService implements ProviderService {
      */
     @Override
     public void extractAuthors(String[] organizations) {
+        Map <String, String> msgOrg = new HashMap ();
         String providerUri = createProvider(getProviderName());
         Task task = taskManagerService.createSubTask(String.format("%s Extraction", getProviderName()), "Publication Extractor");
         task.updateMessage(String.format("Extracting publications from %s Provider", getProviderName()));
@@ -168,8 +170,11 @@ public abstract class AbstractProviderService implements ProviderService {
                                 connection.close();
                             }
                         } catch (DataRetrievalException dre) {
+                            msgOrg.put(organization, "Fail: "+processedAuthors+"/"+totalAuthors );
+                             taskManagerService.endTask(task);
                             log.error("Cannot retieve RDF for the given resource: '{}'", reqResource, dre);
                             throw new RuntimeException(dre);
+                             
                         }
                     }
 
@@ -177,9 +182,18 @@ public abstract class AbstractProviderService implements ProviderService {
                     processedAuthors++;
                     printprogress(processedAuthors, totalAuthors, getProviderName(), organization);
                     task.updateProgress(processedAuthors);
-
+                   
+                       msgOrg.put(organization, processedAuthors+"/"+totalAuthors );
+                       if (processedAuthors == totalAuthors ) {
+                        registerDate(organization, providerUri , "Success: "+processedAuthors+"/"+totalAuthors );
+                       
+                        msgOrg.put(organization, "Success: "+processedAuthors+"/"+totalAuthors );
+                       
+                       }
+                  
+                    
                     // Update date of execution
-                    if (!lastorg.equals(organization)) {
+                  /*  if (!lastorg.equals(organization)) {
                         if (!"".equals(lastorg)) {
                             registerDate(organization, providerUri);
 
@@ -188,19 +202,28 @@ public abstract class AbstractProviderService implements ProviderService {
                         processedAuthors = 0;
                     } else {
                         processedAuthors++;
-                    }
+                    }*/
                 }
 
-                if (!resultAllAuthors.isEmpty() && processedAuthors > 0) {
+              /*  if (!resultAllAuthors.isEmpty() && processedAuthors > 0) {
                     registerDate(lastorg, providerUri);
-                }
+                }*/
             }
 
         } catch (MarmottaException me) {
+           
             log.error("Cannot query.", me);
         } catch (RepositoryException re) {
+            
             log.error("Cannot store data retrieved.", re);
         } finally {
+            
+            for ( String key : msgOrg.keySet()) {
+               if ( !msgOrg.get(key).contains("Success:")) {
+               registerDate(key, providerUri , msgOrg.get(key) );
+               }
+            }
+         
             taskManagerService.endTask(task);
         }
     }
@@ -282,7 +305,7 @@ public abstract class AbstractProviderService implements ProviderService {
 
     }
 
-    private void registerDate(String org, String providerUri) {
+    private void registerDate(String org, String providerUri , String detail ) {
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
         String uriEvent = createExtractEventUri(getProviderName(), org);
@@ -290,7 +313,8 @@ public abstract class AbstractProviderService implements ProviderService {
         sparqlFunctionsService.executeInsert(getProviderGraph(), providerUri, REDI.BELONGTO.toString(), uriEvent);
         sparqlFunctionsService.executeInsert(constantService.getOrganizationsGraph(), org, REDI.BELONGTO.toString(), uriEvent);
         sparqlFunctionsService.executeInsert(getProviderGraph(), uriEvent, REDI.EXTRACTIONDATE.toString(), dateFormat.format(date));
-
+        sparqlFunctionsService.executeInsert(getProviderGraph(), uriEvent, RDFS.LABEL.toString(), detail);
+      
     }
 
 }
