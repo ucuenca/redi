@@ -125,6 +125,8 @@ public abstract class AbstractProviderService implements ProviderService {
                 int totalAuthors = resultAllAuthors.size();
                 int processedAuthors = 0;
                 task.updateTotalSteps(totalAuthors);
+                task.updateDetailMessage("Organization", organization.substring(organization.lastIndexOf('/')));
+
                 String lastorg = "";
                 for (Map<String, Value> map : resultAllAuthors) {
 
