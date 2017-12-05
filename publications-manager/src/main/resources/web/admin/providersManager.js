@@ -19,6 +19,12 @@ function loadTables () {
                        columns: [
             { "data" : "Selection" },
             { "data" : "name"} ,
+            { "data" : "valAK"} ,
+            { "data" : "valDBLP"} ,
+            { "data" : "valScopus"} ,
+            { "data" : "valGs"} 
+            
+    
 
         ] ,
       
@@ -39,6 +45,65 @@ function loadTables () {
                 },
                 
                 targets: 1
+            } ,
+               {
+                "render": function(data, type, row) {
+                    
+                    if (typeof(row["DateAk"]) === "undefined" && typeof(row["AdvAK"]) === "undefined"){
+                       return "";
+                   }else {
+                       return row["DateAk"]+" | " +row["AdvAK"];    
+                   }         
+                },
+                
+                targets: 2
+            } ,
+             {
+                "render": function(data, type, row) {
+                    
+                    if (typeof(row["DateDBLP"]) === "undefined" && typeof(row["AdvDBLP"]) === "undefined")
+                    {
+                       return ""; 
+                    }
+                    else {
+                       return  row["DateDBLP"]+" | "+row["AdvDBLP"];
+                    }
+                },
+                
+                targets: 3
+            } ,
+              {
+                "render": function(data, type, row) {
+                    
+                        
+                    if (typeof(row["DateScopus"]) === "undefined" && typeof(row["AdvScopus"]) === "undefined")
+                    {
+                       return ""; 
+                    }
+                    else {
+                       return  row["DateScopus"]+" | "+row["AdvScopus"];      
+                    }
+                  
+                       
+                },
+                
+                targets: 4
+            } , 
+             {
+                "render": function(data, type, row) {
+                          
+                    if (typeof(row["DateGs"]) === "undefined" && typeof(row["AdvGs"]) === "undefined")
+                    {
+                       return ""; 
+                    }
+                    else {
+                         return  row["DateGs"]+" | "+row["AdvGs"];  
+                    }
+                  
+                             
+                },
+                
+                targets: 5
             }
         ]
     

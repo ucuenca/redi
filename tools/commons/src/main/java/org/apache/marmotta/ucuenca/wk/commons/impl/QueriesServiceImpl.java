@@ -321,17 +321,54 @@ public class QueriesServiceImpl implements QueriesService {
 
     @Override
     public String getExtractedOrgList() {
-        return "SELECT DISTINCT ?uri ?name "
-                + "FROM  <" + con.getEndpointsGraph() + "> "
-                + "FROM  <" + con.getOrganizationsGraph() + "> "
-                + "WHERE  {"
-                + "  ?subject  <" + REDI.BELONGTO.toString() + "> ?uri ."
-                + "  ?uri  <" + REDI.NAME.toString() + ">  ?name ."
-                + "  ?subject   <" + REDI.EXTRACTIONDATE.toString() + ">  ?date ."
-                + "  FILTER ( STR(?date)  != '')"
-                + "}";
+        return "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
+                + "PREFIX ucmodel: <http://ucuenca.edu.ec/ontology#> "
+                + "SELECT DISTINCT ?uri ?name (group_concat(  ?eventdateAK ;separator=\";\")  as  ?DateAk) (group_concat(  ?labelAK  ; separator=\";\")  as  ?AdvAK) (group_concat(  ?eventdateDBLP ;separator=\";\")  as  ?DateDBLP) (group_concat(  ?labelDBLP ; separator=\";\")  as  ?AdvDBLP) (group_concat(  ?eventdateScopus ;separator=\";\")  as  ?DateScopus) (group_concat(  ?labelScopus ; separator=\";\")  as  ?AdvScopus) (group_concat(  ?eventdateGs ;separator=\";\")  as  ?DateGs) (group_concat(  ?labelGs ; separator=\";\")  as  ?AdvGs) WHERE  {\n"
+                + "?subject  ucmodel:belongTo ?uri . \n"
+                + "?subject   ucmodel:extractionDate  ?date .  FILTER ( STR(?date)  != '') \n"
+                + "?uri  ucmodel:name  ?name    \n"
+                + "          OPTIONAL  {\n"
+                + " GRAPH   <"+con.getOrganizationsGraph()+"> {\n"
+                + "   ?uri  ucmodel:belongTo ?event  }\n"
+                + "  GRAPH  <"+con.getAcademicsKnowledgeGraph()+"> {\n"
+                + "  OPTIONAL {\n"
+                + "  ?event rdfs:label  ?labelAK }\n"
+                + "  OPTIONAL {\n"
+                + "  ?event  ucmodel:extractionDate ?eventdateAK } \n"
+                + "  }\n"
+                + "  GRAPH  <"+con.getDBLPGraph()+"> {\n"
+                + "  OPTIONAL {\n"
+                + "  ?event rdfs:label  ?labelDBLP }\n"
+                + "  OPTIONAL {\n"
+                + "  ?event  ucmodel:extractionDate ?eventdateDBLP } \n"
+                + "  }\n"
+                + "  GRAPH  <"+con.getScopusGraph()+"> {\n"
+                + "  OPTIONAL {\n"
+                + "  ?event rdfs:label  ?labelScopus }\n"
+                + "  OPTIONAL {\n"
+                + "  ?event  ucmodel:extractionDate ?eventdateScopus} \n"
+                + "  }\n"
+                + "  GRAPH  <"+con.getGoogleScholarGraph()+"> {\n"
+                + "  OPTIONAL {\n"
+                + "  ?event rdfs:label  ?labelGs }\n"
+                + "  OPTIONAL {\n"
+                + "  ?event  ucmodel:extractionDate ?eventdateGs } \n"
+                + "  }\n"
+                + " }  } Group by ?uri ?name  ";
     }
 
+    /*   @Override
+     public String getExtractedOrgList() {
+     return "SELECT DISTINCT ?uri ?name "
+     + "FROM  <" + con.getEndpointsGraph() + "> "
+     + "FROM  <" + con.getOrganizationsGraph() + "> "
+     + "WHERE  {"
+     + "  ?subject  <" + REDI.BELONGTO.toString() + "> ?uri ."
+     + "  ?uri  <" + REDI.NAME.toString() + ">  ?name ."
+     + "  ?subject   <" + REDI.EXTRACTIONDATE.toString() + ">  ?date ."
+     + "  FILTER ( STR(?date)  != '')"
+     + "}";
+     }*/
     @Override
     public String getlistEndpointNamesQuery() {
         return "SELECT DISTINCT ?fullName WHERE {   GRAPH <http://ucuenca.edu.ec/wkhuska/endpoints>"
@@ -548,7 +585,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + "               foaf:firstName ?fname;"
                 + "               foaf:lastName ?lname;"
                 + "               dct:provenance ?provenance."
-//                                + "filter (mm:fulltext-search(?name,\"Saquicela\")) "
+                //                                + "filter (mm:fulltext-search(?name,\"Saquicela\")) "
                 + "  }"
                 + "}";
     }
