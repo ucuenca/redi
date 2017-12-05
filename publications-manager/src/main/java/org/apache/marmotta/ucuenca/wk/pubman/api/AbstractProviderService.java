@@ -80,6 +80,8 @@ public abstract class AbstractProviderService implements ProviderService {
 
     @Inject
     private ConstantService constantService;
+    
+    private  String STR = "string";
 
     /**
      * Build a list of URLs to request authors with {@link LDClient}.
@@ -312,8 +314,8 @@ public abstract class AbstractProviderService implements ProviderService {
         sparqlFunctionsService.executeInsert(getProviderGraph(), uriEvent, RDF.TYPE, REDI.EXTRACTION_EVENT.toString());
         sparqlFunctionsService.executeInsert(getProviderGraph(), providerUri, REDI.BELONGTO.toString(), uriEvent);
         sparqlFunctionsService.executeInsert(constantService.getOrganizationsGraph(), org, REDI.BELONGTO.toString(), uriEvent);
-        sparqlFunctionsService.executeInsert(getProviderGraph(), uriEvent, REDI.EXTRACTIONDATE.toString(), dateFormat.format(date));
-        sparqlFunctionsService.executeInsert(getProviderGraph(), uriEvent, RDFS.LABEL.toString(), detail);
+        sparqlFunctionsService.executeInsert(getProviderGraph(), uriEvent, REDI.EXTRACTIONDATE.toString(), dateFormat.format(date), STR);
+        sparqlFunctionsService.executeInsert(getProviderGraph(), uriEvent, RDFS.LABEL.toString(), detail, STR);
       
     }
 
