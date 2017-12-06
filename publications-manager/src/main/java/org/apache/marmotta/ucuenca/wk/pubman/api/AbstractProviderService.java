@@ -160,8 +160,6 @@ public abstract class AbstractProviderService implements ProviderService {
                                             reqResource, response.getHttpStatus(), new QuotaLimitException());
                                     continue;
                             }
-                            // store search query.
-                            sparqlFunctionsService.executeInsert(getProviderGraph(), reqResource.replace(" ", ""), OWL.ONE_OF, authorResource);
                             RepositoryConnection connection = sesameService.getConnection();
                             try {
                                 // store triples with new vocabulary
@@ -175,6 +173,8 @@ public abstract class AbstractProviderService implements ProviderService {
                             } finally {
                                 connection.close();
                             }
+                            // register search query.
+                            sparqlFunctionsService.executeInsert(getProviderGraph(), reqResource.replace(" ", ""), OWL.ONE_OF, authorResource);
                         } catch (DataRetrievalException dre) {
                             msgOrg.put(organization, "Fail: " + processedAuthors + "/" + totalAuthors);
                             log.error("Cannot retieve RDF for the given resource: '{}'", reqResource, dre);
