@@ -131,7 +131,6 @@ public abstract class AbstractProviderService implements ProviderService {
                 task.updateTotalSteps(totalAuthors);
                 task.updateDetailMessage("Organization", organization.substring(organization.lastIndexOf('/')));
 
-                String lastorg = "";
                 for (Map<String, Value> map : resultAllAuthors) {
 
                     // Information of local author.
@@ -193,41 +192,20 @@ public abstract class AbstractProviderService implements ProviderService {
                         registerDate(organization, providerUri, "Success: " + processedAuthors + "/" + totalAuthors);
 
                         msgOrg.put(organization, "Success: " + processedAuthors + "/" + totalAuthors);
-
                     }
-
-                    // Update date of execution
-                    /*  if (!lastorg.equals(organization)) {
-                        if (!"".equals(lastorg)) {
-                            registerDate(organization, providerUri);
-
-                        }
-                        lastorg = organization;
-                        processedAuthors = 0;
-                    } else {
-                        processedAuthors++;
-                    }*/
                 }
-
-                /*  if (!resultAllAuthors.isEmpty() && processedAuthors > 0) {
-                    registerDate(lastorg, providerUri);
-                }*/
             }
 
         } catch (MarmottaException me) {
-
             log.error("Cannot query.", me);
         } catch (RepositoryException re) {
-
             log.error("Cannot store data retrieved.", re);
         } finally {
-
             for (String key : msgOrg.keySet()) {
                 if (!msgOrg.get(key).contains("Success:")) {
                     registerDate(key, providerUri, msgOrg.get(key));
                 }
             }
-
             taskManagerService.endTask(task);
         }
     }
@@ -317,7 +295,7 @@ public abstract class AbstractProviderService implements ProviderService {
         sparqlFunctionsService.executeInsert(getProviderGraph(), providerUri, REDI.BELONGTO.toString(), uriEvent);
         sparqlFunctionsService.executeInsert(constantService.getOrganizationsGraph(), org, REDI.BELONGTO.toString(), uriEvent);
         sparqlFunctionsService.executeInsert(getProviderGraph(), uriEvent, REDI.EXTRACTIONDATE.toString(), dateFormat.format(date), STR);
-        sparqlFunctionsService.executeInsert(getProviderGraph(), uriEvent, RDFS.LABEL.toString(), detail, STR);
+        sparqlFunctionsService.executeInsert(getProviderGraph(), uriEvent, RDFS.LABEL.toString(), dateFormat.format(date) + " | " + detail, STR);
 
     }
 

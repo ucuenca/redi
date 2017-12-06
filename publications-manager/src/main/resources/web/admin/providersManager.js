@@ -49,11 +49,13 @@ function loadTables () {
                {
                 "render": function(data, type, row) {
                     
-                    if (typeof(row["DateAk"]) === "undefined" && typeof(row["AdvAK"]) === "undefined"){
+                    if ( typeof(row["AdvAK"]) === "undefined"){
                        return "";
                    }else {
-                       return row["DateAk"]+" | " +row["AdvAK"];    
-                   }         
+                       return row["AdvAK"].split(";").sort (function (a,b){ return CompareDate( a, b );})[0];
+                      // return row["DateAk"].split(";").sort(function(a,b){ return CompareDate( a, b ); }) +" | " +row["AdvAK"].split(";")[0];    
+                   
+                    }         
                 },
                 
                 targets: 2
@@ -61,12 +63,13 @@ function loadTables () {
              {
                 "render": function(data, type, row) {
                     
-                    if (typeof(row["DateDBLP"]) === "undefined" && typeof(row["AdvDBLP"]) === "undefined")
+                    if ( typeof(row["AdvDBLP"]) === "undefined")
                     {
                        return ""; 
                     }
                     else {
-                       return  row["DateDBLP"]+" | "+row["AdvDBLP"];
+                         return row["AdvDBLP"].split(";").sort (function (a,b){ return CompareDate( a, b );})[0];
+                      // return  row["DateDBLP"].split(";").sort(function(a,b){ return CompareDate( a, b ); })+" | "+row["AdvDBLP"].split(";")[0];
                     }
                 },
                 
@@ -76,12 +79,13 @@ function loadTables () {
                 "render": function(data, type, row) {
                     
                         
-                    if (typeof(row["DateScopus"]) === "undefined" && typeof(row["AdvScopus"]) === "undefined")
+                    if ( typeof(row["AdvScopus"]) === "undefined")
                     {
                        return ""; 
                     }
                     else {
-                       return  row["DateScopus"]+" | "+row["AdvScopus"];      
+                       return row["AdvScopus"].split(";").sort (function (a,b){ return CompareDate( a, b );})[0];
+                      // return  row["DateScopus"].split(";").sort(function(a,b){ return CompareDate( a, b ); })+" | "+row["AdvScopus"].split(";")[0];      
                     }
                   
                        
@@ -92,12 +96,13 @@ function loadTables () {
              {
                 "render": function(data, type, row) {
                           
-                    if (typeof(row["DateGs"]) === "undefined" && typeof(row["AdvGs"]) === "undefined")
+                    if (  typeof(row["AdvGs"]) === "undefined")
                     {
                        return ""; 
                     }
                     else {
-                         return  row["DateGs"]+" | "+row["AdvGs"];  
+                         return row["AdvGs"].split(";").sort (function (a,b){ return CompareDate( a, b );})[0];
+                      //   return  row["DateGs"].split(";").sort(function(a,b){ return CompareDate( a, b ); })+" | "+row["AdvGs"].split(";")[0];  
                     }
                   
                              
@@ -108,6 +113,19 @@ function loadTables () {
         ]
     
     });
+    }
+    
+    function  CompareDate( a, b ) {
+               
+            var datea = a.split(" | ")[0];
+            var dateb = b.split(" | ")[0];
+            var auxa = datea.split(" ")[0].split("/") ;
+            var auxb = dateb.split(" ")[0].split("/") ;
+          
+        return new Date ( auxb[1]+"/"+auxb[0]+"/"+auxb[2]+" "+dateb.split(" ")[1]) - new Date (auxa[1]+"/"+auxa[0]+"/"+auxa[2]+" "+datea.split(" ")[1]) ;
+   //  return new Date(aux1[0].split("/")[1]+"/"+aux1[0].split("/")[0]+"/"+aux1[0].split("/")[2]+" "+ aux1[1]) - new Date(aux2[0].split("/")[1]+"/"+aux2[0].split("/")[0]+"/"+aux2[0].split("/")[2]+" "+aux2[1]);
+  
+        
     }
     
     function ExtractAk()  {
