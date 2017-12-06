@@ -323,7 +323,7 @@ public class QueriesServiceImpl implements QueriesService {
     public String getExtractedOrgList() {
         return "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
                 + "PREFIX ucmodel: <http://ucuenca.edu.ec/ontology#> "
-                + "SELECT DISTINCT ?uri ?name (group_concat(  ?eventdateAK ;separator=\";\")  as  ?DateAk) (group_concat(  ?labelAK  ; separator=\";\")  as  ?AdvAK) (group_concat(  ?eventdateDBLP ;separator=\";\")  as  ?DateDBLP) (group_concat(  ?labelDBLP ; separator=\";\")  as  ?AdvDBLP) (group_concat(  ?eventdateScopus ;separator=\";\")  as  ?DateScopus) (group_concat(  ?labelScopus ; separator=\";\")  as  ?AdvScopus) (group_concat(  ?eventdateGs ;separator=\";\")  as  ?DateGs) (group_concat(  ?labelGs ; separator=\";\")  as  ?AdvGs) WHERE  {\n"
+                + "SELECT DISTINCT ?uri ?name  (group_concat(  ?labelAK  ; separator=\";\")  as  ?AdvAK)  (group_concat(  ?labelDBLP ; separator=\";\")  as  ?AdvDBLP)  (group_concat(  ?labelScopus ; separator=\";\")  as  ?AdvScopus) (group_concat(  ?labelGs ; separator=\";\")  as  ?AdvGs) WHERE  {\n"
                 + "?subject  ucmodel:belongTo ?uri . \n"
                 + "?subject   ucmodel:extractionDate  ?date .  FILTER ( STR(?date)  != '') \n"
                 + "?uri  ucmodel:name  ?name    \n"

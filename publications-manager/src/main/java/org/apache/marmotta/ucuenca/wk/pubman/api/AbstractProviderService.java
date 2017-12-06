@@ -315,7 +315,7 @@ public abstract class AbstractProviderService implements ProviderService {
         sparqlFunctionsService.executeInsert(getProviderGraph(), providerUri, REDI.BELONGTO.toString(), uriEvent);
         sparqlFunctionsService.executeInsert(constantService.getOrganizationsGraph(), org, REDI.BELONGTO.toString(), uriEvent);
         sparqlFunctionsService.executeInsert(getProviderGraph(), uriEvent, REDI.EXTRACTIONDATE.toString(), dateFormat.format(date), STR);
-        sparqlFunctionsService.executeInsert(getProviderGraph(), uriEvent, RDFS.LABEL.toString(), detail, STR);
+        sparqlFunctionsService.executeInsert(getProviderGraph(), uriEvent, RDFS.LABEL.toString(), dateFormat.format(date)+" | "+detail, STR);
       
     }
 
