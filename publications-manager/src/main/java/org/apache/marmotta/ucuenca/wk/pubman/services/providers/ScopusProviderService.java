@@ -40,7 +40,8 @@ public class ScopusProviderService extends AbstractProviderService {
     private ConfigurationService configurationService;
 
     private final String requestTemplate = "http://api.elsevier.com/content/search/author?query=%s&count=100&apiKey=%s";
-    private final String expressionTemplate = "authfirst(%s) OR authfirst(%s) AND authlast(%s)";
+    private final String expressionTemplateNames = "authfirst(%s) OR authfirst(%s) AND authlast(%s)";
+    private final String expressionTemplateName = "authfirst(%s) AND authlast(%s)";
 
     @Override
     protected List<String> buildURLs(String firstname, String lastname) {
@@ -58,8 +59,12 @@ public class ScopusProviderService extends AbstractProviderService {
 
         String[] names = firstname.split(" ").length == 2 ? firstname.split(" ") : new String[]{firstname};
         lastname = lastname.split(" ").length > 1 ? lastname.split(" ")[0] : lastname;
-
-        String expression = String.format(expressionTemplate, names[0], names[1], lastname);
+        String expression;
+        if (names.length == 2) {
+            expression = String.format(expressionTemplateNames, names[0], names[1], lastname);
+        } else {
+            expression = String.format(expressionTemplateName, names[0], lastname);
+        }
         try {
             expression = URLEncoder.encode(expression, "UTF-8");
         } catch (UnsupportedEncodingException ex) {

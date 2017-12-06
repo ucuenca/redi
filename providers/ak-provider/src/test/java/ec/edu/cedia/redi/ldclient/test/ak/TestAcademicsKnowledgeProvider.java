@@ -30,7 +30,7 @@ import org.openrdf.repository.RepositoryConnection;
  */
 public class TestAcademicsKnowledgeProvider extends ProviderTestBase {
 
-    private final String apikey = "5bcfc7fb866f44679b32f69a26dd1ea2";
+    private final String apikey = "e12de59d47024f72bff06a9e256a4629";
 
     /**
      * Tests the extraction of an author and his publications. This test might

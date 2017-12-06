@@ -31,7 +31,7 @@ import org.openrdf.model.impl.LinkedHashModel;
 
 /**
  * Maps a dataset with other ontology using the
- * <a href="http://wifo5-03.informatik.uni-mannheim.de/bizer/r2r/spec/#targetvocabulary">R2R
+ * <a href="http://wifo5-03.informatik.uni-mannheim.de/bizer/r2r/spec/">R2R
  * Mapping Language</a>. See some
  * <a href="http://wifo5-03.informatik.uni-mannheim.de/bizer/r2r/">examples</a>
  * of the R2R Mapping Framework.
