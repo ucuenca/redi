@@ -91,6 +91,13 @@ uc:publications a r2r:Mapping ;
     r2r:targetPattern "?SUBJ foaf:publications ?b";
     r2r:targetPattern "?b dct:contributor ?SUBJ " .
 
+uc:publications2 a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblp:authoredBy ?b" ;
+    r2r:targetPattern "?b foaf:publications ?SUBJ";
+    r2r:targetPattern "?b a foaf:Person" ;
+    r2r:targetPattern "?SUBJ dct:contributor ?b" .
+
 uc:publicationscreator a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ dblp:creator ?b" ;
