@@ -7,12 +7,12 @@
 @prefix uc: <http://ucuenca.edu.ec/ontology#> .  
 @prefix scoro: <http://purl.org/spar/scoro/> .
 @prefix dct: <http://purl.org/dc/terms/> .
-@prefix bibo: <ttp://purl.org/ontology/bibo/> .
+@prefix bibo: <http://purl.org/ontology/bibo/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 
 uc:mapColl1 a r2r:MappingCollection;
-    r2r:prefixDefinitions "rdfs: <http://www.w3.org/2000/01/rdf-schema#> . bibo: <ttp://purl.org/ontology/bibo/> . dct: <http://purl.org/dc/terms/> . scoro: <http://purl.org/spar/scoro/> . schema: <http://schema.org/> . foaf: <http://xmlns.com/foaf/0.1/> . uc: <http://ucuenca.edu.ec/ontology#> . dblp: <http://dblp.org/rdf/schema-2017-04-18#> . owl: <http://www.w3.org/2002/07/owl#> ." .
+    r2r:prefixDefinitions "rdfs: <http://www.w3.org/2000/01/rdf-schema#> . bibo: <http://purl.org/ontology/bibo/> . dct: <http://purl.org/dc/terms/> . scoro: <http://purl.org/spar/scoro/> . schema: <http://schema.org/> . foaf: <http://xmlns.com/foaf/0.1/> . uc: <http://ucuenca.edu.ec/ontology#> . dblp: <http://dblp.org/rdf/schema-2017-04-18#> . owl: <http://www.w3.org/2002/07/owl#> ." .
 
 uc:Person a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
