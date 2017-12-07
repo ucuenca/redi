@@ -1,9 +1,9 @@
-
 <urlrewrite>
-<!--    <rule>
+<!-- <rule>
         <name>Domain Name Check</name>
-        <condition name="host" operator="notequal">redi.cedia.edu.ec</condition>
+        <condition name="host" operator="notequal" next="or" >redi.cedia.edu.ec</condition>
+        <condition type="scheme" operator="equal">https</condition>
         <from>^(.*)$</from>
-        <to type="redirect">http://redi.cedia.edu.ec$1</to>
-    </rule> -->
+        <to type="permanent-redirect">http://redi.cedia.edu.ec$1</to>
+    </rule>-->
 </urlrewrite>
