@@ -135,8 +135,8 @@ public abstract class AbstractProviderService implements ProviderService {
 
                     // Information of local author.
                     String authorResource = map.get("subject").stringValue();
-                    String firstName = map.get("fname").stringValue().trim().toLowerCase();
-                    String lastName = map.get("lname").stringValue().trim().toLowerCase();
+                    String firstName = map.get("fname").stringValue().trim().toLowerCase().replaceAll("\\p{C}", "");;
+                    String lastName = map.get("lname").stringValue().trim().toLowerCase().replaceAll("\\p{C}", "");;
 
                     task.updateDetailMessage("Author URI", authorResource);
 
