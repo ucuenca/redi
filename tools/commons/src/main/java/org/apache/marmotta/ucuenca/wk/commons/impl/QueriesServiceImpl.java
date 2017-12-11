@@ -133,6 +133,13 @@ public class QueriesServiceImpl implements QueriesService {
     }
 
     @Override
+    public String getAskObjectQuery(String graph, String resource, String filterexpr) {
+        return "ASK FROM <" + graph + "> { "
+                + "?s ?p <" + resource + "> "
+                + "FILTER REGEX(STR(?s), \".*" + filterexpr + ".*\")}";
+    }
+
+    @Override
     @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
     public String getAskObjectQuery(String graph, String object) {
         return "ASK FROM  <" + graph + "> { ?s ?p <" + object + "> }";
@@ -328,27 +335,27 @@ public class QueriesServiceImpl implements QueriesService {
                 + "?subject   ucmodel:extractionDate  ?date .  FILTER ( STR(?date)  != '') \n"
                 + "?uri  ucmodel:name  ?name    \n"
                 + "          OPTIONAL  {\n"
-                + " GRAPH   <"+con.getOrganizationsGraph()+"> {\n"
+                + " GRAPH   <" + con.getOrganizationsGraph() + "> {\n"
                 + "   ?uri  ucmodel:belongTo ?event  }\n"
-                + "  GRAPH  <"+con.getAcademicsKnowledgeGraph()+"> {\n"
+                + "  GRAPH  <" + con.getAcademicsKnowledgeGraph() + "> {\n"
                 + "  OPTIONAL {\n"
                 + "  ?event rdfs:label  ?labelAK }\n"
                 + "  OPTIONAL {\n"
                 + "  ?event  ucmodel:extractionDate ?eventdateAK } \n"
                 + "  }\n"
-                + "  GRAPH  <"+con.getDBLPGraph()+"> {\n"
+                + "  GRAPH  <" + con.getDBLPGraph() + "> {\n"
                 + "  OPTIONAL {\n"
                 + "  ?event rdfs:label  ?labelDBLP }\n"
                 + "  OPTIONAL {\n"
                 + "  ?event  ucmodel:extractionDate ?eventdateDBLP } \n"
                 + "  }\n"
-                + "  GRAPH  <"+con.getScopusGraph()+"> {\n"
+                + "  GRAPH  <" + con.getScopusGraph() + "> {\n"
                 + "  OPTIONAL {\n"
                 + "  ?event rdfs:label  ?labelScopus }\n"
                 + "  OPTIONAL {\n"
                 + "  ?event  ucmodel:extractionDate ?eventdateScopus} \n"
                 + "  }\n"
-                + "  GRAPH  <"+con.getGoogleScholarGraph()+"> {\n"
+                + "  GRAPH  <" + con.getGoogleScholarGraph() + "> {\n"
                 + "  OPTIONAL {\n"
                 + "  ?event rdfs:label  ?labelGs }\n"
                 + "  OPTIONAL {\n"

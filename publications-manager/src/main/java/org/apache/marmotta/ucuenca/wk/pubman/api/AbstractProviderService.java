@@ -81,7 +81,7 @@ public abstract class AbstractProviderService implements ProviderService {
     @Inject
     private ConstantService constantService;
 
-    private String STR = "string";
+    private final String STR = "string";
 
     /**
      * Build a list of URLs to request authors with {@link LDClient}.
@@ -107,6 +107,16 @@ public abstract class AbstractProviderService implements ProviderService {
      * @return
      */
     protected abstract String getProviderName();
+
+    /**
+     * Returns a filter expression to be executed in the ask query. If the
+     * filter is empty, the ask evaluates without filter.
+     *
+     * @return
+     */
+    protected String filterExpressionSearch() {
+        return "";
+    }
 
     /**
      * Extract authors from a particular provider.
@@ -141,12 +151,19 @@ public abstract class AbstractProviderService implements ProviderService {
                     task.updateDetailMessage("Author URI", authorResource);
 
                     for (String reqResource : buildURLs(firstName, lastName)) {
+                        // validate if the request has been done
+                        String querySearchAuthor;
+                        if ("".equals(filterExpressionSearch())) {
+                            querySearchAuthor = queriesService.getAskResourceQuery(getProviderGraph(), reqResource.replace(" ", ""));
+                        } else {
+                            querySearchAuthor = queriesService.getAskObjectQuery(getProviderGraph(), authorResource, filterExpressionSearch());
+                        }
                         boolean existNativeAuthor = sparqlService.ask(
-                                QueryLanguage.SPARQL,
-                                queriesService.getAskResourceQuery(getProviderGraph(), reqResource.replace(" ", "")));
+                                QueryLanguage.SPARQL, querySearchAuthor);
                         if (existNativeAuthor) {
                             continue;
                         }
+
                         try {
                             ClientResponse response = ldClient.retrieveResource(reqResource);
 
