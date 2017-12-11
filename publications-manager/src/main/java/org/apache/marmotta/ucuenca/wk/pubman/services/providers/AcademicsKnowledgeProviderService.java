@@ -1,13 +1,27 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.marmotta.ucuenca.wk.pubman.services.providers;
 
 import com.google.common.base.Preconditions;
 import edu.emory.mathcs.backport.java.util.Collections;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.util.List;
 import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
@@ -27,6 +41,7 @@ public class AcademicsKnowledgeProviderService extends AbstractProviderService {
     private ConstantService constantService;
     @Inject
     private ConfigurationService configurationService;
+    private String expression;
 
     /**
      * Build URLs to request information from Academics Knowledge API.
@@ -53,27 +68,28 @@ public class AcademicsKnowledgeProviderService extends AbstractProviderService {
         firstName = StringUtils.stripAccents(firstName).trim().toLowerCase();
         lastName = StringUtils.stripAccents(lastName).trim().toLowerCase();
 
-        StringBuilder expression = new StringBuilder("AND(Ty='1',OR(");
+        StringBuilder expr = new StringBuilder("AND(Ty='1',OR(");
 
         String[] fName = splitName(firstName);
         String[] lName = splitName(lastName);
         for (int i = 0; i <= fName.length; i++) {
             if (i == fName.length) {
-                expression.append("AuN='")
+                expr.append("AuN='")
                         .append(firstName).append(' ')
                         .append(lName[0]).append('\'');
             } else {
-                expression.append("AuN='")
+                expr.append("AuN='")
                         .append(fName[i]).append(' ')
                         .append(lName[0]).append('\'');
             }
             if (i < fName.length) {
-                expression.append(',');
+                expr.append(',');
             }
         }
-        expression.append("))");
+        expr.append("))");
+        expression = expr.toString();
         URIBuilder builder = new URIBuilder("https://westus.api.cognitive.microsoft.com/academic/v1.0/evaluate");
-        builder.setParameter("expr", expression.toString());
+        builder.setParameter("expr", expression);
         builder.setParameter("attributes", "Id,AuN,DAuN,CC,ECC,E");
         builder.setParameter("subscription-key", apiKey);
 
@@ -111,6 +127,15 @@ public class AcademicsKnowledgeProviderService extends AbstractProviderService {
     @Override
     protected String getProviderName() {
         return "Academics Knowledge";
+    }
+
+    @Override
+    protected String filterExpressionSearch() {
+        try {
+            return URLEncoder.encode(expression, "UTF-8").replace('+', '.');
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException("Cannot build expression", ex);
+        }
     }
 
 }

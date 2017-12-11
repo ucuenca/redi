@@ -125,6 +125,8 @@ public interface QueriesService {
      */
     String getAskResourceQuery(String graph, String resource);
 
+    String getAskObjectQuery(String graph, String resource, String filterexpr);
+
     String getAskObjectQuery(String graph, String object);
 
     String getAskAcademicsQuery(String graph, String object);
