@@ -125,7 +125,7 @@ public class OntologyMapperTest {
         assertEquals(dblpModel.size(), 229307);
         Model resultWithMapperFile = OntologyMapper.map(dblpModel, dblpMapper, vocabulary);
         Model resultEmptyMapperFile = OntologyMapper.map(dblpModel, emptyMapper, vocabulary);
-        assertEquals(resultWithMapperFile.size(), 89503);
+        assertEquals(resultWithMapperFile.size(), 194106);
         assertEquals(resultEmptyMapperFile.size(), 0);
     }
 }
