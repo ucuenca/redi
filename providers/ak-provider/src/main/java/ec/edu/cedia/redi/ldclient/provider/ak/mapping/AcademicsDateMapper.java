@@ -31,9 +31,9 @@ import org.openrdf.model.ValueFactory;
  *
  * @author Xavier Sumba <xavier.sumba93@ucuenca.ec>
  */
-public class ScopusDateMapper extends JsonPathValueMapper {
+public class AcademicsDateMapper extends JsonPathValueMapper {
 
-    public ScopusDateMapper(String path, Predicate... filters) {
+    public AcademicsDateMapper(String path, Predicate... filters) {
         super(path, filters);
     }
 

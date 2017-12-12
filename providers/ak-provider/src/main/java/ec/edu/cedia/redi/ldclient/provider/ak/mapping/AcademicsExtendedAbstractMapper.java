@@ -30,9 +30,9 @@ import java.util.Map;
  *
  * @author Xavier Sumba <xavier.sumba93@ucuenca.ec>
  */
-public class ScopusExtendedAbstractMapper extends ScopusExtendedMetaLiteraldataMapper {
+public class AcademicsExtendedAbstractMapper extends AcademicsExtendedMetaLiteraldataMapper {
 
-    public ScopusExtendedAbstractMapper(String path, String extendedPath, Predicate... filters) {
+    public AcademicsExtendedAbstractMapper(String path, String extendedPath, Predicate... filters) {
         super(path, extendedPath, filters);
     }
 

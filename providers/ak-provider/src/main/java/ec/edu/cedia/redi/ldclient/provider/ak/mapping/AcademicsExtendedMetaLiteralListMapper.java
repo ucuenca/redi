@@ -34,17 +34,17 @@ import org.openrdf.model.vocabulary.XMLSchema;
  *
  * @author Xavier Sumba <xavier.sumba93@ucuenca.ec>
  */
-public class ScopusExtendedMetaLiteralListMapper extends JsonPathValueMapper {
+public class AcademicsExtendedMetaLiteralListMapper extends JsonPathValueMapper {
 
     protected final String extendedPath;
     private String datatype;
 
-    public ScopusExtendedMetaLiteralListMapper(String path, String extendedPath, Predicate... filters) {
+    public AcademicsExtendedMetaLiteralListMapper(String path, String extendedPath, Predicate... filters) {
         super(path, filters);
         this.extendedPath = extendedPath;
     }
 
-    public ScopusExtendedMetaLiteralListMapper(String path, String extendedPath, String datatype, Predicate... filters) {
+    public AcademicsExtendedMetaLiteralListMapper(String path, String extendedPath, String datatype, Predicate... filters) {
         super(path, filters);
         this.extendedPath = extendedPath;
         this.datatype = datatype;
