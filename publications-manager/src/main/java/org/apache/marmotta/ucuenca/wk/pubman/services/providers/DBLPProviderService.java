@@ -27,7 +27,7 @@ public class DBLPProviderService extends AbstractProviderService {
     @Override
     protected List<String> buildURLs(String firstname, String lastname) {
         String NS_DBLP = "http://rdf.dblp.com/ns/search/";
-        String nameToFind = commonsServices.removeAccents(priorityFindQueryBuilding(1, firstname, lastname));
+        String nameToFind = commonsServices.removeAccents(priorityFindQueryBuilding(firstname, lastname));
         String URI = NS_DBLP + nameToFind;
         return Collections.singletonList(URI);
     }
@@ -42,54 +42,11 @@ public class DBLPProviderService extends AbstractProviderService {
         return "DBLP";
     }
 
-    public String priorityFindQueryBuilding(int priority, String firstName, String lastName) {
-        String[] fnamelname = {"", "", "", "", ""};
-        /**
-         * fnamelname[0] is a firstName A, fnamelname[1] is a firstName B
-         * fnamelname[2] is a lastName A, fnamelname[3] is a lastName B
-         *
-         */
-        String nameProcess = "";
-        for (String name : (firstName + " " + lastName).split(" ")) {
-            if (name.length() > 1) {
-                nameProcess += name + " ";
-            }
-        }
-        if (nameProcess.split(" ").length > 2) {
-            for (int i = 0; i < firstName.split(" ").length; i++) {
-                fnamelname[i] = firstName.split(" ")[i];
-            }
-
-            for (int i = 0; i < lastName.split(" ").length; i++) {
-                fnamelname[i + 2] = lastName.split(" ")[i];
-            }
-
-            switch (priority) {
-//            case 5:
-//                return fnamelname[3];
-                case 1:
-                    return fnamelname[0] + "_" + fnamelname[2];
-                case 3:
-                    return fnamelname[1] + "_" + fnamelname[2] + "_" + fnamelname[3];
-                case 2:
-                    return fnamelname[0] + "_" + fnamelname[2] + "_" + fnamelname[3];
-                case 4:
-                    return fnamelname[0] + "_" + fnamelname[1] + "_" + fnamelname[2] + "_" + fnamelname[3];
-            }
-
-        } else {
-            for (int i = 0; i < firstName.split(" ").length; i++) {
-                fnamelname[i] = firstName.split(" ")[i];
-            }
-
-            for (int i = 0; i < lastName.split(" ").length; i++) {
-                fnamelname[i + 1] = lastName.split(" ")[i];
-            }
-
-            return fnamelname[0] + "_" + fnamelname[1];
-
-        }
-        return "";
+    public String priorityFindQueryBuilding(String firstName, String lastName) {
+        String fn = firstName.trim();
+        String ln = lastName.trim();
+        fn = fn.split(" ")[0];
+        ln = ln.split(" ")[0];
+        return fn + "_" + ln;
     }
-
 }
