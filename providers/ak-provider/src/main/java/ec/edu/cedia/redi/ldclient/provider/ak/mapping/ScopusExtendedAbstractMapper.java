@@ -6,14 +6,14 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package ec.edu.cedia.redi.ldclient.provider.ak.mapping;
 
@@ -55,7 +55,15 @@ public class ScopusExtendedAbstractMapper extends ScopusExtendedMetaLiteraldataM
                 plainAbstract[index] = key;
             }
         }
-        return Joiner.on(" ").skipNulls().join(plainAbstract);
+        /**
+         * There are some problems with invisible control characters and unused
+         * code points. \p{C} should detect those unexpected characters and
+         * replace them with an empty value.
+         * <p>
+         * Read this for more info about the regex patter.
+         * https://stackoverflow.com/questions/44034232/undocumented-java-regex-character-class-pc
+         */
+        return Joiner.on(" ").skipNulls().join(plainAbstract).replaceAll("\\p{C}", "");
     }
 
 }
