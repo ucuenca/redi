@@ -27,7 +27,7 @@ uc:authorAcademicsID a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:classMappingRef uc:authorType ;
     r2r:sourcePattern "?SUBJ uc:academicsId ?id. ?SUBJ a foaf:Person" ;
-    r2r:transformation "?academicsAccount=concat('https://academic.microsoft.com/#/detail/', replaceAll(' ', '', ?id))" ;
+    r2r:transformation "?academicsAccount=concat('https://academic.microsoft.com/#/detail/', xpath:encode-for-uri(?id))" ;
     r2r:targetPattern "?SUBJ foaf:holdsAccount ?<academicsAccount>" ;
     r2r:targetPattern "?academicsAccount a uc:AcademicsKnowledgeAccount" ;
     r2r:targetPattern "?academicsAccount a foaf:OnlineAccount" .
@@ -42,7 +42,7 @@ uc:authorAffiliation a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:classMappingRef uc:authorType ;
     r2r:sourcePattern "?SUBJ uc:affiliationId ?affId; uc:affiliationName ?affName." ;
-    r2r:transformation "?affIRI=concat('https://academic.microsoft.com/#/detail/', replaceAll(' ', '', ?affId))" ;
+    r2r:transformation "?affIRI=concat('https://academic.microsoft.com/#/detail/', xpath:encode-for-uri(?affId))" ;
     r2r:targetPattern "?SUBJ schema:memberOf ?<affIRI>" ;
     r2r:targetPattern "?affIRI a foaf:Organization" ;
     r2r:targetPattern "?affIRI foaf:name ?'affName'^^xsd:string" ;
@@ -93,7 +93,7 @@ uc:publicationConference a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:classMappingRef uc:publicationType ;
     r2r:sourcePattern "?SUBJ uc:conferenceId ?id; uc:venueFullName ?name; uc:conferenceName ?altName; uc:venueShortName ?shortName" ;
-    r2r:transformation "?confIRI=concat('https://academic.microsoft.com/#/detail/', replaceAll(' ', '', ?id))" ;
+    r2r:transformation "?confIRI=concat('https://academic.microsoft.com/#/detail/', xpath:encode-for-uri(?id))" ;
     r2r:targetPattern "?SUBJ dct:isPartOf ?<confIRI>" ;
     r2r:targetPattern "?confIRI a bibo:Conference" ;
     r2r:targetPattern "?confIRI rdfs:label ?name" ;
@@ -124,7 +124,7 @@ uc:publicationQuotes a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:classMappingRef uc:publicationType ;
     r2r:sourcePattern "?SUBJ foaf:topic ?topic" ;
-    r2r:transformation "?topicIRI=concat('http://redi.cedia.edu.ec/resource/quote/', replaceAll(' ', '-', ?topic))" ;
+    r2r:transformation "?topicIRI=concat('http://redi.cedia.edu.ec/resource/quote/', xpath:encode-for-uri(?topic))" ;
     r2r:targetPattern "?SUBJ bibo:quote ?<topicIRI>" ;
     r2r:targetPattern "?topicIRI rdfs:label ?'topic'^^xsd:string" .
 
@@ -132,7 +132,7 @@ uc:publicationCites a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:classMappingRef uc:publicationType ;
     r2r:sourcePattern "?SUBJ uc:academicsReferenceId ?citeId" ;
-    r2r:transformation "?citeIRI=concat('https://academic.microsoft.com/#/detail/', replaceAll(' ', '', ?citeId))" ;
+    r2r:transformation "?citeIRI=concat('https://academic.microsoft.com/#/detail/', xpath:encode-for-uri(?citeId))" ;
     r2r:targetPattern "?SUBJ bibo:cites ?<citeIRI>" ;
     r2r:targetPattern "?citeIRI a bibo:AcademicArticle" .
 
