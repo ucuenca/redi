@@ -103,7 +103,7 @@ uc:authorAffiliation a r2r:Mapping;
     r2r:sourcePattern "?SUBJ elsevier:affiliation ?aff. ?aff skos:prefLabel ?affName." ;
     r2r:targetPattern "?SUBJ schema:memberOf ?aff" ;
     r2r:targetPattern "?aff a foaf:Organization" ;
-    r2r:targetPattern "?aff rdfs:label ?'affName'^^xsd:string" .
+    r2r:targetPattern "?aff foaf:name ?'affName'^^xsd:string" .
 
 # PUBLICATION INFORMATION
 
