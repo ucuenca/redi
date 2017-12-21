@@ -128,9 +128,9 @@ public class DBLPAuthorRawProvider extends AbstractHttpProvider {
             throw new DataRetrievalException("I/O error while parsing response", e);
         }
         Model publications = triples.filter(null, factory.createURI(dblpNamespaces.get("dblp") + "authorOf"), null);
-        Model type = triples.filter(null, null,factory.createURI(dblpNamespaces.get("dblp") + "Person"));
-        Resource subject = type.subjects().iterator().next();
-        triples.add(factory.createURI(resource), OWL.SAMEAS, subject);
+        //Model type = triples.filter(null, null,factory.createURI(dblpNamespaces.get("dblp") + "Person"));
+        //Resource subject = type.subjects().iterator().next();
+        //triples.add(factory.createURI(resource), OWL.SAMEAS, subject);
         Set<Value> resources = publications.objects();
         if (!resources.isEmpty()) {
             Model resourceModel = null;
