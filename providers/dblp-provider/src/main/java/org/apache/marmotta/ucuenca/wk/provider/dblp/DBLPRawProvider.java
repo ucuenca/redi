@@ -111,7 +111,7 @@ public class DBLPRawProvider extends AbstractHttpProvider {
         } else {
             Preconditions.checkState(StringUtils.isNotBlank(resource));
             String id = resource.substring(resource.lastIndexOf('/') + 1);
-            url = String.format(API, id.replace('_', '+'));
+            url = String.format(API, id.replace('_', '+').replace('-', '|'));
         }
         Delay.call();
         return Collections.singletonList(url);

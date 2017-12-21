@@ -56,7 +56,7 @@ public class DBLPProviderService extends AbstractProviderService {
         List<String> list = new ArrayList<String>(Arrays.asList(tokens));
         list.removeAll(Arrays.asList("", null));
         for (int i = 0; i < list.size(); i++) {
-            s += list.get(i) + (i == list.size() - 1 ? "" : "|");
+            s += list.get(i) + (i == list.size() - 1 ? "" : "-");
         }
         return s;
     }
