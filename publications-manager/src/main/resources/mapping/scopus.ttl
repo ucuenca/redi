@@ -22,7 +22,7 @@ uc:authorPublications a r2r:Mapping;
     r2r:classMappingRef uc:authorType ;
     r2r:sourcePattern "?SUBJ foaf:publications ?publication" ;
     r2r:targetPattern "?SUBJ foaf:publications ?publication" ;
-    r2r:targetPattern "?publication a foaf:AcademicArticle" ;
+    r2r:targetPattern "?publication a bibo:AcademicArticle" ;
     r2r:targetPattern "?publication dct:provenance uc:ScopusProvider" .
 
 uc:authorIdentifier a r2r:Mapping;
