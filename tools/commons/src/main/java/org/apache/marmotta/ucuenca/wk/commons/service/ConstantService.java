@@ -134,4 +134,5 @@ public interface ConstantService {
     
     String getAuthorsSameAsGraph();
     String getPublicationsSameAsGraph();
+    String getAuthorsProviderGraph();
 }

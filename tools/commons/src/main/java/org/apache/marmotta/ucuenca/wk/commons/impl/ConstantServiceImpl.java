@@ -301,4 +301,9 @@ public class ConstantServiceImpl implements ConstantService {
         return confService.getBaseContext() + "publicationsSameAs";
     }
 
+    @Override
+    public String getAuthorsProviderGraph() {
+        return confService.getBaseContext() + "authorsProvider";
+    }
+
 }

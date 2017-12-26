@@ -62,7 +62,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
     private Thread CentralGraphWorker;
 
     private List<Provider> getProviders() {
-        Provider a0 = new Provider("Authors", constantService.getAuthorsGraph(), sparqlService);
+        Provider a0 = new Provider("Authors", constantService.getAuthorsProviderGraph(), sparqlService);
         Provider a1 = new Provider("Scopus", constantService.getScopusGraph(), sparqlService);
         Provider a2 = new Provider("MSAK", constantService.getAcademicsKnowledgeGraph(), sparqlService);
         Provider a3 = new Provider("DBLP", constantService.getDBLPGraph(), sparqlService);
@@ -77,6 +77,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
     @Override
     public void Proccess() {
         try {
+            InitAuthorsProvider();
             List<Provider> Providers = getProviders();
             ProcessAuthors(Providers);
             ProcessPublications(Providers);
@@ -86,11 +87,78 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         }
     }
 
+    public void InitAuthorsProvider() throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
+        String delete = "delete {\n"
+                + "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
+                + "		?a ?b ?c .\n"
+                + "	}\n"
+                + "} where {\n"
+                + "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
+                + "		?a ?b ?c .\n"
+                + "	}\n"
+                + "}";
+        String copy = "insert {\n"
+                + "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
+                + "		?a ?b ?c .\n"
+                + "	}\n"
+                + "} where {\n"
+                + "	graph <" + constantService.getAuthorsGraph() + "> {\n"
+                + "		?a ?b ?c .\n"
+                + "	}\n"
+                + "}";
+        String givName = "prefix foaf: <http://xmlns.com/foaf/0.1/>\n"
+                + "insert {\n"
+                + "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
+                + "		?a foaf:givenName ?c .\n"
+                + "	}\n"
+                + "} where {\n"
+                + "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
+                + "		?a foaf:firstName ?c .\n"
+                + "	}\n"
+                + "}";
+        String famName = "prefix foaf: <http://xmlns.com/foaf/0.1/>\n"
+                + "insert {\n"
+                + "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
+                + "		?a foaf:familyName ?c .\n"
+                + "	}\n"
+                + "} where {\n"
+                + "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
+                + "		?a foaf:lastName ?c .\n"
+                + "	}\n"
+                + "}";
+        String org = "prefix foaf: <http://xmlns.com/foaf/0.1/>\n"
+                + "prefix  schema: <http://schema.org/>\n"
+                + "insert {\n"
+                + "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
+                + "		?a schema:memberOf ?o .\n"
+                + "		?o a foaf:Organization .\n"
+                + "		?o foaf:name ?n .\n"
+                + "	}\n"
+                + "} where {\n"
+                + "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
+                + "		?a <http://purl.org/dc/terms/provenance> ?p .\n"
+                + "	}\n"
+                + "	graph <" + constantService.getEndpointsGraph() + "> {\n"
+                + "		?p <http://ucuenca.edu.ec/ontology#belongTo> ?o .\n"
+                + "	}\n"
+                + "	graph <" + constantService.getOrganizationsGraph() + "> {\n"
+                + "		?o <http://ucuenca.edu.ec/ontology#fullName> ?n .\n"
+                + "	}\n"
+                + "}";
+        sparqlService.update(QueryLanguage.SPARQL, delete);
+        sparqlService.update(QueryLanguage.SPARQL, copy);
+        sparqlService.update(QueryLanguage.SPARQL, givName);
+        sparqlService.update(QueryLanguage.SPARQL, famName);
+        sparqlService.update(QueryLanguage.SPARQL, org);
+    }
+
     public void ProcessAuthors(List<Provider> AuthorsProviderslist) throws MarmottaException, RepositoryException, MalformedQueryException, QueryEvaluationException, RDFHandlerException, InvalidArgumentException, UpdateExecutionException, InterruptedException {
         ExecutorService executorService = Executors.newFixedThreadPool(MAXTHREADS);
         Provider MainAuthorsProvider = AuthorsProviderslist.get(0);
         List<Person> allAuthors = MainAuthorsProvider.getAuthors();
         for (int i = 0; i < allAuthors.size(); i++) {
+            final int ix=i;
+            final int allx=allAuthors.size();
             Person aSeedAuthor = allAuthors.get(i);
             final List<Map.Entry<Provider, List<Person>>> Candidates = new ArrayList<>();
             Candidates.add(new AbstractMap.SimpleEntry<Provider, List<Person>>(MainAuthorsProvider, Lists.newArrayList(aSeedAuthor)));
@@ -109,6 +177,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                             aCandidateList.getKey().FillData(aCandidateList.getValue());
                         }
                         Disambiguate(Candidates, 0, new Person());
+                        log.info("Disambiguating {} out of {} authors", ix, allx);
                     } catch (Exception ex) {
                         log.error("Unknown error while disambiguating");
                         ex.printStackTrace();
@@ -138,9 +207,12 @@ public class DisambiguationServiceImpl implements DisambiguationService {
     public void ProcessPublications(List<Provider> ProvidersList) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
         String qryDisambiguatedAuthors = " select distinct ?p { graph <" + constantService.getAuthorsSameAsGraph() + "> { ?p <http://www.w3.org/2002/07/owl#sameAs> ?o } }";
         List<Map<String, Value>> queryResponse = sparqlService.query(QueryLanguage.SPARQL, qryDisambiguatedAuthors);
+        int i=0;
         for (Map<String, Value> anAuthor : queryResponse) {
             String authorURI = anAuthor.get("p").stringValue();
             groupPublications(ProvidersList, authorURI);
+            log.info("Disambiguating publications {} out of {} authors", i, queryResponse.size());
+            i++;
         }
 
     }
@@ -269,9 +341,6 @@ public class DisambiguationServiceImpl implements DisambiguationService {
     }
 
     public void mergeRawData(List<Provider> ProvidersList) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
-        //String CGP = "http://redi.cedia.edu.ec/person/sameAs";
-        //String rd = "http://redi.cedia.edu.ec/rediNew";
-
         String providersGraphs = "  ";
         for (Provider aProvider : ProvidersList) {
             providersGraphs += " <" + aProvider.Graph + "> ";
