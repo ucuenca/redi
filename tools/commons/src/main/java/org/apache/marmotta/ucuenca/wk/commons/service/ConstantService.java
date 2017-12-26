@@ -131,4 +131,7 @@ public interface ConstantService {
      */
     String getLatindexJournalsGraph();
     String getEndpointBaseEvent();
+    
+    String getAuthorsSameAsGraph();
+    String getPublicationsSameAsGraph();
 }

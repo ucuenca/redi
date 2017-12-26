@@ -63,6 +63,8 @@ public class PubWebService {
     public static final String GET_PUBLICATIONS_AK = "/publications_ak";
     public static final String GET_PUBLICATIONS_DSPACE = "/publications_dspace";
     public static final String DETECT_LATINDEX_PUBLICATIONS = "/publications_latindex";
+    public static final String DISAMBIGUATION_PUBLICATIONS = "/publications_disambiguation";
+    public static final String CENTRAL_GRAPH_PUBLICATIONS = "/publications_centralgraph";
     public static final String LOAD_PUBLICATIONS = "/publications_provider_graph";
     public static final String LOAD_AUTHOR_ATTR = "/author_attr";
     public static final String GET_AUTHOR_DATA = "/pubsearch";
@@ -359,6 +361,26 @@ public class PubWebService {
         String realContextPath = context.getRealPath(request.getContextPath());
         log.debug("Report Task");
         String result = commonService.getSearchQuery(textSearch);
+        return Response.ok().entity(result).build();
+    }
+    
+    
+    
+    @POST
+    @Path(DISAMBIGUATION_PUBLICATIONS)
+    public Response disambiguation(@QueryParam("Endpoint") String resultType) {
+        String params = resultType;
+        log.debug("Publications Task", params);
+        String result = commonService.DisambiguationProcess();
+        return Response.ok().entity(result).build();
+    }
+    
+    @POST
+    @Path(CENTRAL_GRAPH_PUBLICATIONS)
+    public Response centralGraph(@QueryParam("Endpoint") String resultType) {
+        String params = resultType;
+        log.debug("Publications Task", params);
+        String result = commonService.CentralGraphProcess();
         return Response.ok().entity(result).build();
     }
 

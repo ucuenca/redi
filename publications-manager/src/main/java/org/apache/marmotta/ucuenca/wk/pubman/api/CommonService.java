@@ -38,6 +38,8 @@ public interface CommonService {
     String getSearchQuery(String textSearch);
 
     String DetectLatindexPublications();
+    String DisambiguationProcess();
+    String CentralGraphProcess();
 
     String organizationListExtracted();
 }

@@ -1,0 +1,375 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package org.apache.marmotta.ucuenca.wk.pubman.services;
+
+import com.google.common.collect.Lists;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
+import org.apache.marmotta.platform.core.exception.MarmottaException;
+import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
+import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
+import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
+import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
+import org.apache.marmotta.ucuenca.wk.pubman.api.DisambiguationService;
+import org.apache.marmotta.ucuenca.wk.pubman.disambiguation.Person;
+import org.apache.marmotta.ucuenca.wk.pubman.disambiguation.Provider;
+import org.apache.marmotta.ucuenca.wk.pubman.disambiguation.utils.PublicationUtils;
+import org.openrdf.model.Value;
+import org.openrdf.query.MalformedQueryException;
+import org.openrdf.query.QueryEvaluationException;
+import org.openrdf.query.QueryLanguage;
+import org.openrdf.query.UpdateExecutionException;
+import org.openrdf.repository.RepositoryException;
+import org.openrdf.rio.RDFHandlerException;
+
+/**
+ *
+ * @author cedia
+ */
+@ApplicationScoped
+public class DisambiguationServiceImpl implements DisambiguationService {
+
+    final int MAXTHREADS = 20;
+
+    @Inject
+    private org.slf4j.Logger log;
+
+    @Inject
+    private ConstantService constantService;
+
+    @Inject
+    private SparqlService sparqlService;
+
+    @Inject
+    private QueriesService queriesService;
+
+    @Inject
+    private CommonsServices commonsServices;
+
+    private Thread DisambiguationWorker;
+    private Thread CentralGraphWorker;
+
+    private List<Provider> getProviders() {
+        Provider a0 = new Provider("Authors", constantService.getAuthorsGraph(), sparqlService);
+        Provider a1 = new Provider("Scopus", constantService.getScopusGraph(), sparqlService);
+        Provider a2 = new Provider("MSAK", constantService.getAcademicsKnowledgeGraph(), sparqlService);
+        Provider a3 = new Provider("DBLP", constantService.getDBLPGraph(), sparqlService);
+        List<Provider> Providers = new ArrayList();
+        Providers.add(a0);
+        Providers.add(a1);
+        Providers.add(a2);
+        Providers.add(a3);
+        return Providers;
+    }
+
+    @Override
+    public void Proccess() {
+        try {
+            List<Provider> Providers = getProviders();
+            ProcessAuthors(Providers);
+            ProcessPublications(Providers);
+        } catch (Exception ex) {
+            log.error("Unknown error while disambiguating");
+            ex.printStackTrace();
+        }
+    }
+
+    public void ProcessAuthors(List<Provider> AuthorsProviderslist) throws MarmottaException, RepositoryException, MalformedQueryException, QueryEvaluationException, RDFHandlerException, InvalidArgumentException, UpdateExecutionException, InterruptedException {
+        ExecutorService executorService = Executors.newFixedThreadPool(MAXTHREADS);
+        Provider MainAuthorsProvider = AuthorsProviderslist.get(0);
+        List<Person> allAuthors = MainAuthorsProvider.getAuthors();
+        for (int i = 0; i < allAuthors.size(); i++) {
+            Person aSeedAuthor = allAuthors.get(i);
+            final List<Map.Entry<Provider, List<Person>>> Candidates = new ArrayList<>();
+            Candidates.add(new AbstractMap.SimpleEntry<Provider, List<Person>>(MainAuthorsProvider, Lists.newArrayList(aSeedAuthor)));
+            for (int j = 1; j < AuthorsProviderslist.size(); j++) {
+                Provider aSecondaryProvider = AuthorsProviderslist.get(j);
+                List<Person> aProviderCandidates = aSecondaryProvider.getCandidates(aSeedAuthor.URI);
+                if (!aProviderCandidates.isEmpty()) {
+                    Candidates.add(new AbstractMap.SimpleEntry<>(aSecondaryProvider, aProviderCandidates));
+                }
+            }
+            executorService.execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        for (Map.Entry<Provider, List<Person>> aCandidateList : Candidates) {
+                            aCandidateList.getKey().FillData(aCandidateList.getValue());
+                        }
+                        Disambiguate(Candidates, 0, new Person());
+                    } catch (Exception ex) {
+                        log.error("Unknown error while disambiguating");
+                        ex.printStackTrace();
+                    }
+                }
+            });
+        }
+        executorService.shutdown();
+    }
+
+    public void Disambiguate(List<Map.Entry<Provider, List<Person>>> Candidates, int level, Person superAuthor) throws MarmottaException, RepositoryException, MalformedQueryException, QueryEvaluationException, RDFHandlerException, InvalidArgumentException, UpdateExecutionException {
+        if (level >= Candidates.size()) {
+            return;
+        }
+        List<Person> CandidateListLevel = Candidates.get(level).getValue();
+        for (Person aCandidate : CandidateListLevel) {
+            if (superAuthor.check(aCandidate)) {
+                Person enrich = superAuthor.enrich(aCandidate);
+                registerSameAs(constantService.getAuthorsSameAsGraph(), superAuthor.URI, aCandidate.URI);
+                Disambiguate(Candidates, level + 1, enrich);
+            } else {
+                Disambiguate(Candidates, level + 1, superAuthor);
+            }
+        }
+    }
+
+    public void ProcessPublications(List<Provider> ProvidersList) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
+        String qryDisambiguatedAuthors = " select distinct ?p { graph <" + constantService.getAuthorsSameAsGraph() + "> { ?p <http://www.w3.org/2002/07/owl#sameAs> ?o } }";
+        List<Map<String, Value>> queryResponse = sparqlService.query(QueryLanguage.SPARQL, qryDisambiguatedAuthors);
+        for (Map<String, Value> anAuthor : queryResponse) {
+            String authorURI = anAuthor.get("p").stringValue();
+            groupPublications(ProvidersList, authorURI);
+        }
+
+    }
+
+    public void groupPublications(List<Provider> ProvidersList, String personURI) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
+        String providersGraphs = "  ";
+        for (Provider aProvider : ProvidersList) {
+            providersGraphs += " <" + aProvider.Graph + "> ";
+        }
+        String qryAllPublications = "select distinct ?p ?t {\n"
+                + "  	graph <" + constantService.getAuthorsSameAsGraph() + ">{\n"
+                + "		<" + personURI + "> <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
+                + "    }\n"
+                + "    values ?g { " + providersGraphs + " } graph ?g {\n"
+                + "  	 ?c <http://xmlns.com/foaf/0.1/publications> ?p.\n"
+                + "  	 ?p <http://purl.org/dc/terms/title> ?t.\n"
+                + "    }\n"
+                + "} ";
+        List<Map<String, Value>> queryResponse = sparqlService.query(QueryLanguage.SPARQL, qryAllPublications);
+        Set<Set<Integer>> publicationsGroups = new HashSet<>();
+        for (int i = 0; i < queryResponse.size(); i++) {
+            for (int j = i + 1; j < queryResponse.size(); j++) {
+                double titleSimilarity = PublicationUtils.compareTitle(queryResponse.get(i).get("t").stringValue(), queryResponse.get(j).get("t").stringValue());
+                if (titleSimilarity >= Person.thresholdTitle) {
+                    Set<Integer> aGroup = new HashSet<>();
+                    aGroup.add(i);
+                    aGroup.add(j);
+                    Set<Integer> auxGroup = null;
+                    for (Set<Integer> potentialGroup : publicationsGroups) {
+                        if (potentialGroup.contains(i) || potentialGroup.contains(j)) {
+                            auxGroup = potentialGroup;
+                            break;
+                        }
+                    }
+                    if (auxGroup == null) {
+                        publicationsGroups.add(aGroup);
+                    } else {
+                        auxGroup.addAll(aGroup);
+                    }
+                }
+            }
+        }
+        for (Set<Integer> eachGroup : publicationsGroups) {
+            int firstIndex = -1;
+            for (Integer groupIndex : eachGroup) {
+                if (firstIndex == -1) {
+                    firstIndex = groupIndex;
+                }
+                String URIPublicationA = queryResponse.get(firstIndex).get("p").stringValue();
+                String URIPublicationB = queryResponse.get(groupIndex).get("p").stringValue();
+                registerSameAs(constantService.getPublicationsSameAsGraph(), URIPublicationA, URIPublicationB);
+            }
+        }
+    }
+
+    public void registerSameAs(String graph, String URIO, String URIP) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
+
+        if (URIO != null && URIP != null && URIO.compareTo(URIP) != 0) {
+            String buildInsertQuery = buildInsertQuery(graph, URIO, "http://www.w3.org/2002/07/owl#sameAs", URIP);
+            sparqlService.update(QueryLanguage.SPARQL, buildInsertQuery);
+        }
+    }
+
+    private String buildInsertQuery(String grapfhProv, String sujeto, String predicado, String objeto) {
+        if (commonsServices.isURI(objeto)) {
+            return queriesService.getInsertDataUriQuery(grapfhProv, sujeto, predicado, objeto);
+        } else {
+            return queriesService.getInsertDataLiteralQuery(grapfhProv, sujeto, predicado, objeto);
+        }
+    }
+
+    @Override
+    public void Merge() {
+        try {
+            List<Provider> Providers = getProviders();
+            mergeRawData(Providers);
+            replaceSameAs(constantService.getAuthorsSameAsGraph());
+            replaceSameAs(constantService.getPublicationsSameAsGraph());
+        } catch (Exception ex) {
+            log.error("Unknown error while merging Central Graph");
+            ex.printStackTrace();
+        }
+    }
+
+    public void replaceSameAs(String CGP) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
+        String qry1 = "delete {\n"
+                + "	graph <" + constantService.getCentralGraph() + "> {\n"
+                + "		?c ?p ?v .\n"
+                + "	}\n"
+                + "}\n"
+                + "insert {\n"
+                + "	graph <" + constantService.getCentralGraph() + "> {\n"
+                + "		?a ?p ?v .\n"
+                + "		?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
+                + "	}\n"
+                + "}\n"
+                + "where {\n"
+                + "	graph <" + CGP + "> {\n"
+                + "		?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
+                + "	}\n"
+                + "	graph <" + constantService.getCentralGraph() + "> {\n"
+                + "		?c ?p ?v .\n"
+                + "	}\n"
+                + "}";
+        String qry2 = "delete {\n"
+                + "	graph <" + constantService.getCentralGraph() + "> {\n"
+                + "		?v ?p ?c .\n"
+                + "	}\n"
+                + "}\n"
+                + "insert {\n"
+                + "	graph <" + constantService.getCentralGraph() + "> {\n"
+                + "		?v ?p ?a .\n"
+                + "		?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
+                + "	}\n"
+                + "}\n"
+                + "where {\n"
+                + "	graph <" + CGP + "> {\n"
+                + "		?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
+                + "	}\n"
+                + "	graph <" + constantService.getCentralGraph() + "> {\n"
+                + "		?v ?p ?c .\n"
+                + "	}\n"
+                + "}";
+        sparqlService.update(QueryLanguage.SPARQL, qry1);
+        sparqlService.update(QueryLanguage.SPARQL, qry2);
+    }
+
+    public void mergeRawData(List<Provider> ProvidersList) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
+        //String CGP = "http://redi.cedia.edu.ec/person/sameAs";
+        //String rd = "http://redi.cedia.edu.ec/rediNew";
+
+        String providersGraphs = "  ";
+        for (Provider aProvider : ProvidersList) {
+            providersGraphs += " <" + aProvider.Graph + "> ";
+        }
+        String qry1 = "insert {\n"
+                + "    graph <" + constantService.getCentralGraph() + "> {\n"
+                + "        ?c ?p ?v .\n"
+                + "    }\n"
+                + "} where {\n"
+                + "    graph <" + constantService.getAuthorsSameAsGraph() + "> {\n"
+                + "        ?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
+                + "    }\n"
+                + "    values ?g { " + providersGraphs + " } graph ?g {\n"
+                + "        ?c ?p ?v .\n"
+                + "    }\n"
+                + "}";
+
+        String qry2 = "insert {\n"
+                + "    graph <" + constantService.getCentralGraph() + "> {\n"
+                + "        ?v ?w ?q .\n"
+                + "    }\n"
+                + "} where {\n"
+                + "    graph <" + constantService.getAuthorsSameAsGraph() + "> {\n"
+                + "        ?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
+                + "    }\n"
+                + "    values ?g { " + providersGraphs + " } graph ?g {\n"
+                + "         ?c ?p ?v .\n"
+                + "         ?v ?w ?q .\n"
+                + "    }\n"
+                + "}";
+        String qry3 = "insert {\n"
+                + "    graph <" + constantService.getCentralGraph() + "> {\n"
+                + "        ?q ?z ?m .\n"
+                + "    }\n"
+                + "} where {\n"
+                + "    graph <" + constantService.getAuthorsSameAsGraph() + "> {\n"
+                + "        ?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
+                + "    }\n"
+                + "    values ?g { " + providersGraphs + " } graph ?g {\n"
+                + "         ?c ?p ?v .\n"
+                + "         ?v ?w ?q .\n"
+                + "        ?q ?z ?m .\n"
+                + "    }\n"
+                + "}";
+
+        sparqlService.update(QueryLanguage.SPARQL, qry1);
+        sparqlService.update(QueryLanguage.SPARQL, qry2);
+        sparqlService.update(QueryLanguage.SPARQL, qry3);
+    }
+
+    @Override
+    public String startDisambiguation() {
+        String State = "";
+        if (DisambiguationWorker != null && DisambiguationWorker.isAlive()) {
+            State = "Process running.. check the marmotta main log for further details";
+        } else {
+            State = "Process starting.. check the marmotta main log for further details";
+            DisambiguationWorker = new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        log.info("Starting Disambiguation process ...");
+                        Proccess();
+                    } catch (Exception ex) {
+                        log.warn("Unknown error while disambiguating, please check the catalina log for further details.");
+                        ex.printStackTrace();
+                    }
+                }
+
+            };
+            DisambiguationWorker.start();
+        }
+        return State;
+    }
+
+    @Override
+    public String startMerge() {
+        String State = "";
+        if (CentralGraphWorker != null && CentralGraphWorker.isAlive()) {
+            State = "Process running.. check the marmotta main log for further details";
+        } else {
+            State = "Process starting.. check the marmotta main log for further details";
+            CentralGraphWorker = new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        log.info("Starting Central Graph process ...");
+                        Merge();
+                    } catch (Exception ex) {
+                        log.warn("Unknown error Central Graph , please check the catalina log for further details.");
+                        ex.printStackTrace();
+                    }
+                }
+
+            };
+            CentralGraphWorker.start();
+        }
+        return State;
+    }
+
+}

@@ -54,6 +54,14 @@
             {
                 runUpdateLatindex(host);
             }
+            function runDisambiguation()
+            {
+                runUpdateDisambiguation(host);
+            }
+            function runCreateCentralGraph()
+            {
+                runUpdateCreateCentralGraph(host);
+            }
         </script>
         <!--###END_HEAD###-->
     </head>
@@ -87,33 +95,40 @@
         <p>"Publications-Manager" descripcion...</p>
         <p>get publications data</p>
         <form> 
-            <button type="button"  onclick="run()"  value="Activar Función">LOAD FROM  SCOPUS </button>
-            <input id="updateScopus" type="checkbox"> Update <br>
-            <p>
 
-            </p>
-            <button type="button"  onclick="runDBLP()"  value="Activar Función">LOAD FROM DBLP </button>
-            <p>
-
-            </p>
-            <button type="button"  onclick="runGOOGLE()"  value="Activar Función">LOAD FROM GOOGLE SCHOLAR </button>
-            <input id="updateGoogleScholar" type="checkbox"> Update <br>
-            <p>
-
-            </p>
-
-            <button type="button"  onclick="runMA()"  value="Activar Función">ENRICHMENT FROM  MICROSOFT ACADEMICS </button>
-            <p>
-
-            </p>
-            <button type="button"  onclick="runAK()"  value="Activar Función">LOAD FROM ACADEMIC ACADEMICS KNOWLEDGE  </button>
-            <p>
-
-                <button type="button"  onclick="runDspace()"  value="Activar Función">LOAD FROM DSPACE  </button>
-            <p>
+            <!--            <button type="button"  onclick="run()"  value="Activar Función">LOAD FROM  SCOPUS </button>
+                        <input id="updateScopus" type="checkbox"> Update <br>
+                        <p>
             
+                        </p>
+                        <button type="button"  onclick="runDBLP()"  value="Activar Función">LOAD FROM DBLP </button>
+                        <p>
+            
+                        </p>
+                        <button type="button"  onclick="runGOOGLE()"  value="Activar Función">LOAD FROM GOOGLE SCHOLAR </button>
+                        <input id="updateGoogleScholar" type="checkbox"> Update <br>
+                        <p>
+            
+                        </p>
+            
+                        <button type="button"  onclick="runMA()"  value="Activar Función">ENRICHMENT FROM  MICROSOFT ACADEMICS </button>
+                        <p>
+            
+                        </p>
+                        <button type="button"  onclick="runAK()"  value="Activar Función">LOAD FROM ACADEMIC ACADEMICS KNOWLEDGE  </button>
+                        <p>
+            
+                            <button type="button"  onclick="runDspace()"  value="Activar Función">LOAD FROM DSPACE  </button>
+                        <p>-->
+
             <p>
                 <button type="button"  onclick="runLatindex()"  value="Activar Función">DETECT LATINDEX JOURNALS/PUBLICATIONS</button>
+            <p>
+            <p>
+                <button type="button"  onclick="runDisambiguation()"  value="Activar Función">DISAMBIGUATION PROCESS</button>
+            <p>
+            <p>
+                <button type="button"  onclick="runCreateCentralGraph()"  value="Activar Función">CREATE CENTRAL GRAPH</button>
             <p>
 
             <div id="imgloading" style="visibility: hidden">

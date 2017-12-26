@@ -291,4 +291,14 @@ public class ConstantServiceImpl implements ConstantService {
         return confService.getBaseContext() + "latindex";
     }
 
+    @Override
+    public String getAuthorsSameAsGraph() {
+        return confService.getBaseContext() + "authorsSameAs";
+    }
+
+    @Override
+    public String getPublicationsSameAsGraph() {
+        return confService.getBaseContext() + "publicationsSameAs";
+    }
+
 }
