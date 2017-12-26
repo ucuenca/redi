@@ -288,7 +288,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                     ///if (infoBar) {
                     var id = node.author["@id"];
                     var author = _.findWhere(node.author.jsonld["@graph"], {"@id": id, "@type": "foaf:Person"});
-                    if (!(author['@id'].indexOf($window.location.hostname) > 0) && (node.author.jsonld["@graph"].length <= 1)) {
+                    if (false && !(author['@id'].indexOf($window.location.hostname) > 0) && (node.author.jsonld["@graph"].length <= 1)) {
                         //       infoBar.find('h4').text("Informacion del CoAutor");
                         //      infoBar = $('div.tree-node-info .entityInfo');
                         //infoBar.find('div#title').text('');

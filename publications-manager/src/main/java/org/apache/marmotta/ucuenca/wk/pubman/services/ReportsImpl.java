@@ -21,9 +21,7 @@ import com.google.common.base.Joiner;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +37,7 @@ import net.sf.jasperreports.engine.data.JsonDataSource;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import org.apache.marmotta.platform.core.api.triplestore.SesameService;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.function.Cache;
 import org.apache.marmotta.ucuenca.wk.commons.impl.ConstantServiceImpl;
@@ -56,7 +55,6 @@ import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.sparql.SPARQLRepository;
 import org.slf4j.Logger;
 
 /**
@@ -79,6 +77,8 @@ public class ReportsImpl implements ReportsService {
     private SparqlService sparqlService;
     @Inject
     protected ConstantService constant;
+    @Inject
+    private SesameService sesameService;
 
     protected String TEMP_PATH = "./../research_webapps/ROOT/tmp";
     protected String REPORTS_FOLDER = "./../research_webapps/ROOT/reports/";
@@ -86,10 +86,9 @@ public class ReportsImpl implements ReportsService {
     @Override
     public String createReport(String hostname, String realPath, String name, String type, List<String> params) {
 
-        String hash =hostname+"|"+realPath+"|"+name+"|"+type+"|"+Joiner.on(",").join(params);
+        String hash = hostname + "|" + realPath + "|" + name + "|" + type + "|" + Joiner.on(",").join(params);
         hash = Cache.getMD5(hash);
-        
-        
+
         TEMP_PATH = "/tmp/redi_reports";
         REPORTS_FOLDER = realPath + "/reports/";
         // Make sure the output directory exists.
@@ -97,14 +96,14 @@ public class ReportsImpl implements ReportsService {
         outDir.mkdirs();
         //Name of the file
         //SimpleDateFormat format = new SimpleDateFormat("ddMMyyyy_HHmmss");
-        String nameFile = "redi_reports_"+hash;//name + "_" + format.format(new Date());
+        String nameFile = "redi_reports_" + hash;//name + "_" + format.format(new Date());
         String pathFile = TEMP_PATH + "/" + nameFile + "." + type;
         try {
             //Cache
-            if (new File(pathFile).exists()){
+            if (new File(pathFile).exists()) {
                 return "/pubman/reportDownload?file=" + hash + "." + type;
             }
-            
+
             // Compile jrxml file.
             JasperReport jasperReport = JasperCompileManager
                     .compileReport(REPORTS_FOLDER + name + ".jrxml");
@@ -237,7 +236,7 @@ public class ReportsImpl implements ReportsService {
             //Query
             getQuery = ConstantServiceImpl.PREFIX
                     + " SELECT ?publications ?authors ( max(str(?name_)) as ?name) (max(str(?title_)) as ?title) (max(str(?abstract_)) as ?abstract) ( max(str(?authorsName_)) as ?authorsName) WHERE { "
-                    + " graph <"+constant.getCentralGraph()+"> { <" + author + "> foaf:name ?name_. "
+                    + " graph <" + constant.getCentralGraph() + "> { <" + author + "> foaf:name ?name_. "
                     + "  <" + author + "> foaf:publications  ?publications. "
                     + "  ?publications dct:title ?title_. "
                     + "  OPTIONAL {?publications bibo:abstract ?abstract_ .} "
@@ -246,7 +245,7 @@ public class ReportsImpl implements ReportsService {
                     + "} } group by ?publications ?authors ";
 
             log.info("Buscando Informacion de: " + author);
-            Repository repo = new SPARQLRepository(hostname + "/sparql/select");
+            Repository repo = sesameService.getRepository();
             repo.initialize();
             RepositoryConnection con = repo.getConnection();
             try {
@@ -327,7 +326,7 @@ public class ReportsImpl implements ReportsService {
                     + "    	select DISTINCT ?subject ?author ?keywords "
                     + "        where "
                     + "        { "
-                    + "        	graph <" + constant.getCentralGraph()+ "> "
+                    + "        	graph <" + constant.getCentralGraph() + "> "
                     + "            { "
                     + "                 ?subject foaf:name ?author. "
                     + "                 ?subject foaf:publications ?publicationUri. "
@@ -339,7 +338,7 @@ public class ReportsImpl implements ReportsService {
                     + "  }"
                     + "}";
 
-            Repository repo = new SPARQLRepository(hostname + "/sparql/select");
+            Repository repo = sesameService.getRepository();
             repo.initialize();
             RepositoryConnection con = repo.getConnection();
             try {
@@ -354,8 +353,8 @@ public class ReportsImpl implements ReportsService {
                 JSONObject coauthors = new JSONObject();
                 while (resulta.hasNext()) {
                     BindingSet binding = resulta.next();
-                    name = String.valueOf(binding.getValue("cluster")).replace("\"", "").replace("^^", "").split("<")[0];
-                    String authorName = String.valueOf(binding.getValue("author")).replace("\"", "").replace("^^", "").split("<")[0];
+                    name = binding.getValue("cluster").stringValue();
+                    String authorName = binding.getValue("author").stringValue();
                     if (!autMap.containsKey(authorName)) {
                         autMap.put(authorName, new JSONObject());
                         autMap.get(authorName).put("author", authorName);
@@ -407,7 +406,7 @@ public class ReportsImpl implements ReportsService {
                     + " SELECT ?provenance ?name (COUNT(DISTINCT(?s)) AS ?total) (count(DISTINCT ?pub) as ?totalp) "
                     + " WHERE "
                     + "    { "
-                    + "    	GRAPH <" + constant.getCentralGraph()+ "> { "
+                    + "    	GRAPH <" + constant.getCentralGraph() + "> { "
                     + "          ?s a foaf:Person. "
                     + "          ?s foaf:publications ?pub . "
                     + "          ?s dct:provenance ?provenance . "
@@ -424,7 +423,7 @@ public class ReportsImpl implements ReportsService {
                     + "    	} "
                     + "  	} GROUP BY ?provenance ?name ";
 
-            Repository repo = new SPARQLRepository(hostname + "/sparql/select");
+            Repository repo = sesameService.getRepository();
             repo.initialize();
             RepositoryConnection con = repo.getConnection();
             try {
@@ -437,9 +436,9 @@ public class ReportsImpl implements ReportsService {
                 while (resulta.hasNext()) {
                     BindingSet binding = resulta.next();
                     uni = new JSONObject();
-                    String uniName = String.valueOf(binding.getValue("name")).replace("\"", "").replace("^^", "").split("<")[0];
-                    String totalAuthors = String.valueOf(binding.getValue("total")).replace("\"", "").replace("^^", "").split("<")[0];
-                    String totalPubs = String.valueOf(binding.getValue("totalp")).replace("\"", "").replace("^^", "").split("<")[0];
+                    String uniName = binding.getValue("name").stringValue();
+                    String totalAuthors = binding.getValue("total").stringValue();
+                    String totalPubs = binding.getValue("totalp").stringValue();
                     uni.put("university", uniName);
                     uni.put("authors", totalAuthors);
                     uni.put("pubs", totalPubs);
@@ -478,7 +477,7 @@ public class ReportsImpl implements ReportsService {
                     + "  }"
                     + "} ORDER BY ?uni";
 
-            Repository repo = new SPARQLRepository(hostname + "/sparql/select");
+            Repository repo = sesameService.getRepository();
             repo.initialize();
             RepositoryConnection con = repo.getConnection();
 
@@ -489,14 +488,14 @@ public class ReportsImpl implements ReportsService {
                 //Check authors of each university
                 while (resultUnis.hasNext()) {
                     BindingSet binding = resultUnis.next();
-                    String uniId = String.valueOf(binding.getValue("provenance")).replace("\"", "").replace("^^", "").split("<")[0];
-                    String uniName = String.valueOf(binding.getValue("uni")).replace("\"", "").replace("^^", "").split("<")[0];
+                    String uniId = binding.getValue("provenance").stringValue();
+                    String uniName = binding.getValue("uni").stringValue();
 
                     query2 = ConstantServiceImpl.PREFIX
                             + "SELECT ?researcher (count(DISTINCT ?pub) as ?totalp) "
                             + "WHERE "
                             + "{ "
-                            + "  GRAPH <" + constant.getCentralGraph()+ "> "
+                            + "  GRAPH <" + constant.getCentralGraph() + "> "
                             + "        { "
                             + "          ?s a foaf:Person. "
                             + "          ?s foaf:name ?researcher. "
@@ -514,8 +513,8 @@ public class ReportsImpl implements ReportsService {
                         contPub++;
                         //Form the Json object
                         author = new JSONObject();
-                        String researcherName = String.valueOf(bind2.getValue("researcher")).replace("\"", "").replace("^^", "").split("<")[0];
-                        String totalPubs = String.valueOf(bind2.getValue("totalp")).replace("\"", "").replace("^^", "").split("<")[0];
+                        String researcherName = bind2.getValue("researcher").stringValue();
+                        String totalPubs = bind2.getValue("totalp").stringValue();
                         author.put("universityName", uniName);
                         author.put("numberResearcher", contPub);
                         author.put("name", researcherName);
@@ -567,7 +566,7 @@ public class ReportsImpl implements ReportsService {
                     + "Select ?publicationUri (GROUP_CONCAT(distinct ?name;separator='; ') as ?names) ?title ?abstract ?uri ?provname "
                     + "WHERE "
                     + "{ "
-                    + "  GRAPH <"+constant.getCentralGraph()+"> "
+                    + "  GRAPH <" + constant.getCentralGraph() + "> "
                     + "  { "
                     + "      ?subject foaf:publications ?publicationUri . "
                     + "      ?subject foaf:name ?name . "
@@ -583,7 +582,7 @@ public class ReportsImpl implements ReportsService {
                     + "             SELECT DISTINCT ?provenance (STR(?pname) as ?provname)"
                     + "             WHERE"
                     + "             {                                                                                                                                                                                                                                                                                                                     "
-                    + "                graph <"+constant.getEndpointsGraph()+"> "
+                    + "                graph <" + constant.getEndpointsGraph() + "> "
                     + "                { "
                     + "                  ?provenance uc:fullName ?pname. "
                     + "                  FILTER (lang(?pname) = \"es\"). "
@@ -591,9 +590,9 @@ public class ReportsImpl implements ReportsService {
                     + "             } "
                     + "		  }"
                     + "  } "
-                    + "} group by ?publicationUri ?title ?abstract ?uri ?provname";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+                    + "} group by ?publicationUri ?title ?abstract ?uri ?provname";
 
-            Repository repo = new SPARQLRepository(hostname + "/sparql/select");
+            Repository repo = sesameService.getRepository();
             repo.initialize();
             RepositoryConnection con = repo.getConnection();
             try {
@@ -608,12 +607,12 @@ public class ReportsImpl implements ReportsService {
                     //Form the Json object
                     publication = new JSONObject();
 
-                    id = String.valueOf(binding.getValue("publicationUri")).replace("\"", "").replace("^^", "").split("<")[0];
-                    authors = String.valueOf(binding.getValue("names")).replace("\"", "").replace("^^", "").split("<")[0];
-                    title = String.valueOf(binding.getValue("title")).replace("\"", "").replace("^^", "").split("<")[0];
-                    abst = String.valueOf(binding.getValue("abstract")).replace("\"", "").replace("^^", "").split("<")[0];
-                    uri = String.valueOf(binding.getValue("uri")).replace("\"", "").replace("^^", "").split("<")[0];
-                    universidad = String.valueOf(binding.getValue("provname")).replace("\"", "").replace("^^", "").split("<")[0];
+                    id = binding.getValue("publicationUri").stringValue();
+                    authors = binding.getValue("names").stringValue();
+                    title = binding.getValue("title").stringValue();
+                    abst = binding.getValue("abstract").stringValue();
+                    uri = binding.getValue("uri").stringValue();
+                    universidad = binding.getValue("provname").stringValue();
 
                     publication.put("id", id);
                     publication.put("authors", authors);
@@ -624,8 +623,8 @@ public class ReportsImpl implements ReportsService {
 
                     publications.add(publication);
 
-                    /*name = String.valueOf(binding.getValue("publicationUri")).replace("\"", "").replace("^^", "").split("<")[0];
-                    String authorName = String.valueOf(binding.getValue("author")).replace("\"", "").replace("^^", "").split("<")[0];
+                    /*name = String.valueOf(binding.getValue("publicationUri").stringValue();
+                    String authorName = String.valueOf(binding.getValue("author").stringValue();
                     if (!autMap.containsKey(authorName)) {
                         autMap.put(authorName, new JSONObject());
                         autMap.get(authorName).put("author", authorName);
@@ -685,7 +684,7 @@ public class ReportsImpl implements ReportsService {
                     + " ?title ?abstract ?uri (GROUP_CONCAT(distinct ?quote;separator='; ') as ?keywords) "
                     + "WHERE "
                     + "{"
-                    + "  GRAPH <"+constant.getCentralGraph()+">"
+                    + "  GRAPH <" + constant.getCentralGraph() + ">"
                     + "  {"
                     + "      <" + author + "> foaf:publications ?publicationUri ."
                     + "      <" + author + "> foaf:name ?name ."
@@ -695,7 +694,7 @@ public class ReportsImpl implements ReportsService {
                     + "      OPTIONAL{?publicationUri bibo:Quote ?quote.} "
                     + "  }"
                     + "} group by ?publicationUri ?title ?abstract ?uri ?name";
-            Repository repo = new SPARQLRepository(hostname + "/sparql/select");
+            Repository repo = sesameService.getRepository();
             repo.initialize();
             RepositoryConnection con = repo.getConnection();
             try {
@@ -710,12 +709,12 @@ public class ReportsImpl implements ReportsService {
                     //Form the Json object
                     publication = new JSONObject();
 
-                    id = String.valueOf(binding.getValue("publicationUri")).replace("\"", "").replace("^^", "").split("<")[0];
-                    authorName = String.valueOf(binding.getValue("name")).replace("\"", "").replace("^^", "").split("<")[0];
-                    title = String.valueOf(binding.getValue("title")).replace("\"", "").replace("^^", "").split("<")[0];
-                    abst = String.valueOf(binding.getValue("abstract")).replace("\"", "").replace("^^", "").split("<")[0];
-                    uri = String.valueOf(binding.getValue("uri")).replace("\"", "").replace("^^", "").split("<")[0];
-                    keywords = String.valueOf(binding.getValue("keywords")).replace("\"", "").replace("^^", "").split("<")[0];
+                    id = binding.getValue("publicationUri").stringValue();
+                    authorName = binding.getValue("name").stringValue();
+                    title = binding.getValue("title").stringValue();
+                    abst = binding.getValue("abstract").stringValue();
+                    uri = binding.getValue("uri").stringValue();
+                    keywords = binding.getValue("keywords").stringValue();
 
                     publication.put("id", id);
                     publication.put("title", title);
@@ -750,7 +749,7 @@ public class ReportsImpl implements ReportsService {
             String queryAuthors = ConstantServiceImpl.PREFIX
                     + "SELECT ?author (max(str(?name_)) as ?name ) (COUNT(distinct ?publication ) as ?totalPub)"
                     + "WHERE {  "
-                    + "  GRAPH <" + constant.getCentralGraph()+ ">  {"
+                    + "  GRAPH <" + constant.getCentralGraph() + ">  {"
                     + "    ?author foaf:publications ?publication ;"
                     + "       dct:provenance ?endpoint ."
                     + "    ?author foaf:name ?name_ ."
@@ -777,7 +776,7 @@ public class ReportsImpl implements ReportsService {
                     + "  }"
                     + "}";
 
-            Repository repository = new SPARQLRepository(hostname + "/sparql/select");
+            Repository repository = sesameService.getRepository();
             repository.initialize();
             RepositoryConnection connection = repository.getConnection();
 
@@ -792,8 +791,8 @@ public class ReportsImpl implements ReportsService {
                 //Check authors of each university
                 while (resultAuthors.hasNext()) {
                     BindingSet binding = resultAuthors.next();
-                    String name = String.valueOf(binding.getValue("name")).replace("\"", "").replace("^^", "").split("<")[0];
-                    String totalPub = String.valueOf(binding.getValue("totalPub")).replace("\"", "").replace("^^", "").split("<")[0];
+                    String name = binding.getValue("name").stringValue();
+                    String totalPub = binding.getValue("totalPub").stringValue();
 
                     author = new JSONObject();
                     author.put("author", name);
@@ -826,10 +825,10 @@ public class ReportsImpl implements ReportsService {
         }
         return new String[]{"", ""};
     }
-    
+
     public String[] getJSONPublicationsByHEI(String hei, String hostname) {
-    String getQuery = "";
-    try {
+        String getQuery = "";
+        try {
             /*getQuery = ConstantServiceImpl.PREFIX
                 + " SELECT ?name ?title"
                 + "WHERE { "
@@ -848,37 +847,36 @@ public class ReportsImpl implements ReportsService {
                 + "  }"
                 + "}"
                 + "ORDER BY ASC(?name)";*/
-            
+
             getQuery = ConstantServiceImpl.PREFIX
-                + " select * { "
-                + "SELECT  distinct ?name ?title ?year (group_concat(?orig; separator = \" \") AS ?origin)  "
-                + "WHERE {   "
-                + "  GRAPH <"+constant.getCentralGraph()+">  {  "
-                + "    ?author foaf:publications ?publication.  "
-                + "    ?author foaf:name ?name .  "
-                + "    ?author dct:provenance ?endpoint.  "
-                + "    ?publication dct:title ?title.  "
-                + "    optional{?publication dc:date ?year}.  "
-                + "    ?publication <http://ucuenca.edu.ec/ontology#origin> ?orig.  "
-                + "   	filter(xsd:integer(?year) > 2010).  "
-                + "    {      "
-                + "      SELECT * {         	  "
-                + "      GRAPH <"+constant.getEndpointsGraph()+">   "
-                + "            {                 "
-                + "              ?endpoint uc:name \"UCUENCA\"^^xsd:string .               "
-                + "            }           "
-                + "      }  "
-                + "    }  "
-                + "  }  "
-                + "}  "
-                + " GROUP BY ?title ?name ?year "//+ "ORDER BY ASC (?year)";
-                + " } ORDER BY ASC (?year) ";
-                        
-            
-            Repository repository = new SPARQLRepository(hostname + "/sparql/select");
+                    + " select * { "
+                    + "SELECT  distinct ?name ?title ?year (group_concat(?orig; separator = \" \") AS ?origin)  "
+                    + "WHERE {   "
+                    + "  GRAPH <" + constant.getCentralGraph() + ">  {  "
+                    + "    ?author foaf:publications ?publication.  "
+                    + "    ?author foaf:name ?name .  "
+                    + "    ?author dct:provenance ?endpoint.  "
+                    + "    ?publication dct:title ?title.  "
+                    + "    optional{?publication dc:date ?year}.  "
+                    + "    ?publication <http://ucuenca.edu.ec/ontology#origin> ?orig.  "
+                    + "   	filter(xsd:integer(?year) > 2010).  "
+                    + "    {      "
+                    + "      SELECT * {         	  "
+                    + "      GRAPH <" + constant.getEndpointsGraph() + ">   "
+                    + "            {                 "
+                    + "              ?endpoint uc:name \"UCUENCA\"^^xsd:string .               "
+                    + "            }           "
+                    + "      }  "
+                    + "    }  "
+                    + "  }  "
+                    + "}  "
+                    + " GROUP BY ?title ?name ?year "//+ "ORDER BY ASC (?year)";
+                    + " } ORDER BY ASC (?year) ";
+
+            Repository repository = sesameService.getRepository();
             repository.initialize();
             RepositoryConnection connection = repository.getConnection();
-            
+
             try {
                 // perform operations on the connection
                 TupleQueryResult resultAuthors = connection.prepareTupleQuery(QueryLanguage.SPARQL, getQuery).evaluate();
@@ -890,10 +888,10 @@ public class ReportsImpl implements ReportsService {
                 //Check authors of each university
                 while (resultAuthors.hasNext()) {
                     BindingSet binding = resultAuthors.next();
-                    String name = String.valueOf(binding.getValue("name")).replace("\"", "").replace("^^", "").split("<")[0];
-                    String title = String.valueOf(binding.getValue("title")).replace("\"", "").replace("^^", "").split("<")[0];
-                    String year = String.valueOf(binding.getValue("year")).replace("\"", "").replace("^^", "").split("<")[0];
-                    String origin = String.valueOf(binding.getValue("origin")).replace("\"", "").replace("^^", "").split("<")[0];
+                    String name = binding.getValue("name").stringValue();
+                    String title = binding.getValue("title").stringValue();
+                    String year = binding.getValue("year").stringValue();
+                    String origin = binding.getValue("origin").stringValue();
 
                     author = new JSONObject();
                     author.put("author", name);
@@ -910,7 +908,6 @@ public class ReportsImpl implements ReportsService {
                     BindingSet binding = resultIES.next();
                     fname = String.valueOf(binding.getValue("fname"));
                 }*/
-
                 connection.close();
 
                 return new String[]{authors.toString(), fname, String.valueOf(totalAuthors)};
@@ -927,9 +924,9 @@ public class ReportsImpl implements ReportsService {
             ex.printStackTrace();
         }
         return new String[]{"", ""};
-    
+
     }
-    
+
     public String[] getJSONStatisticsTopKeywords(String hostname) {
 
         String getQuery = "";
@@ -947,7 +944,7 @@ public class ReportsImpl implements ReportsService {
                     + "            SELECT DISTINCT ?keyword (COUNT(DISTINCT ?s) AS ?total) "
                     + "            WHERE "
                     + "            { "
-                    + "              GRAPH <"+constant.getCentralGraph()+"> "
+                    + "              GRAPH <" + constant.getCentralGraph() + "> "
                     + "              { "
                     + "                ?s foaf:publications ?publications. "
                     + "                ?publications dct:subject ?keyword_. "//bibo:Quote
@@ -963,7 +960,7 @@ public class ReportsImpl implements ReportsService {
                     + "    } "
                     + "} ";
 
-            Repository repo = new SPARQLRepository(hostname + "/sparql/select");
+            Repository repo = sesameService.getRepository();
             repo.initialize();
             RepositoryConnection con = repo.getConnection();
             try {
@@ -976,9 +973,9 @@ public class ReportsImpl implements ReportsService {
 
                 while (resulta.hasNext()) {
                     BindingSet binding = resulta.next();
-                    uri = String.valueOf(binding.getValue("uriArea")).replace("\"", "").replace("^^", "").split("<")[0];
-                    key = String.valueOf(binding.getValue("keyword")).replace("\"", "").replace("^^", "").split("<")[0];
-                    total = String.valueOf(binding.getValue("total")).replace("\"", "").replace("^^", "").split("<")[0];
+                    uri = binding.getValue("uriArea").stringValue();
+                    key = binding.getValue("keyword").stringValue();
+                    total = binding.getValue("total").stringValue();
 
                     JSONObject keyword = new JSONObject();
                     keyword.put("uri", uri);
