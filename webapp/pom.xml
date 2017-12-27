@@ -270,8 +270,8 @@
                 </dependency>
                 <dependency>
                     <groupId>org.apache.marmotta</groupId>
-                    <artifactId>marmotta-ldcache-kiwi</artifactId>
-                    <version>${marmotta.version}</version>
+                    <artifactId>marmotta-ldcache-file-mod</artifactId>
+                    <version>${project.version}</version>
                 </dependency>
                 <dependency>
                     <groupId>org.apache.marmotta</groupId>

@@ -52,7 +52,12 @@
         </dependency>
         <dependency>
             <groupId>org.apache.marmotta</groupId>
-            <artifactId>marmotta-ldcache-kiwi</artifactId>
+            <artifactId>kiwi-triplestore</artifactId>
+            <version>${marmotta.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.marmotta</groupId>
+            <artifactId>marmotta-ldcache-common</artifactId>
             <version>${marmotta.version}</version>
         </dependency>
         <dependency>

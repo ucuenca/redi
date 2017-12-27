@@ -66,7 +66,9 @@
         <module>marmotta-worker</module>
         <module>marmotta-utils</module>
         <module>marmotta-search</module>    
-        <module>publications-manager</module>
+        <module>publications-manager</module>        
+        <module>ldcache-backend-file-mod</module>
+        <module>marmotta-ldcache-file-mod</module>
         <module>storage</module>
         <module>webapp</module>
     </modules>
