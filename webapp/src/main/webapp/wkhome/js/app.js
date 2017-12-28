@@ -32,6 +32,7 @@ wkhomeApp.service('searchData', function () {
 wkhomeApp.service('globalData', ['$window', function ($window) {
     // var baseURL = "http://localhost:8080/";
     var baseURL = $window.location.origin + $window.location.pathname;
+    baseURL = baseURL.replace("clon","");
     this.language = "es";
     // this.centralGraph = "http://ucuenca.edu.ec/wkhuska";
     this.centralGraph = baseURL + "context/redi";
