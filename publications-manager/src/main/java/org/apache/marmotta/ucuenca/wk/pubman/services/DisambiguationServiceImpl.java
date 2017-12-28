@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
+import org.apache.marmotta.ucuenca.wk.commons.function.Cache;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
@@ -263,7 +264,8 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 }
                 String URIPublicationA = queryResponse.get(firstIndex).get("p").stringValue();
                 String URIPublicationB = queryResponse.get(groupIndex).get("p").stringValue();
-                registerSameAs(constantService.getPublicationsSameAsGraph(), URIPublicationA, URIPublicationB);
+                String newURI = constantService.getPublicationResource()+Cache.getMD5(URIPublicationA);
+                registerSameAs(constantService.getPublicationsSameAsGraph(), newURI, URIPublicationB);
             }
         }
     }
