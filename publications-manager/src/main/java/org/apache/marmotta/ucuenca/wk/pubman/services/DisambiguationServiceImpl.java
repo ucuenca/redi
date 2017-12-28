@@ -233,17 +233,17 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 + "    }\n"
                 + "} ";
         List<Map<String, Value>> queryResponse = sparqlService.query(QueryLanguage.SPARQL, qryAllPublications);
-        Set<Set<Integer>> publicationsGroups = new HashSet<>();
+        Set<Set<String>> publicationsGroups = new HashSet<>();
         for (int i = 0; i < queryResponse.size(); i++) {
             for (int j = i + 1; j < queryResponse.size(); j++) {
                 double titleSimilarity = PublicationUtils.compareTitle(queryResponse.get(i).get("t").stringValue(), queryResponse.get(j).get("t").stringValue());
                 if (titleSimilarity >= Person.thresholdTitle) {
-                    Set<Integer> aGroup = new HashSet<>();
-                    aGroup.add(i);
-                    aGroup.add(j);
-                    Set<Integer> auxGroup = null;
-                    for (Set<Integer> potentialGroup : publicationsGroups) {
-                        if (potentialGroup.contains(i) || potentialGroup.contains(j)) {
+                    Set<String> aGroup = new HashSet<>();
+                    aGroup.add(queryResponse.get(i).get("p").stringValue());
+                    aGroup.add(queryResponse.get(j).get("p").stringValue());
+                    Set<String> auxGroup = null;
+                    for (Set<String> potentialGroup : publicationsGroups) {
+                        if (potentialGroup.contains(queryResponse.get(i).get("p").stringValue()) || potentialGroup.contains(queryResponse.get(j).get("p").stringValue())) {
                             auxGroup = potentialGroup;
                             break;
                         }
@@ -257,32 +257,32 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             }
         }
         
-        Set<Set<Integer>> ls_alone = new HashSet<>();
+        Set<Set<String>> ls_alone = new HashSet<>();
         for (int i = 0; i < queryResponse.size(); i++) {
             boolean alone = true;
-            for (Set<Integer> ung : publicationsGroups) {
-                if (ung.contains(i)) {
+            for (Set<String> ung : publicationsGroups) {
+                if (ung.contains(queryResponse.get(i).get("p").stringValue())) {
                     alone = false;
                     break;
                 }
             }
             if (alone){
-                Set<Integer> hsalone = new HashSet<>();
-                hsalone.add(i);
+                Set<String> hsalone = new HashSet<>();
+                hsalone.add(queryResponse.get(i).get("p").stringValue());
                 ls_alone.add(hsalone);
             }
         }
         publicationsGroups.addAll(ls_alone);
         
         
-        for (Set<Integer> eachGroup : publicationsGroups) {
-            int firstIndex = -1;
-            for (Integer groupIndex : eachGroup) {
-                if (firstIndex == -1) {
+        for (Set<String> eachGroup : publicationsGroups) {
+            String firstIndex = null;
+            for (String groupIndex : eachGroup) {
+                if (firstIndex == null) {
                     firstIndex = groupIndex;
                 }
-                String URIPublicationA = queryResponse.get(firstIndex).get("p").stringValue();
-                String URIPublicationB = queryResponse.get(groupIndex).get("p").stringValue();
+                String URIPublicationA = firstIndex;
+                String URIPublicationB = groupIndex;
                 String newURI = constantService.getPublicationResource()+Cache.getMD5(URIPublicationA);
                 registerSameAs(constantService.getPublicationsSameAsGraph(), newURI, URIPublicationB);
             }
