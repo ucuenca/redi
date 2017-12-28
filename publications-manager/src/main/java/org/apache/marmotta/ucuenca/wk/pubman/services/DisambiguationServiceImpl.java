@@ -256,6 +256,25 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 }
             }
         }
+        
+        Set<Set<Integer>> ls_alone = new HashSet<>();
+        for (int i = 0; i < queryResponse.size(); i++) {
+            boolean alone = true;
+            for (Set<Integer> ung : publicationsGroups) {
+                if (ung.contains(i)) {
+                    alone = false;
+                    break;
+                }
+            }
+            if (alone){
+                Set<Integer> hsalone = new HashSet<>();
+                hsalone.add(i);
+                ls_alone.add(hsalone);
+            }
+        }
+        publicationsGroups.addAll(ls_alone);
+        
+        
         for (Set<Integer> eachGroup : publicationsGroups) {
             int firstIndex = -1;
             for (Integer groupIndex : eachGroup) {
