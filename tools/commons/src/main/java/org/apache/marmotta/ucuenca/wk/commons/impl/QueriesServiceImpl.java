@@ -81,7 +81,7 @@ public class QueriesServiceImpl implements QueriesService {
         if (datatype != null) {
             object = "\"" + object + "\"^^xsd:" + datatype;
         } else {
-            object += "\"" + object + "\"^^xsd:string";
+            object = "\"" + object + "\"^^xsd:string";
         }
 
         if (isURI(predicate)) {

@@ -303,6 +303,10 @@ public class AuthorServiceImpl implements AuthorService {
                                     insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, FOAF.name.toString(), object);
                                     sparqlFunctionsService.updateAuthor(insert);
                                     break;
+                                case "http://purl.org/dc/terms/isVersionOf":
+                                    insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, DCTERMS.IS_VERSION_OF.toString() , buildLocalURI(object) );
+                                    sparqlFunctionsService.updateAuthor(insert);
+                                    break;
                                 case "http://www.w3.org/2002/07/owl#sameAs": // If sameas found include the provenance
                                     SparqlEndpoint newEndpoint = matchWithProvenance(object);
                                     if (newEndpoint != null) {
@@ -723,6 +727,10 @@ public class AuthorServiceImpl implements AuthorService {
                                            insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, FOAF.name.toString(), object);
                                            sparqlFunctionsService.updateAuthor(insert);
                                            break;
+                                        case "http://purl.org/dc/terms/isVersionOf":
+                                       insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, DCTERMS.IS_VERSION_OF.toString() , buildLocalURI( object , endpoint.getType() , endpoint.getName() ) );
+                                       sparqlFunctionsService.updateAuthor(insert);
+                                       break;
                                        case "http://www.w3.org/2002/07/owl#sameAs": // If sameas found include the provenance
                                            //SparqlEndpoint newEndpoint = matchWithProvenance(object);
                                           /* if (newEndpoint != null) {
