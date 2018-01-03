@@ -12,7 +12,7 @@ import org.openrdf.model.impl.StatementImpl;
 
 /**
  * Provides functionality to convert Sesame objects to Jena objects.
- *
+ * <p>
  * https://github.com/anno4j/anno4j/blob/master/anno4j-core/src/main/java/com/github/anno4j/util/JenaSesameUtils.java
  *
  * @author Xavier Sumba <xavier.sumba93@ucuenca.ec>
@@ -55,6 +55,10 @@ public class JenaSesameUtils {
         if (theProperty == null) {
             return null;
         } else {
+            if (!theProperty.toString().startsWith("http") && theProperty.toString().startsWith("www")) {
+                String uri = "http://" + theProperty.toString();
+                theProperty = mInternalModel.createProperty(uri);
+            }
             return FACTORY.createURI(theProperty.getURI());
         }
     }
@@ -164,7 +168,7 @@ public class JenaSesameUtils {
      *
      * @param theGraph the Graph to convert
      * @return the set of statements in the Sesame Graph converted and saved in
-     * a Jena Model
+     *         a Jena Model
      */
     public static com.hp.hpl.jena.rdf.model.Model asJenaModel(Graph theGraph) {
         com.hp.hpl.jena.rdf.model.Model aModel = ModelFactory.createDefaultModel();
