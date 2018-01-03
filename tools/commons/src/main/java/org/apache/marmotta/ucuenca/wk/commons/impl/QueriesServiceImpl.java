@@ -592,7 +592,9 @@ public class QueriesServiceImpl implements QueriesService {
                 + "               foaf:firstName ?fname;"
                 + "               foaf:lastName ?lname;"
                 + "               dct:provenance ?provenance."
-                //                                + "filter (mm:fulltext-search(?name,\"Saquicela\")) "
+                //                + "filter (mm:fulltext-search(?name,\"Saquicela\")) "
+                //                + "filter (mm:fulltext-search(?name,\"Mauricio espinoza\")) "
+                //                + "filter (mm:fulltext-search(?name,\"Saquicela\") || mm:fulltext-search(?name,\"Mauricio espinoza\")) "
                 + "  }"
                 + "}";
     }

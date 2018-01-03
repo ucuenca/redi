@@ -40,8 +40,8 @@ public class ScopusProviderService extends AbstractProviderService {
     private ConfigurationService configurationService;
 
     private final String requestTemplate = "http://api.elsevier.com/content/search/author?query=%s&count=100&apiKey=%s";
-    private final String expressionTemplateNames = "authfirst(%s) OR authfirst(%s) AND authlast(%s)";
-    private final String expressionTemplateName = "authfirst(%s) AND authlast(%s)";
+    private final String expressionTemplateNames = "authfirst(%s) OR authfirst(%s) AND authlast(%s) AND AFFIL(ecuador)";
+    private final String expressionTemplateName = "authfirst(%s) AND authlast(%s) AND AFFIL(ecuador)";
     private String expression;
 
     @Override
