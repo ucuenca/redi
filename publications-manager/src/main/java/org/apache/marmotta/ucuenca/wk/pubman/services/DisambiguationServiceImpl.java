@@ -42,7 +42,7 @@ import org.openrdf.rio.RDFHandlerException;
 @ApplicationScoped
 public class DisambiguationServiceImpl implements DisambiguationService {
 
-    final int MAXTHREADS = 30;
+    final int MAXTHREADS = 15;
 
     @Inject
     private org.slf4j.Logger log;
