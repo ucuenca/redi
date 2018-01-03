@@ -65,8 +65,8 @@ public class AcademicsKnowledgeProviderService extends AbstractProviderService {
             throw new APIException("There is not api-key.");
         }
 
-        firstName = StringUtils.stripAccents(firstName).trim().toLowerCase();
-        lastName = StringUtils.stripAccents(lastName).trim().toLowerCase();
+        firstName = StringUtils.stripAccents(firstName).trim().toLowerCase().replace("'", "");
+        lastName = StringUtils.stripAccents(lastName).trim().toLowerCase().replace("'", "");
 
         StringBuilder expr = new StringBuilder("AND(Ty='1',OR(");
 
