@@ -113,7 +113,7 @@ public class OntologyMapperTest {
         assertEquals(scopusModel.size(), 3911);
         Model resultWithMapperFile = OntologyMapper.map(scopusModel, scopusMapper, vocabulary);
         Model resultEmptyMapperFile = OntologyMapper.map(scopusModel, emptyMapper, vocabulary);
-        assertEquals(resultWithMapperFile.size(), 2600);
+        assertEquals(resultWithMapperFile.size(), 2593);
         assertEquals(resultEmptyMapperFile.size(), 0);
     }
 

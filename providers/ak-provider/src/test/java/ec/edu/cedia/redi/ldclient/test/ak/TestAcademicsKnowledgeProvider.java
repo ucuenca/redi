@@ -6,23 +6,25 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package ec.edu.cedia.redi.ldclient.test.ak;
 
 import org.apache.marmotta.commons.sesame.model.ModelCommons;
+import org.apache.marmotta.ldclient.exception.DataRetrievalException;
 import org.apache.marmotta.ldclient.model.ClientResponse;
 import org.apache.marmotta.ldclient.test.provider.ProviderTestBase;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryException;
 
 /**
  *
@@ -40,18 +42,26 @@ public class TestAcademicsKnowledgeProvider extends ProviderTestBase {
      * <li> Quota limit.
      * </ol>
      *
-     * @throws Exception
+     * @throws org.openrdf.repository.RepositoryException
      */
     @Test
-    public void testAcademicsKnowledgeAPI() throws Exception {
+    public void testAcademicsKnowledgeAPI() throws RepositoryException {
 
         String uri = "https://westus.api.cognitive.microsoft.com/academic/v1.0/evaluate?"
                 + "expr=And(Ty=%271%27,%20AuN=%27mauricio%20espinoza%27)&"
                 + "attributes=Id,AuN,DAuN,CC,ECC,E&"
                 + "subscription-key=" + apikey;
 
-        ClientResponse response = ldclient.retrieveResource(uri);
+        ClientResponse response = null;
+        try {
+            response = ldclient.retrieveResource(uri);
+        } catch (DataRetrievalException ex) {
+            Assert.assertTrue("Change API-KEY, Quota Exceeded.", ex.getCause().toString().contains("403 Quota Exceeded"));
+        }
 
+        if (response == null) {
+            return;
+        }
         RepositoryConnection connection = ModelCommons.asRepository(response.getData()).getConnection();
         try {
             connection.begin();
