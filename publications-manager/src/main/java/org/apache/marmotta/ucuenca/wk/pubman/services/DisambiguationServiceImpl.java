@@ -42,7 +42,7 @@ import org.openrdf.rio.RDFHandlerException;
 @ApplicationScoped
 public class DisambiguationServiceImpl implements DisambiguationService {
 
-    final int MAXTHREADS = 20;
+    final int MAXTHREADS = 30;
 
     @Inject
     private org.slf4j.Logger log;
@@ -177,6 +177,11 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                         for (Map.Entry<Provider, List<Person>> aCandidateList : Candidates) {
                             aCandidateList.getKey().FillData(aCandidateList.getValue());
                         }
+                        if (Candidates.size()>1){
+                            List<Map.Entry<Provider, List<Person>>> reverse = Lists.reverse(Candidates.subList(1, Candidates.size()));
+                            Candidates.addAll(reverse);
+                        }
+                        
                         Disambiguate(Candidates, 0, new Person());
                         log.info("Disambiguating {} out of {} authors", ix, allx);
                     } catch (Exception ex) {

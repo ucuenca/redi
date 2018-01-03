@@ -55,7 +55,9 @@ public class Provider {
                 + "	graph <" + Graph + "> {\n"
                 + "             values ?per { <" + URI + "> } . \n"
                 + "  		?q <http://www.w3.org/2002/07/owl#oneOf> ?per .\n"
-                + "      	?a <http://www.w3.org/2002/07/owl#oneOf> ?q .\n"
+                + "      	?b <http://www.w3.org/2002/07/owl#oneOf> ?q .\n"
+                + "      	?b <http://xmlns.com/foaf/0.1/publications> ?pu .\n"
+                + "      	?a <http://xmlns.com/foaf/0.1/publications> ?pu .\n"
                 + "	}\n"
                 + "}";
         List<Map<String, Value>> persons = sparql.query(QueryLanguage.SPARQL, qry);
