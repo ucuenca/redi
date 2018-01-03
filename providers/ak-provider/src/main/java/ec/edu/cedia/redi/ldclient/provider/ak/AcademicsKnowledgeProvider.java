@@ -250,8 +250,8 @@ public class AcademicsKnowledgeProvider extends AbstractJSONDataProvider impleme
                 root = String.format("$.entities[%d].AA[%d]", i, j);
                 ontologyMapping.put(REDI.ACADEMICS_ID.stringValue(), new JsonPathLiteralMapper(root + ".AuId", integerDatatype));
                 ontologyMapping.put(FOAF.NAME.stringValue(), new JsonPathLiteralMapper(root + ".AuN"));
-                ontologyMapping.put(REDI.AFFILIATION_ID.stringValue(), new JsonPathLiteralMapper(root + ".AfId", integerDatatype));
-                ontologyMapping.put(REDI.AFFILIATION_NAME.stringValue(), new JsonPathLiteralMapper(root + ".AfN"));
+//                ontologyMapping.put(REDI.AFFILIATION_ID.stringValue(), new JsonPathLiteralMapper(root + ".AfId", integerDatatype));
+//                ontologyMapping.put(REDI.AFFILIATION_NAME.stringValue(), new JsonPathLiteralMapper(root + ".AfN"));
                 ontologyMapping.put(REDI.POSITION.stringValue(), new JsonPathLiteralMapper(root + ".S", integerDatatype));
                 break;
             case FIELD:
