@@ -6,7 +6,11 @@
 package org.apache.marmotta.ucuenca.wk.pubman.disambiguation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.apache.marmotta.ucuenca.wk.pubman.disambiguation.utils.AffiliationUtils;
 import org.apache.marmotta.ucuenca.wk.pubman.disambiguation.utils.NameUtils;
 import org.apache.marmotta.ucuenca.wk.pubman.disambiguation.utils.PublicationUtils;
@@ -199,6 +203,33 @@ public class Person {
             newPersonClon.Topics = new ArrayList<>();
         }
         newPersonClon.Topics.addAll(new ArrayList<>(p.Topics));
+        RemoveDuplicatePerson(newPersonClon);
         return newPersonClon;
     }
+    
+    private void RemoveDuplicatePerson(Person p){
+        RemoveDuplicateList(p.Name);
+        RemoveDuplicateList(p.Coauthors);
+        RemoveDuplicateString(p.Affiliations);
+        RemoveDuplicateString(p.Publications);
+        RemoveDuplicateString(p.Topics);
+    }
+    
+
+    private void RemoveDuplicateString(List<String> in) {
+        Set<String> hs = new HashSet<>();
+        hs.addAll(in);
+        in.clear();
+        in.addAll(hs);
+    }
+
+    private void RemoveDuplicateList(List<List<String>> in) {
+        Map <String, List<String>> hm = new HashMap<>();
+        for (List<String> n: in){
+            hm.put(n.toString(), n);
+        }
+        in.clear();
+        in.addAll(hm.values());
+    }
+
 }
