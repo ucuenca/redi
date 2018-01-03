@@ -42,7 +42,7 @@ import org.openrdf.rio.RDFHandlerException;
 @ApplicationScoped
 public class DisambiguationServiceImpl implements DisambiguationService {
 
-    final int MAXTHREADS = 20;
+    final int MAXTHREADS = 5;
 
     @Inject
     private org.slf4j.Logger log;
@@ -89,6 +89,11 @@ public class DisambiguationServiceImpl implements DisambiguationService {
     }
 
     public void InitAuthorsProvider() throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
+        boolean ask = sparqlService.ask(QueryLanguage.SPARQL, "ask from <" + constantService.getAuthorsProviderGraph() + "> { ?a ?b ?c }");
+        if (ask) {
+            return;
+        }
+
         String delete = "delete {\n"
                 + "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
                 + "		?a ?b ?c .\n"
@@ -158,8 +163,8 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         Provider MainAuthorsProvider = AuthorsProviderslist.get(0);
         List<Person> allAuthors = MainAuthorsProvider.getAuthors();
         for (int i = 0; i < allAuthors.size(); i++) {
-            final int ix=i;
-            final int allx=allAuthors.size();
+            final int ix = i;
+            final int allx = allAuthors.size();
             Person aSeedAuthor = allAuthors.get(i);
             final List<Map.Entry<Provider, List<Person>>> Candidates = new ArrayList<>();
             Candidates.add(new AbstractMap.SimpleEntry<Provider, List<Person>>(MainAuthorsProvider, Lists.newArrayList(aSeedAuthor)));
@@ -174,11 +179,16 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 @Override
                 public void run() {
                     try {
+                        log.info("Start disambiguating {} out of {} authors", ix, allx);
                         for (Map.Entry<Provider, List<Person>> aCandidateList : Candidates) {
                             aCandidateList.getKey().FillData(aCandidateList.getValue());
                         }
+                        if (Candidates.size() > 1) {
+                            List<Map.Entry<Provider, List<Person>>> reverse = Lists.reverse(Candidates.subList(1, Candidates.size()));
+                            Candidates.addAll(reverse);
+                        }
                         Disambiguate(Candidates, 0, new Person());
-                        log.info("Disambiguating {} out of {} authors", ix, allx);
+                        log.info("Finish disambiguating {} out of {} authors", ix, allx);
                     } catch (Exception ex) {
                         log.error("Unknown error while disambiguating");
                         ex.printStackTrace();
@@ -208,7 +218,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
     public void ProcessPublications(List<Provider> ProvidersList) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
         String qryDisambiguatedAuthors = " select distinct ?p { graph <" + constantService.getAuthorsSameAsGraph() + "> { ?p <http://www.w3.org/2002/07/owl#sameAs> ?o } }";
         List<Map<String, Value>> queryResponse = sparqlService.query(QueryLanguage.SPARQL, qryDisambiguatedAuthors);
-        int i=0;
+        int i = 0;
         for (Map<String, Value> anAuthor : queryResponse) {
             String authorURI = anAuthor.get("p").stringValue();
             groupPublications(ProvidersList, authorURI);
@@ -256,7 +266,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 }
             }
         }
-        
+
         Set<Set<String>> ls_alone = new HashSet<>();
         for (int i = 0; i < queryResponse.size(); i++) {
             boolean alone = true;
@@ -266,15 +276,14 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                     break;
                 }
             }
-            if (alone){
+            if (alone) {
                 Set<String> hsalone = new HashSet<>();
                 hsalone.add(queryResponse.get(i).get("p").stringValue());
                 ls_alone.add(hsalone);
             }
         }
         publicationsGroups.addAll(ls_alone);
-        
-        
+
         for (Set<String> eachGroup : publicationsGroups) {
             String firstIndex = null;
             for (String groupIndex : eachGroup) {
@@ -283,7 +292,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 }
                 String URIPublicationA = firstIndex;
                 String URIPublicationB = groupIndex;
-                String newURI = constantService.getPublicationResource()+Cache.getMD5(URIPublicationA);
+                String newURI = constantService.getPublicationResource() + Cache.getMD5(URIPublicationA);
                 registerSameAs(constantService.getPublicationsSameAsGraph(), newURI, URIPublicationB);
             }
         }
