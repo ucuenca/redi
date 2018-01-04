@@ -12,8 +12,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
@@ -160,7 +164,8 @@ public class DisambiguationServiceImpl implements DisambiguationService {
     }
 
     public void ProcessAuthors(List<Provider> AuthorsProviderslist) throws MarmottaException, RepositoryException, MalformedQueryException, QueryEvaluationException, RDFHandlerException, InvalidArgumentException, UpdateExecutionException, InterruptedException {
-        ExecutorService executorService = Executors.newFixedThreadPool(MAXTHREADS);
+        ExecutorService executorServicex = Executors.newFixedThreadPool(MAXTHREADS);
+        BoundedExecutor bexecutorService = new BoundedExecutor(executorServicex, MAXTHREADS);
         Provider MainAuthorsProvider = AuthorsProviderslist.get(0);
         List<Person> allAuthors = MainAuthorsProvider.getAuthors();
         for (int i = 0; i < allAuthors.size(); i++) {
@@ -180,7 +185,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 }
             }
             Candidates.addAll(Lists.reverse(CandidatesI));
-            executorService.execute(new Runnable() {
+            bexecutorService.submitTask(new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -197,7 +202,8 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 }
             });
         }
-        executorService.shutdown();
+        executorServicex.shutdown();
+        executorServicex.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
     }
 
     public void Disambiguate(List<Map.Entry<Provider, List<Person>>> Candidates, int level, Person superAuthor) throws MarmottaException, RepositoryException, MalformedQueryException, QueryEvaluationException, RDFHandlerException, InvalidArgumentException, UpdateExecutionException {
@@ -324,6 +330,18 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                     + "}";
 
             List<Map<String, Value>> query = sparqlService.query(QueryLanguage.SPARQL, qry);
+            for (String groupIndex : eachGroup) {
+                if (firstIndex == null) {
+                    firstIndex = groupIndex;
+                }
+                String URICoauthorB = groupIndex;
+                for (Map<String, Value> re : query) {
+                    registerSameAs(constantService.getAuthorsSameAsGraph(), re.get("a").stringValue(), URICoauthorB);
+                }
+
+            }
+            query = sparqlService.query(QueryLanguage.SPARQL, qry);
+            firstIndex = null;
             for (String groupIndex : eachGroup) {
                 if (firstIndex == null) {
                     firstIndex = groupIndex;
@@ -598,6 +616,35 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             CentralGraphWorker.start();
         }
         return State;
+    }
+
+    class BoundedExecutor {
+
+        private final Executor exec;
+        private final Semaphore semaphore;
+
+        public BoundedExecutor(Executor exec, int bound) {
+            this.exec = exec;
+            this.semaphore = new Semaphore(bound);
+        }
+
+        public void submitTask(final Runnable command)
+                throws InterruptedException {
+            semaphore.acquire();
+            try {
+                exec.execute(new Runnable() {
+                    public void run() {
+                        try {
+                            command.run();
+                        } finally {
+                            semaphore.release();
+                        }
+                    }
+                });
+            } catch (RejectedExecutionException e) {
+                semaphore.release();
+            }
+        }
     }
 
 }

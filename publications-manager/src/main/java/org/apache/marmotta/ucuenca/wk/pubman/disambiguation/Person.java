@@ -5,6 +5,7 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.disambiguation;
 
+import edu.emory.mathcs.backport.java.util.Collections;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,13 +32,22 @@ public class Person {
 
     public Provider Origin;
     public String URI;
+    public Set<String> URIS;
     public List<List<String>> Name;
     public List<List<String>> Coauthors;
     public List<String> Publications;
     public List<String> Affiliations;
     public List<String> Topics;
 
+    public Person() {
+        URIS = new HashSet<>();
+    }
+
     public boolean check(Person p) {
+        boolean common = !Collections.disjoint(URIS, p.URIS);
+        if (common) {
+            return false;
+        }
         if (URI == null) {
             return true;
         }
@@ -160,6 +170,8 @@ public class Person {
 
     public Person enrich(Person p) {
         Person newPersonClon = new Person();
+        newPersonClon.URIS.addAll(URIS);
+        newPersonClon.URIS.addAll(p.URIS);
         if (URI == null) {
             newPersonClon.Origin = p.Origin;
             newPersonClon.URI = p.URI + "";
@@ -206,15 +218,14 @@ public class Person {
         RemoveDuplicatePerson(newPersonClon);
         return newPersonClon;
     }
-    
-    private void RemoveDuplicatePerson(Person p){
+
+    private void RemoveDuplicatePerson(Person p) {
         RemoveDuplicateList(p.Name);
         RemoveDuplicateList(p.Coauthors);
         RemoveDuplicateString(p.Affiliations);
         RemoveDuplicateString(p.Publications);
         RemoveDuplicateString(p.Topics);
     }
-    
 
     private void RemoveDuplicateString(List<String> in) {
         Set<String> hs = new HashSet<>();
@@ -224,8 +235,8 @@ public class Person {
     }
 
     private void RemoveDuplicateList(List<List<String>> in) {
-        Map <String, List<String>> hm = new HashMap<>();
-        for (List<String> n: in){
+        Map<String, List<String>> hm = new HashMap<>();
+        for (List<String> n : in) {
             hm.put(n.toString(), n);
         }
         in.clear();
