@@ -46,6 +46,7 @@ public class Provider {
             Person p = new Person();
             p.Origin = this;
             p.URI = row.get("a").stringValue();
+            p.URIS.add(p.URI);
             lsp.add(p);
         }
         return lsp;
@@ -65,6 +66,7 @@ public class Provider {
             Person p = new Person();
             p.Origin = this;
             p.URI = row.get("a").stringValue();
+            p.URIS.add(p.URI);
             lsp.add(p);
         }
         return lsp;

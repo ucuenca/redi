@@ -17,6 +17,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
@@ -172,18 +173,18 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             final int allx = allAuthors.size();
             Person aSeedAuthor = allAuthors.get(i);
             final List<Map.Entry<Provider, List<Person>>> Candidates = new ArrayList<>();
-            //List<Map.Entry<Provider, List<Person>>> CandidatesI = new ArrayList<>();
+            List<Map.Entry<Provider, List<Person>>> CandidatesI = new ArrayList<>();
             Candidates.add(new AbstractMap.SimpleEntry<Provider, List<Person>>(MainAuthorsProvider, Lists.newArrayList(aSeedAuthor)));
             for (int j = 1; j < AuthorsProviderslist.size(); j++) {
                 Provider aSecondaryProvider = AuthorsProviderslist.get(j);
                 List<Person> aProviderCandidates = aSecondaryProvider.getCandidates(aSeedAuthor.URI);
-                //List<Person> aProviderCandidatesI = aSecondaryProvider.getCandidates(aSeedAuthor.URI);
+                List<Person> aProviderCandidatesI = aSecondaryProvider.getCandidates(aSeedAuthor.URI);
                 if (!aProviderCandidates.isEmpty()) {
                     Candidates.add(new AbstractMap.SimpleEntry<>(aSecondaryProvider, aProviderCandidates));
-                    //CandidatesI.add(new AbstractMap.SimpleEntry<>(aSecondaryProvider, aProviderCandidatesI));
+                    CandidatesI.add(new AbstractMap.SimpleEntry<>(aSecondaryProvider, aProviderCandidatesI));
                 }
             }
-            //Candidates.addAll(Lists.reverse(CandidatesI));
+            Candidates.addAll(Lists.reverse(CandidatesI));
             bexecutorService.submitTask(new Runnable() {
                 @Override
                 public void run() {
@@ -202,6 +203,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             });
         }
         executorServicex.shutdown();
+        executorServicex.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
     }
 
     public void Disambiguate(List<Map.Entry<Provider, List<Person>>> Candidates, int level, Person superAuthor) throws MarmottaException, RepositoryException, MalformedQueryException, QueryEvaluationException, RDFHandlerException, InvalidArgumentException, UpdateExecutionException {
