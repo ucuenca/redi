@@ -334,6 +334,18 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 if (firstIndex == null) {
                     firstIndex = groupIndex;
                 }
+                String URICoauthorB = groupIndex;
+                for (Map<String, Value> re : query) {
+                    registerSameAs(constantService.getAuthorsSameAsGraph(), re.get("a").stringValue(), URICoauthorB);
+                }
+
+            }
+            query = sparqlService.query(QueryLanguage.SPARQL, qry);
+            firstIndex = null;
+            for (String groupIndex : eachGroup) {
+                if (firstIndex == null) {
+                    firstIndex = groupIndex;
+                }
                 String URICoauthorA = firstIndex;
                 String URICoauthorB = groupIndex;
                 String newURI = constantService.getAuthorResource() + Cache.getMD5(URICoauthorA);
