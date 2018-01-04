@@ -12,8 +12,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.Semaphore;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
@@ -160,7 +163,8 @@ public class DisambiguationServiceImpl implements DisambiguationService {
     }
 
     public void ProcessAuthors(List<Provider> AuthorsProviderslist) throws MarmottaException, RepositoryException, MalformedQueryException, QueryEvaluationException, RDFHandlerException, InvalidArgumentException, UpdateExecutionException, InterruptedException {
-        ExecutorService executorService = Executors.newFixedThreadPool(MAXTHREADS);
+        ExecutorService executorServicex = Executors.newFixedThreadPool(MAXTHREADS);
+        BoundedExecutor bexecutorService = new BoundedExecutor(executorServicex, MAXTHREADS);
         Provider MainAuthorsProvider = AuthorsProviderslist.get(0);
         List<Person> allAuthors = MainAuthorsProvider.getAuthors();
         for (int i = 0; i < allAuthors.size(); i++) {
@@ -168,19 +172,19 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             final int allx = allAuthors.size();
             Person aSeedAuthor = allAuthors.get(i);
             final List<Map.Entry<Provider, List<Person>>> Candidates = new ArrayList<>();
-            List<Map.Entry<Provider, List<Person>>> CandidatesI = new ArrayList<>();
+            //List<Map.Entry<Provider, List<Person>>> CandidatesI = new ArrayList<>();
             Candidates.add(new AbstractMap.SimpleEntry<Provider, List<Person>>(MainAuthorsProvider, Lists.newArrayList(aSeedAuthor)));
             for (int j = 1; j < AuthorsProviderslist.size(); j++) {
                 Provider aSecondaryProvider = AuthorsProviderslist.get(j);
                 List<Person> aProviderCandidates = aSecondaryProvider.getCandidates(aSeedAuthor.URI);
-                List<Person> aProviderCandidatesI = aSecondaryProvider.getCandidates(aSeedAuthor.URI);
+                //List<Person> aProviderCandidatesI = aSecondaryProvider.getCandidates(aSeedAuthor.URI);
                 if (!aProviderCandidates.isEmpty()) {
                     Candidates.add(new AbstractMap.SimpleEntry<>(aSecondaryProvider, aProviderCandidates));
-                    CandidatesI.add(new AbstractMap.SimpleEntry<>(aSecondaryProvider, aProviderCandidatesI));
+                    //CandidatesI.add(new AbstractMap.SimpleEntry<>(aSecondaryProvider, aProviderCandidatesI));
                 }
             }
-            Candidates.addAll(Lists.reverse(CandidatesI));
-            executorService.execute(new Runnable() {
+            //Candidates.addAll(Lists.reverse(CandidatesI));
+            bexecutorService.submitTask(new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -197,7 +201,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 }
             });
         }
-        executorService.shutdown();
+        executorServicex.shutdown();
     }
 
     public void Disambiguate(List<Map.Entry<Provider, List<Person>>> Candidates, int level, Person superAuthor) throws MarmottaException, RepositoryException, MalformedQueryException, QueryEvaluationException, RDFHandlerException, InvalidArgumentException, UpdateExecutionException {
@@ -598,6 +602,35 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             CentralGraphWorker.start();
         }
         return State;
+    }
+
+    class BoundedExecutor {
+
+        private final Executor exec;
+        private final Semaphore semaphore;
+
+        public BoundedExecutor(Executor exec, int bound) {
+            this.exec = exec;
+            this.semaphore = new Semaphore(bound);
+        }
+
+        public void submitTask(final Runnable command)
+                throws InterruptedException {
+            semaphore.acquire();
+            try {
+                exec.execute(new Runnable() {
+                    public void run() {
+                        try {
+                            command.run();
+                        } finally {
+                            semaphore.release();
+                        }
+                    }
+                });
+            } catch (RejectedExecutionException e) {
+                semaphore.release();
+            }
+        }
     }
 
 }

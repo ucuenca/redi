@@ -36,6 +36,7 @@ public class Provider {
                 + "{\n"
                 + "	graph <" + Graph + "> {\n"
                 + "  		?a a <http://xmlns.com/foaf/0.1/Person> . \n"
+                //+ "  		values ?a { <http://redi.cedia.edu.ec/resource/authors/UCUENCA/file/_SAQUICELA_GALARZA_____VICTOR_HUGO_> } . \n"
                 //+ "  		?a <http://purl.org/dc/terms/provenance> <http://redi.cedia.edu.ec/resource/endpoint/file/UCUENCA> . \n"
                 + "	}\n"
                 + "}";
