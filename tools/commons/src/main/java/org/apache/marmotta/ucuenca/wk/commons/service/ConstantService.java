@@ -68,11 +68,11 @@ public interface ConstantService {
     String getAcademicsKnowledgeResource();
 
     String getEndpointResource();
-    
+
     String getOrganizationBaseUri();
-    
+
     String getEndpointBaseUri();
-    
+
     String getOrganizationsGraph();
 
     String getBaseResource();
@@ -122,17 +122,23 @@ public interface ConstantService {
 
     //String getAuthorsGraph();
     String getProviderNsGraph();
-    
+
     String getProviderBaseUri();
-    
+
     /**
      * Returns the URI of the Latindex Graph
-     * @return 
+     *
+     * @return
      */
     String getLatindexJournalsGraph();
+
     String getEndpointBaseEvent();
-    
+
     String getAuthorsSameAsGraph();
+
     String getPublicationsSameAsGraph();
+
+    String getCoauthorsSameAsGraph();
+
     String getAuthorsProviderGraph();
 }

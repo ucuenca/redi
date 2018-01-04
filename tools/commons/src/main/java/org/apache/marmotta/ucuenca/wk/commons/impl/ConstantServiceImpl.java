@@ -50,7 +50,7 @@ public class ConstantServiceImpl implements ConstantService {
     public String getEndpointsGraph() {
         return confService.getBaseContext() + "endpoints";
     }
-    
+
     @Override
     public String getOrganizationsGraph() {
         return confService.getBaseContext() + "organization";
@@ -65,7 +65,7 @@ public class ConstantServiceImpl implements ConstantService {
     public String getAcademicsKnowledgeGraph() {
         return confService.getBaseContext() + "provider/AcademicsKnowledgeProvider";
     }
-    
+
     @Override
     public String getProviderBaseUri() {
         return confService.getBaseContext() + "provider";
@@ -141,17 +141,17 @@ public class ConstantServiceImpl implements ConstantService {
     public String getEndpointResource() {
         return getBaseResource() + "endpoint/";
     }
-    
+
     @Override
     public String getOrganizationBaseUri() {
         return getBaseResource() + "organization/";
     }
-    
-     @Override
+
+    @Override
     public String getEndpointBaseUri() {
         return getBaseResource() + "endpoint/";
     }
-    
+
     @Override
     public String getEndpointBaseEvent() {
         return getBaseResource() + "event/";
@@ -285,7 +285,7 @@ public class ConstantServiceImpl implements ConstantService {
     public String getSelectedGraph(String type) {
         return commonService.readPropertyFromFile("parameters.properties", type);
     }
-    
+
     @Override
     public String getLatindexJournalsGraph() {
         return confService.getBaseContext() + "latindex";
@@ -304,6 +304,11 @@ public class ConstantServiceImpl implements ConstantService {
     @Override
     public String getAuthorsProviderGraph() {
         return confService.getBaseContext() + "authorsProvider";
+    }
+
+    @Override
+    public String getCoauthorsSameAsGraph() {
+        return confService.getBaseContext() + "coauthorsSameAs";
     }
 
 }

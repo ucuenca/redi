@@ -42,7 +42,7 @@ import org.openrdf.rio.RDFHandlerException;
 @ApplicationScoped
 public class DisambiguationServiceImpl implements DisambiguationService {
 
-    final int MAXTHREADS = 5;
+    final int MAXTHREADS = 3;
 
     @Inject
     private org.slf4j.Logger log;
@@ -82,6 +82,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             List<Provider> Providers = getProviders();
             ProcessAuthors(Providers);
             ProcessPublications(Providers);
+            ProcessCoauthors(Providers);
         } catch (Exception ex) {
             log.error("Unknown error while disambiguating");
             ex.printStackTrace();
@@ -167,14 +168,18 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             final int allx = allAuthors.size();
             Person aSeedAuthor = allAuthors.get(i);
             final List<Map.Entry<Provider, List<Person>>> Candidates = new ArrayList<>();
+            List<Map.Entry<Provider, List<Person>>> CandidatesI = new ArrayList<>();
             Candidates.add(new AbstractMap.SimpleEntry<Provider, List<Person>>(MainAuthorsProvider, Lists.newArrayList(aSeedAuthor)));
             for (int j = 1; j < AuthorsProviderslist.size(); j++) {
                 Provider aSecondaryProvider = AuthorsProviderslist.get(j);
                 List<Person> aProviderCandidates = aSecondaryProvider.getCandidates(aSeedAuthor.URI);
+                List<Person> aProviderCandidatesI = aSecondaryProvider.getCandidates(aSeedAuthor.URI);
                 if (!aProviderCandidates.isEmpty()) {
                     Candidates.add(new AbstractMap.SimpleEntry<>(aSecondaryProvider, aProviderCandidates));
+                    CandidatesI.add(new AbstractMap.SimpleEntry<>(aSecondaryProvider, aProviderCandidatesI));
                 }
             }
+            Candidates.addAll(Lists.reverse(CandidatesI));
             executorService.execute(new Runnable() {
                 @Override
                 public void run() {
@@ -182,10 +187,6 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                         log.info("Start disambiguating {} out of {} authors", ix, allx);
                         for (Map.Entry<Provider, List<Person>> aCandidateList : Candidates) {
                             aCandidateList.getKey().FillData(aCandidateList.getValue());
-                        }
-                        if (Candidates.size() > 1) {
-                            List<Map.Entry<Provider, List<Person>>> reverse = Lists.reverse(Candidates.subList(1, Candidates.size()));
-                            Candidates.addAll(reverse);
                         }
                         Disambiguate(Candidates, 0, new Person());
                         log.info("Finish disambiguating {} out of {} authors", ix, allx);
@@ -211,6 +212,133 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 Disambiguate(Candidates, level + 1, enrich);
             } else {
                 Disambiguate(Candidates, level + 1, superAuthor);
+            }
+        }
+    }
+
+    public void ProcessCoauthors(List<Provider> ProvidersList) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
+        String qryDisambiguatedCoauthors = " select distinct ?p { graph <" + constantService.getPublicationsSameAsGraph() + "> { ?p <http://www.w3.org/2002/07/owl#sameAs> ?o } }";
+        List<Map<String, Value>> queryResponse = sparqlService.query(QueryLanguage.SPARQL, qryDisambiguatedCoauthors);
+        int i = 0;
+        for (Map<String, Value> anAuthor : queryResponse) {
+            String publicationURI = anAuthor.get("p").stringValue();
+            groupCoauthors(ProvidersList, publicationURI);
+            log.info("Disambiguating coauthors {} out of {} publications", i, queryResponse.size());
+            i++;
+        }
+    }
+
+    public Person getAuxPerson(Map<String, Value> ar) {
+        Person n = new Person();
+        n.Name = new ArrayList<>();
+        n.URI = ar.get("a").stringValue();
+        if (ar.get("n") != null) {
+            n.Name.add(Lists.newArrayList(ar.get("n").stringValue()));
+        }
+        if (ar.get("fn") != null && ar.get("ln") != null) {
+            ArrayList<String> names = Lists.newArrayList(ar.get("fn").stringValue());
+            names.add(ar.get("ln").stringValue());
+            n.Name.add(names);
+        }
+        return n;
+    }
+
+    public void groupCoauthors(List<Provider> ProvidersList, String publicationURI) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
+        String providersGraphs = "  ";
+        for (Provider aProvider : ProvidersList) {
+            providersGraphs += " <" + aProvider.Graph + "> ";
+        }
+        String qryAllAuthors = "select distinct ?a ?n ?fn ?ln {\n"
+                + "		graph <" + constantService.getPublicationsSameAsGraph() + "> {\n"
+                + "			values ?pu { <" + publicationURI + "> } .\n"
+                + "			?pu <http://www.w3.org/2002/07/owl#sameAs> ?p .\n"
+                + "		}\n"
+                + "		values ?g { " + providersGraphs + " } graph ?g {\n"
+                + "			?a <http://xmlns.com/foaf/0.1/publications> ?p .\n"
+                + "			optional { ?a <http://xmlns.com/foaf/0.1/name> ?n}\n"
+                + "			optional { ?a <http://xmlns.com/foaf/0.1/givenName> ?fn}\n"
+                + "			optional { ?a <http://xmlns.com/foaf/0.1/familyName> ?ln}\n"
+                + "		}\n"
+                + "}";
+        List<Map<String, Value>> queryResponse = sparqlService.query(QueryLanguage.SPARQL, qryAllAuthors);
+        Set<Set<String>> coauthorsGroups = new HashSet<>();
+        for (int i = 0; i < queryResponse.size(); i++) {
+            for (int j = i + 1; j < queryResponse.size(); j++) {
+
+                Person auxPersoni = getAuxPerson(queryResponse.get(i));
+                Person auxPersonj = getAuxPerson(queryResponse.get(j));
+
+                Boolean checkName = auxPersoni.checkName(auxPersonj);
+
+                if (checkName != null && checkName) {
+                    Set<String> aGroup = new HashSet<>();
+                    aGroup.add(auxPersoni.URI);
+                    aGroup.add(auxPersonj.URI);
+                    Set<String> auxGroup = null;
+                    for (Set<String> potentialGroup : coauthorsGroups) {
+                        if (potentialGroup.contains(auxPersoni.URI) || potentialGroup.contains(auxPersonj.URI)) {
+                            auxGroup = potentialGroup;
+                            break;
+                        }
+                    }
+                    if (auxGroup == null) {
+                        coauthorsGroups.add(aGroup);
+                    } else {
+                        auxGroup.addAll(aGroup);
+                    }
+                }
+            }
+        }
+
+        Set<Set<String>> ls_alone = new HashSet<>();
+        for (int i = 0; i < queryResponse.size(); i++) {
+            Person auxPersoni = getAuxPerson(queryResponse.get(i));
+            boolean alone = true;
+            for (Set<String> ung : coauthorsGroups) {
+                if (ung.contains(auxPersoni.URI)) {
+                    alone = false;
+                    break;
+                }
+            }
+            if (alone) {
+                Set<String> hsalone = new HashSet<>();
+                hsalone.add(auxPersoni.URI);
+                ls_alone.add(hsalone);
+            }
+        }
+        coauthorsGroups.addAll(ls_alone);
+
+        for (Set<String> eachGroup : coauthorsGroups) {
+            String firstIndex = null;
+
+            String coauthoruris = "  ";
+            for (String aProvider : eachGroup) {
+                coauthoruris += " <" + aProvider + "> ";
+            }
+
+            String qry = "select distinct ?a {\n"
+                    + "		graph <" + constantService.getAuthorsSameAsGraph() + "> {\n"
+                    + "			values ?pa { " + coauthoruris + "  } .\n"
+                    + "			?a <http://www.w3.org/2002/07/owl#sameAs> ?pa .\n"
+                    + "		}\n"
+                    + "}";
+
+            List<Map<String, Value>> query = sparqlService.query(QueryLanguage.SPARQL, qry);
+            for (String groupIndex : eachGroup) {
+                if (firstIndex == null) {
+                    firstIndex = groupIndex;
+                }
+                String URICoauthorA = firstIndex;
+                String URICoauthorB = groupIndex;
+                String newURI = constantService.getAuthorResource() + Cache.getMD5(URICoauthorA);
+                if (query.isEmpty()) {
+                    registerSameAs(constantService.getCoauthorsSameAsGraph(), newURI, URICoauthorB);
+                } else {
+                    for (Map<String, Value> re : query) {
+                        registerSameAs(constantService.getAuthorsSameAsGraph(), re.get("a").stringValue(), URICoauthorB);
+                    }
+                }
+
             }
         }
     }
@@ -321,6 +449,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             mergeRawData(Providers);
             replaceSameAs(constantService.getAuthorsSameAsGraph());
             replaceSameAs(constantService.getPublicationsSameAsGraph());
+            replaceSameAs(constantService.getCoauthorsSameAsGraph());
         } catch (Exception ex) {
             log.error("Unknown error while merging Central Graph");
             ex.printStackTrace();
