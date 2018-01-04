@@ -51,6 +51,7 @@ import org.semarglproject.vocab.OWL;
 import org.semarglproject.vocab.RDF;
 import org.semarglproject.vocab.RDFS;
 import org.slf4j.Logger;
+import scala.actors.threadpool.Arrays;
 
 /**
  * Default Implementation of {@link ProviderService}. Each provider
@@ -137,6 +138,9 @@ public abstract class AbstractProviderService implements ProviderService {
                         QueryLanguage.SPARQL, queriesService.getAuthorsDataQuery(organization));
 
                 int totalAuthors = resultAllAuthors.size();
+                if (totalAuthors == 0) {
+                    log.info("There are not authors for organization(s) {}", Arrays.toString(organizations));
+                }
                 int processedAuthors = 0;
                 task.updateTotalSteps(totalAuthors);
                 task.updateDetailMessage("Organization", organization.substring(organization.lastIndexOf('/')));
