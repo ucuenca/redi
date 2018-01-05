@@ -173,18 +173,18 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             final int allx = allAuthors.size();
             Person aSeedAuthor = allAuthors.get(i);
             final List<Map.Entry<Provider, List<Person>>> Candidates = new ArrayList<>();
-            List<Map.Entry<Provider, List<Person>>> CandidatesI = new ArrayList<>();
+            //List<Map.Entry<Provider, List<Person>>> CandidatesI = new ArrayList<>();
             Candidates.add(new AbstractMap.SimpleEntry<Provider, List<Person>>(MainAuthorsProvider, Lists.newArrayList(aSeedAuthor)));
             for (int j = 1; j < AuthorsProviderslist.size(); j++) {
                 Provider aSecondaryProvider = AuthorsProviderslist.get(j);
                 List<Person> aProviderCandidates = aSecondaryProvider.getCandidates(aSeedAuthor.URI);
-                List<Person> aProviderCandidatesI = aSecondaryProvider.getCandidates(aSeedAuthor.URI);
+                //List<Person> aProviderCandidatesI = aSecondaryProvider.getCandidates(aSeedAuthor.URI);
                 if (!aProviderCandidates.isEmpty()) {
                     Candidates.add(new AbstractMap.SimpleEntry<>(aSecondaryProvider, aProviderCandidates));
-                    CandidatesI.add(new AbstractMap.SimpleEntry<>(aSecondaryProvider, aProviderCandidatesI));
+                    //CandidatesI.add(new AbstractMap.SimpleEntry<>(aSecondaryProvider, aProviderCandidatesI));
                 }
             }
-            Candidates.addAll(Lists.reverse(CandidatesI));
+            //Candidates.addAll(Lists.reverse(CandidatesI));
             bexecutorService.submitTask(new Runnable() {
                 @Override
                 public void run() {
