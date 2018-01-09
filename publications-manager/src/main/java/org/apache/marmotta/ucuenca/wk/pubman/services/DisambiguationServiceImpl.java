@@ -45,27 +45,27 @@ import org.openrdf.rio.RDFHandlerException;
  */
 @ApplicationScoped
 public class DisambiguationServiceImpl implements DisambiguationService {
-
-    final int MAXTHREADS = 3;
-
+    
+    final int MAXTHREADS = 5;
+    
     @Inject
     private org.slf4j.Logger log;
-
+    
     @Inject
     private ConstantService constantService;
-
+    
     @Inject
     private SparqlService sparqlService;
-
+    
     @Inject
     private QueriesService queriesService;
-
+    
     @Inject
     private CommonsServices commonsServices;
-
+    
     private Thread DisambiguationWorker;
     private Thread CentralGraphWorker;
-
+    
     private List<Provider> getProviders() {
         Provider a0 = new Provider("Authors", constantService.getAuthorsProviderGraph(), sparqlService);
         Provider a1 = new Provider("Scopus", constantService.getScopusGraph(), sparqlService);
@@ -78,7 +78,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         Providers.add(a3);
         return Providers;
     }
-
+    
     @Override
     public void Proccess() {
         try {
@@ -98,18 +98,51 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 }
             } while (true);
             ProcessCoauthors(Providers, false);
+            
+            removeDuplicates(constantService.getAuthorsSameAsGraph());
+            removeDuplicates(constantService.getPublicationsSameAsGraph());
+            removeDuplicates(constantService.getCoauthorsSameAsGraph());
         } catch (Exception ex) {
             log.error("Unknown error while disambiguating");
             ex.printStackTrace();
         }
     }
-
+    
+    public void removeDuplicates(String graph) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
+        String q = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
+                + "\n"
+                + "delete {\n"
+                + "	graph <" + graph + "> {\n"
+                + "		?no owl:sameAs ?p .\n"
+                + "	}\n"
+                + "}\n"
+                + "insert {\n"
+                + "	graph <" + graph + "> {\n"
+                + "		?r owl:sameAs ?p .\n"
+                + "		?r owl:sameAs ?no .\n"
+                + "	}\n"
+                + "}\n"
+                + "where {\n"
+                + "	graph <" + graph + "> {\n"
+                + "		?no owl:sameAs ?p .\n"
+                + "	} .\n"
+                + "	{\n"
+                + "		select ?p (count(distinct ?o) as ?c) (max(str(?o)) as ?u) ( iri (?u) as ?r) {\n"
+                + "	  		graph <" + graph + "> {\n"
+                + "	  			?o owl:sameAs ?p .\n"
+                + "	  		}\n"
+                + "		} group by ?p having (?c > 1)\n"
+                + "	}\n"
+                + "}";
+        sparqlService.update(QueryLanguage.SPARQL, q);
+    }
+    
     public void InitAuthorsProvider() throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
         boolean ask = sparqlService.ask(QueryLanguage.SPARQL, "ask from <" + constantService.getAuthorsProviderGraph() + "> { ?a ?b ?c }");
         if (ask) {
             return;
         }
-
+        
         String delete = "delete {\n"
                 + "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
                 + "		?a ?b ?c .\n"
@@ -173,7 +206,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         sparqlService.update(QueryLanguage.SPARQL, famName);
         sparqlService.update(QueryLanguage.SPARQL, org);
     }
-
+    
     public void ProcessAuthors(List<Provider> AuthorsProviderslist) throws MarmottaException, RepositoryException, MalformedQueryException, QueryEvaluationException, RDFHandlerException, InvalidArgumentException, UpdateExecutionException, InterruptedException {
         ExecutorService executorServicex = Executors.newFixedThreadPool(MAXTHREADS);
         BoundedExecutor bexecutorService = new BoundedExecutor(executorServicex, MAXTHREADS);
@@ -216,7 +249,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         executorServicex.shutdown();
         executorServicex.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
     }
-
+    
     public void Disambiguate(List<Map.Entry<Provider, List<Person>>> Candidates, int level, Person superAuthor) throws MarmottaException, RepositoryException, MalformedQueryException, QueryEvaluationException, RDFHandlerException, InvalidArgumentException, UpdateExecutionException {
         if (level >= Candidates.size()) {
             return;
@@ -232,7 +265,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             }
         }
     }
-
+    
     public void ProcessCoauthors(List<Provider> ProvidersList, boolean onlySameAs) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
         String qryDisambiguatedCoauthors = " select distinct ?p { graph <" + constantService.getPublicationsSameAsGraph() + "> { ?p <http://www.w3.org/2002/07/owl#sameAs> ?o } }";
         List<Map<String, Value>> queryResponse = sparqlService.query(QueryLanguage.SPARQL, qryDisambiguatedCoauthors);
@@ -244,7 +277,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             i++;
         }
     }
-
+    
     public Person getAuxPerson(Map<String, Value> ar) {
         Person n = new Person();
         n.Name = new ArrayList<>();
@@ -259,7 +292,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         }
         return n;
     }
-
+    
     public void groupCoauthors(List<Provider> ProvidersList, String publicationURI, boolean onlySameAs) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
         String providersGraphs = "  ";
         for (Provider aProvider : ProvidersList) {
@@ -281,12 +314,12 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         Set<Set<String>> coauthorsGroups = new HashSet<>();
         for (int i = 0; i < queryResponse.size(); i++) {
             for (int j = i + 1; j < queryResponse.size(); j++) {
-
+                
                 Person auxPersoni = getAuxPerson(queryResponse.get(i));
                 Person auxPersonj = getAuxPerson(queryResponse.get(j));
-
+                
                 Boolean checkName = auxPersoni.checkName(auxPersonj);
-
+                
                 if (checkName != null && checkName) {
                     Set<String> aGroup = new HashSet<>();
                     aGroup.add(auxPersoni.URI);
@@ -306,7 +339,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 }
             }
         }
-
+        
         Set<Set<String>> ls_alone = new HashSet<>();
         for (int i = 0; i < queryResponse.size(); i++) {
             Person auxPersoni = getAuxPerson(queryResponse.get(i));
@@ -324,22 +357,22 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             }
         }
         coauthorsGroups.addAll(ls_alone);
-
+        
         for (Set<String> eachGroup : coauthorsGroups) {
             String firstIndex = null;
-
+            
             String coauthoruris = "  ";
             for (String aProvider : eachGroup) {
                 coauthoruris += " <" + aProvider + "> ";
             }
-
+            
             String qry = "select distinct ?a {\n"
                     + "		graph <" + constantService.getAuthorsSameAsGraph() + "> {\n"
                     + "			values ?pa { " + coauthoruris + "  } .\n"
                     + "			?a <http://www.w3.org/2002/07/owl#sameAs> ?pa .\n"
                     + "		}\n"
                     + "}";
-
+            
             List<Map<String, Value>> query = sparqlService.query(QueryLanguage.SPARQL, qry);
             for (String groupIndex : eachGroup) {
                 if (firstIndex == null) {
@@ -358,7 +391,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             }
         }
     }
-
+    
     public void ProcessPublications(List<Provider> ProvidersList) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
         String qryDisambiguatedAuthors = " select distinct ?p { graph <" + constantService.getAuthorsSameAsGraph() + "> { ?p <http://www.w3.org/2002/07/owl#sameAs> ?o } }";
         List<Map<String, Value>> queryResponse = sparqlService.query(QueryLanguage.SPARQL, qryDisambiguatedAuthors);
@@ -369,9 +402,9 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             log.info("Disambiguating publications {} out of {} authors", i, queryResponse.size());
             i++;
         }
-
+        
     }
-
+    
     public void groupPublications(List<Provider> ProvidersList, String personURI) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
         String providersGraphs = "  ";
         for (Provider aProvider : ProvidersList) {
@@ -410,7 +443,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 }
             }
         }
-
+        
         Set<Set<String>> ls_alone = new HashSet<>();
         for (int i = 0; i < queryResponse.size(); i++) {
             boolean alone = true;
@@ -427,7 +460,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             }
         }
         publicationsGroups.addAll(ls_alone);
-
+        
         for (Set<String> eachGroup : publicationsGroups) {
             String firstIndex = null;
             for (String groupIndex : eachGroup) {
@@ -441,15 +474,15 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             }
         }
     }
-
+    
     public void registerSameAs(String graph, String URIO, String URIP) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
-
+        
         if (URIO != null && URIP != null && URIO.compareTo(URIP) != 0) {
             String buildInsertQuery = buildInsertQuery(graph, URIO, "http://www.w3.org/2002/07/owl#sameAs", URIP);
             sparqlService.update(QueryLanguage.SPARQL, buildInsertQuery);
         }
     }
-
+    
     private String buildInsertQuery(String grapfhProv, String sujeto, String predicado, String objeto) {
         if (commonsServices.isURI(objeto)) {
             return queriesService.getInsertDataUriQuery(grapfhProv, sujeto, predicado, objeto);
@@ -457,7 +490,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             return queriesService.getInsertDataLiteralQuery(grapfhProv, sujeto, predicado, objeto);
         }
     }
-
+    
     @Override
     public void Merge() {
         try {
@@ -474,12 +507,12 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             ex.printStackTrace();
         }
     }
-
+    
     public void mergeSameAs(String CGP) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
         String q = "insert { graph <" + constantService.getCentralGraph() + "> { ?a ?b ?c } } where { graph <" + CGP + "> { ?a ?b ?c }}";
         sparqlService.update(QueryLanguage.SPARQL, q);
     }
-
+    
     public void replaceSameAs(String CGP) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
         String qry1 = "delete {\n"
                 + "	graph <" + constantService.getCentralGraph() + "> {\n"
@@ -520,7 +553,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         sparqlService.update(QueryLanguage.SPARQL, qry1);
         sparqlService.update(QueryLanguage.SPARQL, qry2);
     }
-
+    
     public void mergeRawData(List<Provider> ProvidersList) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
         String providersGraphs = "  ";
         for (Provider aProvider : ProvidersList) {
@@ -538,7 +571,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 + "        ?c ?p ?v .\n"
                 + "    }\n"
                 + "}";
-
+        
         String qry2 = "insert {\n"
                 + "    graph <" + constantService.getCentralGraph() + "> {\n"
                 + "        ?v ?w ?q .\n"
@@ -566,24 +599,24 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 + "        ?q ?z ?m .\n"
                 + "    }\n"
                 + "}";
-
+        
         sparqlService.update(QueryLanguage.SPARQL, qry1);
         sparqlService.update(QueryLanguage.SPARQL, qry2);
         sparqlService.update(QueryLanguage.SPARQL, qry3);
     }
-
+    
     public int count(String graph) throws MarmottaException {
         String c = "select (count (*) as ?co) { graph <" + graph + "> { ?a ?b ?c }}";
         List<Map<String, Value>> query = sparqlService.query(QueryLanguage.SPARQL, c);
         int parseInt = Integer.parseInt(query.get(0).get("co").stringValue());
         return parseInt;
     }
-
+    
     public void delete(String graph) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
         String d = "delete { graph <" + graph + "> { ?a ?b ?c }} where { graph <" + graph + "> { ?a ?b ?c }} ";
         sparqlService.update(QueryLanguage.SPARQL, d);
     }
-
+    
     @Override
     public String startDisambiguation() {
         String State = "";
@@ -602,13 +635,13 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                         ex.printStackTrace();
                     }
                 }
-
+                
             };
             DisambiguationWorker.start();
         }
         return State;
     }
-
+    
     @Override
     public String startMerge() {
         String State = "";
@@ -627,23 +660,23 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                         ex.printStackTrace();
                     }
                 }
-
+                
             };
             CentralGraphWorker.start();
         }
         return State;
     }
-
+    
     class BoundedExecutor {
-
+        
         private final Executor exec;
         private final Semaphore semaphore;
-
+        
         public BoundedExecutor(Executor exec, int bound) {
             this.exec = exec;
             this.semaphore = new Semaphore(bound);
         }
-
+        
         public void submitTask(final Runnable command)
                 throws InterruptedException {
             semaphore.acquire();
@@ -662,5 +695,5 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             }
         }
     }
-
+    
 }
