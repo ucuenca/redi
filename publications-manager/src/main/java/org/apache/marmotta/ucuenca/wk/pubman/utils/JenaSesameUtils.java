@@ -55,7 +55,8 @@ public class JenaSesameUtils {
         if (theProperty == null) {
             return null;
         } else {
-            if (!theProperty.toString().startsWith("http") && theProperty.toString().startsWith("www")) {
+            // Sesame accepts absolute URIs. Add protocol in case there isn't.
+            if (!theProperty.toString().startsWith("http")) {
                 String uri = "http://" + theProperty.toString();
                 theProperty = mInternalModel.createProperty(uri);
             }
@@ -168,7 +169,7 @@ public class JenaSesameUtils {
      *
      * @param theGraph the Graph to convert
      * @return the set of statements in the Sesame Graph converted and saved in
-     *         a Jena Model
+     * a Jena Model
      */
     public static com.hp.hpl.jena.rdf.model.Model asJenaModel(Graph theGraph) {
         com.hp.hpl.jena.rdf.model.Model aModel = ModelFactory.createDefaultModel();

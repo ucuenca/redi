@@ -143,7 +143,7 @@ public class ScopusAuthorProvider extends AbstractXMLDataProvider {
      * Parse the HTTP response entity returned by the web service call and
      * return its contents as a Sesame RDF repository. There are four web
      * services that can be called. The method makes many calls to Scopus API,
-     * so if it can return all data, it throws a {@see DataRetrievalException}.
+     * so if it can return all data, it throws a {@link DataRetrievalException}.
      * <p>
      * The logic to return authors with its publications consists in four steps:
      *
@@ -155,13 +155,19 @@ public class ScopusAuthorProvider extends AbstractXMLDataProvider {
      * author.</li>
      * </ol>
      *
-     * See
+     *
+     *
+     * @see
      * <a href="https://dev.elsevier.com/academic_research_scopus.html">Academic
-     * Research</a>, <a href="https://dev.elsevier.com/sc_apis.html">Elsevier Scopus
-     * APIs</a>, <a href="http://api.elsevier.com/documentation/AUTHORSearchAPI.wadl">Authors
-     * search API</a>, <a href="https://api.elsevier.com/documentation/AuthorRetrievalAPI.wadl">Author
-     * retrieval API</a>, <a href="http://api.elsevier.com/documentation/SCOPUSSearchAPI.wadl">
-     * Scopus Search API</a>, and <a href="http://api.elsevier.com/documentation/AbstractRetrievalAPI.wadl">
+     * Research</a>, <a href="https://dev.elsevier.com/sc_apis.html">Elsevier
+     * Scopus APIs</a>,
+     * <a href="http://api.elsevier.com/documentation/AUTHORSearchAPI.wadl">Authors
+     * search API</a>,
+     * <a href="https://api.elsevier.com/documentation/AuthorRetrievalAPI.wadl">Author
+     * retrieval API</a>,
+     * <a href="http://api.elsevier.com/documentation/SCOPUSSearchAPI.wadl">
+     * Scopus Search API</a>, and
+     * <a href="http://api.elsevier.com/documentation/AbstractRetrievalAPI.wadl">
      * Abstract Retrieval API</a>.
      *
      * @param resource
@@ -194,16 +200,18 @@ public class ScopusAuthorProvider extends AbstractXMLDataProvider {
             throw new DataRetrievalException("Cannot read input stream.", ex);
         }
     }
-    
+
     /**
-     * Parse each XML result of publications. Assings each publication resource 
-     * to its author. See 
-     * <a href="http://api.elsevier.com/documentation/SCOPUSSearchAPI.wadl">Scopus Search API</a>.
+     * Parse each XML result of publications. Assings each publication resource
+     * to its author. See
+     * <a href="http://api.elsevier.com/documentation/SCOPUSSearchAPI.wadl">Scopus
+     * Search API</a>.
+     *
      * @param input
      * @param requestUrl
      * @param triples
      * @return list of publication resources
-     * @throws DataRetrievalException 
+     * @throws DataRetrievalException
      */
     private List<String> parseSearchPub(InputStream input, String requestUrl, final Model triples) throws DataRetrievalException {
         try {
@@ -239,7 +247,8 @@ public class ScopusAuthorProvider extends AbstractXMLDataProvider {
      * @param requestUrl
      * @param triples
      * @param contentType
-     * @return list of resources of abstract documents associated with an author.
+     * @return list of resources of abstract documents associated with an
+     * author.
      * @throws DataRetrievalException
      */
     private List<String> parseResponseAuthorsProfile(InputStream input, String requestUrl, final Model triples, String contentType) throws DataRetrievalException {
@@ -274,8 +283,10 @@ public class ScopusAuthorProvider extends AbstractXMLDataProvider {
     }
 
     /**
-     * Maps each author from XML to RDF using default implementation of 
-     * {@see AbstractXMLDataProvider#parseResponse}. See
+     * Maps each author from XML to RDF using default implementation of
+     * {@link AbstractXMLDataProvider#parseResponse}.
+     *
+     * @see
      * <a href="http://api.elsevier.com/documentation/AUTHORSearchAPI.wadl">Authors
      * search API.</a>
      *
