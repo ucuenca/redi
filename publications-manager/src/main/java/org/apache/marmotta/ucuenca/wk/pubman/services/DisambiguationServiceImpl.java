@@ -135,7 +135,19 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 + "		} group by ?p having (?c > 1)\n"
                 + "	}\n"
                 + "}";
+        String qq = "PREFIX owl: <http://www.w3.org/2002/07/owl#> \n"
+                + "insert {	\n"
+                + "	graph <" + graph + "> {\n"
+                + "		?o owl:sameAs ?o .\n"
+                + "	}\n"
+                + "} \n"
+                + "where {\n"
+                + "	graph <" + graph + "> {\n"
+                + "		?o owl:sameAs ?p .\n"
+                + "	}\n"
+                + "}";
         sparqlService.update(QueryLanguage.SPARQL, q);
+        sparqlService.update(QueryLanguage.SPARQL, qq);
     }
 
     public void InitAuthorsProvider() throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
