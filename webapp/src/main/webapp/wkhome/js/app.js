@@ -30,8 +30,8 @@ wkhomeApp.service('searchData', function () {
 });
 
 wkhomeApp.service('globalData', ['$window', function ($window) {
-    // var baseURL = "http://redi.cedia.edu.ec/";
-    var baseURL = $window.location.origin + $window.location.pathname;
+    var baseURL = "http://redi.cedia.edu.ec/";
+    //var baseURL = $window.location.origin + $window.location.pathname;
     baseURL = baseURL.replace("clon","");
     this.language = "es";
     this.centralGraph = baseURL + "context/redi";

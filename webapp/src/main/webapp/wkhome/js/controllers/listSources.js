@@ -21,7 +21,7 @@ wkhomeControllers.controller('listSources', ['sparqlQuery', '$scope', 'globalDat
                 + '?subject uc:province ?province. '
                 + '} '
                 + 'WHERE { '
-                + 'graph <' + globalData.endpointsGraph + '> '
+                + 'graph <' + globalData.organizationsGraph + '> '
                 + '{ '
                 + '?subject uc:name ?name. '
                 + '?subject uc:fullName ?fullName. '
