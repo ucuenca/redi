@@ -30,17 +30,16 @@ wkhomeApp.service('searchData', function () {
 });
 
 wkhomeApp.service('globalData', ['$window', function ($window) {
-    // var baseURL = "http://localhost:8080/";
+    // var baseURL = "http://redi.cedia.edu.ec/";
     var baseURL = $window.location.origin + $window.location.pathname;
     baseURL = baseURL.replace("clon","");
     this.language = "es";
-    // this.centralGraph = "http://ucuenca.edu.ec/wkhuska";
     this.centralGraph = baseURL + "context/redi";
     this.externalAuthorsGraph = "http://ucuenca.edu.ec/wkhuska/externalauthors";
     this.clustersGraph = baseURL + "context/clusters";
     this.authorsGraph = baseURL + "context/authors";
-    //this.endpointsGraph = "http://localhost:8080/" + "context/endpoints";
     this.endpointsGraph = baseURL + "context/endpoints";
+    this.organizationsGraph = baseURL + "context/organization";
     this.latindexGraph = baseURL + "context/latindex";
     this.translateData = null;
     this.PREFIX = 'PREFIX bibo: <http://purl.org/ontology/bibo/>'
@@ -50,6 +49,7 @@ wkhomeApp.service('globalData', ['$window', function ($window) {
             + ' PREFIX uc: <http://ucuenca.edu.ec/ontology#>  '
             + ' PREFIX mm: <http://marmotta.apache.org/vocabulary/sparql-functions#> '
             + ' PREFIX dcterms: <http://purl.org/dc/terms/>'
+            + 'PREFIX schema: <http://schema.org/>'
             ;
     this.CONTEXT = {
         "uc": "http://ucuenca.edu.ec/ontology#",
