@@ -374,6 +374,7 @@ genericCloud.directive('genericCloud', ["d3", 'globalData','sparqlQuery',
                                   mappedData.push({id:keyword["@id"], label: name, value: pubsvalue});
                                 }
                             });
+                            debugger
                             var pageTitle = "";
                             pageTitle = _.findWhere(jsonld['@graph'],{"@type": "uc:pagetitle"})["uc:viewtitle"];
                             draw(svg, width, height, mappedData, scope, attrs, pageTitle);

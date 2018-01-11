@@ -1,6 +1,7 @@
 wkhomeControllers.controller('genericCloud', ['$scope', '$window', 'globalData', 'sparqlQuery', 'searchData',
     function ($scope, $window, globalData, sparqlQuery, searchData) {
         $scope.todos = [];
+        debugger;
         $scope.ctrlFn = function (value)
         {
             $scope.todos = [];

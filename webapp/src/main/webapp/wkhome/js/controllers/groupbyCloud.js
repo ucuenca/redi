@@ -9,7 +9,7 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
       $scope.areas = [];
       _.map(data["@graph"], function(keyword) {
         $scope.areas.push({
-          tag: keyword["rdfs:label"]
+          tag: keyword["rdfs:label"]["@value"]
         });
       });
     });
@@ -22,8 +22,8 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
         model["id"] = pub["@id"];
         model["title"] = typeof pub["dct:title"] === 'string' ? pub["dct:title"] : _(pub["dct:title"]).first();
         model["abstract"] = typeof pub["bibo:abstract"] === 'string' ? pub["bibo:abstract"] : _(pub["bibo:abstract"]).first();
-        model["uri"] = _.isArray(pub["bibo:uri"]) ? _(pub["bibo:uri"]).first() : (pub["bibo:uri"]['@id'] ? pub["bibo:uri"] : "");
-        model["keywords"] = pub["dct:subject"] ? pub["dct:subject"] : "";
+        model["uri"] = pub["bibo:uri"] ? (_.isArray(pub["bibo:uri"]) ? _(pub["bibo:uri"]).first() : pub["bibo:uri"]) : undefined;
+        model["keywords"] = pub["dct:subject"] ? pub["dct:subject"] : undefined;
         $scope.todos.push({
           id: model["id"],
           title: model["title"],
@@ -70,20 +70,22 @@ wkhomeControllers.controller('groupbyCloud', ['$translate', '$routeParams', '$sc
     function loadAuthors(area, groupby) {
       waitingDialog.show("Consultando Autores Relacionados con:  \"" + area + "\"");
 
-      var queryRelatedPublications = globalData.PREFIX +
-        'CONSTRUCT {' +
-        '  ?author foaf:name  ?nameauthor;' +
-        '          dct:provenance ?sourcename .' +
-        '}  WHERE {' +
-        '  ?author foaf:publications ?publication ;' +
-        '          foaf:name  ?nameauthor;' +
-        '          dct:provenance ?provenance.' +
-        '  ?publication dct:subject [rdfs:label ?keyword].' +
-        '  FILTER (mm:fulltext-search(?keyword, "' + area + '"))' +
-        '  GRAPH <' + globalData.endpointsGraph + '> {' +
-        '    ?provenance uc:name ?sourcename.' +
-        '  }' +
-        '} LIMIT 200';
+      var queryRelatedPublications = globalData.PREFIX
+          + 'CONSTRUCT {  ?author foaf:name  ?authorName;          dct:provenance ?orgName .}'
+          + 'WHERE { '
+          + '  GRAPH <' + globalData.clustersGraph + '> {    '
+          + '    ?area rdfs:label ?label;'
+          + '                foaf:publications [uc:hasPerson ?author].'
+          + '    FILTER REGEX(?label, "' + area + '")'
+          + '  }'
+          + '  GRAPH <' + globalData.centralGraph + '> {'
+          + '    ?author foaf:name ?authorName;'
+          + '            schema:memberOf ?org.'
+          + '  }'
+          + '  GRAPH <' + globalData.organizationsGraph + '> {'
+          + '    ?org uc:name ?orgName.'
+          + '  }'
+          + '} ';
 
       sparqlQuery.querySrv({
         query: queryRelatedPublications

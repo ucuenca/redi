@@ -54,7 +54,7 @@
         </center>
       </div>
       <div class="col-md-3">
-        <img ng-src="{{author.photo}}" class="img-responsive" alt="{{author.name}}">
+        <img ng-show="author.photo" ng-src="{{author.photo}}" class="img-responsive" alt="{{author.name}}">
         <a ng-click="loadAuthorProfile()"><h3 style="margin: 0px 0px">{{author.name}}</h3></a>
         <h5 style="margin: 0px 0px" ng-repeat="institution in author.institutions">{{institution.name}}, <small><i>{{institution.city}}</i></small></h5>
         <br>

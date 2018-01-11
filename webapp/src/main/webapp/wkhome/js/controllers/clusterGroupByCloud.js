@@ -39,6 +39,7 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$timeout', '$scope', 'glob
             }
 
         }, true);
+
         if (!searchData.allkeywords)
         {
             $scope.themes = [];
@@ -115,36 +116,58 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$timeout', '$scope', 'glob
                 searchData.clustersAuthors = [];
 
                 var queryClusters = globalData.PREFIX
-                  + 'CONSTRUCT {?author foaf:name ?name. ?author uc:hasCluster ?clusterId. ?author rdfs:label ?label. ?author dcterms:subject ?keywords }'
-                  + 'WHERE{ '
-                  + '  { '
-                  + '    SELECT DISTINCT ?author ?name ?clusterId ?label (group_concat(DISTINCT ?keyword; separator = ", ") as ?keywords) '
-                  + '    WHERE {'
-                  + '      GRAPH <' + globalData.clustersGraph + '> { '
-                  + '        {'
-                  + '          SELECT ?clusterId '
-                  + '          WHERE{'
-                  + '            ?clusterId foaf:publications  ?pub'
-                  + '          } GROUP BY ?clusterId'
-                  + '            HAVING (COUNT(?pub) > 20)'
-                  + '        }'
-                  + '        ?clusterId rdfs:label ?label . '
-                  + '        ?clusterId foaf:publications  ?publication . '
-                  + '        ?publication uc:hasPerson ?author .'
-                  + '        {'
-                  + '          SELECT * {'
-                  + '            GRAPH <' + globalData.centralGraph + '> {'
-                  + '                ?author foaf:name ?name .'
-                  + '                ?publication dcterms:subject ?keywordSubject. '
-                  + '                ?keywordSubject rdfs:label ?keyword. '
-                  + '            }'
-                  + '          } '
-                  + '        }'
-                  + '      } '
-                  + '    } '
-                  + '    GROUP BY ?author ?name ?clusterId ?label'
+                  + 'CONSTRUCT {'
+                  + '  ?author foaf:name ?name_;'
+                  + '          uc:hasCluster ?clusterId;'
+                  + '          rdfs:label ?label_;'
+                  + '          dcterms:subject ?keywords '
+                  + '} WHERE {'
+                  + '  {     '
+                  + '    SELECT DISTINCT ?author (SAMPLE(?name) as ?name_) ?clusterId (SAMPLE(?label) as ?label_) (group_concat(DISTINCT ?keyword; separator = ", ") as ?keywords)     '
+                  + '    WHERE {      '
+                  + '      GRAPH <' + globalData.clustersGraph + '> {            '
+                  + '        ?clusterId rdfs:label ?label .         '
+                  + '        ?clusterId foaf:publications  ?publication .'
+                  + '        ?publication uc:hasPerson ?author .       '
+                  + '      }'
+                  + '      GRAPH <' + globalData.centralGraph + '> {'
+                  + '         ?author foaf:name ?name .                '
+                  + '         ?publication dcterms:subject ?keywordSubject.'
+                  + '          ?keywordSubject rdfs:label ?keyword.             '
+                  + '      }            '
+                  + '    }  GROUP BY ?author ?clusterId  '
                   + '  } '
                   + '}';
+                  // + 'CONSTRUCT {?author foaf:name ?name. ?author uc:hasCluster ?clusterId. ?author rdfs:label ?label. ?author dcterms:subject ?keywords }'
+                  // + 'WHERE{ '
+                  // + '  { '
+                  // + '    SELECT DISTINCT ?author ?name ?clusterId ?label (group_concat(DISTINCT ?keyword; separator = ", ") as ?keywords) '
+                  // + '    WHERE {'
+                  // + '      GRAPH <' + globalData.clustersGraph + '> { '
+                  // + '        {'
+                  // + '          SELECT ?clusterId '
+                  // + '          WHERE{'
+                  // + '            ?clusterId foaf:publications  ?pub'
+                  // + '          } GROUP BY ?clusterId'
+                  // + '            HAVING (COUNT(?pub) > 20)'
+                  // + '        }'
+                  // + '        ?clusterId rdfs:label ?label . '
+                  // + '        ?clusterId foaf:publications  ?publication . '
+                  // + '        ?publication uc:hasPerson ?author .'
+                  // + '        {'
+                  // + '          SELECT * {'
+                  // + '            GRAPH <' + globalData.centralGraph + '> {'
+                  // + '                ?author foaf:name ?name .'
+                  // + '                ?publication dcterms:subject ?keywordSubject. '
+                  // + '                ?keywordSubject rdfs:label ?keyword. '
+                  // + '            }'
+                  // + '          } '
+                  // + '        }'
+                  // + '      } '
+                  // + '    } '
+                  // + '    GROUP BY ?author ?name ?clusterId ?label'
+                  // + '  } '
+                  // + '}';
 
                 sparqlQuery.querySrv({query: queryClusters}, function (rdf) {
 
@@ -164,9 +187,9 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$timeout', '$scope', 'glob
                                 for (i = 0; i < clusterIds.length; i++) {
                                     model["IdAuthor"] = res["@id"];
                                     model["IdCluster"] = res["uc:hasCluster"][i]["@id"];
-                                    model["ClusterName"] = res["rdfs:label"][i];
+                                    model["ClusterName"] = res["rdfs:label"][i]['@value'];
                                     model["Author"] = res["foaf:name"];
-                                    model["Keyword"] = keywords[i];
+                                    model["Keyword"] = keywords;
                                     model["Title"] = res["foaf:name"];
                                     model["URI"] = res["foaf:name"];
                                     authors.push({idAuthor: model["IdAuthor"], cluster: model["IdCluster"], clusterName: model["ClusterName"], author: model["Author"], keyword: model["Keyword"], title: model["Title"], uri: model["URI"]});
@@ -195,11 +218,11 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$timeout', '$scope', 'glob
 
                         //var cont = 1;
                         for (i = 0, len = authors.length; i < len; i++) { //&& cont < 600
-                            if (myArray[authors[i]["cluster"].toString()][0] > 4 && myArray[authors[i]["cluster"].toString()][1] < 95) {
+                            // if (myArray[authors[i]["cluster"].toString()][0] > 4 && myArray[authors[i]["cluster"].toString()][1] < 95) {
                                 clusters.push(authors[i]);
                                 //cont+=1;
                                 myArray[authors[i]["cluster"].toString()][1] += 1;
-                            }
+                            // }
                         }
                         searchData.clustersAuthors = clusters;
                         $timeout(executeDraw(searchData.clustersAuthors, groupby));
@@ -254,27 +277,28 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$timeout', '$scope', 'glob
 
         clickonRelatedauthor = function (id_author)
         {
-            var getAuthorDataQuery = globalData.PREFIX
-                    + ' CONSTRUCT {   <' + id_author + '> foaf:name ?name; a foaf:Person  '
-                    + ' }   '
-                    + ' WHERE '
-                    + ' {'
-                    + 'Graph <' + globalData.centralGraph + '>'
-                    + '{'
-                    + '     <' + id_author + '> a foaf:Person.'
-                    + '     <' + id_author + '> foaf:name ?name'
-                    + ' } '
-                    + '}';
-
-            sparqlQuery.querySrv({query: getAuthorDataQuery}, function (rdf) {
-                jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
-                    $scope.$apply(function () {
-                        searchData.authorSearch = compacted;
-                        //alert(author);
-                        $window.location.hash = "/" + $routeParams.lang + "/w/search?" + id_author;
-                    });
-                });
-            });
+          $window.location.hash = "/" + $routeParams.lang + "/w/author/" + id_author;
+            // var getAuthorDataQuery = globalData.PREFIX
+            //         + ' CONSTRUCT {   <' + id_author + '> foaf:name ?name; a foaf:Person  '
+            //         + ' }   '
+            //         + ' WHERE '
+            //         + ' {'
+            //         + 'Graph <' + globalData.centralGraph + '>'
+            //         + '{'
+            //         + '     <' + id_author + '> a foaf:Person.'
+            //         + '     <' + id_author + '> foaf:name ?name'
+            //         + ' } '
+            //         + '}';
+            //
+            // sparqlQuery.querySrv({query: getAuthorDataQuery}, function (rdf) {
+            //     jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
+            //         $scope.$apply(function () {
+            //             searchData.authorSearch = compacted;
+            //             //alert(author);
+            //             $window.location.hash = "/" + $routeParams.lang + "/w/search?" + id_author;
+            //         });
+            //     });
+            // });
         }; //end clickonRelatedauthor
 
         function executeDraw(dataToDraw, groupby)

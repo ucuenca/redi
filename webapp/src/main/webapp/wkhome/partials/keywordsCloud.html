@@ -7,8 +7,11 @@
     <div class="col-md-12">
       <div class="row subject-cloud">
         <div class="col-md-12">
-          <div class="col-md-4" ng-cloak="" style="border: outset; border-radius: 5px;">
-            <md-content>
+          <div class="col-md-4" ng-cloak="">
+            <select name="board" id="board" ng-model="selectedItem" ng-options="key.tag as key.tag for key  in areas">
+                        <option value="">{{'Palabra Clave' | translate}}</option>
+                    </select>
+            <!-- <md-content>
               <form ng-submit="$event.preventDefault()">
                 <md-autocomplete md-no-cache="true" md-selected-item="selectedItem" md-search-text="searchText" md-selected-item-change="selectedItemChange(item)" md-items="item in querySearch(searchText)" md-item-text="item.tag" md-min-length="1" placeholder="{{'Keywords' | translate}}">
                   <md-item-template>
@@ -19,7 +22,7 @@
                   </md-not-found>
                 </md-autocomplete>
               </form>
-            </md-content>
+            </md-content> -->
           </div>
 
           <cloud-tag data="data" style="display: block; height: 80%;padding-top: 0px;" ctrl-fn="ctrlFn(value)" clickon-Relatedauthor="clickonRelatedauthor(value)" ng-model="value"></cloud-tag>

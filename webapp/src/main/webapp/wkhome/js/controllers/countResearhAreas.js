@@ -11,7 +11,7 @@ wkhomeControllers.controller('countResearchAreas', ['$routeParams', '$scope', 'g
       var endpoints = data['@graph'];
       var dataToSend = []
       endpoints.forEach(function(endpoint) {
-        var label = endpoint['uc:name'];
+        var label = endpoint['uc:name']['@value'];
         var value = endpoint['uc:total'].length > 1 ? endpoint['uc:total'][0]['@value'] : endpoint['uc:total']['@value'];
         dataToSend.push({
           label: label,

@@ -10,11 +10,11 @@
     </center>
     <div class="col-md-12">
       <div class="col-md-3">
-        <h3 class="text-success" style="text-align: left">{{'Select Research Area'| translate}}:</h3>
-        <!-- <select class="form-control" name="board" id="board" ng-model="selectedArea" ng-options="key.tag as key.tag for key  in areas">
-                    <option value="">Select Theme</option>
-                </select> -->
-        <md-content>
+        <!-- <h3 class="text-success" style="text-align: left">{{'Select Research Area'| translate}}:</h3> -->
+        <select name="board" id="board" ng-model="selectedArea" ng-options="key.tag as key.tag for key  in areas">
+                    <option value="">{{'Palabra Clave' | translate}}</option>
+                </select>
+        <!-- <md-content>
           <form ng-submit="$event.preventDefault()">
             <md-autocomplete md-no-cache="true" md-selected-item="selectedArea" md-search-text="searchText"
             md-items="area in querySearch(searchText)" md-item-text="area"
@@ -27,7 +27,7 @@
               </md-not-found>
             </md-autocomplete>
           </form>
-        </md-content>
+        </md-content> -->
       </div>
 
       <!-- <div class="col-md-3">

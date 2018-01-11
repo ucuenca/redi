@@ -70,7 +70,7 @@ myApp.labels_en = {
 "Select Research Area":"Select knowledge Area",
 "Keywords":"Do you know the keywords?",
 "No match":"No keywords match with the text",
-"Palabra Clave":"Type a keyword",
+"Palabra Clave":"Select a knowledge area",
 //"All" - from cloud cluster view
 "Author":"Author",
 "Source":"Source",

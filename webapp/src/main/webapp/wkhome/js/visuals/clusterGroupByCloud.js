@@ -14,12 +14,12 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
         var arrayColors = new Array();
         arrayColors['default'] = '#5882FA';
         function create(svgElement, dataToDraw, groupByOption) {
-            
+
             var radius = 400;
             var width = Math.max(document.documentElement.clientWidth * 1, window.innerWidth * 1) ;
             var height = Math.max(document.documentElement.clientHeight * 1, window.innerHeight * 1);
-            
-            
+
+
             var svg = svgElement.append("svg")
                     .attr("width", width )
                     .attr("height", height);
@@ -34,7 +34,7 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
             var click = function (d) {
                 removePopovers();
                 scopeEI.$parent.clickonAuthor(d.idAuthor);
-                
+
                 /*var title = '';
                 if ($routeParams.lang === "es") {
                     title = '"Clusters que contienen \'' + d.label + '\' Keyword"';
@@ -94,7 +94,7 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
                     });
                 });   // end  sparqlQuery.querySrv(...*/
             };
-            
+
             var getCenters = function (vname, size) {
                 var centers, map;
                 centers = _.uniq(_.pluck(dataMapping, vname)).map(function (d) {
@@ -107,9 +107,9 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
                         while (d != null && cont == 0 && dataMapping[i] != null) {
                             if (dataMapping[i].cluster == d){
                                 keyw = dataMapping[i].keyword;
-                                if (keyw == null || keyw == "") {
+                                // if (keyw == null || keyw == "") {
                                     keyw = dataMapping[i].clusterName;
-                                }
+                                // }
                                 arrayColors[d] = '#' + Math.floor(Math.random() * 16777215).toString(16);
                                 cont++;
                             }
@@ -217,7 +217,7 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
             draw(groupByOption);
 
             function draw(varname) {
-                
+
                 if (varname == 'cluster') {
                     width = Math.max(document.documentElement.clientWidth * (0.95), window.innerWidth * (0.95) || 0);
                     height = Math.max(document.documentElement.clientHeight + dataToDraw.length * 1 - 350, window.innerHeight + dataToDraw.length * 1 - 350 || 0);
@@ -227,7 +227,7 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
                     height = Math.max(document.documentElement.clientHeight * 0.8);
                     svg.attr("width", width).attr("height", height);
                 }
-                
+
                 var centers = getCenters(varname, [width, height]);
                 force.on("tick", tick(centers, varname));
                 labels(centers)
@@ -259,7 +259,6 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
 
             function labels(centers) {
                 svg.selectAll(".label").remove();
-
                 svg.selectAll(".label")
                         .data(centers).enter().append("text")
                         .attr("class", "label")
@@ -361,9 +360,9 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
                      x: d.time,
                      y: d.visitors
                      }
-                     
+
                      });
-                     
+
                      draw(svg, width, height, data);
                      },	true);*/
                     scope.$watch('data', function (newVal, oldVal, scope) {
@@ -396,4 +395,3 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
             }
         };
     }]);
-

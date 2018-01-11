@@ -70,7 +70,7 @@ pieChart.directive('pieChart', ["d3", "globalData", "sparqlQuery",
             var key = function (d) {
                 return d.data.label;
             };
-           
+
             var slice = g.select(".slices").selectAll("path.slice").data(pie(data), key);
 
 
@@ -108,7 +108,7 @@ pieChart.directive('pieChart', ["d3", "globalData", "sparqlQuery",
                         var key = d.data.label;
 //                        if (entityName === 'Articles')
 //                        {
-//                           
+//
 //                        }
 //                        else
                         if (entityName === 'Researchers')
@@ -125,19 +125,19 @@ pieChart.directive('pieChart', ["d3", "globalData", "sparqlQuery",
                                     + ' ?subject uc:total ?totalPub }   '
                                     + ' WHERE {  '
                                     + ' {       '
-                                    + ' SELECT ?subject ?name (COUNT(?pub) AS ?totalPub)  '
+                                    + ' SELECT ?subject ?name (COUNT(DISTINCT ?pub) AS ?totalPub)  '
                                     + ' WHERE { '
                                     + ' GRAPH <' + globalData.centralGraph + '> {'
                                     + ' 	?subject foaf:publications  ?pub . '
                                     + ' 	?pub dct:title ?title . '
                                     + ' 	?subject foaf:name       ?name.        '
-                                    + ' 	?subject dct:provenance ?provenance. '
+                                    + ' 	?subject schema:memberOf ?provenance. '
                                     + '     { '
                                     + '         SELECT * '
                                     + '         WHERE { '
-                                    + '         GRAPH <' + globalData.endpointsGraph + '> { '
+                                    + '         GRAPH <' + globalData.organizationsGraph + '> { '
                                     + '           ?provenance uc:name ?sourcename. '
-                                    + '           FILTER(mm:fulltext-search(?sourcename,"'+key+'"))' 
+                                    + '           FILTER(mm:fulltext-search(?sourcename,"'+key+'"))'
                                     + '             }'
                                     + '         } '
                                     + '     } '
@@ -179,10 +179,10 @@ pieChart.directive('pieChart', ["d3", "globalData", "sparqlQuery",
             /*
              var polyline = svg.select(".lines").selectAll("polyline")
              .data(pie(data), key);
-             
+
              polyline.enter()
              .append("polyline");
-             
+
              polyline.transition().duration(1000)
              .attrTween("points", function (d) {
              this._current = this._current || d;
@@ -195,26 +195,26 @@ pieChart.directive('pieChart', ["d3", "globalData", "sparqlQuery",
              return [arc.centroid(d2) + 80, outerArc.centroid(d2) , pos];
              };
              });
-             
+
              polyline.exit()
              .remove();
-             
+
              /* ------- TEXT LABELS -------*/
             /*
              var text = svg.select(".labels").selectAll("text")
              .data(pie(data), key);
-             
+
              text.enter()
              .append("text")
              .attr("dy", ".35em")
              .text(function (d) {
              return d.data.value > 150 ? d.data.label + "(" + d.data.value +")" : "";
              });
-             
+
              function midAngle(d) {
              return d.startAngle + (d.endAngle - d.startAngle) / 3;
              }
-             
+
              text.transition().duration(1000)
              .attrTween("transform", function (d) {
              this._current = this._current || d;
@@ -236,7 +236,7 @@ pieChart.directive('pieChart', ["d3", "globalData", "sparqlQuery",
              return midAngle(d2) < Math.PI ? "start" : "end";
              };
              });
-             
+
              text.exit()
              .remove();
              */
@@ -282,4 +282,3 @@ pieChart.directive('pieChart', ["d3", "globalData", "sparqlQuery",
             }
         };
     }]);
-

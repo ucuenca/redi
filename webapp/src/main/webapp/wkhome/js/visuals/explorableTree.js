@@ -196,21 +196,14 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                         + ' WHERE { '
                         + '     GRAPH <' + globalData.centralGraph + '> { '
                         + '         <' + id + '> foaf:name ?name; '
-                        + '         dct:provenance ?provenance; '
+                        + '         schema:memberOf ?org. '
                         + '         OPTIONAL {  <' + id + '> foaf:topic_interest [rdfs:label ?subjects]. }'
-                        + '         { '
-                        + '             SELECT DISTINCT ?provenance ?city ?provname ?province '
-                        + '             WHERE'
-                        + '             {'
-                        + '                 graph <' + globalData.endpointsGraph + '> '
-                        + '                 { '
-                        + '                     ?provenance uc:fullName ?provname.'
-                        + '                     ?provenance uc:city ?city.'
-                        + '                     ?provenance uc:province ?province.'
-                        + '                 }'
-                        + '             }'
-                        + '         }'
-                        + '       } '
+                        + '     } '
+                        + '     GRAPH <' + globalData.organizationsGraph + '> { '
+                        + '         ?org uc:fullName ?provname;'
+                        + '              uc:city ?city;'
+                        + '              uc:province ?province.'
+                        + '     }'
                         + '  }  ';
                 /*
                  * execute sparql to get name, city, province, and institution of the author
@@ -582,7 +575,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                           var getSubjects = function(val, key) {
                               try{
                                 var publication = _.findWhere(compacted["@graph"], {"@id": val['@id']});
-                                return publication['rdfs:label'];
+                                return _.isArray(publication['rdfs:label']) ? _.first(publication['rdfs:label']) : publication['rdfs:label'];
                               }catch(ex){
                                 return "";
                               }

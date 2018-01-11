@@ -109,7 +109,7 @@ cloudGroup.directive('mapView', ["d3", 'globalData', 'sparqlQuery',
                 // redraw the map
                 states.selectAll("path").attr("d", path);
 
-                // redraw the points 
+                // redraw the points
                 circles.selectAll("circle")
                         .attr("cx", function (d, i) {
                             return t[0] + d3.event.translate[0] + (positions[i][0] * d3.event.scale) - 6400;
@@ -159,41 +159,64 @@ cloudGroup.directive('mapView', ["d3", 'globalData', 'sparqlQuery',
                         })
                         .on("click", function (d, i) {
                             var sparqlquery = globalData.PREFIX
-                                    + ' CONSTRUCT { <http://ucuenca.edu.ec/wkhuska/resultTitle> a uc:pagetitle. <http://ucuenca.edu.ec/wkhuska/resultTitle> uc:viewtitle "Authors from ' + d.name + ' , taking place in ' + d.keyword + ' field" . ?subject rdfs:label ?name. ?subject uc:total ?totalPub }   '
-                                    + ' WHERE {  '
-                                    + '     SELECT ?subject ?totalPub ?name '
-                                    + '     WHERE { '
-                                    + '         ?subject foaf:publications ?pubb. '
-                                    + '         ?pubb dcterms:subject ?keySub. '
-                                    + '         ?keySub rdfs:label ?key. '
-                                    //+ '         ?subject dct:subject ?key . '
-                                    + '         FILTER (mm:fulltext-search(?key,"' + d.keyword + '")). '
-                                    + '         { '
-                                    + '         SELECT ?subject ?name (COUNT( DISTINCT ?pub) AS ?totalPub)  '
-                                    + '             WHERE { '
-                                    + '                 GRAPH <' + globalData.centralGraph + '>  { '
-                                    + '                     ?subject foaf:publications  ?pub . '
-                                    + '                     ?subject foaf:name       ?name.        '
-                                    + '                     ?subject dct:provenance ?provenance. '
-                                    + '                     {  '
-                                    + '                         SELECT * WHERE { '
-                                    + '                             GRAPH <' + globalData.endpointsGraph + '>  { '
-                                    + '                                 ?provenance uc:name ?sourcename. '
-                                    + '                                 FILTER(mm:fulltext-search(?sourcename,"'+d.name+'"))' 
-                                    + '                             } '
-                                    + '                         } '
-                                    + '                     } '
-                                    + '                 } '
-                                    + '             }  '
-                                    + '         GROUP BY ?subject ?name '
-                                    + '         } '
-                                    + '     }'
-                                    + ' }  ';
+                                    + 'CONSTRUCT { '
+                                    + '  <http://ucuenca.edu.ec/wkhuska/resultTitle> a uc:pagetitle. '
+                                    + '  <http://ucuenca.edu.ec/wkhuska/resultTitle> uc:viewtitle "Authors from UCUENCA , taking place in Computer Sciences field" . '
+                                    + '  ?author rdfs:label ?name_;'
+                                    + '           uc:total ?totalPub '
+                                    + '}    WHERE {       '
+                                    + ' 	SELECT ?author (SAMPLE(?name) as ?name_) (COUNT( DISTINCT ?pub) AS ?totalPub)'
+                                    + '      WHERE {                  '
+                                    + '        GRAPH <' + globalData.centralGraph + '>  {   '
+                                    + '          ?author foaf:publications  ?pub;'
+                                    + '                   foaf:name       ?name;'
+                                    + '                   schema:memberOf ?org.  '
+                                    + '        }'
+                                    + '        GRAPH <' + globalData.organizationsGraph + '>  {'
+                                    + '                ?org uc:name "' + d.name + '"^^xsd:string.'
+                                    + '        }           '
+                                    + '        GRAPH <' + globalData.clustersGraph + '> {'
+                                    + '        	[] foaf:publications [uc:hasPerson ?author];'
+                                    + '            rdfs:label ?lbl.'
+                                    + '         FILTER REGEX(?lbl, "' + d.keyword + '")'
+                                    + '        }'
+                                    + '      } GROUP BY ?author'
+                                    + '}';
+
+                                    // + ' CONSTRUCT { <http://ucuenca.edu.ec/wkhuska/resultTitle> a uc:pagetitle. <http://ucuenca.edu.ec/wkhuska/resultTitle> uc:viewtitle "Authors from ' + d.name + ' , taking place in ' + d.keyword + ' field" . ?subject rdfs:label ?name. ?subject uc:total ?totalPub }   '
+                                    // + ' WHERE {  '
+                                    // + '     SELECT ?subject ?totalPub ?name '
+                                    // + '     WHERE { '
+                                    // + '         ?subject foaf:publications ?pubb. '
+                                    // + '         ?pubb dcterms:subject ?keySub. '
+                                    // + '         ?keySub rdfs:label ?key. '
+                                    // //+ '         ?subject dct:subject ?key . '
+                                    // + '         FILTER (mm:fulltext-search(?key,"' + d.keyword + '")). '
+                                    // + '         { '
+                                    // + '         SELECT ?subject ?name (COUNT( DISTINCT ?pub) AS ?totalPub)  '
+                                    // + '             WHERE { '
+                                    // + '                 GRAPH <' + globalData.centralGraph + '>  { '
+                                    // + '                     ?subject foaf:publications  ?pub . '
+                                    // + '                     ?subject foaf:name       ?name.        '
+                                    // + '                     ?subject dct:provenance ?provenance. '
+                                    // + '                     {  '
+                                    // + '                         SELECT * WHERE { '
+                                    // + '                             GRAPH <' + globalData.endpointsGraph + '>  { '
+                                    // + '                                 ?provenance uc:name ?sourcename. '
+                                    // + '                                 FILTER(mm:fulltext-search(?sourcename,"'+d.name+'"))'
+                                    // + '                             } '
+                                    // + '                         } '
+                                    // + '                     } '
+                                    // + '                 } '
+                                    // + '             }  '
+                                    // + '         GROUP BY ?subject ?name '
+                                    // + '         } '
+                                    // + '     }'
+                                    // + ' }  ';
                             waitingDialog.show("Loading Authors Related with " + d.keyword);
                             sparqlQuery.querySrv({query: sparqlquery}, function (rdf) {
                                 jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
-                                    if (compacted)
-                                    {
+                                    if (compacted["@graph"]){
                                         var entity = compacted["@graph"];
                                         //var final_entity = _.where(entity, {"@type": "bibo:Document"});
                                         var values = entity.length ? entity : [entity];
@@ -245,4 +268,3 @@ cloudGroup.directive('mapView', ["d3", 'globalData', 'sparqlQuery',
             }
         };
     }]);
-
