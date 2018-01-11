@@ -66,9 +66,9 @@ public class PopulateMongoImpl implements PopulateMongo {
     /**
      *
      * @param queryResources query to load resources to describe.
-     * @param queryDescribe query to describe each candidate; it has to be a
-     * describe/construct.
-     * @param collection collection name in Mongo db.
+     * @param queryDescribe  query to describe each candidate; it has to be a
+     *                       describe/construct.
+     * @param collection     collection name in Mongo db.
      */
     private void loadResources(String queryResources, String queryDescribe, String c) {
         try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));
@@ -168,6 +168,7 @@ public class PopulateMongoImpl implements PopulateMongo {
 //        loadResources(queryCandidates, queryDescribe, MongoService.Collection.AUTHORS.getValue());
     }
 
+    @Override
     public void statistics() {
         HashMap<String, String> queries = new HashMap<>();
         queries.put("barchar", queriesService.getBarcharDataQuery());

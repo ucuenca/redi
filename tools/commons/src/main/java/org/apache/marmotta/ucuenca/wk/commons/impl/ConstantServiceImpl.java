@@ -190,7 +190,7 @@ public class ConstantServiceImpl implements ConstantService {
 //    }
     @Override
     public String getClusterGraph() {
-        return getWkhuskaGraph() + getSelectedGraph("clusters");
+        return confService.getBaseContext() + "clusters";
     }
 
     @Override
