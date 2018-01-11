@@ -41,7 +41,7 @@ uc:authorOrcid a r2r:Mapping;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:classMappingRef uc:authorType ;
     r2r:sourcePattern "?SUBJ elsevier:orcid ?orcid" ;
-    r2r:targetPattern "?SUBJ scoro:hasOrcid ?'orcid'^^xsd:string" .
+    r2r:targetPattern "?SUBJ scoro:hasORCID ?'orcid'^^xsd:string" .
 
 uc:authorHIndex a r2r:Mapping;
     r2r:partOfMappingCollection uc:mapColl1 ;
@@ -208,7 +208,8 @@ uc:publicationCites a r2r:Mapping ;
 uc:publicationCreator a r2r:Mapping ; 
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ dc:creator ?node; prism:contentType 'Abstract'. ?node rdf:_1 ?author; a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq>." ;
-    r2r:targetPattern "?SUBJ dct:creator ?<author>" .
+    r2r:targetPattern "?SUBJ dct:creator ?<author>" ;
+    r2r:targetPattern "?author foaf:publications ?SUBJ" .
 
 uc:publicationContributor a r2r:Mapping ; 
     r2r:partOfMappingCollection uc:mapColl1 ;
@@ -217,7 +218,8 @@ uc:publicationContributor a r2r:Mapping ;
     #r2r:sourcePattern "?SUBJ dc:creator ?node; prism:contentType 'Abstract'. ?node rdfs:member ?author; a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq>." ;
     # It is not possible to use a variable as a property. Solution: First 10 authors are assigned as contributors.
     r2r:sourcePattern "{?SUBJ dc:creator ?node; prism:contentType 'Abstract'. ?node rdf:_2 ?author; a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq>.} UNION {?SUBJ dc:creator ?node; prism:contentType 'Abstract'. ?node rdf:_3 ?author; a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq>.} UNION {?SUBJ dc:creator ?node; prism:contentType 'Abstract'. ?node rdf:_4 ?author; a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq>.} UNION {?SUBJ dc:creator ?node; prism:contentType 'Abstract'. ?node rdf:_5 ?author; a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq>.} UNION {?SUBJ dc:creator ?node; prism:contentType 'Abstract'. ?node rdf:_6 ?author; a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq>.} UNION {?SUBJ dc:creator ?node; prism:contentType 'Abstract'. ?node rdf:_7 ?author; a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq>.} UNION {?SUBJ dc:creator ?node; prism:contentType 'Abstract'. ?node rdf:_8 ?author; a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq>.} UNION {?SUBJ dc:creator ?node; prism:contentType 'Abstract'. ?node rdf:_9 ?author; a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq>.} UNION {?SUBJ dc:creator ?node; prism:contentType 'Abstract'. ?node rdf:_10 ?author; a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq>.}" ;
-    r2r:targetPattern "?SUBJ dct:contributor ?<author>" .
+    r2r:targetPattern "?SUBJ dct:contributor ?<author>" ;
+    r2r:targetPattern "?author foaf:publications ?SUBJ" .
 
 uc:publicationPublisher a r2r:Mapping ; 
     r2r:partOfMappingCollection uc:mapColl1 ;

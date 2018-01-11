@@ -147,4 +147,5 @@ uc:publicationContributor a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:classMappingRef uc:publicationType ;
     r2r:sourcePattern "?SUBJ dct:contributor ?contributor" ;
-    r2r:targetPattern "?SUBJ dct:contributor ?contributor" .
+    r2r:targetPattern "?SUBJ dct:contributor ?contributor" ;
+    r2r:targetPattern "?contributor foaf:publications ?SUBJ" .
