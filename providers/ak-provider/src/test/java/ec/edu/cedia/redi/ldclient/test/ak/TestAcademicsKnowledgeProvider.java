@@ -32,7 +32,7 @@ import org.openrdf.repository.RepositoryException;
  */
 public class TestAcademicsKnowledgeProvider extends ProviderTestBase {
 
-    private final String apikey = "9d3236831576410d860f6a8bb7971d73";
+    private final String apikey = "fa881bd5e2044966a88827bd4b00d4b5";
 
     /**
      * Tests the extraction of an author and his publications. This test might
@@ -57,11 +57,9 @@ public class TestAcademicsKnowledgeProvider extends ProviderTestBase {
             response = ldclient.retrieveResource(uri);
         } catch (DataRetrievalException ex) {
             Assert.assertTrue("Change API-KEY, Quota Exceeded.", ex.getCause().toString().contains("403 Quota Exceeded"));
-        }
-
-        if (response == null) {
             return;
         }
+        
         RepositoryConnection connection = ModelCommons.asRepository(response.getData()).getConnection();
         try {
             connection.begin();
