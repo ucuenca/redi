@@ -528,72 +528,114 @@ public class DisambiguationServiceImpl implements DisambiguationService {
     public void Merge() {
         try {
             List<Provider> Providers = getProviders();
-            mergeRawData(Providers);
-            replaceSameAs(constantService.getAuthorsSameAsGraph());
-            replaceSameAs(constantService.getPublicationsSameAsGraph());
-            replaceSameAs(constantService.getCoauthorsSameAsGraph());
-            mergeSameAs(constantService.getAuthorsSameAsGraph());
-            mergeSameAs(constantService.getPublicationsSameAsGraph());
-            mergeSameAs(constantService.getCoauthorsSameAsGraph());
+            log.info("Merging raw data ...");
+            mergeRawData(Providers, constantService.getCentralGraph() + "TempRaw");
+            log.info("Merging Same As ...");
+            addAll(constantService.getCentralGraph() + "TempAllSameAs", constantService.getAuthorsSameAsGraph());
+            addAll(constantService.getCentralGraph() + "TempAllSameAs", constantService.getPublicationsSameAsGraph());
+            addAll(constantService.getCentralGraph() + "TempAllSameAs", constantService.getCoauthorsSameAsGraph());
+            log.info("Replacing subjects ...");
+            replaceSameAs(constantService.getCentralGraph() + "TempRaw", constantService.getCentralGraph() + "TempAllSameAs",
+                    constantService.getCentralGraph() + "TempAllSameAsD1", constantService.getCentralGraph() + "TempAllSameAsI1", true);
+            log.info("Deleting old subjects ...");
+            minus(constantService.getCentralGraph() + "TempRaw2", constantService.getCentralGraph() + "TempRaw", constantService.getCentralGraph() + "TempAllSameAsD1");
+            log.info("Adding new subjects ...");
+            addAll(constantService.getCentralGraph() + "TempRaw2", constantService.getCentralGraph() + "TempAllSameAsI1");
+            log.info("Replacing objects ...");
+            replaceSameAs(constantService.getCentralGraph() + "TempRaw2", constantService.getCentralGraph() + "TempAllSameAs",
+                    constantService.getCentralGraph() + "TempAllSameAsD2", constantService.getCentralGraph() + "TempAllSameAsI2", false);
+            log.info("Deleting old objects ...");
+            minus(constantService.getCentralGraph(), constantService.getCentralGraph() + "TempRaw2", constantService.getCentralGraph() + "TempAllSameAsD2");
+            log.info("Adding new objects ...");
+            addAll(constantService.getCentralGraph(), constantService.getCentralGraph() + "TempAllSameAsI2");
+            log.info("Adding sameAs triples ...");
+            addAll(constantService.getCentralGraph(), constantService.getCentralGraph() + "TempAllSameAs");
+            log.info("Deleting temporals ...");
+            delete(constantService.getCentralGraph() + "TempRaw");
+            delete(constantService.getCentralGraph() + "TempRaw2");
+            delete(constantService.getCentralGraph() + "TempAllSameAs");
+            delete(constantService.getCentralGraph() + "TempAllSameAsD1");
+            delete(constantService.getCentralGraph() + "TempAllSameAsI1");
+            delete(constantService.getCentralGraph() + "TempAllSameAsD2");
+            delete(constantService.getCentralGraph() + "TempAllSameAsI2");
+            log.info("Finished merging ...");
+
         } catch (Exception ex) {
             log.error("Unknown error while merging Central Graph");
             ex.printStackTrace();
         }
     }
 
-    public void mergeSameAs(String CGP) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
-        String q = "insert { graph <" + constantService.getCentralGraph() + "> { ?a ?b ?c } } where { graph <" + CGP + "> { ?a ?b ?c }}";
-        sparqlService.update(QueryLanguage.SPARQL, q);
-    }
-
-    public void replaceSameAs(String CGP) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
-        String qry1 = "delete {\n"
-                + "	graph <" + constantService.getCentralGraph() + "> {\n"
+    public void replaceSameAs(String D, String SAG, String DG, String IG, boolean s) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
+        String qry1D = "insert {\n"
+                + "	graph <" + DG + "> {\n"
                 + "		?c ?p ?v .\n"
                 + "	}\n"
                 + "}\n"
-                + "insert {\n"
-                + "	graph <" + constantService.getCentralGraph() + "> {\n"
+                + "where {\n"
+                + "	graph <" + SAG + "> {\n"
+                + "		?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
+                + "	}\n"
+                + "	graph <" + D + "> {\n"
+                + "		?c ?p ?v .\n"
+                + "	}\n"
+                + "}";
+        String qry1I = "insert {\n"
+                + "	graph <" + IG + "> {\n"
                 + "		?a ?p ?v .\n"
                 + "	}\n"
                 + "}\n"
                 + "where {\n"
-                + "	graph <" + CGP + "> {\n"
+                + "	graph <" + SAG + "> {\n"
                 + "		?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
                 + "	}\n"
-                + "	graph <" + constantService.getCentralGraph() + "> {\n"
+                + "	graph <" + D + "> {\n"
                 + "		?c ?p ?v .\n"
                 + "	}\n"
                 + "}";
-        String qry2 = "delete {\n"
-                + "	graph <" + constantService.getCentralGraph() + "> {\n"
+
+        String qry2D = "insert {\n"
+                + "	graph <" + DG + "> {\n"
                 + "		?v ?p ?c .\n"
                 + "	}\n"
                 + "}\n"
-                + "insert {\n"
-                + "	graph <" + constantService.getCentralGraph() + "> {\n"
+                + "where {\n"
+                + "	graph <" + SAG + "> {\n"
+                + "		?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
+                + "	}\n"
+                + "	graph <" + D + "> {\n"
+                + "		?v ?p ?c .\n"
+                + "	}\n"
+                + "}";
+        String qry2I = "insert {\n"
+                + "	graph <" + IG + "> {\n"
                 + "		?v ?p ?a .\n"
                 + "	}\n"
                 + "}\n"
                 + "where {\n"
-                + "	graph <" + CGP + "> {\n"
+                + "	graph <" + SAG + "> {\n"
                 + "		?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
                 + "	}\n"
-                + "	graph <" + constantService.getCentralGraph() + "> {\n"
+                + "	graph <" + D + "> {\n"
                 + "		?v ?p ?c .\n"
                 + "	}\n"
                 + "}";
-        sparqlService.update(QueryLanguage.SPARQL, qry1);
-        sparqlService.update(QueryLanguage.SPARQL, qry2);
+        if (s) {
+            sparqlService.update(QueryLanguage.SPARQL, qry1D);
+            sparqlService.update(QueryLanguage.SPARQL, qry1I);
+        } else {
+            sparqlService.update(QueryLanguage.SPARQL, qry2D);
+            sparqlService.update(QueryLanguage.SPARQL, qry2I);
+        }
     }
 
-    public void mergeRawData(List<Provider> ProvidersList) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
+    public void mergeRawData(List<Provider> ProvidersList, String graph) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
         String providersGraphs = "  ";
         for (Provider aProvider : ProvidersList) {
             providersGraphs += " <" + aProvider.Graph + "> ";
         }
         String qry1 = "insert {\n"
-                + "    graph <" + constantService.getCentralGraph() + "> {\n"
+                + "    graph <" + graph + "> {\n"
                 + "        ?c ?p ?v .\n"
                 + "    }\n"
                 + "} where {\n"
@@ -606,7 +648,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 + "}";
 
         String qry2 = "insert {\n"
-                + "    graph <" + constantService.getCentralGraph() + "> {\n"
+                + "    graph <" + graph + "> {\n"
                 + "        ?v ?w ?q .\n"
                 + "    }\n"
                 + "} where {\n"
@@ -619,7 +661,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 + "    }\n"
                 + "}";
         String qry3 = "insert {\n"
-                + "    graph <" + constantService.getCentralGraph() + "> {\n"
+                + "    graph <" + graph + "> {\n"
                 + "        ?q ?z ?m .\n"
                 + "    }\n"
                 + "} where {\n"
@@ -647,6 +689,29 @@ public class DisambiguationServiceImpl implements DisambiguationService {
 
     public void delete(String graph) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
         String d = "delete { graph <" + graph + "> { ?a ?b ?c }} where { graph <" + graph + "> { ?a ?b ?c }} ";
+        sparqlService.update(QueryLanguage.SPARQL, d);
+    }
+
+    public void addAll(String graph, String graph1) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
+        String d = "insert { graph <" + graph + "> { ?a ?b ?c }} where { graph <" + graph1 + "> { ?a ?b ?c }} ";
+        sparqlService.update(QueryLanguage.SPARQL, d);
+    }
+
+    public void minus(String graph, String graph1, String graph2) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
+        String d = "insert {\n"
+                + "	graph <" + graph + "> {\n"
+                + "		?a ?b ?c .\n"
+                + "	}\n"
+                + "} where {	\n"
+                + "	graph <" + graph1 + "> {\n"
+                + "		?a ?b ?c \n"
+                + "		filter not exists {\n"
+                + "			graph <" + graph2 + "> {\n"
+                + "				?a ?b ?c .\n"
+                + "			}\n"
+                + "		}		\n"
+                + "	}\n"
+                + "}";
         sparqlService.update(QueryLanguage.SPARQL, d);
     }
 
