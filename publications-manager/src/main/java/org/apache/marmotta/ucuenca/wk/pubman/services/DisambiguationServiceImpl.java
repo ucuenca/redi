@@ -19,6 +19,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
@@ -259,8 +261,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 }
             });
         }
-        executorServicex.shutdown();
-        executorServicex.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
+        bexecutorService.end();
     }
 
     public void Disambiguate(List<Map.Entry<Provider, List<Person>>> Candidates, int level, Person superAuthor) throws MarmottaException, RepositoryException, MalformedQueryException, QueryEvaluationException, RDFHandlerException, InvalidArgumentException, UpdateExecutionException {
@@ -424,17 +425,31 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         }
     }
 
-    public void ProcessPublications(List<Provider> ProvidersList) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
+    public void ProcessPublications(final List<Provider> ProvidersList) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, InterruptedException {
+        ExecutorService executorServicex = Executors.newFixedThreadPool(MAXTHREADS);
+        BoundedExecutor bexecutorService = new BoundedExecutor(executorServicex, MAXTHREADS);
+
         String qryDisambiguatedAuthors = " select distinct ?p { graph <" + constantService.getAuthorsSameAsGraph() + "> { ?p <http://www.w3.org/2002/07/owl#sameAs> ?o } }";
         List<Map<String, Value>> queryResponse = sparqlService.query(QueryLanguage.SPARQL, qryDisambiguatedAuthors);
         int i = 0;
         for (Map<String, Value> anAuthor : queryResponse) {
-            String authorURI = anAuthor.get("p").stringValue();
-            groupPublications(ProvidersList, authorURI);
-            log.info("Disambiguating publications {} out of {} authors", i, queryResponse.size());
+            final String authorURI = anAuthor.get("p").stringValue();
+            log.info("Start disambiguating publications {} out of {} authors", i, queryResponse.size());
+            bexecutorService.submitTask(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        groupPublications(ProvidersList, authorURI);
+                    } catch (Exception ex) {
+                        log.error("Unknown exception while disambiguating publications");
+                        ex.printStackTrace();
+                    }
+                }
+            });
+            log.info("Finish disambiguating publications {} out of {} authors", i, queryResponse.size());
             i++;
         }
-
+        bexecutorService.end();
     }
 
     public void groupPublications(List<Provider> ProvidersList, String personURI) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
@@ -790,6 +805,12 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             } catch (RejectedExecutionException e) {
                 semaphore.release();
             }
+        }
+
+        public void end() throws InterruptedException {
+            ExecutorService sexec = (ExecutorService) exec;
+            sexec.shutdown();
+            sexec.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
         }
     }
 
