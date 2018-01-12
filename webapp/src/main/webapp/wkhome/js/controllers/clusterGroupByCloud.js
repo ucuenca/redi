@@ -197,7 +197,7 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$timeout', '$scope', 'glob
                             } else {
                                 model["IdAuthor"] = res["@id"];
                                 model["IdCluster"] = res["uc:hasCluster"]["@id"];
-                                model["ClusterName"] = res["rdfs:label"];
+                                model["ClusterName"] = res["rdfs:label"]['@value'];
                                 model["Author"] = res["foaf:name"];
                                 model["Keyword"] = keywords;
                                 model["Title"] = res["foaf:name"];
@@ -303,6 +303,7 @@ wkhomeControllers.controller('clusterGroupByCloud', ['$timeout', '$scope', 'glob
 
         function executeDraw(dataToDraw, groupby)
         {
+            console.log(dataToDraw);
             $timeout(function () {
                 $scope.data = [{value: dataToDraw, group: groupby}];
                 $scope.dataaux = dataToDraw;

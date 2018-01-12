@@ -114,11 +114,10 @@ wkhomeControllers.controller('loadData', ['sparqlQuery', 'searchData', '$transla
                         + '    ?clusterId foaf:publications ?publication;'
                         + '               rdfs:label ?label.'
                         + '    ?publication uc:hasPerson ?author.'
-                        + '    GRAPH <' + globalData.centralGraph + '>  {'
-                        + '      ?author foaf:name ?name.'
-                        + '      ?publication dct:subject [rdfs:label ?keywords].'
-                        + '    }'
-                        + ' '
+                        + '  }'
+                        + '  GRAPH <' + globalData.centralGraph + '>  {'
+                        + '    ?author foaf:name ?name.'
+                        + '    ?publication dct:subject [rdfs:label ?keywords].'
                         + '  }'
                         + '}';
 
@@ -129,16 +128,16 @@ wkhomeControllers.controller('loadData', ['sparqlQuery', 'searchData', '$transla
                             var model = {};
                             var clusterIds = res["uc:hasCluster"];
                             var keywords = "";
-                            if (res["dcterms:subject"] != null && (res["dcterms:subject"].constructor === Array || res["dcterms:subject"] instanceof Array)) {
-                                for (i = 0; i < res["dcterms:subject"].length && i < 12; i++) {
-                                    keywords += (i == 0 ? res["dcterms:subject"][i] : ", " + res["dcterms:subject"][i]);
+                            if (res["dct:subject"] != null && (res["dct:subject"].constructor === Array || res["dct:subject"] instanceof Array)) {
+                                for (i = 0; i < res["dct:subject"].length && i < 12; i++) {
+                                    keywords += (i == 0 ? res["dct:subject"][i] : ", " + res["dct:subject"][i]);
                                 }
                             }
                             if (clusterIds != null && (clusterIds.constructor === Array || clusterIds instanceof Array)) {
                                 for (i = 0; i < clusterIds.length; i++) {
                                     model["IdAuthor"] = res["@id"];
                                     model["IdCluster"] = res["uc:hasCluster"][i]["@id"];
-                                    model["ClusterName"] = res["rdfs:label"][i];
+                                    model["ClusterName"] = res["rdfs:label"][i]['@value'];
                                     model["Author"] = res["foaf:name"];
                                     model["Keyword"] = keywords;
                                     model["Title"] = res["foaf:name"];
@@ -148,7 +147,7 @@ wkhomeControllers.controller('loadData', ['sparqlQuery', 'searchData', '$transla
                             } else {
                                 model["IdAuthor"] = res["@id"];
                                 model["IdCluster"] = res["uc:hasCluster"]["@id"];
-                                model["ClusterName"] = res["rdfs:label"];
+                                model["ClusterName"] = res["rdfs:label"]['@value'];
                                 model["Author"] = res["foaf:name"];
                                 model["Keyword"] = keywords;
                                 model["Title"] = res["foaf:name"];
@@ -169,11 +168,11 @@ wkhomeControllers.controller('loadData', ['sparqlQuery', 'searchData', '$transla
 
                         //var cont = 1;
                         for (i = 0, len = authors.length; i < len; i++) { //&& cont < 600
-                            if (myArray[authors[i]["cluster"].toString()][0] > 4 && myArray[authors[i]["cluster"].toString()][1] < 95) {
+                            // if (myArray[authors[i]["cluster"].toString()][0] > 4 && myArray[authors[i]["cluster"].toString()][1] < 95) {
                                 $scope.clusters.push(authors[i]);
                                 //cont+=1;
                                 myArray[authors[i]["cluster"].toString()][1] += 1;
-                            }
+                            // }
                         }
                         searchData.clustersAuthors = $scope.clusters;
                         searchData.areaSearch = null;
