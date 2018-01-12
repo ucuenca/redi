@@ -320,8 +320,9 @@ public class ReportsImpl implements ReportsService {
                     + "{ "
                     + "  graph <" + constant.getClusterGraph() + "> "
                     + "  { "
-                    + "    <" + clusterId + "> uc:hasPerson ?subject. "
-                    + "    <" + clusterId + "> rdfs:label ?cluster. "
+                    + "    <" + clusterId + "> foaf:publications ?publications. "
+                    + "    <" + clusterId + "> rdfs:label ?cluster . "
+                    + "     ?publications uc:hasPerson ?subject"
                     + "    { "
                     + "    	select DISTINCT ?subject ?author ?keywords "
                     + "        where "
@@ -331,7 +332,7 @@ public class ReportsImpl implements ReportsService {
                     + "                 ?subject foaf:name ?author. "
                     + "                 ?subject foaf:publications ?publicationUri. "
                     + "                 ?publicationUri dct:title ?title. "
-                    + "                 ?publicationUri bibo:Quote ?keywords. "
+                    + "                 ?publicationUri bibo:quote [rdfs:label ?keywords].  "
                     + "             } "
                     + "        } group by ?subject ?author ?keywords "
                     + "    }"
@@ -597,7 +598,7 @@ public class ReportsImpl implements ReportsService {
             RepositoryConnection con = repo.getConnection();
             try {
                 // perform operations on the connection
-                TupleQueryResult resulta = con.prepareTupleQuery(QueryLanguage.SPARQL, getQuery).evaluate();
+                TupleQueryResult resulta = con.prepareTupleQuery(QueryLanguage.SPARQL, getQuery , constant.getSubjectResource()).evaluate();
 
                 JSONArray publications = new JSONArray();
                 JSONObject publication = new JSONObject();
@@ -947,9 +948,8 @@ public class ReportsImpl implements ReportsService {
                     + "              GRAPH <" + constant.getCentralGraph() + "> "
                     + "              { "
                     + "                ?s foaf:publications ?publications. "
-                    + "                ?publications dct:subject ?keyword_. "//bibo:Quote
+                    + "                ?publications dct:subject ?keyword_. "
                     + "                ?keyword_ rdfs:label ?keyword. "
-                    //+ "                #?s dct:subject ?keyword. "
                     + "              } "
                     + "            } "
                     + "            GROUP BY ?keyword "
@@ -965,7 +965,9 @@ public class ReportsImpl implements ReportsService {
             RepositoryConnection con = repo.getConnection();
             try {
                 // perform operations on the connection
-                TupleQueryResult resulta = con.prepareTupleQuery(QueryLanguage.SPARQL, getQuery).evaluate();
+                
+
+                TupleQueryResult resulta = con.prepareTupleQuery(QueryLanguage.SPARQL, getQuery , constant.getSubjectResource()).evaluate();
 
                 JSONArray keywords = new JSONArray();
 
