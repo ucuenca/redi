@@ -19,8 +19,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
@@ -90,8 +88,6 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             ProcessAuthors(Providers);
             int iasa = count(constantService.getAuthorsSameAsGraph());
             do {
-                delete(constantService.getPublicationsSameAsGraph());
-                ProcessPublications(Providers);
                 ProcessCoauthors(Providers, true);
                 int asa = count(constantService.getAuthorsSameAsGraph());
                 if (asa != iasa) {
@@ -100,8 +96,8 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                     break;
                 }
             } while (true);
+            ProcessPublications(Providers);
             ProcessCoauthors(Providers, false);
-
             removeDuplicates(constantService.getAuthorsSameAsGraph());
             removeDuplicates(constantService.getPublicationsSameAsGraph());
             removeDuplicates(constantService.getCoauthorsSameAsGraph());
@@ -280,13 +276,13 @@ public class DisambiguationServiceImpl implements DisambiguationService {
     }
 
     public void ProcessCoauthors(List<Provider> ProvidersList, boolean onlySameAs) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
-        String qryDisambiguatedCoauthors = " select distinct ?p { graph <" + constantService.getPublicationsSameAsGraph() + "> { ?p <http://www.w3.org/2002/07/owl#sameAs> ?o } }";
+        String qryDisambiguatedCoauthors = " select distinct ?p { graph <" + constantService.getAuthorsSameAsGraph() + "> { ?p <http://www.w3.org/2002/07/owl#sameAs> ?o } }";
         List<Map<String, Value>> queryResponse = sparqlService.query(QueryLanguage.SPARQL, qryDisambiguatedCoauthors);
         int i = 0;
         for (Map<String, Value> anAuthor : queryResponse) {
-            String publicationURI = anAuthor.get("p").stringValue();
-            groupCoauthors(ProvidersList, publicationURI, onlySameAs);
-            log.info("Disambiguating coauthors {} out of {} publications", i, queryResponse.size());
+            String authorURI = anAuthor.get("p").stringValue();
+            groupCoauthors(ProvidersList, authorURI, onlySameAs);
+            log.info("Disambiguating coauthors {} out of {}", i, queryResponse.size());
             i++;
         }
     }
@@ -325,17 +321,18 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         return n;
     }
 
-    public void groupCoauthors(List<Provider> ProvidersList, String publicationURI, boolean onlySameAs) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
+    public void groupCoauthors(List<Provider> ProvidersList, String authorURI, boolean onlySameAs) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
         String providersGraphs = "  ";
         for (Provider aProvider : ProvidersList) {
             providersGraphs += " <" + aProvider.Graph + "> ";
         }
         String qryAllAuthors = "select distinct ?a ?n ?fn ?ln {\n"
-                + "		graph <" + constantService.getPublicationsSameAsGraph() + "> {\n"
-                + "			values ?pu { <" + publicationURI + "> } .\n"
-                + "			?pu <http://www.w3.org/2002/07/owl#sameAs> ?p .\n"
+                + "		graph <" + constantService.getSameAuthorsGraph() + "> {\n"
+                + "			values ?pu { <" + authorURI + "> } .\n"
+                + "			?pu <http://www.w3.org/2002/07/owl#sameAs> ?ax .\n"
                 + "		}\n"
                 + "		values ?g { " + providersGraphs + " } graph ?g {\n"
+                + "			?ax <http://xmlns.com/foaf/0.1/publications> ?p .\n"
                 + "			?a <http://xmlns.com/foaf/0.1/publications> ?p .\n"
                 + "			optional { ?a <http://xmlns.com/foaf/0.1/name> ?n}\n"
                 + "			optional { ?a <http://xmlns.com/foaf/0.1/givenName> ?fn}\n"
