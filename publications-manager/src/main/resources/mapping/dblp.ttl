@@ -73,7 +73,8 @@ uc:sameAsPerson a r2r:Mapping ;
 uc:orcid a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ a dblp:Person . ?SUBJ owl:sameAs ?b . filter ( regex(str(?b),'orcid.org','i') ) ." ;
-    r2r:targetPattern "?SUBJ scoro:hasORCID ?b" .
+    r2r:transformation "?nb = xpath:substring-after(?b, 'orcid.org/')" ;
+    r2r:targetPattern "?SUBJ scoro:hasORCID ?'nb'^^xsd:string" .
 
 uc:home1 a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
@@ -143,17 +144,20 @@ uc:uri2 a r2r:Mapping ;
 uc:doi a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?t dblp:authorOf ?SUBJ . ?SUBJ owl:sameAs ?v. filter ( regex(str(?v),'doi.org','i') ) ." ;
-    r2r:targetPattern "?SUBJ bibo:doi ?v" .
+    r2r:transformation "?nv = xpath:substring-after(?v, 'doi.org/')" ;
+    r2r:targetPattern "?SUBJ bibo:doi ?'nv'^^xsd:string" .
 
 uc:doi1 a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?t dblp:authorOf ?SUBJ . ?SUBJ dblp:primaryElectronicEdition ?v. filter ( regex(str(?v),'doi.org','i') ) ." ;
-    r2r:targetPattern "?SUBJ bibo:doi ?v" .
+    r2r:transformation "?nv = xpath:substring-after(?v, 'doi.org/')" ;
+    r2r:targetPattern "?SUBJ bibo:doi ?'nv'^^xsd:string" .
 
 uc:doi2 a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?t dblp:authorOf ?SUBJ . ?SUBJ dblp:otherElectronicEdition ?v. filter ( regex(str(?v),'doi.org','i') ) ." ;
-    r2r:targetPattern "?SUBJ bibo:doi ?v" .
+    r2r:transformation "?nv = xpath:substring-after(?v, 'doi.org/')" ;
+    r2r:targetPattern "?SUBJ bibo:doi ?'nv'^^xsd:string" .
 
 
 uc:isbn1 a r2r:Mapping ;
