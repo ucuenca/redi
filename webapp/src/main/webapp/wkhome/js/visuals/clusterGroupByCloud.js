@@ -266,6 +266,9 @@ cloudCluster.directive('cloudCluster', ["d3", 'sparqlQuery',
                         .text(function (d) {
                             //if(d.keyword != null && (d.keyword.constructor === Array || d.keyword instanceof Array))
                             //    d.keyword = d.keyword[0];
+                            if (d.keyword['@value']) {
+                              d.keyword = d.keyword['@value'];
+                            }
                             if (d.keyword != null && (typeof d.keyword === 'string' || d.keyword instanceof String) && d.keyword.toString().trim() != null && d.keyword.toString().trim() != "" ) {
                                 var keyArray = d.keyword.toString().split(",");
                                 var keyword = keyArray.length > 0 ? (keyArray[0].length > 1 ? keyArray[0].trim().replace("\"", "").substring(0, 22):'') : '';

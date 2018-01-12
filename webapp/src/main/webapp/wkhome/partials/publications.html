@@ -16,7 +16,8 @@
           <ul>
             <li ng-repeat="publication in filterPublications">
               <div class="publicationList">
-                <h2 class="title"><a href="{{publication.id}}" target='_blank'>{{publication.title}}</a></h2>
+                <!-- <h2 class="title"><a href="{{publication.id}}" target='_blank'>{{publication.title}}</a></h2> -->
+                <h2 class="title"><a href="{{publication.uri.uri}}" target='_blank'>{{publication.title}}</a></h2>
 
                 <div ng-show="publication.abstract">
                   <hm-read-more

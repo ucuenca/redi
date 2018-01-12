@@ -1,7 +1,7 @@
 wkhomeControllers.controller('genericCloud', ['$scope', '$window', 'globalData', 'sparqlQuery', 'searchData',
     function ($scope, $window, globalData, sparqlQuery, searchData) {
         $scope.todos = [];
-        debugger;
+
         $scope.ctrlFn = function (value)
         {
             $scope.todos = [];
@@ -9,10 +9,10 @@ wkhomeControllers.controller('genericCloud', ['$scope', '$window', 'globalData',
             _.map(value, function (pub) {
                 //var keys = Object.keys(author);
                 model["id"] = pub["@id"];
-                model["title"] = pub["dct:title"];
+                model["title"] = _.isArray(pub["dct:title"]) ? _.first(pub["dct:title"]) : pub["dct:title"];
                 model["abstract"] = pub["bibo:abstract"] ? pub["bibo:abstract"] : "";
                 model["uri"] = pub["bibo:uri"] ? pub["bibo:uri"]["@id"] : "";
-
+                
                 if (model["title"])
                 {
                     $scope.todos.push({id: model["id"], title: model["title"], abstract: model["abstract"], uri: model["uri"]});
