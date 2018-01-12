@@ -273,10 +273,9 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 Person enrich = superAuthor.enrich(aCandidate);
                 registerSameAs(constantService.getAuthorsSameAsGraph(), superAuthor.URI, aCandidate.URI);
                 Disambiguate(Candidates, level + 1, enrich);
-            } else {
-                Disambiguate(Candidates, level + 1, superAuthor);
             }
         }
+        Disambiguate(Candidates, level + 1, superAuthor);
     }
 
     public void ProcessCoauthors(List<Provider> ProvidersList, boolean onlySameAs) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
