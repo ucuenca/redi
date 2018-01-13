@@ -265,14 +265,18 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             return;
         }
         List<Person> CandidateListLevel = Candidates.get(level).getValue();
+        boolean up = true;
         for (Person aCandidate : CandidateListLevel) {
             if (superAuthor.check(aCandidate)) {
+                up = false;
                 Person enrich = superAuthor.enrich(aCandidate);
                 registerSameAs(constantService.getAuthorsSameAsGraph(), superAuthor.URI, aCandidate.URI);
                 Disambiguate(Candidates, level + 1, enrich);
             }
         }
-        Disambiguate(Candidates, level + 1, superAuthor);
+        if (up) {
+            Disambiguate(Candidates, level + 1, superAuthor);
+        }
     }
 
     public void ProcessCoauthors(List<Provider> ProvidersList, boolean onlySameAs) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
