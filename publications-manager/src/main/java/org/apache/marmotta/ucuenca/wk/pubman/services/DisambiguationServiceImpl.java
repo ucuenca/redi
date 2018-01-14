@@ -96,8 +96,8 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                     break;
                 }
             } while (true);
-            ProcessPublications(Providers);
             ProcessCoauthors(Providers, false);
+            ProcessPublications(Providers);
             removeDuplicates(constantService.getAuthorsSameAsGraph());
             removeDuplicates(constantService.getPublicationsSameAsGraph());
             removeDuplicates(constantService.getCoauthorsSameAsGraph());
@@ -331,7 +331,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             providersGraphs += " <" + aProvider.Graph + "> ";
         }
         String qryAllAuthors = "select distinct ?a ?n ?fn ?ln {\n"
-                + "		graph <" + constantService.getSameAuthorsGraph() + "> {\n"
+                + "		graph <" + constantService.getAuthorsSameAsGraph() + "> {\n"
                 + "			values ?pu { <" + authorURI + "> } .\n"
                 + "			?pu <http://www.w3.org/2002/07/owl#sameAs> ?ax .\n"
                 + "		}\n"
