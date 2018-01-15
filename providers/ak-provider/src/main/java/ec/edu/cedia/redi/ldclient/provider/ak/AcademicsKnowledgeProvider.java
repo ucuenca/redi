@@ -76,7 +76,7 @@ public class AcademicsKnowledgeProvider extends AbstractJSONDataProvider impleme
     private final ConcurrentMap<String, JsonPathValueMapper> ontologyMapping = new ConcurrentHashMap<>();
     private final String templatePublication = "https://westus.api.cognitive.microsoft.com/academic/v1.0/evaluate?"
             + "expr=Composite(AA.AuId=%s)&attributes=Id,Ti,L,Y,D,CC,ECC,AA.AuN,AA.AuId,AA.AfN,AA.AfId,AA.S,F.FN,F.FId,"
-            + "J.JN.J.JId,C.CN,C.CId,RId,W,E&subscription-key=%s";
+            + "J.JN.J.JId,C.CN,C.CId,RId,W,E&model=latest&subscription-key=%s";
 
     private String apiKey;
 
