@@ -49,7 +49,7 @@ import org.openrdf.rio.RDFHandlerException;
 @ApplicationScoped
 public class DisambiguationServiceImpl implements DisambiguationService {
 
-    final int MAXTHREADS = 5;
+    final int MAXTHREADS = 10;
 
     @Inject
     private org.slf4j.Logger log;
@@ -98,7 +98,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                     break;
                 }
             } while (true);
-            ProcessCoauthors(Providers, false, false);
+            ProcessCoauthors(Providers, false, true);
             ProcessPublications(Providers);
             removeDuplicates(constantService.getAuthorsSameAsGraph());
             removeDuplicates(constantService.getPublicationsSameAsGraph());
@@ -600,20 +600,10 @@ public class DisambiguationServiceImpl implements DisambiguationService {
     }
 
     public void replaceSameAs(String D, String SAG, String DG, String IG, boolean s) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
-        String qry1D = "insert {\n"
+        String qry1 = "insert {\n"
                 + "	graph <" + DG + "> {\n"
                 + "		?c ?p ?v .\n"
                 + "	}\n"
-                + "}\n"
-                + "where {\n"
-                + "	graph <" + SAG + "> {\n"
-                + "		?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
-                + "	}\n"
-                + "	graph <" + D + "> {\n"
-                + "		?c ?p ?v .\n"
-                + "	}\n"
-                + "}";
-        String qry1I = "insert {\n"
                 + "	graph <" + IG + "> {\n"
                 + "		?a ?p ?v .\n"
                 + "	}\n"
@@ -627,20 +617,10 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 + "	}\n"
                 + "}";
 
-        String qry2D = "insert {\n"
+        String qry2 = "insert {\n"
                 + "	graph <" + DG + "> {\n"
                 + "		?v ?p ?c .\n"
                 + "	}\n"
-                + "}\n"
-                + "where {\n"
-                + "	graph <" + SAG + "> {\n"
-                + "		?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
-                + "	}\n"
-                + "	graph <" + D + "> {\n"
-                + "		?v ?p ?c .\n"
-                + "	}\n"
-                + "}";
-        String qry2I = "insert {\n"
                 + "	graph <" + IG + "> {\n"
                 + "		?v ?p ?a .\n"
                 + "	}\n"
@@ -654,11 +634,9 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 + "	}\n"
                 + "}";
         if (s) {
-            sparqlService.update(QueryLanguage.SPARQL, qry1D);
-            sparqlService.update(QueryLanguage.SPARQL, qry1I);
+            sparqlService.update(QueryLanguage.SPARQL, qry1);
         } else {
-            sparqlService.update(QueryLanguage.SPARQL, qry2D);
-            sparqlService.update(QueryLanguage.SPARQL, qry2I);
+            sparqlService.update(QueryLanguage.SPARQL, qry2);
         }
     }
 
