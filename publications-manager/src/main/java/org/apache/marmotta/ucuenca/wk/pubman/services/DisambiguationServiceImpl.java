@@ -49,7 +49,7 @@ import org.openrdf.rio.RDFHandlerException;
 @ApplicationScoped
 public class DisambiguationServiceImpl implements DisambiguationService {
 
-    final int MAXTHREADS = 5;
+    final int MAXTHREADS = 10;
 
     @Inject
     private org.slf4j.Logger log;
@@ -98,7 +98,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                     break;
                 }
             } while (true);
-            ProcessCoauthors(Providers, false, false);
+            ProcessCoauthors(Providers, false, true);
             ProcessPublications(Providers);
             removeDuplicates(constantService.getAuthorsSameAsGraph());
             removeDuplicates(constantService.getPublicationsSameAsGraph());
