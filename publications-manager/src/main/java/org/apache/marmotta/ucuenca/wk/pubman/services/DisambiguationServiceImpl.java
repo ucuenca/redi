@@ -282,8 +282,8 @@ public class DisambiguationServiceImpl implements DisambiguationService {
     }
 
     public void ProcessCoauthors(final List<Provider> ProvidersList, final boolean onlySameAs, boolean asyn) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, InterruptedException {
-        ExecutorService executorServicex = Executors.newFixedThreadPool(asyn ? 1 : MAXTHREADS);
-        BoundedExecutor bexecutorService = new BoundedExecutor(executorServicex, asyn ? 1 : MAXTHREADS);
+        ExecutorService executorServicex = Executors.newFixedThreadPool(asyn ? MAXTHREADS : 1);
+        BoundedExecutor bexecutorService = new BoundedExecutor(executorServicex, asyn ? MAXTHREADS : 1);
 
         String qryDisambiguatedCoauthors = " select distinct ?p { graph <" + constantService.getAuthorsSameAsGraph() + "> { ?p <http://www.w3.org/2002/07/owl#sameAs> ?o } }";
         final List<Map<String, Value>> queryResponse = sparqlService.query(QueryLanguage.SPARQL, qryDisambiguatedCoauthors);
