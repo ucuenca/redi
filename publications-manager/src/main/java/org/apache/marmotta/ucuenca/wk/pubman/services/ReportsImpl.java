@@ -182,6 +182,13 @@ public class ReportsImpl implements ReportsService {
                     json = getJSONStatisticsTopKeywords(hostname);
 
                     break;
+                case "ReportClustersAuthors":
+                    // Get the Json with the top keywords (considering the number of publications).
+                    json = getClusterAuthors(hostname);
+                    parameters.put("name", "Todos");
+                    parameters.put("numero", json[1]);
+
+                    break;
             }
             //Always the first element of the array has the json stream
             stream = new ByteArrayInputStream(json[0].getBytes("UTF-8"));
@@ -332,7 +339,7 @@ public class ReportsImpl implements ReportsService {
                     + "                 ?subject foaf:name ?author. "
                     + "                 ?subject foaf:publications ?publicationUri. "
                     + "                 ?publicationUri dct:title ?title. "
-                    + "                 ?publicationUri bibo:quote [rdfs:label ?keywords].  "
+                    + "                 ?publicationUri dct:subject [rdfs:label ?keywords].  "
                     + "             } "
                     + "        } group by ?subject ?author ?keywords "
                     + "    }"
@@ -389,6 +396,61 @@ public class ReportsImpl implements ReportsService {
             ex.printStackTrace();
         }
         return new String[]{"", ""};
+    }
+
+    public String[] getClusterAuthors(String hostname) {
+
+        RepositoryConnection con;
+        try {
+            Repository repo = sesameService.getRepository();
+            repo.initialize();
+            con = repo.getConnection();
+
+            String getQuery = ConstantServiceImpl.PREFIX 
+                    + "select (?clusterlabel as ?cluster) (group_concat(?name ; separator=' ; ') as ?authors) \n"
+                    + "  { "
+                    + "	select ?clusterlabel ?subject (sample(str(?namex)) as ?name) { "
+                    + "		graph <http://redi.cedia.edu.ec/context/clusters> "
+                    + "		                       	{ "
+                    + "		                         ?cluster foaf:publications ?publications. "
+                    + "		                         ?cluster rdfs:label ?clusterlabel .  "
+                    + "		                         ?publications uc:hasPerson ?subject . "
+                    + "		                        }"
+                    + "		graph <http://redi.cedia.edu.ec/context/redi> "
+                    + "	                                 { "
+                    + "	                                      ?subject foaf:name ?namex . "
+                    + "	                                  } "
+                    + "	} group by ?clusterlabel ?subject "
+                    + " } group by ?clusterlabel";
+
+            // perform operations on the connection
+            TupleQueryResult resulta = con.prepareTupleQuery(QueryLanguage.SPARQL, getQuery).evaluate();
+
+            JSONObject cluster;
+            JSONArray clusters = new JSONArray();
+
+            while (resulta.hasNext()) {
+                BindingSet binding = resulta.next();
+                String clustername = binding.getValue("cluster").stringValue();
+                String totalAuthors = binding.getValue("authors").stringValue();
+                cluster = new JSONObject();
+                cluster.put("name", clustername);
+                cluster.put("authors", totalAuthors);
+                clusters.add(cluster);
+
+            }
+            con.close();
+
+            return new String[]{clusters.toString() , clusters.size()+""};
+
+            //return null;
+        } catch (RepositoryException | MalformedQueryException | QueryEvaluationException ex) {
+            java.util.logging.Logger.getLogger(ReportsImpl.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+
+        return new String[]{"", ""};
+
     }
 
     /**
@@ -574,7 +636,7 @@ public class ReportsImpl implements ReportsService {
                     + "      ?publicationUri dct:title ?title . "
                     + "      OPTIONAL{ ?publicationUri bibo:abstract  ?abstract. } "
                     + "      OPTIONAL{ ?publicationUri bibo:uri  ?uri. } "
-                    + "      ?publicationUri bibo:quote [rdfs:label ?quote].  "
+                    + "      ?publicationUri dct:subject [rdfs:label ?quote].  "
                     + "      FILTER (mm:fulltext-search(?quote, '" + keyword + "' )) . "
                     + "      BIND(REPLACE( '" + keyword + "', ' ', '_', 'i') AS ?key) . "
                     + "      BIND(IRI(?key) as ?keyword) "
@@ -598,7 +660,7 @@ public class ReportsImpl implements ReportsService {
             RepositoryConnection con = repo.getConnection();
             try {
                 // perform operations on the connection
-                TupleQueryResult resulta = con.prepareTupleQuery(QueryLanguage.SPARQL, getQuery , constant.getSubjectResource()).evaluate();
+                TupleQueryResult resulta = con.prepareTupleQuery(QueryLanguage.SPARQL, getQuery, constant.getSubjectResource()).evaluate();
 
                 JSONArray publications = new JSONArray();
                 JSONObject publication = new JSONObject();
@@ -611,8 +673,12 @@ public class ReportsImpl implements ReportsService {
                     id = binding.getValue("publicationUri").stringValue();
                     authors = binding.getValue("names").stringValue();
                     title = binding.getValue("title").stringValue();
-                    abst = binding.getValue("abstract").stringValue();
-                    uri = binding.getValue("uri").stringValue();
+                    if (binding.hasBinding("abstract")) {
+                        abst = binding.getValue("abstract").stringValue();
+                    }
+                    if (binding.hasBinding("uri")) {
+                        uri = binding.getValue("uri").stringValue();
+                    }
                     universidad = binding.getValue("provname").stringValue();
 
                     publication.put("id", id);
@@ -625,25 +691,25 @@ public class ReportsImpl implements ReportsService {
                     publications.add(publication);
 
                     /*name = String.valueOf(binding.getValue("publicationUri").stringValue();
-                    String authorName = String.valueOf(binding.getValue("author").stringValue();
-                    if (!autMap.containsKey(authorName)) {
-                        autMap.put(authorName, new JSONObject());
-                        autMap.get(authorName).put("author", authorName);
-                        if (binding.getValue("keywords") != null) {
-                            autMap.get(authorName).put("keywords", String.valueOf(binding.getValue("keywords")).replace("\"", ""));
-                        }
-                        //Keywords
-                        keyMap.put(authorName, new JSONArray());
-                        keyMap.get(authorName).add(String.valueOf(binding.getValue("keywords")).replace("\"", "").replace("^^", ""));
-                    } else {
-                        keyMap.get(authorName).add(String.valueOf(binding.getValue("keywords")).replace("\"", "").replace("^^", ""));
-                    }*/
+                     String authorName = String.valueOf(binding.getValue("author").stringValue();
+                     if (!autMap.containsKey(authorName)) {
+                     autMap.put(authorName, new JSONObject());
+                     autMap.get(authorName).put("author", authorName);
+                     if (binding.getValue("keywords") != null) {
+                     autMap.get(authorName).put("keywords", String.valueOf(binding.getValue("keywords")).replace("\"", ""));
+                     }
+                     //Keywords
+                     keyMap.put(authorName, new JSONArray());
+                     keyMap.get(authorName).add(String.valueOf(binding.getValue("keywords")).replace("\"", "").replace("^^", ""));
+                     } else {
+                     keyMap.get(authorName).add(String.valueOf(binding.getValue("keywords")).replace("\"", "").replace("^^", ""));
+                     }*/
                 }
 
                 /*for (Map.Entry<String, JSONObject> aut: autMap.entrySet()) {
-                    aut.getValue().put("keywords", keyMap.get(aut.getKey()));
-                    authors.add(aut.getValue());
-                }*/
+                 aut.getValue().put("keywords", keyMap.get(aut.getKey()));
+                 authors.add(aut.getValue());
+                 }*/
                 con.close();
                 //Number of authors
                 cont = publications.size();
@@ -692,7 +758,7 @@ public class ReportsImpl implements ReportsService {
                     + "      ?publicationUri dct:title ?title . "
                     + "      OPTIONAL{ ?publicationUri bibo:abstract  ?abstract. } "
                     + "      OPTIONAL{ ?publicationUri bibo:uri  ?uri. } "
-                    + "      OPTIONAL{?publicationUri bibo:quote [rdfs:label ?quote].} "
+                    + "      OPTIONAL{?publicationUri dct:subject [rdfs:label ?quote].} "
                     + "  }"
                     + "} group by ?publicationUri ?title ?abstract ?uri ?name";
             Repository repo = sesameService.getRepository();
@@ -713,9 +779,15 @@ public class ReportsImpl implements ReportsService {
                     id = binding.getValue("publicationUri").stringValue();
                     authorName = binding.getValue("name").stringValue();
                     title = binding.getValue("title").stringValue();
-                    abst = binding.getValue("abstract").stringValue();
-                    uri = binding.getValue("uri").stringValue();
-                    keywords = binding.getValue("keywords").stringValue();
+                    if (binding.hasBinding("abstract")) {
+                        abst = binding.getValue("abstract").stringValue();
+                    }
+                    if (binding.hasBinding("uri")) {
+                        uri = binding.getValue("uri").stringValue();
+                    }
+                    if (binding.hasBinding("keywords")) {
+                        keywords = binding.getValue("keywords").stringValue();
+                    }
 
                     publication.put("id", id);
                     publication.put("title", title);
@@ -831,23 +903,23 @@ public class ReportsImpl implements ReportsService {
         String getQuery = "";
         try {
             /*getQuery = ConstantServiceImpl.PREFIX
-                + " SELECT ?name ?title"
-                + "WHERE { "
-                + "  GRAPH <http://ucuenca.edu.ec/wkhuska>  {"
-                + "    ?author foaf:publications ?publication ;"
-                + "       dct:provenance ?endpoint."
-                + "    ?publication dct:title ?title."
-                + "    ?author foaf:name ?name ."
-                + "    {"
-                + "    	SELECT * {"
-                + "        	GRAPH <http://ucuenca.edu.ec/wkhuska/endpoints> {"
-                + "              ?endpoint uc:name \"" + hei + "\"^^xsd:string ."
-                + "            }"
-                + "        }"
-                + "    }"
-                + "  }"
-                + "}"
-                + "ORDER BY ASC(?name)";*/
+             + " SELECT ?name ?title"
+             + "WHERE { "
+             + "  GRAPH <http://ucuenca.edu.ec/wkhuska>  {"
+             + "    ?author foaf:publications ?publication ;"
+             + "       dct:provenance ?endpoint."
+             + "    ?publication dct:title ?title."
+             + "    ?author foaf:name ?name ."
+             + "    {"
+             + "    	SELECT * {"
+             + "        	GRAPH <http://ucuenca.edu.ec/wkhuska/endpoints> {"
+             + "              ?endpoint uc:name \"" + hei + "\"^^xsd:string ."
+             + "            }"
+             + "        }"
+             + "    }"
+             + "  }"
+             + "}"
+             + "ORDER BY ASC(?name)";*/
 
             getQuery = ConstantServiceImpl.PREFIX
                     + " select * { "
@@ -885,13 +957,16 @@ public class ReportsImpl implements ReportsService {
                 JSONObject author;
                 int totalAuthors = 0;
                 String fname = "";
+                String year = "";
 
                 //Check authors of each university
                 while (resultAuthors.hasNext()) {
                     BindingSet binding = resultAuthors.next();
                     String name = binding.getValue("name").stringValue();
                     String title = binding.getValue("title").stringValue();
-                    String year = binding.getValue("year").stringValue();
+                    if (binding.hasBinding("year")) {
+                        year = binding.getValue("year").stringValue();
+                    }
                     String origin = binding.getValue("origin").stringValue();
 
                     author = new JSONObject();
@@ -905,10 +980,10 @@ public class ReportsImpl implements ReportsService {
                 }
 
                 /*TupleQueryResult resultIES = connection.prepareTupleQuery(QueryLanguage.SPARQL, queryIES).evaluate();
-                if (resultIES.hasNext()) {
-                    BindingSet binding = resultIES.next();
-                    fname = String.valueOf(binding.getValue("fname"));
-                }*/
+                 if (resultIES.hasNext()) {
+                 BindingSet binding = resultIES.next();
+                 fname = String.valueOf(binding.getValue("fname"));
+                 }*/
                 connection.close();
 
                 return new String[]{authors.toString(), fname, String.valueOf(totalAuthors)};
@@ -965,9 +1040,8 @@ public class ReportsImpl implements ReportsService {
             RepositoryConnection con = repo.getConnection();
             try {
                 // perform operations on the connection
-                
 
-                TupleQueryResult resulta = con.prepareTupleQuery(QueryLanguage.SPARQL, getQuery , constant.getSubjectResource()).evaluate();
+                TupleQueryResult resulta = con.prepareTupleQuery(QueryLanguage.SPARQL, getQuery, constant.getSubjectResource()).evaluate();
 
                 JSONArray keywords = new JSONArray();
 
