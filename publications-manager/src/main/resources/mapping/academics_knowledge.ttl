@@ -89,10 +89,20 @@ uc:publicationCitationCount a r2r:Mapping ;
     r2r:sourcePattern "?SUBJ uc:citationCount ?count" ;
     r2r:targetPattern "?SUBJ uc:citationCount ?'count'^^xsd:integer" .
 
-uc:publicationConference a r2r:Mapping ;
+# Add always conferences with redi URL, and if there is academics id, repeat data with academics URL.
+uc:publicationConference1 a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:classMappingRef uc:publicationType ;
-    r2r:sourcePattern "?SUBJ uc:conferenceId ?id; uc:venueFullName ?name; uc:conferenceName ?altName; uc:venueShortName ?shortName" ;
+    r2r:sourcePattern "{ ?SUBJ uc:venueFullName ?name. } UNION { ?SUBJ uc:conferenceName ?name } UNION { ?SUBJ uc:venueShortName ?name }" ;
+    r2r:transformation "?confIRI=concat('https://redi.cedia.edu.ec/resource/conference/', xpath:lower-case(xpath:encode-for-uri(?name)))" ;
+    r2r:targetPattern "?SUBJ dct:isPartOf ?<confIRI>" ;
+    r2r:targetPattern "?confIRI a bibo:Conference" ;
+    r2r:targetPattern "?confIRI rdfs:label ?name" .
+
+uc:publicationConference2 a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:publicationType ;
+    r2r:sourcePattern "?SUBJ uc:conferenceId ?id. { ?SUBJ uc:venueFullName ?name. } UNION { ?SUBJ uc:conferenceName ?name } UNION { ?SUBJ uc:venueShortName ?name }" ;
     r2r:transformation "?confIRI=concat('https://academic.microsoft.com/#/detail/', xpath:encode-for-uri(?id))" ;
     r2r:targetPattern "?SUBJ dct:isPartOf ?<confIRI>" ;
     r2r:targetPattern "?confIRI a bibo:Conference" ;

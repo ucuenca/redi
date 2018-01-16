@@ -32,7 +32,7 @@ import org.openrdf.repository.RepositoryException;
  */
 public class TestAcademicsKnowledgeProvider extends ProviderTestBase {
 
-    private final String apikey = "fa881bd5e2044966a88827bd4b00d4b5";
+    private final String apikey = "b4091be5da784342b86f6a4d05d9af57";
 
     /**
      * Tests the extraction of an author and his publications. This test might
@@ -50,6 +50,7 @@ public class TestAcademicsKnowledgeProvider extends ProviderTestBase {
         String uri = "https://westus.api.cognitive.microsoft.com/academic/v1.0/evaluate?"
                 + "expr=And(Ty=%271%27,%20AuN=%27mauricio%20espinoza%27)&"
                 + "attributes=Id,AuN,DAuN,CC,ECC,E&"
+                + "model=latest&"
                 + "subscription-key=" + apikey;
 
         ClientResponse response = null;
@@ -59,7 +60,7 @@ public class TestAcademicsKnowledgeProvider extends ProviderTestBase {
             Assert.assertTrue("Change API-KEY, Quota Exceeded.", ex.getCause().toString().contains("403 Quota Exceeded"));
             return;
         }
-        
+
         RepositoryConnection connection = ModelCommons.asRepository(response.getData()).getConnection();
         try {
             connection.begin();
@@ -69,4 +70,5 @@ public class TestAcademicsKnowledgeProvider extends ProviderTestBase {
             connection.close();
         }
     }
+
 }

@@ -72,43 +72,58 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
 
             waitingDialog.show("Consultando Ubicacion de Autores Relacionados con:  \"" + $scope.selectedTagItem + "\"");
             var queryBySource = globalData.PREFIX
-                    + 'CONSTRUCT {          '
-                    + '  ?org dcterms:subject ?label_;'
+                    + 'CONSTRUCT {            '
+                    + '         ?org dcterms:subject ?label_;'
                     + '              uc:totalpublications ?totPub;'
-                    + '              uc:name ?sourcename_;'
-                    + '              uc:lat ?lat_;'
-                    + '              uc:long ?long_;'
-                    + '              uc:province ?province_;'
-                    + '              uc:city ?city_;'
-                    + '              uc:fullname ?name_.  '
-                    + '} WHERE {     '
-                    + '  SELECT ?org ?area (count(DISTINCT ?publications) as ?totPub) (SAMPLE(?label) as ?label_) (SAMPLE(?sourcename) as ?sourcename_) (SAMPLE(?lat) as ?lat_) (SAMPLE(?long) as ?long_) (SAMPLE(?province) as ?province_) (SAMPLE(?city) as ?city_) (SAMPLE(?name) as ?name_)'
-                    + '  WHERE {         '
-                    + '    GRAPH <' + globalData.centralGraph + '>  {             '
-                    + '      	[] foaf:publications ?publications;'
-                    + '                 schema:memberOf ?org.'
-                    + '	}'
-                    + '    GRAPH <' + globalData.clustersGraph + '> {'
-                    + '   		?area foaf:publications ?publications;'
-                    + '              rdfs:label ?label.'
-                    + '      FILTER REGEX(?label, "' + $scope.selectedTagItem + '")'
-                    + '    } '
-                    + '    GRAPH <' + globalData.organizationsGraph + '> {'
-                    + '   		?org uc:name ?sourcename;'
-                    + '             uc:latitude ?lat;'
-                    + '             uc:longitude ?long;'
-                    + '             uc:province ?province;'
-                    + '             uc:city ?city;'
-                    + '             uc:fullName ?name.            '
-                    + '            FILTER (lang(?name) = "es").  '
-                    + '    }       '
-                    + '  } GROUP BY ?org ?area'
+                    + '              ?b ?c.'
+                    + '} WHERE { '
+                    + '  {	'
+                    + '    SELECT ?org (count(DISTINCT ?publications) as ?totPub) (SAMPLE(?label) as ?label_)'
+                    + '     WHERE {             '
+                    + '       GRAPH <' + globalData.centralGraph + '>  {                   	'
+                    + '         [] foaf:publications ?publications;'
+                    + '                   schema:memberOf ?org.	'
+                    + '       }    '
+                    + '       GRAPH <' + globalData.clustersGraph + '> {   		'
+                    + '         [] foaf:publications ?publications;'
+                    + '                rdfs:label ?label.      '
+                    + '         FILTER REGEX(?label, "' + $scope.selectedTagItem + '")    '
+                    + '       }          '
+                    + '     } GROUP BY ?org'
+                    + '  }'
+                    + '  {'
+                    + '     GRAPH <' + globalData.organizationsGraph + '> {   		'
+                    + '       ?org ?b ?c.                        '
+                    + '     }    '
+                    + '  }'
                     + '}';
+                    // + 'CONSTRUCT {          '
+                    // + '  ?org dcterms:subject ?label_;'
+                    // + '              uc:totalpublications ?totPub;'
+                    // + '              ?b_ ?c_.'
+                    // + '} WHERE {     '
+                    // + '  SELECT ?org ?area (count(DISTINCT ?publications) as ?totPub) (SAMPLE(?label) as ?label_) (SAMPLE(?b) as ?b_) (SAMPLE(?c) as ?c_)'
+                    // + '  WHERE {         '
+                    // + '    GRAPH <' + globalData.centralGraph + '>  {             '
+                    // + '      	[] foaf:publications ?publications;'
+                    // + '                 schema:memberOf ?org.'
+                    // + '	}'
+                    // + '    GRAPH <' + globalData.clustersGraph + '> {'
+                    // + '   		?area foaf:publications ?publications;'
+                    // + '              rdfs:label ?label.'
+                    // + '      FILTER REGEX(?label, "' + $scope.selectedTagItem + '")'
+                    // + '    } '
+                    // + '    GRAPH <' + globalData.organizationsGraph + '> {'
+                    // + '   		?org ?b ?c;'
+                    // + '    }       '
+                    // + '  } GROUP BY ?org ?area'
+                    // + '}';
 
             $scope.publicationsBySource = [];
             sparqlQuery.querySrv({query: queryBySource},
             function (rdf) {
                 jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
+                  debugger;
                     if (compacted["@graph"])
                     {
                         waitingDialog.hide();
@@ -117,10 +132,10 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
                             var model = {};
                             model["id"] = resource["@id"];
                             model["name"] = resource["uc:name"];
-                            model["fullname"] = resource["uc:fullname"]["@value"];
+                            model["fullname"] = _.findWhere(resource["uc:fullName"],{'@language': $routeParams.lang})['@value'];
                             model["total"] = resource["uc:totalpublications"]["@value"];
-                            model["lat"] = resource["uc:lat"];
-                            model["long"] = resource["uc:long"];
+                            model["lat"] = resource["uc:latitude"];
+                            model["long"] = resource["uc:longitude"];
                             model["keyword"] = resource["dct:subject"]["@value"];
                             model["city"] = resource["uc:city"];
                             model["province"] = resource["uc:province"];
