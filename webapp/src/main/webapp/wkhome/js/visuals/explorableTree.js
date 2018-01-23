@@ -947,7 +947,8 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                             if (isAuthor(d)) {
                               if (d.author.jsonld["@graph"][0]["foaf:name"] && d.author.jsonld["@graph"][0]["foaf:img"]) {
                                   return d.author.jsonld["@graph"][0]["foaf:img"]["@id"];
-                              } else if (d.author.jsonld["@graph"][0]["foaf:name"] && (d.author.jsonld["@graph"][0]["@id"].indexOf('localhost') > 0)) {
+                              // } else if (d.author.jsonld["@graph"][0]["foaf:name"] && (d.author.jsonld["@graph"][0]["@id"].indexOf('localhost') > 0)) {
+                              } else if (d.author.jsonld["@graph"][0]["foaf:name"] && (/\/authors\/.*\//.test(d.author.jsonld["@graph"][0]["@id"]))) {
                                   return 'wkhome/images/author-ec.png';
                               } else {
                                   return 'wkhome/images/author-default.png';
