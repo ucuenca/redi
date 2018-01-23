@@ -163,7 +163,7 @@ wkhomeControllers.controller('keywordsCloud', ['$translate', '$routeParams', '$s
             + '    ?person foaf:publications ?publication.          '
             + '    ?publication dcterms:subject  ?keyword.         '
             + '    ?keyword rdfs:label ?label .      '
-            + '  }      GROUP BY ?keyword  LIMIT 145'
+            + '  }      GROUP BY ?keyword  LIMIT 50'
             + '}';
 
       sparqlQuery.querySrv({
@@ -212,7 +212,7 @@ wkhomeControllers.controller('keywordsCloud', ['$translate', '$routeParams', '$s
           '              foaf:publications ?publications.' +
           '      	FILTER REGEX(?label, "' + $scope.selectedItem + '")' +
           '    }' +
-          ' }  GROUP BY ?keyword_  ' +
+          ' }  GROUP BY ?keyword_  LIMIT 50' +
           '}';
 
         sparqlQuery.querySrv({
