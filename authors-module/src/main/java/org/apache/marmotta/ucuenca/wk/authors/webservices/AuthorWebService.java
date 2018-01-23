@@ -120,7 +120,7 @@ public class AuthorWebService {
 
     @POST
     @Path("/upload")
-    @SuppressWarnings({"PMD.ExcessiveMethodLength", "PMD.AvoidDuplicateLiterals"})
+    @SuppressWarnings({"PMD.ExcessiveMethodLength", "PMD.AvoidDuplicateLiterals", "PMD.NPathComplexity"})
     public Response uploadAuthors(@HeaderParam(HttpHeaders.CONTENT_TYPE) String type, @Context HttpServletRequest request,
             @QueryParam("org") String organization, @QueryParam("type") String endpointType) throws IOException {
         if (type == null || !"text/csv".equals(type.toLowerCase()) || !"application/vnd.ms-excel".equals(type.toLowerCase())) {

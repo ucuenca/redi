@@ -74,7 +74,7 @@ myApp.labels_es = {
 "Select Research Area":"Área de conocimiento",
 "Keywords":"¿Conoces las palabras claves?",
 "No match":"No existe la palabra clave",
-"Palabra Clave":"Seleccione una area de conocmiento",
+"Palabra Clave":"Seleccione una area de conocimiento",
 //"All" - from cloud cluster view
 "Author":"Autor",
 "Source":"Institución",
