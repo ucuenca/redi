@@ -92,7 +92,7 @@ myApp.labels_en = {
 
 
 //CLOUD CLUSTER VIEW
-"Clustering Publications":"Clustering Publications",
+"Clustering Publications":"Authors by knowledge area",
 "All":"All",
 "Area":"Area",
 //"Group by" - from GROUP BY VIEW
