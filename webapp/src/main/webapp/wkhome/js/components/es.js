@@ -96,7 +96,7 @@ myApp.labels_es = {
 
 
 //CLOUD CLUSTER VIEW
-"Clustering Publications":"Agrupamiento de publicaciones",
+"Clustering Publications":"Agrupamiento de autores por areas de conocimiento",
 "All":"Todos",
 "Area":"Área",
 //"Group by" - from GROUP BY VIEW
