@@ -24,7 +24,7 @@
         <script type="text/javascript" src="../../webjars/jquery/1.8.2/jquery.min.js"></script>
         <script type="text/javascript" src="js/widgets/authorUpdate.js"></script>
         <script type="text/javascript" src="../../core/public/js/widgets/configurator/configurator.js"></script>
-        <script type="text/javascript">
+        <!-- <script type="text/javascript">
             var host = _SERVER_URL;
             function run(){
                 runUpdateAuthor(host);
@@ -35,7 +35,7 @@
             function runSearchDuplicates(){
                 searchDuplicates(host);
             }
-        </script>
+        </script>-->
         <!--###END_HEAD###-->
     </head>
     <body>
@@ -45,24 +45,27 @@
 
         <!--###BEGIN_CONTENT###-->
         <h1>UPDATE AUTHORS DATA </h1>
-        <h2>CEDIA:  REPOSITORIO SEMÁNTICO DE INVESTIGADORES DEL ECUADOR </h2>
+        <h2> REPOSITORIO SEMÁNTICO DE INVESTIGADORES DEL ECUADOR </h2>
         <p>
             This module allows automatic extraction information regarding authors, and update this data to marmotta platform.
         </p>
+         
+        <p>
+            In order to carry out the extraction process of researchers, it is necessary to register the information of the institutions to which the researcher belongs. Organization information can be managed from the "<b>Organization</b>" interface.
+        </p>
+        
+        <p>
+            Additionally, it is necessary to register the data access points ("endpoints") available to each institution in which the associated authors are located. This can be configured through the "<b>Endpoint</b>" interface.
+        </p>  
+        
+        <p>
+            
+            The processes used during author extraction tasks require integration with components of the LOD-GF platform. The "<b>Configuration</b>" section is available to configure these external dependencies.    
+        </p>
 
-
-        <h2> DEFAULT SOURCE  </h2>
-        <ul>
-            <li> NAME: "UCUENCA" </li>
-            <li> SPARQL Endpoint:  "http://190.15.141.102:8891/myservice/query" </li>
-            <li> GRAPH URI:  "http://190.15.141.66:8899/ucuenca/" </li>
-
-        </ul>
-
-        <h2> ACTUALIZAR REPOSITORIO DE AUTORES  </h2>
 
         <!-- <p><a href="#" onClick="runUpdateAuthor();">UPDATE</a></p>    --> 
-        <p>
+      <!--  <p>
             Se cargara la informacion de los autores provenientes desde las Diferentes Fuentes (Endpoints) que esten activas.
             Las uris de los recursos (Autores) seran analizadas previamente con la sentencia  <a href="http://www.w3.org/TR/rdf-sparql-query/#ask">ASK</a> para verificar
             si los datos aun no se encuentran en la plataforma.
@@ -79,7 +82,7 @@
                 <img src="img/ajax-loader-big.gif" alt="Loading Authors" height="120" width="120">
                 <p> Please wait until the reply message</p>
             </div>
-        </form>
+        </form>-->
 
         <!--###END_CONTENT###-->
     </body>

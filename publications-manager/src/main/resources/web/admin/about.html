@@ -24,7 +24,7 @@
         <script type="text/javascript" src="../../webjars/jquery/1.8.2/jquery.min.js"></script>
         <script type="text/javascript" src="publicationsUpdate.js"></script>
         <script type="text/javascript" src="../../core/public/js/widgets/configurator/configurator.js"></script>
-        <script type="text/javascript">
+       <!-- <script type="text/javascript">
             var host = _SERVER_URL;
             function runPub()
             {
@@ -35,7 +35,7 @@
             {
                 runIndexacionPublications(host);
             }
-        </script>
+        </script>-->
         <!--###END_HEAD###-->
     </head>
     <body>
@@ -45,25 +45,29 @@
 
         <!--###BEGIN_CONTENT###-->
         <h1>GET PUBLICATIONS DATA </h1>
-        <h2>CEDIA:  REPOSITORIO SEMÁNTICO DE INVESTIGADORES DEL ECUADOR </h2>
+        <h2>REPOSITORIO SEMÁNTICO DE INVESTIGADORES DEL ECUADOR </h2>
         <p>
-            Este modulo realiza la tarea de carga de datos desde los grafos de los proveedores hasta un grafo centralizado.
+            This module allows automatic extraction information regarding authors  publication, and update this data to marmotta platform.
         </p>
-
-
-        <h2> Grafo Centralizado  </h2>
-        <ul>
-            <li> URL  =  http://ucuenca.edu.ec/wkhuska </li>
-        </ul>
-
-        <h2> PUBLICACIONES DE AUTORES </h2>
-
+        
         <p>
-            Las publicaciones se relacionan con los datos de los autores extraidos con el modulo de Autores.
-
-
+            The data associated with the publications of the authors are extracted from different sources of scientific information (providers). Each provider has different access methods and formats that are transparent thanks to the internal REDI processes. To extract the information from each of the available providers and check their status you can go to the "Providers Management" section.
+            
+        </p>
+        
+        <p> 
+            Once the data have been collected, a validation process must be carried out prior to assigning the publications to the authors. This is done in the "<b>Data From Providers</b>" section. 
 
         </p>
+        
+        <p>
+            Subsequently, in order to access the data in the REDI interface, the central database must be generated. You can do this through the "<b>Data From Providers</b>" interface.
+
+        </p>
+        
+        
+        <p> Some of the providers employed require API keys for their operation. These can be configured via the "<b>Configuration</b>" section. </p>
+        <!--
         <form> 
             <button type="button"  onclick="runPub()"  value="Activar Función">PUBLICATIONS TASK</button>
             <div id="imgloading" style="visibility: hidden">
@@ -91,7 +95,7 @@
                 <p> Please wait until the reply message</p>
             </div>
 
-        </form>
+        </form>-->
 
         <!--###END_CONTENT###-->
     </body>
