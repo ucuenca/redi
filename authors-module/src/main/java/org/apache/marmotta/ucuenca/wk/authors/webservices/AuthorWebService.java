@@ -123,7 +123,7 @@ public class AuthorWebService {
     @SuppressWarnings({"PMD.ExcessiveMethodLength", "PMD.AvoidDuplicateLiterals"})
     public Response uploadAuthors(@HeaderParam(HttpHeaders.CONTENT_TYPE) String type, @Context HttpServletRequest request,
             @QueryParam("org") String organization, @QueryParam("type") String endpointType) throws IOException {
-        if (type == null || !"text/csv".equals(type.toLowerCase())) {
+        if (type == null || !"text/csv".equals(type.toLowerCase()) || !"application/vnd.ms-excel".equals(type.toLowerCase())) {
             return Response.status(Status.BAD_REQUEST).entity("Incorrect file format.").build();
         }
         if (organization == null || organization.trim().length() <= 0) {
