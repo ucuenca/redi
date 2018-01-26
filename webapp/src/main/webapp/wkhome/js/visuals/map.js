@@ -161,7 +161,7 @@ cloudGroup.directive('mapView', ["d3", 'globalData', 'sparqlQuery',
                             var sparqlquery = globalData.PREFIX
                                     + 'CONSTRUCT { '
                                     + '  <http://ucuenca.edu.ec/wkhuska/resultTitle> a uc:pagetitle. '
-                                    + '  <http://ucuenca.edu.ec/wkhuska/resultTitle> uc:viewtitle "Authors from UCUENCA , taking place in Computer Sciences field" . '
+                                    + '  <http://ucuenca.edu.ec/wkhuska/resultTitle> uc:viewtitle "Authors from '+d.name+' , taking place in '+d.keyword+' field" . '
                                     + '  ?author rdfs:label ?name_;'
                                     + '           uc:total ?totalPub '
                                     + '}    WHERE {       '
@@ -183,36 +183,7 @@ cloudGroup.directive('mapView', ["d3", 'globalData', 'sparqlQuery',
                                     + '      } GROUP BY ?author'
                                     + '}';
 
-                                    // + ' CONSTRUCT { <http://ucuenca.edu.ec/wkhuska/resultTitle> a uc:pagetitle. <http://ucuenca.edu.ec/wkhuska/resultTitle> uc:viewtitle "Authors from ' + d.name + ' , taking place in ' + d.keyword + ' field" . ?subject rdfs:label ?name. ?subject uc:total ?totalPub }   '
-                                    // + ' WHERE {  '
-                                    // + '     SELECT ?subject ?totalPub ?name '
-                                    // + '     WHERE { '
-                                    // + '         ?subject foaf:publications ?pubb. '
-                                    // + '         ?pubb dcterms:subject ?keySub. '
-                                    // + '         ?keySub rdfs:label ?key. '
-                                    // //+ '         ?subject dct:subject ?key . '
-                                    // + '         FILTER (mm:fulltext-search(?key,"' + d.keyword + '")). '
-                                    // + '         { '
-                                    // + '         SELECT ?subject ?name (COUNT( DISTINCT ?pub) AS ?totalPub)  '
-                                    // + '             WHERE { '
-                                    // + '                 GRAPH <' + globalData.centralGraph + '>  { '
-                                    // + '                     ?subject foaf:publications  ?pub . '
-                                    // + '                     ?subject foaf:name       ?name.        '
-                                    // + '                     ?subject dct:provenance ?provenance. '
-                                    // + '                     {  '
-                                    // + '                         SELECT * WHERE { '
-                                    // + '                             GRAPH <' + globalData.endpointsGraph + '>  { '
-                                    // + '                                 ?provenance uc:name ?sourcename. '
-                                    // + '                                 FILTER(mm:fulltext-search(?sourcename,"'+d.name+'"))'
-                                    // + '                             } '
-                                    // + '                         } '
-                                    // + '                     } '
-                                    // + '                 } '
-                                    // + '             }  '
-                                    // + '         GROUP BY ?subject ?name '
-                                    // + '         } '
-                                    // + '     }'
-                                    // + ' }  ';
+
                             waitingDialog.show("Loading Authors Related with " + d.keyword);
                             sparqlQuery.querySrv({query: sparqlquery}, function (rdf) {
                                 jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
@@ -268,3 +239,35 @@ cloudGroup.directive('mapView', ["d3", 'globalData', 'sparqlQuery',
             }
         };
     }]);
+
+
+                                    // + ' CONSTRUCT { <http://ucuenca.edu.ec/wkhuska/resultTitle> a uc:pagetitle. <http://ucuenca.edu.ec/wkhuska/resultTitle> uc:viewtitle "Authors from ' + d.name + ' , taking place in ' + d.keyword + ' field" . ?subject rdfs:label ?name. ?subject uc:total ?totalPub }   '
+                                    // + ' WHERE {  '
+                                    // + '     SELECT ?subject ?totalPub ?name '
+                                    // + '     WHERE { '
+                                    // + '         ?subject foaf:publications ?pubb. '
+                                    // + '         ?pubb dcterms:subject ?keySub. '
+                                    // + '         ?keySub rdfs:label ?key. '
+                                    // //+ '         ?subject dct:subject ?key . '
+                                    // + '         FILTER (mm:fulltext-search(?key,"' + d.keyword + '")). '
+                                    // + '         { '
+                                    // + '         SELECT ?subject ?name (COUNT( DISTINCT ?pub) AS ?totalPub)  '
+                                    // + '             WHERE { '
+                                    // + '                 GRAPH <' + globalData.centralGraph + '>  { '
+                                    // + '                     ?subject foaf:publications  ?pub . '
+                                    // + '                     ?subject foaf:name       ?name.        '
+                                    // + '                     ?subject dct:provenance ?provenance. '
+                                    // + '                     {  '
+                                    // + '                         SELECT * WHERE { '
+                                    // + '                             GRAPH <' + globalData.endpointsGraph + '>  { '
+                                    // + '                                 ?provenance uc:name ?sourcename. '
+                                    // + '                                 FILTER(mm:fulltext-search(?sourcename,"'+d.name+'"))'
+                                    // + '                             } '
+                                    // + '                         } '
+                                    // + '                     } '
+                                    // + '                 } '
+                                    // + '             }  '
+                                    // + '         GROUP BY ?subject ?name '
+                                    // + '         } '
+                                    // + '     }'
+                                    // + ' }  ';

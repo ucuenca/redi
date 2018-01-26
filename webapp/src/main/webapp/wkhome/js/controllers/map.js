@@ -71,8 +71,35 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
             if ($scope.selectedTagItem) {
 
             waitingDialog.show("Consultando Ubicacion de Autores Relacionados con:  \"" + $scope.selectedTagItem + "\"");
-            var queryBySource = globalData.PREFIX
-                    + 'CONSTRUCT {            '
+            var queryBySource = globalData.PREFIX +
+            "CONSTRUCT {                      " +
+            "?org dcterms:subject ?label;             " +
+            " uc:totalpublications ?totPub;             " +
+            "   ?b ?c.  } where { " +
+            "SELECT ?org ?b ?c ?label (count(DISTINCT ?pub) as ?totPub)  " +
+            "WHERE { " +
+            "  GRAPH  <"+globalData.clustersGraph+">{ " +
+            "   " +
+            "  ?clu rdfs:label  ?label . " +
+            "  FILTER REGEX(?label, '"+$scope.selectedTagItem+"') . " +
+            "   ?clu foaf:publications ?pub . " +
+            "    ?pub uc:hasPerson  ?author . " +
+            "     " +
+            "       GRAPH <"+ globalData.centralGraph +"> { " +
+            "      ?author schema:memberOf  ?org . " +
+            "         GRAPH   <"+ globalData.organizationsGraph+"> { " +
+            "         ?org ?b ?c " +
+            "         } " +
+            "       } " +
+            "         } " +
+            "} GROUP BY ?org ?b ?c ?label " +
+            "           }";
+
+
+
+
+
+                  /*  + 'CONSTRUCT {            '
                     + '         ?org dcterms:subject ?label_;'
                     + '              uc:totalpublications ?totPub;'
                     + '              ?b ?c.'
@@ -96,7 +123,7 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
                     + '       ?org ?b ?c.                        '
                     + '     }    '
                     + '  }'
-                    + '}';
+                    + '}';*/
                     // + 'CONSTRUCT {          '
                     // + '  ?org dcterms:subject ?label_;'
                     // + '              uc:totalpublications ?totPub;'
