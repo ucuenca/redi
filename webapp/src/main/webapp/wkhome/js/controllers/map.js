@@ -73,10 +73,10 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
             waitingDialog.show("Consultando Ubicacion de Autores Relacionados con:  \"" + $scope.selectedTagItem + "\"");
             var queryBySource = globalData.PREFIX +
             "CONSTRUCT {                      " +
-            "?org dcterms:subject ?label;             " +
+            "?org dcterms:subject ?label_;             " +
             " uc:totalpublications ?totPub;             " +
             "   ?b ?c.  } where { " +
-            "SELECT ?org ?b ?c ?label (count(DISTINCT ?pub) as ?totPub)  " +
+            "SELECT ?org ?b ?c  (count(DISTINCT ?pub) as ?totPub) (SAMPLE(?label) as ?label_) " +
             "WHERE { " +
             "  GRAPH  <"+globalData.clustersGraph+">{ " +
             "   " +
@@ -92,7 +92,7 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
             "         } " +
             "       } " +
             "         } " +
-            "} GROUP BY ?org ?b ?c ?label " +
+            "} GROUP BY ?org ?b ?c " +
             "           }";
 
 
