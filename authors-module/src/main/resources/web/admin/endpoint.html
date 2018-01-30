@@ -24,8 +24,8 @@
         <script type="text/javascript" src="../../webjars/jquery/1.8.2/jquery.min.js"></script> 
         <script type="text/javascript" src="../../webjars/marmotta.js"></script>
         <script type="text/javascript" src="js/widgets/endpointsManager.js"></script>
-        <script type="text/javascript" src="http://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
-                <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
+        <script type="text/javascript" src="lib/dataTables/datatables.min.js"></script>
+                <link rel="stylesheet" type="text/css" href="lib/dataTables/datatables.min.css">
         <script type="text/javascript">
             $(document).ready(function() {
                 $("tr.sparql_form").css("display","block");
@@ -96,7 +96,7 @@
                     </td>
                 </tr>
                 <tr> 
-                    <td> Tipo </td>
+                    <td> Type </td>
                     <td>   <select id="endpoint_type" onchange="selectEndpoint(this.value)" >
                             <option value="sparql">SPARQL</option>
                             <option value="file">FILE</option>

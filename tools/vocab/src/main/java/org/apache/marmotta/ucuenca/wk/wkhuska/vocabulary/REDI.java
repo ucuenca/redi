@@ -73,6 +73,7 @@ public class REDI {
     public static final URI POSITION;
     public static final URI VENUE_FULL_NAME;
     public static final URI VENUE_SHORT_NAME;
+    public static final URI ALIAS;
 
     static {
         ValueFactory factory = ValueFactoryImpl.getInstance();
@@ -121,5 +122,6 @@ public class REDI {
         POSITION = factory.createURI(REDI.NAMESPACE, "position");
         VENUE_FULL_NAME = factory.createURI(REDI.NAMESPACE, "venueFullName");
         VENUE_SHORT_NAME = factory.createURI(REDI.NAMESPACE, "venueShortName");
+        ALIAS = factory.createURI(REDI.NAMESPACE, "alias");
     }
 }

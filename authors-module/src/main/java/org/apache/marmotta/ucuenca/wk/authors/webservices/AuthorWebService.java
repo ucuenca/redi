@@ -18,21 +18,19 @@
 package org.apache.marmotta.ucuenca.wk.authors.webservices;
 
 //import com.google.common.io.CharStreams;
-import com.google.common.io.CharStreams;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+
 import java.util.logging.Level;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.DELETE;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -47,10 +45,10 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
 import org.apache.marmotta.ucuenca.wk.authors.api.AuthorService;
-import org.apache.marmotta.ucuenca.wk.authors.api.EndpointService;
+
 import org.apache.marmotta.ucuenca.wk.authors.api.EndpointsService;
 import org.apache.marmotta.ucuenca.wk.authors.api.OrganizationService;
-import org.apache.marmotta.ucuenca.wk.authors.api.SparqlEndpoint;
+
 import org.apache.marmotta.ucuenca.wk.authors.api.UTPLAuthorService;
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.DaoException;
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.UpdateException;
@@ -72,8 +70,6 @@ public class AuthorWebService {
     @Inject
     private UTPLAuthorService utplAuthorService;
 
-    @Inject
-    private EndpointService endpointService;
 
     @Inject
     private ConfigurationService configurationService;
@@ -89,34 +85,8 @@ public class AuthorWebService {
     private static final int MAX_NUMBER_CSV_FIELDS = 3;
     public static final String APPLICATIONJSON = "application/json";
 
-    /**
-     * Add Endpoint Service
-     *
-     * @param resultType
-     * @param request
-     * @return
-     */
-    @Deprecated
-    @POST
-    @Path(ADD_ENDPOINT)
-    public Response addEndpointPost(@QueryParam("Endpoint") String resultType, @Context HttpServletRequest request) {
-        try {
-            String params = CharStreams.toString(request.getReader());
-            log.debug("Adding Endpoint", params);
-            return addEndpointImpl(params);
-        } catch (IOException | UpdateException ex) {
-            java.util.logging.Logger.getLogger(AuthorWebService.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
+  
 
-    @Deprecated
-    @POST
-    @Path("/domain")
-    public Response addDomain(@QueryParam("id") String id, @QueryParam("domain") String domain) throws IOException {
-        String result = endpointService.addDomain(id, domain);
-        return Response.status(Status.CREATED).entity(result).build();
-    }
 
     @POST
     @Path("/upload")
@@ -159,18 +129,7 @@ public class AuthorWebService {
         return Response.ok().entity("Import Successfully.").build();
     }
 
-    @Deprecated
-    @DELETE
-    @Path("/endpoint/delete")
-    public Response removeEndpoint(@QueryParam("id") String resourceid) {
-
-        SparqlEndpoint endpoint = endpointService.getEndpoint(resourceid);
-        if (endpoint == null) {
-            return Response.ok().entity("notFound " + resourceid + " Endpoint").build();
-        }
-        endpointService.removeEndpoint(resourceid);
-        return Response.ok().entity("Endpoint was successfully removed").build();
-    }
+  
 
     @POST
     @Path("/organization/loadOrg")
@@ -197,42 +156,7 @@ public class AuthorWebService {
         return Response.ok().entity(result).build();
     }
 
-    @Deprecated
-    @POST
-    @Path("/endpoints/updateStatusEnd")
-    @SuppressWarnings({"PMD.ExcessiveMethodLength", "PMD.AvoidDuplicateLiterals"})
-    public Response updateEndpointStatus(@QueryParam("uri") String resourceid, @QueryParam("status") String oldstatus) {
-        String result = endpointsService.updateStatus(resourceid, oldstatus);
-        return Response.ok().entity(result).build();
-    }
-
-    @Deprecated
-    @POST
-    @Path("/endpoint/updatestatus")
-    public Response updateEndpoint(@QueryParam("id") String resourceid, @QueryParam("oldstatus") String oldstatus, @QueryParam("newstatus") String newstatus) {
-
-        SparqlEndpoint endpoint = endpointService.getEndpoint(resourceid);
-        if (endpoint == null) {
-            return Response.ok().entity("notFound " + resourceid + " Endpoint").build();
-        }
-        endpointService.updateEndpoint(resourceid, oldstatus, newstatus);
-        return Response.ok().entity("Endpoint was successfully removed").build();
-    }
-
-    @Deprecated
-    @GET
-    @Path("/endpoint/list")
-    @Produces(APPLICATIONJSON)
-    public Response listEndpoints() {
-
-        List<Map<String, Object>> result = new LinkedList<Map<String, Object>>();
-        for (SparqlEndpoint endpoint : endpointService.listEndpoints()) {
-            result.add(buildEndpointJSON(endpoint));
-        }
-
-        return Response.ok().entity(result).build();
-    }
-
+ 
     @GET
     @Path("/organization/list")
     @Produces(APPLICATIONJSON)
@@ -255,84 +179,11 @@ public class AuthorWebService {
 
     }
 
-    @Deprecated
-    private Map<String, Object> buildEndpointJSON(SparqlEndpoint endpoint) {
-        HashMap<String, Object> resultMap = new HashMap<String, Object>();
-        resultMap.put("id", endpoint.getResourceId());
-        resultMap.put("status", endpoint.getStatus());
-        resultMap.put("name", endpoint.getName());
-        resultMap.put("url", endpoint.getEndpointUrl());
-        resultMap.put("graph", endpoint.getGraph());
-        resultMap.put("fullName", endpoint.getFullName());
-        resultMap.put("city", endpoint.getCity());
-        resultMap.put("province", endpoint.getProvince());
-        resultMap.put("latitude", endpoint.getLatitude());
-        resultMap.put("longitude", endpoint.getLongitude());
-        //       resultMap.put("active", endpoint.isActive());
+   
 
-        return resultMap;
-    }
 
-    /**
-     * Add Endpoint Impl
-     *
-     * @param urisString
-     * @return
-     * @throws UpdateException
-     */
-    @Deprecated
-    private Response addEndpointImpl(String urisString) throws UpdateException {
-        if (StringUtils.isBlank(urisString)) {
-            return Response.status(Response.Status.NOT_ACCEPTABLE).entity("Required Endpoint and GraphURI").build();
-        } else {
-            String status = urisString.split("\"")[3];
-            String name = urisString.split("\"")[7];
-            String endpoint = urisString.split("\"")[11];
-            String graphUri = urisString.split("\"")[15];
-            String fullName = urisString.split("\"")[19];
-            String englishName = urisString.split("\"")[23];
-            String city = urisString.split("\"")[27];
-            String province = urisString.split("\"")[31];
-            String latitude = urisString.split("\"")[35];
-            String longitude = urisString.split("\"")[39];
-            String result = endpointService.addEndpoint(status, name, endpoint, graphUri, fullName, englishName, city, province, latitude, longitude);
-            return Response.ok().entity(result).build();
-        }
 
-    }
 
-    @Deprecated
-    private Response addEndpointImpl(HttpServletRequest request) {
-
-        if (!request.getParameterMap().isEmpty()) {
-            String status = request.getParameter("State");
-            String name = request.getParameter("Name");
-            String endpoint = request.getParameter("Endpoint");
-            String graphUri = request.getParameter("GraphUri");
-            String fullName = request.getParameter("FullName");
-            String englishName = request.getParameter("NameEnglish");
-            String city = request.getParameter("City");
-            String province = request.getParameter("Province");
-            String latitude = request.getParameter("Latitude");
-            String longitude = request.getParameter("Longitude");
-            String json = request.getParameter("JSON");
-            log.info("Parametros");
-            log.info(json);
-            log.info(name);
-            String result = endpointService.addEndpoint(status, name, endpoint, graphUri, fullName, englishName, city, province, latitude, longitude);
-            return Response.ok().entity(result).build();
-        } else {
-            return Response.status(Response.Status.NOT_ACCEPTABLE).entity("Required Endpoint and GraphURI").build();
-        }
-    }
-
-    /**
-     * Author Load Service
-     *
-     * @return
-     * @throws org.apache.marmotta.ucuenca.wk.authors.exceptions.UpdateException
-     * @throws org.apache.marmotta.ucuenca.wk.authors.exceptions.DaoException
-     */
     @POST
     @Path("/update")
     public Response updateAuthorPost() throws UpdateException, DaoException {
@@ -340,51 +191,26 @@ public class AuthorWebService {
         return Response.ok().entity(result).build();
     }
 
-    @Deprecated
-    @POST
-    @Path("/oaiExtraction")
-    public Response oaiExtraction(@QueryParam("name") String name, @QueryParam("endpoint") String endpoint) throws UpdateException, DaoException {
-        String resultado = endpointService.addEndpoint("true", name, endpoint, "-", "-", "-", "-", "-", "-", "-");
-        log.info(resultado);
-        String result = authorService.extractOAI(name, endpoint);
-        return Response.ok().entity(result).build();
-    }
-
-    @Deprecated
-    @POST
-    @Path("/extract-subjects")
-    public Response extractSubjects() throws UpdateException, DaoException {
-        String result = authorService.extractSubjects();
-        return Response.ok().entity(result).build();
-    }
-
-    @Deprecated
-    @POST
-    @Path("/search-duplicates")
-    public Response searchDuplicates() throws UpdateException, DaoException {
-        String result = authorService.searchDuplicates();
-        return Response.ok().entity(result).build();
-    }
-
+ 
     @POST
     @Path("/orgRegister")
     @SuppressWarnings({"PMD.ExcessiveMethodLength", "PMD.AvoidDuplicateLiterals"})
-    public Response orgRegister(@QueryParam("acro") String acro, @QueryParam("namEn") String namEn, @QueryParam("namEs") String namEs, @QueryParam("coun") String coun, @QueryParam("prov") String prov, @QueryParam("city") String city, @QueryParam("lan") String lan, @QueryParam("long") String lon, @QueryParam("type") String type) throws UpdateException, DaoException {
+    public Response orgRegister(@QueryParam("acro") String acro, @QueryParam("namEn") String namEn, @QueryParam("namEs") String namEs, @QueryParam("alias") String alias ,@QueryParam("coun") String coun, @QueryParam("prov") String prov, @QueryParam("city") String city, @QueryParam("lan") String lan, @QueryParam("long") String lon, @QueryParam("type") String type) throws UpdateException, DaoException {
        // String resultado = endpointService.addEndpoint("true", name, endpoint, "-", "-", "-", "-", "-", "-", "-");
         // log.info(resultado);
         // String result = authorService.extractOAI(name, endpoint);
-        String result = organizationService.addOrganization(acro, namEn, namEs, coun, prov, city, lan, lon, type);
+        String result = organizationService.addOrganization(acro, namEn, namEs , alias, coun, prov, city, lan, lon, type);
         return Response.ok().entity(result).build();
 
     }
 
     @POST
     @Path("/orgEdit")
-    public Response orgEdit(@QueryParam("acro") String acro, @QueryParam("namEn") String namEn, @QueryParam("namEs") String namEs, @QueryParam("coun") String coun, @QueryParam("prov") String prov, @QueryParam("city") String city, @QueryParam("lan") String lan, @QueryParam("long") String lon, @QueryParam("type") String type) throws UpdateException, DaoException {
+    public Response orgEdit(@QueryParam("acro") String acro, @QueryParam("namEn") String namEn, @QueryParam("namEs") String namEs,  @QueryParam("alias") String alias, @QueryParam("coun") String coun, @QueryParam("prov") String prov, @QueryParam("city") String city, @QueryParam("lan") String lan, @QueryParam("long") String lon, @QueryParam("type") String type) throws UpdateException, DaoException {
        // String resultado = endpointService.addEndpoint("true", name, endpoint, "-", "-", "-", "-", "-", "-", "-");
         // log.info(resultado);
         // String result = authorService.extractOAI(name, endpoint);
-        String result = organizationService.editOrg(acro, namEn, namEs, coun, prov, city, lan, lon, type);
+        String result = organizationService.editOrg(acro, namEn, namEs, alias,  coun, prov, city, lan, lon, type);
         if ("Success".equals(result)) {
             return Response.ok().entity(result).build();
         } else {
@@ -416,9 +242,6 @@ public class AuthorWebService {
     @Path("/endpoints/extractAuthors")
     @Produces(APPLICATIONJSON)
     public Response extractAuthors(@Context HttpServletRequest request) {
-        //String result = organizationService.editOrg( acro, namEn, namEs, coun, prov, city, lan, lon, type);
-        //String result = endpointsService.registerOAI(type, org, url );
-//        String data = request.getParameter("data");
 
         String[] get = request.getParameterMap().get("data[]");
         String output = authorService.extractAuthorsGeneric(get);
@@ -427,22 +250,7 @@ public class AuthorWebService {
         //return  Response.status(Status.BAD_REQUEST).entity("Incorrect file format.").build();
     }
 
-//
-//    /**  url: host + "authors-module/orgRegister?acro="+acro+"&namEn="+namEn+"&namEs="+namEs+"&coun="+coun+
-    //          "&prov="+prov+"&city="+city+"&lan="+lan+"&long="+long+"&type="+type,
-//     * AUTHOR UPDATE IMPLEMENTATION
-//     *
-//     * @param urisString // JSON contains Endpoint and GraphURI
-//     *
-//     */
-//    private Response authorUpdate() throws UpdateException, DaoException, QueryEvaluationException {
-//        //if (StringUtils.isBlank(urisString)) {
-//        //return Response.status(Response.Status.NOT_ACCEPTABLE).entity("Required Endpoint and GraphURI").build();
-//        // } else {
-//
-//
-//        //}
-//    }
+
     @POST
     @Path(AUTHOR_SPLIT)
     public Response split(@QueryParam("endpointuri") String endpointuri, @QueryParam("graphuri") String graphuri) {

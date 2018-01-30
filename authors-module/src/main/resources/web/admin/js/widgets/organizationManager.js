@@ -25,6 +25,7 @@ function organizationRegister() {
     var acro = $("#org_acro").val();
     var namEn = $("#org_name_en").val();
     var namEs = $("#org_name_es").val();
+    var alia = $("#org_name_alias").val(); 
     var coun = $("#org_country").val();
     var prov = $("#org_prov").val();
     var city = $("#org_city").val();
@@ -38,7 +39,7 @@ function organizationRegister() {
     $.ajax({
         type: "POST",
         dataType: "text", //result data type
-        url: host + "authors-module/orgRegister?acro=" + acro + "&namEn=" + namEn + "&namEs=" + namEs + "&coun=" + coun +
+        url: host + "authors-module/orgRegister?acro=" + acro + "&namEn=" + namEn + "&namEs=" + namEs + "&alias="+alia+ "&coun=" + coun +
                 "&prov=" + prov + "&city=" + city + "&lan=" + lan + "&long=" + long + "&type=" + type,
         success: function(Result) {
             //document.getElementById("imgloading").style.visibility = "hidden";
@@ -146,6 +147,7 @@ function edit(URI) {
             $("input#org_acro").val(obj.data[0].name);
             $("input#org_name_en").val(obj.data[0].fullNameEn);
             $("input#org_name_es").val(obj.data[0].fullNameEs);
+            $("#org_name_alias").val(obj.data[0].alias);
             $("input#org_country").val(obj.data[0].country);
             $("input#org_prov").val(obj.data[0].province);
             $("input#org_city").val(obj.data[0].city);
@@ -174,6 +176,7 @@ function editOrg() {
     var acro = $("#org_acro").val();
     var namEn = $("#org_name_en").val();
     var namEs = $("#org_name_es").val();
+    var alia = $("#org_name_alias").val(); 
     var coun = $("#org_country").val();
     var prov = $("#org_prov").val();
     var city = $("#org_city").val();
@@ -187,7 +190,7 @@ function editOrg() {
       $.ajax({
         type: "POST",
         dataType: "text", //result data type
-        url: host + "authors-module/orgEdit?acro=" + acro + "&namEn=" + namEn + "&namEs=" + namEs + "&coun=" + coun +
+        url: host + "authors-module/orgEdit?acro=" + acro + "&namEn=" + namEn + "&namEs=" + namEs +  "&alias="+alia+"&coun=" + coun +
                 "&prov=" + prov + "&city=" + city + "&lan=" + lan + "&long=" + long + "&type=" + type,
         success: function(Result) {
             //document.getElementById("imgloading").style.visibility = "hidden";
@@ -207,6 +210,7 @@ function NewOrg() {
     var acro = $("#org_acro").val("");
     var namEn = $("#org_name_en").val("");
     var namEs = $("#org_name_es").val("");
+    var alia = $("#org_name_alias").val(""); 
     var coun = $("#org_country").val("");
     var prov = $("#org_prov").val("");
     var city = $("#org_city").val("");
