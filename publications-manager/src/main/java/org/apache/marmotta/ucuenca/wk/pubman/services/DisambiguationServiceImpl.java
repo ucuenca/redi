@@ -8,6 +8,7 @@ package org.apache.marmotta.ucuenca.wk.pubman.services;
 import com.google.common.collect.Lists;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -201,6 +202,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 + "		?a schema:memberOf ?o .\n"
                 + "		?o a foaf:Organization .\n"
                 + "		?o foaf:name ?n .\n"
+                + "		?o foaf:name ?nn .\n"
                 + "	}\n"
                 + "} where {\n"
                 + "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
@@ -211,6 +213,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 + "	}\n"
                 + "	graph <" + constantService.getOrganizationsGraph() + "> {\n"
                 + "		?o <http://ucuenca.edu.ec/ontology#fullName> ?n .\n"
+                + "		?o <http://ucuenca.edu.ec/ontology#name> ?nn .\n"
                 + "	}\n"
                 + "}";
         sparqlService.update(QueryLanguage.SPARQL, delete);
@@ -218,6 +221,29 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         sparqlService.update(QueryLanguage.SPARQL, givName);
         sparqlService.update(QueryLanguage.SPARQL, famName);
         sparqlService.update(QueryLanguage.SPARQL, org);
+        //alias
+        String orgAlias = "prefix foaf: <http://xmlns.com/foaf/0.1/>\n"
+                + "prefix  schema: <http://schema.org/>\n"
+                + "select ?o ?n  {\n"
+                + "	graph <" + constantService.getOrganizationsGraph() + "> {\n"
+                + "		?o <http://ucuenca.edu.ec/ontology#alias> ?n .\n"
+                + "	}\n"
+                + "}";
+        List<Map<String, Value>> query = sparqlService.query(QueryLanguage.SPARQL, orgAlias);
+        for (Map<String, Value> ar : query) {
+            String URI = ar.get("o").stringValue();
+            String[] split = ar.get("n").stringValue().split(";");
+            for (int k = 0; k < split.length; k++) {
+                split[k] = split[k].trim();
+            }
+            ArrayList<String> newArrayList = Lists.newArrayList(split);
+            newArrayList.removeAll(Arrays.asList("", null));
+            for (String nn : newArrayList) {
+                String buildInsertQuery = buildInsertQuery(constantService.getAuthorsProviderGraph(), URI, "http://xmlns.com/foaf/0.1/name", nn);
+                sparqlService.update(QueryLanguage.SPARQL, buildInsertQuery);
+            }
+        }
+
     }
 
     public void ProcessAuthors(List<Provider> AuthorsProviderslist) throws MarmottaException, RepositoryException, MalformedQueryException, QueryEvaluationException, RDFHandlerException, InvalidArgumentException, UpdateExecutionException, InterruptedException {
