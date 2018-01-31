@@ -311,4 +311,9 @@ public class ConstantServiceImpl implements ConstantService {
         return confService.getBaseContext() + "coauthorsSameAs";
     }
 
+    @Override
+    public String getScieloGraph() {
+        return confService.getBaseContext() + "provider/ScieloProvider";
+    }
+
 }
