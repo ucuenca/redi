@@ -21,11 +21,11 @@
     <head>
         <!--###BEGIN_HEAD###-->
         <title>Organization Manager</title>
-        <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
+        <link rel="stylesheet" type="text/css" href="lib/dataTables/datatables.min.css">
         <script type="text/javascript" src="../../webjars/jquery/1.8.2/jquery.min.js"></script>       
         <script type="text/javascript" src="../../webjars/marmotta.js"></script>
         <script type="text/javascript" src="js/widgets/organizationManager.js"></script>
-        <script type="text/javascript" src="http://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+        <script type="text/javascript" src="lib/dataTables/datatables.min.js"></script>
         <script type="text/javascript">
             $(document).ready(function() {
                 console.log(_SERVER_URL);
@@ -74,8 +74,12 @@
                     <td>  <input type="text" id="org_name_es"> </td>
                 </tr>
                 <tr> 
+                    <td> Alias </td>
+                    <td>  <input type="text" title="Use (;)  for more than one alias "  id="org_name_alias"> </td>
+                </tr>
+                <tr> 
                     <td> Country </td>
-                    <td>  <input type="text" id="org_country"> </td>
+                    <td>  <input type="text"  id="org_country"> </td>
 
                 </tr>
                 <tr> 

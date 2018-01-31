@@ -226,7 +226,7 @@ public class QueriesServiceImpl implements QueriesService {
         return "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
                 + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
                 + "PREFIX REDI: <http://ucuenca.edu.ec/ontology#>"
-                + "select DISTINCT ?URI ?name ?fullNameEn  ?fullNameEs  ?country ?province ?city ?type ?lang ?long "
+                + "select DISTINCT ?URI ?name ?fullNameEn  ?fullNameEs ?alias ?country ?province ?city ?type ?lang ?long "
                 + "FROM <" + con.getOrganizationsGraph() + ">"
                 + " where "
                 + " {   ?URI <" + RDF.TYPE.toString() + "> <" + FOAF.Organization.toString() + ">  . "
@@ -235,6 +235,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + "FILTER (langMatches(lang(?fullNameEs), 'es')) } ."
                 + "OPTIONAL { ?URI  <" + REDI.FULLNAME.toString() + "> ?fullNameEn  ."
                 + "FILTER (langMatches(lang(?fullNameEn), 'en')) } ."
+                + "OPTIONAL { ?URI <" + REDI.ALIAS.toString() + "> ?alias } . "
                 + "OPTIONAL { ?URI <" + REDI.COUNTRY.toString() + "> ?country } . "
                 + "OPTIONAL { ?URI <" + REDI.PROVINCE.toString() + "> ?province } ."
                 + "OPTIONAL { ?URI <" + REDI.CITY.toString() + "> ?city } . "
@@ -252,7 +253,7 @@ public class QueriesServiceImpl implements QueriesService {
         return "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
                 + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
                 + "PREFIX REDI: <http://ucuenca.edu.ec/ontology#>"
-                + "select DISTINCT ?URI ?name ?fullNameEn  ?fullNameEs  ?country ?province ?city ?type ?lang ?long "
+                + "select DISTINCT ?URI ?name ?fullNameEn  ?fullNameEs ?alias ?country ?province ?city ?type ?lang ?long "
                 + "FROM <" + con.getOrganizationsGraph() + ">"
                 + " where "
                 + "{   <" + uri + "> <" + RDF.TYPE.toString() + "> <" + FOAF.Organization.toString() + "> . "
@@ -261,6 +262,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + "FILTER (langMatches(lang(?fullNameEs), 'es')) } ."
                 + "OPTIONAL { <" + uri + ">  <" + REDI.FULLNAME.toString() + "> ?fullNameEn . "
                 + "FILTER (langMatches(lang(?fullNameEn), 'en')) } ."
+                + "OPTIONAL { <" + uri + "> <" + REDI.ALIAS.toString() + "> ?alias } . "
                 + "OPTIONAL { <" + uri + "> <" + REDI.COUNTRY.toString() + "> ?country } . "
                 + "OPTIONAL { <" + uri + "> <" + REDI.PROVINCE.toString() + "> ?province } ."
                 + "OPTIONAL { <" + uri + "> <" + REDI.CITY.toString() + "> ?city } . "
@@ -296,6 +298,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + " FROM <" + con.getEndpointsGraph() + "> "
                 + "WHERE {"
                 + "<" + uri + "> <" + RDF.TYPE.toString() + ">  <" + REDI.ENDPOINT.toString() + "> ."
+                
                 + "OPTIONAL { <" + uri + ">   <" + REDI.STATUS.toString() + "> ?status } ."
                 + "OPTIONAL { <" + uri + ">  <" + REDI.URL.toString() + ">    ?url } ."
                 + "OPTIONAL { <" + uri + ">   <" + REDI.GRAPH.toString() + ">   ?graph } ."
@@ -443,12 +446,12 @@ public class QueriesServiceImpl implements QueriesService {
             return "WITH  <" + graph + ">"
                     + " DELETE  {<" + resource + ">  <" + property + ">  ?o  }"
                     + " INSERT {<" + resource + ">  <" + property + ">  <" + object + "> }"
-                    + " WHERE {<" + resource + ">  <" + property + ">  ?o  }";
+                    + " WHERE { OPTIONAL{ <" + resource + ">  <" + property + ">  ?o } }";
         } else {
             return "WITH  <" + graph + ">"
                     + " DELETE  {<" + resource + ">  <" + property + ">  ?o  }"
                     + " INSERT {<" + resource + ">  <" + property + ">  '" + object + "'" + literal + " }"
-                    + " WHERE {<" + resource + ">  <" + property + ">  ?o ."
+                    + " WHERE {OPTIONAL{<" + resource + ">  <" + property + ">  ?o }."
                     + " BIND( lang(?o) as  ?la  ) . FILTER (  !Bound(?la) || langMatches(?la , '" + literal.replace("@", "") + "'  ) )"
                     + " }";
         }

@@ -16,5 +16,6 @@
         <module>gs-provider</module>
         <module>scopus-provider</module>
         <module>ak-provider</module>
+        <module>scielo-provider</module>
     </modules>
 </project>

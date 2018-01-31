@@ -2,7 +2,7 @@
 @prefix uc: <http://ucuenca.edu.ec/ontology#> .  
 
 uc:mapColl1 a r2r:MappingCollection;
-    r2r:prefixDefinitions " foaf: <http://xmlns.com/foaf/0.1/> . uc: <http://ucuenca.edu.ec/ontology#> . redi: <http://redi.cedia.edu.ec/resource/> . schema: <http://schema.org/> . bibo: <http://purl.org/ontology/bibo/> . dct: <http://purl.org/dc/terms/> . nature: <http://ns.nature.com/terms/> ." .
+    r2r:prefixDefinitions " foaf: <http://xmlns.com/foaf/0.1/> . uc: <http://ucuenca.edu.ec/ontology#> . redi: <https://redi.cedia.edu.ec/resource/> . schema: <http://schema.org/> . bibo: <http://purl.org/ontology/bibo/> . dct: <http://purl.org/dc/terms/> . nature: <http://ns.nature.com/terms/> ." .
 
 # AUTHOR INFORMATION
 
@@ -134,7 +134,7 @@ uc:publicationQuotes a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:classMappingRef uc:publicationType ;
     r2r:sourcePattern "?SUBJ foaf:topic ?topic" ;
-    r2r:transformation "?topicIRI=concat('http://redi.cedia.edu.ec/resource/quote/', xpath:encode-for-uri(?topic))" ;
+    r2r:transformation "?topicIRI=concat('https://redi.cedia.edu.ec/resource/quote/', xpath:encode-for-uri(?topic))" ;
     r2r:targetPattern "?SUBJ bibo:quote ?<topicIRI>" ;
     r2r:targetPattern "?topicIRI rdfs:label ?'topic'^^xsd:string" .
 

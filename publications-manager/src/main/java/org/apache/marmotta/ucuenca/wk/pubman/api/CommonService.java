@@ -24,6 +24,7 @@ public interface CommonService {
     String CountPublications();
 
     String GetDataFromProvidersServiceDBLP(final String[] organizations);
+    String GetDataFromProvidersServiceScielo(final String[] organizations);
 
     String GetDataFromProvidersServiceMicrosoftAcademics();
 

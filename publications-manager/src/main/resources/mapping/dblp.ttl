@@ -51,7 +51,7 @@ uc:oneOf a r2r:Mapping ;
 uc:aff1 a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ dblp:primaryAffiliation ?b" ;
-    r2r:transformation "?urip = concat('http://redi.cedia.edu.ec/dblp/affiliations/',xpath:encode-for-uri(?b))" ;
+    r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/dblp/affiliations/',xpath:encode-for-uri(?b))" ;
     r2r:targetPattern "?SUBJ schema:memberOf ?<urip>" ;
     r2r:targetPattern "?<urip> a foaf:Organization" ;
     r2r:targetPattern "?<urip> foaf:name ?b" .
@@ -60,7 +60,7 @@ uc:aff1 a r2r:Mapping ;
 uc:aff2 a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ dblp:otherAffiliation ?b" ;
-    r2r:transformation "?urip = concat('http://redi.cedia.edu.ec/dblp/affiliations/',xpath:encode-for-uri(?b))" ;
+    r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/dblp/affiliations/',xpath:encode-for-uri(?b))" ;
     r2r:targetPattern "?SUBJ schema:memberOf ?<urip>" ;
     r2r:targetPattern "?<urip> a foaf:Organization" ;
     r2r:targetPattern "?<urip> foaf:name ?b" .
@@ -179,7 +179,7 @@ uc:isbn0 a r2r:Mapping ;
 uc:publi1 a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ dblp:publishedBy ?b " ;
-    r2r:transformation "?urip = concat('http://redi.cedia.edu.ec/dblp/publisher/',xpath:encode-for-uri(?b))" ;
+    r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/dblp/publisher/',xpath:encode-for-uri(?b))" ;
     r2r:targetPattern "?SUBJ dct:publisher ?<urip>" ;
     r2r:targetPattern "?<urip> a foaf:Organization" ;
     r2r:targetPattern "?<urip> foaf:name ?b" .
@@ -221,7 +221,7 @@ uc:ispartofCollection a r2r:Mapping ;
 uc:ispartofJournalO a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ dblp:publishedInJournal ?t . " ;
-    r2r:transformation "?urip = concat('http://redi.cedia.edu.ec/dblp/journal/',xpath:encode-for-uri(?t))" ;
+    r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/dblp/journal/',xpath:encode-for-uri(?t))" ;
     r2r:targetPattern "?SUBJ dct:isPartOf ?<urip>";
     r2r:targetPattern "?<urip> a bibo:Journal";
     r2r:targetPattern "?<urip> rdfs:label ?t".
@@ -230,7 +230,7 @@ uc:ispartofJournalO a r2r:Mapping ;
 uc:ispartofBookO a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ dblp:publishedInBook ?t . " ;
-    r2r:transformation "?urip = concat('http://redi.cedia.edu.ec/dblp/book/',xpath:encode-for-uri(?t))" ;
+    r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/dblp/book/',xpath:encode-for-uri(?t))" ;
     r2r:targetPattern "?SUBJ dct:isPartOf ?<urip>";
     r2r:targetPattern "?<urip> a bibo:Book";
     r2r:targetPattern "?<urip> rdfs:label ?t".
@@ -238,7 +238,7 @@ uc:ispartofBookO a r2r:Mapping ;
 uc:ispartofSeriesO a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ dblp:publishedInSeries ?t . " ;
-    r2r:transformation "?urip = concat('http://redi.cedia.edu.ec/dblp/series/',xpath:encode-for-uri(?t))" ;
+    r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/dblp/series/',xpath:encode-for-uri(?t))" ;
     r2r:targetPattern "?SUBJ dct:isPartOf ?<urip>";
     r2r:targetPattern "?<urip> a bibo:Series";
     r2r:targetPattern "?<urip> rdfs:label ?t".

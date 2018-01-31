@@ -108,6 +108,17 @@ public class PubWebService {
     }
     
     @POST
+    @Path("/publicationsScieloByOrg")
+    public Response readPublicationsPostScielo (@Context HttpServletRequest request) {
+
+        String[] org = request.getParameterMap().get("data[]");
+        String result = commonService.GetDataFromProvidersServiceScielo(org);
+
+        return Response.ok().entity(result).build();
+    }
+    
+    
+    @POST
     @Path("/publicationsGSchoolarByOrg")
     public Response readPublicationsPostGSchoolar (@Context HttpServletRequest request) {
 

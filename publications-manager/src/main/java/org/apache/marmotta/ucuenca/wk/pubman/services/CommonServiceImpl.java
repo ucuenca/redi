@@ -89,11 +89,16 @@ public class CommonServiceImpl implements CommonService {
 
     @Inject
     private org.apache.marmotta.ucuenca.wk.pubman.services.providers.DBLPProviderService providerServiceDblp1;
+    
+    @Inject
+    private org.apache.marmotta.ucuenca.wk.pubman.services.providers.ScieloProviderService providerServiceScielo;
+    
     @Inject
     private ScopusProviderService providerServiceScopus1;
     private Thread scopusThread;
     private Thread academicsThread;
     private Thread dblpThread;
+    private Thread scieloThread;
 
     @Override
     public String getDataFromProvidersService(final String[] organizations) {
@@ -238,6 +243,21 @@ public class CommonServiceImpl implements CommonService {
     public String CentralGraphProcess() {
         String startProcess = DisambiguationImpl.startMerge();
         return startProcess;
+    }
+
+    @Override
+    public String GetDataFromProvidersServiceScielo(final String[] organizations) {
+            if (scieloThread != null && scieloThread.isAlive()) {
+            return "Process is executing.";
+        }
+        scieloThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                providerServiceScielo.extractAuthors(organizations);
+            }
+        });
+        scieloThread.start();
+        return "Data Provider DBLP are extracted in background.   Please review main.log file for details";
     }
 
 }
