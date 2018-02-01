@@ -20,6 +20,7 @@ package org.apache.marmotta.ucuenca.wk.pubman.api;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -91,7 +92,7 @@ public abstract class AbstractProviderService implements ProviderService {
      * @param lastname
      * @return
      */
-    protected abstract List<String> buildURLs(String firstname, String lastname);
+    protected abstract List<String> buildURLs(String firstname, String lastname, List<String> organization);
 
     /**
      * Provider's graph to store triples using {@link LDClient}.
@@ -136,14 +137,15 @@ public abstract class AbstractProviderService implements ProviderService {
             for (String organization : organizations) {
                 List<Map<String, Value>> resultAllAuthors = sparqlService.query(
                         QueryLanguage.SPARQL, queriesService.getAuthorsDataQuery(organization));
-
+                List<String> organizationNames = getOrganizationNames(sparqlService.query(
+                        QueryLanguage.SPARQL, queriesService.getOrganizationNameQuery(organization)));
                 int totalAuthors = resultAllAuthors.size();
                 if (totalAuthors == 0) {
                     log.info("There are not authors for organization(s) {}", Arrays.toString(organizations));
                 }
                 int processedAuthors = 0;
                 task.updateTotalSteps(totalAuthors);
-                task.updateDetailMessage("Organization", organization.substring(organization.lastIndexOf('/')));
+                task.updateDetailMessage("Organization", organization.substring(organization.lastIndexOf('/') + 1));
 
                 for (Map<String, Value> map : resultAllAuthors) {
 
@@ -154,7 +156,7 @@ public abstract class AbstractProviderService implements ProviderService {
 
                     task.updateDetailMessage("Author URI", authorResource);
 
-                    for (String reqResource : buildURLs(firstName, lastName)) {
+                    for (String reqResource : buildURLs(firstName, lastName, organizationNames)) {
                         // validate if the request has been done
                         String querySearchAuthor;
                         if ("".equals(filterExpressionSearch())) {
@@ -263,6 +265,14 @@ public abstract class AbstractProviderService implements ProviderService {
         InputStream resourceAsStream = this.getClass().getResourceAsStream("/mapping/redi.r2r");
         String toString = IOUtils.toString(resourceAsStream);
         return toString;
+    }
+
+    private List<String> getOrganizationNames(List<Map<String, Value>> names) {
+        List<String> n = new ArrayList<>();
+        for (Map<String, Value> name : names) {
+            n.add(name.get("name").stringValue());
+        }
+        return n;
     }
 
     /**

@@ -42,7 +42,7 @@ public class ScopusProviderService extends AbstractProviderService {
     private String expression;
 
     @Override
-    protected List<String> buildURLs(String firstname, String lastname) {
+    protected List<String> buildURLs(String firstname, String lastname, List<String> organizations) {
         Preconditions.checkArgument(firstname != null && !"".equals(firstname.trim()));
         Preconditions.checkArgument(lastname != null && !"".equals(lastname.trim()));
 

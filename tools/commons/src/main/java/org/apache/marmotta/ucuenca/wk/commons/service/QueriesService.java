@@ -15,6 +15,8 @@ public interface QueriesService {
 
     String getAuthorsDataQuery(String organization);
 
+    String getOrganizationNameQuery(String organization);
+
     String getAuthors();
 
     String getAuthorsPropertiesQuery(String authorURI);

@@ -27,7 +27,7 @@ import org.apache.marmotta.ucuenca.wk.pubman.api.AbstractProviderService;
 public class GoogleScholarProviderService extends AbstractProviderService {
 
     @Override
-    protected List<String> buildURLs(String firstname, String lastname) {
+    protected List<String> buildURLs(String firstname, String lastname, List<String> organizations) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

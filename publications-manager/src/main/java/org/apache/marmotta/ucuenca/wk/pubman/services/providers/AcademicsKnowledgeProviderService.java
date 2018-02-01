@@ -107,7 +107,7 @@ public class AcademicsKnowledgeProviderService extends AbstractProviderService {
     }
 
     @Override
-    protected List<String> buildURLs(String firstname, String lastname) {
+    protected List<String> buildURLs(String firstname, String lastname, List<String> organizations) {
         List urls = Collections.emptyList();
         try {
             urls = Collections.singletonList(buildRequestURL(firstname, lastname));

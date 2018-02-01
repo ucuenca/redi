@@ -25,7 +25,7 @@ public class DBLPProviderService extends AbstractProviderService {
     private CommonsServices commonsServices;
 
     @Override
-    protected List<String> buildURLs(String firstName, String lastName) {
+    protected List<String> buildURLs(String firstName, String lastName, List<String> organizations) {
         Preconditions.checkArgument(firstName != null && !"".equals(firstName.trim()));
         Preconditions.checkArgument(lastName != null && !"".equals(lastName.trim()));
         firstName = or(firstName);

@@ -298,7 +298,6 @@ public class QueriesServiceImpl implements QueriesService {
                 + " FROM <" + con.getEndpointsGraph() + "> "
                 + "WHERE {"
                 + "<" + uri + "> <" + RDF.TYPE.toString() + ">  <" + REDI.ENDPOINT.toString() + "> ."
-                
                 + "OPTIONAL { <" + uri + ">   <" + REDI.STATUS.toString() + "> ?status } ."
                 + "OPTIONAL { <" + uri + ">  <" + REDI.URL.toString() + ">    ?url } ."
                 + "OPTIONAL { <" + uri + ">   <" + REDI.GRAPH.toString() + ">   ?graph } ."
@@ -606,6 +605,17 @@ public class QueriesServiceImpl implements QueriesService {
     public String getAuthorsDataQuery(String organization) {
         String[] orgs = new String[]{organization};
         return getAuthorsDataQuery(orgs);
+    }
+
+    @Override
+    public String getOrganizationNameQuery(String organization) {
+        return PREFIXES
+                + "SELECT (str(?name_) as ?name)"
+                + "WHERE {"
+                + "  GRAPH <https://redi.cedia.edu.ec/context/organization> {"
+                + " 	 <" + organization + "> uc:fullName  ?name_ ."
+                + "  }"
+                + "}";
     }
 
     @Override
