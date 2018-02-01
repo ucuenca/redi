@@ -1,0 +1,13 @@
+@prefix r2r: <http://www4.wiwiss.fu-berlin.de/bizer/r2r/> .
+@prefix uc: <http://ucuenca.edu.ec/ontology#> .  
+
+uc:mapColl1 a r2r:MappingCollection;
+    r2r:prefixDefinitions " foaf: <http://xmlns.com/foaf/0.1/> . uc: <http://ucuenca.edu.ec/ontology#> . redi: <https://redi.cedia.edu.ec/resource/> . schema: <http://schema.org/> . bibo: <http://purl.org/ontology/bibo/> . dct: <http://purl.org/dc/terms/> . nature: <http://ns.nature.com/terms/> ." .
+
+# AUTHOR INFORMATION
+
+uc:authorType a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ a foaf:Person" ;
+    r2r:targetPattern "?SUBJ a foaf:Person" ;
+    r2r:targetPattern "?SUBJ dct:provenance uc:AcademicsKnowledgeProvider" .

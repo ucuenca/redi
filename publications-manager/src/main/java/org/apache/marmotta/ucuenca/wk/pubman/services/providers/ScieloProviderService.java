@@ -13,7 +13,6 @@ import java.util.List;
 import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
-import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.AbstractProviderService;
 
 /**
@@ -21,9 +20,6 @@ import org.apache.marmotta.ucuenca.wk.pubman.api.AbstractProviderService;
  * @author José Ortiz
  */
 public class ScieloProviderService extends AbstractProviderService {
-
-    @Inject
-    private ConstantService constantService;
 
     @Inject
     private CommonsServices commonsServices;
@@ -35,7 +31,7 @@ public class ScieloProviderService extends AbstractProviderService {
         firstName = or(firstName);
         lastName = or(lastName);
         String NS_DBLP = "https://search.scielo.org/search/";
-        String URI = NS_DBLP + firstName+"_"+lastName;
+        String URI = NS_DBLP + firstName + "_" + lastName;
         return Collections.singletonList(URI);
     }
 

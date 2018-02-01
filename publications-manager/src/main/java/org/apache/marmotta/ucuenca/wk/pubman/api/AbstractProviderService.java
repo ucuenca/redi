@@ -80,7 +80,7 @@ public abstract class AbstractProviderService implements ProviderService {
     private SesameService sesameService;
 
     @Inject
-    private ConstantService constantService;
+    protected ConstantService constantService;
 
     private final String STR = "string";
 

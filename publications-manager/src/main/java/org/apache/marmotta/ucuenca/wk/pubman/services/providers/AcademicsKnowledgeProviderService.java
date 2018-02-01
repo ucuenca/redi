@@ -27,7 +27,6 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
-import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.AbstractProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.exceptions.APIException;
 
@@ -37,8 +36,6 @@ import org.apache.marmotta.ucuenca.wk.pubman.exceptions.APIException;
  */
 public class AcademicsKnowledgeProviderService extends AbstractProviderService {
 
-    @Inject
-    private ConstantService constantService;
     @Inject
     private ConfigurationService configurationService;
     private String expression;
