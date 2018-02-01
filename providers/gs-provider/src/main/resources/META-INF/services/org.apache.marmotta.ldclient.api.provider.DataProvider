@@ -1,3 +1,1 @@
-org.apache.marmotta.ucuenca.wk.provider.gs.GoogleScholarPublicationProvider
-org.apache.marmotta.ucuenca.wk.provider.gs.GoogleScholarSearchProvider
-org.apache.marmotta.ucuenca.wk.provider.gs.GoogleScholarProfileProvider
+ec.edu.cedia.redi.ldclient.provider.scholar.ScholarPublicationProvider

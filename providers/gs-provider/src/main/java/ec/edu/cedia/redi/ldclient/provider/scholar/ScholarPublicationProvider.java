@@ -1,13 +1,29 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package ec.edu.cedia.redi.ldclient.provider.scholar;
 
 import com.google.common.collect.ImmutableList;
+import ec.edu.cedia.redi.ldclient.provider.scholar.mapping.ScholarAbstractTextLiteralMapper;
 import ec.edu.cedia.redi.ldclient.provider.scholar.mapping.ScholarAuthorTextLiteralMapper;
+import ec.edu.cedia.redi.ldclient.provider.scholar.mapping.ScholarCitationTextLiteralMapper;
 import ec.edu.cedia.redi.ldclient.provider.scholar.mapping.ScholarEmailTextLiteralMapper;
+import ec.edu.cedia.redi.ldclient.provider.scholar.mapping.ScholarImageUriAttrMapper;
+import ec.edu.cedia.redi.ldclient.provider.scholar.mapping.ScholarIndexesTextLiteralMapper;
 import ec.edu.cedia.redi.ldclient.provider.scholar.mapping.ScholarTableTextLiteralMapper;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -39,25 +55,23 @@ import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.model.vocabulary.DCTERMS;
 import org.openrdf.model.vocabulary.FOAF;
 import org.openrdf.model.vocabulary.OWL;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Xavier Sumba <xavier.sumba93@ucuenca.ec>
  */
-public class GSPublicationProvider extends AbstractHTMLDataProvider implements DataProvider {//NOPMD
+public class ScholarPublicationProvider extends AbstractHTMLDataProvider implements DataProvider {//NOPMD
 
     public static final String PROVIDER_NAME = "Google Scholar Publications";
-    private final Logger log = LoggerFactory.getLogger(GSPublicationProvider.class);
-    private final Map<String, JSoupMapper> postMappings = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, JSoupMapper> postMappings = new ConcurrentHashMap<>();
     private final ValueFactory vf = ValueFactoryImpl.getInstance();
+    private static final int PUBLICATIONS_PAGINATION = 100;
     /**
      * Pattern matchings
      */
-    public static String AUTHORS_SEARCH = "^https?://scholar\\.google\\.com/citations\\?mauthors\\=(.*)\\&hl=en\\&view_op\\=search_authors";
-    public static String PROFILE = "^https?:\\/\\/scholar\\.google\\.com\\/citations\\?user=.*";
-    public static String PUBLICATION = "^https?:\\/\\/scholar\\.google\\.com\\/citations\\?view_op=view_citation.*";
+    public static final String AUTHORS_SEARCH = "^https?://scholar\\.google\\.com/citations\\?mauthors\\=(.*)\\&hl=en\\&view_op\\=search_authors";
+    public static final String PROFILE = "^https?:\\/\\/scholar\\.google\\.com\\/citations\\?user=.*";
+    public static final String PUBLICATION = "^https?:\\/\\/scholar\\.google\\.com\\/citations\\?view_op=view_citation.*";
 
     @Override
     protected List<String> getTypes(URI resource) {
@@ -69,6 +83,7 @@ public class GSPublicationProvider extends AbstractHTMLDataProvider implements D
         return Collections.emptyList();
     }
 
+    @SuppressWarnings("PMD.AvoidDuplicateLiterals")
     @Override
     protected Map<String, JSoupMapper> getMappings(String resource, String requestUrl) {
         postMappings.clear();
@@ -76,11 +91,14 @@ public class GSPublicationProvider extends AbstractHTMLDataProvider implements D
             postMappings.put(REDI.NAMESPACE + "googlescholarURL", new CssUriAttrBlacklistQueryParamsMapper("div .gsc_oai_name a", "href", "hl", "oe"));
         } else if (requestUrl.matches(PROFILE)) {
             postMappings.put(FOAF.NAMESPACE + "publications", new CssUriAttrWhitelistQueryParamsMapper("div .gsc_a_tr .gsc_a_t a", "data-href", "view_op", "citation_for_view"));
-            postMappings.put(FOAF.NAMESPACE + "img", new CssUriAttrWhitelistQueryParamsMapper("div#gsc_prf_pua img", "src", "view_op", "user"));
+            postMappings.put(FOAF.NAMESPACE + "img", new ScholarImageUriAttrMapper("div#gsc_prf_pua img", "src", "view_op", "user"));
             postMappings.put(FOAF.NAMESPACE + "name", new CssTextLiteralMapper("div#gsc_prf_in"));
             postMappings.put(REDI.NAMESPACE + "affiliationName", new CssTextLiteralMapper(".gsc_prf_il:nth-child(2) a"));
             postMappings.put(FOAF.NAMESPACE + "topic_interest", new CssTextLiteralMapper("div#gsc_prf_int a"));
             postMappings.put(REDI.NAMESPACE + "domain", new ScholarEmailTextLiteralMapper("#gsc_prf_ivh"));
+            postMappings.put(REDI.NAMESPACE + "citationCount", new ScholarIndexesTextLiteralMapper("#gsc_rsb_st tbody tr", "gsc_rsb_sc1", ".gsc_rsb_std", "Citations"));
+            postMappings.put(REDI.NAMESPACE + "hindex", new ScholarIndexesTextLiteralMapper("#gsc_rsb_st tbody tr", "gsc_rsb_sc1", ".gsc_rsb_std", "h-index"));
+            postMappings.put(REDI.NAMESPACE + "i10", new ScholarIndexesTextLiteralMapper("#gsc_rsb_st tbody tr", "gsc_rsb_sc1", ".gsc_rsb_std", "i10-index"));
         } else if (requestUrl.matches(PUBLICATION)) {
             postMappings.put(DCTERMS.NAMESPACE + "title", new CssTextLiteralMapper("div#gsc_vcd_title a"));
             postMappings.put(BIBO.NAMESPACE + "uri1", new CssUriAttrMapper("div#gsc_vcd_title a", "href"));
@@ -90,8 +108,13 @@ public class GSPublicationProvider extends AbstractHTMLDataProvider implements D
             postMappings.put(REDI.NAMESPACE + "conference", new ScholarTableTextLiteralMapper("div#gsc_vcd_table .gs_scl", "gsc_vcd_field", ".gsc_vcd_value", "Conference"));
             postMappings.put(REDI.NAMESPACE + "pages", new ScholarTableTextLiteralMapper("div#gsc_vcd_table .gs_scl", "gsc_vcd_field", ".gsc_vcd_value", "Pages"));
             postMappings.put(DCTERMS.NAMESPACE + "publisher", new ScholarTableTextLiteralMapper("div#gsc_vcd_table .gs_scl", "gsc_vcd_field", ".gsc_vcd_value", "Publisher"));
-            postMappings.put(BIBO.NAMESPACE + "abstract", new ScholarTableTextLiteralMapper("div#gsc_vcd_table .gs_scl", "gsc_vcd_field", ".gsc_vcd_value", "Description"));
-            postMappings.put(REDI.NAMESPACE + "citationCount", new ScholarTableTextLiteralMapper("div#gsc_vcd_table .gs_scl", "gsc_vcd_field", ".gsc_vcd_value div[style] a  ", "Total citations"));
+            postMappings.put(BIBO.NAMESPACE + "issue", new ScholarTableTextLiteralMapper("div#gsc_vcd_table .gs_scl", "gsc_vcd_field", ".gsc_vcd_value", "Issue"));
+            postMappings.put(REDI.NAMESPACE + "journal", new ScholarTableTextLiteralMapper("div#gsc_vcd_table .gs_scl", "gsc_vcd_field", ".gsc_vcd_value", "Journal"));
+            postMappings.put(REDI.NAMESPACE + "book", new ScholarTableTextLiteralMapper("div#gsc_vcd_table .gs_scl", "gsc_vcd_field", ".gsc_vcd_value", "Book"));
+            postMappings.put(REDI.NAMESPACE + "source", new ScholarTableTextLiteralMapper("div#gsc_vcd_table .gs_scl", "gsc_vcd_field", ".gsc_vcd_value", "Source"));
+            postMappings.put(BIBO.NAMESPACE + "volume", new ScholarTableTextLiteralMapper("div#gsc_vcd_table .gs_scl", "gsc_vcd_field", ".gsc_vcd_value", "Volume"));
+            postMappings.put(BIBO.NAMESPACE + "abstract", new ScholarAbstractTextLiteralMapper("div#gsc_vcd_table .gs_scl", "gsc_vcd_field", ".gsc_vcd_value", "Description"));
+            postMappings.put(REDI.NAMESPACE + "citationCount", new ScholarCitationTextLiteralMapper("div#gsc_vcd_table .gs_scl", "gsc_vcd_field", ".gsc_vcd_value div[style] a  ", "Total citations"));
 
         }
         return postMappings;
@@ -103,16 +126,18 @@ public class GSPublicationProvider extends AbstractHTMLDataProvider implements D
     }
 
     @Override
-    public List<String> parseResponse(String resource, String requestUrl, Model triples, InputStream in, String contentType) throws DataRetrievalException {
+    public List<String> parseResponse(String resource, String requestUrl, Model triples, InputStream input, String contentType) throws DataRetrievalException {
         List<String> urls = new ArrayList<>();
         if (requestUrl.matches(AUTHORS_SEARCH)) {
-            urls = super.parseResponse(resource, requestUrl, triples, in, contentType);
+            urls = super.parseResponse(resource, requestUrl, triples, input, contentType);
             registerAuthorProfile(resource, triples);
         } else if (requestUrl.matches(PROFILE)) {
             String r = requestUrl.replaceAll("&cstart=.*&pagesize=.*", "");
-            urls = super.parseResponse(r, requestUrl, triples, in, contentType);
+            urls = super.parseResponse(r, requestUrl, triples, input, contentType);
         } else if (requestUrl.matches(PUBLICATION)) {
-            urls = super.parseResponse(requestUrl, requestUrl, triples, in, contentType);
+            urls = super.parseResponse(requestUrl, requestUrl, triples, input, contentType);
+            URI r = vf.createURI(requestUrl);
+            triples.add(r, BIBO.URI, r);
         }
         return urls;
     }
@@ -132,7 +157,7 @@ public class GSPublicationProvider extends AbstractHTMLDataProvider implements D
         } else if (requestUrl.matches(PROFILE)) {
             JSoupMapper mapper = getMappings(resource, requestUrl).get(FOAF.NAMESPACE + "publications");
             Elements publications = mapper.select(document);
-            if (publications.size() == 100) {
+            if (publications.size() == PUBLICATIONS_PAGINATION) {
                 Matcher matcher = Pattern.compile("^.*&cstart=(.*)&.*$").matcher(requestUrl);
                 if (matcher.find()) {
                     String start = String.format("cstart=%s", matcher.group(1));
@@ -168,6 +193,7 @@ public class GSPublicationProvider extends AbstractHTMLDataProvider implements D
         triples.remove(null, REDI.GSCHOLAR_URl, null);
         for (URI profile : profiles) {
             triples.add(profile, OWL.ONEOF, vf.createURI(resource));
+            triples.add(profile, FOAF.HOLDS_ACCOUNT, profile);
         }
     }
 }

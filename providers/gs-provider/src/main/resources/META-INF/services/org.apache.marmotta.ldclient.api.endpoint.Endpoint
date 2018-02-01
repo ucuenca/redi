@@ -1,3 +1,1 @@
-org.apache.marmotta.ucuenca.wk.endpoint.gs.GoogleScholarPublicationEndpoint
-org.apache.marmotta.ucuenca.wk.endpoint.gs.GoogleScholarSearchEndpoint
-org.apache.marmotta.ucuenca.wk.endpoint.gs.GoogleScholarProfileEndpoint
+ec.edu.cedia.redi.ldclient.endpoint.scholar.ScholarPublicationEndpoint
