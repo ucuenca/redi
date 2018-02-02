@@ -10,4 +10,175 @@ uc:authorType a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ a foaf:Person" ;
     r2r:targetPattern "?SUBJ a foaf:Person" ;
-    r2r:targetPattern "?SUBJ dct:provenance uc:AcademicsKnowledgeProvider" .
+    r2r:targetPattern "?SUBJ dct:provenance uc:GoogleScholarProvider" .
+
+uc:authorPublications a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ foaf:publications ?publication" ;
+    r2r:targetPattern "?SUBJ foaf:publications ?publication" ;
+    r2r:targetPattern "?publication a bibo:AcademicArticle" ;
+    r2r:targetPattern "?publication dct:provenance uc:GoogleScholarProvider" .
+
+uc:authorName a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:authorType ;
+    r2r:sourcePattern "?SUBJ foaf:name ?name" ;
+    r2r:targetPattern "?SUBJ foaf:name ?name" .
+
+uc:authorAffiliation a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:authorType ;
+    r2r:sourcePattern "?SUBJ uc:affiliationName ?affName." ;
+    r2r:transformation "?affIRI=concat('https://redi.cedia.edu.ec/resource/organization/', xpath:encode-for-uri(?affName))" ;
+    r2r:targetPattern "?SUBJ schema:memberOf ?<affIRI>" ;
+    r2r:targetPattern "?affIRI a foaf:Organization" ;
+    r2r:targetPattern "?affIRI foaf:name ?'affName'^^xsd:string" .
+
+uc:authorTopic a r2r:Mapping;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:authorType ;
+    r2r:sourcePattern "?SUBJ foaf:topic_interest ?topic." ;
+    r2r:transformation "?topicIRI=concat('https://redi.cedia.edu.ec/resource/topic/', xpath:encode-for-uri(?topic))" ;
+    r2r:targetPattern "?SUBJ foaf:topic_interest ?<topicIRI>";
+    r2r:targetPattern "?topicIRI rdfs:label ?'topic'^^xsd:string" .
+
+uc:authorDomain a r2r:Mapping ; # In case, it is useful for disambiguation.
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:authorType ;
+    r2r:sourcePattern "?SUBJ uc:domain ?domain" ;
+    r2r:targetPattern "?SUBJ uc:domain ?domain" .
+
+uc:authorCitation a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:authorType ;
+    r2r:sourcePattern "?SUBJ uc:citationCount ?total; a foaf:Person" ;
+    r2r:targetPattern "?SUBJ uc:citationCount ?total" .
+
+uc:authorHIndex a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:authorType ;
+    r2r:sourcePattern "?SUBJ uc:hindex ?hindex" ;
+    r2r:targetPattern "?SUBJ uc:h-index ?'hindex'^^xsd:integer" .
+
+uc:authori10 a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:authorType ;
+    r2r:sourcePattern "?SUBJ uc:i10 ?iten" ;
+    r2r:targetPattern "?SUBJ uc:i10-index ?'iten'^^xsd:integer" .
+
+uc:authorPhoto a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:authorType ;
+    r2r:sourcePattern "?SUBJ foaf:img ?img" ;
+    r2r:targetPattern "?SUBJ foaf:img ?<img>" ;
+    r2r:targetPattern "?img a foaf:Image" .
+
+uc:authorAccount a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:authorType ;
+    r2r:sourcePattern "?SUBJ foaf:holdsAccount ?account" ;
+    r2r:targetPattern "?SUBJ foaf:holdsAccount ?<account>" ;
+    r2r:targetPattern "?account a uc:GoogleScholarAccount" ;
+    r2r:targetPattern "?account a foaf:OnlineAccount" .
+
+# PUBLICATION INFORMATION
+
+uc:publicationTitle a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dct:title ?title" ;
+    r2r:targetPattern "?SUBJ dct:title ?'title'^^xsd:string" .
+
+uc:publicationUri1 a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ bibo:uri1 ?uri" ;
+    r2r:targetPattern "?SUBJ bibo:uri ?<uri>" .
+
+uc:publicationUri2 a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ bibo:uri2 ?uri" ;
+    r2r:targetPattern "?SUBJ bibo:uri ?<uri>" .
+
+uc:publicationUri3 a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ bibo:uri ?uri" ;
+    r2r:targetPattern "?SUBJ bibo:uri ?<uri>" .
+
+uc:publicationContributor a r2r:Mapping;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dct:contributor ?contributor." ;
+    r2r:transformation "?contributorIRI=concat('https://redi.cedia.edu.ec/resource/author/scholar/', xpath:encode-for-uri(?contributor))" ;
+    r2r:targetPattern "?SUBJ dct:contributor ?<contributorIRI>";
+    r2r:targetPattern "?contributorIRI foaf:name ?'contributor'^^xsd:string" .
+
+uc:publicationDate a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ bibo:created ?created" ;
+    r2r:targetPattern "?SUBJ bibo:created ?'created'^^xsd:dateTime" .
+
+uc:publicationConference a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ uc:conference ?conference" ;
+    r2r:transformation "?confIRI=concat('https://redi.cedia.edu.ec/resource/conference/', xpath:lower-case(xpath:encode-for-uri(?conference)))" ;
+    r2r:targetPattern "?SUBJ dct:isPartOf ?<confIRI>" ;
+    r2r:targetPattern "?confIRI a bibo:Conference" ;
+    r2r:targetPattern "?confIRI rdfs:label ?conference" .
+
+uc:publicationJournal1 a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ uc:journal ?journal" ;
+    r2r:transformation "?journalIRI=concat('https://redi.cedia.edu.ec/resource/journal/', xpath:lower-case(xpath:encode-for-uri(?journal)))" ;
+    r2r:targetPattern "?SUBJ dct:isPartOf ?<journalIRI>" ;
+    r2r:targetPattern "?journalIRI a bibo:Journal" ;
+    r2r:targetPattern "?journalIRI rdfs:label ?journal" .
+
+uc:publicationJournal2 a r2r:Mapping ;
+    # Check if uc:source is always a Journal.
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ uc:source ?source" ;
+    r2r:transformation "?sourceIRI=concat('https://redi.cedia.edu.ec/resource/journal/source/', xpath:lower-case(xpath:encode-for-uri(?source)))" ;
+    r2r:targetPattern "?SUBJ dct:isPartOf ?<sourceIRI>" ;
+    r2r:targetPattern "?sourceIRI a bibo:Journal" ;
+    r2r:targetPattern "?sourceIRI a bibo:ScholarSourceType" ;
+    r2r:targetPattern "?sourceIRI rdfs:label ?source" .
+
+uc:publicationBook a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ uc:book ?book" ;
+    r2r:transformation "?bookIRI=concat('https://redi.cedia.edu.ec/resource/book/', xpath:lower-case(xpath:encode-for-uri(?book)))" ;
+    r2r:targetPattern "?SUBJ dct:isPartOf ?<bookIRI>" ;
+    r2r:targetPattern "?bookIRI a bibo:Proceedings" ;
+    r2r:targetPattern "?bookIRI rdfs:label ?book" .
+
+uc:publicationPublisher a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dct:publisher ?publisher" ;
+    r2r:transformation "?publisherIRI=concat('https://redi.cedia.edu.ec/resource/publisher/', xpath:lower-case(xpath:encode-for-uri(?publisher)))" ;
+    r2r:targetPattern "?SUBJ dct:isPartOf ?<publisherIRI>" ;
+    r2r:targetPattern "?publisherIRI a bibo:Proceedings" ;
+    r2r:targetPattern "?publisherIRI rdfs:label ?publisher" .
+
+uc:publicationIssue a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ bibo:issue ?issue" ;
+    r2r:targetPattern "?SUBJ bibo:issue ?'issue'^^xsd:integer" .
+
+uc:publicationPages a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ uc:pages ?pages" ;
+    r2r:targetPattern "?SUBJ bibo:pages ?'pages'^^xsd:string" .
+
+uc:publicationVolume a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ bibo:volume ?vol" ;
+    r2r:targetPattern "?SUBJ bibo:volume ?'vol'^^xsd:string" .
+
+uc:publicationAbstract a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ bibo:abstract ?abstract" ;
+    r2r:targetPattern "?SUBJ bibo:abstract ?'abstract'^^xsd:string" .
+
+uc:publicationCitationCount a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ uc:citationCount ?count; a bibo:AcademicArticle" ;
+    r2r:targetPattern "?SUBJ uc:citationCount?'count'^^xsd:integer" .
+

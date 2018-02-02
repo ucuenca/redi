@@ -83,7 +83,7 @@ public class OntologyMapperTest {
         assertEquals(academicsKnowledgeModel.size(), 1305);
         Model resultWithMapperFile = OntologyMapper.map(academicsKnowledgeModel, academicsKnowledgeMapper, vocabulary);
         Model resultEmptyMapperFile = OntologyMapper.map(academicsKnowledgeModel, emptyMapper, vocabulary);
-        assertEquals(resultWithMapperFile.size(), 1599);
+        assertEquals(resultWithMapperFile.size(), 1662);
         assertEquals(resultEmptyMapperFile.size(), 0);
     }
 
@@ -119,7 +119,7 @@ public class OntologyMapperTest {
         assertEquals(scholarModel.size(), 919);
         Model resultWithMapperFile = OntologyMapper.map(scholarModel, scholarMapper, vocabulary);
         Model resultEmptyMapperFile = OntologyMapper.map(scholarModel, emptyMapper, vocabulary);
-        assertEquals(resultWithMapperFile.size(), 189011);
+        assertEquals(resultWithMapperFile.size(), 1170);
         assertEquals(resultEmptyMapperFile.size(), 0);
     }
 }
