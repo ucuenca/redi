@@ -75,12 +75,22 @@ uc:publicationLanguage a r2r:Mapping ;
     r2r:sourcePattern "?SUBJ dct:language ?lang" ;
     r2r:targetPattern "?SUBJ dct:language ?'lang'^^xsd:string" .
 
-uc:publicationDates a r2r:Mapping ;
+uc:publicationDates1 a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:classMappingRef uc:publicationType ;
-    r2r:sourcePattern "?SUBJ uc:year ?year; dct:created ?created; bibo:issue ?issue" ;
-    r2r:targetPattern "?SUBJ schema:copyrightYear ?'year'^^xsd:integer" ;
-    r2r:targetPattern "?SUBJ bibo:created ?'created'^^xsd:dateTime" ;
+    r2r:sourcePattern "?SUBJ uc:year ?year" ;
+    r2r:targetPattern "?SUBJ schema:copyrightYear ?'year'^^xsd:integer" .
+
+uc:publicationDates2 a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:publicationType ;
+    r2r:sourcePattern "?SUBJ dct:created ?created" ;
+    r2r:targetPattern "?SUBJ bibo:created ?'created'^^xsd:dateTime" .
+
+uc:publicationDates3 a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:publicationType ;
+    r2r:sourcePattern "?SUBJ bibo:issue ?issue" ;
     r2r:targetPattern "?SUBJ bibo:issue ?'issue'^^xsd:integer" .
 
 uc:publicationCitationCount a r2r:Mapping ;
@@ -115,13 +125,28 @@ uc:publicationAbstract a r2r:Mapping ;
     r2r:sourcePattern "?SUBJ bibo:abstract ?abstract" ;
     r2r:targetPattern "?SUBJ bibo:abstract ?'abstract'^^xsd:string" .
 
-uc:publicationInfo a r2r:Mapping ;
+uc:publicationDoi a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:classMappingRef uc:publicationType ;
-    r2r:sourcePattern "?SUBJ bibo:doi ?doi; bibo:pageStart ?start; bibo:pageEnd ?end; bibo:volume ?volume" ;
-    r2r:targetPattern "?SUBJ bibo:doi ?'doi'^^xsd:string" ;
-    r2r:targetPattern "?SUBJ bibo:pageStart ?'start'^^xsd:integer" ;
-    r2r:targetPattern "?SUBJ bibo:pageEnd ?'end'^^xsd:integer" ;
+    r2r:sourcePattern "?SUBJ bibo:doi ?doi" ;
+    r2r:targetPattern "?SUBJ bibo:doi ?'doi'^^xsd:string" .
+
+uc:publicationPageStart a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:publicationType ;
+    r2r:sourcePattern "?SUBJ bibo:pageStart ?start" ;
+    r2r:targetPattern "?SUBJ bibo:pageStart ?'start'^^xsd:integer" .
+
+uc:publicationPageEnd a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:publicationType ;
+    r2r:sourcePattern "?SUBJ bibo:pageEnd ?end" ;
+    r2r:targetPattern "?SUBJ bibo:pageEnd ?'end'^^xsd:integer" .
+
+uc:publicationVolume a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:publicationType ;
+    r2r:sourcePattern "?SUBJ bibo:volume ?volume" ;
     r2r:targetPattern "?SUBJ bibo:volume ?'volume'^^xsd:integer" .
 
 uc:publicationLinks a r2r:Mapping ;
