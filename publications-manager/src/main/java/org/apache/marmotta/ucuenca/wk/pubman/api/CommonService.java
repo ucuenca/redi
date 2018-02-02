@@ -13,22 +13,23 @@ import java.util.List;
  */
 public interface CommonService {
 
-    String getDataFromProvidersService(final String[] organizations);
-
-    String GetDataFromProvidersServiceAcademicsKnowledge(final String[] organizations);
-
     String Data2GlobalGraph();
 
     String authorAttrFromProviders();
 
     String CountPublications();
 
-    String GetDataFromProvidersServiceDBLP(final String[] organizations);
-    String GetDataFromProvidersServiceScielo(final String[] organizations);
+    String getDataFromDBLPProvidersService(final String[] organizations);
 
-    String GetDataFromProvidersServiceMicrosoftAcademics();
+    String getDataFromScopusProvidersService(final String[] organizations);
 
-    String GetDataFromProvidersServiceGoogleScholar(boolean update);
+    String getDataFromAcademicsKnowledgeProvidersService(final String[] organizations);
+
+    String getDataFromScieloProvidersService(final String[] organizations);
+
+    String getDataFromGoogleScholarProvidersService(final String[] organizations);
+
+    String getDataFromProvidersServiceMicrosoftAcademics();
 
     String GetDataFromProvidersServiceDspace();
 
@@ -39,7 +40,9 @@ public interface CommonService {
     String getSearchQuery(String textSearch);
 
     String DetectLatindexPublications();
+
     String DisambiguationProcess();
+
     String CentralGraphProcess();
 
     String organizationListExtracted();

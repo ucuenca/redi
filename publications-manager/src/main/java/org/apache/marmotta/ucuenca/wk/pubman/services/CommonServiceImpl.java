@@ -5,23 +5,23 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.services;
 
-import org.apache.marmotta.ucuenca.wk.pubman.services.providers.DspaceProviderServiceImpl;
-import org.apache.marmotta.ucuenca.wk.pubman.services.providers.ScopusProviderService;
-import org.apache.marmotta.ucuenca.wk.pubman.services.providers.MicrosoftAcadProviderServiceImpl;
-import org.apache.marmotta.ucuenca.wk.pubman.services.providers.GoogleScholarProviderServiceImpl;
-import org.apache.marmotta.ucuenca.wk.pubman.services.providers.AcademicsKnowledgeProviderService;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
-import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
+import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.ProviderServiceGoogleScholar;
 import org.apache.marmotta.ucuenca.wk.pubman.api.ReportsService;
+import org.apache.marmotta.ucuenca.wk.pubman.services.providers.AcademicsKnowledgeProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.DBLPProviderService;
+import org.apache.marmotta.ucuenca.wk.pubman.services.providers.DspaceProviderServiceImpl;
+import org.apache.marmotta.ucuenca.wk.pubman.services.providers.GoogleScholarProviderService;
+import org.apache.marmotta.ucuenca.wk.pubman.services.providers.MicrosoftAcadProviderServiceImpl;
+import org.apache.marmotta.ucuenca.wk.pubman.services.providers.ScopusProviderService;
 import org.openrdf.model.Value;
 import org.openrdf.query.QueryLanguage;
 import org.slf4j.Logger;
@@ -40,7 +40,7 @@ public class CommonServiceImpl implements CommonService {
     MicrosoftAcadProviderServiceImpl microsoftAcadProviderService;
 
     @Inject
-    GoogleScholarProviderServiceImpl googleProviderService;
+    GoogleScholarProviderService googleProviderService;
 
     @Inject
     ProviderServiceGoogleScholar googleService;
@@ -89,19 +89,20 @@ public class CommonServiceImpl implements CommonService {
 
     @Inject
     private org.apache.marmotta.ucuenca.wk.pubman.services.providers.DBLPProviderService providerServiceDblp1;
-    
+
     @Inject
     private org.apache.marmotta.ucuenca.wk.pubman.services.providers.ScieloProviderService providerServiceScielo;
-    
+
     @Inject
     private ScopusProviderService providerServiceScopus1;
     private Thread scopusThread;
     private Thread academicsThread;
     private Thread dblpThread;
     private Thread scieloThread;
+    private Thread scholarThread;
 
     @Override
-    public String getDataFromProvidersService(final String[] organizations) {
+    public String getDataFromScopusProvidersService(final String[] organizations) {
         // Find a way to execute thread and get response information.
         if (scopusThread != null && scopusThread.isAlive()) {
             return "Process is executing.";
@@ -119,7 +120,7 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public String GetDataFromProvidersServiceAcademicsKnowledge(final String[] organizations) {
+    public String getDataFromAcademicsKnowledgeProvidersService(final String[] organizations) {
         if (academicsThread != null && academicsThread.isAlive()) {
             return "Process is executing.";
         }
@@ -134,7 +135,7 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public String GetDataFromProvidersServiceDBLP(final String[] organizations) {
+    public String getDataFromDBLPProvidersService(final String[] organizations) {
         if (dblpThread != null && dblpThread.isAlive()) {
             return "Process is executing.";
         }
@@ -149,17 +150,25 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public String GetDataFromProvidersServiceMicrosoftAcademics() {
+    public String getDataFromProvidersServiceMicrosoftAcademics() {
         Thread MicrosofProvider = new Thread(microsoftAcadProviderService);
         MicrosofProvider.start();
         return "Data Provider MICROSOFT ACEDEMICS are extracted in background.   Please review main.log file for details";
     }
 
     @Override
-    public String GetDataFromProvidersServiceGoogleScholar(boolean update) {
-        googleProviderService.executeUpdateTask(update);
-        Thread GoogleProvider = new Thread(googleProviderService);
-        GoogleProvider.start();
+    public String getDataFromGoogleScholarProvidersService(final String[] organizations) {
+
+        if (scholarThread != null && scholarThread.isAlive()) {
+            return "Process is executing.";
+        }
+        scholarThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                googleProviderService.extractAuthors(organizations);
+            }
+        });
+        scholarThread.start();
         return "Data Provider Google Scholar are extracted in background.   Please review main.log file for details";
     }
 
@@ -246,8 +255,8 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public String GetDataFromProvidersServiceScielo(final String[] organizations) {
-            if (scieloThread != null && scieloThread.isAlive()) {
+    public String getDataFromScieloProvidersService(final String[] organizations) {
+        if (scieloThread != null && scieloThread.isAlive()) {
             return "Process is executing.";
         }
         scieloThread = new Thread(new Runnable() {

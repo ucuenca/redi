@@ -17,6 +17,7 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.services.providers;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.apache.marmotta.ucuenca.wk.pubman.api.AbstractProviderService;
 
@@ -26,9 +27,20 @@ import org.apache.marmotta.ucuenca.wk.pubman.api.AbstractProviderService;
  */
 public class GoogleScholarProviderService extends AbstractProviderService {
 
+    private final String template = "https://scholar.google.com/citations?mauthors=%s&hl=en&view_op=search_authors";
+
     @Override
     protected List<String> buildURLs(String firstname, String lastname, List<String> organizations) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<String> queries = new ArrayList<>(organizations.size());
+        String name = lastname.split(" ")[0];
+        for (String organization : organizations) {
+            String query = (name + " " + organization)
+                    .trim()
+                    .toLowerCase()
+                    .replace(' ', '+');
+            queries.add(String.format(template, query));
+        }
+        return queries;
     }
 
     @Override
