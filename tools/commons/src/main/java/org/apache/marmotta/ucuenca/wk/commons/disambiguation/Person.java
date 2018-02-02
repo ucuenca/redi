@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.apache.marmotta.ucuenca.wk.pubman.disambiguation;
+package org.apache.marmotta.ucuenca.wk.commons.disambiguation;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 import java.util.ArrayList;
@@ -12,14 +12,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.apache.marmotta.ucuenca.wk.pubman.disambiguation.utils.AffiliationUtils;
-import org.apache.marmotta.ucuenca.wk.pubman.disambiguation.utils.NameUtils;
-import org.apache.marmotta.ucuenca.wk.pubman.disambiguation.utils.PublicationUtils;
+import org.apache.marmotta.ucuenca.wk.commons.disambiguation.utils.AffiliationUtils;
+import org.apache.marmotta.ucuenca.wk.commons.disambiguation.utils.NameUtils;
+import org.apache.marmotta.ucuenca.wk.commons.disambiguation.utils.PublicationUtils;
 
 /**
  *
  * @author Jose Ortiz
  */
+@SuppressWarnings("PMD")
 public class Person {
 
     public static final double thresholdName = 0.9;

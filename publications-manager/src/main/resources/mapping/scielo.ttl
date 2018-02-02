@@ -1,0 +1,134 @@
+
+@prefix r2r: <http://www4.wiwiss.fu-berlin.de/bizer/r2r/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix scielo: <https://search.scielo.org/ont/> .
+@prefix uc: <http://ucuenca.edu.ec/ontology#> .  
+@prefix scoro: <http://purl.org/spar/scoro/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix bibo: <http://purl.org/ontology/bibo/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+
+uc:mapColl1 a r2r:MappingCollection;
+    r2r:prefixDefinitions "rdfs: <http://www.w3.org/2000/01/rdf-schema#> . bibo: <http://purl.org/ontology/bibo/> . dct: <http://purl.org/dc/terms/> . scoro: <http://purl.org/spar/scoro/> . schema: <http://schema.org/> . foaf: <http://xmlns.com/foaf/0.1/> . uc: <http://ucuenca.edu.ec/ontology#> . scielo: <https://search.scielo.org/ont/> . owl: <http://www.w3.org/2002/07/owl#> ." .
+
+uc:Person a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ scielo:name ?n" ;
+    r2r:targetPattern "?SUBJ a foaf:Person" ;
+    r2r:targetPattern "?SUBJ dct:provenance uc:Scielo".
+
+uc:Name1 a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ scielo:name ?name" ;
+    r2r:targetPattern "?SUBJ foaf:name ?name" .
+
+
+uc:oneOf a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ owl:oneOf ?b" ;
+    r2r:targetPattern "?SUBJ owl:oneOf ?b" .
+
+
+
+
+
+
+uc:publications a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ scielo:publications ?b" ;
+    r2r:targetPattern "?SUBJ foaf:publications ?b";
+    r2r:targetPattern "?b dct:contributor ?SUBJ " .
+
+
+uc:publications2 a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ scielo:creator ?b" ;
+    r2r:targetPattern "?SUBJ scielo:creator ?b" .
+
+
+
+uc:topicin a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ scielo:interestArea ?b " ;
+    r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/scielo/topic/',xpath:encode-for-uri(?b))" ;
+    r2r:targetPattern "?SUBJ foaf:topic_interest ?<urip>" ;
+    r2r:targetPattern "?<urip> rdfs:label ?b" .
+
+
+
+
+uc:publicationstitle a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ scielo:title ?b" ;
+    r2r:targetPattern "?SUBJ dct:title ?b" .
+
+uc:publicationsabstr a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ scielo:abstract ?b" ;
+    r2r:targetPattern "?SUBJ bibo:abstract ?b" .
+
+
+uc:pubkw a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ scielo:keywords ?b " ;
+    r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/scielo/keyword/',xpath:encode-for-uri(?b))" ;
+    r2r:targetPattern "?SUBJ dct:subject ?<urip>" ;
+    r2r:targetPattern "?<urip> rdfs:label ?b" .
+
+
+uc:publicationuri a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ scielo:uri ?b" ;
+    r2r:targetPattern "?SUBJ bibo:uri ?b" .
+
+
+uc:publicationpages a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ scielo:pages ?b" ;
+    r2r:targetPattern "?SUBJ bibo:pages ?b" .
+
+
+uc:publicationpagesS a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ scielo:pagesS ?b" ;
+    r2r:targetPattern "?SUBJ bibo:pageStart ?b" .
+
+uc:publicationpagesE a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ scielo:pagesE ?b" ;
+    r2r:targetPattern "?SUBJ bibo:pageEnd ?b" .
+
+
+uc:publicationIssue a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ scielo:issue ?b" ;
+    r2r:targetPattern "?SUBJ bibo:issue ?b" .
+
+
+uc:publicationIssn a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ scielo:issn ?b" ;
+    r2r:targetPattern "?SUBJ bibo:issn ?b" .
+
+uc:publicationDoi a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ scielo:doi ?b" ;
+    r2r:targetPattern "?SUBJ bibo:doi ?b" .
+
+
+uc:publicationDate a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ scielo:date ?b" ;
+    r2r:targetPattern "?SUBJ bibo:created ?b" .
+
+
+uc:pubkw a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ scielo:journal ?b " ;
+    r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/scielo/journal/',xpath:encode-for-uri(?b))" ;
+    r2r:targetPattern "?SUBJ dct:isPartOf ?<urip>" ;
+    r2r:targetPattern "?<urip> a bibo:Journal" ;
+    r2r:targetPattern "?<urip> rdfs:label ?b" .

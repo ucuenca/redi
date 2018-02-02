@@ -3,20 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.apache.marmotta.ucuenca.wk.pubman.disambiguation.utils;
+package org.apache.marmotta.ucuenca.wk.commons.disambiguation.utils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.apache.marmotta.ucuenca.wk.commons.util.ModifiedJaccardMod;
-import org.apache.marmotta.ucuenca.wk.pubman.disambiguation.Person;
+import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Person;
 
 /**
  *
  * @author Jose Ortiz
  */
-public class AffiliationUtils {
+@SuppressWarnings("PMD")
+public class PublicationUtils {
 
     public static double compareTitle(String name1, String name2) {
         ModifiedJaccardMod metric = new ModifiedJaccardMod();
@@ -26,7 +27,7 @@ public class AffiliationUtils {
     }
 
     public static List<String> uniqueTitle(List<String> options) {
-        final double aggThreshold = Person.thresholdAff;
+        final double aggThreshold = Person.thresholdTitle;
         Set<Set<Integer>> ls = new HashSet<>();
         for (int i = 0; i < options.size(); i++) {
             for (int j = i + 1; j < options.size(); j++) {
@@ -50,7 +51,6 @@ public class AffiliationUtils {
                 }
             }
         }
-
         Set<Set<Integer>> ls_alone = new HashSet<>();
         for (int i = 0; i < options.size(); i++) {
             boolean alone = true;
@@ -67,7 +67,7 @@ public class AffiliationUtils {
             }
         }
         ls.addAll(ls_alone);
-
+        
         List<String> optsal = new ArrayList<>();
         for (Set<Integer> grp : ls) {
             List<String> opt = new ArrayList<>();

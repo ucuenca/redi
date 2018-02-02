@@ -43,7 +43,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.apache.marmotta.ucuenca.wk.pubman.disambiguation.Person;
+import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Person;
 import org.openrdf.model.vocabulary.OWL;
 
 /**

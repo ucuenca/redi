@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.apache.marmotta.ucuenca.wk.pubman.disambiguation;
+package org.apache.marmotta.ucuenca.wk.commons.disambiguation;
 
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
@@ -18,6 +18,7 @@ import org.openrdf.query.QueryLanguage;
  *
  * @author Jose Ortiz
  */
+@SuppressWarnings("PMD")
 public class Provider {
 
     public String Name;

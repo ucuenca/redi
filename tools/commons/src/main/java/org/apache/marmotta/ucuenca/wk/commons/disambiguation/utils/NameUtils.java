@@ -3,19 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.apache.marmotta.ucuenca.wk.pubman.disambiguation.utils;
+package org.apache.marmotta.ucuenca.wk.commons.disambiguation.utils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.apache.marmotta.ucuenca.wk.commons.util.ModifiedJaccardMod;
-import org.apache.marmotta.ucuenca.wk.pubman.disambiguation.Person;
+import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Person;
 
 /**
  *
  * @author Jose Ortiz
  */
+@SuppressWarnings("PMD")
 public class NameUtils {
 
     public static double compareName(List<String> name1, List<String> name2) {
