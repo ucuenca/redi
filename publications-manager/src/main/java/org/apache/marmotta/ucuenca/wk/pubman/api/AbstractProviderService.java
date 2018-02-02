@@ -164,8 +164,7 @@ public abstract class AbstractProviderService implements ProviderService {
                         } else {
                             querySearchAuthor = queriesService.getAskObjectQuery(getProviderGraph(), authorResource, filterExpressionSearch());
                         }
-                        boolean existNativeAuthor = sparqlService.ask(
-                                QueryLanguage.SPARQL, querySearchAuthor);
+                        boolean existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, querySearchAuthor);
                         if (existNativeAuthor) {
                             continue;
                         }

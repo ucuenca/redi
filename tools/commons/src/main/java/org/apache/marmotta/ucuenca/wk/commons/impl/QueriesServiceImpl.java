@@ -583,22 +583,23 @@ public class QueriesServiceImpl implements QueriesService {
             orgs[i] = "<" + orgs[i] + ">";
         }
         return PREFIXES
-                + "SELECT DISTINCT * WHERE {"
+                + "SELECT DISTINCT ?subject (SAMPLE(?name_) as ?name) (SAMPLE(?fname_) as ?fname) (SAMPLE(?lname_) as ?lname)"
+                + "WHERE {"
                 + "  VALUES ?organization {" + StringUtils.join(orgs, " ") + "}"
                 + "  GRAPH <" + con.getEndpointsGraph() + ">  {"
                 + "      ?provenance uc:belongTo ?organization."
                 + "  }"
                 + "  GRAPH <" + con.getAuthorsGraph() + ">  {"
                 + "    ?subject a foaf:Person;"
-                + "               foaf:name ?name;"
-                + "               foaf:firstName ?fname;"
-                + "               foaf:lastName ?lname;"
+                + "               foaf:name ?name_;"
+                + "               foaf:firstName ?fname_;"
+                + "               foaf:lastName ?lname_;"
                 + "               dct:provenance ?provenance."
-                //                + "filter (mm:fulltext-search(?name,\"Saquicela\")) "
-                //                + "filter (mm:fulltext-search(?name,\"Mauricio espinoza\")) "
-                //                + "filter (mm:fulltext-search(?name,\"Saquicela\") || mm:fulltext-search(?name,\"Mauricio espinoza\")) "
+//                                + "filter (mm:fulltext-search(?name_,\"Saquicela\")) "
+                //                + "filter (mm:fulltext-search(?name_,\"Mauricio espinoza\")) "
+                //                + "filter (mm:fulltext-search(?name_,\"Saquicela\") || mm:fulltext-search(?name,\"Mauricio espinoza\")) "
                 + "  }"
-                + "}";
+                + "} GROUP BY ?subject";
     }
 
     @Override
@@ -612,7 +613,7 @@ public class QueriesServiceImpl implements QueriesService {
         return PREFIXES
                 + "SELECT (str(?name_) as ?name)"
                 + "WHERE {"
-                + "  GRAPH <https://redi.cedia.edu.ec/context/organization> {"
+                + "  GRAPH <" + con.getOrganizationsGraph() + "> {"
                 + " 	 <" + organization + "> uc:fullName  ?name_ ."
                 + "  }"
                 + "}";
