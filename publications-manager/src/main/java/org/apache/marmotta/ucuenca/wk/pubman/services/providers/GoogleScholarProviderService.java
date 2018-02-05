@@ -45,7 +45,7 @@ public class GoogleScholarProviderService extends AbstractProviderService {
 
     @Override
     protected String getProviderGraph() {
-        return constantService.getAcademicsKnowledgeGraph();
+        return constantService.getGoogleScholarGraph();
     }
 
     @Override

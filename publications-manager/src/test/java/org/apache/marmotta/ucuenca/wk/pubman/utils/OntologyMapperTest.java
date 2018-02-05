@@ -63,7 +63,7 @@ public class OntologyMapperTest {
         academicsKnowledgeMapper = OntologyMapper.class.getResourceAsStream("/mapping/academics_knowledge.ttl");
         scopusMapper = OntologyMapper.class.getResourceAsStream("/mapping/scopus.ttl");
         dblpMapper = OntologyMapper.class.getResourceAsStream("/mapping/dblp.ttl");
-        scholarMapper = OntologyMapper.class.getResourceAsStream("/mapping/scholar.ttl");
+        scholarMapper = OntologyMapper.class.getResourceAsStream("/mapping/google_scholar.ttl");
         emptyMapper = new ByteArrayInputStream(new byte[]{});
 
         InputStream resourceAsStream = OntologyMapper.class.getResourceAsStream("/mapping/redi.r2r");

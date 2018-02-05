@@ -24,6 +24,8 @@ import org.junit.Test;
  */
 public class TestScholarProvider extends ProviderTestBase {
 
+    private final String template = "https://scholar.google.com/citations?mauthors=%s&hl=en&view_op=search_authors";
+
     /**
      * This method tests accessing Google Scholar and gets a profile with a
      * publication..
@@ -32,8 +34,8 @@ public class TestScholarProvider extends ProviderTestBase {
      */
     @Test
     public void testScholarProfile() throws Exception {
-        String url = "https://scholar.google.com/citations?mauthors=arevalo+univesidad+de+cuenca&hl=en&view_op=search_authors";
-        testResource(url, "scholar-profile.sparql");
+        String query = "arevalo+univesidad+de+cuenca";
+        testResource(String.format(template, query), "scholar-profile.sparql");
     }
 
 }

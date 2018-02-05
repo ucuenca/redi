@@ -121,6 +121,12 @@ public abstract class AbstractProviderService implements ProviderService {
     }
 
     /**
+     * Do Something if the request wasn't successful.
+     */
+    protected void retryPlan() {
+    }
+
+    /**
      * Extract authors from a particular provider.
      *
      * @param organizations URLs of organizations to extract authors.
@@ -164,8 +170,10 @@ public abstract class AbstractProviderService implements ProviderService {
                         } else {
                             querySearchAuthor = queriesService.getAskObjectQuery(getProviderGraph(), authorResource, filterExpressionSearch());
                         }
-                        boolean existNativeAuthor = sparqlService.ask(QueryLanguage.SPARQL, querySearchAuthor);
-                        if (existNativeAuthor) {
+                        boolean isResquestDone = sparqlService.ask(QueryLanguage.SPARQL, querySearchAuthor);
+                        if (isResquestDone) {
+                            // Register only the search query, given that the resource might be from other author.
+                            sparqlFunctionsService.executeInsert(getProviderGraph(), reqResource.replace(" ", ""), OWL.ONE_OF, authorResource);
                             continue;
                         }
 
@@ -177,14 +185,16 @@ public abstract class AbstractProviderService implements ProviderService {
                                 case 200:
                                     break;
                                 default:
-                                    log.error("Invalid request/unexpected error for '{}', skipping resource; response with HTTP {} code status.",
+                                    log.warn("Invalid request/unexpected error for '{}', skipping resource; response with HTTP {} code status.",
                                             reqResource, response.getHttpStatus(), new QuotaLimitException());
+                                    retryPlan();
                                     continue;
                             }
                             RepositoryConnection connection = sesameService.getConnection();
                             try {
                                 // store triples with new vocabulary
                                 Model data = response.getData();
+                                //TODO: distribute conversion sesame/jena.
                                 data = OntologyMapper.map(data, getMappingPathFile(), getVocabularyMapper());
                                 log.info("After ontology mapper: writing {} triples in context {} for request '{}'.", data.size(), getProviderGraph(), reqResource);
                                 Resource providerContext = connection.getValueFactory().createURI(getProviderGraph());
@@ -194,8 +204,12 @@ public abstract class AbstractProviderService implements ProviderService {
                             } finally {
                                 connection.close();
                             }
-                            // register search query.
+                            // Register search query.
                             sparqlFunctionsService.executeInsert(getProviderGraph(), reqResource.replace(" ", ""), OWL.ONE_OF, authorResource);
+                            // Skip extra calls after have found some data
+                            if (!response.getData().isEmpty()) {
+                                break;
+                            }
                         } catch (DataRetrievalException dre) {
                             msgOrg.put(organization, "Fail: " + processedAuthors + "/" + totalAuthors);
                             log.error("Cannot retieve RDF for the given resource: '{}'", reqResource, dre);

@@ -175,7 +175,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.marmotta.ucuenca.wk.provider</groupId>
-            <artifactId>gs-provider</artifactId>
+            <artifactId>scholar-provider</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -185,7 +185,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.marmotta.ucuenca.wk.provider</groupId>
-            <artifactId>ak-provider</artifactId>
+            <artifactId>academics-provider</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

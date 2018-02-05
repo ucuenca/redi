@@ -8,7 +8,7 @@
     </parent>
 
     <groupId>org.apache.marmotta.ucuenca.wk.provider</groupId>
-    <artifactId>ak-provider</artifactId>
+    <artifactId>academics-provider</artifactId>
     <packaging>jar</packaging>
     <name>LDClient Provider: Academics Knowledge - JSON ACCESS</name>
     <build>
