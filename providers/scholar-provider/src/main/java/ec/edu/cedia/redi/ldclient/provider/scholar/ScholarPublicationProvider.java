@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -139,6 +140,7 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
             URI r = vf.createURI(requestUrl);
             triples.add(r, BIBO.URI, r);
         }
+        delay(); // wait after each call.
         return urls;
     }
 
@@ -183,6 +185,21 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
     @Override
     public String[] listMimeTypes() {
         return new String[]{"text/html"};
+    }
+
+    /**
+     * Waits between one and three seconds.
+     */
+    private static void delay() {
+        try {
+            Random r = new Random();
+            int max = 3000,
+                    min = 1000;
+            int milseconds = r.nextInt(max - min) + min;
+            Thread.sleep(milseconds);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     private void registerAuthorProfile(String resource, Model triples) {

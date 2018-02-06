@@ -1,16 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-	    <groupId>org.apache.marmotta.ucuenca.wk</groupId>
-	    <artifactId>providers</artifactId>
-	    <version>0.0.1-SNAPSHOT</version>
-  	</parent>
-  	
-	<groupId>org.apache.marmotta.ucuenca.wk.provider</groupId>
-	<artifactId>dblp-provider</artifactId>
-	<packaging>jar</packaging>
+    <parent>
+        <groupId>ec.edu.cedia.redi.provider</groupId>
+        <artifactId>providers</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>dblp-provider</artifactId>
+    <packaging>jar</packaging>
 
     <name>LDClient Provider: DBLP RDF Access</name>
     <description>Implements Linked Data model over DBLP data.</description>
@@ -27,29 +26,29 @@
                 </configuration>
             </plugin>
             <plugin>
-	        <groupId>org.apache.maven.plugins</groupId>
-	        <artifactId>maven-pmd-plugin</artifactId>
-	        <version>3.4</version>
-	        <executions>
-	          <execution>
-	          	<phase>verify</phase>
-	            <goals>
-	              <goal>check</goal>
-	            </goals>
-	          </execution>
-	        </executions>
-	        <configuration>
-	          <rulesets>
-	            <ruleset>..${file.separator}..${file.separator}PMDRules.xml</ruleset>
-	          </rulesets>
-	        </configuration>
-	      </plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.4</version>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <rulesets>
+                        <ruleset>..${file.separator}..${file.separator}PMDRules.xml</ruleset>
+                    </rulesets>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>org.apache.marmotta</groupId>
@@ -62,10 +61,10 @@
             <version>${marmotta.version}</version>
         </dependency>
         <dependency>
-		    <groupId>org.apache.marmotta</groupId>
-		    <artifactId>ldclient-provider-xml</artifactId>
-		    <version>3.3.0</version>
-		</dependency>
+            <groupId>org.apache.marmotta</groupId>
+            <artifactId>ldclient-provider-xml</artifactId>
+            <version>3.3.0</version>
+        </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-rio-turtle</artifactId>

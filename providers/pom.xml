@@ -6,16 +6,19 @@
         <artifactId>ucuenca</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <groupId>org.apache.marmotta.ucuenca.wk</groupId>
+    
+    <groupId>ec.edu.cedia.redi.provider</groupId>
     <artifactId>providers</artifactId>
-    <name>Watiqay Khuska LOD Platform - Providers</name>
+    <name>REDI - Providers</name>
     <packaging>pom</packaging>
+    
     <modules>
         <module>dblp-provider</module>
         <module>ma-provider</module>
-        <module>gs-provider</module>
+        <module>scholar-provider</module>
         <module>scopus-provider</module>
-        <module>ak-provider</module>
+        <module>academics-provider</module>
         <module>scielo-provider</module>
+        <module>springer-provider</module>
     </modules>
 </project>
