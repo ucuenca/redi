@@ -20,6 +20,7 @@ package org.apache.marmotta.ucuenca.wk.pubman.services.providers;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.marmotta.ucuenca.wk.pubman.api.AbstractProviderService;
+import org.apache.marmotta.ucuenca.wk.pubman.exceptions.QuotaLimitException;
 
 /**
  *
@@ -41,6 +42,14 @@ public class GoogleScholarProviderService extends AbstractProviderService {
             queries.add(String.format(template, query));
         }
         return queries;
+    }
+
+    @Override
+    protected void retryPlan() {
+        // TODO: come up with a better plan.
+        throw new RuntimeException(
+                new QuotaLimitException("Cannot continue scrapping Google Scholar. "
+                        + "Restart the process once you can continue sending requests."));
     }
 
     @Override
