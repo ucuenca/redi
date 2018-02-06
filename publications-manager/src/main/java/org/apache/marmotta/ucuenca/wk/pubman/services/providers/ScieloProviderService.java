@@ -37,7 +37,7 @@ public class ScieloProviderService extends AbstractProviderService {
 
     @Override
     protected String getProviderGraph() {
-        return constantService.getDBLPGraph();
+        return constantService.getScieloGraph();
     }
 
     @Override
