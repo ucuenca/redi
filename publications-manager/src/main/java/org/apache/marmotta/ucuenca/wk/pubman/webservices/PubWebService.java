@@ -136,7 +136,6 @@ public class PubWebService {
         //return  Response.status(Status.BAD_REQUEST).entity("Incorrect file format.").build();
     }
 
-
 //    /*
 //     * Get Publications Data from Source and Load into Provider Graph
 //     */
@@ -171,18 +170,6 @@ public class PubWebService {
         String params = resultType;
         log.debug("Publications Task", params);
         String result = commonService.getDataFromAcademicsKnowledgeProvidersService(organizations);
-        return Response.ok().entity(result).build();
-    }
-
-    /*
-     * Get Publications Data from Source and Load into Provider Graph
-     */
-    @POST
-    @Path(GET_PUBLICATIONS_MA)
-    public Response readPublicationsPostMA(@QueryParam("Endpoint") String resultType) {
-        String params = resultType;
-        log.debug("Publications Task", params);
-        String result = commonService.getDataFromProvidersServiceMicrosoftAcademics();
         return Response.ok().entity(result).build();
     }
 

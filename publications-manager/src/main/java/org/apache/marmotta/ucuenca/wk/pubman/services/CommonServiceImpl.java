@@ -20,7 +20,6 @@ import org.apache.marmotta.ucuenca.wk.pubman.services.providers.AcademicsKnowled
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.DBLPProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.DspaceProviderServiceImpl;
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.GoogleScholarProviderService;
-import org.apache.marmotta.ucuenca.wk.pubman.services.providers.MicrosoftAcadProviderServiceImpl;
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.ScopusProviderService;
 import org.openrdf.model.Value;
 import org.openrdf.query.QueryLanguage;
@@ -35,9 +34,6 @@ public class CommonServiceImpl implements CommonService {
 
     @Inject
     private Logger log;
-
-    @Inject
-    MicrosoftAcadProviderServiceImpl microsoftAcadProviderService;
 
     @Inject
     GoogleScholarProviderService googleProviderService;
@@ -147,13 +143,6 @@ public class CommonServiceImpl implements CommonService {
         });
         dblpThread.start();
         return "Data Provider DBLP are extracted in background.   Please review main.log file for details";
-    }
-
-    @Override
-    public String getDataFromProvidersServiceMicrosoftAcademics() {
-        Thread MicrosofProvider = new Thread(microsoftAcadProviderService);
-        MicrosofProvider.start();
-        return "Data Provider MICROSOFT ACEDEMICS are extracted in background.   Please review main.log file for details";
     }
 
     @Override

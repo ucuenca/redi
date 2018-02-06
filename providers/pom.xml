@@ -14,7 +14,6 @@
     
     <modules>
         <module>dblp-provider</module>
-        <module>ma-provider</module>
         <module>scholar-provider</module>
         <module>scopus-provider</module>
         <module>academics-provider</module>
