@@ -194,7 +194,7 @@ public abstract class AbstractProviderService implements ProviderService {
                             try {
                                 // store triples with new vocabulary
                                 Model data = response.getData();
-                                //TODO: distribute conversion sesame/jena.
+                                // TODO: distribute conversion sesame/jena to improve convertion time.
                                 data = OntologyMapper.map(data, getMappingPathFile(), getVocabularyMapper());
                                 log.info("After ontology mapper: writing {} triples in context {} for request '{}'.", data.size(), getProviderGraph(), reqResource);
                                 Resource providerContext = connection.getValueFactory().createURI(getProviderGraph());

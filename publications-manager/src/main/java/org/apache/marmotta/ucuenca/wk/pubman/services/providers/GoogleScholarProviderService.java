@@ -33,11 +33,19 @@ public class GoogleScholarProviderService extends AbstractProviderService {
     @Override
     protected List<String> buildURLs(String firstname, String lastname, List<String> organizations) {
         List<String> queries = new ArrayList<>(organizations.size());
-        String name = lastname.split(" ")[0];
+
+        String[] names = firstname.split(" ");
+        if (names.length > 1) {
+            firstname = names[0] + " OR " + names[1];
+        } else {
+            firstname = names[0];
+        }
+
+        lastname = lastname.split(" ")[0];
         for (String organization : organizations) {
-            String query = (name + " " + organization)
+            organization = organization.toLowerCase();
+            String query = String.format("%s %s %s", firstname, lastname, organization)
                     .trim()
-                    .toLowerCase()
                     .replace(' ', '+');
             queries.add(String.format(template, query));
         }
