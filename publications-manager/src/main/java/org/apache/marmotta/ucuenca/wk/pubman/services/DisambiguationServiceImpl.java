@@ -20,8 +20,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
@@ -50,7 +48,7 @@ import org.openrdf.rio.RDFHandlerException;
 @ApplicationScoped
 public class DisambiguationServiceImpl implements DisambiguationService {
 
-    final int MAXTHREADS = 5;
+    final int MAXTHREADS = 10;
 
     @Inject
     private org.slf4j.Logger log;
@@ -74,12 +72,16 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         Provider a0 = new Provider("Authors", constantService.getAuthorsProviderGraph(), sparqlService);
         Provider a1 = new Provider("Scopus", constantService.getScopusGraph(), sparqlService);
         Provider a2 = new Provider("MSAK", constantService.getAcademicsKnowledgeGraph(), sparqlService);
-        Provider a3 = new Provider("DBLP", constantService.getDBLPGraph(), sparqlService);
+        Provider a3 = new Provider("Google", constantService.getGoogleScholarGraph(), sparqlService);
+        Provider a4 = new Provider("Scielo", constantService.getScieloGraph(), sparqlService);
+        Provider a5 = new Provider("DBLP", constantService.getDBLPGraph(), sparqlService);
         List<Provider> Providers = new ArrayList();
         Providers.add(a0);
         Providers.add(a1);
         Providers.add(a2);
         Providers.add(a3);
+        Providers.add(a4);
+        Providers.add(a5);
         return Providers;
     }
 
