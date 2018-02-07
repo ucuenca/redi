@@ -14,7 +14,6 @@ import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
-import org.apache.marmotta.ucuenca.wk.pubman.api.ProviderServiceGoogleScholar;
 import org.apache.marmotta.ucuenca.wk.pubman.api.ReportsService;
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.AcademicsKnowledgeProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.DBLPProviderService;
@@ -37,9 +36,6 @@ public class CommonServiceImpl implements CommonService {
 
     @Inject
     GoogleScholarProviderService googleProviderService;
-
-    @Inject
-    ProviderServiceGoogleScholar googleService;
 
     @Inject
     AcademicsKnowledgeProviderService academicsKnowledgeService;
