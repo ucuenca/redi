@@ -22,7 +22,6 @@ import org.apache.marmotta.ldclient.exception.DataRetrievalException;
 import org.apache.marmotta.ldclient.model.ClientResponse;
 import org.apache.marmotta.ldclient.test.provider.ProviderTestBase;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
@@ -46,14 +45,9 @@ public class TestSpringerProvider extends ProviderTestBase {
      * @throws org.openrdf.repository.RepositoryException
      */
     @Test
-    @Ignore
-    public void testAcademicsKnowledgeAPI() throws RepositoryException {
+    public void testSpringerAPI() throws RepositoryException {
 
-        String uri = "https://westus.api.cognitive.microsoft.com/academic/v1.0/evaluate?"
-                + "expr=And(Ty=%271%27,%20AuN=%27mauricio%20espinoza%27)&"
-                + "attributes=Id,AuN,DAuN,CC,ECC,E&"
-                + "model=latest&"
-                + "subscription-key=" + apikey;
+        String uri = "http://api.springer.com/meta/v1/json?q=((name:victor OR name:hugo) AND name:saquicela)&api_key=a6bf2dbe42d9e7d523fadd7c40dcc43d&p=50&s=0";
 
         ClientResponse response = null;
         try {
