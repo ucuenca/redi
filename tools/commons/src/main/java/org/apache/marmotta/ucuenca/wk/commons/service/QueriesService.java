@@ -5,6 +5,10 @@
  */
 package org.apache.marmotta.ucuenca.wk.commons.service;
 
+
+import java.util.Map;
+
+
 /**
  *
  * @author Satellite
@@ -63,7 +67,12 @@ public interface QueriesService {
 
     String getListEndpointsByUri(String uri);
 
-    String getExtractedOrgList();
+    
+    String getExtractedOrgList(Map<String, String> providers);
+    
+    String getOrgEnrichmentProvider( Map <String, String> mp);
+    
+    String getOrgDisambiguationResult(Map<String, String> providers);
 
     /**
      * return query to obtain all subject ( keywords ) of an author , using

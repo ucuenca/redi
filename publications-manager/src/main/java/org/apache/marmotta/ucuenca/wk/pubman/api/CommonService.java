@@ -6,6 +6,7 @@
 package org.apache.marmotta.ucuenca.wk.pubman.api;
 
 import java.util.List;
+import org.apache.marmotta.ucuenca.wk.pubman.disambiguation.Provider;
 
 /**
  *
@@ -38,8 +39,13 @@ public interface CommonService {
     String getSearchQuery(String textSearch);
 
     String DetectLatindexPublications();
-    String DisambiguationProcess();
+  
+    String runDisambiguationProcess(String [] orgs);
     String CentralGraphProcess();
 
     String organizationListExtracted();
+    
+    String organizationListEnrichment();
+    
+    List<Provider> getProviders();
 }

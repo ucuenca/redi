@@ -9,8 +9,10 @@ import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.inject.Inject;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
+import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.openrdf.model.Value;
 import org.openrdf.query.QueryLanguage;
 
@@ -19,16 +21,34 @@ import org.openrdf.query.QueryLanguage;
  * @author Jose Ortiz
  */
 public class Provider {
-
+   
+    private ConstantService con;
+   
     public String Name;
     public String Graph;
+    public String Uri;
+
+    public String getUri() {
+        return Uri;
+    }
+
+    public void setUri(String Uri) {
+        this.Uri = Uri;
+    }
 
     private SparqlService sparql;
 
-    public Provider(String Name, String Graph, SparqlService sparql) {
+    public Provider(String Name, String Graph, SparqlService sparql , String Uri) {
         this.Name = Name;
         this.Graph = Graph;
         this.sparql = sparql;
+        this.Uri = Uri;
+    }
+    
+    
+    
+    public void SetConstant (ConstantService constantService) {
+    this.con = constantService; 
     }
 
     public List<Person> getAuthors() throws MarmottaException {
@@ -40,6 +60,30 @@ public class Provider {
                 //+ "  		?a <http://purl.org/dc/terms/provenance> <http://redi.cedia.edu.ec/resource/endpoint/file/UCUENCA> . \n"
                 + "	}\n"
                 + "}";
+        List<Map<String, Value>> persons = sparql.query(QueryLanguage.SPARQL, qry);
+        List<Person> lsp = new ArrayList<>();
+        for (Map<String, Value> row : persons) {
+            Person p = new Person();
+            p.Origin = this;
+            p.URI = row.get("a").stringValue();
+            p.URIS.add(p.URI);
+            lsp.add(p);
+        }
+        return lsp;
+    }
+
+    public List<Person> getAuthorsbyOrg(String org , String authorgraph , String endpointgraph) throws MarmottaException {
+        String qry = "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                + "select ?a \n"
+                + "{	graph <"+authorgraph+"> { \n"
+                + "     ?a a <http://xmlns.com/foaf/0.1/Person> . \n"
+                + "     ?a dct:provenance ?endp.\n"
+                + "   graph <"+endpointgraph+"> {\n"
+                + "    ?endp  <http://ucuenca.edu.ec/ontology#belongTo>  ?org\n"
+                + "     }   \n"
+                + "    values ?org { <"+org+"> } \n"
+                + "} }";
         List<Map<String, Value>> persons = sparql.query(QueryLanguage.SPARQL, qry);
         List<Person> lsp = new ArrayList<>();
         for (Map<String, Value> row : persons) {

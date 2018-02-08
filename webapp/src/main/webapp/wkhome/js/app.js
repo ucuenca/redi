@@ -30,14 +30,15 @@ wkhomeApp.service('searchData', function () {
 });
 
 wkhomeApp.service('globalData', ['$window', function ($window) {
-    //var baseURL = "http://redi.cedia.edu.ec/";
-    var baseURL = $window.location.origin + $window.location.pathname;
-    baseURL = baseURL.replace("clon","");
+     //var baseURL = "http://redi.cedia.edu.ec/";
+     var baseURL = $window.location.origin + $window.location.pathname;
+     baseURL = baseURL.replace("clon","");
+ //   baseURL = baseURL.replace("localhost:8080","redi.cedia.edu.ec");
     this.language = "es";
     this.centralGraph = baseURL + "context/redi";
     this.externalAuthorsGraph = "http://ucuenca.edu.ec/wkhuska/externalauthors";
     this.clustersGraph = baseURL + "context/clusters";
-    this.authorsGraph = baseURL + "context/authors";
+                this.authorsGraph = baseURL + "context/authors";
     this.endpointsGraph = baseURL + "context/endpoints";
     this.organizationsGraph = baseURL + "context/organization";
     this.latindexGraph = baseURL + "context/latindex";

@@ -19,10 +19,12 @@ function loadTables () {
                        columns: [
             { "data" : "Selection" },
             { "data" : "name"} ,
-            { "data" : "valAK"} ,
-            { "data" : "valDBLP"} ,
-            { "data" : "valScopus"} ,
-            { "data" : "valGs"} 
+            {"data": "AdvAcademicsKnowledge"},
+            {"data": "AdvDBLP"},
+            {"data": "AdvSCOPUS"},
+            {"data": "AdvGS"} ,
+            {"data": "AdvSCIELO"},
+ 
             
     
 
@@ -49,10 +51,10 @@ function loadTables () {
                {
                 "render": function(data, type, row) {
                     
-                    if ( typeof(row["AdvAK"]) === "undefined"){
+                    if ( typeof(row["AdvAcademicsKnowledge"]) === "undefined"){
                        return "";
                    }else {
-                       return row["AdvAK"].split(";").sort (function (a,b){ return CompareDate( a, b );})[0];
+                       return row["AdvAcademicsKnowledge"].split(";").sort (function (a,b){ return CompareDate( a, b );})[0];
                       // return row["DateAk"].split(";").sort(function(a,b){ return CompareDate( a, b ); }) +" | " +row["AdvAK"].split(";")[0];    
                    
                     }         
@@ -79,12 +81,12 @@ function loadTables () {
                 "render": function(data, type, row) {
                     
                         
-                    if ( typeof(row["AdvScopus"]) === "undefined")
+                    if ( typeof(row["AdvSCOPUS"]) === "undefined")
                     {
                        return ""; 
                     }
                     else {
-                       return row["AdvScopus"].split(";").sort (function (a,b){ return CompareDate( a, b );})[0];
+                       return row["AdvSCOPUS"].split(";").sort (function (a,b){ return CompareDate( a, b );})[0];
                       // return  row["DateScopus"].split(";").sort(function(a,b){ return CompareDate( a, b ); })+" | "+row["AdvScopus"].split(";")[0];      
                     }
                   
@@ -96,12 +98,12 @@ function loadTables () {
              {
                 "render": function(data, type, row) {
                           
-                    if (  typeof(row["AdvGs"]) === "undefined")
+                    if (  typeof(row["AdvGS"]) === "undefined")
                     {
                        return ""; 
                     }
                     else {
-                         return row["AdvGs"].split(";").sort (function (a,b){ return CompareDate( a, b );})[0];
+                         return row["AdvGS"].split(";").sort (function (a,b){ return CompareDate( a, b );})[0];
                       //   return  row["DateGs"].split(";").sort(function(a,b){ return CompareDate( a, b ); })+" | "+row["AdvGs"].split(";")[0];  
                     }
                   
@@ -109,6 +111,20 @@ function loadTables () {
                 },
                 
                 targets: 5
+            } ,
+             {
+                "render": function(data, type, row) {
+                          
+                    if (  typeof(row["AdvSCIELO"]) === "undefined")
+                    {
+                       return ""; 
+                    }
+                    else {
+                         return row["AdvSCIELO"].split(";").sort (function (a,b){ return CompareDate( a, b );})[0];
+                    }   
+                },
+                
+                targets: 6
             }
         ]
     

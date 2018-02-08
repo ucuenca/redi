@@ -18,16 +18,20 @@
 
 -->
 
+
 <html>
     <head>
         <!--###BEGIN_HEAD###-->
-        <title>Providers Manager</title>
-       <!-- <script type="text/javascript" src="../../webjars/jquery/1.8.2/jquery.min.js"></script> -->
-       <!--  <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>-->
-       <script type="text/javascript" src="../../webjars/jquery/1.8.2/jquery.min.js"></script>  
-        <script type="text/javascript" src="providersManager.js"></script>
-        <script type="text/javascript" src="lib/dataTables/datatables.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="lib/dataTables/datatables.min.css">
+        <title>Desambiguation Proccess</title>
+     
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.16/datatables.min.js"></script>
+           <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.16/datatables.min.css">
+       
+      <!--   <script type="text/javascript" src="../../webjars/jquery/1.8.2/jquery.min.js"></script>  -->
+        <script type="text/javascript" src="desambiguation.js"></script>
+      <!--   <script type="text/javascript" src="lib/dataTables/datatables.min.js"></script> -->
+        <!--  <link rel="stylesheet" type="text/css" href="lib/dataTables/datatables.min.css"> -->
         <script type="text/javascript">
             $(document).ready(function() {
               //  console.log(_SERVER_URL);
@@ -42,7 +46,7 @@
     <body>
          <!--###BEGIN_CONTENT###-->
         <div>TODO write content</div>
-          <table id="provTable" class="display" width="90%">
+          <table id="provTableDis" class="display" width="90%">
                   <thead>
                 <tr>
                 <th>Selection</th>
@@ -52,16 +56,13 @@
                 <th>Scopus</th>
                 <th>Google</th>
                 <th>Scielo</th>
-                <th>Latin</th>
+                <th>Logs</th>
             </tr> 
         </thead>  
           </table>
         
-        <button id="buttonAk" onclick="ExtractAk()"> Extract AK </button>
-         <button id="buttonScopus" onclick="ExtractScopus()"> Extract Scopus </button>
-          <button id="buttonScopus" onclick="ExtractDBLP()"> Extract DBLP </button>
-           <button id="buttonScopus" onclick="ExtractGoogleScholar()"> Extract Google Scholar </button>     
-           <button id="buttonScopus" onclick="unifiedProviders()"> Unified </button>
+        <button id="buttonAk" onclick="DisambiguationProcess ()"> Disambiguate </button>
+ 
         
         <!--###END_CONTENT###-->
     </body>

@@ -206,6 +206,17 @@ public class PubWebService {
 
     }
 
+    @GET
+    @Path("publication/organization/disambiguationList")
+    @Produces(APPLICATIONJSON)
+    public Response listEnrichmentOrganization() {
+
+        String result = commonService.organizationListEnrichment();
+      //  result = organizationService.listOrganization();
+        return Response.ok().entity(result).build();
+
+    }
+    
     /*
      * Detect Latindex Journals
      */
@@ -347,7 +358,7 @@ public class PubWebService {
     }
     
     
-    
+    /*
     @POST
     @Path(DISAMBIGUATION_PUBLICATIONS)
     public Response disambiguation(@QueryParam("Endpoint") String resultType) {
@@ -355,7 +366,18 @@ public class PubWebService {
         log.debug("Publications Task", params);
         String result = commonService.DisambiguationProcess();
         return Response.ok().entity(result).build();
+    }*/
+    
+    @POST
+    @Path("/runDisambiguation")
+    public Response runDisambiguation (@Context HttpServletRequest request) {
+
+        String[] org = request.getParameterMap().get("data[]");
+        String result = commonService.runDisambiguationProcess(org);
+
+        return Response.ok().entity(result).build();
     }
+    
     
     @POST
     @Path(CENTRAL_GRAPH_PUBLICATIONS)
