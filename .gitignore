@@ -26,6 +26,7 @@ cssmin/
 
 #ignore Netbeans files
 nbactions.xml
+nb-configuration.xml
 /webapp/target (copia)/
 /nb-configuration.xml
 ComparisonNamesAuthors.csv

@@ -79,7 +79,7 @@
             <scope>test</scope>
             <type>jar</type>
         </dependency>
-           <dependency>
+        <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20070829</version>
@@ -196,6 +196,17 @@
             <artifactId>simmetrics-core</artifactId>
             <version>3.2.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.marmotta</groupId>
+            <artifactId>ldclient-api</artifactId>
+            <version>${marmotta.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.marmotta</groupId>
+            <artifactId>ldclient-core</artifactId>
+            <version>${marmotta.version}</version>
+        </dependency>
+        
     </dependencies>
 
 </project>

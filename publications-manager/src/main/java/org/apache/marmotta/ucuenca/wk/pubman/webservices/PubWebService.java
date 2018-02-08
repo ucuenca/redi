@@ -49,7 +49,7 @@ public class PubWebService {
 
     @Inject
     private TranslationService traslateService;
-    
+
     private static final int MAX_TURNS = 100;
     private static final int MIN_TURNS = 0;
     public static final String GET_PUBLICATIONS = "/publications";
@@ -74,74 +74,78 @@ public class PubWebService {
     /*
      * Get Publications Data from Source and Load into Provider Graph
      */
-    
-    
     @POST
     @Path(GET_PUBLICATIONS)
     public Response readPublicationsPost(@QueryParam("update") Boolean update) {
         String[] organizations = {"http://redi.cedia.edu.ec/resource/organization/UCUENCA"};
-        String result = commonService.getDataFromProvidersService(organizations);
+        String result = commonService.getDataFromScopusProvidersService(organizations);
         return Response.ok().entity(result).build();
     }
-    
+
     @POST
     @Path("/publicationsScopusByOrg")
-    public Response readPublicationsPostScopus (@Context HttpServletRequest request) {
-
+    public Response readPublicationsPostScopus(@Context HttpServletRequest request) {
 
         String[] org = request.getParameterMap().get("data[]");
-        String result = commonService.getDataFromProvidersService(org);
-      //  String output = authorService.extractAuthorsGeneric(get);
+        String result = commonService.getDataFromScopusProvidersService(org);
+        //  String output = authorService.extractAuthorsGeneric(get);
 
         return Response.ok().entity(result).build();
         //return  Response.status(Status.BAD_REQUEST).entity("Incorrect file format.").build();
     }
-    
+
     @POST
     @Path("/publicationsDBLPByOrg")
-    public Response readPublicationsPostDBLP (@Context HttpServletRequest request) {
+    public Response readPublicationsPostDBLP(@Context HttpServletRequest request) {
 
         String[] org = request.getParameterMap().get("data[]");
-        String result = commonService.GetDataFromProvidersServiceDBLP(org);
+        String result = commonService.getDataFromDBLPProvidersService(org);
 
         return Response.ok().entity(result).build();
     }
-    
+
+    @POST
+    @Path("/publicationsScieloByOrg")
+    public Response readPublicationsPostScielo(@Context HttpServletRequest request) {
+
+        String[] org = request.getParameterMap().get("data[]");
+        String result = commonService.getDataFromScieloProvidersService(org);
+
+        return Response.ok().entity(result).build();
+    }
+
     @POST
     @Path("/publicationsGSchoolarByOrg")
-    public Response readPublicationsPostGSchoolar (@Context HttpServletRequest request) {
-
+    public Response readPublicationsPostGSchoolar(@Context HttpServletRequest request) {
         String[] org = request.getParameterMap().get("data[]");
-       // String result = commonService.GetDataFromProvidersServiceDBLP(org);
+        String result = commonService.getDataFromGoogleScholarProvidersService(org);
 
-        return Response.ok().entity("Not implement yet").build();
+        return Response.ok().entity(result).build();
     }
-    
+
     @POST
     @Path("/publicationsAkByOrg")
-  //  @Produces(APPLICATIONJSON)
-    public Response readPublicationsPostAK (@Context HttpServletRequest request) {
-
+    //  @Produces(APPLICATIONJSON)
+    public Response readPublicationsPostAK(@Context HttpServletRequest request) {
 
         String[] org = request.getParameterMap().get("data[]");
-        String result = commonService.GetDataFromProvidersServiceAcademicsKnowledge(org);
-      //  String output = authorService.extractAuthorsGeneric(get);
+        String result = commonService.getDataFromAcademicsKnowledgeProvidersService(org);
+        //  String output = authorService.extractAuthorsGeneric(get);
 
         return Response.ok().entity(result).build();
         //return  Response.status(Status.BAD_REQUEST).entity("Incorrect file format.").build();
     }
-    
 
-    /*
-     * Get Publications Data from Source and Load into Provider Graph
-     */
-    @POST
-    @Path(GET_PUBLICATIONS_GOOGLE)
-    public Response readPublicationsPostGoogle(@QueryParam("update") Boolean update) {
-        log.debug("Publications Task, update {}", update);
-        String result = commonService.GetDataFromProvidersServiceGoogleScholar(update);
-        return Response.ok().entity(result).build();
-    }
+//    /*
+//     * Get Publications Data from Source and Load into Provider Graph
+//     */
+//    @POST
+//    @Path(GET_PUBLICATIONS_GOOGLE)
+//    public Response readPublicationsPostGoogle(@QueryParam("update") Boolean update) {
+//        log.debug("Publications Task, update {}", update);
+//        String result = commonService.getDataFromGoogleScholarProvidersService(update);
+//        return Response.ok().entity(result).build();
+//    }
 
     /*
      * Get Publications Data from Source and Load into Provider Graph
@@ -152,7 +156,7 @@ public class PubWebService {
         String[] organizations = {"http://redi.cedia.edu.ec/resource/organization/UCUENCA"};
         String params = resultType;
         log.debug("Publications Task", params);
-        String result = commonService.GetDataFromProvidersServiceDBLP(organizations);
+        String result = commonService.getDataFromDBLPProvidersService(organizations);
         return Response.ok().entity(result).build();
     }
 
@@ -165,21 +169,7 @@ public class PubWebService {
         String[] organizations = {"http://redi.cedia.edu.ec/resource/organization/UCUENCA"};
         String params = resultType;
         log.debug("Publications Task", params);
-        String result = commonService.GetDataFromProvidersServiceAcademicsKnowledge(organizations);
-        return Response.ok().entity(result).build();
-    }
-    
-
-
-    /*
-     * Get Publications Data from Source and Load into Provider Graph
-     */
-    @POST
-    @Path(GET_PUBLICATIONS_MA)
-    public Response readPublicationsPostMA(@QueryParam("Endpoint") String resultType) {
-        String params = resultType;
-        log.debug("Publications Task", params);
-        String result = commonService.GetDataFromProvidersServiceMicrosoftAcademics();
+        String result = commonService.getDataFromAcademicsKnowledgeProvidersService(organizations);
         return Response.ok().entity(result).build();
     }
 
@@ -194,14 +184,14 @@ public class PubWebService {
         String result = commonService.GetDataFromProvidersServiceDspace();
         return Response.ok().entity(result).build();
     }
-    
-      @GET
+
+    @GET
     @Path("publication/organization/list")
     @Produces(APPLICATIONJSON)
     public Response listExtractedOrganization() {
 
-        String result = commonService.organizationListExtracted ();
-      //  result = organizationService.listOrganization();
+        String result = commonService.organizationListExtracted();
+        //  result = organizationService.listOrganization();
         return Response.ok().entity(result).build();
 
     }
@@ -229,35 +219,6 @@ public class PubWebService {
         return Response.ok().entity(result).build();
     }
 
-    /*
-     * Get Publications Data from  Provider Graph and load into General Graph
-     */
-    @POST
-    @Path(LOAD_PUBLICATIONS)
-    public Response loadPublicationsPost(@QueryParam("Endpoint") String resultType, @Context HttpServletRequest request) {
-        String params = resultType;
-        log.debug("Publications Task", params);
-        String result = commonService.Data2GlobalGraph();
-        return Response.ok().entity(result).build();
-    }
-
-    @POST
-    @Path(INDEX_CENTRAL_GRAPH)
-    public Response IndexCentralGraphPost(@QueryParam("Endpoint") String resultType, @Context HttpServletRequest request) {
-        String params = resultType;
-        log.debug("Index Central Graph Task", params);
-        String result = commonService.IndexCentralGraph();
-        return Response.ok().entity(result).build();
-    }
-
-    /*
-     * Get Publications Data from  Provider Graph and load into General Graph
-     */
-    @POST
-    @Path(LOAD_AUTHOR_ATTR)
-    public Response loadPublicationsPost() {
-        return Response.ok(commonService.authorAttrFromProviders()).build();
-    }
 
 //    /**
 //     * Service to get data related with especific author.
@@ -272,33 +233,13 @@ public class PubWebService {
 //        String result = resultjson.toString();
 //        return Response.ok().entity(result).build();
 //    }
-    public static final String COUNT_PUBLICATIONS = "/count_publications_graph";
 
-    /**
-     * @Author Freddy Sumba. Service that count the publications in the provider
-     * an central graph.
-     * @param resultType
-     * @param request
-     * @return
-     */
-    @POST
-    @Path(COUNT_PUBLICATIONS)
-    public Response CountPublicationsPost(@QueryParam("Endpoint") String resultType, @Context HttpServletRequest request) {
-        String params = resultType;
-        log.debug("Publications Task Count", params);
-        return runPublicationsCountTask(params);
-    }
-
-    private Response runPublicationsCountTask(String urisString) {
-        String result = commonService.CountPublications();
-        return Response.ok().entity(result).build();
-    }
 
     /**
      * @Author Jose Luis Cullcay. Service used to create reports
-     * @param report Name of the report
-     * @param param Type of the report
-     * @param param1 Parameter
+     * @param report  Name of the report
+     * @param param   Type of the report
+     * @param param1  Parameter
      * @param request
      * @return Address to the new report created
      */
@@ -356,9 +297,13 @@ public class PubWebService {
         String result = commonService.getSearchQuery(textSearch);
         return Response.ok().entity(result).build();
     }
+
     
     
     /*
+=======
+
+>>>>>>> 6f858bfa10208cd38e68ba6b3d2a156b7bb5ade7
     @POST
     @Path(DISAMBIGUATION_PUBLICATIONS)
     public Response disambiguation(@QueryParam("Endpoint") String resultType) {
@@ -377,8 +322,9 @@ public class PubWebService {
 
         return Response.ok().entity(result).build();
     }
-    
-    
+
+
+
     @POST
     @Path(CENTRAL_GRAPH_PUBLICATIONS)
     public Response centralGraph(@QueryParam("Endpoint") String resultType) {

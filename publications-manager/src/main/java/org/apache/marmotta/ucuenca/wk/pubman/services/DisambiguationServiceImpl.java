@@ -23,8 +23,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.api.task.Task;
@@ -38,11 +36,15 @@ import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.DisambiguationService;
+
 import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
-import org.apache.marmotta.ucuenca.wk.pubman.disambiguation.Person;
-import org.apache.marmotta.ucuenca.wk.pubman.disambiguation.Provider;
-import org.apache.marmotta.ucuenca.wk.pubman.disambiguation.utils.PublicationUtils;
+
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
+
+import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Person;
+import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Provider;
+import org.apache.marmotta.ucuenca.wk.commons.disambiguation.utils.PublicationUtils;
+
 import org.openrdf.model.Value;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
@@ -60,7 +62,7 @@ import org.semarglproject.vocab.RDFS;
 @ApplicationScoped
 public class DisambiguationServiceImpl implements DisambiguationService {
 
-    final int MAXTHREADS = 5;
+    final int MAXTHREADS = 10;
 
     @Inject
     private org.slf4j.Logger log;
@@ -92,6 +94,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
     private Thread CentralGraphWorker;
     private final String STR = "string";
 
+
     /*private List<Provider> getProviders() throws MarmottaException {
 
   
@@ -112,6 +115,22 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             Providers.add(p);
         }
 
+=======
+    private List<Provider> getProviders() {
+        Provider a0 = new Provider("Authors", constantService.getAuthorsProviderGraph(), sparqlService);
+        Provider a1 = new Provider("Scopus", constantService.getScopusGraph(), sparqlService);
+        Provider a2 = new Provider("MSAK", constantService.getAcademicsKnowledgeGraph(), sparqlService);
+        Provider a3 = new Provider("Google", constantService.getGoogleScholarGraph(), sparqlService);
+        Provider a4 = new Provider("Scielo", constantService.getScieloGraph(), sparqlService);
+        Provider a5 = new Provider("DBLP", constantService.getDBLPGraph(), sparqlService);
+        List<Provider> Providers = new ArrayList();
+        Providers.add(a0);
+        Providers.add(a1);
+        Providers.add(a2);
+        Providers.add(a3);
+        Providers.add(a4);
+        Providers.add(a5);
+>>>>>>> 6f858bfa10208cd38e68ba6b3d2a156b7bb5ade7
         return Providers;
     }*/
 

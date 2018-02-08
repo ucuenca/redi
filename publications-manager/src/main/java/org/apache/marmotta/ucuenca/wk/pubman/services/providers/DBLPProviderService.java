@@ -13,7 +13,6 @@ import java.util.List;
 import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
-import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.AbstractProviderService;
 
 /**
@@ -23,19 +22,16 @@ import org.apache.marmotta.ucuenca.wk.pubman.api.AbstractProviderService;
 public class DBLPProviderService extends AbstractProviderService {
 
     @Inject
-    private ConstantService constantService;
-
-    @Inject
     private CommonsServices commonsServices;
 
     @Override
-    protected List<String> buildURLs(String firstName, String lastName) {
+    protected List<String> buildURLs(String firstName, String lastName, List<String> organizations) {
         Preconditions.checkArgument(firstName != null && !"".equals(firstName.trim()));
         Preconditions.checkArgument(lastName != null && !"".equals(lastName.trim()));
         firstName = or(firstName);
         lastName = or(lastName);
         String NS_DBLP = "http://rdf.dblp.com/ns/search/";
-        String URI = NS_DBLP + firstName+"_"+lastName;
+        String URI = NS_DBLP + firstName + "_" + lastName;
         return Collections.singletonList(URI);
     }
 

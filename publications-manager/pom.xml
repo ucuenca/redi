@@ -159,28 +159,28 @@
             <version>${marmotta.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.marmotta.ucuenca.wk.provider</groupId>
+            <groupId>ec.edu.cedia.redi.provider</groupId>
             <artifactId>dblp-provider</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.marmotta.ucuenca.wk.provider</groupId>
-            <artifactId>ma-provider</artifactId>
+            <groupId>ec.edu.cedia.redi.provider</groupId>
+            <artifactId>scielo-provider</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.marmotta.ucuenca.wk.provider</groupId>
-            <artifactId>gs-provider</artifactId>
+            <groupId>ec.edu.cedia.redi.provider</groupId>
+            <artifactId>scholar-provider</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.marmotta.ucuenca.wk.provider</groupId>
+            <groupId>ec.edu.cedia.redi.provider</groupId>
             <artifactId>scopus-provider</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.marmotta.ucuenca.wk.provider</groupId>
-            <artifactId>ak-provider</artifactId>
+            <groupId>ec.edu.cedia.redi.provider</groupId>
+            <artifactId>academics-provider</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -299,12 +299,12 @@
             <artifactId>poi</artifactId>
             <version>3.10.1</version>
         </dependency>
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>1.5</version>
         </dependency>-->
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
             <version>1.1</version>

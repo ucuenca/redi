@@ -6,7 +6,8 @@
 package org.apache.marmotta.ucuenca.wk.pubman.api;
 
 import java.util.List;
-import org.apache.marmotta.ucuenca.wk.pubman.disambiguation.Provider;
+import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Provider;
+//import org.apache.marmotta.ucuenca.wk.pubman.disambiguation.Provider;
 
 /**
  *
@@ -14,33 +15,28 @@ import org.apache.marmotta.ucuenca.wk.pubman.disambiguation.Provider;
  */
 public interface CommonService {
 
-    String getDataFromProvidersService(final String[] organizations);
+    String getDataFromDBLPProvidersService(final String[] organizations);
 
-    String GetDataFromProvidersServiceAcademicsKnowledge(final String[] organizations);
+    String getDataFromScopusProvidersService(final String[] organizations);
 
-    String Data2GlobalGraph();
+    String getDataFromAcademicsKnowledgeProvidersService(final String[] organizations);
 
-    String authorAttrFromProviders();
+    String getDataFromScieloProvidersService(final String[] organizations);
 
-    String CountPublications();
-
-    String GetDataFromProvidersServiceDBLP(final String[] organizations);
-
-    String GetDataFromProvidersServiceMicrosoftAcademics();
-
-    String GetDataFromProvidersServiceGoogleScholar(boolean update);
+    String getDataFromGoogleScholarProvidersService(final String[] organizations);
 
     String GetDataFromProvidersServiceDspace();
 
     String createReport(String hostname, String realPath, String name, String type, List<String> params);
 
-    String IndexCentralGraph();
 
     String getSearchQuery(String textSearch);
 
     String DetectLatindexPublications();
+
   
     String runDisambiguationProcess(String [] orgs);
+
     String CentralGraphProcess();
 
     String organizationListExtracted();

@@ -5,7 +5,6 @@ import com.hp.hpl.jena.vocabulary.OWL;
 import java.util.Arrays;
 import java.util.Map;
 import javax.inject.Inject;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
@@ -685,26 +684,33 @@ public class QueriesServiceImpl implements QueriesService {
             orgs[i] = "<" + orgs[i] + ">";
         }
         return PREFIXES
+
                 + "SELECT DISTINCT ?organization   ?provenance  ?subject (SAMPLE(?names) as ?name) (SAMPLE(?fnames) as ?fname) (SAMPLE(?lnames) as ?lname) "
                 + " WHERE {"
-                + "  VALUES ?organization {" + StringUtils.join(orgs, " ") + "}"
-                + "  GRAPH <" + con.getEndpointsGraph() + ">  {"
-                + "      ?provenance uc:belongTo ?organization."
-                + "  }"
-                + "  GRAPH <" + con.getAuthorsGraph() + ">  {"
-                + "    ?subject a foaf:Person;"
                 + "               foaf:name ?names;"
                 + "               foaf:firstName ?fnames;"
                 + "               foaf:lastName ?lnames;"
                 + "               dct:provenance ?provenance."
                 + "  }"
                 + "} GROUP BY ?organization ?provenance  ?subject ";
+
     }
 
     @Override
     public String getAuthorsDataQuery(String organization) {
         String[] orgs = new String[]{organization};
         return getAuthorsDataQuery(orgs);
+    }
+
+    @Override
+    public String getOrganizationNameQuery(String organization) {
+        return PREFIXES
+                + "SELECT (str(?name_) as ?name)"
+                + "WHERE {"
+                + "  GRAPH <" + con.getOrganizationsGraph() + "> {"
+                + " 	 <" + organization + "> uc:fullName  ?name_ ."
+                + "  }"
+                + "}";
     }
 
     @Override

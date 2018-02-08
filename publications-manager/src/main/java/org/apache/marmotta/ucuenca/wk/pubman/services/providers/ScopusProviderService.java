@@ -25,7 +25,6 @@ import java.util.List;
 import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
-import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.AbstractProviderService;
 
 /**
@@ -35,8 +34,6 @@ import org.apache.marmotta.ucuenca.wk.pubman.api.AbstractProviderService;
 public class ScopusProviderService extends AbstractProviderService {
 
     @Inject
-    private ConstantService constantService;
-    @Inject
     private ConfigurationService configurationService;
 
     private final String requestTemplate = "http://api.elsevier.com/content/search/author?query=%s&count=100&apiKey=%s";
@@ -45,7 +42,7 @@ public class ScopusProviderService extends AbstractProviderService {
     private String expression;
 
     @Override
-    protected List<String> buildURLs(String firstname, String lastname) {
+    protected List<String> buildURLs(String firstname, String lastname, List<String> organizations) {
         Preconditions.checkArgument(firstname != null && !"".equals(firstname.trim()));
         Preconditions.checkArgument(lastname != null && !"".equals(lastname.trim()));
 

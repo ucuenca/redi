@@ -1,0 +1,1230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<rdf:Description rdf:about="https://scholar.google.com/citations?user=nYte-bkAAAAJ">
+	<affiliationName xmlns="http://ucuenca.edu.ec/ontology#">Universidad de Cuenca</affiliationName>
+	<citationCount xmlns="http://ucuenca.edu.ec/ontology#">202</citationCount>
+	<domain xmlns="http://ucuenca.edu.ec/ontology#">ucuenca.edu.ec</domain>
+	<hindex xmlns="http://ucuenca.edu.ec/ontology#">7</hindex>
+	<i10 xmlns="http://ucuenca.edu.ec/ontology#">4</i10>
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://scholar.google.com/citations?mauthors=saquicela+universidad+de+cuenca&amp;hl=en&amp;view_op=search_authors"/>
+	<holdsAccount xmlns="http://xmlns.com/foaf/0.1/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?user=nYte-bkAAAAJ">
+			<img xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_photo&amp;user=nYte-bkAAAAJ"/>
+			<name xmlns="http://xmlns.com/foaf/0.1/">Victor Saquicela</name>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A08ZZubdj9fEC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A1sJd4Hv_s6UC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A2osOgNQ5qMEC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A3s1wT3WcHBgC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A4OULZ7Gr8RgC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A4fKUyHm3Qg0C"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A5Ul4iDaHHb8C"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A738O_yMBCRsC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A8AbLer7MMksC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A9yKSN-GCB0IC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AB3FOqHPlNUQC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3ACHSYGLWDkRkC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AD03iK_w7-QYC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AD_sINldO8mEC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AEUQCXRtRnyEC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AIjCSPb-OGe4C"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AK3LRdlH-MEoC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AKxtntwgDAa4C"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3ALPZeul_q3PIC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3ANhqRSupF_l8C"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AOU6Ihb5iCvQC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AP5F9QuxV20EC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3ASP6oXDckpogC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3ATiz5es2fbqcC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AUeHWp8X0CEIC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AUxriW0iASnsC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AVOx2b1Wkg3QC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AWbkHhVStYXYC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AXiSMed-E-HIC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A_xSYboBqXhAC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AabG-DnoFyZgC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Ab0M2c_1WBrUC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AbFI3QPDXJZMC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AcFHS6HbyZ2cC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Ad1gkVwhDpl0C"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AdfsIfKJdRG4C"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Adshw04ExmUIC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AeJXPG6dFmWUC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AeflP2zaiRacC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Af2IySw72cVMC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AfPk4N6BV_jEC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AfQNAKQ3IYiAC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AgeHnlv5EZngC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Al7t_Zn2s7bgC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Anb7KW1ujOQ8C"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Ap2g8aNsByqUC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3ApyW8ca7W8N0C"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AqjMakFHDy7sC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3ArO6llkc54NcC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AsSrBHYA8nusC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AtOudhMTPpwUC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AtS2w5q8j5-wC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Au-x6o8ySG0sC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Au5HHmVD_uO8C"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Au9iWguZQMMsC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AuWQEDVKXjbEC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Au_35RYKgDlwC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AvRqMK49ujn8C"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AxtRiw3GOFMkC"/>
+			<publications xmlns="http://xmlns.com/foaf/0.1/" rdf:resource="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AyD5IFk8b50cC"/>
+			<topic_interest xmlns="http://xmlns.com/foaf/0.1/">Data Integration</topic_interest>
+			<topic_interest xmlns="http://xmlns.com/foaf/0.1/">Linkeddata</topic_interest>
+			<topic_interest xmlns="http://xmlns.com/foaf/0.1/">Semantic Web</topic_interest>
+			<topic_interest xmlns="http://xmlns.com/foaf/0.1/">Web Services</topic_interest>
+			<topic_interest xmlns="http://xmlns.com/foaf/0.1/">semantic annotations</topic_interest>
+		</rdf:Description>
+	</holdsAccount>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A08ZZubdj9fEC">
+	<contributor xmlns="http://purl.org/dc/terms/">Andr�s de los Reyes</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Luis Espinoza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Mar�a Jos� Torres</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Victor Saquicela</contributor>
+	<title xmlns="http://purl.org/dc/terms/">Plataforma de Gesti�n de Identidad y Acceso Federado para la Universidad de Cuenca</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">Con el crecimiento del portafolio de servicios de Tecnolog�as de Informaci�n y Comunicaci�n ofrecidos a la comunidad universitaria, el sistema de autenticaci�n basado en usuario y contrase�a para cada sistema va quedando obsoleto, debido principalmente a la inconsistencia de los datos de usuario que se almacenan en los diferentes repositorios. Tras definir el problema que afecta la prestaci�n de este servicio, se propone como soluci�n la construcci�n de una plataforma de gesti�n de identidad y acceso federado (IAA) basada en la recomendaci�n de la iniciativa Trust and Identity in Education and Research de Internet2. La validez de la arquitectura propuesta se estableci� a trav�s de varias pruebas de concepto que contemplan la configuraci�n de los componentes de la plataforma en un ambiente controlado, pero considerando pruebas de aplicaci�n real con aplicaciones�…</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2017/7/3</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A08ZZubdj9fEC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://dspace.redclara.net:8080/bitstream/10786/1261/1/30-3-4Plataforma%20de%20Gesti%C3%B3n%20de%20Identidad%20y%20Acceso%20Federado%20para%20la%20Universidad%20de%20Cuenca.pdf"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://dspace.redclara.net:8080/bitstream/10786/1261/1/30-3-4Plataforma%20de%20Gesti%C3%B3n%20de%20Identidad%20y%20Acceso%20Federado%20para%20la%20Universidad%20de%20Cuenca.pdf"/>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A1sJd4Hv_s6UC">
+	<contributor xmlns="http://purl.org/dc/terms/">Alexandra La Cruz</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Andr�s Tello</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Maria-Esther Vidal</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V�ctor Saquicela</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Wilson P�rez</contributor>
+	<publisher xmlns="http://purl.org/dc/terms/">IEEE</publisher>
+	<title xmlns="http://purl.org/dc/terms/">An automatic method for the enrichment of dicom metadata using biomedical ontologies</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">This work is a novel contribution for enriching medical images using semantic annotations with a strategy for unifying different ontologies and instances of DICOM medical files. We present the L-MOM library (Library for Mapping of Ontological Metadata) as a tool for making an automatic mapping between instances of DICOM medical files and different medical ontologies (eg, FMA, RadLex, MeSH). The main contributions are i) the domain independent L-MOM library which is able to integrate DICOM metadata with ontologies from different domains; ii) a strategy to automatically annotate DICOM data with universally accepted medical ontologies, and provide values of similarity between ontologies and DICOM metadata; and iii) a framework to traverse ontological concepts that characterized clinical studies of patients registered in the framework catalog.</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2015/8/25</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A1sJd4Hv_s6UC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://ieeexplore.ieee.org/abstract/document/7318912/"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://www.researchgate.net/profile/Andres_Tello/publication/292328384_An_Automatic_Method_for_the_Enrichment_of_DICOM_metadata_Using_Biomedical_Ontologies/links/56ad26cf08aeaa696f2cad11/An-Automatic-Method-for-the-Enrichment-of-DICOM-metadata-Using-Biomedical-Ontologies.pdf"/>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">5</citationCount>
+			<conference xmlns="http://ucuenca.edu.ec/ontology#">Engineering in Medicine and Biology Society (EMBC), 2015 37th Annual International Conference of the IEEE</conference>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">2551-2554</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A2osOgNQ5qMEC">
+	<contributor xmlns="http://purl.org/dc/terms/">LM Vilches-Bl�zquez</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Oscar Corcho</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V Saquicela</contributor>
+	<publisher xmlns="http://purl.org/dc/terms/">Informatica</publisher>
+	<title xmlns="http://purl.org/dc/terms/">Anotaci�n sem�ntica de Web Feature Services</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">Los servicios WFS permiten recuperar informaci�n geogr�fica de features. La anotaci�n sem�ntica de estos servicios proporciona beneficios en tareas relacionadas con el descubrimiento, composici�n y mediaci�n de servicios. La principal contribuci�n de este trabajo consiste en proponer un proceso para la automatizaci�n de la anotaci�n sem�ntica de servicios WFS. Para estas anotaciones se utilizan diversos recursos, tales como ontolog�as y conjuntos de datos presentes en la nube de Linked Data</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2011</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A2osOgNQ5qMEC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://oa.upm.es/id/eprint/9740"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://oa.upm.es/9740/1/Anotaci%C3%B3n.pdf"/>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A3s1wT3WcHBgC">
+	<contributor xmlns="http://purl.org/dc/terms/">Boris Villaz�n Terrazas</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Mauricio Espinoza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Nelson Piedra</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Vıctor Saquicela</contributor>
+	<title xmlns="http://purl.org/dc/terms/">Ecuadorian Geospatial Linked Data</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">Much of the attention lately has been on geospatial data and their combination with Linked Data. In this paper we present our approach for creating the Ecuadorian Geospatial Linked Data repository, pointing out some existing efforts, and open issues we have to cope with in order to make it easier the publication and exploitation of Geospatial Linked Data.</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2014/1/19</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A3s1wT3WcHBgC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://www.academia.edu/download/43608433/Ecuadorian_Geospatial_Linked_Data20160310-29715-m04hh6.pdf"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://www.academia.edu/download/43608433/Ecuadorian_Geospatial_Linked_Data20160310-29715-m04hh6.pdf"/>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">1</citationCount>
+			<journal xmlns="http://ucuenca.edu.ec/ontology#">Retrieved from</journal>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A4OULZ7Gr8RgC">
+	<contributor xmlns="http://purl.org/dc/terms/">Humberto Alb�n</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Kenneth Palacio</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Mauricio Espinoza-Mej�a</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Victor Saquicela</contributor>
+	<publisher xmlns="http://purl.org/dc/terms/">IEEE</publisher>
+	<title xmlns="http://purl.org/dc/terms/">Enriching electronic program guides using semantic technologies and external resources</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">Electronic Program Guides (EPGs) describe broadcast programming information provided by TV stations. However, users may obtain more information when these guides have been enriched. The main contribution of this work is to present an automation process for EPG's information enrichment through the use of semantic technologies and external resources. Among the several resources involved in the enrichment process, the following can be mentioned ontologies, web services, semantic repositories and natural language processing techniques.</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2014/9/15</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A4OULZ7Gr8RgC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://ieeexplore.ieee.org/abstract/document/6965173/"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://www.researchgate.net/profile/Kenneth_Palacio-Baus/publication/268743728_Enriching_Electronic_Program_Guides_using_semantic_technologies_and_external_resources/links/56e7a64808ae438aab88971a/Enriching-Electronic-Program-Guides-using-semantic-technologies-and-external-resources.pdf"/>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">6</citationCount>
+			<conference xmlns="http://ucuenca.edu.ec/ontology#">Computing Conference (CLEI), 2014 XL Latin American</conference>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">1-8</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A4fKUyHm3Qg0C">
+	<contributor xmlns="http://purl.org/dc/terms/">Jos� Cullcay</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Jos� Ortiz</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Jos� Segarra</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Mauricio Espinoza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V�ctor Saquicelak</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Xavier Sumba</contributor>
+	<title xmlns="http://purl.org/dc/terms/">Authors semantic disambiguation on heterogeneous bibliographic sources</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">Data ambiguity from various sources remains as a complex problem that affects services provided by digital libraries. From the point of view of integration of information from different sources, the challenge of author ambiguity is one of the most important, and there are numerous methods proposed to deal with this issue using different approaches. They generally work for some scenarios but they have important limitations, specially when dealing with heterogeneous sources. In this work, we review a group of existing methods and then propose a technique that combines some of them, also incorporating a measure of distance using semantic technologies to solve the ambiguity of authors while integrating bibliographic data from various sources. This technique has been successfully tested in disambiguating Ecuadorian authors from both internal sources (institutional repositories)�…</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2017</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A4fKUyHm3Qg0C">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://sedici.unlp.edu.ar/handle/10915/63267"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://sedici.unlp.edu.ar/bitstream/handle/10915/63267/Documento_completo.pdf-PDFA.pdf?sequence=1"/>
+			<conference xmlns="http://ucuenca.edu.ec/ontology#">Simposio Latinoamericano de Manejo de Datos e Informaci�n (SLMDI)-JAIIO 46 (C�rdoba, 2017)</conference>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A5Ul4iDaHHb8C">
+	<contributor xmlns="http://purl.org/dc/terms/">Freddy Suma</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Jos� Ort�z</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Jos� Segarra</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V�ctor Saquicela</contributor>
+	<title xmlns="http://purl.org/dc/terms/">Integraci�n de fuentes de datos bibliogr�ficas utilizando tecnolog�as de Linked Data-Caso de uso: Biblioteca de la Universidad de Cuenca</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">Actualmente, las bibliotecas de todo el mundo almacenan su informaci�n bibliogr�fica en m�ltiples fuentes digitales. Dependiendo del tipo de contenido libros, trabajos de pregrado, contenido de terceros (servicios externos tales como Scopus y Springer) y otros materiales suelen ser administrados por diferentes herramientas de software. Sin embargo, el almacenamiento independiente de la producci�n acad�mica y cient�fica dificulta el acceso y la exploraci�n de datos de manera unificada. En este contexto, se propone un enfoque de integraci�n centralizado para aprovechar el conocimiento que tienen las instituciones bibliotecarias. El enfoque presentado aplica el Ciclo de Vida de Datos Enlazados sobre todas las fuentes bibliogr�ficas con el fin de estandarizar la informaci�n tanto en formato como en vocabulario, y para enlazar todos�…</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2017/11/29</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A5Ul4iDaHHb8C">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://publicaciones.ucuenca.edu.ec/ojs/index.php/maskana/article/view/1462"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://publicaciones.ucuenca.edu.ec/ojs/index.php/maskana/article/download/1462/1136"/>
+			<volume xmlns="http://purl.org/ontology/bibo/">8</volume>
+			<journal xmlns="http://ucuenca.edu.ec/ontology#">Maskana</journal>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">189-203</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A738O_yMBCRsC">
+	<contributor xmlns="http://purl.org/dc/terms/">Juan Pablo Carvallo</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Karina Abad</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Mauricio Espinoza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V�ctor Hugo Saquicela Galarza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Wilson P�rez</contributor>
+	<publisher xmlns="http://purl.org/dc/terms/">Universidad de Cuenca</publisher>
+	<title xmlns="http://purl.org/dc/terms/">Ontolog�a DHARMA para la construcci�n de arquitectura de sistemas empresariales</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">The construction of enterprise context models, a fundamental tool for the design of modern information systems, is usually a cumbersome task, largely as a consequence of the lack of communication between administrative staff and technical consultants in charge of its construction. In order to make this task easier, previous works proposed the reuse of context elements identified in various industrial cases, which have been packaged and stored in a catalog specifically designed for this purpose. The authors propose to go one step further, using semantic technologies to exploit the catalog, storing its content in a semantic repository designed to support the construction of context models. In order to construct the repository, NeOn ontology was adopted to develop a network ontology which integrates different domains and their vocabularies, based on different scenarios that allows the�…</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2016/11/16</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A738O_yMBCRsC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://dspace.ucuenca.edu.ec/handle/123456789/26345"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://dspace.ucuenca.edu.ec/jspui/bitstream/123456789/26345/1/TICEC_2016_17.pdf"/>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">3</citationCount>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A8AbLer7MMksC">
+	<contributor xmlns="http://purl.org/dc/terms/">D Mendoza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Francisco Vega</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Jos� Medina</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Mauricio Espinoza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V Saquicela</contributor>
+	<title xmlns="http://purl.org/dc/terms/">Towards a multi-screen interactive ad delivery platform</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">—Interactive advertising based on multiple devices opens new possibilities for mobile applications, where users can search, select, or expand the information provided in advertising commercials by incorporating interactivity-friendly companion devices such as smart phones and tablets. In this paper, we derive the basic requirements for a flexible infrastructure that can support interactive ad applications. The infrastructure comprises a set of components and their externally visible properties, and the relationships between them. The main contributions of this work are first, establishing a desirable set of requirements for a suitable working scenario on which the different interactivity supporting systems people use in a regular basis can be easily integrated, and second, the definition of a platform which considers the different stages and requirements identified from different works in�…</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2017</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A8AbLer7MMksC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://www.clei2017-46jaiio.sadio.org.ar/sites/default/files/Mem/SLCGRVPI/slcgrvpi-14.pdf"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://www.clei2017-46jaiio.sadio.org.ar/sites/default/files/Mem/SLCGRVPI/slcgrvpi-14.pdf"/>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">1</citationCount>
+			<journal xmlns="http://ucuenca.edu.ec/ontology#">43th Latin American Computing Conference, Lat. Am. Symp. on Computer Graphics, Virtual Reality, and Image Processing</journal>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A9yKSN-GCB0IC">
+	<contributor xmlns="http://purl.org/dc/terms/">Luis M Vilches-Bl�zquez</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Victor Saquicela</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">�scar Corcho</contributor>
+	<publisher xmlns="http://purl.org/dc/terms/">Springer, Berlin, Heidelberg</publisher>
+	<title xmlns="http://purl.org/dc/terms/">Semantic Annotation of RESTful services using external resources</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">Since the advent of Web 2.0, RESTful services have become an increasing phenomenon. Currently, Semantic Web technologies are being integrated into Web 2.0 services for both to leverage each other strengths. The need to take advantage of data available in RESTful services in the scope of Semantic Web evidences the difficulties to cope with syntactic and semantic description of the services. In this paper we present an approach to tackle the problem of automatic the semantic annotation of RESTful services using a cross-domain ontology, a semantic resource (DBpedia) and additional external resources (suggestion and synonyms services) to annotate the parameters of the RESTful services. We also present a preliminary evaluation that proves the feasibility of our approach and highlights that it is possible to carry out this semantic annotation with satisfactory�…</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2010/7/5</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A9yKSN-GCB0IC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://link.springer.com/chapter/10.1007/978-3-642-16985-4_24"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://link.springer.com/content/pdf/10.1007/978-3-642-16985-4_24.pdf"/>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">6</citationCount>
+			<conference xmlns="http://ucuenca.edu.ec/ontology#">International Conference on Web Engineering</conference>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">266-276</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AB3FOqHPlNUQC">
+	<contributor xmlns="http://purl.org/dc/terms/">Dirk Cattrysse</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Lorena Siguenza Guzman</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Valeria Alexandra Haro Valle</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V�ctor Hugo Saquicela Galarza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Wilson Rodrigo P�rez Rocano</contributor>
+	<publisher xmlns="http://purl.org/dc/terms/">Universidad de Cuenca, Direcci�n de Investigaci�n</publisher>
+	<title xmlns="http://purl.org/dc/terms/">Dise�o e implementaci�n de un sistema de soporte de decisiones para el Centro de Documentaci�n Regional “Juan Bautista V�zquez”</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">In recent years, volume of library-related data has increased tremendously, as well as complexity of data sources and formats has been escalating. This information explosion has created a big challenge for data managing, archiving and accessing, especially in support of library decision-making. Knowing that a good library management involves integrating a number of strategic indicators, the implementation of a Data Warehouse (DW), that properly manages such amount of information and the complex mix of data sources, becomes an interesting alternative to be considered. This article describes the design and implementation of a decision support system based on a DW approach for the Regional Documentation Centre “Juan Bautista Vazquez”. To assure that all relevant data sources are included during the data analysis, the study utilizes a holistic methodology, previously�…</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2014/12/1</created>
+	<issue xmlns="http://purl.org/ontology/bibo/">2</issue>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AB3FOqHPlNUQC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://lirias.kuleuven.be/handle/123456789/468631"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://lirias.kuleuven.be/bitstream/123456789/468631/1/ticec2014_submission_89+v04.pdf"/>
+			<volume xmlns="http://purl.org/ontology/bibo/">5</volume>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">2</citationCount>
+			<journal xmlns="http://ucuenca.edu.ec/ontology#">Maskana</journal>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">245-256</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3ACHSYGLWDkRkC">
+	<contributor xmlns="http://purl.org/dc/terms/">Juan Pablo Carvallo</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Karina Abad</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Mauricio Espinoza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Victor Saquicela</contributor>
+	<publisher xmlns="http://purl.org/dc/terms/">Springer, Cham</publisher>
+	<title xmlns="http://purl.org/dc/terms/">Towards the creation of a semantic repository of iStar-based context models</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">The System Architecture definition of the majority of organizations requires a deep understanding about its environment and organizational structure; nevertheless, the construction of such models is not an easy task because of the gap of knowledge and communication between the technical and administrative staff. The DHARMA method, which makes intensive use of the i* notation, propose a solution to that problem, supporting the Context Models construction. This paper presents an approach for annotating the i* models with semantic technologies, to support the search and generation of Context Models based on the knowledge defined in ontological models, allowing the creation of a Semantic Repository of Context Models, which will be used to discover relations between different i* models and extract patterns from them.</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2016</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3ACHSYGLWDkRkC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://link.springer.com/chapter/10.1007/978-3-319-26285-7_11"/>
+			<book xmlns="http://ucuenca.edu.ec/ontology#">Trends and Applications in Software Engineering</book>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">3</citationCount>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">125-137</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AD03iK_w7-QYC">
+	<contributor xmlns="http://purl.org/dc/terms/">C Villa</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">D Astudillo</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">H Alb�n</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">J Medina</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Kenneth Samuel Palacio Baus</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">M Espinoza Mej�a</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V Saquicela</contributor>
+	<publisher xmlns="http://purl.org/dc/terms/">Universidad de Cuenca</publisher>
+	<title xmlns="http://purl.org/dc/terms/">On the implementation of a Laboratory of Digital Television according to the ISDB-Tb standard</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">This paper summarizes the implementation process of the Digital Television (DTV) Laboratory of the University of Cuenca according to the open television broadcasting ISDB- Tb standard, adopted by Ecuador in 2010. The Laboratory arises as a research and testing environment for Digital Television DTV signal transmission and interactive applications. The goal of this article is to document the aspects that have been considered to simulate a real DTV scenario where a Transport Stream (TS) is first generated, then transmitted through the communication channel and finally, received in televisions using an ISDB-Tb receiver. The TS is formed by combining DTV audiovisual content and interactive applications. Therefore, it facilitates the development and testing of new services and allows taking full advantage of the characteristics of the new DTV adopted format.</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2014</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AD03iK_w7-QYC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://dspace.ucuenca.edu.ec/handle/123456789/21415"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://dspace.ucuenca.edu.ec/bitstream/123456789/21415/1/TIC.EC_24_Medina%20et%20al.pdf"/>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">3</citationCount>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AD_sINldO8mEC">
+	<contributor xmlns="http://purl.org/dc/terms/">C�sar Coello Araujo</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V�ctor Hugo Saquicela Galarza</contributor>
+	<title xmlns="http://purl.org/dc/terms/">Sofware para regular el manejo del correo electr�nico, control de acceso a internet y la transferencia de archivos en una red corporativa</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">Description Optimizaci�n del uso de los recursos de internet, mediante manejo del correo electr�nico en el web, logrando que los usuarios de una red corporativa puedan revisar su correo desde cualquier parte del mundo sin necesidad de configuraci�n alguna. Control de acceso a internet a trav�s de las asignaciones. Acelerar la transferencia de archivos con la configuraci�n de servidores proxy.</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2001</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AD_sINldO8mEC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://dspace.ucuenca.edu.ec/handle/123456789/6376"/>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AEUQCXRtRnyEC">
+	<contributor xmlns="http://purl.org/dc/terms/">Boris Villaz�n-Terrazas</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Kenneth Palacio</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Mauricio Espinoza-Mejıa</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Nuria Garcıa Santa</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Vıctor Saquicela</contributor>
+	<title xmlns="http://purl.org/dc/terms/">Leveraging social data with s emantic technology</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">—Social networks offer the opportunity of communicating and sharing preferences with other users, reflecting in this way the interests, needs, values, and priorities among the members of the community. However, this information has rarely been considered in traditional recommender systems. This paper shows how Semantic Web technologies can be used to model user information and user-generated content in a machine-readable way. The idea proposed in this work is to extract content-based user profiles from the data available in different social networks in order to obtain an image of the user's preferences that can be used to recommend television programs. In particular, domain ontologies and specific vocabularies are put together to describe the information that social networks have about their structure and contents. As a proof of concepts, we propose a simple example�…</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2011</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AEUQCXRtRnyEC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://enc2014.cicese.mx/Memorias/paper_126.pdf"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://enc2014.cicese.mx/Memorias/paper_126.pdf"/>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">2</citationCount>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AIjCSPb-OGe4C">
+	<contributor xmlns="http://purl.org/dc/terms/">Luis M Vilches-Bl�zquez</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Oscar Corcho</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Victor Saquicela</contributor>
+	<publisher xmlns="http://purl.org/dc/terms/">IGI Global</publisher>
+	<title xmlns="http://purl.org/dc/terms/">Adding semantic annotations into (geospatial) restful services</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">In this paper the authors present an approach for the semantic annotation of RESTful services in the geospatial domain. Their approach automates some stages of the annotation process, by using a combination of resources and services a cross-domain knowledge base like DBpedia, two domain ontologies like GeoNames and the WGS84 vocabulary, and suggestion and synonym services. The authors' approach has been successfully evaluated with a set of geospatial RESTful services obtained from ProgrammableWeb. com, where geospatial services account for a third of the total amount of services available in this registry.</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2012</created>
+	<issue xmlns="http://purl.org/ontology/bibo/">2</issue>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AIjCSPb-OGe4C">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://oa.upm.es/id/eprint/16327"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://find.galegroup.com/openurl/openurl?sid=google&amp;pid=Gale.UserGroupName%3Aucuenca_cons%5EGale.prodID%3AAONE?sid=google&amp;auinit=V&amp;aulast=Saquicela&amp;atitle=Adding+semantic+annotations+into+(geospatial)+restful+services&amp;title=International+Journal+on+Semantic+Web+and+Information+Systems&amp;volume=8&amp;issue=2&amp;date=2012&amp;spage=51&amp;issn=1552-6283"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://oa.upm.es/16327/1/corcho_adding_semantic.pdf"/>
+			<volume xmlns="http://purl.org/ontology/bibo/">8</volume>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">7</citationCount>
+			<journal xmlns="http://ucuenca.edu.ec/ontology#">International Journal on Semantic Web and Information Systems</journal>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">51-71</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AK3LRdlH-MEoC">
+	<contributor xmlns="http://purl.org/dc/terms/">Valeria Haro</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V�ctor Saquicela</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Wilson P�rez</contributor>
+	<title xmlns="http://purl.org/dc/terms/">Bibliomining para descubrir reglas de asociaci�n en el Centro de Documentaci�n Regional “Juan Bautista V�zquez”</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">The technological advances in hardware and software in the last years allows storing large volumes of information, which has complicated its management and exploitation. Data mining is a process to discover hidden knowledge in databases and to support decision-making, taking advantage of historic data of a business or institution. This article describes the implementation of data mining techniques in the Regional Documentation Centre “Juan Bautista Vazquez” of the University of Cuenca. The study follows the methodology proposed by Nicholson and uses the algorithms of Weka based on the loan transactions data of Data Warehouse, implemented previously in the documentation center. Finally, the association rules between the bibliographic resources are validated to determine the users' preference.</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2017/1/18</created>
+	<issue xmlns="http://purl.org/ontology/bibo/">Supl.</issue>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AK3LRdlH-MEoC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://publicaciones.ucuenca.edu.ec/ojs/index.php/maskana/article/view/1100"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://publicaciones.ucuenca.edu.ec/ojs/index.php/maskana/article/download/1100/961"/>
+			<volume xmlns="http://purl.org/ontology/bibo/">7</volume>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">1</citationCount>
+			<journal xmlns="http://ucuenca.edu.ec/ontology#">Maskana</journal>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">203-211</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AKxtntwgDAa4C">
+	<contributor xmlns="http://purl.org/dc/terms/">Diego Auquilla</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Kenneth Palacio-Baus</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V�ctor Saquicela</contributor>
+	<publisher xmlns="http://purl.org/dc/terms/">Universidad de Cuenca</publisher>
+	<title xmlns="http://purl.org/dc/terms/">Reconocimiento de caracteres del alfabeto dactilol�gico mediante redes neuronales artificiales: Un enfoque experimental</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">This article presents the development of a system aimed to aid people with speech and/or communication disabilities, who must use the sign language and the dactilologic alphabet in order to transmit their ideas. To assist others in understanding such language, we present an experimental approach for sign language characters recognition through digital image acquisition and processing techniques and the use of a Neural Network based classifier.</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2015</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AKxtntwgDAa4C">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://dspace.ucuenca.edu.ec/handle/123456789/23793"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://dspace.ucuenca.edu.ec/bitstream/123456789/23793/1/2015_TIC.EC_6.pdf"/>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3ALPZeul_q3PIC">
+	<contributor xmlns="http://purl.org/dc/terms/">Valeria Haro</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V�ctor Saquicela</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Wilson P�rez</contributor>
+	<title xmlns="http://purl.org/dc/terms/">Bibliomining: Aplicaci�n de text mining para descubrir preferencias de usuarios en el Centro de Documentaci�n Regional “Juan Bautista V�zquez”</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">Nowadays, the management of huge volumes of information in support of administrative decisions is one of the challenges libraries face. An aid thereby are text mining techniques enabling the extraction of hidden knowledge. The article describes the implementation of Bibliomining and Text Mining in the “Juan Bautista V�zquez” library of the University of Cuenca. The purpose of this study is to determine the behavior of library users by discovering patterns of similarity between the titles they seek and the titles of the bibliographic material they borrow. In this case study, we used the methodology proposed by Nicholson and the algorithms and libraries of the tool R, to create word clouds generated from search terms and book titles; demonstrating that the used visualization facilitates the perception and the interpretation of the obtained results.</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2017/11/29</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3ALPZeul_q3PIC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://publicaciones.ucuenca.edu.ec/ojs/index.php/maskana/article/view/1458"/>
+			<volume xmlns="http://purl.org/ontology/bibo/">8</volume>
+			<journal xmlns="http://ucuenca.edu.ec/ontology#">Maskana</journal>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">135-144</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3ANhqRSupF_l8C">
+	<contributor xmlns="http://purl.org/dc/terms/">Edmundo Tovar</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Elizabeth Cadme</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Janneth Chicaiza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Jorge L�pez</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Mauricio Espinoza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Nelson Piedra</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Pricila Quichimbo</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V�ctor Saquicela</contributor>
+	<publisher xmlns="http://purl.org/dc/terms/">Associa��o Ib�rica de Sistemas e Tecnologias de Informa��o (AISTI)</publisher>
+	<title xmlns="http://purl.org/dc/terms/">Marco de trabajo para la integraci�n de recursos digitales basado en un enfoque de web sem�ntica</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">En un entorno abierto como la Web, no es posible estandarizar los procesos de descripci�n y publicaci�n de metadatos, cada instituci�n puede manejar diferentes formatos o modelos de datos. Para mejorar la interoperabilidad sem�ntica entre repositorios heterog�neos, se est�n adoptando enfoques basados en tecnolog�as de la Web Sem�ntica; de esta manera, cada Librer�a Digital puede conservar sus cualidades locales espec�ficas y no requerir� resignarlas para poder normalizar el intercambio, reuso o la cosecha de recursos digitales. En este trabajo, se presenta un ciclo que cubre los procesos de extracci�n de metadatos desde repositorios OAI-PMH, y la generaci�n y publicaci�n de datos enlazados, con el prop�sito de mejorar la integraci�n e interoperabilidad de recursos almacenados en Librer�as Digitales. La propuesta descrita facilita la existencia de�…</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2015/3</created>
+	<issue xmlns="http://purl.org/ontology/bibo/">SPE3</issue>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3ANhqRSupF_l8C">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://www.scielo.mec.pt/scielo.php?pid=S1646-98952015000100006&amp;script=sci_arttext&amp;tlng=es"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://go.galegroup.com/ps/i.do?id=GALE%7CA421626562&amp;sid=googleScholar&amp;v=2.1&amp;it=r&amp;linkaccess=fulltext&amp;issn=16469895&amp;p=AONE&amp;sw=w"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://www.scielo.mec.pt/scielo.php?pid=S1646-98952015000100006&amp;script=sci_arttext&amp;tlng=es"/>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">12</citationCount>
+			<journal xmlns="http://ucuenca.edu.ec/ontology#">RISTI-Revista Ib�rica de Sistemas e Tecnologias de Informa��o</journal>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">55-70</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AOU6Ihb5iCvQC">
+	<contributor xmlns="http://purl.org/dc/terms/">Juan Pablo Carvallo</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Karina Abad</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Mauricio Espinoza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Victor Saquicela</contributor>
+	<publisher xmlns="http://purl.org/dc/terms/">AISTI (Iberian Association for Information Systems and Technologies)</publisher>
+	<title xmlns="http://purl.org/dc/terms/">Towards the creation of a semantic repository of iStar-based context models and the DHARMA method/Hacia la creacion de un repositorio semantico de modelos de...</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">The System Architecture definition of the majority of organizations requires a deep understanding about its environment and organizational structure; however, the construction of such models is not an easy task because of the gap of knowledge and communication between the technical and administrative staff. The DHARMA method, which makes intensive use of the i* notation, propose a solution to this problem, supporting the building of context models. This paper presents an approach for annotating the i* models with semantic technologies, to support the search and generation of Context Models based on the knowledge defined in ontological models, allowing the creation of a Semantic Repository of Context Models, which will be used to discover relations between different i* models and extract patterns from them.</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2016/3/1</created>
+	<issue xmlns="http://purl.org/ontology/bibo/">17</issue>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AOU6Ihb5iCvQC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://go.galegroup.com/ps/i.do?id=GALE%7CA464244239&amp;sid=googleScholar&amp;v=2.1&amp;it=r&amp;linkaccess=fulltext&amp;issn=16469895&amp;p=AONE&amp;sw=w"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://go.galegroup.com/ps/i.do?id=GALE%7CA464244239&amp;sid=googleScholar&amp;v=2.1&amp;it=r&amp;linkaccess=fulltext&amp;issn=16469895&amp;p=AONE&amp;sw=w"/>
+			<journal xmlns="http://ucuenca.edu.ec/ontology#">RISTI (Revista Iberica de Sistemas e Tecnologias de Informacao)</journal>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">41-57</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AP5F9QuxV20EC">
+	<contributor xmlns="http://purl.org/dc/terms/">Alexandra La Cruz</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Andr�s Tello</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Francisco Vega</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Lizandro Solano-Quinde</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Maria-Esther Vidal</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Mauricio Espinoza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Victor Saquicela</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Wilson P�rez</contributor>
+	<publisher xmlns="http://purl.org/dc/terms/">International Society for Optics and Photonics</publisher>
+	<title xmlns="http://purl.org/dc/terms/">WebMedSA: a web-based framework for segmenting and annotating medical images using biomedical ontologies</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">Advances in medical imaging have fostered medical diagnosis based on digital images. Consequently, the number of studies by medical images diagnosis increases, thus, collaborative work and tele-radiology systems are required to effectively scale up to this diagnosis trend. We tackle the problem of the collaborative access of medical images, and present WebMedSA, a framework to manage large datasets of medical images. WebMedSA relies on a PACS and supports the ontological annotation, as well as segmentation and visualization of the images based on their semantic description. Ontological annotations can be performed directly on the volumetric image or at different image planes (eg, axial, coronal, or sagittal); furthermore, annotations can be complemented after applying a segmentation technique. WebMedSA is based on three main steps(1) RDF-ization�…</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2015/12/22</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AP5F9QuxV20EC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://www.spiedigitallibrary.org/conference-proceedings-of-spie/9681/968110/WebMedSA--a-web-based-framework-for-segmenting-and-annotating/10.1117/12.2214324.short"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://www.researchgate.net/profile/Andres_Tello/publication/292328984_WebMedSA_A_Web-based_Framework_for_Segmenting_and_Annotating_Medical_Images_using_Biomedical_Ontologies/links/56ad277c08ae19a385140a43/WebMedSA-A-Web-based-Framework-for-Segmenting-and-Annotating-Medical-Images-using-Biomedical-Ontologies.pdf"/>
+			<volume xmlns="http://purl.org/ontology/bibo/">9681</volume>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">1</citationCount>
+			<conference xmlns="http://ucuenca.edu.ec/ontology#">11th International Symposium on Medical Information Processing and Analysis</conference>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">968110</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3ASP6oXDckpogC">
+	<contributor xmlns="http://purl.org/dc/terms/">Mauricio Espinoza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V�ctor Saquicela</contributor>
+	<title xmlns="http://purl.org/dc/terms/">Modelando los h�bitos de consumo televisivo usando tecnolog�a sem�ntica</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">—La capacidad de modelar las preferencias del usuario y explotar esta informaci�n para mejorar el proceso de b�squeda de informaci�n relevante, se ha convertido en un importante tema en el campo de la representaci�n del conocimiento. Este trabajo explora el uso de tecnolog�as sem�nticas mediante ontolog�as para la representaci�n e interpretaci�n de los h�bitos de consumo televisivo expresados en t�rminos del perfil de usuario y su contexto. Para guiar el proceso de construcci�n del modelo ontol�gico se han instanciado las gu�as propuestas en la metodolog�a NeOn.</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2014/5/28</created>
+	<issue xmlns="http://purl.org/ontology/bibo/">1</issue>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3ASP6oXDckpogC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://journal.espe.edu.ec/index.php/cienciaytecnologia/article/view/105"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://journal.espe.edu.ec/index.php/cienciaytecnologia/article/viewFile/105/103"/>
+			<volume xmlns="http://purl.org/ontology/bibo/">9</volume>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">2</citationCount>
+			<journal xmlns="http://ucuenca.edu.ec/ontology#">Congreso de Ciencia y Tecnolog�a ESPE</journal>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">215-224</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3ATiz5es2fbqcC">
+	<contributor xmlns="http://purl.org/dc/terms/">Andres Tello</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Fernando Baculima</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Freddy Sumba</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Mauricio Espinoza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V�ctor Saquicela</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Xavier Sumba</contributor>
+	<publisher xmlns="http://purl.org/dc/terms/">Elsevier</publisher>
+	<title xmlns="http://purl.org/dc/terms/">Detecting similar areas of knowledge using semantic and data mining technologies</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">Searching for scientific publications online is an essential task for researchers working on a certain topic. However, the extremely large amount of scientific publications found in the web turns the process of finding a publication into a very difficult task whereas, locating peers interested in collaborating on a specific topic or reviewing literature is even more challenging. In this paper, we propose a novel architecture to join multiple bibliographic sources, with the aim of identifying common research areas and potential collaboration networks, through a combination of ontologies, vocabularies, and Linked Data technologies for enriching a base data model. Furthermore, we implement a prototype to provide a centralized repository with bibliographic sources and to find similar knowledge areas using data mining techniques in the domain of Ecuadorian researchers community.</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2016/12/9</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3ATiz5es2fbqcC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://www.sciencedirect.com/science/article/pii/S1571066116301165"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://www.sciencedirect.com/science/article/pii/S1571066116301165/pdf?md5=9c1950eb987a3625c183e831302fd576&amp;pid=1-s2.0-S1571066116301165-main.pdf&amp;_valck=1"/>
+			<volume xmlns="http://purl.org/ontology/bibo/">329</volume>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">4</citationCount>
+			<journal xmlns="http://ucuenca.edu.ec/ontology#">Electronic Notes in Theoretical Computer Science</journal>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">149-167</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AUeHWp8X0CEIC">
+	<contributor xmlns="http://purl.org/dc/terms/">Luis M Vilches-Bl�zquez</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Oscar Corcho</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Victor Saquicela</contributor>
+	<publisher xmlns="http://purl.org/dc/terms/">IGI Global</publisher>
+	<title xmlns="http://purl.org/dc/terms/">Semantic Annotation of Geospatial RESTful Services Using External Resources</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">RESTful services are increasingly gaining traction over Web Services (WS-*). As with WS-* services, their semantic annotation can provide benefits in tasks related to their discovery, composition, and mediation. In this chapter, the authors present an approach to automate the semantic annotation of geospatial RESTful services using a cross-domain ontology like DBpedia, domain ontologies like GeoNames, and additional external resources (suggestion and synonym services). They use combinations of these resources to discover meanings for each of the parameters of the geospatial RESTful services and perform semantic annotations of them.</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2012/9/30</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AUeHWp8X0CEIC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://books.google.com/books?hl=en&amp;lr=&amp;id=-rOeBQAAQBAJ&amp;oi=fnd&amp;pg=PA434&amp;dq=info:5tgpa5AxfXYJ:scholar.google.com&amp;ots=Ju1S6a27P7&amp;sig=RlD7zMR41C3JoZnTxJEXJcEOSWs"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://pdfs.semanticscholar.org/a53b/6e04e5bab252652e3f4acacd3a127e3896e6.pdf"/>
+			<journal xmlns="http://ucuenca.edu.ec/ontology#">Geographic Information Systems: Concepts, Methodologies, Tools, and Applications: Concepts, Methodologies, Tools, and Applications</journal>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">434</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AUxriW0iASnsC">
+	<contributor xmlns="http://purl.org/dc/terms/">Fernando Baculima</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Luc�a Lupercio</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Mauricio Espinoza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V�ctor Saquicela</contributor>
+	<title xmlns="http://purl.org/dc/terms/">Explotaci�n de informaci�n en el dominio geo-h�drico ecuatoriano utilizando tecnolog�a sem�ntica</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">En este art�culo se presenta una propuesta para la explotaci�n de informaci�n en el dominio geo-h�drico ecuatoriano, en sinton�a con la tendencia actual respecto a la integraci�n de datos de diferentes fuentes y la publicaci�n de estos datos aplicando los principios de Linked Data. Esta propuesta utiliza como lenguaje de consulta GeoSPARQL, proporcionando la capacidad de operaciones espaciales para explotaci�n y descubrimiento de recursos que representan entidades geogr�ficas. Estos recursos est�n almacenados sobre repositorios de tripletas RDF distribuidos, que se corresponden con los datos de diferentes instituciones vinculadas al dominio geo-h�drico. Esta propuesta facilita la integraci�n y explotaci�n de informaci�n a partir de los enlaces existentes entre recursos que hacen referencia al mismo fen�meno del mundo real. Finalmente, los recursos�…</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2015/12/5</created>
+	<issue xmlns="http://purl.org/ontology/bibo/">Supl.</issue>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AUxriW0iASnsC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://publicaciones.ucuenca.edu.ec/ojs/index.php/maskana/article/view/699"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://publicaciones.ucuenca.edu.ec/ojs/index.php/maskana/article/download/699/613"/>
+			<volume xmlns="http://purl.org/ontology/bibo/">6</volume>
+			<journal xmlns="http://ucuenca.edu.ec/ontology#">Maskana</journal>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">69-77</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AVOx2b1Wkg3QC">
+	<contributor xmlns="http://purl.org/dc/terms/">Freddy Sumba</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Jos� Cullcay</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V�ctor Saquicela</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Xavier Sumba</contributor>
+	<title xmlns="http://purl.org/dc/terms/">Identificaci�n autom�tica de art�culos indexados en Latindex</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">Identifying researchers with accepted articles in relevant indexed repositories has become increasingly important in higher education, especially in Ecuador, where Latindex is one of the most popular repositories. However, there is no automatic method to identify if an article has been indexed in that repository and currently higher-education institutes (HEI) in Ecuador have to manually recollect data about their indexed publications, providing control entities with information difficult to verify. For this reason, in this paper we present an approach to allow HEI and educational authorities to find publications that are indexed in Latindex using a set of strategies, with the aim of providing a process to identify indexed publications. Additionally, we implemented this approach as a prototype and evaluated it with a sample of publications of Ecuadorian researchers, demonstrating that�…</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2017/11/29</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AVOx2b1Wkg3QC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://publicaciones.ucuenca.edu.ec/ojs/index.php/maskana/article/view/1455"/>
+			<volume xmlns="http://purl.org/ontology/bibo/">8</volume>
+			<journal xmlns="http://ucuenca.edu.ec/ontology#">Maskana</journal>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">103-111</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AWbkHhVStYXYC">
+	<contributor xmlns="http://purl.org/dc/terms/">Andr�s Tello</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Mauricio Espinoza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Ren�n Freire</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Ronald Gual�n</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V�ctor Saquicela</contributor>
+	<title xmlns="http://purl.org/dc/terms/">Automatic RDF-ization of big data semi-structured datasets</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">Linked data adoption continues to grow in many fields at a considerable pace. However, some of the most important datasets usually remain underexploited because of two main reasons the huge volume of the datasets and the lack of methods for automatic conversion to RDF. This paper presents an automatic approach to tackle these problems by leveraging recent Big Data tools and a program for automatic conversion from a relational model to RDF. Overall, the process can be summarized in three steps: 1) bulk transfer of data from different sources to Hive/HDFS; 2) transformation of data on Hive to RDF using D2RQ; and 3) storing the resulting RDF in CumulusRDF. By using these Big Data tools, the platform will cope with the handling of big amounts of data available in different sources, which can include structured or semi-structured data. Moreover, since the RDF data are�…</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2017/1/18</created>
+	<issue xmlns="http://purl.org/ontology/bibo/">Supl.</issue>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AWbkHhVStYXYC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://publicaciones.ucuenca.edu.ec/ojs/index.php/maskana/article/view/1082"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://publicaciones.ucuenca.edu.ec/ojs/index.php/maskana/article/download/1082/953"/>
+			<volume xmlns="http://purl.org/ontology/bibo/">7</volume>
+			<journal xmlns="http://ucuenca.edu.ec/ontology#">Maskana</journal>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">117-127</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AXiSMed-E-HIC">
+	<contributor xmlns="http://purl.org/dc/terms/">Fernando Baculima</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Freddy Sumba</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Jos� Luis Cullcay</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Mauricio Espinoza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Victor Saquicela</contributor>
+	<title xmlns="http://purl.org/dc/terms/">Repositorio Sem�ntico de Investigadores del Ecuador</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">En los �ltimos a�os, el n�mero de investigadores en Ecuador que publican sus trabajos en diferentes l�neas de investigaci�n ha aumentado considerablemente. La identificaci�n de �reas similares de investigaci�n se ha convertido en una necesidad para generar redes de investigadores interesados en la creaci�n de nuevos proyectos en torno a las Instituciones de Educaci�n Superior (IES). En este art�culo se presenta el Repositorio Ecuatoriano de Investigadores (REDI), el cual acoge datos de investigadores ecuatorianos y sus respectivas publicaciones con el objetivo de identificar y visualizar investigadores que trabajen en �reas de conocimiento similares, entre otros.</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2016/9/13</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AXiSMed-E-HIC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://documentos.redclara.net/bitstream/10786/1093/1/Repositorio%20Sem%C3%A1ntico%20de%20Investigadores%20del%20Ecuador.pdf"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://documentos.redclara.net/bitstream/10786/1093/1/Repositorio%20Sem%C3%A1ntico%20de%20Investigadores%20del%20Ecuador.pdf"/>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A_xSYboBqXhAC">
+	<contributor xmlns="http://purl.org/dc/terms/">Humberto Alb�n</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Kenneth Palacio Baus</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Mauricio Espinoza Mej�a</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V�ctor Saquicela</contributor>
+	<title xmlns="http://purl.org/dc/terms/">Extracci�n de preferencias televisivas desde los perfiles de redes sociales</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">El objetivo final de un sistema de recomendaci�n es satisfacer las necesidades de informaci�n de un usuario. En el caso de la TV digital los sistemas de recomendaci�n han mostrado ser una excelente alternativa para hacer frente a la sobrecarga de informaci�n y sugerir la selecci�n de los programas m�s interesantes para ver. Sin embargo, para que esto ocurra se requiere que estos sistemas consideren en su dise�o los intereses y preferencias del usuario. Con el fin de proporcionar un enfoque m�s robusto para la modelaci�n del perfil de un usuario, se propone el uso de tecnolog�as de laWeb sem�ntica junto con laWeb social. La idea de juntar ambos campos es convertir las declaraciones impl�citas de las preferencias televisivas de un usuario en la Web social, a expresiones de la forma sujeto-predicado-objeto (conocidas en t�rminos sem�nticos�…</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2014/8/31</created>
+	<issue xmlns="http://purl.org/ontology/bibo/">2</issue>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3A_xSYboBqXhAC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://www.revistapolitecnica.epn.edu.ec/ojs2/index.php/revista_politecnica2/article/view/328"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://www.revistapolitecnica.epn.edu.ec/ojs2/index.php/revista_politecnica2/article/viewFile/328/pdf"/>
+			<volume xmlns="http://purl.org/ontology/bibo/">34</volume>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">6</citationCount>
+			<journal xmlns="http://ucuenca.edu.ec/ontology#">Revista Polit�cnica</journal>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">63</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AabG-DnoFyZgC">
+	<contributor xmlns="http://purl.org/dc/terms/">Alexander De Leon</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Victor Saquicela</contributor>
+	<title xmlns="http://purl.org/dc/terms/">Luis. M. Vilches-Blazquez, Boris Villazon-Terrazas, Freddy Priyatna, and Oscar Corcho. Geographical linked data: a spanish use case</title>
+	<created xmlns="http://purl.org/ontology/bibo/">2010</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AabG-DnoFyZgC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://scholar.google.com/scholar?cluster=18193883565869971096&amp;hl=en&amp;oi=scholarr"/>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">2</citationCount>
+			<journal xmlns="http://ucuenca.edu.ec/ontology#">I-SEMANTICS 6th International Conference on Semantic Systems</journal>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Ab0M2c_1WBrUC">
+	<contributor xmlns="http://purl.org/dc/terms/">Dirk Cattrysse</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Lorena Siguenza-Guzman</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Victor Saquicela</contributor>
+	<title xmlns="http://purl.org/dc/terms/">Integrated Decision Support System–iDSS for Library Holistic Evaluation</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">The decision-making process in academic libraries is paramount; however highly complicated due to the large number of data sources, processes and high volumes of data to be analyzed. Academic libraries are accustomed to producing and gathering a vast amount of statistics about their collection and services. Typical data sources include integrated library systems, library portals and online catalogues, systems of consortiums, quality surveys and university management. Unfortunately, these heterogeneous data sources are only partially used for decision-making processes due to the wide variety of formats, standards and technologies, as well as the lack of efficient methods of integration. This article presents the analysis and design of an integrated decision support system for an academic library. Firstly, a holistic approach documented in a previous study is used for�…</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2014</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Ab0M2c_1WBrUC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://docs.lib.purdue.edu/iatul/2014/assessment/1/"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://docs.lib.purdue.edu/cgi/viewcontent.cgi?article=2047&amp;context=iatul"/>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AbFI3QPDXJZMC">
+	<contributor xmlns="http://purl.org/dc/terms/">Humberto Alb�n</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Johnny �vila</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Kenneth Samuel Palacio Baus</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Mauricio Espinoza Mej�a</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Victor Saquicela</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Xavier Riofr�o</contributor>
+	<title xmlns="http://purl.org/dc/terms/">An�lisis de la Influencia de las Propiedades Sem�nticas en los Sistemas de Recomendaci�n</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">Este art�culo propone un procedimiento para la evaluaci�n del impacto que tiene la inclusi�n de determinadaspropiedades sem�nticas y sus combinaciones en la estimaci�n de recomendaciones de contenidos audiovisuales, generadas por un sistema de recomendaci�n sem�ntico para usuarios en el domino de la Televisi�n Digital. Este trabajo parte de la hip�tesis de que el incremento moderado del n�mero de propiedades involucradas en el c�lculo delas predicciones mejora paulatinamente su precisi�n y que cada propiedad sem�ntica tiene una influencia espec�fica. Los resultados experimentales demuestran que el uso de diferentes combinaciones de propiedades sem�nticas, tiende areducir el error promedio en distinta proporci�n. Abstract: This paper presents an evaluation procedure focused on analyzing the impact of the inclusion of�…</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2014/8/31</created>
+	<issue xmlns="http://purl.org/ontology/bibo/">2</issue>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AbFI3QPDXJZMC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://revistapolitecnica.epn.edu.ec/ojs2/index.php/revista_politecnica2/article/view/331"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://revistapolitecnica.epn.edu.ec/ojs2/index.php/revista_politecnica2/article/download/331/pdf"/>
+			<volume xmlns="http://purl.org/ontology/bibo/">34</volume>
+			<journal xmlns="http://ucuenca.edu.ec/ontology#">Revista Polit�cnica</journal>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">71</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AcFHS6HbyZ2cC">
+	<contributor xmlns="http://purl.org/dc/terms/">Eduardo Tacuri</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Lucia Lupercio</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Luis M Vilches-Bl�zquez</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Mauricio Espinoza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V�ctor Saquicela</contributor>
+	<title xmlns="http://purl.org/dc/terms/">Semantic integration of Ecuadorian geospatial data in the context of hydrology domain</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">The management of hydrological resources is a broad and complex subject. However, in order to perform an appropriate management of these resources, the geographic information is increasingly becoming a key element for decision-making in the management of Ecuadorian hydrological resources. This paper presents an integration approach between geospatial information (and more concretely with hydrological data) and semantics issues through Linked Data principles in order to provide an integration of hydrological information from different Ecuadorian Institutions in charge of water resources management. The final goal of this proposal is to overcome the traditional concept of layers overlapping as the integrating procedure, which is typical in GIS systems, in order to reach semantic interoperability at the level data.</abstract>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AcFHS6HbyZ2cC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://www.researchgate.net/profile/Mauricio_Espinoza_Mejia/publication/260983894_Semantic_integration_of_Ecuadorian_geospatial_data_in_the_context_of_hydrology_domain/links/0f317532dbb5b0985a000000.pdf"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://www.researchgate.net/profile/Mauricio_Espinoza_Mejia/publication/260983894_Semantic_integration_of_Ecuadorian_geospatial_data_in_the_context_of_hydrology_domain/links/0f317532dbb5b0985a000000.pdf"/>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Ad1gkVwhDpl0C">
+	<contributor xmlns="http://purl.org/dc/terms/">Luis M Vilches-Blazquez</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Oscar Corcho</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V�ctor Saquicela</contributor>
+	<publisher xmlns="http://purl.org/dc/terms/">Springer, Berlin, Heidelberg</publisher>
+	<title xmlns="http://purl.org/dc/terms/">Lightweight semantic annotation of geospatial RESTful services</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">RESTful services are increasingly gaining traction over WS-* ones. As with WS-* services, their semantic annotation can provide benefits in tasks related to their discovery, composition and mediation. In this paper we present an approach to automate the semantic annotation of RESTful services using a cross-domain ontology like DBpedia, domain ontologies like GeoNames, and additional external resources (suggestion and synonym services). We also present a preliminary evaluation in the geospatial domain that proves the feasibility of our approach in a domain where RESTful services are increasingly appearing and highlights that it is possible to carry out this semantic annotation with satisfactory results.</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2011/5/29</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Ad1gkVwhDpl0C">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://link.springer.com/chapter/10.1007/978-3-642-21064-8_23"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://link.springer.com/content/pdf/10.1007/978-3-642-21064-8_23.pdf"/>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">9</citationCount>
+			<conference xmlns="http://ucuenca.edu.ec/ontology#">Extended Semantic Web Conference</conference>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">330-344</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AdfsIfKJdRG4C">
+	<contributor xmlns="http://purl.org/dc/terms/">Boris Villaz�n-Terrazas</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">J Mej�a</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">M Espinoza-Mej�a</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Vıctor Saquicela</contributor>
+	<title xmlns="http://purl.org/dc/terms/">Reduciendo la sobrecarga de informaci�n en usuarios de televisi�n digital</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">—La televisi�n digital trae consigo un acceso m�s amplio a m�ltiples canales y servicios interactivos. Este aumento de programaci�n televisiva obliga al usuario a involucrarse en tareas de recuperaci�n de informaci�n cada vez que desee observar un programa de televisi�n. Este trabajo presenta una propuesta de un sistema de recomendaci�n personalizada, cuyos elementos innovadores son la representaci�n formal del perfil del usuario y el contenido televisivo basado en ontologıas preparadas a prop�sito, o descubiertas en lınea, y un enriquecimiento de la informaci�n con recursos externos como redes sociales, bases de datos de pelıculas, repositorios de guıas de programaci�n, y datos enlazados abiertos que permitan ayudar al televidente a filtrar los programas m�s relevantes bas�ndose en sus necesidades y preferencias.</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2013</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AdfsIfKJdRG4C">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://www.academia.edu/download/43608306/Reduciendo_la_Sobrecarga_de_Informacin_e20160310-29715-18pwchz.pdf"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://www.academia.edu/download/43608306/Reduciendo_la_Sobrecarga_de_Informacin_e20160310-29715-18pwchz.pdf"/>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">7</citationCount>
+			<journal xmlns="http://ucuenca.edu.ec/ontology#">Proceedings of the Workshop on Semantic Web and Linked Data</journal>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Adshw04ExmUIC">
+	<contributor xmlns="http://purl.org/dc/terms/">Alexandra La Cruz</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Andr�s Tello</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Lizandro Solano-Quinde</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Mar�a-Esther Vidal</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Mauricio Espinoza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Patricia Gonz�lez</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V�ctor Hugo Saquicela Galarza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Washintong Ram�rez-Montalv�n</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Yoredy Sarmiento</contributor>
+	<publisher xmlns="http://purl.org/dc/terms/">Universidad de Cuenca</publisher>
+	<title xmlns="http://purl.org/dc/terms/">Plataforma para la b�squeda por contenido visual y sem�ntico de im�genes m�dicas</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">This paper present a framework ontology-independent for the automatic semantic annotation of medical images. The automatic annotation is done by (a) semantifying of DICOM medical images (RDF-ization) automatically;(b) Integration of different biomedical ontologies, through the matching process between ontologies and DICOM metadata, making this approach ontology-independent;(c) segmentation and visualization of annotated data which is further used to generate new annotations according to expert knowledge, and validation. Additionally applying context based image retrieval, make possible the retrieval of medical imaging by similarity of images features. This platform is being built on a distributed architecture, which improve the way of classification, distribution and searching on image repository.</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2015</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Adshw04ExmUIC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://dspace.ucuenca.edu.ec/handle/123456789/23783"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://dspace.ucuenca.edu.ec/bitstream/123456789/23783/1/2015_TIC.EC_2.pdf"/>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AeJXPG6dFmWUC">
+	<contributor xmlns="http://purl.org/dc/terms/">Carmen R�jas-Mu��z</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V�ctor Saquicela</contributor>
+	<title xmlns="http://purl.org/dc/terms/">Sistema de ayuda a la decisi�n basado en un data warehouse</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">Actualmente la Universidad de Cuenca opera varios sistemas inform�ticos que generan grandes cantidades de datos, esto representa una heterogeneidad desde diferentes puntos de vista tales como base de datos, lenguajes de programaci�n, esquemas, datos, etc. Esta heterogeneidad ha generado que cada sistema inform�tico funcione de manera aut�noma, ocasionando que el acceso a los datos de manera integrada se convierta en un cuello de botella, puesto que cada sistema posee su propio listado de informes de manera aislada. Por esto, emitir informes integrados a partir de los sistemas se ha convertido en todo un reto para la Universidad. En este trabajo se realiz� la construcci�n de un data warehouse donde se integraron los datos de todos los sistemas inform�ticos para poder emitir informes consolidados ya futuro poder extraer�…</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2017/11/29</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AeJXPG6dFmWUC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://publicaciones.ucuenca.edu.ec/ojs/index.php/maskana/article/view/1461"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://publicaciones.ucuenca.edu.ec/ojs/index.php/maskana/article/download/1461/1135"/>
+			<volume xmlns="http://purl.org/ontology/bibo/">8</volume>
+			<journal xmlns="http://ucuenca.edu.ec/ontology#">Maskana</journal>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">175-187</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AeflP2zaiRacC">
+	<contributor xmlns="http://purl.org/dc/terms/">Jorge Mauricio Espinoza Mej�a</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V�ctor Hugo Saquicela Galarza</contributor>
+	<publisher xmlns="http://purl.org/dc/terms/">ASSOCIACAO IBERICA DE SISTEMAS E TECNOLOGIAS DE INFORMACAO</publisher>
+	<title xmlns="http://purl.org/dc/terms/">Framework for the integration of digital resources based-on a semantic web approach [Marco de trabajo para la integraci�n de recursos digitales basado en un enfo...</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">Skip navigation�…</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2015/1/1</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AeflP2zaiRacC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://dspace.ucuenca.edu.ec/handle/123456789/29009"/>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Af2IySw72cVMC">
+	<contributor xmlns="http://purl.org/dc/terms/">Dirk Cattrysse</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Elina Avila-Ord��ez</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Joos Vandewalle</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Lorena Siguenza-Guzman</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Victor Saquicela</contributor>
+	<publisher xmlns="http://purl.org/dc/terms/">JAI</publisher>
+	<title xmlns="http://purl.org/dc/terms/">Literature review of data mining applications in academic libraries</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">This article provides a comprehensive literature review and classification method for data mining techniques applied to academic libraries. To achieve this, forty-one practical contributions over the period 1998–2014 were identified and reviewed for their direct relevance. Each article was categorized according to the main data mining functions clustering, association, classification, and regression; and their application in the four main library aspects: services, quality, collection, and usage behavior. Findings indicate that both collection and usage behavior analyses have received most of the research attention, especially related to collection development and usability of websites and online services respectively. Furthermore, classification and regression models are the two most commonly used data mining functions applied in library settings. Additionally, results indicate that�…</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2015/7/1</created>
+	<issue xmlns="http://purl.org/ontology/bibo/">4</issue>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Af2IySw72cVMC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://www.sciencedirect.com/science/article/pii/S009913331500107X"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://lirias.kuleuven.be/bitstream/123456789/499632/1/post-print.pdf"/>
+			<volume xmlns="http://purl.org/ontology/bibo/">41</volume>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">14</citationCount>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">499-510</pages>
+			<source xmlns="http://ucuenca.edu.ec/ontology#">The Journal of Academic Librarianship</source>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AfPk4N6BV_jEC">
+	<contributor xmlns="http://purl.org/dc/terms/">Boris Villaz�n</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Jorge Bermeo</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Mauricio Espinoza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Victor Saquicela</contributor>
+	<title xmlns="http://purl.org/dc/terms/">Identifying Common Research Areas: A Study Case</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">Currently, there is an increasing presence of researchers datasets (services) in the Internet. In this paper, we present an approach for extracting publications made by different authors and identifying common research areas among them. This work makes use of semantic technologies in order to describe authors and their publications through keywords clustering techniques involving data mining algorithms.</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2014</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AfPk4N6BV_jEC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://dspace.cedia.org.ec/handle/123456789/939"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://dspace.cedia.org.ec/bitstream/123456789/939/1/Study%20Case,%20Identifying%20Common%20Research%20Areas.pdf"/>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AfQNAKQ3IYiAC">
+	<contributor xmlns="http://purl.org/dc/terms/">Andrea Morales</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V�ctor Saquicela</contributor>
+	<title xmlns="http://purl.org/dc/terms/">Plataforma para la visualizaci�n de datos multidimensionales basados en tecnolog�as sem�nticas</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">La plataforma “Repositorio Ecuatoriano de Investigadores”, permite identificar las �reas de conocimiento mediante la agrupaci�n de palabras claves definidas en las publicaciones cient�ficas que realizan los investigadores ecuatorianos a trav�s de la utilizaci�n de t�cnicas de datamining y tecnolog�a sem�ntica. Actualmente, la informaci�n de los autores es almacenada en un repositorio en formato Resource Description Framework (RDF). La visualizaci�n de la informaci�n en la actualidad se realiza mediante consultas est�ticas desarrolladas por los programadores del proyecto, por lo que no es posible realizar consultas din�micas por parte de los usuarios. Con esta problem�tica, el presente trabajo define una arquitectura de software para mejorar las herramientas actuales de visualizaci�n, basada en el concepto de cubos de datos multidimensionales�…</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2017/11/29</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AfQNAKQ3IYiAC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://publicaciones.ucuenca.edu.ec/ojs/index.php/maskana/article/view/1464"/>
+			<volume xmlns="http://purl.org/ontology/bibo/">8</volume>
+			<journal xmlns="http://ucuenca.edu.ec/ontology#">Maskana</journal>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">219-231</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AgeHnlv5EZngC">
+	<contributor xmlns="http://purl.org/dc/terms/">Daniel Mendoza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Francisco Vega</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Jos� Medina</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Mauricio Espinoza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Vıctor Saquicela</contributor>
+	<title xmlns="http://purl.org/dc/terms/">A Robust Video Identification Framework using Perceptual Image Hashing</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">—This paper proposes a general framework that allows to identify a video in real time using perceptual image hashing algorithms. In order to evaluate the versatility and performance of the framework, it was coupled for a use case about ads tv monitoring. Four Perceptual Image Hashing (PIH) algorithms were subject to a benchmarking process in order to identify the best one for the use case. This process was focused on analyze differences in terms of discriminability (D), robustness (R), time processing (Tp) and efficiency (E). A truth table was used to obtain information about discriminability and robustness, while processing time was directly measured. An efficiency metric based on time processing and identification capacity was proposed. In general terms, DHASH and PHASH algorithms have higher identification capacities than AHASH and WHASH in order to�…</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2017</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AgeHnlv5EZngC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://pdfs.semanticscholar.org/f913/69de917e18beb3730a727036da47156e6583.pdf"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://pdfs.semanticscholar.org/f913/69de917e18beb3730a727036da47156e6583.pdf"/>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">1</citationCount>
+			<journal xmlns="http://ucuenca.edu.ec/ontology#">43th Latin American Computing Conference, Lat. Am. Symp. on Computer Graphics, Virtual Reality, and Image Processing</journal>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Al7t_Zn2s7bgC">
+	<contributor xmlns="http://purl.org/dc/terms/">D Astudillo</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">J Avila</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Kenneth Palacio-Baus</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">M Espinoza-Mejla</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Victor Saquicela</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">X Riofrlo</contributor>
+	<publisher xmlns="http://purl.org/dc/terms/">IEEE</publisher>
+	<title xmlns="http://purl.org/dc/terms/">Decategorizing demographically stereotyped users in a semantic recommender system</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">In the domain of Digital Television (DTV) broadcasting technology, the enhancement of signals features over classic analog signal transmission allows increasing the amount of content available for TV viewers. Recommender Systems (RS) arose as a suitable choice to assist users in the overwhelming task of selecting audiovisual content, however, the cold- start problem normally associated to the lack of information in early RS stages, causes that user stereotyping approaches are employed meanwhile the lack of information in user profiles is overcome. This paper presents an experimental approach aimed to determine the best conditions for which users who were categorized within a determined stereotype during the cold-start stage, could migrate to a new state in which they receive personalized recommendations. Experimental results show that the best condition under the selected�…</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2016/10/10</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Al7t_Zn2s7bgC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://ieeexplore.ieee.org/abstract/document/7833408/"/>
+			<conference xmlns="http://ucuenca.edu.ec/ontology#">Computing Conference (CLEI), 2016 XLII Latin American</conference>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">1-7</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Anb7KW1ujOQ8C">
+	<contributor xmlns="http://purl.org/dc/terms/">Andr�s Tello</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Mauricio Espinoza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Ren�n Freire</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V�ctor Saquicela</contributor>
+	<title xmlns="http://purl.org/dc/terms/">Integration and massive storage of hydro-meteorological data combining big data &amp; semantic web technologies</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">Ecuador contains an immense collection of hydro-meteorological data, informing us via standards how to locate and invoke them. If we want to make such data easier to understand and use, we need to store them in a common repository and annotate them by means of descriptive metadata. This paper proposes an approach for the massive storage, integration and semantic annotation of hydro-meteorological data using an open source integration container, NoSQL databases and Semantic Web technologies. The main contributions of this paper are i) a shared common repository of hydro-meteorological data, ii) automatic semantic annotation to formally describe the data sources, and iii) efficient mechanisms for searching and retrieving hydro meteorological data.</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2015/12/5</created>
+	<issue xmlns="http://purl.org/ontology/bibo/">Supl.</issue>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Anb7KW1ujOQ8C">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://publicaciones.ucuenca.edu.ec/ojs/index.php/maskana/article/view/711"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://publicaciones.ucuenca.edu.ec/ojs/index.php/maskana/article/download/711/623"/>
+			<volume xmlns="http://purl.org/ontology/bibo/">6</volume>
+			<journal xmlns="http://ucuenca.edu.ec/ontology#">Maskana</journal>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">165-172</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Ap2g8aNsByqUC">
+	<contributor xmlns="http://purl.org/dc/terms/">Juan Pablo Carvallo</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Karina Abad</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Mauricio Espinoza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V�ctor Saquicela</contributor>
+	<publisher xmlns="http://purl.org/dc/terms/">Associa��o Ib�rica de Sistemas e Tecnologias de Informa��o (AISTI)</publisher>
+	<title xmlns="http://purl.org/dc/terms/">Hacia la creaci�n de un repositorio sem�ntico de modelos de contexto basados en i* y el m�todo DHARMA</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">La definici�n de Arquitecturas de Software de la mayor�a de organizaciones requiere una profunda comprensi�n de su entorno y estructura organizacional; sin embargo, la construcci�n de dichos modelos no es una tarea f�cil debido a las brechas de conocimiento y comunicaci�n entre los interesados, t�cnicos y administrativos. El m�todo DHARMA, que hace uso intensivo de la notaci�n i*, propone una soluci�n a este problema, al apoyar la construcci�n de Modelos de Contexto. En este trabajo se presenta un enfoque para anotaci�n de modelos i* utilizando tecnolog�as sem�nticas, para que apoyen la b�squeda y generaci�n de modelos de contexto basados en el conocimiento definido en el modelo ontol�gico, permitiendo la creaci�n de un Repositorio Sem�ntico de Modelos de Contexto, que ser� empleado para descubrir relaciones entre diferentes modelos i* y�…</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2016/3</created>
+	<issue xmlns="http://purl.org/ontology/bibo/">17</issue>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Ap2g8aNsByqUC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://www.scielo.mec.pt/scielo.php?script=sci_arttext&amp;pid=S1646-98952016000100005"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://www.scielo.mec.pt/scielo.php?script=sci_arttext&amp;pid=S1646-98952016000100005"/>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">6</citationCount>
+			<journal xmlns="http://ucuenca.edu.ec/ontology#">RISTI-Revista Ib�rica de Sistemas e Tecnologias de Informa��o</journal>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">41-56</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3ApyW8ca7W8N0C">
+	<contributor xmlns="http://purl.org/dc/terms/">Alexandra La Cruz</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Andr�s Tello</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Maria-Esther Vidal</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Mauricio Espinoza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V�ctor Saquicela</contributor>
+	<publisher xmlns="http://purl.org/dc/terms/">Springer, Cham</publisher>
+	<title xmlns="http://purl.org/dc/terms/">Rdf-ization of dicom medical images towards linked health data cloud</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">This paper proposes a novel strategy for semantifying DICOM medical images (RDF-ization) automatically. We define an architecture that involves processes for extracting, anonymizing, and serializing metadata comprised in DICOM medical images into RDF/XML. These processes allow for semantically enriching and sharing the metadata of DICOM medical files through the Linked Health Data cloud. Thereby providing enhanced query capabilities with respect to the ones offered by current PACS environments, while exploiting all advantages of the Linking Open Data (LOD) cloud and SemanticWeb technologies.</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2015</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3ApyW8ca7W8N0C">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://link.springer.com/chapter/10.1007/978-3-319-13117-7_193"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://www.researchgate.net/profile/Andres_Tello/publication/274312785_RDF-ization_of_DICOM_medical_images_towards_linked_health_data_cloud/links/551b09bf0cf251c35b504a5a/RDF-ization-of-DICOM-medical-images-towards-linked-health-data-cloud.pdf"/>
+			<book xmlns="http://ucuenca.edu.ec/ontology#">VI Latin American Congress on Biomedical Engineering CLAIB 2014, Paran�, Argentina 29, 30 &amp; 31 October 2014</book>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">7</citationCount>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">757-760</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AqjMakFHDy7sC">
+	<contributor xmlns="http://purl.org/dc/terms/">Luis M Vilches-Bl�zquez</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Oscar Corcho</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V�ctor Saquicela</contributor>
+	<publisher xmlns="http://purl.org/dc/terms/">Springer Berlin Heidelberg</publisher>
+	<title xmlns="http://purl.org/dc/terms/">Interlinking geospatial information in the web of data</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">There is an increasing presence of geospatial datasets in the Linked Open Data cloud. However, these datasets are published like data silos and the value of the Web of Data depends, among other properties, on the amount and quality of links between data sources. One of the most overlooked problems to date in the linking process is to ensure that two different resources (identified with URIs) are actually referring to the same physical thing, that is, the co-reference problem. In this paper we present a co-reference resolution approach that is composed of a set of heuristics for interlinking geospatial Linked Data. We have used these heuristics to connect resources from GeoLinkedData. es and DBpedia.</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2012</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AqjMakFHDy7sC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://link.springer.com/10.1007/978-3-642-29063-3_7"/>
+			<book xmlns="http://ucuenca.edu.ec/ontology#">Bridging the Geographic Information Sciences</book>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">6</citationCount>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">119-139</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3ArO6llkc54NcC">
+	<contributor xmlns="http://purl.org/dc/terms/">Dirk Cattrysse</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Lorena Siguenza Guzman</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Victor Saquicela</contributor>
+	<title xmlns="http://purl.org/dc/terms/">Design of an integrated decision support system for library holistic evaluation</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">The decision-making process in academic libraries is paramount; however highly complicated due to the large number of data sources, processes and high volumes of data to be analyzed. Academic libraries are accustomed to producing and gathering a vast amount of statistics about their collection and services. Typical data sources include integrated library systems, library portals and online catalogues, systems of consortiums, quality surveys and university management. Unfortunately, these heterogeneous data sources are only partially used for decision-making processes due to the wide variety of formats, standards and technologies, as well as the lack of efficient methods of integration. This article presents the analysis and design of an integrated decision support system for an academic library. Firstly, a holistic approach documented in a previous study is used for�…</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2014/1/1</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3ArO6llkc54NcC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://lirias.kuleuven.be/handle/123456789/455176"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://lirias.kuleuven.be/bitstream/123456789/455176/1/Conference+Paper.pdf"/>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">3</citationCount>
+			<conference xmlns="http://ucuenca.edu.ec/ontology#">Proceedings of IATUL Conferences</conference>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">1-12</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AsSrBHYA8nusC">
+	<contributor xmlns="http://purl.org/dc/terms/">Carmen Rojas Mu�oz</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Victor Saquicela Galarza</contributor>
+	<title xmlns="http://purl.org/dc/terms/">Hacia un sistema de ayuda a la decisi�n para universidades: caso de uso de la Universidad de Cuenca</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">Actualmente la Universidad de Cuenca cuenta con varios sistemas inform�ticos que generan grandes cantidades de datos, esto representa una heterogeneidad desde diferentes puntos de vista tales como: base de datos, lenguajes de programaci�n, esquemas, datos, etc. Esta heterogeneidad ha generado que cada sistema inform�tico funcione de manera aut�noma, ocasionando que el acceso a los datos de manera integrada se convierta en un cuello de botella, puesto que cada sistema posee su propio listado de informes de manera aislada. Por lo que, emitir informes integrados a partir de los sistemas se ha convertido en todo un reto. Por lo tanto, en este trabajo se propone la creaci�n de un DataWarehouse donde se integre los datos de todos los sistemas inform�ticos para poder emitir informes consolidados ya futuro poder extraer�…</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2017/7/3</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AsSrBHYA8nusC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://documentos.redclara.net/bitstream/10786/1278/1/98-17-4HACIA%20UN%20SISTEMA%20DE%20AYUDA%20A%20LA%20DECISI%C3%93N%20PARA%20UNIVERSIDADES.pdf"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://documentos.redclara.net/bitstream/10786/1278/1/98-17-4HACIA%20UN%20SISTEMA%20DE%20AYUDA%20A%20LA%20DECISI%C3%93N%20PARA%20UNIVERSIDADES.pdf"/>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AtOudhMTPpwUC">
+	<contributor xmlns="http://purl.org/dc/terms/">Jos� Ortiz</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Jos� Segarra</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Mauricio Espinoza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Victor Saquicela</contributor>
+	<publisher xmlns="http://purl.org/dc/terms/">IEEE</publisher>
+	<title xmlns="http://purl.org/dc/terms/">Integration of digital repositories through federated queries using semantic technologies</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">Currently, institutions store the information that they produce in digital repositories, especially those within the academic scope, such as universities and libraries. However, the lack of agreement in defining protocols, meta-data descriptions and technologies for publication has caused issues while trying to integrate repositories. Numerous alternatives have been proposed to tackle this problem, however, most of them are based on syntactical technologies, which are exclusive to the ambit of digital repositories, hampering a higher level integration (Web). In addition, much of the research done so far uses centralized approaches, which are hardly scalable and can threaten to inter-institutional independence. In this work a new distributed integration architecture is proposed, which is based on semantic technologies and federated queries. This architecture has been successfully�…</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2016/10/10</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AtOudhMTPpwUC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://ieeexplore.ieee.org/abstract/document/7833406/"/>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">2</citationCount>
+			<conference xmlns="http://ucuenca.edu.ec/ontology#">Computing Conference (CLEI), 2016 XLII Latin American</conference>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">1-9</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AtS2w5q8j5-wC">
+	<contributor xmlns="http://purl.org/dc/terms/">Idalia Pacheco</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Miryan Iza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V�ctor Hugo Saquicela</contributor>
+	<title xmlns="http://purl.org/dc/terms/">Web Mining</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">El objetivo del presente documento es analizar la Web Mining y la importancia de su manejo en las empresas para tomar decisiones acordes a las exigencias del mercado. Para ello se revisar� el papel de la Web Mining en la actualidad, tanto del lado del servidor, como desde la necesidad en los clientes de la web. Para ello, en una primera parte se examina las t�cnicas del Data Mining, as� como los tipos de agentes dentro de la web. Se destaca la importancia de la generaci�n de las Web Communities of Intelligence, por medio de las cuales se pueden armar estrategias para un adecuado manejo de los textos, as� como la implementaci�n de extractores y navegadores. Adem�s, se considera el uso de lenguajes alternativos como los lenguajes de marcaje, que posibilitan un manejo inteligente de los documentos. Y se finaliza con las aplicaciones pr�cticas de web mining en el�…</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2017/6/14</created>
+	<issue xmlns="http://purl.org/ontology/bibo/">3</issue>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AtS2w5q8j5-wC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://investigacion.utc.edu.ec/revistasutc/index.php/utciencia/article/view/16"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://investigacion.utc.edu.ec/revistasutc/index.php/utciencia/article/viewFile/16/18"/>
+			<volume xmlns="http://purl.org/ontology/bibo/">1</volume>
+			<journal xmlns="http://ucuenca.edu.ec/ontology#">UTCIENCIA</journal>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">134-139</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Au-x6o8ySG0sC">
+	<contributor xmlns="http://purl.org/dc/terms/">Alexander de Le�n</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Boris Villaz�n-Terrazas</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Freddy Priyatna</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Luis M Vilches</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Oscar Corcho</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Victor Saquicela</contributor>
+	<publisher xmlns="http://purl.org/dc/terms/">ACM</publisher>
+	<title xmlns="http://purl.org/dc/terms/">Geographical linked data: a Spanish use case</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">We present the process that has been followed for the development of an application that makes use of several heterogeneous Spanish public datasets that are related to administrative, hydrographic, and statistical domains. Our application aims at analysing existing relations between the Spanish coastal area and different statistical variables such as unemployment, population, dwelling, industry, and building trade. Moreover, we provide an important innovation with respect to other similar processes followed in other initiatives by dealing with the geometrical information of features.</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2010/9/1</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Au-x6o8ySG0sC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://dl.acm.org/citation.cfm?id=1839753"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://oa.upm.es/6167/1/Geographical_Linked_Data_A_Spanish_Use_Case.pdf"/>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">24</citationCount>
+			<conference xmlns="http://ucuenca.edu.ec/ontology#">Proceedings of the 6th International Conference on Semantic Systems</conference>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">36</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Au5HHmVD_uO8C">
+	<contributor xmlns="http://purl.org/dc/terms/">Alexander de Le�n</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Asunci�n G�mez-P�rez</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Boris Villaz�n-Terrazas</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Luis M Vilches-Bl�zquez</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Oscar Corcho</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Victor Saquicela</contributor>
+	<publisher xmlns="http://purl.org/dc/terms/">ACM</publisher>
+	<title xmlns="http://purl.org/dc/terms/">GeoLinked data and INSPIRE through an application case</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">In this paper we present the process that has been followed for the development of an application that makes use of several heterogeneous Spanish public datasets that are related to three themes of INSPIRE Directive, specifically Administrative Units, Hydrography, and Statistical Units. Our application aims at analysing existing relations between the Spanish coastal area and different statistical variables such as population, unemployment, dwelling, industry, and building trade. Besides providing methodological guidelines for the generation, publishing and exploitation of Linked Data from such datasets, we provide an important innovation with respect to other similar processes followed in other initiatives by dealing with the geometrical information of features.</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2010/11/2</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Au5HHmVD_uO8C">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://dl.acm.org/citation.cfm?id=1869858"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://oa.upm.es/6165/1/GeoLinkedData_and_INSPIRE_through_an_Application_Case_poster.pdf"/>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">48</citationCount>
+			<conference xmlns="http://ucuenca.edu.ec/ontology#">Proceedings of the 18th SIGSPATIAL International Conference on Advances in Geographic Information Systems</conference>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">446-449</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Au9iWguZQMMsC">
+	<contributor xmlns="http://purl.org/dc/terms/">Alexandra La Cruz</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Blanca Ochoa</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Francisco Vega</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Lizandro Solano-Quinde</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Maria-Esther Vidal</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Mauricio Espinoza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Ruben Medina</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V�ctor Saquicela</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Wilson P�rez</contributor>
+	<publisher xmlns="http://purl.org/dc/terms/">IEEE</publisher>
+	<title xmlns="http://purl.org/dc/terms/">Mobile teleradiology system suitable for m-health services supporting content and semantic based image retrieval on a grid infrastructure</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">Teleradiology systems tackle the problem of transferring radiological images between medical image workstations for facilitating different medical activities, eg, diagnosis, treatment and follow up a patient, medical training, or consulting second opinion. Nowadays, m-Health (aka mobile health) is becoming popular because of high quality of mobile displays, although remains a work in progress. In this paper a mobile teleradiology system is reported, which main contribution is the development of a platform(1) supported by a Grid infrastructure,(2) using biomedical ontologies for adding semantic annotations on medical images, and (3) supporting semantic and content-based image retrieval. Images are located physically in different repositories like; hospitals and diagnostic imaging centers. All these features make the system ubiquitous, portable, and suitable for m-Health services.</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2016/8/16</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Au9iWguZQMMsC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://ieeexplore.ieee.org/abstract/document/7591943/"/>
+			<conference xmlns="http://ucuenca.edu.ec/ontology#">Engineering in Medicine and Biology Society (EMBC), 2016 IEEE 38th Annual International Conference of the</conference>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">5380-5383</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AuWQEDVKXjbEC">
+	<contributor xmlns="http://purl.org/dc/terms/">Edmundo Tovar</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Elizabeth Cadme</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Janneth Chicaiza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Jorge L�pez</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Mauricio Espinoza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Nelson Piedra</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Pricila Quichimbo</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V�ctor Saquicela</contributor>
+	<publisher xmlns="http://purl.org/dc/terms/">AISTI-Associa��o Ib�rica de Sistemas e Tecnologias de Informa��o</publisher>
+	<title xmlns="http://purl.org/dc/terms/">Framework for the integration of digital resources based-on a Semantic Web approach</title>
+	<created xmlns="http://purl.org/ontology/bibo/">2015/3</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AuWQEDVKXjbEC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://scholar.google.com/scholar?cluster=6957608340178618840&amp;hl=en&amp;oi=scholarr"/>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">1</citationCount>
+			<journal xmlns="http://ucuenca.edu.ec/ontology#">RISTI-Revista Ib�rica de Sistemas e Tecnologias de Informa��o</journal>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">55-70</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Au_35RYKgDlwC">
+	<contributor xmlns="http://purl.org/dc/terms/">Victor Saquicela</contributor>
+	<title xmlns="http://purl.org/dc/terms/">RDF de provincias del Ecuador</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">Skip navigation. Home; Browse Communities &amp; Collections; Browse items by: Issue Date; Author; Title; Subject. Help. Language: English; espa�ol. Sign on to: My DSpace; Receive email updates; Edit Profile. Logo Repositorio Institucional. Repositorio Institucional del Consorcio Ecuatoriano para el Desarrollo de Internet Avanzado; Web Sem�ntica; Geosem�ntica. Please use this identifier to cite or link to this item: http://repositorio.cedia.org.ec/handle/123456789/863. Title: RDF de provincias del Ecuador. Authors: Saquicela, Victor. Keywords: RDF geospatial. Issue Date: 21-Jun-2013. Abstract: RDF generado de las provincias del Ecuador. URI: http://repositorio.cedia. org.ec/handle/123456789/863. Appears in Collections: Geosem�ntica. Files in This Item: File, Description, Size, Format, nxprovincias.zip, 8.29 MB, zip, View/Open. Show full item record�…</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2013/6/21</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3Au_35RYKgDlwC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://repositorio.cedia.org.ec/handle/123456789/863"/>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AvRqMK49ujn8C">
+	<contributor xmlns="http://purl.org/dc/terms/">Erik Sigcha</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Francisco Vega</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Jos� Medina</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">Mauricio Espinoza</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V�ctor Saquicela</contributor>
+	<publisher xmlns="http://purl.org/dc/terms/">Springer, Cham</publisher>
+	<title xmlns="http://purl.org/dc/terms/">Automatic speech-to-text transcription in an ecuadorian radio broadcast context</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">A key element to enable the analysis and accessing to radio broadcast content is the development of automatic speech-to-text systems. The building of these systems has been possible given the current available of different speech resources, models, and open source services designed mainly for English language. However, the most of these tools have been migrated to other languages like Spanish for avoiding the creation of these systems from scratch.</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2017/9/19</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AvRqMK49ujn8C">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://link.springer.com/chapter/10.1007/978-3-319-66562-7_49"/>
+			<conference xmlns="http://ucuenca.edu.ec/ontology#">Colombian Conference on Computing</conference>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">695-709</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AxtRiw3GOFMkC">
+	<contributor xmlns="http://purl.org/dc/terms/">J �vila</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">K Palacio-Baus</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">M Espinoza-Mejia</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V Saquicela</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">X Riofrio</contributor>
+	<publisher xmlns="http://purl.org/dc/terms/">IEEE</publisher>
+	<title xmlns="http://purl.org/dc/terms/">Semantic recommender systems for digital tv: From demographic stereotyping to personalized recommendations</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">Compared to analog transmissions, Digital Television (DTV) standards allows a higher number of available TV stations and consequently, a larger entertainment offer. In this context, Recommender Systems (RS) support users in choosing entertainment content by narrowing their options to a reduced set based on their preferences an interests. However, new users or those having incomplete profiles prevent the system to produce accurate recommendations, which is more noticeable in early stages of the RS. This paper proposes the use of a demographic stereotyping approach based on minimal user attributes acquired during user registration. Furthermore, we propose an experimental procedure that can be used to compare the system accuracy for the created stereotypes and for users making extensive use of the system.</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2015/7/14</created>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AxtRiw3GOFMkC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="http://ieeexplore.ieee.org/abstract/document/7287052/"/>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">4</citationCount>
+			<conference xmlns="http://ucuenca.edu.ec/ontology#">Computer Aided System Engineering (APCASE), 2015 Asia-Pacific Conference on</conference>
+			<pages xmlns="http://ucuenca.edu.ec/ontology#">392-396</pages>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AyD5IFk8b50cC">
+	<contributor xmlns="http://purl.org/dc/terms/">J Avila</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">K Palacio-Baus</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">M Espinoza-Mej�a</contributor>
+	<contributor xmlns="http://purl.org/dc/terms/">V Saquicela</contributor>
+	<title xmlns="http://purl.org/dc/terms/">Sistema de recomendaci�n de contenidos audiovisuales: Algoritmo de inferencia sem�ntica</title>
+	<abstract xmlns="http://purl.org/ontology/bibo/">Este art�culo presenta el an�lisis de un Algoritmo de Inferencia Sem�ntica utilizado en un Sistema de Recomendaci�n de Contenidos Audiovisuales en el contexto de la Televisi�n Digital. Los resultados obtenidos muestran que la inclusi�n de diferentes propiedades sem�nticas y sus combinaciones, influye directamente en la reducci�n del error absoluto promedio obtenido en la predicci�n de la calificaci�n otorgada por un usuario a un �tem determinado. Adem�s se ha determinado que la propiedad Actor tiene un impacto mayor con respecto a otras propiedades analizadas.</abstract>
+	<created xmlns="http://purl.org/ontology/bibo/">2016/4/25</created>
+	<issue xmlns="http://purl.org/ontology/bibo/">Supl.</issue>
+	<uri xmlns="http://purl.org/ontology/bibo/">
+		<rdf:Description rdf:about="https://scholar.google.com/citations?view_op=view_citation&amp;citation_for_view=nYte-bkAAAAJ%3AyD5IFk8b50cC">
+			<uri1 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://publicaciones.ucuenca.edu.ec/ojs/index.php/maskana/article/view/728"/>
+			<uri2 xmlns="http://purl.org/ontology/bibo/" rdf:resource="https://publicaciones.ucuenca.edu.ec/ojs/index.php/maskana/article/viewFile/728/654"/>
+			<volume xmlns="http://purl.org/ontology/bibo/">65</volume>
+			<citationCount xmlns="http://ucuenca.edu.ec/ontology#">3</citationCount>
+			<journal xmlns="http://ucuenca.edu.ec/ontology#">Maskana</journal>
+			<rdf:type rdf:resource="http://purl.org/ontology/bibo/AcademicArticle"/>
+		</rdf:Description>
+	</uri>
+</rdf:Description>
+
+</rdf:RDF>

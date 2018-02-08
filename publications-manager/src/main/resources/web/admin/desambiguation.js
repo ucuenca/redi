@@ -1,6 +1,6 @@
 //var host = "http://localhost:8080
- var host = "https://rediclon.cedia.edu.ec/";
-//var host = _SERVER_URL;
+// var host = "https://rediclon.cedia.edu.ec/";
+var host = _SERVER_URL;
 function loadTables() {
 
     console.log("Graficando");

@@ -22,29 +22,29 @@
     <head>
         <!--###BEGIN_HEAD###-->
         <title>Providers Manager</title>
-       <!-- <script type="text/javascript" src="../../webjars/jquery/1.8.2/jquery.min.js"></script> -->
-       <!--  <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>-->
-       <script type="text/javascript" src="../../webjars/jquery/1.8.2/jquery.min.js"></script>  
+        <!-- <script type="text/javascript" src="../../webjars/jquery/1.8.2/jquery.min.js"></script> -->
+      <!--  <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script> -->
+        <script type="text/javascript" src="../../webjars/jquery/1.8.2/jquery.min.js"></script>  
         <script type="text/javascript" src="providersManager.js"></script>
         <script type="text/javascript" src="lib/dataTables/datatables.min.js"></script>
         <link rel="stylesheet" type="text/css" href="lib/dataTables/datatables.min.css">
         <script type="text/javascript">
-            $(document).ready(function() {
-              //  console.log(_SERVER_URL);
+            $(document).ready(function () {
+                //  console.log(_SERVER_URL);
                 loadTables();
             });
         </script> 
-        
+
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
-         <!--###END_HEAD###-->
+        <!--###END_HEAD###-->
     </head>
     <body>
-         <!--###BEGIN_CONTENT###-->
-        <div>TODO write content</div>
-          <table id="provTable" class="display" width="90%">
-                  <thead>
+        <!--###BEGIN_CONTENT###-->
+        <table id="provTable" class="display" width="90%">
+            <thead>
                 <tr>
+
                 <th>Selection</th>
                 <th>Organization</th>
                 <th>Ac</th>
@@ -58,11 +58,12 @@
           </table>
         
         <button id="buttonAk" onclick="ExtractAk()"> Extract AK </button>
-         <button id="buttonScopus" onclick="ExtractScopus()"> Extract Scopus </button>
-          <button id="buttonScopus" onclick="ExtractDBLP()"> Extract DBLP </button>
-           <button id="buttonScopus" onclick="ExtractGoogleScholar()"> Extract Google Scholar </button>     
-           <button id="buttonScopus" onclick="unifiedProviders()"> Unified </button>
-        
+        <button id="buttonScopus" onclick="ExtractScopus()"> Extract Scopus </button>
+        <button id="buttonScopus" onclick="ExtractDBLP()"> Extract DBLP </button>
+        <button id="buttonScopus" onclick="ExtractGoogleSchoolar()"> Extract Google Scholar </button>     
+        <button id="buttonScielo" onclick="ExtractScielo()"> Extract Scielo </button>   
+        <button id="buttonScopus" onclick="unifiedProviders()"> Unified </button>
+
         <!--###END_CONTENT###-->
     </body>
 </html>
