@@ -142,8 +142,8 @@ public class Person {
         if (Affiliations.isEmpty() || p.Affiliations.isEmpty()) {
             return null;
         }
-        List<String> name1 = AffiliationUtils.uniqueTitle(Affiliations);
-        List<String> name2 = AffiliationUtils.uniqueTitle(p.Affiliations);
+        List<String> name1 = Affiliations;
+        List<String> name2 = p.Affiliations;
         List<String> uname1 = new ArrayList<>();
         List<String> uname2 = new ArrayList<>();
         int co = 0;

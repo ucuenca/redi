@@ -23,8 +23,8 @@ public class ModifiedJaccardMod {
 
     public boolean prioritizeWordOrder = false;
     public boolean onlyCompleteMatchs = false;
-    public double syntacticThreshold = 0.9;
-    public double abvPenalty = 0.9;
+    public double syntacticThreshold = 0.89;
+    public double abvPenalty = 0.95;
 
     public double distanceName(String name1, String name2) {
         List<String> tks1 = tokenizer(name1/*.replaceAll("(\\p{Lu})(\\p{Lu})", "$1 $2")*/.toLowerCase());
