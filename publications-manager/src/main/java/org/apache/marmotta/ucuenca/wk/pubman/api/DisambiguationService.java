@@ -10,14 +10,17 @@ package org.apache.marmotta.ucuenca.wk.pubman.api;
  * @author cedia
  */
 public interface DisambiguationService {
-    
-    
+
     public String startDisambiguation();
+
     public String startMerge();
-    
-    
-    
+
+    public String startDisambiguation(String [] orgs);
+
     public void Proccess();
+
+    public void Proccess(String [] orgs);
+
     public void Merge();
 
 }

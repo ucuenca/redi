@@ -33,6 +33,7 @@ public class REDI {
     public static final URI SCOPUS_PROVIDER;
     public static final URI ACADEMICS_PROVIDER;
     public static final URI EXTRACTION_EVENT;
+    public static final URI DISAMBIGUATION_EVENT;
 
     // Properties
     public static final URI CITATION_COUNT;
@@ -82,6 +83,7 @@ public class REDI {
         SCOPUS_PROVIDER = factory.createURI(REDI.NAMESPACE, "ScopusProvider");
         ACADEMICS_PROVIDER = factory.createURI(REDI.NAMESPACE, "AcademicsKnowledgeProvider");
         EXTRACTION_EVENT = factory.createURI(REDI.NAMESPACE, "ExtractionEvent");
+        DISAMBIGUATION_EVENT = factory.createURI(REDI.NAMESPACE, "DisambiguationEvent");
 
         // Properties
         CITATION_COUNT = factory.createURI(REDI.NAMESPACE, "citationCount");

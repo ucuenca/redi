@@ -4,30 +4,34 @@
  * and open the template in the editor.
  */
 
-/*var dataSet = [
- [ "UDA", "01/01/01 AC", "01/01/01 DBLP", "01/01/01", "2011/04/25", "01/01/01" ],
- [ "UCUENCA", "", "", "12/12/12", "2011/07/25", "50/81/90" ],
- [ "UTPL", "", "", "", "2009/01/12", "" ]
- ];*/
-// var host = "http://localhost:8080/";
-var host = _SERVER_URL;
-function loadTables() {
 
-    console.log("Graficando");
-    $('#provTable').DataTable({
-        ajax: host + "pubman/publication/organization/list",
-        columns: [
-            {"data": "Selection"},
-            {"data": "name"},
-            {"data": "valAK"},
-            {"data": "valDBLP"},
-            {"data": "valScopus"},
-            {"data": "valGs"}
+ /*var dataSet = [
+    [ "UDA", "01/01/01 AC", "01/01/01 DBLP", "01/01/01", "2011/04/25", "01/01/01" ],
+    [ "UCUENCA", "", "", "12/12/12", "2011/07/25", "50/81/90" ],
+    [ "UTPL", "", "", "", "2009/01/12", "" ]
+    ];*/
+ // var host = "http://localhost:8080/";
+ var host = _SERVER_URL;
+// var host = "https://rediclon.cedia.edu.ec/";
+function loadTables () {
+  
+    console.log ("Graficando");
+   $('#provTable').DataTable({
+            ajax: host + "pubman/publication/organization/list",
+                       columns: [
+            { "data" : "Selection" },
+            { "data" : "name"} ,
+            {"data": "AdvAcademicsKnowledge"},
+            {"data": "AdvDBLP"},
+            {"data": "AdvSCOPUS"},
+            {"data": "AdvGS"} ,
+            {"data": "AdvSCIELO"},
+ 
+            
+    
 
-
-
-        ],
-
+        ] ,
+ 
         columnDefs: [
 
             {
@@ -45,22 +49,21 @@ function loadTables() {
                 },
 
                 targets: 1
+
+            } ,
+               {
+                "render": function(data, type, row) {
+                    
+                    if ( typeof(row["AdvAcademicsKnowledge"]) === "undefined"){
+                       return "";
+                   }else {
+                       return row["AdvAcademicsKnowledge"].split(";").sort (function (a,b){ return CompareDate( a, b );})[0];
+                      // return row["DateAk"].split(";").sort(function(a,b){ return CompareDate( a, b ); }) +" | " +row["AdvAK"].split(";")[0];    
+                   
+                    }         
+
             },
-            {
-                "render": function (data, type, row) {
-
-                    if (typeof (row["AdvAK"]) === "undefined") {
-                        return "";
-                    } else {
-                        return row["AdvAK"].split(";").sort(function (a, b) {
-                            return CompareDate(a, b);
-                        })[0];
-                        // return row["DateAk"].split(";").sort(function(a,b){ return CompareDate( a, b ); }) +" | " +row["AdvAK"].split(";")[0];    
-
-                    }
-                },
-
-                targets: 2
+                       targets: 2
             },
             {
                 "render": function (data, type, row) {
@@ -77,43 +80,59 @@ function loadTables() {
                 },
 
                 targets: 3
-            },
+
+            } ,
+              
             {
                 "render": function (data, type, row) {
 
 
-                    if (typeof (row["AdvScopus"]) === "undefined")
+                    if (typeof (row["AdvSCOPUS"]) === "undefined")
+
                     {
                         return "";
-                    } else {
-                        return row["AdvScopus"].split(";").sort(function (a, b) {
-                            return CompareDate(a, b);
-                        })[0];
-                        // return  row["DateScopus"].split(";").sort(function(a,b){ return CompareDate( a, b ); })+" | "+row["AdvScopus"].split(";")[0];      
                     }
-
-
+                    else {
+                       return row["AdvSCOPUS"].split(";").sort (function (a,b){ return CompareDate( a, b );})[0];
+                      // return  row["DateScopus"].split(";").sort(function(a,b){ return CompareDate( a, b ); })+" | "+row["AdvScopus"].split(";")[0];      
+                    } 
                 },
 
                 targets: 4
-            },
+            } , 
+
             {
                 "render": function (data, type, row) {
 
-                    if (typeof (row["AdvGs"]) === "undefined")
+                    if (typeof (row["AdvGS"]) === "undefined")
+
                     {
                         return "";
-                    } else {
-                        return row["AdvGs"].split(";").sort(function (a, b) {
-                            return CompareDate(a, b);
-                        })[0];
-                        //   return  row["DateGs"].split(";").sort(function(a,b){ return CompareDate( a, b ); })+" | "+row["AdvGs"].split(";")[0];  
+                    } 
+                    else {
+                         return row["AdvGS"].split(";").sort (function (a,b){ return CompareDate( a, b );})[0];
+                      //   return  row["DateGs"].split(";").sort(function(a,b){ return CompareDate( a, b ); })+" | "+row["AdvGs"].split(";")[0];  
                     }
-
+                  
+                             
 
                 },
 
                 targets: 5
+            } ,
+             {
+                "render": function(data, type, row) {
+                          
+                    if (  typeof(row["AdvSCIELO"]) === "undefined")
+                    {
+                       return ""; 
+                    }
+                    else {
+                         return row["AdvSCIELO"].split(";").sort (function (a,b){ return CompareDate( a, b );})[0];
+                    }   
+                },
+                
+                targets: 6
             }
         ]
 

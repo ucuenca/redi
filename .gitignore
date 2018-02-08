@@ -30,5 +30,7 @@ nb-configuration.xml
 /webapp/target (copia)/
 /nb-configuration.xml
 ComparisonNamesAuthors.csv
-/publications-manager/nbproject/
-/providers/springer-provider/nbproject/
+
+nbproject/
+nbproject/
+

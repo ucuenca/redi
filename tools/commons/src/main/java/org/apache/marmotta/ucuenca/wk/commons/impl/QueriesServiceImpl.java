@@ -1,9 +1,10 @@
 package org.apache.marmotta.ucuenca.wk.commons.impl;
 
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
+import com.hp.hpl.jena.vocabulary.OWL;
 import java.util.Arrays;
+import java.util.Map;
 import javax.inject.Inject;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
@@ -329,8 +330,37 @@ public class QueriesServiceImpl implements QueriesService {
     }
 
     @Override
-    public String getExtractedOrgList() {
-        return "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
+    public String getExtractedOrgList(Map<String, String> providers) {
+        String varprov = "";
+        String prov = "";
+        
+        
+        for (Map.Entry<String, String> provset : providers.entrySet()) {
+            varprov = " (group_concat(  ?label"+provset.getValue()+"  ; separator=\";\")  as  ?Adv"+provset.getValue()+" ) " + varprov;
+            prov = "  GRAPH  <" + provset.getKey() + "> {"
+                + "  OPTIONAL { "
+                + "  ?event rdfs:label  ?label"+provset.getValue()+" } "
+                + "  OPTIONAL { "
+                + "  ?event  <"+REDI.EXTRACTIONDATE.toString()+"> ?eventdate"+provset.getValue()+" } "
+                + "  } " + prov;
+
+        }
+     
+        String head = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
+                + "PREFIX ucmodel: <http://ucuenca.edu.ec/ontology#> "
+                + "SELECT DISTINCT ?uri ?name "+ varprov
+                + " WHERE { "
+                + "?subject  <"+REDI.BELONGTO.toString()+"> ?uri . "
+                + "?subject  <"+REDI.EXTRACTIONDATE.toString()+">  ?date .  "
+                + "FILTER ( STR(?date)  != '') . "
+                + "?uri  <"+REDI.NAME.toString()+">  ?name ."
+                + "OPTIONAL  {  GRAPH   <" + con.getOrganizationsGraph() + "> { "
+                + "   ?uri  <"+REDI.BELONGTO.toString()+"> ?event  }"
+                +prov
+                + "} }Group by ?uri ?name" ;
+        
+        return head;
+    /* String ant = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
                 + "PREFIX ucmodel: <http://ucuenca.edu.ec/ontology#> "
                 + "SELECT DISTINCT ?uri ?name  (group_concat(  ?labelAK  ; separator=\";\")  as  ?AdvAK)  (group_concat(  ?labelDBLP ; separator=\";\")  as  ?AdvDBLP)  (group_concat(  ?labelScopus ; separator=\";\")  as  ?AdvScopus) (group_concat(  ?labelGs ; separator=\";\")  as  ?AdvGs) WHERE  {\n"
                 + "?subject  ucmodel:belongTo ?uri . \n"
@@ -363,7 +393,78 @@ public class QueriesServiceImpl implements QueriesService {
                 + "  OPTIONAL {\n"
                 + "  ?event  ucmodel:extractionDate ?eventdateGs } \n"
                 + "  }\n"
-                + " }  } Group by ?uri ?name  ";
+                + " }  } Group by ?uri ?name  ";*/
+              
+    }
+
+    @Override
+    public String getOrgEnrichmentProvider(Map<String, String> providers) {
+        String varprov = "";
+        String prov = "";
+
+        for (Map.Entry<String, String> provset : providers.entrySet()) {
+
+            varprov = " ?" + provset.getValue() + " " + varprov;
+            prov = " OPTIONAL {       "
+                    + "   GRAPH <" + provset.getKey() + "> { "
+                    + "    SELECT  ?endp  (COUNT (distinct ?author) as ?" + provset.getValue() + " )  WHERE { "
+                    + "       GRAPH <" + con.getAuthorsGraph() + "> { "
+                    + "      ?author dct:provenance ?endp . "
+                    + "     }   "
+                    + "      ?object <" + OWL.oneOf.toString() + "> ?author . "
+                    + "     } GROUP BY  ?endp "
+                    + "    } } " + prov;
+
+        }
+
+        String head = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "
+                + "PREFIX dct: <http://purl.org/dc/terms/> "
+                + "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
+                + "SELECT     ?org ?label (COUNT (?authort) as ?total)" + varprov
+                + " WHERE {       "
+                + "      GRAPH <" + con.getOrganizationsGraph() + "> { "
+                + "    ?org  	<" + REDI.NAME.toString() + "> ?label  "
+                + "          }           "
+                + "    GRAPH <" + con.getEndpointsGraph() + "> { "
+                + "    ?endp  <" + REDI.BELONGTO.toString() + ">  ?org  } "
+                + " GRAPH <" + con.getAuthorsGraph() + "> { "
+                + "      ?authort dct:provenance ?endp . "
+                + "      ?authort a foaf:Person . "
+                + "     }  "
+                + "     " + prov + " }GROUP BY ?org  ?label" +varprov;
+
+        return head;
+    }
+    
+    @Override
+    public String getOrgDisambiguationResult(Map<String, String> providers) {
+        
+        String varprov = ""; 
+        String prov = "";
+        
+           for (Map.Entry<String, String> provset : providers.entrySet()) {
+
+            varprov = " (GROUP_CONCAT(?" + provset.getValue() + "s ;separator=\";\") as ?"+provset.getValue()+") "+  varprov;
+            prov = " OPTIONAL {       "
+                    + "   GRAPH <" + provset.getKey() + "> { "
+                    +"Select ?event ?"+provset.getValue()+"s  {"
+                    +"?event   rdfs:label ?"+provset.getValue()+"s"
+                    +" } } } " + prov;
+
+        }
+        
+        String queryDes = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
+                + "Select ?orgname ?org  "+ varprov
+                + " where {   "
+                + "       Graph <"+con.getOrganizationsGraph()+"> { "
+                + "      ?org  <"+REDI.BELONGTO.toString()+"> ?event . "
+                + "       ?org  <"+REDI.NAME.toString()+"> ?orgname     "
+                + "       }       "
+                + "     ?event a  <"+REDI.DISAMBIGUATION_EVENT.toString()+"> .   "
+                + prov
+                + " } GROUP BY ?orgname ?org ";
+      
+        return queryDes;
     }
 
     /*   @Override
@@ -583,23 +684,16 @@ public class QueriesServiceImpl implements QueriesService {
             orgs[i] = "<" + orgs[i] + ">";
         }
         return PREFIXES
-                + "SELECT DISTINCT ?subject (SAMPLE(?name_) as ?name) (SAMPLE(?fname_) as ?fname) (SAMPLE(?lname_) as ?lname)"
-                + "WHERE {"
-                + "  VALUES ?organization {" + StringUtils.join(orgs, " ") + "}"
-                + "  GRAPH <" + con.getEndpointsGraph() + ">  {"
-                + "      ?provenance uc:belongTo ?organization."
-                + "  }"
-                + "  GRAPH <" + con.getAuthorsGraph() + ">  {"
-                + "    ?subject a foaf:Person;"
-                + "               foaf:name ?name_;"
-                + "               foaf:firstName ?fname_;"
-                + "               foaf:lastName ?lname_;"
+
+                + "SELECT DISTINCT ?organization   ?provenance  ?subject (SAMPLE(?names) as ?name) (SAMPLE(?fnames) as ?fname) (SAMPLE(?lnames) as ?lname) "
+                + " WHERE {"
+                + "               foaf:name ?names;"
+                + "               foaf:firstName ?fnames;"
+                + "               foaf:lastName ?lnames;"
                 + "               dct:provenance ?provenance."
-                //                + "filter (mm:fulltext-search(?name_,\"Saquicela\")) "
-                //                + "filter (mm:fulltext-search(?name_,\"Mauricio espinoza\")) "
-                //                + "filter (mm:fulltext-search(?name_,\"Saquicela\") || mm:fulltext-search(?name,\"Mauricio espinoza\")) "
                 + "  }"
-                + "} GROUP BY ?subject";
+                + "} GROUP BY ?organization ?provenance  ?subject ";
+
     }
 
     @Override

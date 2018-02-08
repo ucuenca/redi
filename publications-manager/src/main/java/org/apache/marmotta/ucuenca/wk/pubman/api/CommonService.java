@@ -6,18 +6,14 @@
 package org.apache.marmotta.ucuenca.wk.pubman.api;
 
 import java.util.List;
+import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Provider;
+//import org.apache.marmotta.ucuenca.wk.pubman.disambiguation.Provider;
 
 /**
  *
  * @author Satellite
  */
 public interface CommonService {
-
-    String Data2GlobalGraph();
-
-    String authorAttrFromProviders();
-
-    String CountPublications();
 
     String getDataFromDBLPProvidersService(final String[] organizations);
 
@@ -33,15 +29,19 @@ public interface CommonService {
 
     String createReport(String hostname, String realPath, String name, String type, List<String> params);
 
-    String IndexCentralGraph();
 
     String getSearchQuery(String textSearch);
 
     String DetectLatindexPublications();
 
-    String DisambiguationProcess();
+  
+    String runDisambiguationProcess(String [] orgs);
 
     String CentralGraphProcess();
 
     String organizationListExtracted();
+    
+    String organizationListEnrichment();
+    
+    List<Provider> getProviders();
 }
