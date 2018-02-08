@@ -90,6 +90,7 @@ public abstract class AbstractProviderService implements ProviderService {
      *
      * @param firstname
      * @param lastname
+     * @param organization
      * @return
      */
     protected abstract List<String> buildURLs(String firstname, String lastname, List<String> organization);
@@ -206,10 +207,6 @@ public abstract class AbstractProviderService implements ProviderService {
                             }
                             // Register search query.
                             sparqlFunctionsService.executeInsert(getProviderGraph(), reqResource.replace(" ", ""), OWL.ONE_OF, authorResource);
-                            // Skip extra calls after have found some data
-                            if (!response.getData().isEmpty()) {
-                                break;
-                            }
                         } catch (DataRetrievalException dre) {
                             msgOrg.put(organization, "Fail: " + processedAuthors + "/" + totalAuthors);
                             log.error("Cannot retieve RDF for the given resource: '{}'", reqResource, dre);
