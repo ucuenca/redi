@@ -40,6 +40,7 @@ import org.apache.marmotta.ldclient.model.ClientConfiguration;
 import org.apache.marmotta.ldclient.model.ClientResponse;
 import org.apache.marmotta.ldclient.services.ldclient.LDClient;
 import org.apache.marmotta.ucuenca.wk.commons.function.Delay;
+import org.apache.marmotta.ucuenca.wk.commons.function.LDClientTools;
 import static org.apache.marmotta.ucuenca.wk.provider.dblp.DBLPAuthorRawProvider.dblpNamespaces;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -151,7 +152,7 @@ public class DBLPResourceRawProvider extends AbstractHttpProvider {
                     for (Value superp : pubList) {
                         String supURI = ((Resource) superp).stringValue();
                         if (supURI.compareTo(resource) != 0) {
-                            ClientResponse response = DBLPAuthorRawProvider.retryLDClient(ldClient, supURI, 2, 60);
+                            ClientResponse response = LDClientTools.retryLDClient(ldClient, supURI, 2, 60);
                             Model rsModel = response.getData();
                             if (resourceModel == null) {
                                 resourceModel = rsModel;

@@ -40,11 +40,6 @@ public class CommonServiceImpl implements CommonService {
     @Inject
     AcademicsKnowledgeProviderService academicsKnowledgeService;
 
-    @Inject
-    Data2GlobalGraphImpl data2GlobalGraphService;
-
-    @Inject
-    CountPublicationsServiceImpl countPublicationsService;
 
     @Inject
     DBLPProviderService dblpProviderServiceInt;
@@ -59,16 +54,11 @@ public class CommonServiceImpl implements CommonService {
     ReportsImpl reportsImpl;
 
     @Inject
-    AuthorAttributesImpl authorAttr;
-
-    @Inject
     LantindexDetectionServiceImpl LatindexImpl;
 
     @Inject
     DisambiguationServiceImpl DisambiguationImpl;
 
-    @Inject
-    IndexCentralGraphImpl indexingCentralGraphService;
 
     @Inject
     private QueriesService queriesService;
@@ -164,41 +154,10 @@ public class CommonServiceImpl implements CommonService {
         return "Data Provider Dspace are extracted in background.   Please review main.log file for details";
     }
 
-    @Override
-    public String Data2GlobalGraph() {
-        Thread data2globalTask = new Thread(data2GlobalGraphService);
-        data2globalTask.start();
-        return "Load Publications Data from Providers Graph to Global Graph. Task run in background.   Please review main.log file for details";
-    }
 
-    @Override
-    public String CountPublications() {
-        Thread countPublications = new Thread(countPublicationsService);
-        countPublications.start();
-        return "Count Publications from Providers and  Global Graph. Task run in background.   Please review main.log file for details";
-    }
-
-//    @Override
-//    public JsonArray searchAuthor(String uri) {
-//
-//        return dblpProviderServiceInt.SearchAuthorTaskImpl(uri);
-//    }
     @Override
     public String createReport(String hostname, String realPath, String name, String type, List<String> params) {
         return reportService.createReport(hostname, realPath, name, type, params);
-    }
-
-    @Override
-    public String authorAttrFromProviders() {
-        new Thread(authorAttr).start();
-        return "Extracting attributes from authors. Task run in background.   Please review main.log file for details";
-    }
-
-    @Override
-    public String IndexCentralGraph() {
-        Thread indexingTask = new Thread(indexingCentralGraphService);
-        indexingTask.start();
-        return "Index Publications in Global Graph. Task run in background.   Please review main.log file for details";
     }
 
     @Override

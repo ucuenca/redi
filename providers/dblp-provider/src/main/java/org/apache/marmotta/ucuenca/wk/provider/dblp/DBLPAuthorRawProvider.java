@@ -43,6 +43,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import org.apache.marmotta.ucuenca.wk.commons.function.Delay;
+import org.apache.marmotta.ucuenca.wk.commons.function.LDClientTools;
 
 /**
  * Support DBLP Author data lookup
@@ -136,7 +137,7 @@ public class DBLPAuthorRawProvider extends AbstractHttpProvider {
             for (Value dblpResource : resources) {
                 String resourceDoc = ((Resource) dblpResource).stringValue();
                 resourceDoc = resourceDoc.replaceFirst("rec", "rec/html");
-                ClientResponse response = retryLDClient(ldClient, resourceDoc, 2, 60);
+                ClientResponse response = LDClientTools.retryLDClient(ldClient, resourceDoc, 2, 60);
                 Model rsModel = response.getData();
                 if (resourceModel == null) {
                     resourceModel = rsModel;
@@ -148,34 +149,6 @@ public class DBLPAuthorRawProvider extends AbstractHttpProvider {
         }
         return Collections.emptyList();
 
-    }
-
-    public static ClientResponse retryLDClient(LDClient ldClient, String resource, int triesNum, int waitSec) throws DataRetrievalException {
-        ClientResponse respo = null;
-        int num = 0;
-        boolean keepTrying = true;
-        DataRetrievalException err = null;
-        do {
-            try {
-                respo = ldClient.retrieveResource(resource);
-                keepTrying = false;
-            } catch (DataRetrievalException s) {
-                err = s;
-            }
-            if (keepTrying) {
-                num++;
-                if (num < triesNum) {
-                    try {
-                        Thread.sleep(waitSec * 1000);
-                    } catch (InterruptedException ex) {
-                    }
-                } else {
-                    throw err;
-                }
-            }
-        } while (keepTrying);
-
-        return respo;
     }
 
 }

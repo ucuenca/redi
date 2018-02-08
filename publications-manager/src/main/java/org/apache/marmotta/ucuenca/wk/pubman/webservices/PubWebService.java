@@ -208,35 +208,6 @@ public class PubWebService {
         return Response.ok().entity(result).build();
     }
 
-    /*
-     * Get Publications Data from  Provider Graph and load into General Graph
-     */
-    @POST
-    @Path(LOAD_PUBLICATIONS)
-    public Response loadPublicationsPost(@QueryParam("Endpoint") String resultType, @Context HttpServletRequest request) {
-        String params = resultType;
-        log.debug("Publications Task", params);
-        String result = commonService.Data2GlobalGraph();
-        return Response.ok().entity(result).build();
-    }
-
-    @POST
-    @Path(INDEX_CENTRAL_GRAPH)
-    public Response IndexCentralGraphPost(@QueryParam("Endpoint") String resultType, @Context HttpServletRequest request) {
-        String params = resultType;
-        log.debug("Index Central Graph Task", params);
-        String result = commonService.IndexCentralGraph();
-        return Response.ok().entity(result).build();
-    }
-
-    /*
-     * Get Publications Data from  Provider Graph and load into General Graph
-     */
-    @POST
-    @Path(LOAD_AUTHOR_ATTR)
-    public Response loadPublicationsPost() {
-        return Response.ok(commonService.authorAttrFromProviders()).build();
-    }
 
 //    /**
 //     * Service to get data related with especific author.
@@ -251,27 +222,7 @@ public class PubWebService {
 //        String result = resultjson.toString();
 //        return Response.ok().entity(result).build();
 //    }
-    public static final String COUNT_PUBLICATIONS = "/count_publications_graph";
 
-    /**
-     * @Author Freddy Sumba. Service that count the publications in the provider
-     * an central graph.
-     * @param resultType
-     * @param request
-     * @return
-     */
-    @POST
-    @Path(COUNT_PUBLICATIONS)
-    public Response CountPublicationsPost(@QueryParam("Endpoint") String resultType, @Context HttpServletRequest request) {
-        String params = resultType;
-        log.debug("Publications Task Count", params);
-        return runPublicationsCountTask(params);
-    }
-
-    private Response runPublicationsCountTask(String urisString) {
-        String result = commonService.CountPublications();
-        return Response.ok().entity(result).build();
-    }
 
     /**
      * @Author Jose Luis Cullcay. Service used to create reports

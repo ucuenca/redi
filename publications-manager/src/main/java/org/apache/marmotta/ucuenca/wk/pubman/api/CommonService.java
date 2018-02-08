@@ -13,12 +13,6 @@ import java.util.List;
  */
 public interface CommonService {
 
-    String Data2GlobalGraph();
-
-    String authorAttrFromProviders();
-
-    String CountPublications();
-
     String getDataFromDBLPProvidersService(final String[] organizations);
 
     String getDataFromScopusProvidersService(final String[] organizations);
@@ -33,7 +27,6 @@ public interface CommonService {
 
     String createReport(String hostname, String realPath, String name, String type, List<String> params);
 
-    String IndexCentralGraph();
 
     String getSearchQuery(String textSearch);
 

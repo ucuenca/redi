@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.marmotta.ucuenca.wk.commons.function.Delay;
+import org.apache.marmotta.ucuenca.wk.commons.function.LDClientTools;
 import org.apache.marmotta.ucuenca.wk.commons.function.URLUtils;
 import static org.apache.marmotta.ucuenca.wk.provider.dblp.DBLPAuthorRawProvider.dblpNamespaces;
 import org.openrdf.model.Resource;
@@ -137,7 +138,7 @@ public class DBLPRawProvider extends AbstractHttpProvider {
             if (!candidates.isEmpty()) {
                 Model candidateModel = null;
                 for (String author : candidates) {
-                    ClientResponse response = DBLPAuthorRawProvider.retryLDClient(ldClient, author, 2, 60);
+                    ClientResponse response = LDClientTools.retryLDClient(ldClient, author, 2, 60);
                     Model authorModel = response.getData();
                     Model type = authorModel.filter(null, null, factory.createURI(dblpNamespaces.get("dblp") + "Person"));
                     Resource subject = type.subjects().iterator().next();
