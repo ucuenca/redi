@@ -202,11 +202,11 @@ public class PubWebService {
     public Response listEnrichmentOrganization() {
 
         String result = commonService.organizationListEnrichment();
-      //  result = organizationService.listOrganization();
+        //  result = organizationService.listOrganization();
         return Response.ok().entity(result).build();
 
     }
-    
+
     /*
      * Detect Latindex Journals
      */
@@ -218,7 +218,6 @@ public class PubWebService {
         String result = commonService.DetectLatindexPublications();
         return Response.ok().entity(result).build();
     }
-
 
 //    /**
 //     * Service to get data related with especific author.
@@ -233,13 +232,11 @@ public class PubWebService {
 //        String result = resultjson.toString();
 //        return Response.ok().entity(result).build();
 //    }
-
-
     /**
      * @Author Jose Luis Cullcay. Service used to create reports
-     * @param report  Name of the report
-     * @param param   Type of the report
-     * @param param1  Parameter
+     * @param report Name of the report
+     * @param param Type of the report
+     * @param param1 Parameter
      * @param request
      * @return Address to the new report created
      */
@@ -298,32 +295,24 @@ public class PubWebService {
         return Response.ok().entity(result).build();
     }
 
-    
-    
-    /*
-=======
-
->>>>>>> 6f858bfa10208cd38e68ba6b3d2a156b7bb5ade7
     @POST
     @Path(DISAMBIGUATION_PUBLICATIONS)
     public Response disambiguation(@QueryParam("Endpoint") String resultType) {
         String params = resultType;
         log.debug("Publications Task", params);
-        String result = commonService.DisambiguationProcess();
+        String result = commonService.runDisambiguationProcess();
         return Response.ok().entity(result).build();
-    }*/
-    
+    }
+
     @POST
     @Path("/runDisambiguation")
-    public Response runDisambiguation (@Context HttpServletRequest request) {
+    public Response runDisambiguation(@Context HttpServletRequest request) {
 
         String[] org = request.getParameterMap().get("data[]");
         String result = commonService.runDisambiguationProcess(org);
 
         return Response.ok().entity(result).build();
     }
-
-
 
     @POST
     @Path(CENTRAL_GRAPH_PUBLICATIONS)
