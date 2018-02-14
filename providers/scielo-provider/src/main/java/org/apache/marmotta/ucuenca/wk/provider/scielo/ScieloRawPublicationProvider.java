@@ -50,7 +50,7 @@ import org.slf4j.LoggerFactory;
  * Author: Jose Ortiz
  */
 public class ScieloRawPublicationProvider extends AbstractJSONDataProvider implements DataProvider {
-    
+
     public static final String NAME = "Scielo Raw Publication Provider";
     public static final String API = "http://articlemeta.scielo.org/api/v1/article/?code=%s";
     public static final String PATTERN = "https://search\\.scielo\\.org/searchpub/.*";
@@ -60,22 +60,22 @@ public class ScieloRawPublicationProvider extends AbstractJSONDataProvider imple
     public static final String SCIELOBASEPUBLICATION = SCIELOBASE + "publication/";
     public static final String SCIELOBASEAUTHOR = SCIELOBASE + "author/";
     public static final String SCIELOBASEAFFILIATION = SCIELOBASE + "affiliation/";
-    
+
     private static final String SUE = "issue";
     private static final String VOLUMEN = "volumen";
     private static final String SN = "issn";
     private static final String JOURNAL = "journal";
-    
+
     @Override
     protected List<String> getTypes(URI uri) {
         return Collections.emptyList();
     }
-    
+
     @Override
     protected Map<String, JsonPathValueMapper> getMappings(String string, String string1) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     protected List<String> buildRequestUrl(String resourceUri, Endpoint endpoint) throws DataRetrievalException {
         String url = null;
@@ -84,11 +84,11 @@ public class ScieloRawPublicationProvider extends AbstractJSONDataProvider imple
         url = String.format(API, URLEncoder.encode(id));
         return Collections.singletonList(url);
     }
-    
+
     private String getCode(String resource) {
         return resource.substring(resource.lastIndexOf('/') + 1);
     }
-    
+
     @Override
     protected List<String> parseResponse(String resource, String requestUrl, Model triples, InputStream input, String contentType) throws DataRetrievalException {
         try {
@@ -131,31 +131,31 @@ public class ScieloRawPublicationProvider extends AbstractJSONDataProvider imple
             mapProperty(triples, parse, SCIELOBASEPUBLICATION + code, SCIELOPREFIX + "publisher", "$.article.v62[*]._", null, null, false);
             mapProperty(triples, parse, SCIELOBASEPUBLICATION + code, SCIELOPREFIX + SN, "$.article.v435[*]._", null, null, false);
             mapProperty(triples, parse, SCIELOBASEPUBLICATION + code, SCIELOPREFIX + SN, "$.article.v936[*].i", null, null, false);
-            
+
             mapProperty(triples, parse, SCIELOBASEAUTHOR + code, SCIELOPREFIX + "fname", "$.article.v10[*].s", null, null, true);
             mapProperty(triples, parse, SCIELOBASEAUTHOR + code, SCIELOPREFIX + "gname", "$.article.v10[*].n", null, null, true);
             mapProperty(triples, parse, SCIELOBASEAUTHOR + code, SCIELOPREFIX + "aff", "$.article.v10[*]['1']", SCIELOBASEAFFILIATION + code, null, true);
             mapProperty(triples, parse, SCIELOBASEAUTHOR + code, SCIELOPREFIX + "email", "$.article.v70[*].e", null, null, true);
-            
+
             mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + "nameff", "$.article.v70[*].i", "$.article.v70[*]._", null);
             mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + "nameff", "$.article.v240[*].i", "$.article.v240[*]._", null);
-            
+
             ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
             Model unmodifiable = triples.unmodifiable();
-            
+
             Model filter = unmodifiable.filter(null, instance.createURI(SCIELOPREFIX + "fname"), null);
             Model filter1 = unmodifiable.filter(null, instance.createURI(SCIELOPREFIX + "gname"), null);
             Model filter2 = unmodifiable.filter(null, instance.createURI(SCIELOPREFIX + "email"), null);
             Model filter3 = unmodifiable.filter(null, instance.createURI(SCIELOPREFIX + "aff"), null);
-            
+
             Model t = new LinkedHashModel();
             t.addAll(filter);
             t.addAll(filter1);
             t.addAll(filter2);
             t.addAll(filter3);
-            
+
             Model t2 = new LinkedHashModel();
-            
+
             for (Resource r : t.subjects()) {
                 t2.add(instance.createURI(SCIELOBASEPUBLICATION + code), instance.createURI(SCIELOPREFIX + "contributor"), r);
                 if (r.stringValue().endsWith("_0")) {
@@ -163,36 +163,36 @@ public class ScieloRawPublicationProvider extends AbstractJSONDataProvider imple
                 }
             }
             triples.addAll(t2);
-            
+
         } catch (IOException ex) {
             log.debug(ex.toString());
         }
         return Collections.emptyList();
     }
-    
+
     @Override
     protected Configuration getConfiguration() {
         return Configuration.defaultConfiguration()
                 .addOptions(Option.ALWAYS_RETURN_LIST)
                 .addOptions(Option.SUPPRESS_EXCEPTIONS);
     }
-    
+
     @Override
     public String getName() {
         return NAME;
     }
-    
+
     @Override
     public String[] listMimeTypes() {
         return new String[]{
             "application/json"
         };
     }
-    
+
     private List<String> getValues(DocumentContext jsonDocument, String query) {
         return jsonDocument.read(query);
     }
-    
+
     private void mapRelation(Model model, DocumentContext document, String subject, String property, String query1, String query2, String lang) {
         ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
         List<String> gValues = getValues(document, query1);
@@ -212,12 +212,15 @@ public class ScieloRawPublicationProvider extends AbstractJSONDataProvider imple
             model.add(createIRI, createIRI1, createLiteral);
         }
     }
-    
+
     private void mapProperty(Model model, DocumentContext document, String subject, String property, String query, String prefixObject, String lang, boolean addSequence) {
         ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
         List<String> gValues = getValues(document, query);
         int i = 0;
         for (String v : gValues) {
+            if (v.trim().equals("")) {
+                continue;
+            }
             URI createIRI = instance.createURI(subject);
             if (addSequence) {
                 createIRI = instance.createURI(subject + "_" + i);
@@ -232,11 +235,11 @@ public class ScieloRawPublicationProvider extends AbstractJSONDataProvider imple
                 } else {
                     createLiteral = instance.createURI(prefixObject + "_" + URLEncoder.encode(v));
                 }
-                
+
             }
             model.add(createIRI, createIRI1, createLiteral);
             i++;
         }
     }
-    
+
 }
