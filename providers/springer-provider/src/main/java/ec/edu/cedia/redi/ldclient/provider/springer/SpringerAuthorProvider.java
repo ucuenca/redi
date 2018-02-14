@@ -193,12 +193,12 @@ public class SpringerAuthorProvider extends AbstractJSONDataProvider implements 
     private void setMapper(int i) {
         String root = String.format("$.records[%s]", i);
         mapper.put(DCTERMS.NAMESPACE + "title", new SpringerLiteralMapper(root + ".title", "string"));
-        mapper.put(BIBO.NAMESPACE + "doi", new SpringerLiteralMapper(root + ".doi", "integer"));
-        mapper.put(REDI.NAMESPACE + "pisbn", new SpringerLiteralMapper(root + ".printIsbn", "integer"));
-        mapper.put(REDI.NAMESPACE + "eisbn", new SpringerLiteralMapper(root + ".electronicIsbn", "integer"));
-        mapper.put(REDI.NAMESPACE + "isbn", new SpringerLiteralMapper(root + ".isbn", "integer"));
-        mapper.put(REDI.NAMESPACE + "issn", new SpringerLiteralMapper(root + ".issn", "integer"));
-        mapper.put(REDI.NAMESPACE + "eissn", new SpringerLiteralMapper(root + ".eissn", "integer"));
+        mapper.put(BIBO.NAMESPACE + "doi", new SpringerLiteralMapper(root + ".doi", "string"));
+        mapper.put(REDI.NAMESPACE + "pisbn", new SpringerLiteralMapper(root + ".printIsbn", "string"));
+        mapper.put(REDI.NAMESPACE + "eisbn", new SpringerLiteralMapper(root + ".electronicIsbn", "string"));
+        mapper.put(REDI.NAMESPACE + "isbn", new SpringerLiteralMapper(root + ".isbn", "string"));
+        mapper.put(REDI.NAMESPACE + "issn", new SpringerLiteralMapper(root + ".issn", "string"));
+        mapper.put(REDI.NAMESPACE + "eissn", new SpringerLiteralMapper(root + ".eissn", "string"));
         mapper.put(REDI.NAMESPACE + "springerJournalId", new SpringerLiteralMapper(root + ".journalid", "integer"));
         mapper.put(DCTERMS.NAMESPACE + "publisher", new SpringerLiteralMapper(root + ".publisher", "string"));
         mapper.put(BIBO.NAMESPACE + "created1", new SpringerDateMapper(root + ".publicationDate"));
@@ -206,7 +206,7 @@ public class SpringerAuthorProvider extends AbstractJSONDataProvider implements 
         mapper.put(BIBO.NAMESPACE + "created3", new SpringerDateMapper(root + ".printDate"));
         mapper.put(REDI.NAMESPACE + "coverDate", new SpringerDateMapper(root + ".coverDate"));
         mapper.put(BIBO.NAMESPACE + "volume", new SpringerLiteralMapper(root + ".volume", "integer"));
-        mapper.put(BIBO.NAMESPACE + "issue", new SpringerLiteralMapper(root + ".number", "integer"));
+        mapper.put(BIBO.NAMESPACE + "issue", new SpringerLiteralMapper(root + ".number", "string"));
         mapper.put(BIBO.NAMESPACE + "pageStart", new SpringerLiteralMapper(root + ".startingPage", "integer"));
         mapper.put(BIBO.NAMESPACE + "pageEnd", new SpringerLiteralMapper(root + ".endingPage", "integer"));
         mapper.put(REDI.NAMESPACE + "copyrightYear", new SpringerLiteralMapper(root + ".copyright", "string"));
