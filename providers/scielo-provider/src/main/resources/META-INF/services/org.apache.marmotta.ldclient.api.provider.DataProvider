@@ -1,1 +1,2 @@
 org.apache.marmotta.ucuenca.wk.provider.scielo.ScieloRawProvider
+org.apache.marmotta.ucuenca.wk.provider.scielo.ScieloRawPublicationProvider

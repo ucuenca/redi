@@ -3,27 +3,58 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix scielo: <https://search.scielo.org/ont/> .
+@prefix scielo: <http://search.scielo.org/ontology/> .
 @prefix uc: <http://ucuenca.edu.ec/ontology#> .  
 @prefix scoro: <http://purl.org/spar/scoro/> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix bibo: <http://purl.org/ontology/bibo/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+
 
 
 uc:mapColl1 a r2r:MappingCollection;
-    r2r:prefixDefinitions "rdfs: <http://www.w3.org/2000/01/rdf-schema#> . bibo: <http://purl.org/ontology/bibo/> . dct: <http://purl.org/dc/terms/> . scoro: <http://purl.org/spar/scoro/> . schema: <http://schema.org/> . foaf: <http://xmlns.com/foaf/0.1/> . uc: <http://ucuenca.edu.ec/ontology#> . scielo: <https://search.scielo.org/ont/> . owl: <http://www.w3.org/2002/07/owl#> ." .
+    r2r:prefixDefinitions "vcard: <http://www.w3.org/2006/vcard/ns#> . rdfs: <http://www.w3.org/2000/01/rdf-schema#> . bibo: <http://purl.org/ontology/bibo/> . dct: <http://purl.org/dc/terms/> . scoro: <http://purl.org/spar/scoro/> . schema: <http://schema.org/> . foaf: <http://xmlns.com/foaf/0.1/> . uc: <http://ucuenca.edu.ec/ontology#> . scielo: <http://search.scielo.org/ontology/> . owl: <http://www.w3.org/2002/07/owl#> ." .
 
-uc:Person a r2r:Mapping ;
+uc:AffN a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
-    r2r:sourcePattern "?SUBJ scielo:name ?n" ;
-    r2r:targetPattern "?SUBJ a foaf:Person" ;
-    r2r:targetPattern "?SUBJ dct:provenance uc:Scielo".
+    r2r:sourcePattern "?SUBJ scielo:nameff ?name" ;
+    r2r:targetPattern "?SUBJ foaf:name ?name" ;
+    r2r:targetPattern "?SUBJ a foaf:Organization" .
 
-uc:Name1 a r2r:Mapping ;
+
+uc:NameG a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
-    r2r:sourcePattern "?SUBJ scielo:name ?name" ;
-    r2r:targetPattern "?SUBJ foaf:name ?name" .
+    r2r:sourcePattern "?SUBJ scielo:gname ?gname" ;
+    r2r:targetPattern "?SUBJ foaf:givenName ?gname" ;
+    r2r:targetPattern "?SUBJ a foaf:Person" .
+
+uc:NameF a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ scielo:fname ?fname" ;
+    r2r:targetPattern "?SUBJ foaf:familyName ?fname" ;
+    r2r:targetPattern "?SUBJ a foaf:Person" .
+
+uc:NameC a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ scielo:fname ?fname . ?SUBJ scielo:gname ?gname ." ;
+    r2r:transformation "?cname = concat(?fname, ' , ', ?gname)" ;
+    r2r:targetPattern "?SUBJ foaf:name ?cname" ;
+    r2r:targetPattern "?SUBJ a foaf:Person" .
+
+
+uc:NameM a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ scielo:email ?email" ;
+    r2r:targetPattern "?SUBJ vcard:hasEmail ?email" ;
+    r2r:targetPattern "?SUBJ a foaf:Person" .
+
+uc:NameAf a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ scielo:aff ?aff" ;
+    r2r:targetPattern "?SUBJ schema:memberOf ?aff" ;
+    r2r:targetPattern "?SUBJ a foaf:Person" .
+
 
 
 uc:oneOf a r2r:Mapping ;
@@ -32,29 +63,37 @@ uc:oneOf a r2r:Mapping ;
     r2r:targetPattern "?SUBJ owl:oneOf ?b" .
 
 
-
-
-
-
-uc:publications a r2r:Mapping ;
-    r2r:partOfMappingCollection uc:mapColl1 ;
-    r2r:sourcePattern "?SUBJ scielo:publications ?b" ;
-    r2r:targetPattern "?SUBJ foaf:publications ?b";
-    r2r:targetPattern "?b dct:contributor ?SUBJ " .
-
-
-uc:publications2 a r2r:Mapping ;
+uc:publicationsC a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ scielo:creator ?b" ;
-    r2r:targetPattern "?SUBJ scielo:creator ?b" .
+    r2r:targetPattern "?b foaf:publications ?SUBJ";
+    r2r:targetPattern "?SUBJ dct:creator ?b" ;
+    r2r:targetPattern "?SUBJ dct:contributor ?b" ;
+    r2r:targetPattern "?SUBJ a bibo:AcademicArticle" .
 
 
+uc:publicationsCo a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ scielo:contributor ?b" ;
+    r2r:targetPattern "?b foaf:publications ?SUBJ";
+    r2r:targetPattern "?SUBJ dct:contributor ?b" ;
+    r2r:targetPattern "?SUBJ a bibo:AcademicArticle" . 
+
+
+
+
+uc:topicin1 a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ scielo:interest ?b . ?SUBJ scielo:creator ?a ." ;
+    r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/scielo/topic/',xpath:encode-for-uri(?b))" ;
+    r2r:targetPattern "?a foaf:topic_interest ?<urip>" ;
+    r2r:targetPattern "?<urip> rdfs:label ?b" .
 
 uc:topicin a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
-    r2r:sourcePattern "?SUBJ scielo:interestArea ?b " ;
+    r2r:sourcePattern "?SUBJ scielo:interest ?b . ?SUBJ scielo:contributor ?a ." ;
     r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/scielo/topic/',xpath:encode-for-uri(?b))" ;
-    r2r:targetPattern "?SUBJ foaf:topic_interest ?<urip>" ;
+    r2r:targetPattern "?a foaf:topic_interest ?<urip>" ;
     r2r:targetPattern "?<urip> rdfs:label ?b" .
 
 
@@ -73,11 +112,10 @@ uc:publicationsabstr a r2r:Mapping ;
 
 uc:pubkw a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
-    r2r:sourcePattern "?SUBJ scielo:keywords ?b " ;
+    r2r:sourcePattern "?SUBJ scielo:keyword ?b " ;
     r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/scielo/keyword/',xpath:encode-for-uri(?b))" ;
     r2r:targetPattern "?SUBJ dct:subject ?<urip>" ;
     r2r:targetPattern "?<urip> rdfs:label ?b" .
-
 
 uc:publicationuri a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
@@ -87,18 +125,18 @@ uc:publicationuri a r2r:Mapping ;
 
 uc:publicationpages a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
-    r2r:sourcePattern "?SUBJ scielo:pages ?b" ;
+    r2r:sourcePattern "?SUBJ scielo:page ?b" ;
     r2r:targetPattern "?SUBJ bibo:pages ?b" .
 
 
 uc:publicationpagesS a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
-    r2r:sourcePattern "?SUBJ scielo:pagesS ?b" ;
+    r2r:sourcePattern "?SUBJ scielo:pageS ?b" ;
     r2r:targetPattern "?SUBJ bibo:pageStart ?b" .
 
 uc:publicationpagesE a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
-    r2r:sourcePattern "?SUBJ scielo:pagesE ?b" ;
+    r2r:sourcePattern "?SUBJ scielo:pageE ?b" ;
     r2r:targetPattern "?SUBJ bibo:pageEnd ?b" .
 
 
@@ -108,10 +146,17 @@ uc:publicationIssue a r2r:Mapping ;
     r2r:targetPattern "?SUBJ bibo:issue ?b" .
 
 
+uc:publicationVolume a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ scielo:volume ?b" ;
+    r2r:targetPattern "?SUBJ bibo:volume ?b" .
+
+
 uc:publicationIssn a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ scielo:issn ?b" ;
     r2r:targetPattern "?SUBJ bibo:issn ?b" .
+
 
 uc:publicationDoi a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
@@ -119,16 +164,28 @@ uc:publicationDoi a r2r:Mapping ;
     r2r:targetPattern "?SUBJ bibo:doi ?b" .
 
 
+
 uc:publicationDate a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
-    r2r:sourcePattern "?SUBJ scielo:date ?b" ;
+    r2r:sourcePattern "?SUBJ scielo:created ?b" ;
     r2r:targetPattern "?SUBJ bibo:created ?b" .
 
 
-uc:pubkw a r2r:Mapping ;
+
+uc:pubjr a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ scielo:journal ?b " ;
     r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/scielo/journal/',xpath:encode-for-uri(?b))" ;
     r2r:targetPattern "?SUBJ dct:isPartOf ?<urip>" ;
     r2r:targetPattern "?<urip> a bibo:Journal" ;
+    r2r:targetPattern "?<urip> rdfs:label ?b" .
+
+
+
+uc:pubpbl a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ scielo:publisher ?b " ;
+    r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/scielo/publisher/',xpath:encode-for-uri(?b))" ;
+    r2r:targetPattern "?SUBJ dct:publisher ?<urip>" ;
+    r2r:targetPattern "?<urip> a foaf:Organization" ;
     r2r:targetPattern "?<urip> rdfs:label ?b" .
