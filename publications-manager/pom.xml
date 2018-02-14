@@ -159,27 +159,27 @@
             <version>${marmotta.version}</version>
         </dependency>
         <dependency>
-            <groupId>ec.edu.cedia.redi.provider</groupId>
+            <groupId>ec.edu.cedia.redi</groupId>
             <artifactId>dblp-provider</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>ec.edu.cedia.redi.provider</groupId>
+            <groupId>ec.edu.cedia.redi</groupId>
             <artifactId>scielo-provider</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>ec.edu.cedia.redi.provider</groupId>
+            <groupId>ec.edu.cedia.redi</groupId>
             <artifactId>scholar-provider</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>ec.edu.cedia.redi.provider</groupId>
+            <groupId>ec.edu.cedia.redi</groupId>
             <artifactId>scopus-provider</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>ec.edu.cedia.redi.provider</groupId>
+            <groupId>ec.edu.cedia.redi</groupId>
             <artifactId>academics-provider</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -352,6 +352,11 @@
             <artifactId>lucene-queryparser</artifactId>
             <!--<version>5.5.4</version>-->
             <version>4.3.1</version>
+        </dependency>
+        <dependency>
+            <artifactId>junit</artifactId>
+            <groupId>junit</groupId>
+            <version>4.11</version>
         </dependency>
     </dependencies>
 </project>
