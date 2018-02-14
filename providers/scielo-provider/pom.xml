@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>ec.edu.cedia.redi.provider</groupId>
+        <groupId>ec.edu.cedia.redi</groupId>
         <artifactId>providers</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
@@ -11,7 +11,7 @@
     <artifactId>scielo-provider</artifactId>
     <packaging>jar</packaging>
 
-    <name>LDClient Provider: Scielo XML Access</name>
+    <name>LDClient Provider: Scielo - XML Access</name>
     <description>Implements Linked Data model over Scielo data.</description>
     
     <build>
