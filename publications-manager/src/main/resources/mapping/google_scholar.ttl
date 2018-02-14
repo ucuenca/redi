@@ -113,6 +113,7 @@ uc:publicationContributor a r2r:Mapping;
     r2r:sourcePattern "?SUBJ dct:contributor ?contributor." ;
     r2r:transformation "?contributorIRI=concat('https://redi.cedia.edu.ec/resource/author/scholar/', xpath:encode-for-uri(?contributor))" ;
     r2r:targetPattern "?SUBJ dct:contributor ?<contributorIRI>";
+    r2r:targetPattern "?contributorIRI foaf:publications ?SUBJ";
     r2r:targetPattern "?contributorIRI foaf:name ?'contributor'^^xsd:string" .
 
 uc:publicationDate a r2r:Mapping ;

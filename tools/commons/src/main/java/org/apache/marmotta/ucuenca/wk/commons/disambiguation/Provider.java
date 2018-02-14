@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
-import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.openrdf.model.Value;
 import org.openrdf.query.QueryLanguage;
 
@@ -21,34 +20,15 @@ import org.openrdf.query.QueryLanguage;
  */
 @SuppressWarnings("PMD")
 public class Provider {
-   
-    private ConstantService con;
-   
+
     public String Name;
     public String Graph;
-    public String Uri;
-
-    public String getUri() {
-        return Uri;
-    }
-
-    public void setUri(String Uri) {
-        this.Uri = Uri;
-    }
-
     private SparqlService sparql;
 
-    public Provider(String Name, String Graph, SparqlService sparql , String Uri) {
+    public Provider(String Name, String Graph, SparqlService sparql) {
         this.Name = Name;
         this.Graph = Graph;
         this.sparql = sparql;
-        this.Uri = Uri;
-    }
-    
-    
-    
-    public void SetConstant (ConstantService constantService) {
-    this.con = constantService; 
     }
 
     public List<Person> getAuthors() throws MarmottaException {
@@ -72,18 +52,15 @@ public class Provider {
         return lsp;
     }
 
-    public List<Person> getAuthorsbyOrg(String org , String authorgraph , String endpointgraph) throws MarmottaException {
-        String qry = "PREFIX dct: <http://purl.org/dc/terms/>\n"
-                + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
-                + "select ?a \n"
-                + "{	graph <"+authorgraph+"> { \n"
-                + "     ?a a <http://xmlns.com/foaf/0.1/Person> . \n"
-                + "     ?a dct:provenance ?endp.\n"
-                + "   graph <"+endpointgraph+"> {\n"
-                + "    ?endp  <http://ucuenca.edu.ec/ontology#belongTo>  ?org\n"
-                + "     }   \n"
-                + "    values ?org { <"+org+"> } \n"
-                + "} }";
+    public List<Person> getAuthorsByOrganization(String organization) throws MarmottaException {
+        String qry = "select ?a \n"
+                + "{\n"
+                + "	graph <" + Graph + "> {\n"
+                + "  		?a a <http://xmlns.com/foaf/0.1/Person> . \n"
+                + "  		?a <http://schema.org/memberOf> ?o . \n"
+                + "  		values ?o { <" + organization + "> } . \n"
+                + "	}\n"
+                + "}";
         List<Map<String, Value>> persons = sparql.query(QueryLanguage.SPARQL, qry);
         List<Person> lsp = new ArrayList<>();
         for (Map<String, Value> row : persons) {
@@ -142,7 +119,7 @@ public class Provider {
                 + "      		?publication  dct:contributor | dct:creator   ?p .\n"
                 + "            filter (?p != ?per) .\n"
                 + "          	optional { ?p foaf:name ?fun . }\n"
-                + "       		optional { ?p foaf:givenName ?fn . }\n"
+                + "             optional { ?p foaf:givenName ?fn . }\n"
                 + "          	optional { ?p foaf:familyName ?ln . }\n"
                 + "    }\n"
                 + "}";

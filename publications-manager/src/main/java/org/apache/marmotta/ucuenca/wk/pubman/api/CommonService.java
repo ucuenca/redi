@@ -6,8 +6,8 @@
 package org.apache.marmotta.ucuenca.wk.pubman.api;
 
 import java.util.List;
+import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Provider;
-//import org.apache.marmotta.ucuenca.wk.pubman.disambiguation.Provider;
 
 /**
  *
@@ -36,6 +36,7 @@ public interface CommonService {
 
   
     String runDisambiguationProcess(String [] orgs);
+    String runDisambiguationProcess();
 
     String CentralGraphProcess();
 
@@ -43,5 +44,5 @@ public interface CommonService {
     
     String organizationListEnrichment();
     
-    List<Provider> getProviders();
+    List<Provider> getProviders() throws MarmottaException;
 }
