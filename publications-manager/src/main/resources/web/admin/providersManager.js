@@ -5,35 +5,30 @@
  */
 
 
- /*var dataSet = [
-    [ "UDA", "01/01/01 AC", "01/01/01 DBLP", "01/01/01", "2011/04/25", "01/01/01" ],
-    [ "UCUENCA", "", "", "12/12/12", "2011/07/25", "50/81/90" ],
-    [ "UTPL", "", "", "", "2009/01/12", "" ]
-    ];*/
- // var host = "http://localhost:8080/";
- var host = _SERVER_URL;
+/*var dataSet = [
+ [ "UDA", "01/01/01 AC", "01/01/01 DBLP", "01/01/01", "2011/04/25", "01/01/01" ],
+ [ "UCUENCA", "", "", "12/12/12", "2011/07/25", "50/81/90" ],
+ [ "UTPL", "", "", "", "2009/01/12", "" ]
+ ];*/
+// var host = "http://localhost:8080/";
+var host = _SERVER_URL;
 // var host = "https://rediclon.cedia.edu.ec/";
-function loadTables () {
-  
-    console.log ("Graficando");
-   $('#provTable').DataTable({
-            ajax: host + "pubman/publication/organization/list",
-                       columns: [
-            { "data" : "Selection" },
-            { "data" : "name"} ,
+function loadTables() {
+
+    console.log("Graficando");
+    $('#provTable').DataTable({
+        ajax: host + "pubman/publication/organization/list",
+        columns: [
+            {"data": "Selection"},
+            {"data": "name"},
             {"data": "AdvAcademicsKnowledge"},
             {"data": "AdvDBLP"},
             {"data": "AdvSCOPUS"},
-            {"data": "AdvGS"} ,
+            {"data": "AdvGS"},
             {"data": "AdvSCIELO"},
- 
-            
-    
-
-        ] ,
- 
+            {"data": "AdvSpringer"}
+        ],
         columnDefs: [
-
             {
                 "render": function (data, type, row) {
 
@@ -47,23 +42,24 @@ function loadTables () {
 
                     return  data;
                 },
-
                 targets: 1
 
-            } ,
-               {
-                "render": function(data, type, row) {
-                    
-                    if ( typeof(row["AdvAcademicsKnowledge"]) === "undefined"){
-                       return "";
-                   }else {
-                       return row["AdvAcademicsKnowledge"].split(";").sort (function (a,b){ return CompareDate( a, b );})[0];
-                      // return row["DateAk"].split(";").sort(function(a,b){ return CompareDate( a, b ); }) +" | " +row["AdvAK"].split(";")[0];    
-                   
-                    }         
-
             },
-                       targets: 2
+            {
+                "render": function (data, type, row) {
+
+                    if (typeof (row["AdvAcademicsKnowledge"]) === "undefined") {
+                        return "";
+                    } else {
+                        return row["AdvAcademicsKnowledge"].split(";").sort(function (a, b) {
+                            return CompareDate(a, b);
+                        })[0];
+                        // return row["DateAk"].split(";").sort(function(a,b){ return CompareDate( a, b ); }) +" | " +row["AdvAK"].split(";")[0];    
+
+                    }
+
+                },
+                targets: 2
             },
             {
                 "render": function (data, type, row) {
@@ -78,11 +74,9 @@ function loadTables () {
                         // return  row["DateDBLP"].split(";").sort(function(a,b){ return CompareDate( a, b ); })+" | "+row["AdvDBLP"].split(";")[0];
                     }
                 },
-
                 targets: 3
 
-            } ,
-              
+            },
             {
                 "render": function (data, type, row) {
 
@@ -91,16 +85,15 @@ function loadTables () {
 
                     {
                         return "";
+                    } else {
+                        return row["AdvSCOPUS"].split(";").sort(function (a, b) {
+                            return CompareDate(a, b);
+                        })[0];
+                        // return  row["DateScopus"].split(";").sort(function(a,b){ return CompareDate( a, b ); })+" | "+row["AdvScopus"].split(";")[0];      
                     }
-                    else {
-                       return row["AdvSCOPUS"].split(";").sort (function (a,b){ return CompareDate( a, b );})[0];
-                      // return  row["DateScopus"].split(";").sort(function(a,b){ return CompareDate( a, b ); })+" | "+row["AdvScopus"].split(";")[0];      
-                    } 
                 },
-
                 targets: 4
-            } , 
-
+            },
             {
                 "render": function (data, type, row) {
 
@@ -108,31 +101,45 @@ function loadTables () {
 
                     {
                         return "";
-                    } 
-                    else {
-                         return row["AdvGS"].split(";").sort (function (a,b){ return CompareDate( a, b );})[0];
-                      //   return  row["DateGs"].split(";").sort(function(a,b){ return CompareDate( a, b ); })+" | "+row["AdvGs"].split(";")[0];  
+                    } else {
+                        return row["AdvGS"].split(";").sort(function (a, b) {
+                            return CompareDate(a, b);
+                        })[0];
+                        //   return  row["DateGs"].split(";").sort(function(a,b){ return CompareDate( a, b ); })+" | "+row["AdvGs"].split(";")[0];  
                     }
-                  
-                             
+
+
 
                 },
-
                 targets: 5
-            } ,
-             {
-                "render": function(data, type, row) {
-                          
-                    if (  typeof(row["AdvSCIELO"]) === "undefined")
+            },
+            {
+                "render": function (data, type, row) {
+
+                    if (typeof (row["AdvSCIELO"]) === "undefined")
                     {
-                       return ""; 
+                        return "";
+                    } else {
+                        return row["AdvSCIELO"].split(";").sort(function (a, b) {
+                            return CompareDate(a, b);
+                        })[0];
                     }
-                    else {
-                         return row["AdvSCIELO"].split(";").sort (function (a,b){ return CompareDate( a, b );})[0];
-                    }   
                 },
-                
                 targets: 6
+            },
+            {
+                "render": function (data, type, row) {
+
+                    if (typeof (row["AdvSpringer"]) === "undefined")
+                    {
+                        return "";
+                    } else {
+                        return row["AdvSpringer"].split(";").sort(function (a, b) {
+                            return CompareDate(a, b);
+                        })[0];
+                    }
+                },
+                targets: 7
             }
         ]
 
@@ -331,6 +338,35 @@ function ExtractGoogleSchoolar() {
                 alert("Error" + data.responseText);
             }});
 
+    }
+}
+
+function ExtractSpringer() {
+    var publications = [];
+    $('tbody tr input:checked').each(function (index) {
+        console.log($(this).val())
+        publications.push($(this).val());
+    })
+
+    console.log(publications);
+
+    if (publications.length < 1) {
+        alert("No providers selected");
+    } else {
+        var listPublications = {"data": publications};
+        $.ajax({
+            type: "POST",
+            data: listPublications,
+            dataType: "text", //result data type
+            //contentType : "application/x-www-form-urlencoded; charset=UTF-8" ,
+            url: host + "pubman/publicationsSpringerByOrg",
+            success: function (Result) {
+                console.log(Result);
+            },
+            error: function (data) {
+                //document.getElementById("imgloading").style.visibility = "hidden";
+                alert("Error" + data.responseText);
+            }});
     }
 }
 
