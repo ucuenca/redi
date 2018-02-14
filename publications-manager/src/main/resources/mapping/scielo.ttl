@@ -27,27 +27,31 @@ uc:NameG a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ scielo:gname ?gname" ;
     r2r:targetPattern "?SUBJ foaf:givenName ?gname" ;
-    r2r:targetPattern "?SUBJ a foaf:Person" .
+    r2r:targetPattern "?SUBJ a foaf:Person" ;
+    r2r:targetPattern "?SUBJ dct:provenance uc:Scielo".
 
 uc:NameF a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ scielo:fname ?fname" ;
     r2r:targetPattern "?SUBJ foaf:familyName ?fname" ;
-    r2r:targetPattern "?SUBJ a foaf:Person" .
+    r2r:targetPattern "?SUBJ a foaf:Person" ;
+    r2r:targetPattern "?SUBJ dct:provenance uc:Scielo" .
 
 uc:NameC a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ scielo:fname ?fname . ?SUBJ scielo:gname ?gname ." ;
     r2r:transformation "?cname = concat(?fname, ' , ', ?gname)" ;
     r2r:targetPattern "?SUBJ foaf:name ?cname" ;
-    r2r:targetPattern "?SUBJ a foaf:Person" .
+    r2r:targetPattern "?SUBJ a foaf:Person"  ;
+    r2r:targetPattern "?SUBJ dct:provenance uc:Scielo" .
 
 
 uc:NameM a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ scielo:email ?email" ;
     r2r:targetPattern "?SUBJ vcard:hasEmail ?email" ;
-    r2r:targetPattern "?SUBJ a foaf:Person" .
+    r2r:targetPattern "?SUBJ a foaf:Person" ;
+    r2r:targetPattern "?SUBJ dct:provenance uc:Scielo" .
 
 uc:NameAf a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
@@ -69,7 +73,8 @@ uc:publicationsC a r2r:Mapping ;
     r2r:targetPattern "?b foaf:publications ?SUBJ";
     r2r:targetPattern "?SUBJ dct:creator ?b" ;
     r2r:targetPattern "?SUBJ dct:contributor ?b" ;
-    r2r:targetPattern "?SUBJ a bibo:AcademicArticle" .
+    r2r:targetPattern "?SUBJ a bibo:AcademicArticle" ;
+    r2r:targetPattern "?SUBJ dct:provenance uc:Scielo" .
 
 
 uc:publicationsCo a r2r:Mapping ;
@@ -77,7 +82,8 @@ uc:publicationsCo a r2r:Mapping ;
     r2r:sourcePattern "?SUBJ scielo:contributor ?b" ;
     r2r:targetPattern "?b foaf:publications ?SUBJ";
     r2r:targetPattern "?SUBJ dct:contributor ?b" ;
-    r2r:targetPattern "?SUBJ a bibo:AcademicArticle" . 
+    r2r:targetPattern "?SUBJ a bibo:AcademicArticle" ;
+    r2r:targetPattern "?SUBJ dct:provenance uc:Scielo" . 
 
 
 
