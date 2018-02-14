@@ -35,7 +35,10 @@ import org.openrdf.model.impl.ValueFactoryImpl;
  *
  * @author Xavier Sumba <xavier.sumba93@ucuenca.ec>
  */
-public class Utils {
+public final class SpringerUtility {
+
+    private SpringerUtility() {
+    }
 
     public static String buildNameFromRequest(String resource) throws DataRetrievalException {
         final Matcher matcher = Pattern.compile(PATTERN).matcher(resource);
@@ -51,6 +54,7 @@ public class Utils {
         throw new DataRetrievalException("Cannot rebuild name for resource " + resource);
     }
 
+    @SuppressWarnings("PMD.AvoidLiteralsInIfCondition")
     public static String buildNameFromQuery(String query) throws DataRetrievalException {
 
         final Matcher m = Pattern.compile("name:(\\w*[^\\S]*)").matcher(query);

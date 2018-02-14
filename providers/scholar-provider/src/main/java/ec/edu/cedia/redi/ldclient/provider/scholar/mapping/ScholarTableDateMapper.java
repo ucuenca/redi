@@ -44,16 +44,15 @@ public class ScholarTableDateMapper extends ScholarTableTextLiteralMapper {
     public List<Value> map(String resourceUri, Element elem, ValueFactory factory) {
         String key = elem.getElementsByClass(classKey).first().text();
         if (keys.contains(key)) {
-            for (Element e : Jsoup.parse(elem.html()).select(cssSelectorVal)) {
-                String v = e.text();
-                final String value = cleanValue(v);
-                Date date = DateUtils.parseDate(value);
-                if (StringUtils.isBlank(value) || date == null) {
-                    return Collections.emptyList();
-                }
-
-                return Collections.singletonList((Value) factory.createLiteral(date));
+            Element e = Jsoup.parse(elem.html()).select(cssSelectorVal).first();
+            String v = e.text();
+            final String value = cleanValue(v);
+            Date date = DateUtils.parseDate(value);
+            if (StringUtils.isBlank(value) || date == null) {
+                return Collections.emptyList();
             }
+
+            return Collections.singletonList((Value) factory.createLiteral(date));
         }
         return Collections.emptyList();
 

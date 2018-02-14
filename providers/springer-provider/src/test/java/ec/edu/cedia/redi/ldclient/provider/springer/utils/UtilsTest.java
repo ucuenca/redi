@@ -31,7 +31,7 @@ public class UtilsTest {
     }
 
     /**
-     * Test of buildNameFromRequest method, of class Utils.
+     * Test of buildNameFromRequest method, of class SpringerUtility.
      *
      * @throws java.lang.Exception
      */
@@ -39,19 +39,19 @@ public class UtilsTest {
     public void testBuildNameRequest() throws Exception {
         String resource = "http://api.springer.com/meta/v1/json?q=((name:victor OR name:hugo) AND name:saquicela)&api_key=1234&p=50&s=0";
         String expResult = "Victor Hugo Saquicela";
-        assertEquals(expResult, Utils.buildNameFromRequest(resource));
+        assertEquals(expResult, SpringerUtility.buildNameFromRequest(resource));
 
         resource = "http://api.springer.com/meta/v1/json?q=(name:victor AND name:saquicela)&api_key=1234&p=50&s=0";
         expResult = "Victor Saquicela";
-        assertEquals(expResult, Utils.buildNameFromRequest(resource));
+        assertEquals(expResult, SpringerUtility.buildNameFromRequest(resource));
 
         resource = "http://api.springer.com/meta/v1/json?q=(name:saquicela)&api_key=1234&p=50&s=0";
         expResult = "Saquicela";
-        assertEquals(expResult, Utils.buildNameFromRequest(resource));
+        assertEquals(expResult, SpringerUtility.buildNameFromRequest(resource));
     }
 
     /**
-     * Test of buildNameFromQuery method, of class Utils.
+     * Test of buildNameFromQuery method, of class SpringerUtility.
      *
      * @throws java.lang.Exception
      */
@@ -59,67 +59,67 @@ public class UtilsTest {
     public void testBuildNameQuery() throws Exception {
         String query = "((name:victor OR name:hugo) AND name:saquicela)";
         String expResult = "Victor Hugo Saquicela";
-        assertEquals(expResult, Utils.buildNameFromQuery(query));
+        assertEquals(expResult, SpringerUtility.buildNameFromQuery(query));
 
         query = "(name:victor AND name:saquicela)";
         expResult = "Victor Saquicela";
-        assertEquals(expResult, Utils.buildNameFromQuery(query));
+        assertEquals(expResult, SpringerUtility.buildNameFromQuery(query));
 
         query = "name:saquicela";
         expResult = "Saquicela";
-        assertEquals(expResult, Utils.buildNameFromQuery(query));
+        assertEquals(expResult, SpringerUtility.buildNameFromQuery(query));
 
         query = "(name:saquicela)";
         expResult = "Saquicela";
-        assertEquals(expResult, Utils.buildNameFromQuery(query));
+        assertEquals(expResult, SpringerUtility.buildNameFromQuery(query));
     }
 
     /**
-     * Test of buildNameFromRequest method, of class Utils when the name
-     * parameter is empty.
+     * Test of buildNameFromRequest method, of class SpringerUtility when the name
+ parameter is empty.
      *
      * @throws java.lang.Exception
      */
     @Test(expected = DataRetrievalException.class)
     public void testBuildNameEmptyNameinRequest() throws Exception {
         String resource = "http://api.springer.com/meta/v1/json?q=(name:)&api_key=1234&p=50&s=0";
-        Utils.buildNameFromRequest(resource);
+        SpringerUtility.buildNameFromRequest(resource);
     }
 
     /**
-     * Test of buildNameFromRequest method, of class Utils when the name
-     * parameter is empty.
+     * Test of buildNameFromRequest method, of class SpringerUtility when the name
+ parameter is empty.
      *
      * @throws java.lang.Exception
      */
     @Test(expected = DataRetrievalException.class)
     public void testBuildNameEmptyNameinQuery() throws Exception {
         String query = "(name:)";
-        Utils.buildNameFromQuery(query);
+        SpringerUtility.buildNameFromQuery(query);
     }
 
     /**
-     * Test of buildNameFromRequest method, of class Utils when the name
-     * parameter is empty.
+     * Test of buildNameFromRequest method, of class SpringerUtility when the name
+ parameter is empty.
      *
      * @throws java.lang.Exception
      */
     @Test(expected = DataRetrievalException.class)
     public void testBuildNameEmptyString() throws Exception {
         String query = "";
-        Utils.buildNameFromQuery(query);
+        SpringerUtility.buildNameFromQuery(query);
     }
 
     /**
-     * Test of buildNameFromRequest method, of class Utils when the name
-     * parameter is empty.
+     * Test of buildNameFromRequest method, of class SpringerUtility when the name
+ parameter is empty.
      *
      * @throws java.lang.Exception
      */
     @Test
     public void testHashGeneration() throws Exception {
         String query = "This is my hash.";
-        assertEquals("b0051e6655550461f9cf80dd99338049", Utils.generateHash(query));
+        assertEquals("b0051e6655550461f9cf80dd99338049", SpringerUtility.generateHash(query));
     }
 
 }

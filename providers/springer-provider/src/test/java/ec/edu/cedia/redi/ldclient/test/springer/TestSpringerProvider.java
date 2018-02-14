@@ -17,13 +17,19 @@
  */
 package ec.edu.cedia.redi.ldclient.test.springer;
 
+import java.io.StringWriter;
 import org.apache.marmotta.commons.sesame.model.ModelCommons;
 import org.apache.marmotta.ldclient.model.ClientResponse;
 import org.apache.marmotta.ldclient.test.provider.ProviderTestBase;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.Rio;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -33,6 +39,7 @@ public class TestSpringerProvider extends ProviderTestBase {
 
     private final String KEY = "a6bf2dbe42d9e7d523fadd7c40dcc43d";
     private final String TEMPLATE = "http://api.springer.com/meta/v1/json?q=%s&api_key=" + KEY + "&p=50&s=0";
+    private final static Logger log = LoggerFactory.getLogger(TestSpringerProvider.class);
 
     /**
      *
@@ -46,7 +53,6 @@ public class TestSpringerProvider extends ProviderTestBase {
 
     /**
      *
-     * @throws Exception
      */
     @Test
     public void testSpringerAuthorWithIssn() throws Exception {
@@ -56,7 +62,6 @@ public class TestSpringerProvider extends ProviderTestBase {
 
     /**
      *
-     * @throws Exception
      */
     @Test
     @Ignore("This test makes many requests bc of pagination.")
@@ -68,12 +73,22 @@ public class TestSpringerProvider extends ProviderTestBase {
     @Override
     protected void testResource(String uri) throws Exception {
         // Override method bc cannot ping service. 
+        // Assume.assumeTrue("LDClient endpoint for <" + uri + "> not available", ldclient.ping(uri));
+
         ClientResponse response = ldclient.retrieveResource(uri);
+
+        Assume.assumeTrue(response.getHttpStatus() == 200);
 
         RepositoryConnection connection = ModelCommons.asRepository(response.getData()).getConnection();
         try {
             connection.begin();
             Assert.assertTrue(connection.size() > 0);
+            if (log.isDebugEnabled()) {
+                StringWriter out = new StringWriter();
+                connection.export(Rio.createWriter(RDFFormat.TURTLE, out));
+                log.debug("DATA:");
+                log.debug(out.toString());
+            }
         } finally {
             connection.commit();
             connection.close();

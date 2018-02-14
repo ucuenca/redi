@@ -24,7 +24,7 @@ import ec.edu.cedia.redi.ldclient.provider.json.mappers.JsonPathValueMapper;
 import ec.edu.cedia.redi.ldclient.provider.springer.mapping.SpringerAbstractMapper;
 import ec.edu.cedia.redi.ldclient.provider.springer.mapping.SpringerDateMapper;
 import ec.edu.cedia.redi.ldclient.provider.springer.mapping.SpringerLiteralMapper;
-import ec.edu.cedia.redi.ldclient.provider.springer.utils.Utils;
+import ec.edu.cedia.redi.ldclient.provider.springer.utils.SpringerUtility;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -96,7 +96,7 @@ public class SpringerAuthorProvider extends AbstractJSONDataProvider implements 
         try {
             byte[] data = IOUtils.toByteArray(input); // keep data for some reads
             ValueFactory vf = ValueFactoryImpl.getInstance();
-            String authorname = Utils.buildNameFromRequest(resource);
+            String authorname = SpringerUtility.buildNameFromRequest(resource);
             ReadContext ctx = JsonPath.parse(new ByteArrayInputStream(data));
             Map resultsStatistics = ctx.read("$.result[0]");
 
@@ -117,7 +117,7 @@ public class SpringerAuthorProvider extends AbstractJSONDataProvider implements 
                     publicationPath = "publication/" + id;
                 }
 
-                URI author = Utils.generateURI(SPRINGER_URL + "author/", authorname + id);
+                URI author = SpringerUtility.generateURI(SPRINGER_URL + "author/", authorname + id);
                 URI publication = vf.createURI(SPRINGER_URL + publicationPath);
                 triples.add(author, FOAF.NAME, vf.createLiteral(authorname));
                 triples.add(author, OWL.ONEOF, vf.createLiteral(resource));
@@ -189,6 +189,7 @@ public class SpringerAuthorProvider extends AbstractJSONDataProvider implements 
         return mapper;
     }
 
+    @SuppressWarnings("PMD.AvoidDuplicateLiterals")
     private void setMapper(int i) {
         String root = String.format("$.records[%s]", i);
         mapper.put(DCTERMS.NAMESPACE + "title", new SpringerLiteralMapper(root + ".title", "string"));
