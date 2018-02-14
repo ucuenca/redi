@@ -19,8 +19,11 @@ package ec.edu.cedia.redi.ldclient.provider.springer;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
 import ec.edu.cedia.redi.ldclient.provider.json.AbstractJSONDataProvider;
-import ec.edu.cedia.redi.ldclient.provider.json.mappers.JsonPathLiteralMapper;
+import ec.edu.cedia.redi.ldclient.provider.json.mappers.JsonPathURIMapper;
 import ec.edu.cedia.redi.ldclient.provider.json.mappers.JsonPathValueMapper;
+import ec.edu.cedia.redi.ldclient.provider.springer.mapping.SpringerAbstractMapper;
+import ec.edu.cedia.redi.ldclient.provider.springer.mapping.SpringerDateMapper;
+import ec.edu.cedia.redi.ldclient.provider.springer.mapping.SpringerLiteralMapper;
 import ec.edu.cedia.redi.ldclient.provider.springer.utils.Utils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -98,16 +101,24 @@ public class SpringerAuthorProvider extends AbstractJSONDataProvider implements 
             Map resultsStatistics = ctx.read("$.result[0]");
 
             int docs = Integer.parseInt((String) resultsStatistics.get("recordsDisplayed"));
+            int totalDocs = Integer.parseInt((String) resultsStatistics.get("total"));
+            int start = Integer.parseInt((String) resultsStatistics.get("start"));
 
             for (int i = 0; i < docs; i++) {
-                String doi;
-                try {
-                    doi = ctx.read(String.format("$.records[%s].identifier", i));
-                } catch (Exception e) {
-                    doi = String.valueOf(Math.random() * 100);
+                String id = String.valueOf(ctx.read(String.format("$.records[%s].identifier", i)))
+                        .replace("doi:", "");
+
+                String publicationPath;
+                if (getAttribute(ctx, i, "isbn") != null) { // Build Springer resource for a book.
+                    publicationPath = "chapter/" + id;
+                } else if (getAttribute(ctx, i, "issn") != null) { // Build Springer resource for a journal.
+                    publicationPath = "article/" + id;
+                } else { // Arbitrary path.
+                    publicationPath = "publication/" + id;
                 }
-                URI author = Utils.generateURI(SPRINGER_URL + "author/", authorname + doi);
-                URI publication = Utils.generateURI(SPRINGER_URL + "publication/", doi);
+
+                URI author = Utils.generateURI(SPRINGER_URL + "author/", authorname + id);
+                URI publication = vf.createURI(SPRINGER_URL + publicationPath);
                 triples.add(author, FOAF.NAME, vf.createLiteral(authorname));
                 triples.add(author, OWL.ONEOF, vf.createLiteral(resource));
                 triples.add(author, RDF.TYPE, FOAF.PERSON);
@@ -115,12 +126,20 @@ public class SpringerAuthorProvider extends AbstractJSONDataProvider implements 
                 setMapper(i);
                 super.parseResponse(publication.toString(), requestUrl, triples, new ByteArrayInputStream(data), contentType);
             }
-            // https://link.springer.com/article/10.1007/s10853-017-1751-9 --> journal
-            // https://link.springer.com/chapter/10.1007/978-3-319-66562-7_49 --> book
-
+            if (start + 50 <= totalDocs) {
+                return Collections.singletonList(requestUrl.replaceAll("s=.*", "s=" + (start + 50)));
+            }
             return Collections.emptyList();
         } catch (IOException ex) {
             throw new DataRetrievalException(ex);
+        }
+    }
+
+    private String getAttribute(ReadContext ctx, int i, String attr) {
+        try {
+            return ctx.read(String.format("$.records[%s].%s", i, attr));
+        } catch (Exception e) {
+            return null;
         }
     }
 
@@ -162,7 +181,7 @@ public class SpringerAuthorProvider extends AbstractJSONDataProvider implements 
      */
     @Override
     protected final List<String> getTypes(URI resource) {
-        return Collections.emptyList();
+        return Collections.singletonList(BIBO.ACADEMIC_ARTICLE.toString());
     }
 
     @Override
@@ -172,28 +191,29 @@ public class SpringerAuthorProvider extends AbstractJSONDataProvider implements 
 
     private void setMapper(int i) {
         String root = String.format("$.records[%s]", i);
-        mapper.put(DCTERMS.NAMESPACE + "title", new JsonPathLiteralMapper(root + ".title", "string"));
-        mapper.put(BIBO.NAMESPACE + "doi", new JsonPathLiteralMapper(root + ".doi", "string"));
-        mapper.put(REDI.NAMESPACE + "pisbn", new JsonPathLiteralMapper(root + ".printIsbn", "string"));
-        mapper.put(REDI.NAMESPACE + "eisbn", new JsonPathLiteralMapper(root + ".electronicIsbn", "string"));
-        mapper.put(REDI.NAMESPACE + "isbn", new JsonPathLiteralMapper(root + ".isbn", "string"));
-        mapper.put(REDI.NAMESPACE + "issn", new JsonPathLiteralMapper(root + ".issn", "string"));
-        mapper.put(REDI.NAMESPACE + "eissn", new JsonPathLiteralMapper(root + ".eissn", "string"));
-        mapper.put(REDI.NAMESPACE + "springerJournalId", new JsonPathLiteralMapper(root + ".journalid", "string"));
-        mapper.put(DCTERMS.NAMESPACE + "publisher", new JsonPathLiteralMapper(root + ".publisher", "string"));
-        mapper.put(BIBO.NAMESPACE + "created1", new JsonPathLiteralMapper(root + ".publicationDate", "string"));
-        mapper.put(BIBO.NAMESPACE + "created2", new JsonPathLiteralMapper(root + ".onlineDate", "string"));
-        mapper.put(BIBO.NAMESPACE + "created3", new JsonPathLiteralMapper(root + ".printDate", "string"));
-        mapper.put(REDI.NAMESPACE + "coverDate", new JsonPathLiteralMapper(root + ".coverDate", "string"));
-        mapper.put(BIBO.NAMESPACE + "volume", new JsonPathLiteralMapper(root + ".volume", "string"));
-        mapper.put(BIBO.NAMESPACE + "issue", new JsonPathLiteralMapper(root + ".number", "string"));
-        mapper.put(BIBO.NAMESPACE + "pageStart", new JsonPathLiteralMapper(root + ".startingPage", "string"));
-        mapper.put(REDI.NAMESPACE + "copyrightYear", new JsonPathLiteralMapper(root + ".copyright", "string"));
-//        mapper.put(DCTERMS.NAMESPACE + "genre", new JsonPathLiteralMapper(root + ".genre", "string"));
-        mapper.put(BIBO.NAMESPACE + "abstract", new JsonPathLiteralMapper(root + ".abstract", "string"));
-        mapper.put(BIBO.NAMESPACE + "uri", new JsonPathLiteralMapper(root + ".url[*].value", "string"));
-        mapper.put(DCTERMS.NAMESPACE + "contributor", new JsonPathLiteralMapper(root + ".creators[*].creator", "string"));
-        mapper.put(DCTERMS.NAMESPACE + "name", new JsonPathLiteralMapper(root + ".publicationName", "string"));
+        mapper.put(DCTERMS.NAMESPACE + "title", new SpringerLiteralMapper(root + ".title", "string"));
+        mapper.put(BIBO.NAMESPACE + "doi", new SpringerLiteralMapper(root + ".doi", "integer"));
+        mapper.put(REDI.NAMESPACE + "pisbn", new SpringerLiteralMapper(root + ".printIsbn", "integer"));
+        mapper.put(REDI.NAMESPACE + "eisbn", new SpringerLiteralMapper(root + ".electronicIsbn", "integer"));
+        mapper.put(REDI.NAMESPACE + "isbn", new SpringerLiteralMapper(root + ".isbn", "integer"));
+        mapper.put(REDI.NAMESPACE + "issn", new SpringerLiteralMapper(root + ".issn", "integer"));
+        mapper.put(REDI.NAMESPACE + "eissn", new SpringerLiteralMapper(root + ".eissn", "integer"));
+        mapper.put(REDI.NAMESPACE + "springerJournalId", new SpringerLiteralMapper(root + ".journalid", "integer"));
+        mapper.put(DCTERMS.NAMESPACE + "publisher", new SpringerLiteralMapper(root + ".publisher", "string"));
+        mapper.put(BIBO.NAMESPACE + "created1", new SpringerDateMapper(root + ".publicationDate"));
+        mapper.put(BIBO.NAMESPACE + "created2", new SpringerDateMapper(root + ".onlineDate"));
+        mapper.put(BIBO.NAMESPACE + "created3", new SpringerDateMapper(root + ".printDate"));
+        mapper.put(REDI.NAMESPACE + "coverDate", new SpringerDateMapper(root + ".coverDate"));
+        mapper.put(BIBO.NAMESPACE + "volume", new SpringerLiteralMapper(root + ".volume", "integer"));
+        mapper.put(BIBO.NAMESPACE + "issue", new SpringerLiteralMapper(root + ".number", "integer"));
+        mapper.put(BIBO.NAMESPACE + "pageStart", new SpringerLiteralMapper(root + ".startingPage", "integer"));
+        mapper.put(BIBO.NAMESPACE + "pageEnd", new SpringerLiteralMapper(root + ".endingPage", "integer"));
+        mapper.put(REDI.NAMESPACE + "copyrightYear", new SpringerLiteralMapper(root + ".copyright", "string"));
+//        mapper.put(DCTERMS.NAMESPACE + "genre", new SpringerLiteralMapper(root + ".genre", "string"));
+        mapper.put(BIBO.NAMESPACE + "abstract", new SpringerAbstractMapper(root + ".abstract", "string"));
+        mapper.put(BIBO.NAMESPACE + "uri", new JsonPathURIMapper(root + ".url[*].value"));
+        mapper.put(DCTERMS.NAMESPACE + "contributor", new SpringerLiteralMapper(root + ".creators[*].creator", "string"));
+        mapper.put(DCTERMS.NAMESPACE + "name", new SpringerLiteralMapper(root + ".publicationName", "string"));
     }
 
 }
