@@ -123,7 +123,7 @@ public class OntologyMapperTest {
         assertEquals(scholarModel.size(), 919);
         Model resultWithMapperFile = OntologyMapper.map(scholarModel, scholarMapper, vocabulary);
         Model resultEmptyMapperFile = OntologyMapper.map(scholarModel, emptyMapper, vocabulary);
-        assertEquals(resultWithMapperFile.size(), 1432);
+        assertEquals(resultWithMapperFile.size(), 1538);
         assertEquals(resultEmptyMapperFile.size(), 0);
     }
 
