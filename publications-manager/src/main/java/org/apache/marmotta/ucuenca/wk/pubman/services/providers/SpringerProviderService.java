@@ -17,11 +17,9 @@ package org.apache.marmotta.ucuenca.wk.pubman.services.providers;
 
 import com.google.common.base.Preconditions;
 import edu.emory.mathcs.backport.java.util.Collections;
-import java.net.URISyntaxException;
 import java.util.List;
 import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.utils.URIBuilder;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.AbstractProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.exceptions.APIException;
@@ -34,6 +32,7 @@ public class SpringerProviderService extends AbstractProviderService {
 
     @Inject
     private ConfigurationService configurationService;
+    private final String TEMPLATE = "http://api.springer.com/meta/v1/json?q=%s&api_key=%s&p=50&s=0";
 
     @Override
     protected List<String> buildURLs(String firstname, String lastname, List<String> organization) {
@@ -67,20 +66,13 @@ public class SpringerProviderService extends AbstractProviderService {
                 expr.append(" OR ");
             }
         }
-
-        expr.append(" AND name:").append(lastname).append(")");
-        URIBuilder builder;
-        try {
-            builder = new URIBuilder("http://api.springer.com/meta/v1/json");
-            builder.setParameter("q", expr.toString());
-            builder.setParameter("api_key", "apiKey");
-            builder.setParameter("p", "50");
-            builder.setParameter("s", "0");
-
-            return Collections.singletonList(builder.build().toString());
-        } catch (URISyntaxException ex) {
-            throw new RuntimeException(ex);
+        if (!"".equals(lastname)) {
+            expr.append(" AND name:").append(lastname);
         }
+        expr.append(")");
+
+        String query = String.format(TEMPLATE, expr.toString(), apiKey);
+        return Collections.singletonList(query);
     }
 
     @Override
