@@ -37,8 +37,12 @@ public class UtilsTest {
      */
     @Test
     public void testBuildNameRequest() throws Exception {
-        String resource = "http://api.springer.com/meta/v1/json?q=((name:victor OR name:hugo) AND name:saquicela)&api_key=1234&p=50&s=0";
+        String resource = "http://api.springer.com/meta/v1/json?q=((name:victor+OR+name:hugo)+AND+name:saquicela)&api_key=1234&p=50&s=0";
         String expResult = "Victor Hugo Saquicela";
+        assertEquals(expResult, SpringerUtility.buildNameFromRequest(resource));
+
+        resource = "http://api.springer.com/meta/v1/json?q=((name:victor OR name:hugo) AND name:saquicela)&api_key=1234&p=50&s=0";
+        expResult = "Victor Hugo Saquicela";
         assertEquals(expResult, SpringerUtility.buildNameFromRequest(resource));
 
         resource = "http://api.springer.com/meta/v1/json?q=(name:victor AND name:saquicela)&api_key=1234&p=50&s=0";
@@ -61,6 +65,10 @@ public class UtilsTest {
         String expResult = "Victor Hugo Saquicela";
         assertEquals(expResult, SpringerUtility.buildNameFromQuery(query));
 
+        query = "((name:victor+OR+name:hugo)+AND+name:saquicela)";
+        expResult = "Victor Hugo Saquicela";
+        assertEquals(expResult, SpringerUtility.buildNameFromQuery(query));
+
         query = "(name:victor AND name:saquicela)";
         expResult = "Victor Saquicela";
         assertEquals(expResult, SpringerUtility.buildNameFromQuery(query));
@@ -75,8 +83,8 @@ public class UtilsTest {
     }
 
     /**
-     * Test of buildNameFromRequest method, of class SpringerUtility when the name
- parameter is empty.
+     * Test of buildNameFromRequest method, of class SpringerUtility when the
+     * name parameter is empty.
      *
      * @throws java.lang.Exception
      */
@@ -87,8 +95,8 @@ public class UtilsTest {
     }
 
     /**
-     * Test of buildNameFromRequest method, of class SpringerUtility when the name
- parameter is empty.
+     * Test of buildNameFromRequest method, of class SpringerUtility when the
+     * name parameter is empty.
      *
      * @throws java.lang.Exception
      */
@@ -99,8 +107,8 @@ public class UtilsTest {
     }
 
     /**
-     * Test of buildNameFromRequest method, of class SpringerUtility when the name
- parameter is empty.
+     * Test of buildNameFromRequest method, of class SpringerUtility when the
+     * name parameter is empty.
      *
      * @throws java.lang.Exception
      */
@@ -111,8 +119,8 @@ public class UtilsTest {
     }
 
     /**
-     * Test of buildNameFromRequest method, of class SpringerUtility when the name
- parameter is empty.
+     * Test of buildNameFromRequest method, of class SpringerUtility when the
+     * name parameter is empty.
      *
      * @throws java.lang.Exception
      */

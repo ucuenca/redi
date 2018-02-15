@@ -120,7 +120,7 @@ public class SpringerAuthorProvider extends AbstractJSONDataProvider implements 
                 URI author = SpringerUtility.generateURI(SPRINGER_URL + "author/", authorname + id);
                 URI publication = vf.createURI(SPRINGER_URL + publicationPath);
                 triples.add(author, FOAF.NAME, vf.createLiteral(authorname));
-                triples.add(author, OWL.ONEOF, vf.createLiteral(resource));
+                triples.add(author, OWL.ONEOF, vf.createURI(resource.replace(" ", "")));
                 triples.add(author, RDF.TYPE, FOAF.PERSON);
                 triples.add(author, FOAF.PUBLICATIONS, publication);
                 setMapper(i);
@@ -162,6 +162,7 @@ public class SpringerAuthorProvider extends AbstractJSONDataProvider implements 
             try {
                 String query = "q=" + URLEncoder.encode(matcher.group(1), "UTF-8");
                 resource = resource.replaceFirst("q=[^\\&]+", query);
+                resource = resource.replaceAll("%2B", "+"); // replace all encoded '+'.
                 return Collections.singletonList(resource);
             } catch (UnsupportedEncodingException ex) {
                 throw new RuntimeException(

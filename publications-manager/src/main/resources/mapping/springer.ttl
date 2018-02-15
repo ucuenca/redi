@@ -15,7 +15,7 @@ uc:authorType a r2r:Mapping ;
 uc:authorSearch a r2r:Mapping ; 
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ owl:oneOf ?search" ;
-    r2r:targetPattern "?SUBJ owl:oneOf ?search" .
+    r2r:targetPattern "?SUBJ owl:oneOf ?<search>" .
 
 uc:authorPublications a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;

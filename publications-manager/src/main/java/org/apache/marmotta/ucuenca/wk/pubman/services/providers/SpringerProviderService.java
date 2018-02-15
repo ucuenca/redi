@@ -63,11 +63,11 @@ public class SpringerProviderService extends AbstractProviderService {
             if (i == fName.length - 1) {
                 expr.append(")");
             } else {
-                expr.append(" OR ");
+                expr.append("+OR+");
             }
         }
         if (!"".equals(lastname)) {
-            expr.append(" AND name:").append(lastname);
+            expr.append("+AND+name:").append(lastname);
         }
         expr.append(")");
 

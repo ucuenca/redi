@@ -57,7 +57,7 @@ public final class SpringerUtility {
     @SuppressWarnings("PMD.AvoidLiteralsInIfCondition")
     public static String buildNameFromQuery(String query) throws DataRetrievalException {
 
-        final Matcher m = Pattern.compile("name:(\\w*[^\\S]*)").matcher(query);
+        final Matcher m = Pattern.compile("name:(\\w*[^\\S\\+]*)").matcher(query);
 
         String name = "";
         while (m.find()) {
