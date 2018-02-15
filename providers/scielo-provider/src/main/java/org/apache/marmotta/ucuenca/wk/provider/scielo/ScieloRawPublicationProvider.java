@@ -18,10 +18,8 @@
 package org.apache.marmotta.ucuenca.wk.provider.scielo;
 
 import com.google.common.base.Preconditions;
-import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.Option;
 import ec.edu.cedia.redi.ldclient.provider.json.AbstractJSONDataProvider;
 import ec.edu.cedia.redi.ldclient.provider.json.mappers.JsonPathValueMapper;
 import java.io.ByteArrayInputStream;
@@ -31,6 +29,7 @@ import java.net.URLEncoder;
 import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -97,8 +96,8 @@ public class ScieloRawPublicationProvider extends AbstractJSONDataProvider imple
         try {
             ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
             byte[] data = IOUtils.toByteArray(input);
+            //DocumentContext parse = JsonPath.parse(new ByteArrayInputStream(data), getConfiguration());
             DocumentContext parse = JsonPath.parse(new ByteArrayInputStream(data), getConfiguration());
-            DocumentContext parse2 = JsonPath.parse(new ByteArrayInputStream(data), getConfiguration().addOptions(Option.DEFAULT_PATH_LEAF_TO_NULL));
             String code = URLEncoder.encode(getCode(resource));
             mapProperty(triples, parse, SCIELOBASEPUBLICATION + code, SCIELOPREFIX + "created", "$.publication_date", null, null, false);
             mapProperty(triples, parse, SCIELOBASEPUBLICATION + code, SCIELOPREFIX + "abstract", "$.article.v83[?(@.l=='es')].a", null, "es", false);
@@ -140,12 +139,12 @@ public class ScieloRawPublicationProvider extends AbstractJSONDataProvider imple
             mapProperty(triples, parse, SCIELOBASEAUTHOR + code, SCIELOPREFIX + "fname", "$.article.v10[*].s", null, null, true);
             mapProperty(triples, parse, SCIELOBASEAUTHOR + code, SCIELOPREFIX + "gname", "$.article.v10[*].n", null, null, true);
             mapProperty(triples, parse, SCIELOBASEAUTHOR + code, SCIELOPREFIX + "aff", "$.article.v10[*]['1']", SCIELOBASEAFFILIATION + code, null, true);
-
             if (getValues(parse, "$.article.v70[*]._").size() == getValues(parse, "$.article.v10[*]._").size()
                     && getValues(parse, "$.article.v70[*].e").size() == getValues(parse, "$.article.v10[*]._").size()) {
                 mapProperty(triples, parse, SCIELOBASEAUTHOR + code, SCIELOPREFIX + "email", "$.article.v70[*].e", null, null, true);
             } else {
-                mapEmail(triples, parse2, code);
+                mapEmail(triples, parse, code, "$.article.v240[*]");
+                mapEmail(triples, parse, code, "$.article.v70[*]");
             }
             mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + "nameff", "$.article.v70[*].i", "$.article.v70[*]._", null);
             mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + "nameff", "$.article.v240[*].i", "$.article.v240[*]._", null);
@@ -180,13 +179,6 @@ public class ScieloRawPublicationProvider extends AbstractJSONDataProvider imple
     }
 
     @Override
-    protected Configuration getConfiguration() {
-        return Configuration.defaultConfiguration()
-                .addOptions(Option.ALWAYS_RETURN_LIST)
-                .addOptions(Option.SUPPRESS_EXCEPTIONS);
-    }
-
-    @Override
     public String getName() {
         return NAME;
     }
@@ -202,6 +194,10 @@ public class ScieloRawPublicationProvider extends AbstractJSONDataProvider imple
         return jsonDocument.read(query);
     }
 
+    private List<LinkedHashMap<String, String>> getValuesObject(DocumentContext jsonDocument, String query) {
+        return jsonDocument.read(query);
+    }
+
     private void mapRelation(Model model, DocumentContext document, String subject, String property, String query1, String query2, String lang) {
         ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
         List<String> gValues = getValues(document, query1);
@@ -210,6 +206,9 @@ public class ScieloRawPublicationProvider extends AbstractJSONDataProvider imple
         for (int i = 0; i < gValues.size(); i++) {
             String v = gValues.get(i);
             String v2 = gValues2.get(i);
+            if (v == null || v.trim().equals("") || v2 == null || v2.trim().equals("")) {
+                continue;
+            }
             URI createIRI = instance.createURI(subject + "_" + URLEncoder.encode(v));
             URI createIRI1 = instance.createURI(property);
             Value createLiteral = null;
@@ -225,9 +224,10 @@ public class ScieloRawPublicationProvider extends AbstractJSONDataProvider imple
     private void mapProperty(Model model, DocumentContext document, String subject, String property, String query, String prefixObject, String lang, boolean addSequence) {
         ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
         List<String> gValues = getValues(document, query);
-        int i = 0;
-        for (String v : gValues) {
-            if (v.trim().equals("")) {
+
+        for (int i = 0; i < gValues.size(); i++) {
+            String v = gValues.get(i);
+            if (v == null || v.trim().equals("")) {
                 continue;
             }
             URI createIRI = instance.createURI(subject);
@@ -247,50 +247,42 @@ public class ScieloRawPublicationProvider extends AbstractJSONDataProvider imple
 
             }
             model.add(createIRI, createIRI1, createLiteral);
-            i++;
         }
     }
 
-    private void mapEmail(Model triples, DocumentContext parse2, String code) {
-        try {
-            ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
-            List<String> mailsList = getValues(parse2, "$.article.v70[*].e");
-            List<String> affI = getValues(parse2, "$.article.v70[*].i");
-            List<String> per = getValues(parse2, "$.article.v10[*]['1']");
-            if (affI.size() == mailsList.size()) {
-                ConcurrentHashMap<String, Queue<String>> emails = new ConcurrentHashMap<>();
-                String last = "";
-                for (int k = 0; k < mailsList.size(); k++) {
-                    String get = affI.get(k);
-                    String get1 = get;
-                    if (get1 == null || get1.trim().equals("")) {
-                        get1 = last;
-                    }
-                    Queue<String> get2 = new LinkedList<>();
-                    if (emails.containsKey(get1)) {
-                        get2 = emails.get(get1);
-                    } else {
-                        emails.put(get1, get2);
-                    }
-                    get2.add(mailsList.get(k));
-                    last = get;
-                }
-                for (int k = 0; k < per.size(); k++) {
-                    String getK = per.get(k) == null ? "" : per.get(k).trim();
-                    Queue<String> get = emails.get(getK);
-                    if (!get.isEmpty()) {
-                        String poll = get.poll();
-                        if (poll != null) {
-                            String uri = SCIELOBASEAUTHOR + code + "_" + k;
-                            String prop = SCIELOPREFIX + "email";
-                            triples.add(instance.createURI(uri), instance.createURI(prop), instance.createLiteral(poll));
-                        }
-                    }
+    private void mapEmail(Model triples, DocumentContext parse2, String code, String q) {
+        ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
+        List<LinkedHashMap<String, String>> affData = getValuesObject(parse2, q);
+        List<String> per = getValues(parse2, "$.article.v10[*]['1']");
+        ConcurrentHashMap<String, Queue<String>> emails = new ConcurrentHashMap<>();
+        String last = "";
+        for (int k = 0; k < affData.size(); k++) {
+            String idAff = affData.get(k).get("i");
+            String email = affData.get(k).get("e");
+            String tmpAff = idAff;
+            if (tmpAff == null || tmpAff.trim().equals("")) {
+                tmpAff = last;
+            }
+            Queue<String> emailByAff = new LinkedList<>();
+            if (emails.containsKey(tmpAff)) {
+                emailByAff = emails.get(tmpAff);
+            } else {
+                emails.put(tmpAff, emailByAff);
+            }
+            emailByAff.add(email);
+            last = idAff;
+        }
+        for (int k = 0; k < per.size(); k++) {
+            String getK = per.get(k) == null || per.get(k).trim().equals("") ? "" : per.get(k).trim();
+            Queue<String> get = emails.get(getK);
+            if (get != null && !get.isEmpty()) {
+                String poll = get.poll();
+                if (poll != null) {
+                    String uri = SCIELOBASEAUTHOR + code + "_" + k;
+                    String prop = SCIELOPREFIX + "email";
+                    triples.add(instance.createURI(uri), instance.createURI(prop), instance.createLiteral(poll));
                 }
             }
-        } catch (Exception q) {
-            log.error(q.getMessage());
         }
     }
-
 }

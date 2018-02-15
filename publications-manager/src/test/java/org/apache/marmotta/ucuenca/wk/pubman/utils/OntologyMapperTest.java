@@ -23,9 +23,11 @@ import java.io.InputStream;
 import org.apache.commons.io.IOUtils;
 import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openrdf.model.Model;
 import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.Rio;
 import org.openrdf.rio.UnsupportedRDFormatException;
@@ -43,10 +45,12 @@ public class OntologyMapperTest {
     private static Model scopusModel;
     private static Model dblpModel;
     private static Model scholarModel;
+    private static Model scieloModel;
     private static InputStream academicsKnowledgeMapper;
     private static InputStream scopusMapper;
     private static InputStream dblpMapper;
     private static InputStream scholarMapper;
+    private static InputStream scieloMapper;
     private static InputStream emptyMapper;
     private static final Logger log = LoggerFactory.getLogger(OntologyMapperTest.class);
 
@@ -57,6 +61,7 @@ public class OntologyMapperTest {
             scopusModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/scopus.n3"), "", RDFFormat.N3);
             dblpModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/dblp.ttl"), "", RDFFormat.TURTLE);
             scholarModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/scholar.rdf"), "", RDFFormat.RDFXML);
+            scieloModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/scielo.rdf"), "", RDFFormat.RDFXML);
         } catch (IOException | RDFParseException | UnsupportedRDFormatException ex) {
             log.error("cannot read file.", ex);
         }
@@ -64,6 +69,7 @@ public class OntologyMapperTest {
         scopusMapper = OntologyMapper.class.getResourceAsStream("/mapping/scopus.ttl");
         dblpMapper = OntologyMapper.class.getResourceAsStream("/mapping/dblp.ttl");
         scholarMapper = OntologyMapper.class.getResourceAsStream("/mapping/google_scholar.ttl");
+        scieloMapper = OntologyMapper.class.getResourceAsStream("/mapping/scielo.ttl");
         emptyMapper = new ByteArrayInputStream(new byte[]{});
 
         InputStream resourceAsStream = OntologyMapper.class.getResourceAsStream("/mapping/redi.r2r");
@@ -122,4 +128,17 @@ public class OntologyMapperTest {
         assertEquals(resultWithMapperFile.size(), 1171);
         assertEquals(resultEmptyMapperFile.size(), 0);
     }
+    
+    /**
+     * Test ontology mapping of Scielo vocabulary.
+     */
+    @Test
+    public void testScieloOntologyMapping() throws RDFHandlerException {
+        assertEquals(scieloModel.size(), 108);
+        Model resultWithMapperFile = OntologyMapper.map(scieloModel, scieloMapper, vocabulary);
+        Model resultEmptyMapperFile = OntologyMapper.map(scieloModel, emptyMapper, vocabulary);
+        assertEquals(resultWithMapperFile.size(), 214);
+        assertEquals(resultEmptyMapperFile.size(), 0);
+    }
+    
 }

@@ -168,7 +168,8 @@ public class ScieloRawProvider extends AbstractHttpProvider {
         return XPathFactory.instance().compile(query, new ElementFilter()).evaluate(n);
     }
 
-    private String getName(String id) {
+    private String getName(String resource) {
+        String id = resource.substring(resource.lastIndexOf('/') + 1);
         return id.replaceAll("_", " ").replaceAll("-", " ");
     }
 

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+
+<rdf:Description rdf:about="http://search.scielo.org/data/affiliation/S0798-22592009000100010_A01">
+	<nameff xmlns="http://search.scielo.org/ontology/">Centro Interdisciplinario de Ciencias Marinas</nameff>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.scielo.org/data/affiliation/S0798-22592009000100010_A02">
+	<nameff xmlns="http://search.scielo.org/ontology/">Universidad Autónoma de Baja California Sur</nameff>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.scielo.org/data/affiliation/S0798-22592009000100010_A03">
+	<nameff xmlns="http://search.scielo.org/ontology/">Instituto Nacional de Ciencias Médicas y Nutrición Salvador Zubirán</nameff>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.scielo.org/data/affiliation/S0864-21762010000300012_A01">
+	<nameff xmlns="http://search.scielo.org/ontology/">Instituto Cubano de Oftalmología Ramón Pando Ferrer</nameff>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.scielo.org/data/author/S0798-22592009000100010_0">
+	<aff xmlns="http://search.scielo.org/ontology/" rdf:resource="http://search.scielo.org/data/affiliation/S0798-22592009000100010_A01"/>
+	<fname xmlns="http://search.scielo.org/ontology/">Mora Castro</fname>
+	<gname xmlns="http://search.scielo.org/ontology/">Nidia</gname>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.scielo.org/search/nidia_castro"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.scielo.org/data/author/S0798-22592009000100010_1">
+	<aff xmlns="http://search.scielo.org/ontology/" rdf:resource="http://search.scielo.org/data/affiliation/S0798-22592009000100010_A01"/>
+	<fname xmlns="http://search.scielo.org/ontology/">Casas Valdez</fname>
+	<gname xmlns="http://search.scielo.org/ontology/">Margarita</gname>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.scielo.org/data/author/S0798-22592009000100010_2">
+	<aff xmlns="http://search.scielo.org/ontology/" rdf:resource="http://search.scielo.org/data/affiliation/S0798-22592009000100010_A01"/>
+	<fname xmlns="http://search.scielo.org/ontology/">Alejandro</fname>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.scielo.org/data/author/S0798-22592009000100010_3">
+	<aff xmlns="http://search.scielo.org/ontology/" rdf:resource="http://search.scielo.org/data/affiliation/S0798-22592009000100010_A01"/>
+	<fname xmlns="http://search.scielo.org/ontology/">Águila Ramírez</fname>
+	<gname xmlns="http://search.scielo.org/ontology/">Ruth Noemí</gname>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.scielo.org/data/author/S0798-22592009000100010_4">
+	<aff xmlns="http://search.scielo.org/ontology/" rdf:resource="http://search.scielo.org/data/affiliation/S0798-22592009000100010_A01"/>
+	<fname xmlns="http://search.scielo.org/ontology/">Sánchez Rodríguez</fname>
+	<gname xmlns="http://search.scielo.org/ontology/">Ignacio</gname>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.scielo.org/data/author/S0798-22592009000100010_5">
+	<aff xmlns="http://search.scielo.org/ontology/" rdf:resource="http://search.scielo.org/data/affiliation/S0798-22592009000100010_A02"/>
+	<fname xmlns="http://search.scielo.org/ontology/">Hernández Contreras</fname>
+	<gname xmlns="http://search.scielo.org/ontology/">Hugo</gname>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.scielo.org/data/author/S0798-22592009000100010_6">
+	<aff xmlns="http://search.scielo.org/ontology/" rdf:resource="http://search.scielo.org/data/affiliation/S0798-22592009000100010_A03"/>
+	<fname xmlns="http://search.scielo.org/ontology/">Sanginés García</fname>
+	<gname xmlns="http://search.scielo.org/ontology/">Leonor</gname>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.scielo.org/data/author/S0864-21762010000300012_0">
+	<aff xmlns="http://search.scielo.org/ontology/" rdf:resource="http://search.scielo.org/data/affiliation/S0864-21762010000300012_A01"/>
+	<fname xmlns="http://search.scielo.org/ontology/">Noya Cabaña</fname>
+	<gname xmlns="http://search.scielo.org/ontology/">Andrés</gname>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.scielo.org/data/author/S0864-21762010000300012_1">
+	<aff xmlns="http://search.scielo.org/ontology/" rdf:resource="http://search.scielo.org/data/affiliation/S0864-21762010000300012_A01"/>
+	<fname xmlns="http://search.scielo.org/ontology/">Llamos Durive</fname>
+	<gname xmlns="http://search.scielo.org/ontology/">Reina</gname>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.scielo.org/data/author/S0864-21762010000300012_2">
+	<aff xmlns="http://search.scielo.org/ontology/" rdf:resource="http://search.scielo.org/data/affiliation/S0864-21762010000300012_A01"/>
+	<fname xmlns="http://search.scielo.org/ontology/">Rodríguez Acosta</fname>
+	<gname xmlns="http://search.scielo.org/ontology/">Carmen</gname>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.scielo.org/data/author/S0864-21762010000300012_3">
+	<aff xmlns="http://search.scielo.org/ontology/" rdf:resource="http://search.scielo.org/data/affiliation/S0864-21762010000300012_A01"/>
+	<fname xmlns="http://search.scielo.org/ontology/">Rojas Hernández</fname>
+	<gname xmlns="http://search.scielo.org/ontology/">Nidia</gname>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.scielo.org/data/author/S0864-21762010000300012_4">
+	<aff xmlns="http://search.scielo.org/ontology/" rdf:resource="http://search.scielo.org/data/affiliation/S0864-21762010000300012_A01"/>
+	<fname xmlns="http://search.scielo.org/ontology/">Castro Sánchez</fname>
+	<gname xmlns="http://search.scielo.org/ontology/">Niria</gname>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.scielo.org/search/nidia_castro"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.scielo.org/data/author/S0864-21762010000300012_5">
+	<aff xmlns="http://search.scielo.org/ontology/" rdf:resource="http://search.scielo.org/data/affiliation/S0864-21762010000300012_A01"/>
+	<fname xmlns="http://search.scielo.org/ontology/">Méndez Duque de Estrada</fname>
+	<gname xmlns="http://search.scielo.org/ontology/">Ana M</gname>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.scielo.org/data/publication/S0798-22592009000100010">
+	<abstract xmlns="http://search.scielo.org/ontology/" xml:lang="en">The present study was aimed to evaluate Macrocystis pyrifera (MP) meal as a nutritional supplement for goats. There is an increasing interest to look at nutritional alternatives to guarantee a continuous supply of good quality forage for goats, in many communities around the world. Given its abundance and chemical composition, the algae M. pyrifera is an important potential resource as animal feed. Three diets with 10, 20, and 30% of MP meal concentrations and a control diet, with no algae, were evaluated. Four rumen cannulated goats, housed individually in metabolism cages, were used. The experimental design was a 4 x 4 Latin-Square. Feed and water intake, excreted urine and faeces, were measured. Digestibility in vivo, dry matter (DM) disappearance, and the metabolic variables of pH and ammoniacal nitrogen in the rumen, were determined. There was no significant difference in the feed intake but there was in water intake and urine excreted. No significant difference in digestibility in vivo among diets (P&gt;0.05) was found. A significant difference (P&lt;0.05) for degradability in situ was found for the algae diets containing 10 and 30% MP concentrations at 96 hours of sampling (78.3 and 82.2%). The raw algae in situ digestibility was 77%. A potential degradability of 87.3% was obtained with 30% MP diet. The highest effective degradation was obtained at an estimated rate of 0.02 h-1. Ruminal pH was higher (P&lt;0.05) in all MP treatments (10% MP: 6.83, 20% MP: 6.85, 30% MP: 6.91). As suggested by the results, M. pyrifera represents a good unconventional feeding as a nutritional supplement for goats.</abstract>
+	<abstract xmlns="http://search.scielo.org/ontology/" xml:lang="es">El objetivo de este trabajo fue evaluar Macrocystis pyrifera (MP) como suplemento alimenticio para cabras. Hay un interés creciente en buscar alternativas alimenticias para garantizar el suministro continuo de forraje de buena calidad para cabras en muchas comunidades del mundo. Dada su abundancia y composición química, el alga M. pyrifera es un recurso potencial importante como pienso para ganado. Se evaluaron tres dietas con concentraciones de 10, 20, y 30% de harina de MP, y una dieta control, sin las algas. Se utilizaron cuatro cabras canuladas dispuestas individualmente en jaulas metabólicas. El diseño experimental fue un Cuadrado Latino 4 x 4. El alimento y agua consumidos, la orina y las heces excretadas fueron medidas. Se determinaron la digestibilidad in vivo, la desaparición in situ de la materia seca y las variables metabólicas pH y nitrógeno amoniacal en rumen. No se encontró diferencia significativa en el alimento consumido, ni en la digestibilidad in vivo entre las dietas (P&gt;0,05), pero si hubo diferencia significativa en el consumo de agua y la orina excretada (P&lt;0,05). Se encontró diferencia significativa (P&lt;0,05) para la digestibilidad in situ en las dietas que contenían el 10 y 30% del alga a la hora 96 del muestreo (78,3 y el 82,2%). La digestibilidad in situ del alga fue de 77%. Se obtuvo una degradabilidad potencial de 87,3% con la dieta que contiene 30% de MP. La mayor degradación efectiva se obtuvo a una tasa estimada de 0,02 h-1. El pH ruminal fue más alto (P&lt;0,05) en todos los tratamientos con MP (10% de MP: 6,83, 20% de MP: 6,85, 30% de MP: 6,91). Los resultados obtenidos sugieren que M. pyrifera representa un buen suplemento nutricional no convencional para cabras.</abstract>
+	<contributor xmlns="http://search.scielo.org/ontology/" rdf:resource="http://search.scielo.org/data/author/S0798-22592009000100010_0"/>
+	<contributor xmlns="http://search.scielo.org/ontology/" rdf:resource="http://search.scielo.org/data/author/S0798-22592009000100010_1"/>
+	<contributor xmlns="http://search.scielo.org/ontology/" rdf:resource="http://search.scielo.org/data/author/S0798-22592009000100010_2"/>
+	<contributor xmlns="http://search.scielo.org/ontology/" rdf:resource="http://search.scielo.org/data/author/S0798-22592009000100010_3"/>
+	<contributor xmlns="http://search.scielo.org/ontology/" rdf:resource="http://search.scielo.org/data/author/S0798-22592009000100010_4"/>
+	<contributor xmlns="http://search.scielo.org/ontology/" rdf:resource="http://search.scielo.org/data/author/S0798-22592009000100010_5"/>
+	<contributor xmlns="http://search.scielo.org/ontology/" rdf:resource="http://search.scielo.org/data/author/S0798-22592009000100010_6"/>
+	<creator xmlns="http://search.scielo.org/ontology/" rdf:resource="http://search.scielo.org/data/author/S0798-22592009000100010_0"/>
+	<interest xmlns="http://search.scielo.org/ontology/">ENGINEERING, MULTIDISCIPLINARY</interest>
+	<interest xmlns="http://search.scielo.org/ontology/">VETERINARY SCIENCES</interest>
+	<issn xmlns="http://search.scielo.org/ontology/">0798-2259</issn>
+	<issue xmlns="http://search.scielo.org/ontology/">1</issue>
+	<issue xmlns="http://search.scielo.org/ontology/">v19n1</issue>
+	<journal xmlns="http://search.scielo.org/ontology/">Rev. Cient. (Maracaibo)</journal>
+	<journal xmlns="http://search.scielo.org/ontology/">Rev. cient. (Maracaibo)</journal>
+	<journal xmlns="http://search.scielo.org/ontology/">Revista Científica</journal>
+	<keyword xmlns="http://search.scielo.org/ontology/" xml:lang="en">Macrocystis</keyword>
+	<keyword xmlns="http://search.scielo.org/ontology/" xml:lang="en">Marine algae</keyword>
+	<keyword xmlns="http://search.scielo.org/ontology/" xml:lang="en">digestibility</keyword>
+	<keyword xmlns="http://search.scielo.org/ontology/" xml:lang="en">goats</keyword>
+	<keyword xmlns="http://search.scielo.org/ontology/" xml:lang="en">nonconventional feed</keyword>
+	<keyword xmlns="http://search.scielo.org/ontology/" xml:lang="es">Alga marina</keyword>
+	<keyword xmlns="http://search.scielo.org/ontology/" xml:lang="es">Macrocystis</keyword>
+	<keyword xmlns="http://search.scielo.org/ontology/" xml:lang="es">alimento no convencional</keyword>
+	<keyword xmlns="http://search.scielo.org/ontology/" xml:lang="es">cabras</keyword>
+	<keyword xmlns="http://search.scielo.org/ontology/" xml:lang="es">digestibilidad</keyword>
+	<pageE xmlns="http://search.scielo.org/ontology/">70</pageE>
+	<pageS xmlns="http://search.scielo.org/ontology/">63</pageS>
+	<publisher xmlns="http://search.scielo.org/ontology/">UNIVERSIDAD DEL ZULIA</publisher>
+	<publisher xmlns="http://search.scielo.org/ontology/">Universidad del Zulia</publisher>
+	<title xmlns="http://search.scielo.org/ontology/" xml:lang="en">The kelp macrocystis pyrifera as nutritional supplement for goats</title>
+	<title xmlns="http://search.scielo.org/ontology/" xml:lang="es">El alga marina macrocystis pyrifera como sumplemento alimenticio para cabras</title>
+	<uri xmlns="http://search.scielo.org/ontology/">http://www.scielo.org.ve/pdf/rc/v19n1/art10.pdf</uri>
+	<uri xmlns="http://search.scielo.org/ontology/">http://www.scielo.org.ve/scielo.php?script=sci_arttext&amp;pid=S0798-22592009000100010&amp;tlng=en</uri>
+	<volumen xmlns="http://search.scielo.org/ontology/">19</volumen>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.scielo.org/data/publication/S0864-21762010000300012">
+	<abstract xmlns="http://search.scielo.org/ontology/" xml:lang="en">OBJECTIVE: To determine the incidence of Staphylococcus strains isolated from conjunctival swaps and their resistance to several antimicrobial agents. METHODS: A retrospective, descriptive and observational study was performed to review 3554 conjunctival swabs from patients who went to "Ramón Pando Ferrer" Institute of Ophthalmology in the period from January 2002 to December 2009 due to a diagnosis of external ocular infection. RESULTS: From the total of conjunctival swabs, 874 Staphylococcus aureus strains (47.5 %) and 965 (52.4 %) negative Staphylococcus spp. coagulasa strains were isolated, being pathogenecity test positive in 52.4 %. In 69 swabs, the cultures presented mixed etiology with two different bacteria accounting for 3.7 %. Resistance percentages of Staphylococcus strains were estimated. CONCLUSION: The incidence of Staphylococcus species in eye infections was high and the drug resistance for Staphylococcus aureus and Staphylococcus spp. coagulasa negative to Ciprofloxacin and Amikacyn was lower. The greatest drug resistance of S. aureus strains corresponded to erythromycin and tetracycline whereas Staphylococcus spp coagulasa negative were more resistant to tetracycline.</abstract>
+	<abstract xmlns="http://search.scielo.org/ontology/" xml:lang="es">OBJETIVO: Determinar la incidencia de cepas del género Staphylococcus aisladas de exudados conjuntivales y analizar su resistencia frente a diferentes antimicrobianos. MÉTODOS: Se realizó un estudio observacional descriptivo retrospectivo en el que se revisaron 3554 exudados conjuntivales a pacientes que acudieron en el período comprendido entre enero de 2002 a diciembre de 2003 y desde enero de 2005 hasta diciembre de 2007 al Instituto Cubano de Oftalmología «Ramón Pando Ferrer» por presentar un diagnóstico de infección ocular externa. RESULTADOS: Se aislaron 874 cepas de Staphylococcus aureus para un 47,5 % y 965 cepas de Staphylococcus spp. coagulasa negativa con prueba de patogenicidad positiva para un 52,4 %. En 69 de esos exudados los cultivos presentaron etiología mixta con dos bacterias diferentes, para el 3,7 %. Se determinaron los porcentajes de resistencia a las cepas aisladas pertenecientes al género Staphylococcus. CONCLUSIONES: Se encontró una alta incidencia de las especies del género Staphylococcus en las infecciones oculares, así como se pudo apreciar que la menor fármaco-resistencia para Staphylococcus aureus y Staphylococcus spp. coagulasa negativa correspondieron a los antimicrobianos ciprofloxacina y amikacina. La mayor fármaco-resistencia de las cepas de Staphylococcus aureus correspondió a eritromicina y tetraciclina y en Staphylococcus spp coagulasa negativa fue frente a la tetraciclina.</abstract>
+	<contributor xmlns="http://search.scielo.org/ontology/" rdf:resource="http://search.scielo.org/data/author/S0864-21762010000300012_0"/>
+	<contributor xmlns="http://search.scielo.org/ontology/" rdf:resource="http://search.scielo.org/data/author/S0864-21762010000300012_1"/>
+	<contributor xmlns="http://search.scielo.org/ontology/" rdf:resource="http://search.scielo.org/data/author/S0864-21762010000300012_2"/>
+	<contributor xmlns="http://search.scielo.org/ontology/" rdf:resource="http://search.scielo.org/data/author/S0864-21762010000300012_3"/>
+	<contributor xmlns="http://search.scielo.org/ontology/" rdf:resource="http://search.scielo.org/data/author/S0864-21762010000300012_4"/>
+	<contributor xmlns="http://search.scielo.org/ontology/" rdf:resource="http://search.scielo.org/data/author/S0864-21762010000300012_5"/>
+	<creator xmlns="http://search.scielo.org/ontology/" rdf:resource="http://search.scielo.org/data/author/S0864-21762010000300012_0"/>
+	<interest xmlns="http://search.scielo.org/ontology/">OPHTHALMOLOGY</interest>
+	<issn xmlns="http://search.scielo.org/ontology/">0864-2176</issn>
+	<issn xmlns="http://search.scielo.org/ontology/">1561-3070</issn>
+	<issue xmlns="http://search.scielo.org/ontology/">v23s1</issue>
+	<journal xmlns="http://search.scielo.org/ontology/">Rev Cubana Oftalmol</journal>
+	<journal xmlns="http://search.scielo.org/ontology/">Revista Cubana de Oftalmología</journal>
+	<keyword xmlns="http://search.scielo.org/ontology/" xml:lang="en">coagulase negative with positive pathogenecity test</keyword>
+	<keyword xmlns="http://search.scielo.org/ontology/" xml:lang="en">conjunctival swaps - Staphylococcus aureus - Staphylococcus spp</keyword>
+	<keyword xmlns="http://search.scielo.org/ontology/" xml:lang="es">Exudados conjuntivales - Staphylococcus aureus Staphylococcus spp</keyword>
+	<keyword xmlns="http://search.scielo.org/ontology/" xml:lang="es">coagulasa negativa con prueba de patogenicidad positiva</keyword>
+	<pageE xmlns="http://search.scielo.org/ontology/">579</pageE>
+	<pageS xmlns="http://search.scielo.org/ontology/">568</pageS>
+	<publisher xmlns="http://search.scielo.org/ontology/">Editorial Ciencias Médicas</publisher>
+	<title xmlns="http://search.scielo.org/ontology/" xml:lang="en">Incidence and drug-resistance of Staphylococcus spp strains isolated from conjunctival swabs</title>
+	<title xmlns="http://search.scielo.org/ontology/" xml:lang="es">Incidencia y fármaco-resistencia de cepas de Staphylococcus spp aisladas de exudados conjuntivales</title>
+	<uri xmlns="http://search.scielo.org/ontology/">http://scielo.sld.cu/pdf/oft/v23s1/oft12310.pdf</uri>
+	<uri xmlns="http://search.scielo.org/ontology/">http://scielo.sld.cu/scielo.php?script=sci_arttext&amp;pid=S0864-21762010000300012&amp;tlng=es</uri>
+	<volumen xmlns="http://search.scielo.org/ontology/">23</volumen>
+</rdf:Description>
+
+</rdf:RDF>

@@ -11,7 +11,7 @@
     <artifactId>scielo-provider</artifactId>
     <packaging>jar</packaging>
 
-    <name>LDClient Provider: Scielo XML Access</name>
+    <name>LDClient Provider: Scielo - XML Access</name>
     <description>Implements Linked Data model over Scielo data.</description>
     
     <build>
@@ -53,11 +53,6 @@
         <dependency>
             <groupId>org.apache.marmotta</groupId>
             <artifactId>ldclient-api</artifactId>
-            <version>${marmotta.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.marmotta</groupId>
-            <artifactId>ldclient-core</artifactId>
             <version>${marmotta.version}</version>
         </dependency>
         <dependency>
