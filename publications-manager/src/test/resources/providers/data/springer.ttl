@@ -1,0 +1,284 @@
+<https://link.springer.com/author/012d5d0f46c060346dbe52fe5133bf5a> a <http://xmlns.com/foaf/0.1/Person> ;
+	<http://www.w3.org/2002/07/owl#oneOf> "http://api.springer.com/meta/v1/json?q=((name:victor OR name:hugo) AND name:saquicela)&api_key=a6bf2dbe42d9e7d523fadd7c40dcc43d&p=50&s=0" ;
+	<http://xmlns.com/foaf/0.1/name> "Victor Hugo Saquicela" ;
+	<http://xmlns.com/foaf/0.1/publications> <https://link.springer.com/chapter/10.1007/978-3-642-29063-3_7> .
+
+<https://link.springer.com/author/1ee953411d1c98ef96d73c5f5f3b1eb2> a <http://xmlns.com/foaf/0.1/Person> ;
+	<http://www.w3.org/2002/07/owl#oneOf> "http://api.springer.com/meta/v1/json?q=((name:victor OR name:hugo) AND name:saquicela)&api_key=a6bf2dbe42d9e7d523fadd7c40dcc43d&p=50&s=0" ;
+	<http://xmlns.com/foaf/0.1/name> "Victor Hugo Saquicela" ;
+	<http://xmlns.com/foaf/0.1/publications> <https://link.springer.com/chapter/10.1007/978-3-642-16985-4_24> .
+
+<https://link.springer.com/author/380165ef68395a9eedfa713c25d09058> a <http://xmlns.com/foaf/0.1/Person> ;
+	<http://www.w3.org/2002/07/owl#oneOf> "http://api.springer.com/meta/v1/json?q=((name:victor OR name:hugo) AND name:saquicela)&api_key=a6bf2dbe42d9e7d523fadd7c40dcc43d&p=50&s=0" ;
+	<http://xmlns.com/foaf/0.1/name> "Victor Hugo Saquicela" ;
+	<http://xmlns.com/foaf/0.1/publications> <https://link.springer.com/chapter/10.1007/978-3-642-21064-8_23> .
+
+<https://link.springer.com/author/6431c061d1dae6f21e0fc60016263c98> a <http://xmlns.com/foaf/0.1/Person> ;
+	<http://www.w3.org/2002/07/owl#oneOf> "http://api.springer.com/meta/v1/json?q=((name:victor OR name:hugo) AND name:saquicela)&api_key=a6bf2dbe42d9e7d523fadd7c40dcc43d&p=50&s=0" ;
+	<http://xmlns.com/foaf/0.1/name> "Victor Hugo Saquicela" ;
+	<http://xmlns.com/foaf/0.1/publications> <https://link.springer.com/chapter/10.1007/978-3-319-13117-7_193> .
+
+<https://link.springer.com/author/d68b96ee71771f49ab29aa0ce8ddbf64> a <http://xmlns.com/foaf/0.1/Person> ;
+	<http://www.w3.org/2002/07/owl#oneOf> "http://api.springer.com/meta/v1/json?q=((name:victor OR name:hugo) AND name:saquicela)&api_key=a6bf2dbe42d9e7d523fadd7c40dcc43d&p=50&s=0" ;
+	<http://xmlns.com/foaf/0.1/name> "Victor Hugo Saquicela" ;
+	<http://xmlns.com/foaf/0.1/publications> <https://link.springer.com/chapter/10.1007/978-3-319-66562-7_49> .
+
+<https://link.springer.com/author/d736dda90a47a469b2c89a597de829eb> a <http://xmlns.com/foaf/0.1/Person> ;
+	<http://www.w3.org/2002/07/owl#oneOf> "http://api.springer.com/meta/v1/json?q=((name:victor OR name:hugo) AND name:saquicela)&api_key=a6bf2dbe42d9e7d523fadd7c40dcc43d&p=50&s=0" ;
+	<http://xmlns.com/foaf/0.1/name> "Victor Hugo Saquicela" ;
+	<http://xmlns.com/foaf/0.1/publications> <https://link.springer.com/chapter/10.1007/978-3-319-26285-7_11> .
+
+<https://link.springer.com/chapter/10.1007/978-3-319-13117-7_193> <http://purl.org/dc/terms/contributor> "Cruz, Alexandra"^^<http://www.w3.org/2001/XMLSchema#string> , "Espinoza, Mauricio"^^<http://www.w3.org/2001/XMLSchema#string> , "Saquicela, Víctor"^^<http://www.w3.org/2001/XMLSchema#string> , "Tello, Andrés"^^<http://www.w3.org/2001/XMLSchema#string> , "Vidal, Maria-Esther"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/name> "VI Latin American Congress on Biomedical Engineering CLAIB 2014, Paraná, Argentina 29, 30 & 31 October 2014"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/publisher> "Springer"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/title> "RDF-ization of DICOM Medical Images towards Linked Health Data Cloud"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/abstract> "This paper proposes a novel strategy for semantifying DICOM medical images (RDF-ization) automatically. We define an architecture that involves processes for extracting, anonymizing, and serializing metadata comprised in DICOM medical images into RDF/XML. These processes allow for semantically enriching and sharing the metadata of DICOM medical files through the Linked Health Data cloud. Thereby providing enhanced query capabilities with respect to the ones offered by current PACS environments, while exploiting all advantages of the Linking Open Data (LOD) cloud and SemanticWeb technologies."^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/created1> "2014-12-31T19:00:00.000-05:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<http://purl.org/ontology/bibo/doi> "10.1007/978-3-319-13117-7_193"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/uri> <http://dx.doi.org/10.1007/978-3-319-13117-7_193> , <http://link.springer.com/openurl/pdf?id=doi:10.1007/978-3-319-13117-7_193> ;
+	<http://ucuenca.edu.ec/ontology#copyrightYear> "©2015 Springer International Publishing Switzerland"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#eisbn> "978-3-319-13117-7"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#isbn> "978-3-319-13116-0"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#pisbn> "978-3-319-13116-0"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> .
+
+<https://link.springer.com/chapter/10.1007/978-3-319-26285-7_11> <http://purl.org/dc/terms/contributor> "Abad, Karina"^^<http://www.w3.org/2001/XMLSchema#string> , "Carvallo, Juan Pablo"^^<http://www.w3.org/2001/XMLSchema#string> , "Espinoza, Mauricio"^^<http://www.w3.org/2001/XMLSchema#string> , "Saquicela, Victor"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/name> "Trends and Applications in Software Engineering"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/publisher> "Springer"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/title> "Towards the Creation of a Semantic Repository of iStar-Based Context Models"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/abstract> "The System Architecture definition of the majority of organizations requires a deep understanding about its environment and organizational structure; nevertheless, the construction of such models is not an easy task because of the gap of knowledge and communication between the technical and administrative staff. The DHARMA method, which makes intensive use of the i * notation, propose a solution to that problem, supporting the Context Models construction. This paper presents an approach for annotating the i * models with semantic technologies, to support the search and generation of Context Models based on the knowledge defined in ontological models, allowing the creation of a Semantic Repository of Context Models, which will be used to discover relations between different i * models and extract patterns from them."^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/created1> "2015-12-31T19:00:00.000-05:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<http://purl.org/ontology/bibo/created2> "2015-10-21T19:00:00.000-05:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<http://purl.org/ontology/bibo/doi> "10.1007/978-3-319-26285-7_11"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/uri> <http://dx.doi.org/10.1007/978-3-319-26285-7_11> , <http://link.springer.com/openurl/fulltext?id=doi:10.1007/978-3-319-26285-7_11> , <http://link.springer.com/openurl/pdf?id=doi:10.1007/978-3-319-26285-7_11> ;
+	<http://ucuenca.edu.ec/ontology#copyrightYear> "©2016 Springer International Publishing Switzerland"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#eisbn> "978-3-319-26285-7"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#isbn> "978-3-319-26283-3"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#pisbn> "978-3-319-26283-3"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> .
+
+<https://link.springer.com/chapter/10.1007/978-3-319-66562-7_49> <http://purl.org/dc/terms/contributor> "Espinoza, Mauricio"^^<http://www.w3.org/2001/XMLSchema#string> , "Medina, José"^^<http://www.w3.org/2001/XMLSchema#string> , "Saquicela, Víctor"^^<http://www.w3.org/2001/XMLSchema#string> , "Sigcha, Erik"^^<http://www.w3.org/2001/XMLSchema#string> , "Vega, Francisco"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/name> "Advances in Computing"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/publisher> "Springer"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/title> "Automatic Speech-to-Text Transcription in an Ecuadorian Radio Broadcast Context"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/abstract> "A key element to enable the analysis and accessing to radio broadcast content is the development of automatic speech-to-text systems. The building of these systems has been possible given the current available of different speech resources, models, and open source services designed mainly for English language. However, the most of these tools have been migrated to other languages like Spanish for avoiding the creation of these systems from scratch. Despite existing efforts there is no clear evidence of the tools that can be used to convert audio to text in other dialects of Spanish. Also, the most of these systems are trained to consider a specific context, therefore, audio transcription systems personalized for a language and a specific context are needed. This article describes the implementation of an architecture oriented to automatic speech-to-text transcription applied on Ecuadorian radio broadcasters, using available free tools for performing audio segmentation and transcription. The selected tools were evaluated measuring their performance and facilities for adjusting to the defined architecture. At the end, a Web application was developed and its final performance was compared with IBM Watson speech to text service; the results show that the proposed system improves the accuracy and achieves a Word Error Rate around 10%. The obtained results allow to suggest the use of a free tools set in order to train models oriented to specific speech-to-text transcription scenarios."^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/created1> "2016-12-31T19:00:00.000-05:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<http://purl.org/ontology/bibo/created2> "2017-08-16T19:00:00.000-05:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<http://purl.org/ontology/bibo/doi> "10.1007/978-3-319-66562-7_49"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/uri> <http://dx.doi.org/10.1007/978-3-319-66562-7_49> , <http://link.springer.com/openurl/fulltext?id=doi:10.1007/978-3-319-66562-7_49> , <http://link.springer.com/openurl/pdf?id=doi:10.1007/978-3-319-66562-7_49> ;
+	<http://ucuenca.edu.ec/ontology#copyrightYear> "©2017 Springer International Publishing AG"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#eisbn> "978-3-319-66562-7"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#isbn> "978-3-319-66561-0"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#pisbn> "978-3-319-66561-0"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> .
+
+<https://link.springer.com/chapter/10.1007/978-3-642-16985-4_24> <http://purl.org/dc/terms/contributor> "Corcho, Óscar"^^<http://www.w3.org/2001/XMLSchema#string> , "Saquicela, Victor"^^<http://www.w3.org/2001/XMLSchema#string> , "Vilches-Blázquez, Luis. M."^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/name> "Current Trends in Web Engineering"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/publisher> "Springer"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/title> "Semantic Annotation of RESTful Services Using External Resources"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/abstract> "Since the advent of Web 2.0, RESTful services have become an increasing phenomenon. Currently, Semantic Web technologies are being integrated into Web 2.0 services for both to leverage each other strengths. The need to take advantage of data available in RESTful services in the scope of Semantic Web evidences the difficulties to cope with syntactic and semantic description of the services. In this paper we present an approach to tackle the problem of automatic the semantic annotation of RESTful services using a cross-domain ontology, a semantic resource (DBpedia) and additional external resources (suggestion and synonyms services) to annotate the parameters of the RESTful services. We also present a preliminary evaluation that proves the feasibility of our approach and highlights that it is possible to carry out this semantic annotation with satisfactory results."^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/created1> "2009-12-31T19:00:00.000-05:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<http://purl.org/ontology/bibo/doi> "10.1007/978-3-642-16985-4_24"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/uri> <http://dx.doi.org/10.1007/978-3-642-16985-4_24> , <http://link.springer.com/openurl/pdf?id=doi:10.1007/978-3-642-16985-4_24> ;
+	<http://ucuenca.edu.ec/ontology#copyrightYear> "©2010 Springer Berlin Heidelberg"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#eisbn> "978-3-642-16985-4"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#isbn> "978-3-642-16984-7"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#pisbn> "978-3-642-16984-7"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> .
+
+<https://link.springer.com/chapter/10.1007/978-3-642-21064-8_23> <http://purl.org/dc/terms/contributor> "Corcho, Oscar"^^<http://www.w3.org/2001/XMLSchema#string> , "Saquicela, Víctor"^^<http://www.w3.org/2001/XMLSchema#string> , "Vilches-Blazquez, Luis. M."^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/name> "The Semanic Web: Research and Applications"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/publisher> "Springer"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/title> "Lightweight Semantic Annotation of Geospatial RESTful Services"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/abstract> "RESTful services are increasingly gaining traction over WS-* ones. As with WS-* services, their semantic annotation can provide benefits in tasks related to their discovery, composition and mediation. In this paper we present an approach to automate the semantic annotation of RESTful services using a cross-domain ontology like DBpedia, domain ontologies like GeoNames, and additional external resources (suggestion and synonym services). We also present a preliminary evaluation in the geospatial domain that proves the feasibility of our approach in a domain where RESTful services are increasingly appearing and highlights that it is possible to carry out this semantic annotation with satisfactory results."^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/created1> "2010-12-31T19:00:00.000-05:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<http://purl.org/ontology/bibo/doi> "10.1007/978-3-642-21064-8_23"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/uri> <http://dx.doi.org/10.1007/978-3-642-21064-8_23> , <http://link.springer.com/openurl/pdf?id=doi:10.1007/978-3-642-21064-8_23> ;
+	<http://ucuenca.edu.ec/ontology#copyrightYear> "©2011 Springer Berlin Heidelberg"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#eisbn> "978-3-642-21064-8"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#isbn> "978-3-642-21063-1"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#pisbn> "978-3-642-21063-1"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> .
+
+<https://link.springer.com/chapter/10.1007/978-3-642-29063-3_7> <http://purl.org/dc/terms/contributor> "Corcho, Oscar"^^<http://www.w3.org/2001/XMLSchema#string> , "Saquicela, Víctor"^^<http://www.w3.org/2001/XMLSchema#string> , "Vilches-Blázquez, Luis M."^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/name> "Bridging the Geographic Information Sciences"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/publisher> "Springer"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/title> "Interlinking Geospatial Information in the Web of Data"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/abstract> "There is an increasing presence of geospatial datasets in the Linked Open Data cloud. However, these datasets are published like data silos and the value of the Web of Data depends, among other properties, on the amount and quality of links between data sources. One of the most overlooked problems to date in the linking process is to ensure that two different resources (identified with URIs) are actually referring to the same physical thing, that is, the co-reference problem. In this paper we present a co-reference resolution approach that is composed of a set of heuristics for interlinking geospatial Linked Data. We have used these heuristics to connect resources from GeoLinkedData.es and DBpedia."^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/created1> "2011-12-31T19:00:00.000-05:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<http://purl.org/ontology/bibo/created2> "2012-04-02T19:00:00.000-05:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<http://purl.org/ontology/bibo/doi> "10.1007/978-3-642-29063-3_7"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/uri> <http://dx.doi.org/10.1007/978-3-642-29063-3_7> , <http://link.springer.com/openurl/pdf?id=doi:10.1007/978-3-642-29063-3_7> ;
+	<http://ucuenca.edu.ec/ontology#copyrightYear> "©2012 Springer-Verlag Berlin Heidelberg"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> .
+
+<https://link.springer.com/article/10.1007/s10450-012-9407-1> <http://purl.org/dc/terms/contributor> "Li, Zhong"^^<http://www.w3.org/2001/XMLSchema#string> , "Liu, Defei"^^<http://www.w3.org/2001/XMLSchema#string> , "Wu, Yongbiao"^^<http://www.w3.org/2001/XMLSchema#string> , "Xi, Hongxia"^^<http://www.w3.org/2001/XMLSchema#string> , "Xia, Qibin"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/name> "Adsorption"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/publisher> "Springer"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/title> "Experimental and molecular simulation studies of CO_2 adsorption on zeolitic imidazolate frameworks: ZIF-8 and amine-modified ZIF-8"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/abstract> "ZIF-8 has been rapidly developed as a potential candidate for CO_2 capture due to its low density, high surface area, and robust structure. Considering the electron-donating effect of amino functional groups, amino-modification is expected to be an efficient way to improve CO_2 adsorption of ZIF-8. In this work, grand canonical Monte Carlo (GCMC) simulation was performed to study the CO_2 adsorption isotherm based on ZIF-8, ZIF-8-NH_2, and ZIF-8-(NH_2)_2. ZIF-8 was synthesized and CO_2 adsorption isotherms based on ZIF-8 was measured. The experimental surface area, pore volume, and CO_2 adsorption isotherm were used to validate the force field. Adsorptive capacity of ZIF-8-NH_2, and ZIF-8-(NH_2)_2 were first estimated. The GCMC simulation results indicated that the order of increasing CO_2 capacity of the ZIF-8 in the lower pressure regime is: ZIF-8 < ZIF-8-NH_2 < ZIF-8-(NH_2)_2, and in the high pressure is: ZIF-8 < ZIF-8-(NH_2)_2 < ZIF-8-NH_2. New adsorption sites can be generated with the existence of-NH_2 groups. In addition, for non-modified and amino-modified ZIF-8, it was the first time to use density functional theory (DFT) calculations to investigate their CO_2 adsorption sites and CO_2 binding energies. The present work indicates that appropriate amine-functionalized can directly enhanced CO_2 capacity of ZIF-8."^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/created1> "2013-01-31T19:00:00.000-05:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<http://purl.org/ontology/bibo/created2> "2012-09-04T19:00:00.000-05:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<http://purl.org/ontology/bibo/created3> "2013-02-10T19:00:00.000-05:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<http://purl.org/ontology/bibo/doi> "10.1007/s10450-012-9407-1"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/issue> "1"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/pageEnd> "37"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	<http://purl.org/ontology/bibo/pageStart> "25"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	<http://purl.org/ontology/bibo/uri> <http://dx.doi.org/10.1007/s10450-012-9407-1> , <http://link.springer.com/openurl/fulltext?id=doi:10.1007/s10450-012-9407-1> , <http://link.springer.com/openurl/pdf?id=doi:10.1007/s10450-012-9407-1> ;
+	<http://purl.org/ontology/bibo/volume> "19"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	<http://ucuenca.edu.ec/ontology#copyrightYear> "©2012 Springer Science+Business Media, LLC"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#eissn> "1572-8757"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#issn> "0929-5607"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#springerJournalId> "10450"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> .
+
+<https://link.springer.com/article/10.1007/s10450-014-9621-0> <http://purl.org/dc/terms/contributor> "Liu, Defei"^^<http://www.w3.org/2001/XMLSchema#string> , "Qian, Yu"^^<http://www.w3.org/2001/XMLSchema#string> , "Wu, Ying"^^<http://www.w3.org/2001/XMLSchema#string> , "Wu, Yongbiao"^^<http://www.w3.org/2001/XMLSchema#string> , "Xi, Hongxia"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/name> "Adsorption"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/publisher> "Springer"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/title> "Effect of electrostatic properties of IRMOFs on VOCs adsorption: a density functional theory study"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/abstract> "Metal–organic frameworks (MOFs) are of great promises for the adsorption of volatile organic compounds (VOCs). The adsorption of methanol, aldehyde and one on IRMOF-1 and an amino-functionalized framework, IRMOF-NH_2, were investigated by density functional theory. The adsorption mechanisms and the effects of amino functionalization were clarified with comparison of binding energies, optimized configurations, atomic partial charges and the electrostatic potentials. The calculated results revealed that the electron-donating effect of amino groups had great influence on the electrostatic properties of the framework. The adsorption of methanol was greatly enhanced on organic linkers of IRMOF-NH_2 compared to IRMOF-1, but weakened on the metal corners, different from the adsorption behaviors of aldehyde and acetone. A plausible interaction mechanism was inferred as the VOCs adsorption might be governed by the electrostatic interaction between methyl groups of the adsorbates and the binding sites of the framework, while the polar groups of adsorbates only interacted with framework through weak interaction like H-bonding. Besides, the steric hindrance effects of the inserted amino groups should also be taken into consideration, depending on the configuration and the electrostatic properties of the adsorbates. The binding mechanisms of VOCs on IRMOF-1 and IRMOF-NH_2, provide fundamental insights into the oriented design of MOFs for the adsorption of VOCs.Graphical Abstract"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/created1> "2014-07-31T19:00:00.000-05:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<http://purl.org/ontology/bibo/created2> "2014-06-27T19:00:00.000-05:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<http://purl.org/ontology/bibo/created3> "2014-07-02T19:00:00.000-05:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<http://purl.org/ontology/bibo/doi> "10.1007/s10450-014-9621-0"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/issue> "5-6"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/pageEnd> "788"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	<http://purl.org/ontology/bibo/pageStart> "777"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	<http://purl.org/ontology/bibo/uri> <http://dx.doi.org/10.1007/s10450-014-9621-0> , <http://link.springer.com/openurl/fulltext?id=doi:10.1007/s10450-014-9621-0> , <http://link.springer.com/openurl/pdf?id=doi:10.1007/s10450-014-9621-0> ;
+	<http://purl.org/ontology/bibo/volume> "20"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	<http://ucuenca.edu.ec/ontology#copyrightYear> "©2014 Springer Science+Business Media New York"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#eissn> "1572-8757"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#issn> "0929-5607"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#springerJournalId> "10450"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> .
+
+<https://link.springer.com/article/10.1007/s10853-017-1751-9> <http://purl.org/dc/terms/contributor> "Liu, Zewei"^^<http://www.w3.org/2001/XMLSchema#string> , "Wu, Ying"^^<http://www.w3.org/2001/XMLSchema#string> , "Xi, Hongxia"^^<http://www.w3.org/2001/XMLSchema#string> , "Zhang, Kai"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/name> "Journal of Materials Science"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/publisher> "Springer"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/title> "Effective enhancement on methanol adsorption in Cu-BTC by combination of lithium-doping and nitrogen-doping functionalization"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/abstract> "Grand canonical Monte Carlo method (GCMC) simulation combined with density functional theory calculation was used to investigate the adsorption in Cu-BTC, with nitrogen- and lithium-doping functionalization in order to understand the underlying performance of MOFs in methanol adsorption. A new N-doping structure, 3N–CuBTC, was theoretically constructed by replacing the carbon atoms with hydrogen connection in the organic linkers by nitrogen atoms. 3N–CuBTC shows higher methanol capacity in the measured pressure range due to the increased dispersive interactions caused by the lone electron pair of nitrogen atoms. Another Li-doping structure, 3Li–3N–CuBTC, was fabricated by doping Li atoms on the base of 3N–CuBTC. 3Li–3N–CuBTC demonstrated higher methanol capacity due to the stronger interaction between the induced Li atoms and methanol molecules. Furthermore, these two results can be attributed to the new adsorption sites created by N- and Li-doping, as revealed by the more exothermic binding energies on N-sites (− 49.37 kJ mol^−1) and Li-sites (− 122.28 kJ mol^−1) than Cu-sites (− 40.62 kJ mol^−1). According to the simulation results, it can be concluded that both functionalized Cu-BTCs are capable of enhancing the methanol adsorption capacity of the framework at pressure from 0 to 14 kPa at 298 K."^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/created1> "2018-03-31T19:00:00.000-05:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<http://purl.org/ontology/bibo/created2> "2018-01-21T19:00:00.000-05:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<http://purl.org/ontology/bibo/created3> "2018-01-29T19:00:00.000-05:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<http://purl.org/ontology/bibo/doi> "10.1007/s10853-017-1751-9"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/issue> "8"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/pageEnd> "6093"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	<http://purl.org/ontology/bibo/pageStart> "6080"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	<http://purl.org/ontology/bibo/uri> <http://dx.doi.org/10.1007/s10853-017-1751-9> , <http://link.springer.com/openurl/fulltext?id=doi:10.1007/s10853-017-1751-9> , <http://link.springer.com/openurl/pdf?id=doi:10.1007/s10853-017-1751-9> ;
+	<http://purl.org/ontology/bibo/volume> "53"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	<http://ucuenca.edu.ec/ontology#copyrightYear> "©2018 Springer Science+Business Media, LLC"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#eissn> "1573-4803"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#issn> "0022-2461"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#springerJournalId> "10853"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> .
+
+<https://link.springer.com/article/10.1007/s11595-010-0031-1> <http://purl.org/dc/terms/contributor> "Jiang, Xuhong"^^<http://www.w3.org/2001/XMLSchema#string> , "Li, Jing"^^<http://www.w3.org/2001/XMLSchema#string> , "Li, Zhong"^^<http://www.w3.org/2001/XMLSchema#string> , "Xi, Hongxia"^^<http://www.w3.org/2001/XMLSchema#string> , "Xiao, Wenqing"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/name> "Journal of Wuhan University of Technology-Mater. Sci. Ed."^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/publisher> "Springer"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/title> "Adsorption breakthrough of benzene in the fixed bed of modified activated carbon under different humidity conditions"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/abstract> "The breakthrough curves of benzene and water on modified activated carbons (ACs) were investigated. Temperature-programmed desorption (TPD) experiments were conducted to measure the TPD curves of benzene and water on modified and unmodified ACs and to estimate the activation energy for the desorption of benzene on the modified ACs. Starting with unmodified ACs, two modified ACs were prepared by using two different types of silane, designated by KH560 and 1706. The results showed that the activation energy for the desorption of benzene on KH560/AC and 1706/AC was higher than that on unmodified AC. In addition, the activation energy for the desorption of water on KH560/AC and 1706/AC was lower than that on unmodified AC. The breakthrough curves of benzene obtained from the experimental observations under different humidity conditions were compared with the results of the TPD experiments. The results show that the modified ACs are less affected by water, whereas the unmodified ACs are more affected by water, indicating that surface modification by organosilane compounds can improve the adsorption of benzene on the activated carbo, which weakens the adsorption of water."^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/created1> "2010-05-31T19:00:00.000-05:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<http://purl.org/ontology/bibo/created2> "2010-06-11T19:00:00.000-05:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<http://purl.org/ontology/bibo/doi> "10.1007/s11595-010-0031-1"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/issue> "3"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/pageEnd> "503"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	<http://purl.org/ontology/bibo/pageStart> "499"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	<http://purl.org/ontology/bibo/uri> <http://dx.doi.org/10.1007/s11595-010-0031-1> , <http://link.springer.com/openurl/pdf?id=doi:10.1007/s11595-010-0031-1> ;
+	<http://purl.org/ontology/bibo/volume> "25"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	<http://ucuenca.edu.ec/ontology#copyrightYear> "©2010 Wuhan University of Technology and Springer-Verlag Berlin Heidelberg"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#eissn> "1993-0437"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#issn> "1000-2413"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#springerJournalId> "11595"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> .
+
+<https://link.springer.com/article/10.1007/s11595-016-1371-2> <http://purl.org/dc/terms/contributor> "Gu, Xuexian"^^<http://www.w3.org/2001/XMLSchema#string> , "Su, Zhanjun"^^<http://www.w3.org/2001/XMLSchema#string> , "Xi, Hongxia"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/name> "Journal of Wuhan University of Technology-Mater. Sci. Ed."^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/publisher> "Springer"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/title> "New activated carbon with high thermal conductivity and its microwave regeneration performance"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/abstract> "Using a walnut shell as a carbon source and ZnCl_2 as an activating agent, we resolved the temperature gradient problems of activated carbon in the microwave desorption process. An appropriate amount of silicon carbide was added to prepare the composite activated carbon with high thermal conductivity while developing VOC adsorption-microwave regeneration technology. The experimental results show that the coefficient of thermal conductivity of SiC-AC is three times as much as those of AC and SY-6. When microwave power was 480 W in its microwave desorption, the temperature of the bed thermal desorption was 10 °C to 30 °C below that of normal activated carbon prepared in our laboratory. The toluene desorption activation energy was 16.05 kJ∙mol^−1, which was 15% less than the desorption activation energy of commercial activated carbon. This study testified that the process could maintain its high adsorption and regeneration desorption performances."^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/created1> "2016-03-31T19:00:00.000-05:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<http://purl.org/ontology/bibo/created2> "2016-04-12T19:00:00.000-05:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<http://purl.org/ontology/bibo/doi> "10.1007/s11595-016-1371-2"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/issue> "2"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/pageEnd> "333"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	<http://purl.org/ontology/bibo/pageStart> "328"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	<http://purl.org/ontology/bibo/uri> <http://dx.doi.org/10.1007/s11595-016-1371-2> , <http://link.springer.com/openurl/pdf?id=doi:10.1007/s11595-016-1371-2> ;
+	<http://purl.org/ontology/bibo/volume> "31"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	<http://ucuenca.edu.ec/ontology#copyrightYear> "©2016 Wuhan University of Technology and Springer-Verlag Berlin Heidelberg"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#eissn> "1993-0437"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#issn> "1000-2413"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#springerJournalId> "11595"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> .
+
+<https://link.springer.com/article/10.1007/s11705-008-0056-6> <http://purl.org/dc/terms/contributor> "Li, Zhong"^^<http://www.w3.org/2001/XMLSchema#string> , "Wang, Shuwen"^^<http://www.w3.org/2001/XMLSchema#string> , "Xi, Hongxia"^^<http://www.w3.org/2001/XMLSchema#string> , "Xia, Qibin"^^<http://www.w3.org/2001/XMLSchema#string> , "Yu, Moxin"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/name> "Frontiers of Chemical Engineering in China"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/publisher> "Springer"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/title> "Effect of textural property of coconut shell-based activated carbon on desorption activation energy of benzothiophene"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/abstract> "In this work, the effect of the textural property of activated carbons on desorption activation energy and adsorption capacity for benzothiophene (BT) was investigated. BET surface areas and the textural parameters of three kinds of the activated carbons, namely SY-6, SY-13 and SY-19, were measured with an ASAP 2010 instrument. The desorption activation energies of BT on the activated carbons were determined by temperature-programmed desorption (TPD). Static adsorption experiments were carried out to determine the isotherms of BT on the activated carbons. The influence of the textural property of the activated carbons on desorption activation energy and the adsorption capacity for BT was discussed. Results showed that the BET surface areas of the activated carbons, SY-6, SY-13 and SY-19 were 1106, 1070 and 689 m^2·g^−1, respectively, and their average pore diameters were 1.96, 2.58 and 2.16 nm, respectively. The TPD results indicated that the desorption activation energy of BT on the activated carbons, SY-6, SY-19 and SY-13 were 58.84, 53.02 and 42.57 KJ/mol, respectively. The isotherms showed that the amount of BT adsorbed on the activated carbons followed the order of SY-6 > SY-19 > SY-13. The smaller the average pore diameter of the activated carbon, the stronger its adsorption for BT and the higher the activation energy required for BT desorption on its surface. The Freundlich adsorption isotherm model can be properly used to formulate the adsorption behavior of BT on the activated carbons."^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/created1> "2008-08-31T19:00:00.000-05:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<http://purl.org/ontology/bibo/created2> "2008-07-19T19:00:00.000-05:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<http://purl.org/ontology/bibo/doi> "10.1007/s11705-008-0056-6"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/issue> "3"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/pageEnd> "275"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	<http://purl.org/ontology/bibo/pageStart> "269"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	<http://purl.org/ontology/bibo/uri> <http://dx.doi.org/10.1007/s11705-008-0056-6> , <http://link.springer.com/openurl/pdf?id=doi:10.1007/s11705-008-0056-6> ;
+	<http://purl.org/ontology/bibo/volume> "2"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	<http://ucuenca.edu.ec/ontology#copyrightYear> "©2008 Higher Education Press and Springer-Verlag GmbH"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#eissn> "1673-7474"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#issn> "1673-7369"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#springerJournalId> "11705"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> .
+
+<https://link.springer.com/article/10.1007/s40843-017-9136-y> <http://purl.org/dc/terms/contributor> "Duan, Chongxiong"^^<http://www.w3.org/2001/XMLSchema#string> , "Li, Chao"^^<http://www.w3.org/2001/XMLSchema#string> , "Li, Feier"^^<http://www.w3.org/2001/XMLSchema#string> , "Liu, Zewei"^^<http://www.w3.org/2001/XMLSchema#string> , "Xi, Hongxia"^^<http://www.w3.org/2001/XMLSchema#string> , "Xiao, Jing"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/name> "Science China Materials"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/publisher> "Springer"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/dc/terms/title> "Rapid room-temperature synthesis of hierarchical porous zeolitic imidazolate frameworks with high space-time yield"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/abstract> "摘要常温下快速合成具有多级孔结构的ZIFs村料具有重要的意义: 一方面, 多级孔道结构能有效地增加分子扩散速率、 降低其传质阻力, 这对于涉及大分子参与的反应具有重要意义, 扩大了村料的应用范围; 另一方面, 在常温下快速合成ZIFs村料不仅能大幅降低能源消耗, 并且能极大地提高生产效率, 是一种绿色高效的工艺路线. 本文采用有机胺类作为模板, 首次在常温下快速合成具有高空时产率的3种多级ZIFs村料(ZIF-8, ZIF-61以及ZIF-90), 村料的合成时缩短至1分钟, 同时兼具微孔, 介孔, 大孔结构. 此外, ZIFs产物的形貌和多孔性质可以通过调节胺模板的类型或者合成时间来调控. 更为重要的是, ZIFs村料的空时产率高达1.29×10^4 kg m^−3 d^—1, 比之前报导过的值高出3倍, 这为ZIFs村料的商业化生产提供了可能. 最后, 我们通过对有机胺类分子进行计算机模拟, 再结合之前文献报导的结果, 得到了一般性的合成机理: 一方面有机胺作为质子化剂使得有机配体去质子化, 被质子化的配体迅速地和金属离子结合形成金属有机骨架; 另一方面, 有机胺作为模板被用来引导介孔和大孔结构的形成.AbstractHierarchical porous zeolitic imidazolate frameworks (ZIFs) have potential for adsorption, catalysis and chemical sensing applications. Ultrafast synthesis of ZIFs at room temperature and pressure is particularly desirable for large-scale industrial production. Here, we developed a green and versatile method using organic amines as supramolecular templates (organic amine-template) to rapidly synthesize hierarchical porous ZIFs (ZIF-8, ZIF-61 and ZIF-90) at room temperature and pressure. The synthesis time was reduced dramatically to within 1 min, and the resulting ZIFs had multimodal hierarchical porous structures with mesopores/macropores interconnected with micropores. Notably, the space–time yield (STY) of hierarchical porous ZIF-8 was up to 1.29×10^4 kg m^–3 d^–1, which is more than three times higher than that reported using other methods. Furthermore, the morphologies and porosities of the produced ZIFs could be readily tuned by controlling the synthesis time or type of organic amine. The organic amine played two roles in the synthesis: (1) a protonation agent to deprotonate organic ligands, facilitating the formation of ZIF crystals, and (2) an structure directing agent to direct mesopore/macropore formation. The resulting hierarchical porous ZIF-8 exhibited enhanced uptake capacities and diffusion rates for guest molecules relative to its microporous counterpart. This work provides a new direction for the green and efficient synthesis of various hierarchical porous ZIFs with high STYs for a wide range of applications."^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/created1> "2017-11-30T19:00:00.000-05:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<http://purl.org/ontology/bibo/created2> "2017-11-23T19:00:00.000-05:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;
+	<http://purl.org/ontology/bibo/doi> "10.1007/s40843-017-9136-y"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/issue> "12"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://purl.org/ontology/bibo/pageEnd> "1214"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	<http://purl.org/ontology/bibo/pageStart> "1205"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	<http://purl.org/ontology/bibo/uri> <http://dx.doi.org/10.1007/s40843-017-9136-y> , <http://link.springer.com/openurl/pdf?id=doi:10.1007/s40843-017-9136-y> ;
+	<http://purl.org/ontology/bibo/volume> "60"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	<http://ucuenca.edu.ec/ontology#copyrightYear> "©2017 Science China Press and Springer-Verlag GmbH Germany, part of Springer Nature"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#eissn> "2199-4501"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#issn> "2095-8226"^^<http://www.w3.org/2001/XMLSchema#string> ;
+	<http://ucuenca.edu.ec/ontology#springerJournalId> "40843"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+	a <http://purl.org/ontology/bibo/AcademicArticle> .
+
+<https://link.springer.com/author/12e055b8e13e153179450e9d7faa1169> a <http://xmlns.com/foaf/0.1/Person> ;
+	<http://www.w3.org/2002/07/owl#oneOf> "http://api.springer.com/meta/v1/json?q=name:Xi+Hongxia&api_key=a6bf2dbe42d9e7d523fadd7c40dcc43d&p=50&s=0" ;
+	<http://xmlns.com/foaf/0.1/name> "Xi" ;
+	<http://xmlns.com/foaf/0.1/publications> <https://link.springer.com/article/10.1007/s10450-014-9621-0> .
+
+<https://link.springer.com/author/19f471adf724d3b476e1ba3cf6da2f85> a <http://xmlns.com/foaf/0.1/Person> ;
+	<http://www.w3.org/2002/07/owl#oneOf> "http://api.springer.com/meta/v1/json?q=name:Xi+Hongxia&api_key=a6bf2dbe42d9e7d523fadd7c40dcc43d&p=50&s=0" ;
+	<http://xmlns.com/foaf/0.1/name> "Xi" ;
+	<http://xmlns.com/foaf/0.1/publications> <https://link.springer.com/article/10.1007/s11705-008-0056-6> .
+
+<https://link.springer.com/author/33817548d870f10bbfa947c1bf42893c> a <http://xmlns.com/foaf/0.1/Person> ;
+	<http://www.w3.org/2002/07/owl#oneOf> "http://api.springer.com/meta/v1/json?q=name:Xi+Hongxia&api_key=a6bf2dbe42d9e7d523fadd7c40dcc43d&p=50&s=0" ;
+	<http://xmlns.com/foaf/0.1/name> "Xi" ;
+	<http://xmlns.com/foaf/0.1/publications> <https://link.springer.com/article/10.1007/s10853-017-1751-9> .
+
+<https://link.springer.com/author/562c26236b5bb4ef21ba6f79b7d9ce45> a <http://xmlns.com/foaf/0.1/Person> ;
+	<http://www.w3.org/2002/07/owl#oneOf> "http://api.springer.com/meta/v1/json?q=name:Xi+Hongxia&api_key=a6bf2dbe42d9e7d523fadd7c40dcc43d&p=50&s=0" ;
+	<http://xmlns.com/foaf/0.1/name> "Xi" ;
+	<http://xmlns.com/foaf/0.1/publications> <https://link.springer.com/article/10.1007/s11595-010-0031-1> .
+
+<https://link.springer.com/author/7c9dc664456aeeb7926d1b4365f510e6> a <http://xmlns.com/foaf/0.1/Person> ;
+	<http://www.w3.org/2002/07/owl#oneOf> "http://api.springer.com/meta/v1/json?q=name:Xi+Hongxia&api_key=a6bf2dbe42d9e7d523fadd7c40dcc43d&p=50&s=0" ;
+	<http://xmlns.com/foaf/0.1/name> "Xi" ;
+	<http://xmlns.com/foaf/0.1/publications> <https://link.springer.com/article/10.1007/s11595-016-1371-2> .
+
+<https://link.springer.com/author/8e79a4dcfa30dc517edfba0c3468f31f> a <http://xmlns.com/foaf/0.1/Person> ;
+	<http://www.w3.org/2002/07/owl#oneOf> "http://api.springer.com/meta/v1/json?q=name:Xi+Hongxia&api_key=a6bf2dbe42d9e7d523fadd7c40dcc43d&p=50&s=0" ;
+	<http://xmlns.com/foaf/0.1/name> "Xi" ;
+	<http://xmlns.com/foaf/0.1/publications> <https://link.springer.com/article/10.1007/s10450-012-9407-1> .
+
+<https://link.springer.com/author/e324036d5c928b28969b2194c9ef6313> a <http://xmlns.com/foaf/0.1/Person> ;
+	<http://www.w3.org/2002/07/owl#oneOf> "http://api.springer.com/meta/v1/json?q=name:Xi+Hongxia&api_key=a6bf2dbe42d9e7d523fadd7c40dcc43d&p=50&s=0" ;
+	<http://xmlns.com/foaf/0.1/name> "Xi" ;
+	<http://xmlns.com/foaf/0.1/publications> <https://link.springer.com/article/10.1007/s40843-017-9136-y> .

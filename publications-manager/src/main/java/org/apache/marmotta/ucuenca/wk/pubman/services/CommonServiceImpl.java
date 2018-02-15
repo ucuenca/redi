@@ -13,24 +13,19 @@ import java.util.logging.Level;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
+import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Provider;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
-
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
-
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
-
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.ReportsService;
-
-import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Provider;
-import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
-
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.AcademicsKnowledgeProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.DBLPProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.DspaceProviderServiceImpl;
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.GoogleScholarProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.ScopusProviderService;
-
+import org.apache.marmotta.ucuenca.wk.pubman.services.providers.SpringerProviderService;
+import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
 import org.openrdf.model.Value;
 import org.openrdf.query.QueryLanguage;
 import org.slf4j.Logger;
@@ -50,6 +45,9 @@ public class CommonServiceImpl implements CommonService {
 
     @Inject
     GoogleScholarProviderService googleProviderService;
+
+    @Inject
+    SpringerProviderService springerProviderService;
 
     @Inject
     AcademicsKnowledgeProviderService academicsKnowledgeService;
@@ -94,6 +92,24 @@ public class CommonServiceImpl implements CommonService {
     private Thread dblpThread;
     private Thread scieloThread;
     private Thread scholarThread;
+    private Thread springerThread;
+
+    @Override
+    public String getDataFromSpringerProvidersService(final String[] organizations) {
+        if (springerThread != null && springerThread.isAlive()) {
+            return "Process is executing.";
+        }
+
+        springerThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                springerProviderService.extractAuthors(organizations);
+            }
+        });
+        springerThread.start();
+        return "Data Provider Springer are extracted in background.   Please review main.log file for details";
+
+    }
 
     @Override
     public String getDataFromScopusProvidersService(final String[] organizations) {

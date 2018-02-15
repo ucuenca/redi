@@ -46,11 +46,13 @@ public class OntologyMapperTest {
     private static Model dblpModel;
     private static Model scholarModel;
     private static Model scieloModel;
+    private static Model springerModel;
     private static InputStream academicsKnowledgeMapper;
     private static InputStream scopusMapper;
     private static InputStream dblpMapper;
     private static InputStream scholarMapper;
     private static InputStream scieloMapper;
+    private static InputStream springerMapper;
     private static InputStream emptyMapper;
     private static final Logger log = LoggerFactory.getLogger(OntologyMapperTest.class);
 
@@ -62,6 +64,7 @@ public class OntologyMapperTest {
             dblpModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/dblp.ttl"), "", RDFFormat.TURTLE);
             scholarModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/scholar.rdf"), "", RDFFormat.RDFXML);
             scieloModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/scielo.rdf"), "", RDFFormat.RDFXML);
+            springerModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/springer.ttl"), "", RDFFormat.TURTLE);
         } catch (IOException | RDFParseException | UnsupportedRDFormatException ex) {
             log.error("cannot read file.", ex);
         }
@@ -69,6 +72,7 @@ public class OntologyMapperTest {
         scopusMapper = OntologyMapper.class.getResourceAsStream("/mapping/scopus.ttl");
         dblpMapper = OntologyMapper.class.getResourceAsStream("/mapping/dblp.ttl");
         scholarMapper = OntologyMapper.class.getResourceAsStream("/mapping/google_scholar.ttl");
+        springerMapper = OntologyMapper.class.getResourceAsStream("/mapping/springer.ttl");
         scieloMapper = OntologyMapper.class.getResourceAsStream("/mapping/scielo.ttl");
         emptyMapper = new ByteArrayInputStream(new byte[]{});
 
@@ -125,7 +129,19 @@ public class OntologyMapperTest {
         assertEquals(scholarModel.size(), 919);
         Model resultWithMapperFile = OntologyMapper.map(scholarModel, scholarMapper, vocabulary);
         Model resultEmptyMapperFile = OntologyMapper.map(scholarModel, emptyMapper, vocabulary);
-        assertEquals(resultWithMapperFile.size(), 1171);
+        assertEquals(resultWithMapperFile.size(), 1538);
+        assertEquals(resultEmptyMapperFile.size(), 0);
+    }
+
+    /**
+     * Test ontology mapping of Springer vocabulary.
+     */
+    @Test
+    public void testSpringOntologyMapping() {
+        assertEquals(springerModel.size(), 320);
+        Model resultWithMapperFile = OntologyMapper.map(springerModel, springerMapper, vocabulary);
+        Model resultEmptyMapperFile = OntologyMapper.map(springerModel, emptyMapper, vocabulary);
+        assertEquals(resultWithMapperFile.size(), 493);
         assertEquals(resultEmptyMapperFile.size(), 0);
     }
     

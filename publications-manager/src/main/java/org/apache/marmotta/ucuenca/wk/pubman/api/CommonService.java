@@ -25,24 +25,25 @@ public interface CommonService {
 
     String getDataFromGoogleScholarProvidersService(final String[] organizations);
 
+    String getDataFromSpringerProvidersService(final String[] organizations);
+
     String GetDataFromProvidersServiceDspace();
 
     String createReport(String hostname, String realPath, String name, String type, List<String> params);
-
 
     String getSearchQuery(String textSearch);
 
     String DetectLatindexPublications();
 
-  
-    String runDisambiguationProcess(String [] orgs);
+    String runDisambiguationProcess(String[] orgs);
+
     String runDisambiguationProcess();
 
     String CentralGraphProcess();
 
     String organizationListExtracted();
-    
+
     String organizationListEnrichment();
-    
+
     List<Provider> getProviders() throws MarmottaException;
 }

@@ -7,7 +7,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     
-    <groupId>ec.edu.cedia.redi.provider</groupId>
+    <groupId>ec.edu.cedia.redi</groupId>
     <artifactId>providers</artifactId>
     <name>REDI - Providers</name>
     <packaging>pom</packaging>

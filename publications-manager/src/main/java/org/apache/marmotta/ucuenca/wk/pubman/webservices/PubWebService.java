@@ -124,6 +124,15 @@ public class PubWebService {
     }
 
     @POST
+    @Path("/publicationsSpringerByOrg")
+    public Response readPublicationsPostSpringer(@Context HttpServletRequest request) {
+        String[] org = request.getParameterMap().get("data[]");
+        String result = commonService.getDataFromSpringerProvidersService(org);
+
+        return Response.ok().entity(result).build();
+    }
+
+    @POST
     @Path("/publicationsAkByOrg")
     //  @Produces(APPLICATIONJSON)
     public Response readPublicationsPostAK(@Context HttpServletRequest request) {
@@ -234,9 +243,9 @@ public class PubWebService {
 //    }
     /**
      * @Author Jose Luis Cullcay. Service used to create reports
-     * @param report Name of the report
-     * @param param Type of the report
-     * @param param1 Parameter
+     * @param report  Name of the report
+     * @param param   Type of the report
+     * @param param1  Parameter
      * @param request
      * @return Address to the new report created
      */
