@@ -136,7 +136,6 @@ public class ScieloRawProvider extends AbstractHttpProvider {
                 Person p1 = new Person();
                 p1.Name = new ArrayList<>();
                 p1.Name.add(nameOrg);
-
                 for (Element element : queryElements(doc, "/response/result/doc")) {
                     String value = getValue(element, "ur");
                     String code = URLEncoder.encode(value);
@@ -168,7 +167,8 @@ public class ScieloRawProvider extends AbstractHttpProvider {
         return XPathFactory.instance().compile(query, new ElementFilter()).evaluate(n);
     }
 
-    private String getName(String id) {
+    private String getName(String resource) {
+        String id = resource.substring(resource.lastIndexOf('/') + 1);
         return id.replaceAll("_", " ").replaceAll("-", " ");
     }
 

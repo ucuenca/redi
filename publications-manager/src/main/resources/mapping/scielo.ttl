@@ -23,27 +23,31 @@ uc:AffN a r2r:Mapping ;
     r2r:targetPattern "?SUBJ a foaf:Organization" .
 
 
-uc:NameG a r2r:Mapping ;
-    r2r:partOfMappingCollection uc:mapColl1 ;
-    r2r:sourcePattern "?SUBJ scielo:gname ?gname" ;
-    r2r:targetPattern "?SUBJ foaf:givenName ?gname" ;
-    r2r:targetPattern "?SUBJ a foaf:Person" ;
-    r2r:targetPattern "?SUBJ dct:provenance uc:Scielo".
-
-uc:NameF a r2r:Mapping ;
-    r2r:partOfMappingCollection uc:mapColl1 ;
-    r2r:sourcePattern "?SUBJ scielo:fname ?fname" ;
-    r2r:targetPattern "?SUBJ foaf:familyName ?fname" ;
-    r2r:targetPattern "?SUBJ a foaf:Person" ;
-    r2r:targetPattern "?SUBJ dct:provenance uc:Scielo" .
-
 uc:NameC a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ scielo:fname ?fname . ?SUBJ scielo:gname ?gname ." ;
     r2r:transformation "?cname = concat(?fname, ' , ', ?gname)" ;
     r2r:targetPattern "?SUBJ foaf:name ?cname" ;
+    r2r:targetPattern "?SUBJ foaf:givenName ?gname" ;
+    r2r:targetPattern "?SUBJ foaf:familyName ?fname" ;
     r2r:targetPattern "?SUBJ a foaf:Person"  ;
     r2r:targetPattern "?SUBJ dct:provenance uc:Scielo" .
+
+
+uc:NameF a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ scielo:fname ?fname . optional { ?SUBJ scielo:gname ?gname . }. filter (!bound(?gname)) . " ;
+    r2r:targetPattern "?SUBJ foaf:name ?fname" ;
+    r2r:targetPattern "?SUBJ a foaf:Person"  ;
+    r2r:targetPattern "?SUBJ dct:provenance uc:Scielo" .
+
+uc:NameG a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ scielo:gname ?gname . optional { ?SUBJ scielo:fname ?fname . } . filter (!bound(?fname)) . " ;
+    r2r:targetPattern "?SUBJ foaf:name ?gname" ;
+    r2r:targetPattern "?SUBJ a foaf:Person"  ;
+    r2r:targetPattern "?SUBJ dct:provenance uc:Scielo" .
+
 
 
 uc:NameM a r2r:Mapping ;
