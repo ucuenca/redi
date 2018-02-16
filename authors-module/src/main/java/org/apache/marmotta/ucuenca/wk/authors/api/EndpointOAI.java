@@ -43,6 +43,8 @@ public class EndpointOAI extends EndpointObject {
     
     private Logger log = LoggerFactory.getLogger(this.getClass());
     private String endpoint ;
+    
+    private Boolean severemode ;
 
     private Repository repo;
 
@@ -72,6 +74,14 @@ public class EndpointOAI extends EndpointObject {
         return endpoint;
     }
 
+    public Boolean isSeveremode() {
+        return severemode;
+    }
+
+    public void setSeveremode(Boolean severemode) {
+        this.severemode = severemode;
+    }
+
     public void setEndpoint(String endpoint) {
         this.endpoint = endpoint;
     }
@@ -80,11 +90,11 @@ public class EndpointOAI extends EndpointObject {
         return this.getOutputFilesPath()+"/"+FOLDER+"/"+FILENAME;
     }
 
-    public EndpointOAI(String status, String name, String access, String type ,  String resourceId) {
+    public EndpointOAI(String status, String name, String access, String type ,  String resourceId , Boolean severemode) {
         //this.graph = TEMPORAL_GRAPH;
         super(status, name, access,  type  , TEMPORAL_GRAPH , resourceId);
         this.endpoint = access;
-        
+        this.severemode = severemode;
         
     }
   /*  public String getTemporalGraph () {
@@ -177,9 +187,10 @@ public class EndpointOAI extends EndpointObject {
                  BindingSet bd = result.next();  
                  HashMap hm = new HashMap ();
                  for (String name : resultsName )
-                 {   
+                 {    if (bd.hasBinding(name)){
                       String value =  bd.getBinding(name).getValue().stringValue();
                       hm.put(name, value);
+                      }
                  }
                    listResults.add(hm);
                 } 

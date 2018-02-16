@@ -16,7 +16,7 @@ public interface EndpointsService {
      
      String registerSPARQL (String type , String org, String url , String graph );
     
-     String registerOAI ( String type , String  org , String url );
+     String registerOAI ( String type , String  org , String url , Boolean severemode);
    
      String registerFile (String type, String  org , String file );
      

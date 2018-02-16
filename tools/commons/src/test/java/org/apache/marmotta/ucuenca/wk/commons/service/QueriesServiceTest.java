@@ -13,7 +13,7 @@ import org.junit.Assert;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
+//import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -46,7 +46,7 @@ public class QueriesServiceTest {
     /**
      * Test of getAuthorsQuery method, of class QueriesServiceImplService.
      */
-    @Test
+  /*  @Test
     @Ignore
     public void testGetAuthorsQuery() {
         System.out.println("getAuthorsQuery");
@@ -56,7 +56,7 @@ public class QueriesServiceTest {
         String result = instance.getAuthorsQuery(wkhuskagraph, "1");
         Assert.assertEquals(expResult, result);
     }
-
+*/
     /**
      * Test of getRetrieveResourceQuery method, of class
      * QueriesServiceImplService.
