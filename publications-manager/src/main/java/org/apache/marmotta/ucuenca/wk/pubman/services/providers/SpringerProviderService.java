@@ -52,21 +52,27 @@ public class SpringerProviderService extends AbstractProviderService {
 
         String[] fName = firstname.split(" ");
         String[] lName = lastname.split(" ");
+        String[] orgs = new String[organization.size()];
+        orgs = organization.toArray(orgs);
+        String gname = null;
         if (lName.length > 0) {
-            lastname = lName[0];
+            gname = lName[0];
         }
 
         for (int i = 0; i < fName.length; i++) {
             fName[i] = "name:" + fName[i];
         }
-        for (int i = 0; i < organization.size(); i++) {
-            organization.set(i, "orgname:\"" + organization.get(i) + "\"");
+        for (int i = 0; i < orgs.length; i++) {
+            orgs[i] = "orgname:\"" + orgs[i] + "\"";
         }
-        String names = StringUtils.join(fName, " OR ");
-        String orgs = StringUtils.join(organization, " OR ");
+        String queryNames = StringUtils.join(fName, " OR ");
+        String queryOrgs = StringUtils.join(orgs, " OR ");
 
         try {
-            String query = String.format("((%s) AND (name:%s) AND (%s))", names, lastname, orgs);
+            if (gname == null) {
+                throw new RuntimeException(new NullPointerException("The lastname is mandatory"));
+            }
+            String query = String.format("((%s) AND (name:%s) AND (%s))", queryNames, gname, queryOrgs);
             query = URLEncoder.encode(query, "UTF-8");
             String url = String.format(TEMPLATE, query, apiKey);
             return Collections.singletonList(url);
