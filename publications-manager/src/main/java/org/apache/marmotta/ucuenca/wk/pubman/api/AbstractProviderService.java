@@ -83,7 +83,7 @@ public abstract class AbstractProviderService implements ProviderService {
     @Inject
     protected ConstantService constantService;
 
-    private final String STR = "string";
+    private final  String STR = "string";
 
     /**
      * Build a list of URLs to request authors with {@link LDClient}.

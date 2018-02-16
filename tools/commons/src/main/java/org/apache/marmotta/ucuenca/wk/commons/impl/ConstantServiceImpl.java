@@ -223,10 +223,10 @@ public class ConstantServiceImpl implements ConstantService {
         return getWkhuskaGraph() + getSelectedGraph("googlescholar");
     }
 
-    @Override
+  /*  @Override
     public String getDspaceGraph() {
         return getWkhuskaGraph() + getSelectedGraph("dspace");
-    }
+    }*/
 
 //    @Override
 //    public String getEndpointsGraph() {
@@ -319,6 +319,11 @@ public class ConstantServiceImpl implements ConstantService {
     @Override
     public String getScieloGraph() {
         return confService.getBaseContext() + "provider/ScieloProvider";
+    }
+    
+     @Override
+    public String getDspaceGraph() {
+        return confService.getBaseContext() + "provider/DspaceProvider";
     }
 
 }

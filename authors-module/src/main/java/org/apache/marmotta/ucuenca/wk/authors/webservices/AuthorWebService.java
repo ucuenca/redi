@@ -93,7 +93,7 @@ public class AuthorWebService {
     @SuppressWarnings({"PMD.ExcessiveMethodLength", "PMD.AvoidDuplicateLiterals", "PMD.NPathComplexity"})
     public Response uploadAuthors(@HeaderParam(HttpHeaders.CONTENT_TYPE) String type, @Context HttpServletRequest request,
             @QueryParam("org") String organization, @QueryParam("type") String endpointType) throws IOException {
-        if (type == null || !"text/csv".equals(type.toLowerCase()) || !"application/vnd.ms-excel".equals(type.toLowerCase())) {
+        if (type == null || !( "text/csv".equals(type.toLowerCase()) || "application/vnd.ms-excel".equals(type.toLowerCase()))) {
             return Response.status(Status.BAD_REQUEST).entity("Incorrect file format.").build();
         }
         if (organization == null || organization.trim().length() <= 0) {
@@ -183,13 +183,13 @@ public class AuthorWebService {
 
 
 
-
+    /*       
     @POST
     @Path("/update")
     public Response updateAuthorPost() throws UpdateException, DaoException {
-        String result = authorService.extractAuthors();
+      //  String result = authorService.extractAuthors();
         return Response.ok().entity(result).build();
-    }
+    }*/
 
  
     @POST
@@ -231,9 +231,9 @@ public class AuthorWebService {
 
     @POST
     @Path("/endpointOAIRegister")
-    public Response endpointOAIRegister(@QueryParam("type") String type, @QueryParam("org") String org, @QueryParam("url") String url) {
+    public Response endpointOAIRegister(@QueryParam("type") String type, @QueryParam("org") String org, @QueryParam("url") String url, @QueryParam("severe") Boolean severemode) {
         //String result = organizationService.editOrg( acro, namEn, namEs, coun, prov, city, lan, lon, type);
-        String result = endpointsService.registerOAI(type, org, url);
+        String result = endpointsService.registerOAI(type, org, url , severemode);
         return Response.ok().entity(result).build();
         //return  Response.status(Status.BAD_REQUEST).entity("Incorrect file format.").build();
     }

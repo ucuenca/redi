@@ -29,15 +29,12 @@ public interface AuthorService {
      * @throws DaoException
      * @throws UpdateException
      */
-    String extractAuthors() throws DaoException, UpdateException;
+   
 
-    String extractSubjects();
+  
 
-    String searchDuplicates();
+   // String searchDuplicates();
     
-    String extractOAI (String name , String endpoint);
-    
-    String extractFile (String name , String endpoint);
     
     String extractAuthorsGeneric (String... endpoints);
 

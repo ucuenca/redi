@@ -6,6 +6,7 @@
 
 package org.apache.marmotta.ucuenca.wk.authors.services;
 
+
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -73,10 +74,10 @@ public class EndpointsServiceImpl implements EndpointsService {
     }
 
     @Override
-    public String registerOAI(String type, String org, String url) {
+    public String registerOAI(String type, String org, String url, Boolean severemode) {
        // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         String resourceId = con.getEndpointBaseUri()+type+"/"+org;
-        EndpointObject endpoint = new EndpointOAI ( INITIALSTATUS ,  org ,  url ,  type ,  resourceId );
+        EndpointObject endpoint = new EndpointOAI ( INITIALSTATUS ,  org ,  url ,  type ,  resourceId , severemode );
          try {
              
             return insertEndpoint ( endpoint) ;
@@ -122,7 +123,9 @@ public class EndpointsServiceImpl implements EndpointsService {
                   insertEndpoint(endpoint.getResourceId(), REDI.TYPE.toString() , endpoint.getType() , STR);
                   insertEndpoint(endpoint.getResourceId(), REDI.GRAPH.toString() , endpoint.getGraph() , STR);
                   insertEndpoint(endpoint.getResourceId(), REDI.EXTRACTIONDATE.toString() , "" , STR);
-                  
+                  if (endpoint instanceof EndpointOAI){      
+                  insertEndpoint(endpoint.getResourceId(), REDI.EXTRACTION_MODE.toString() , ((EndpointOAI) endpoint).isSeveremode().toString() , STR);
+                  }
                   String org = con.getOrganizationBaseUri()+endpoint.getName();
                   if (orgserv.askOrganization(org)) {
                   insertEndpoint(endpoint.getResourceId(), REDI.BELONGTO.toString(),  org, STR);

@@ -52,15 +52,39 @@ public class QueriesServiceImpl implements QueriesService {
     private String graph = "graph";
 
     @Override
-    public String getAuthorsQuery(String datagraph, String num) {
-        return PREFIXES
+    public String getAuthorsQuery(String datagraph, String num, Boolean mode) {
+        if (mode) {
+            return  PREFIXES
+                    + " SELECT DISTINCT ?s WHERE { "
+                    + "                 ?s a foaf:Person . "
+                    + "                  ?s ?property ?docu . "
+                    + "                  ?docu a bibo:Article. "
+                    + "} GROUP BY ?s HAVING (count(?docu)> 0  )";
+
+        } else {
+            return PREFIXES
+                    + " SELECT (count (?s) as ?count) {"
+                    + " SELECT DISTINCT ?s WHERE { " + getGraphString(graph) + "{ "
+                    + "                 ?s a foaf:Person . "
+                    + "                  { "
+                    + "                   ?s ?property ?article  . "
+                    + "                   ?article a bibo:Article "
+                    + "                  }UNION { "
+                    + "                   ?s ?property ?docu . "
+                    + "                  ?docu a bibo:Document "
+                    + "                  } } "
+                    + "} GROUP BY ?s HAVING (count(?docu)> " + num + " || count (?article) > 0  ) ";
+        }
+        
+        
+       /* return PREFIXES
                 + " SELECT ?s WHERE { " + getGraphString(datagraph) + "{"
                 + " ?doc rdf:type bibo:Document ;"
                 + " ?c ?s ."
                 + "?s a foaf:Person."
                 + "} }"
                 + " GROUP BY ?s"
-                + " HAVING (count(?doc)>" + num + ")";
+                + " HAVING (count(?doc)>" + num + ")";*/
     }
 
     @Override
@@ -296,7 +320,7 @@ public class QueriesServiceImpl implements QueriesService {
     @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
     public String getListEndpointsByUri(String uri) {
         return "PREFIX REDI: <http://ucuenca.edu.ec/ontology#>"
-                + "SELECT DISTINCT  ?status ?url ?graph ?type ?org ?date"
+                + "SELECT DISTINCT  ?status ?url ?graph ?type ?org ?date ?mode"
                 + " FROM <" + con.getEndpointsGraph() + "> "
                 + "WHERE {"
                 + "<" + uri + "> <" + RDF.TYPE.toString() + ">  <" + REDI.ENDPOINT.toString() + "> ."
@@ -306,6 +330,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + "OPTIONAL { <" + uri + ">   <" + REDI.TYPE.toString() + ">   ?type } ."
                 + "OPTIONAL { <" + uri + ">   <" + REDI.BELONGTO.toString() + ">  ?org } . "
                 + "OPTIONAL { <" + uri + ">   <" + REDI.EXTRACTIONDATE.toString() + ">  ?date }"
+                + "OPTIONAL { <" + uri + ">   <" + REDI.EXTRACTION_MODE.toString() + ">  ?mode }"
                 + "} limit 1";
     }
 
@@ -361,39 +386,40 @@ public class QueriesServiceImpl implements QueriesService {
 
         return head;
         /* String ant = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
-                + "PREFIX ucmodel: <http://ucuenca.edu.ec/ontology#> "
-                + "SELECT DISTINCT ?uri ?name  (group_concat(  ?labelAK  ; separator=\";\")  as  ?AdvAK)  (group_concat(  ?labelDBLP ; separator=\";\")  as  ?AdvDBLP)  (group_concat(  ?labelScopus ; separator=\";\")  as  ?AdvScopus) (group_concat(  ?labelGs ; separator=\";\")  as  ?AdvGs) WHERE  {\n"
-                + "?subject  ucmodel:belongTo ?uri . \n"
-                + "?subject   ucmodel:extractionDate  ?date .  FILTER ( STR(?date)  != '') \n"
-                + "?uri  ucmodel:name  ?name    \n"
-                + "          OPTIONAL  {\n"
-                + " GRAPH   <" + con.getOrganizationsGraph() + "> {\n"
-                + "   ?uri  ucmodel:belongTo ?event  }\n"
-                + "  GRAPH  <" + con.getAcademicsKnowledgeGraph() + "> {\n"
-                + "  OPTIONAL {\n"
-                + "  ?event rdfs:label  ?labelAK }\n"
-                + "  OPTIONAL {\n"
-                + "  ?event  ucmodel:extractionDate ?eventdateAK } \n"
-                + "  }\n"
-                + "  GRAPH  <" + con.getDBLPGraph() + "> {\n"
-                + "  OPTIONAL {\n"
-                + "  ?event rdfs:label  ?labelDBLP }\n"
-                + "  OPTIONAL {\n"
-                + "  ?event  ucmodel:extractionDate ?eventdateDBLP } \n"
-                + "  }\n"
-                + "  GRAPH  <" + con.getScopusGraph() + "> {\n"
-                + "  OPTIONAL {\n"
-                + "  ?event rdfs:label  ?labelScopus }\n"
-                + "  OPTIONAL {\n"
-                + "  ?event  ucmodel:extractionDate ?eventdateScopus} \n"
-                + "  }\n"
-                + "  GRAPH  <" + con.getGoogleScholarGraph() + "> {\n"
-                + "  OPTIONAL {\n"
-                + "  ?event rdfs:label  ?labelGs }\n"
-                + "  OPTIONAL {\n"
-                + "  ?event  ucmodel:extractionDate ?eventdateGs } \n"
-                + "  }\n"
-                + " }  } Group by ?uri ?name  ";*/
+
+         + "PREFIX ucmodel: <http://ucuenca.edu.ec/ontology#> "
+         + "SELECT DISTINCT ?uri ?name  (group_concat(  ?labelAK  ; separator=\";\")  as  ?AdvAK)  (group_concat(  ?labelDBLP ; separator=\";\")  as  ?AdvDBLP)  (group_concat(  ?labelScopus ; separator=\";\")  as  ?AdvScopus) (group_concat(  ?labelGs ; separator=\";\")  as  ?AdvGs) WHERE  {\n"
+         + "?subject  ucmodel:belongTo ?uri . \n"
+         + "?subject   ucmodel:extractionDate  ?date .  FILTER ( STR(?date)  != '') \n"
+         + "?uri  ucmodel:name  ?name    \n"
+         + "          OPTIONAL  {\n"
+         + " GRAPH   <" + con.getOrganizationsGraph() + "> {\n"
+         + "   ?uri  ucmodel:belongTo ?event  }\n"
+         + "  GRAPH  <" + con.getAcademicsKnowledgeGraph() + "> {\n"
+         + "  OPTIONAL {\n"
+         + "  ?event rdfs:label  ?labelAK }\n"
+         + "  OPTIONAL {\n"
+         + "  ?event  ucmodel:extractionDate ?eventdateAK } \n"
+         + "  }\n"
+         + "  GRAPH  <" + con.getDBLPGraph() + "> {\n"
+         + "  OPTIONAL {\n"
+         + "  ?event rdfs:label  ?labelDBLP }\n"
+         + "  OPTIONAL {\n"
+         + "  ?event  ucmodel:extractionDate ?eventdateDBLP } \n"
+         + "  }\n"
+         + "  GRAPH  <" + con.getScopusGraph() + "> {\n"
+         + "  OPTIONAL {\n"
+         + "  ?event rdfs:label  ?labelScopus }\n"
+         + "  OPTIONAL {\n"
+         + "  ?event  ucmodel:extractionDate ?eventdateScopus} \n"
+         + "  }\n"
+         + "  GRAPH  <" + con.getGoogleScholarGraph() + "> {\n"
+         + "  OPTIONAL {\n"
+         + "  ?event rdfs:label  ?labelGs }\n"
+         + "  OPTIONAL {\n"
+         + "  ?event  ucmodel:extractionDate ?eventdateGs } \n"
+         + "  }\n"
+         + " }  } Group by ?uri ?name  ";*/
 
     }
 
@@ -629,16 +655,41 @@ public class QueriesServiceImpl implements QueriesService {
     }
 
     @Override
-    public String getCountPersonQuery(String graph, String num) {
-        return PREFIXES
-                + " SELECT (COUNT(DISTINCT ?s) as ?count) WHERE {"
-                + " SELECT DISTINCT ?s WHERE {" + getGraphString(graph) + "{ "
-                + " ?docu rdf:type bibo:Document ; "
-                + "      ?c ?s ."
-                + " ?s a foaf:Person."
-                + " } }"
-                + " GROUP BY ?s"
-                + " HAVING (count(?docu)>" + num + ")}";
+    public String getCountPersonQuery(String graph, String num, Boolean modo) {
+        /* return PREFIXES
+         + " SELECT (COUNT(DISTINCT ?s) as ?count) WHERE {"
+         + " SELECT DISTINCT ?s WHERE {" + getGraphString(graph) + "{ "
+         + " ?docu rdf:type bibo:Document ; "
+         + "      ?c ?s ."
+         + " ?s a foaf:Person."
+         + " } }"
+         + " GROUP BY ?s"
+         + " HAVING (count(?docu)>" + num + ")}";*/
+        if (modo) {
+            return  PREFIXES
+                    +" SELECT (count (?s) as ?count) { "
+                    + " SELECT DISTINCT ?s WHERE { "
+                    + "                 ?s a foaf:Person . "
+                    + "                  ?s ?property ?docu . "
+                    + "                  ?docu a bibo:Article. "
+                    + "} GROUP BY ?s HAVING (count(?docu)> 0  )"
+                    + "}";
+
+        } else {
+            return PREFIXES
+                    + " SELECT (count (?s) as ?count) {"
+                    + " SELECT DISTINCT ?s WHERE { " + getGraphString(graph) + "{ "
+                    + "                 ?s a foaf:Person . "
+                    + "                  { "
+                    + "                   ?s ?property ?article  . "
+                    + "                   ?article a bibo:Article "
+                    + "                  }UNION { "
+                    + "                   ?s ?property ?docu . "
+                    + "                  ?docu a bibo:Document "
+                    + "                  } } "
+                    + "} GROUP BY ?s HAVING (count(?docu)> " + num + " || count (?article) > 0  ) "
+                    + "}";
+        }
     }
 
     @Override
@@ -689,13 +740,13 @@ public class QueriesServiceImpl implements QueriesService {
                 + "  VALUES ?organization {" + StringUtils.join(orgs, " ") + "}"
                 + "  GRAPH <" + con.getEndpointsGraph() + ">  {"
                 + "      ?provenance uc:belongTo ?organization."
+
                 + "  }"
                 + "  GRAPH <" + con.getAuthorsGraph() + ">  {"
                 + "    ?subject a foaf:Person;"
                 + "               foaf:name ?name_;"
                 + "               foaf:firstName ?fname_;"
-                + "               foaf:lastName ?lname_;"
-                + "               dct:provenance ?provenance."
+                + "               foaf:lastName ?lname_;"             
                 //                + "filter (mm:fulltext-search(?name_,\"Saquicela\")) "
                 //                + "filter (mm:fulltext-search(?name_,\"Mauricio espinoza\")) "
                 //                + "filter (mm:fulltext-search(?name_,\"Saquicela\") || mm:fulltext-search(?name,\"Mauricio espinoza\")) "
@@ -842,9 +893,15 @@ public class QueriesServiceImpl implements QueriesService {
 
     @Override
     public String getAuthorsPropertiesQuery(String uriAuthor) {
-        return " SELECT  ?property ?object WHERE { "
-                + " <" + uriAuthor + ">  ?property ?object  "
-                + " }";
+        /*  return " SELECT  ?property ?object WHERE { "
+         + " <" + uriAuthor + ">  ?property ?object  "
+         + " }";*/
+        return "select ?property ?object ?type where { "
+                + "VALUES ?uri { <" + uriAuthor + "> } .  "
+                + "?uri  ?property ?object . "
+                + "OPTIONAL { "
+                + "?object a  ?type }"
+                + "}";
     }
 
     @Override

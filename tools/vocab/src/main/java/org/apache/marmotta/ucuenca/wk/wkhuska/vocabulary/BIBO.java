@@ -43,6 +43,7 @@ public class BIBO {
     public static final URI DOI;
     public static final URI PAGE_START;
     public static final URI PAGE_END;
+    public static final URI ISSN;
 
     static {
         ValueFactory factory = ValueFactoryImpl.getInstance();
@@ -61,5 +62,7 @@ public class BIBO {
         DOI = factory.createURI(NAMESPACE, "doi");
         PAGE_START = factory.createURI(NAMESPACE, "pageStart");
         PAGE_END = factory.createURI(NAMESPACE, "pageEnd");
+        ISSN = factory.createURI(NAMESPACE, "issn");
+        
     }
 }

@@ -39,7 +39,7 @@ public interface QueriesService {
 
     String getSameAsAuthors(String graph, String authorResource);
 
-    String getCountPersonQuery(String graph, String num);
+    String getCountPersonQuery(String graph, String num, Boolean modo);
 
     String getCountAuthors();
 
@@ -91,7 +91,7 @@ public interface QueriesService {
      * @param num
      * @return
      */
-    String getAuthorsQuery(String wkhuskagraph, String num);
+    String getAuthorsQuery(String wkhuskagraph, String num , Boolean mode);
 
     /**
      * return query to obtain all properties of a resource using LDC ( Linked

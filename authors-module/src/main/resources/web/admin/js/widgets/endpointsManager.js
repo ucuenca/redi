@@ -78,6 +78,7 @@ function cleanEndpoint () {
           $("input#endpoint_graph").val(""); 
           $("input#endpoint_file").val(""); 
           $("input#endpoint_oai").val(""); 
+          $('input#check_oai').prop('checked', true);
 }
 
 function newEndpoint () {
@@ -94,7 +95,8 @@ function newEndpoint () {
        
    }else {
        var val1  = $("input#endpoint_oai").val();  
-       uploadOAI (type, org, val1);
+       var  check = $('input#check_oai').is(':checked');
+       uploadOAI (type, org, val1 , check);
    }
    
  //  console.log ("val1"+val1);
@@ -121,12 +123,12 @@ function uploadSparql ( type , org , url , graph) {
     });
 }
 
-function uploadOAI ( type , org , url) {
+function uploadOAI ( type , org , url , check) {
     
       $.ajax({
         type: "POST",
         dataType: "text", //result data type
-        url: host + "authors-module/endpointOAIRegister?type="+type+"&org="+org+"&url=" + url  ,
+        url: host + "authors-module/endpointOAIRegister?type="+type+"&org="+org+"&url=" + url+"&severe="+check ,
         success: function(Result) {
              table.ajax.reload( null, false );
        
@@ -319,7 +321,7 @@ function uploadOAI ( type , org , url) {
          $('input[type=checkbox]:checked').parents('tr').find('span.exportDate').text("Proccessing");
          
          var endpoints = [];
-         $('tbody tr input:checked').each(function (index) { 
+         $('tbody tr  input:checked[name="selection"]').each(function (index) { 
              console.log ($(this).val())
              endpoints.push($(this).val());
          })
