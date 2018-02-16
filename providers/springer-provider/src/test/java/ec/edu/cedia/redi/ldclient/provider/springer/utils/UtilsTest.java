@@ -41,6 +41,10 @@ public class UtilsTest {
         String expResult = "Victor Hugo Saquicela";
         assertEquals(expResult, SpringerUtility.buildNameFromRequest(resource));
 
+        resource = "http://api.springer.com/meta/v1/json?q=((name:victor+OR+name:hugo)+AND+(name:saquicela)+AND+(orgname:\"Universidad de Cuenca\"+OR+orgname:\"University of Cuenca\"))&api_key=1234&p=50&s=0";
+        expResult = "Victor Hugo Saquicela";
+        assertEquals(expResult, SpringerUtility.buildNameFromRequest(resource));
+
         resource = "http://api.springer.com/meta/v1/json?q=((name:victor OR name:hugo) AND name:saquicela)&api_key=1234&p=50&s=0";
         expResult = "Victor Hugo Saquicela";
         assertEquals(expResult, SpringerUtility.buildNameFromRequest(resource));
@@ -66,6 +70,10 @@ public class UtilsTest {
         assertEquals(expResult, SpringerUtility.buildNameFromQuery(query));
 
         query = "((name:victor+OR+name:hugo)+AND+name:saquicela)";
+        expResult = "Victor Hugo Saquicela";
+        assertEquals(expResult, SpringerUtility.buildNameFromQuery(query));
+
+        query = "((name:victor+OR+name:hugo)+AND+(name:saquicela)+AND+(orgname:\"Universidad de Cuenca\"+OR+orgname:\"University of Cuenca\"))";
         expResult = "Victor Hugo Saquicela";
         assertEquals(expResult, SpringerUtility.buildNameFromQuery(query));
 

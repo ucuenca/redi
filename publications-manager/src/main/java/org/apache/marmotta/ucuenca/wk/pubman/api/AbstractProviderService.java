@@ -127,6 +127,10 @@ public abstract class AbstractProviderService implements ProviderService {
     protected void retryPlan() {
     }
 
+    protected LDClient buildDefaultLDClient() {
+        return new LDClient(new ClientConfiguration());
+    }
+
     /**
      * Extract authors from a particular provider.
      *
@@ -139,7 +143,7 @@ public abstract class AbstractProviderService implements ProviderService {
         Task task = taskManagerService.createSubTask(String.format("%s Extraction", getProviderName()), "Publication Extractor");
         task.updateMessage(String.format("Extracting publications from %s Provider", getProviderName()));
         task.updateDetailMessage("Graph", getProviderGraph());
-        LDClient ldClient = new LDClient(new ClientConfiguration());
+        LDClient ldClient = buildDefaultLDClient();
         try {
             for (String organization : organizations) {
                 List<Map<String, Value>> resultAllAuthors = sparqlService.query(

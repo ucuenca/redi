@@ -28,8 +28,6 @@ import ec.edu.cedia.redi.ldclient.provider.springer.utils.SpringerUtility;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -159,17 +157,10 @@ public class SpringerAuthorProvider extends AbstractJSONDataProvider implements 
     public List<String> buildRequestUrl(String resource, Endpoint endpoint) {
         final Matcher matcher = Pattern.compile(PATTERN).matcher(resource);
         if (matcher.find()) {
-            try {
-                String query = "q=" + URLEncoder.encode(matcher.group(1), "UTF-8");
-                resource = resource.replaceFirst("q=[^\\&]+", query);
-                resource = resource.replaceAll("%2B", "+"); // replace all encoded '+'.
-                return Collections.singletonList(resource);
-            } catch (UnsupportedEncodingException ex) {
-                throw new RuntimeException(
-                        new DataRetrievalException("Cannot encode parameter 'q' in resource: " + matcher.group(1), ex));
-            }
+//                resource = resource.replaceFirst("q=[^\\&]+", query);
+            return Collections.singletonList(resource);
         }
-        throw new RuntimeException(new DataRetrievalException("Incorrect resource request."));
+        return Collections.emptyList();
     }
 
     /**
