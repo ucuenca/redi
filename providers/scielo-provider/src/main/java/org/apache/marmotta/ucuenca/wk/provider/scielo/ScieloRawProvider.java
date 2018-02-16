@@ -64,6 +64,8 @@ public class ScieloRawProvider extends AbstractHttpProvider {
     private static Logger log = LoggerFactory.getLogger(ScieloRawProvider.class);
     public static final String APIPUB = "https://search.scielo.org/searchpub/%s";
 
+    private ClientConfiguration conf = new ClientConfiguration();
+    private LDClient ldClient = new LDClient(conf);
     /**
      * Return the name of this data provider. To be used e.g. in the
      * configuration and in log messages.
@@ -130,8 +132,6 @@ public class ScieloRawProvider extends AbstractHttpProvider {
                 }
                 return e;
             } else {
-                ClientConfiguration conf = new ClientConfiguration();
-                LDClient ldClient = new LDClient(conf);
                 List<String> nameOrg = Lists.newArrayList(getName(resource));
                 Person p1 = new Person();
                 p1.Name = new ArrayList<>();
@@ -152,7 +152,6 @@ public class ScieloRawProvider extends AbstractHttpProvider {
                             triples.add(factory.createURI(authorURI), OWL.ONEOF, factory.createURI(resource));
                         }
                     }
-
                 }
             }
         } catch (IOException e) {

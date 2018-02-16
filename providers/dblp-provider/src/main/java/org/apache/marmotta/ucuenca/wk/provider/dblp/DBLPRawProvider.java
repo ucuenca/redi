@@ -69,6 +69,9 @@ public class DBLPRawProvider extends AbstractHttpProvider {
 
     private static Logger log = LoggerFactory.getLogger(DBLPRawProvider.class);
 
+    private ClientConfiguration conf = new ClientConfiguration();
+    private LDClient ldClient = new LDClient(conf);
+
     /**
      * Return the name of this data provider. To be used e.g. in the
      * configuration and in log messages.
@@ -133,8 +136,6 @@ public class DBLPRawProvider extends AbstractHttpProvider {
                 triples.add(factory.createStatement(factory.createURI(candidate), OWL.ONEOF, factory.createURI(resource)));
                 candidates.add(candidate);
             }
-            ClientConfiguration conf = new ClientConfiguration();
-            LDClient ldClient = new LDClient(conf);
             if (!candidates.isEmpty()) {
                 Model candidateModel = null;
                 for (String author : candidates) {
