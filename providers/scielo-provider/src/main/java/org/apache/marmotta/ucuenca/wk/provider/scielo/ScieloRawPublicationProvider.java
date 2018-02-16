@@ -67,6 +67,7 @@ public class ScieloRawPublicationProvider extends AbstractJSONDataProvider imple
     private static final String VOLUMEN = "volumen";
     private static final String SN = "issn";
     private static final String JOURNAL = "journal";
+    private static final String AFFNAME = "nameff";
 
     @Override
     protected List<String> getTypes(URI uri) {
@@ -146,10 +147,10 @@ public class ScieloRawPublicationProvider extends AbstractJSONDataProvider imple
                 mapEmail(triples, parse, code, "$.article.v240[*]");
                 mapEmail(triples, parse, code, "$.article.v70[*]");
             }
-            mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + "nameff", "$.article.v70[*].i", "$.article.v70[*]._", null);
-            mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + "nameff", "$.article.v240[*].i", "$.article.v240[*]._", null);
-            mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + "nameff", "$.article.v70[*].i", "$.article.v70[*].1", null);
-            mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + "nameff", "$.article.v240[*].i", "$.article.v240[*].1", null);
+            mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + AFFNAME, "$.article.v70[*].i", "$.article.v70[*]._", null);
+            mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + AFFNAME, "$.article.v240[*].i", "$.article.v240[*]._", null);
+            mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + AFFNAME, "$.article.v70[*].i", "$.article.v70[*].1", null);
+            mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + AFFNAME, "$.article.v240[*].i", "$.article.v240[*].1", null);
 
             Model unmodifiable = triples.unmodifiable();
 
