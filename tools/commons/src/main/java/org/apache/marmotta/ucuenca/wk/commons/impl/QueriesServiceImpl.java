@@ -5,6 +5,7 @@ import com.hp.hpl.jena.vocabulary.OWL;
 import java.util.Arrays;
 import java.util.Map;
 import javax.inject.Inject;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
@@ -385,6 +386,7 @@ public class QueriesServiceImpl implements QueriesService {
 
         return head;
         /* String ant = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
+<<<<<<< HEAD
          + "PREFIX ucmodel: <http://ucuenca.edu.ec/ontology#> "
          + "SELECT DISTINCT ?uri ?name  (group_concat(  ?labelAK  ; separator=\";\")  as  ?AdvAK)  (group_concat(  ?labelDBLP ; separator=\";\")  as  ?AdvDBLP)  (group_concat(  ?labelScopus ; separator=\";\")  as  ?AdvScopus) (group_concat(  ?labelGs ; separator=\";\")  as  ?AdvGs) WHERE  {\n"
          + "?subject  ucmodel:belongTo ?uri . \n"
@@ -418,6 +420,7 @@ public class QueriesServiceImpl implements QueriesService {
          + "  ?event  ucmodel:extractionDate ?eventdateGs } \n"
          + "  }\n"
          + " }  } Group by ?uri ?name  ";*/
+
 
     }
 
@@ -733,15 +736,23 @@ public class QueriesServiceImpl implements QueriesService {
             orgs[i] = "<" + orgs[i] + ">";
         }
         return PREFIXES
-                + "SELECT DISTINCT ?organization   ?provenance  ?subject (SAMPLE(?names) as ?name) (SAMPLE(?fnames) as ?fname) (SAMPLE(?lnames) as ?lname) "
-                + " WHERE {"
-                + "               foaf:name ?names;"
-                + "               foaf:firstName ?fnames;"
-                + "               foaf:lastName ?lnames;"
-                + "               dct:provenance ?provenance."
-                + "  }"
-                + "} GROUP BY ?organization ?provenance  ?subject ";
 
+                + "SELECT DISTINCT ?subject (SAMPLE(?name_) as ?name) (SAMPLE(?fname_) as ?fname) (SAMPLE(?lname_) as ?lname)"
+                + "WHERE {"
+                + "  VALUES ?organization {" + StringUtils.join(orgs, " ") + "}"
+                + "  GRAPH <" + con.getEndpointsGraph() + ">  {"
+                + "      ?provenance uc:belongTo ?organization."
+                + "  }"
+                + "  GRAPH <" + con.getAuthorsGraph() + ">  {"
+                + "    ?subject a foaf:Person;"
+                + "               foaf:name ?name_;"
+                + "               foaf:firstName ?fname_;"
+                + "               foaf:lastName ?lname_;"             
+                //                + "filter (mm:fulltext-search(?name_,\"Saquicela\")) "
+                //                + "filter (mm:fulltext-search(?name_,\"Mauricio espinoza\")) "
+                //                + "filter (mm:fulltext-search(?name_,\"Saquicela\") || mm:fulltext-search(?name,\"Mauricio espinoza\")) "
+                + "  }"
+                + "} GROUP BY ?subject";
     }
 
     @Override

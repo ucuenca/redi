@@ -17,15 +17,19 @@
  */
 package ec.edu.cedia.redi.ldclient.test.springer;
 
+import java.io.StringWriter;
 import org.apache.marmotta.commons.sesame.model.ModelCommons;
-import org.apache.marmotta.ldclient.exception.DataRetrievalException;
 import org.apache.marmotta.ldclient.model.ClientResponse;
 import org.apache.marmotta.ldclient.test.provider.ProviderTestBase;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
+import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.Rio;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -33,40 +37,58 @@ import org.openrdf.repository.RepositoryException;
  */
 public class TestSpringerProvider extends ProviderTestBase {
 
-    private final String apikey = "b4091be5da784342b86f6a4d05d9af57";
+    private final String KEY = "a6bf2dbe42d9e7d523fadd7c40dcc43d";
+    private final String TEMPLATE = "http://api.springer.com/meta/v1/json?q=%s&api_key=" + KEY + "&p=50&s=0";
+    private final static Logger log = LoggerFactory.getLogger(TestSpringerProvider.class);
 
     /**
-     * Tests the extraction of an author and his publications. This test might
-     * fail for two reasons.
-     * <ol>
-     * <li> There API key is not valid.
-     * <li> Quota limit.
-     * </ol>
      *
-     * @throws org.openrdf.repository.RepositoryException
+     * @throws java.lang.Exception
      */
     @Test
-    @Ignore
-    public void testAcademicsKnowledgeAPI() throws RepositoryException {
+    public void testSpringerAuthorWithIsbn() throws Exception {
+        String uri = String.format(TEMPLATE, "((name:victor OR name:hugo) AND name:saquicela)");
+        testResource(uri);
+    }
 
-        String uri = "https://westus.api.cognitive.microsoft.com/academic/v1.0/evaluate?"
-                + "expr=And(Ty=%271%27,%20AuN=%27mauricio%20espinoza%27)&"
-                + "attributes=Id,AuN,DAuN,CC,ECC,E&"
-                + "model=latest&"
-                + "subscription-key=" + apikey;
+    /**
+     *
+     */
+    @Test
+    public void testSpringerAuthorWithIssn() throws Exception {
+        String uri = String.format(TEMPLATE, "name:Xi+Hongxia");
+        testResource(uri);
+    }
 
-        ClientResponse response = null;
-        try {
-            response = ldclient.retrieveResource(uri);
-        } catch (DataRetrievalException ex) {
-            Assert.assertTrue("Change API-KEY, Quota Exceeded.", ex.getCause().toString().contains("403 Quota Exceeded"));
-            return;
-        }
+    /**
+     *
+     */
+    @Test
+    @Ignore("This test makes many requests bc of pagination.")
+    public void testSpringerAuthorPagination() throws Exception {
+        String uri = String.format(TEMPLATE, "name:Xi AND name:Mei");
+        testResource(uri);
+    }
+
+    @Override
+    protected void testResource(String uri) throws Exception {
+        // Override method bc cannot ping service. 
+        // Assume.assumeTrue("LDClient endpoint for <" + uri + "> not available", ldclient.ping(uri));
+
+        ClientResponse response = ldclient.retrieveResource(uri);
+
+        Assume.assumeTrue(response.getHttpStatus() == 200);
 
         RepositoryConnection connection = ModelCommons.asRepository(response.getData()).getConnection();
         try {
             connection.begin();
             Assert.assertTrue(connection.size() > 0);
+            if (log.isDebugEnabled()) {
+                StringWriter out = new StringWriter();
+                connection.export(Rio.createWriter(RDFFormat.TURTLE, out));
+                log.debug("DATA:");
+                log.debug(out.toString());
+            }
         } finally {
             connection.commit();
             connection.close();

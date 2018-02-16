@@ -106,6 +106,7 @@ public interface ConstantService {
     String dblp(String pred);
 
     String getDBLPGraph();
+
     String getScieloGraph();
 
     String getExternalAuthorsGraph();
@@ -113,6 +114,8 @@ public interface ConstantService {
     String getScopusGraph();
 
     String getMAGraph();
+
+    String getSpringerGraph();
 
     String getGSGraph();
 

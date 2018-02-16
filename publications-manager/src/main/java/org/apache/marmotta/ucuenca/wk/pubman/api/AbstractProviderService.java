@@ -90,6 +90,7 @@ public abstract class AbstractProviderService implements ProviderService {
      *
      * @param firstname
      * @param lastname
+     * @param organization
      * @return
      */
     protected abstract List<String> buildURLs(String firstname, String lastname, List<String> organization);
@@ -194,7 +195,7 @@ public abstract class AbstractProviderService implements ProviderService {
                             try {
                                 // store triples with new vocabulary
                                 Model data = response.getData();
-                                //TODO: distribute conversion sesame/jena.
+                                // TODO: distribute conversion sesame/jena to improve convertion time.
                                 data = OntologyMapper.map(data, getMappingPathFile(), getVocabularyMapper());
                                 log.info("After ontology mapper: writing {} triples in context {} for request '{}'.", data.size(), getProviderGraph(), reqResource);
                                 Resource providerContext = connection.getValueFactory().createURI(getProviderGraph());
@@ -206,10 +207,6 @@ public abstract class AbstractProviderService implements ProviderService {
                             }
                             // Register search query.
                             sparqlFunctionsService.executeInsert(getProviderGraph(), reqResource.replace(" ", ""), OWL.ONE_OF, authorResource);
-                            // Skip extra calls after have found some data
-                            if (!response.getData().isEmpty()) {
-                                break;
-                            }
                         } catch (DataRetrievalException dre) {
                             msgOrg.put(organization, "Fail: " + processedAuthors + "/" + totalAuthors);
                             log.error("Cannot retieve RDF for the given resource: '{}'", reqResource, dre);

@@ -6,8 +6,8 @@
 package org.apache.marmotta.ucuenca.wk.pubman.api;
 
 import java.util.List;
+import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Provider;
-//import org.apache.marmotta.ucuenca.wk.pubman.disambiguation.Provider;
 
 /**
  *
@@ -25,23 +25,25 @@ public interface CommonService {
 
     String getDataFromGoogleScholarProvidersService(final String[] organizations);
 
+    String getDataFromSpringerProvidersService(final String[] organizations);
+
     String GetDataFromProvidersServiceDspace();
 
     String createReport(String hostname, String realPath, String name, String type, List<String> params);
-
 
     String getSearchQuery(String textSearch);
 
     String DetectLatindexPublications();
 
-  
-    String runDisambiguationProcess(String [] orgs);
+    String runDisambiguationProcess(String[] orgs);
+
+    String runDisambiguationProcess();
 
     String CentralGraphProcess();
 
     String organizationListExtracted();
-    
+
     String organizationListEnrichment();
-    
-    List<Provider> getProviders();
+
+    List<Provider> getProviders() throws MarmottaException;
 }

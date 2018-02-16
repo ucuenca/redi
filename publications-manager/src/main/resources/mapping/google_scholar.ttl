@@ -113,6 +113,8 @@ uc:publicationContributor a r2r:Mapping;
     r2r:sourcePattern "?SUBJ dct:contributor ?contributor." ;
     r2r:transformation "?contributorIRI=concat('https://redi.cedia.edu.ec/resource/author/scholar/', xpath:encode-for-uri(?contributor))" ;
     r2r:targetPattern "?SUBJ dct:contributor ?<contributorIRI>";
+    r2r:targetPattern "?contributorIRI foaf:publications ?SUBJ";
+    r2r:targetPattern "?contributorIRI a foaf:Person";
     r2r:targetPattern "?contributorIRI foaf:name ?'contributor'^^xsd:string" .
 
 uc:publicationDate a r2r:Mapping ;
@@ -159,7 +161,7 @@ uc:publicationPublisher a r2r:Mapping ;
     r2r:sourcePattern "?SUBJ dct:publisher ?publisher" ;
     r2r:transformation "?publisherIRI=concat('https://redi.cedia.edu.ec/resource/publisher/', xpath:lower-case(xpath:encode-for-uri(?publisher)))" ;
     r2r:targetPattern "?SUBJ dct:isPartOf ?<publisherIRI>" ;
-    r2r:targetPattern "?publisherIRI a bibo:Proceedings" ;
+    r2r:targetPattern "?publisherIRI a foaf:Organization" ;
     r2r:targetPattern "?publisherIRI rdfs:label ?publisher" .
 
 uc:publicationIssue a r2r:Mapping ;

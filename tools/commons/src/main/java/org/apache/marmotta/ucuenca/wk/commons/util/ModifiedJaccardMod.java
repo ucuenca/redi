@@ -27,8 +27,8 @@ public class ModifiedJaccardMod {
     public double abvPenalty = 0.95;
 
     public double distanceName(String name1, String name2) {
-        List<String> tks1 = tokenizer(name1/*.replaceAll("(\\p{Lu})(\\p{Lu})", "$1 $2")*/.toLowerCase());
-        List<String> tks2 = tokenizer(name2/*.replaceAll("(\\p{Lu})(\\p{Lu})", "$1 $2")*/.toLowerCase());
+        List<String> tks1 = tokenizer(name1.toLowerCase());
+        List<String> tks2 = tokenizer(name2.toLowerCase());
         onlyCompleteMatchs = true;
         Map.Entry<Integer, Double> c = countMatchs(tks1, tks2);
         onlyCompleteMatchs = false;
@@ -94,7 +94,7 @@ public class ModifiedJaccardMod {
     public List<String> tokenizer(String n) {
         n = specialCharactersClean(n);
         String[] tokens = n.split(" ");
-        List<String> list = new ArrayList<String>(Arrays.asList(tokens));
+        List<String> list = new ArrayList<>(Arrays.asList(tokens));
         list.removeAll(Arrays.asList("", null));
         return list;
     }

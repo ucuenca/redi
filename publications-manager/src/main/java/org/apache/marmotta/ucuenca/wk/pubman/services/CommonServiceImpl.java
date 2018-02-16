@@ -5,7 +5,6 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.services;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,28 +13,21 @@ import java.util.logging.Level;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
+import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Provider;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
-
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
-
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
-
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.ReportsService;
-
-import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Provider;
-import org.apache.marmotta.ucuenca.wk.pubman.services.providers.DBLPProviderService;
-import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
-
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.AcademicsKnowledgeProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.DBLPProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.DspaceProviderServiceImpl;
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.GoogleScholarProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.ScopusProviderService;
-
+import org.apache.marmotta.ucuenca.wk.pubman.services.providers.SpringerProviderService;
+import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
 import org.openrdf.model.Value;
 import org.openrdf.query.QueryLanguage;
-import org.rometools.feed.module.mediarss.types.Hash;
 import org.slf4j.Logger;
 
 /**
@@ -44,6 +36,7 @@ import org.slf4j.Logger;
  *
  */
 public class CommonServiceImpl implements CommonService {
+
     @Inject
     private ConstantService con;
 
@@ -54,8 +47,10 @@ public class CommonServiceImpl implements CommonService {
     GoogleScholarProviderService googleProviderService;
 
     @Inject
-    AcademicsKnowledgeProviderService academicsKnowledgeService;
+    SpringerProviderService springerProviderService;
 
+    @Inject
+    AcademicsKnowledgeProviderService academicsKnowledgeService;
 
     @Inject
     DBLPProviderService dblpProviderServiceInt;
@@ -74,7 +69,6 @@ public class CommonServiceImpl implements CommonService {
 
     @Inject
     DisambiguationServiceImpl DisambiguationImpl;
-
 
     @Inject
     private QueriesService queriesService;
@@ -98,6 +92,24 @@ public class CommonServiceImpl implements CommonService {
     private Thread dblpThread;
     private Thread scieloThread;
     private Thread scholarThread;
+    private Thread springerThread;
+
+    @Override
+    public String getDataFromSpringerProvidersService(final String[] organizations) {
+        if (springerThread != null && springerThread.isAlive()) {
+            return "Process is executing.";
+        }
+
+        springerThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                springerProviderService.extractAuthors(organizations);
+            }
+        });
+        springerThread.start();
+        return "Data Provider Springer are extracted in background.   Please review main.log file for details";
+
+    }
 
     @Override
     public String getDataFromScopusProvidersService(final String[] organizations) {
@@ -170,7 +182,6 @@ public class CommonServiceImpl implements CommonService {
         return "Data Provider Dspace are extracted in background.   Please review main.log file for details";
     }
 
-
     @Override
     public String createReport(String hostname, String realPath, String name, String type, List<String> params) {
         return reportService.createReport(hostname, realPath, name, type, params);
@@ -190,16 +201,17 @@ public class CommonServiceImpl implements CommonService {
 
     @Override
     public String organizationListExtracted() {
-        List<Provider> prov = getProviders();
-        Map <String, String> mprov = new HashMap ();
-        for (Provider p  :prov){
-       
-        mprov.put(p.Graph, p.Name);
-       
-        }    
-        String queryOrg = queriesService.getExtractedOrgList(mprov);
-        List<Map<String, Value>> response;
         try {
+            List<Provider> prov = getProviders();
+            Map<String, String> mprov = new HashMap();
+            for (Provider p : prov) {
+
+                mprov.put(p.Graph, p.Name);
+
+            }
+            String queryOrg = queriesService.getExtractedOrgList(mprov);
+            List<Map<String, Value>> response;
+
             response = sparqlService.query(QueryLanguage.SPARQL, queryOrg);
             return com.listmapTojson(response);
         } catch (MarmottaException ex) {
@@ -208,44 +220,42 @@ public class CommonServiceImpl implements CommonService {
 
         return null;
     }
-    
-      @Override
+
+    @Override
     public String organizationListEnrichment() {
-        List<Provider> prov = getProviders();
-        Map <String, String> mprov = new HashMap ();
-        for (Provider p  :prov){
-       
-        mprov.put(p.Graph, p.Name);
-       
-        }     
-        String queryOrg = queriesService.getOrgEnrichmentProvider( mprov);
-        List<Map<String, Value>> response1;
-        
-        String queryd = queriesService.getOrgDisambiguationResult (mprov);
-        log.info(queryd);
-         List<Map<String, Value>> response2;
-         
-        
         try {
+            List<Provider> prov = getProviders();
+            Map<String, String> mprov = new HashMap();
+            for (Provider p : prov) {
+
+                mprov.put(p.Graph, p.Name);
+
+            }
+            String queryOrg = queriesService.getOrgEnrichmentProvider(mprov);
+            List<Map<String, Value>> response1;
+
+            String queryd = queriesService.getOrgDisambiguationResult(mprov);
+            log.info(queryd);
+            List<Map<String, Value>> response2;
+
             response1 = sparqlService.query(QueryLanguage.SPARQL, queryOrg);
             response2 = sparqlService.query(QueryLanguage.SPARQL, queryd);
-            log.info ("RESP");
-            log.info (response2.toString());
-             for ( Map<String, Value> m1:response1) {
-              for (Map<String, Value> m2: response2) {
-                  if (m1.containsKey("org") && m2.containsKey("org")){
-                     if (m1.get("org").equals( m2.get("org"))){
-                      //m1.putAll(m2);
-                        // String log;
-                         for (Map.Entry<String, Value> e2  :m2.entrySet()) {
-                          m1.put(e2.getKey()+"l", e2.getValue());
-                         }    
-                     }                     
-                  }
-              }
-             }
-            
-            
+            log.info("RESP");
+            log.info(response2.toString());
+            for (Map<String, Value> m1 : response1) {
+                for (Map<String, Value> m2 : response2) {
+                    if (m1.containsKey("org") && m2.containsKey("org")) {
+                        if (m1.get("org").equals(m2.get("org"))) {
+                            //m1.putAll(m2);
+                            // String log;
+                            for (Map.Entry<String, Value> e2 : m2.entrySet()) {
+                                m1.put(e2.getKey() + "l", e2.getValue());
+                            }
+                        }
+                    }
+                }
+            }
+
             return com.listmapTojson(response1);
         } catch (MarmottaException ex) {
             java.util.logging.Logger.getLogger(CommonServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -253,41 +263,28 @@ public class CommonServiceImpl implements CommonService {
 
         return null;
     }
-    
-     @Override
-     public List<Provider> getProviders()  {
-            List<Provider> Providers = new ArrayList();
-        try {
-         
-          //  Providers.add(new Provider("Authors", con.getAuthorsProviderGraph(), sparqlService, ""));
-            
-            String queryProviders = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
-                    + "SELECT ?uri ?name ?graph WHERE { "
-                    + "  GRAPH ?graph { "
-                    + "  ?uri a <"+REDI.PROVIDER.toString()+"> . "
-                    + "  ?uri rdfs:label ?name "
-                    + "  }}";
-            
-            List<Map<String, Value>> response = sparqlService.query(QueryLanguage.SPARQL, queryProviders);
-            
-            for (Map<String, Value> prov : response) {
-                
-                Provider p = new Provider(prov.get("name").stringValue().replace(" ", ""), prov.get("graph").stringValue(), sparqlService, prov.get("uri").stringValue());
-                Providers.add(p);
-            }
-            
-            return Providers;
-        } catch (MarmottaException ex) {
-            java.util.logging.Logger.getLogger(CommonServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return Providers; 
-        }
-    }
-    
 
-    
-     @Override
-    public String runDisambiguationProcess(String [] orgs) {
-        String startProcess = DisambiguationImpl.startDisambiguation( orgs);
+    @Override
+    public List<Provider> getProviders() throws MarmottaException {
+        List<Provider> Providers = new ArrayList();
+        String queryProviders = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
+                + "SELECT ?uri ?name ?graph WHERE { "
+                + "  GRAPH ?graph { "
+                + "  ?uri a <" + REDI.PROVIDER.toString() + "> . "
+                + "  ?uri rdfs:label ?name "
+                + "  }}";
+
+        List<Map<String, Value>> response = sparqlService.query(QueryLanguage.SPARQL, queryProviders);
+        for (Map<String, Value> prov : response) {
+            Provider p = new Provider(prov.get("name").stringValue().replace(" ", ""), prov.get("graph").stringValue(), sparqlService);
+            Providers.add(p);
+        }
+        return Providers;
+    }
+
+    @Override
+    public String runDisambiguationProcess(String[] orgs) {
+        String startProcess = DisambiguationImpl.startDisambiguation(orgs);
         return startProcess;
     }
 
@@ -310,6 +307,12 @@ public class CommonServiceImpl implements CommonService {
         });
         scieloThread.start();
         return "Data Provider DBLP are extracted in background.   Please review main.log file for details";
+    }
+
+    @Override
+    public String runDisambiguationProcess() {
+        String startProcess = DisambiguationImpl.startDisambiguation();
+        return startProcess;
     }
 
 }

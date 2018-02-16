@@ -22,6 +22,7 @@ import org.apache.marmotta.ldclient.exception.DataRetrievalException;
 import org.apache.marmotta.ldclient.model.ClientResponse;
 import org.apache.marmotta.ldclient.test.provider.ProviderTestBase;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
@@ -57,8 +58,7 @@ public class TestAcademicsKnowledgeProvider extends ProviderTestBase {
         try {
             response = ldclient.retrieveResource(uri);
         } catch (DataRetrievalException ex) {
-            Assert.assertTrue("Change API-KEY, Quota Exceeded.", ex.getCause().toString().contains("403 Quota Exceeded"));
-            return;
+            Assume.assumeNoException(ex);
         }
 
         RepositoryConnection connection = ModelCommons.asRepository(response.getData()).getConnection();

@@ -1,0 +1,158 @@
+@prefix r2r: <http://www4.wiwiss.fu-berlin.de/bizer/r2r/> .
+@prefix uc: <http://ucuenca.edu.ec/ontology#> .  
+
+uc:mapColl1 a r2r:MappingCollection;
+    r2r:prefixDefinitions " foaf: <http://xmlns.com/foaf/0.1/> . uc: <http://ucuenca.edu.ec/ontology#> . redi: <https://redi.cedia.edu.ec/resource/> . schema: <http://schema.org/> . bibo: <http://purl.org/ontology/bibo/> . dct: <http://purl.org/dc/terms/> . nature: <http://ns.nature.com/terms/> ." .
+
+# AUTHOR INFORMATION
+
+uc:authorType a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ a foaf:Person" ;
+    r2r:targetPattern "?SUBJ a foaf:Person" ;
+    r2r:targetPattern "?SUBJ dct:provenance uc:SpringerProvider" .
+
+uc:authorSearch a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ owl:oneOf ?search" ;
+    r2r:targetPattern "?SUBJ owl:oneOf ?<search>" .
+
+uc:authorPublications a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ foaf:publications ?publication" ;
+    r2r:targetPattern "?SUBJ foaf:publications ?publication" ;
+    r2r:targetPattern "?publication a bibo:AcademicArticle" ;
+    r2r:targetPattern "?publication dct:provenance uc:SpringerProvider" .
+
+uc:authorName a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:authorType ;
+    r2r:sourcePattern "?SUBJ foaf:name ?name" ;
+    r2r:targetPattern "?SUBJ foaf:name ?name" .
+
+# PUBLICATION INFORMATION
+
+uc:publicationTitle a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dct:title ?title" ;
+    r2r:targetPattern "?SUBJ dct:title ?'title'^^xsd:string" .
+
+uc:publicationUri1 a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ bibo:uri ?uri" ;
+    r2r:targetPattern "?SUBJ bibo:uri ?<uri>" .
+
+uc:publicationUri2 a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ foaf:publications ?pub. FILTER (REGEX(str(?pub), 'article') || REGEX(str(?pub), 'chapter'))" ;
+    r2r:targetPattern "?pub bibo:uri ?<pub>" .
+
+uc:publicationContributor a r2r:Mapping;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dct:contributor ?contributor." ;
+    r2r:transformation "?contributorIRI=concat('https://redi.cedia.edu.ec/resource/author/springer/', xpath:encode-for-uri(?contributor))" ;
+    r2r:targetPattern "?SUBJ dct:contributor ?<contributorIRI>";
+    r2r:targetPattern "?contributorIRI foaf:publications ?SUBJ";
+    r2r:targetPattern "?contributorIRI a foaf:Person";
+    r2r:targetPattern "?contributorIRI foaf:name ?'contributor'^^xsd:string" .
+
+uc:publicationDate1 a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ bibo:created1 ?created" ;
+    r2r:targetPattern "?SUBJ bibo:created ?'created'^^xsd:dateTime" .
+
+uc:publicationDate2 a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ bibo:created2 ?created" ;
+    r2r:targetPattern "?SUBJ bibo:created ?'created'^^xsd:dateTime" .
+
+uc:publicationCoverDate a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ uc:coverDate ?created" ;
+    r2r:targetPattern "?SUBJ nature:coverDate ?'created'^^xsd:dateTime" .
+
+uc:publicationIssue a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ bibo:issue ?issue" ;
+    r2r:targetPattern "?SUBJ bibo:issue ?'issue'^^xsd:string" .
+
+uc:publicationIssn1 a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ uc:issn ?issn" ;
+    r2r:targetPattern "?SUBJ bibo:issn ?'issn'^^xsd:string" .
+
+uc:publicationIssn2 a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ uc:eissn ?eissn" ;
+    r2r:targetPattern "?SUBJ bibo:issn ?'eissn'^^xsd:string" .
+
+uc:publicationIsbn1 a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ uc:isbn ?isbn" ;
+    r2r:targetPattern "?SUBJ bibo:isbn ?'isbn'^^xsd:string" .
+
+uc:publicationIsbn2 a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ uc:eisbn ?eisbn" ;
+    r2r:targetPattern "?SUBJ bibo:isbn ?'eisbn'^^xsd:string" .
+
+uc:publicationIsbn3 a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ uc:pissn ?pissn" ;
+    r2r:targetPattern "?SUBJ bibo:issn ?'pissn'^^xsd:string" .
+
+uc:publicationDOI a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ bibo:doi ?doi" ;
+    r2r:targetPattern "?SUBJ bibo:doi ?'doi'^^xsd:string" .
+
+uc:publicationVolume a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ bibo:volume ?vol" ;
+    r2r:targetPattern "?SUBJ bibo:volume ?'vol'^^xsd:string" .
+
+uc:publicationAbstract a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ bibo:abstract ?abstract" ;
+    r2r:targetPattern "?SUBJ bibo:abstract ?'abstract'^^xsd:string" .
+
+uc:publicationPageStart a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ bibo:pageStart ?start" ;
+    r2r:targetPattern "?SUBJ bibo:pageStart ?'start'^^xsd:integer" .
+
+uc:publicationPageEnd a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ bibo:pageEnd ?end" ;
+    r2r:targetPattern "?SUBJ bibo:pageEnd ?'end'^^xsd:integer" .
+
+uc:publicationCopyright a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ uc:copyrightYear ?cp" ;
+    r2r:targetPattern "?SUBJ schema:copyrightYear ?'cp'^^xsd:string" .
+
+uc:publicationPublisher a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dct:publisher ?publisher" ;
+    r2r:transformation "?publisherIRI=concat('https://redi.cedia.edu.ec/resource/publisher/', xpath:lower-case(xpath:encode-for-uri(?publisher)))" ;
+    r2r:targetPattern "?SUBJ dct:isPartOf ?<publisherIRI>" ;
+    r2r:targetPattern "?publisherIRI a foaf:Organization" ;
+    r2r:targetPattern "?publisherIRI rdfs:label ?publisher" .
+
+uc:publicationBook a r2r:Mapping ;
+    # Publications with isbn, eisbn, e pisbn belong to a book.
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "{?SUBJ dct:name ?name; uc:isbn ?isbn} UNION {?SUBJ dct:name ?name; uc:pisbn ?pisbn} UNION {?SUBJ dct:name ?name; uc:eisbn ?eisbn}" ;
+    r2r:transformation "?bookIRI=concat('https://redi.cedia.edu.ec/resource/book/', xpath:lower-case(xpath:encode-for-uri(?name)))" ;
+    r2r:targetPattern "?SUBJ dct:isPartOf ?<bookIRI>" ;
+    r2r:targetPattern "?bookIRI a bibo:Proceedings" ;
+    r2r:targetPattern "?bookIRI rdfs:label ?name" .
+
+uc:publicationJournal a r2r:Mapping ;
+    # Publications with issn e eissn belong to a journal.
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "{?SUBJ dct:name ?name; uc:issn ?issn} UNION {?SUBJ dct:name ?name; uc:eissn ?eissn}" ;
+    r2r:transformation "?journalIRI=concat('https://redi.cedia.edu.ec/resource/journal/', xpath:lower-case(xpath:encode-for-uri(?name)))" ;
+    r2r:targetPattern "?SUBJ dct:isPartOf ?<journalIRI>" ;
+    r2r:targetPattern "?journalIRI a bibo:Journal" ;
+    r2r:targetPattern "?journalIRI rdfs:label ?name" .

@@ -17,7 +17,9 @@
  */
 package ec.edu.cedia.redi.ldclient.endpoint.springer;
 
-import ec.edu.cedia.redi.ldclient.provider.springer.SpringerProvider;
+import ec.edu.cedia.redi.ldclient.provider.springer.SpringerAuthorProvider;
+import java.nio.charset.Charset;
+import org.apache.marmotta.commons.http.ContentType;
 import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
 
 /**
@@ -28,8 +30,9 @@ import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
 public class SpringerEndpoint extends Endpoint {
 
     public SpringerEndpoint() {
-        super(SpringerProvider.NAME, SpringerProvider.NAME, SpringerProvider.PATTERN, null, 86400L);
+        super(SpringerAuthorProvider.NAME, SpringerAuthorProvider.NAME, SpringerAuthorProvider.PATTERN, null, 86400L);
         setPriority(PRIORITY_MEDIUM);
+        addContentType(new ContentType("text", "html", Charset.forName("utf-8")));
     }
 
 }

@@ -69,6 +69,9 @@ public class DBLPAuthorRawProvider extends AbstractHttpProvider {
     }
 
     private static Logger log = LoggerFactory.getLogger(DBLPAuthorRawProvider.class);
+    
+    private ClientConfiguration conf = new ClientConfiguration();
+    private LDClient ldClient = new LDClient(conf);
 
     /**
      * Return the name of this data provider. To be used e.g. in the
@@ -116,8 +119,6 @@ public class DBLPAuthorRawProvider extends AbstractHttpProvider {
         log.debug("Request {0} succesful", requestUrl);
         ValueFactory factory = ValueFactoryImpl.getInstance();
         RDFFormat format = RDFFormat.forMIMEType(contentType);
-        ClientConfiguration conf = new ClientConfiguration();
-        LDClient ldClient = new LDClient(conf);
         try {
             ModelCommons.add(triples, input, resource, format);
         } catch (UnsupportedRDFormatException e) {

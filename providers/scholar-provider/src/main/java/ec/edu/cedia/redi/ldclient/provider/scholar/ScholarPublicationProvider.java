@@ -24,6 +24,7 @@ import ec.edu.cedia.redi.ldclient.provider.scholar.mapping.ScholarCitationTextLi
 import ec.edu.cedia.redi.ldclient.provider.scholar.mapping.ScholarEmailTextLiteralMapper;
 import ec.edu.cedia.redi.ldclient.provider.scholar.mapping.ScholarImageUriAttrMapper;
 import ec.edu.cedia.redi.ldclient.provider.scholar.mapping.ScholarIndexesTextLiteralMapper;
+import ec.edu.cedia.redi.ldclient.provider.scholar.mapping.ScholarTableDateMapper;
 import ec.edu.cedia.redi.ldclient.provider.scholar.mapping.ScholarTableTextLiteralMapper;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -105,7 +106,7 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
             postMappings.put(BIBO.NAMESPACE + "uri1", new CssUriAttrMapper("div#gsc_vcd_title a", "href"));
             postMappings.put(BIBO.NAMESPACE + "uri2", new CssUriAttrMapper("div#gsc_vcd_title_gg a", "href"));
             postMappings.put(DCTERMS.NAMESPACE + "contributor", new ScholarAuthorTextLiteralMapper("div#gsc_vcd_table .gs_scl", "gsc_vcd_field", ".gsc_vcd_value", "Authors"));
-            postMappings.put(BIBO.NAMESPACE + "created", new ScholarTableTextLiteralMapper("div#gsc_vcd_table .gs_scl", "gsc_vcd_field", ".gsc_vcd_value", "Publication date"));
+            postMappings.put(BIBO.NAMESPACE + "created", new ScholarTableDateMapper("div#gsc_vcd_table .gs_scl", "gsc_vcd_field", ".gsc_vcd_value", "Publication date"));
             postMappings.put(REDI.NAMESPACE + "conference", new ScholarTableTextLiteralMapper("div#gsc_vcd_table .gs_scl", "gsc_vcd_field", ".gsc_vcd_value", "Conference"));
             postMappings.put(REDI.NAMESPACE + "pages", new ScholarTableTextLiteralMapper("div#gsc_vcd_table .gs_scl", "gsc_vcd_field", ".gsc_vcd_value", "Pages"));
             postMappings.put(DCTERMS.NAMESPACE + "publisher", new ScholarTableTextLiteralMapper("div#gsc_vcd_table .gs_scl", "gsc_vcd_field", ".gsc_vcd_value", "Publisher"));

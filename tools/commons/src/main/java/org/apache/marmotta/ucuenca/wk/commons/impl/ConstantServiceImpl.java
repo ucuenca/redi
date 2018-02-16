@@ -209,6 +209,11 @@ public class ConstantServiceImpl implements ConstantService {
     }
 
     @Override
+    public String getSpringerGraph() {
+        return confService.getBaseContext() + "provider/SpringerProvider";
+    }
+
+    @Override
     public String getMAGraph() {
         return getWkhuskaGraph() + getSelectedGraph("microsoftacademics");
     }

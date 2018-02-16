@@ -61,6 +61,9 @@ public class DBLPResourceRawProvider extends AbstractHttpProvider {
     private ValueFactory factory;
 
     private static Logger log = LoggerFactory.getLogger(DBLPResourceRawProvider.class);
+    
+    private ClientConfiguration conf = new ClientConfiguration();
+    private LDClient ldClient = new LDClient(conf);
 
     /**
      * Return the name of this data provider. To be used e.g. in the
@@ -108,8 +111,6 @@ public class DBLPResourceRawProvider extends AbstractHttpProvider {
         log.debug("Request {0} succesful", requestUrl);
         RDFFormat format = RDFFormat.forMIMEType(contentType);
         try {
-            ClientConfiguration conf = new ClientConfiguration();
-            LDClient ldClient = new LDClient(conf);
             factory = ValueFactoryImpl.getInstance();
             ModelCommons.add(triples, input, resource, format);
             /*ValueFactory factory = ValueFactoryImpl.getInstance();
