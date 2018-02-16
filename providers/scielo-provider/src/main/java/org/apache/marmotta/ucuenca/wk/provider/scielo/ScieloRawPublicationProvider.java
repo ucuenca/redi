@@ -148,6 +148,8 @@ public class ScieloRawPublicationProvider extends AbstractJSONDataProvider imple
             }
             mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + "nameff", "$.article.v70[*].i", "$.article.v70[*]._", null);
             mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + "nameff", "$.article.v240[*].i", "$.article.v240[*]._", null);
+            mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + "nameff", "$.article.v70[*].i", "$.article.v70[*].1", null);
+            mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + "nameff", "$.article.v240[*].i", "$.article.v240[*].1", null);
 
             Model unmodifiable = triples.unmodifiable();
 
