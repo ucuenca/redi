@@ -24,6 +24,6 @@ public class TestScieloProvider extends ProviderTestBase {
     public void testAScielo() throws RepositoryException, DataRetrievalException, RDFHandlerException {
         ClientResponse retrieveResource = ldclient.retrieveResource("https://search.scielo.org/search/nidia_castro");
         Model data = retrieveResource.getData();
-        Assert.assertEquals(data.size(), 108);
+        Assert.assertEquals(data.size(), 110);
     }
 }
