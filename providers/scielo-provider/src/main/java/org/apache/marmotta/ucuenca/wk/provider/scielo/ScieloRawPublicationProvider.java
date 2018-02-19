@@ -18,6 +18,7 @@
 package org.apache.marmotta.ucuenca.wk.provider.scielo;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Sets;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import ec.edu.cedia.redi.ldclient.provider.json.AbstractJSONDataProvider;
@@ -26,6 +27,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
 import java.util.Collections;
@@ -34,6 +36,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -147,10 +150,16 @@ public class ScieloRawPublicationProvider extends AbstractJSONDataProvider imple
                 mapEmail(triples, parse, code, "$.article.v240[*]");
                 mapEmail(triples, parse, code, "$.article.v70[*]");
             }
-            mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + AFFNAME, "$.article.v70[*].i", "$.article.v70[*]._", null);
-            mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + AFFNAME, "$.article.v240[*].i", "$.article.v240[*]._", null);
-            mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + AFFNAME, "$.article.v70[*].i", "$.article.v70[*].1", null);
-            mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + AFFNAME, "$.article.v240[*].i", "$.article.v240[*].1", null);
+            mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + AFFNAME, AFFIDPATH1, "$.article.v70[*]._", null);
+            mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + AFFNAME, AFFIDPATH2, "$.article.v240[*]._", null);
+            mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + AFFNAME, AFFIDPATH1, "$.article.v70[*].1", null);
+            mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + AFFNAME, AFFIDPATH2, "$.article.v240[*].1", null);
+            mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + AFFNAME, AFFIDPATH1, "$.article.v70[*].2", null);
+            mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + AFFNAME, AFFIDPATH2, "$.article.v240[*].2", null);
+            mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + AFFNAME, AFFIDPATH1, "$.article.v70[*].3", null);
+            mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + AFFNAME, AFFIDPATH2, "$.article.v240[*].3", null);
+            mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + AFFNAME, AFFIDPATH1, "$.article.v70[*].9", null);
+            mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + AFFNAME, AFFIDPATH2, "$.article.v240[*].9", null);
 
             Model unmodifiable = triples.unmodifiable();
 
@@ -180,6 +189,8 @@ public class ScieloRawPublicationProvider extends AbstractJSONDataProvider imple
         }
         return Collections.emptyList();
     }
+    private static final String AFFIDPATH2 = "$.article.v240[*].i";
+    private static final String AFFIDPATH1 = "$.article.v70[*].i";
 
     @Override
     public String getName() {
@@ -256,7 +267,19 @@ public class ScieloRawPublicationProvider extends AbstractJSONDataProvider imple
     private void mapEmail(Model triples, DocumentContext parse2, String code, String q) {
         ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
         List<LinkedHashMap<String, String>> affData = getValuesObject(parse2, q);
-        List<String> per = getValues(parse2, "$.article.v10[*]['1']");
+        List<String> perx = getValues(parse2, "$.article.v10[*]['1']");
+        List<Set<String>> per = new ArrayList<>();
+        for (String aff : perx) {
+            Set<String> affls = Sets.newHashSet();
+            String[] split = aff.trim().split(" ");
+            for (String oneAff : split) {
+                affls.add(oneAff);
+            }
+            if (affls.isEmpty()) {
+                affls.add("");
+            }
+            per.add(affls);
+        }
         ConcurrentHashMap<String, Queue<String>> emails = new ConcurrentHashMap<>();
         String last = "";
         for (int k = 0; k < affData.size(); k++) {
@@ -273,10 +296,17 @@ public class ScieloRawPublicationProvider extends AbstractJSONDataProvider imple
                 emails.put(tmpAff, emailByAff);
             }
             emailByAff.add(email);
-            last = idAff;
+            last = tmpAff;
         }
         for (int k = 0; k < per.size(); k++) {
-            String getK = per.get(k) == null || per.get(k).trim().equals("") ? "" : per.get(k).trim();
+            matchEmails(per, k, emails, code, triples, instance);
+        }
+    }
+
+    private void matchEmails(List<Set<String>> per, int k, ConcurrentHashMap<String, Queue<String>> emails, String code, Model triples, ValueFactoryImpl instance) {
+        Set<String> affls = per.get(k);
+        for (String oaff : affls) {
+            String getK = oaff == null || oaff.trim().equals("") ? "" : oaff.trim();
             Queue<String> get = emails.get(getK);
             if (get != null && !get.isEmpty()) {
                 String poll = get.poll();
