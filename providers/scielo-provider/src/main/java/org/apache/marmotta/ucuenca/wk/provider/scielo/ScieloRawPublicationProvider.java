@@ -271,9 +271,11 @@ public class ScieloRawPublicationProvider extends AbstractJSONDataProvider imple
         List<Set<String>> per = new ArrayList<>();
         for (String aff : perx) {
             Set<String> affls = Sets.newHashSet();
-            String[] split = aff.trim().split(" ");
-            for (String oneAff : split) {
-                affls.add(oneAff);
+            if (aff != null && !aff.trim().equals("")) {
+                String[] split = aff.trim().split(" ");
+                for (String oneAff : split) {
+                    affls.add(oneAff);
+                }
             }
             if (affls.isEmpty()) {
                 affls.add("");
