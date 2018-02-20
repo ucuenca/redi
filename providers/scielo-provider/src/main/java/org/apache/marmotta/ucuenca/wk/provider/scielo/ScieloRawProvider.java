@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -66,6 +67,7 @@ public class ScieloRawProvider extends AbstractHttpProvider {
 
     private ClientConfiguration conf = new ClientConfiguration();
     private LDClient ldClient = new LDClient(conf);
+
     /**
      * Return the name of this data provider. To be used e.g. in the
      * configuration and in log messages.
@@ -105,7 +107,7 @@ public class ScieloRawProvider extends AbstractHttpProvider {
     public List<String> buildRequestUrl(String resource, Endpoint endpoint) {
         String url = null;
         Preconditions.checkState(StringUtils.isNotBlank(resource));
-        String id = resource.substring(resource.lastIndexOf('/') + 1);
+        String id = URLDecoder.decode(resource.substring(resource.lastIndexOf('/') + 1));
         url = String.format(API, URLEncoder.encode(getQuery(id)));
         return Collections.singletonList(url);
     }
@@ -167,7 +169,7 @@ public class ScieloRawProvider extends AbstractHttpProvider {
     }
 
     private String getName(String resource) {
-        String id = resource.substring(resource.lastIndexOf('/') + 1);
+        String id = URLDecoder.decode(resource.substring(resource.lastIndexOf('/') + 1));
         return id.replaceAll("_", " ").replaceAll("-", " ");
     }
 

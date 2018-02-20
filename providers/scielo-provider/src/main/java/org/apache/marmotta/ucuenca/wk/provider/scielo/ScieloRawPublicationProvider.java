@@ -26,6 +26,7 @@ import ec.edu.cedia.redi.ldclient.provider.json.mappers.JsonPathValueMapper;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
@@ -86,13 +87,13 @@ public class ScieloRawPublicationProvider extends AbstractJSONDataProvider imple
     protected List<String> buildRequestUrl(String resourceUri, Endpoint endpoint) throws DataRetrievalException {
         String url = null;
         Preconditions.checkState(StringUtils.isNotBlank(resourceUri));
-        String id = resourceUri.substring(resourceUri.lastIndexOf('/') + 1);
+        String id = URLDecoder.decode(resourceUri.substring(resourceUri.lastIndexOf('/') + 1));
         url = String.format(API, URLEncoder.encode(id));
         return Collections.singletonList(url);
     }
 
     private String getCode(String resource) {
-        return resource.substring(resource.lastIndexOf('/') + 1);
+        return URLDecoder.decode(resource.substring(resource.lastIndexOf('/') + 1));
     }
 
     @Override

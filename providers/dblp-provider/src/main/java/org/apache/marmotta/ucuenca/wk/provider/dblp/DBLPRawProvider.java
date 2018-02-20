@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -115,7 +116,7 @@ public class DBLPRawProvider extends AbstractHttpProvider {
             url = resource;
         } else {
             Preconditions.checkState(StringUtils.isNotBlank(resource));
-            String id = resource.substring(resource.lastIndexOf('/') + 1);
+            String id = URLDecoder.decode(resource.substring(resource.lastIndexOf('/') + 1));
             url = String.format(API, URLEncoder.encode(id.replace('_', ' ').replace('-', '|')));
         }
         Delay.call();

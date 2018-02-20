@@ -7,6 +7,7 @@ package org.apache.marmotta.ucuenca.wk.pubman.services.providers;
 
 import com.google.common.base.Preconditions;
 import edu.emory.mathcs.backport.java.util.Collections;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,7 +32,7 @@ public class DBLPProviderService extends AbstractProviderService {
         firstName = or(firstName);
         lastName = or(lastName);
         String NS_DBLP = "http://rdf.dblp.com/ns/search/";
-        String URI = NS_DBLP + firstName + "_" + lastName;
+        String URI = NS_DBLP + URLEncoder.encode(firstName + "_" + lastName);
         return Collections.singletonList(URI);
     }
 
