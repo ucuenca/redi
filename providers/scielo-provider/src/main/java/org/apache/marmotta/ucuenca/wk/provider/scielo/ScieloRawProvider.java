@@ -230,7 +230,7 @@ public class ScieloRawProvider extends AbstractHttpProvider {
             triples.addAll(t2);
             triplesx.addAll(triples);
         } catch (IOException ex) {
-            log.debug(ex.toString());
+            throw new DataRetrievalException("Error while parsing response", ex);
         }
 
         return Collections.emptyList();
