@@ -232,7 +232,6 @@ public abstract class AbstractProviderService implements ProviderService {
                     }
                 }
             }
-            ldClient.shutdown();
         } catch (MarmottaException me) {
             log.error("Cannot query.", me);
         } catch (RepositoryException re) {
@@ -244,6 +243,7 @@ public abstract class AbstractProviderService implements ProviderService {
                 }
             }
             taskManagerService.endTask(task);
+            ldClient.shutdown();
         }
     }
 
