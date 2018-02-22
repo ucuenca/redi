@@ -31,6 +31,8 @@ import java.io.BufferedReader;
 //import java.io.FileWriter;
 //import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 //import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 //import java.net.URL;
@@ -444,7 +446,7 @@ public class AuthorServiceImpl implements AuthorService {
                                //conn.commit();
                                //conn.close();
 
-                           }  } catch (    AskException | UpdateException ex) {
+                           }  } catch (    AskException | UnsupportedEncodingException | UpdateException ex) {
                            java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
                            return "Fail"+ex;
                            }
@@ -477,12 +479,12 @@ public class AuthorServiceImpl implements AuthorService {
        // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
      
-      private void createDoc(String uri , String object , String type , EndpointObject e , String relation) throws UpdateException {
+      private void createDoc(String uri , String object , String type , EndpointObject e , String relation) throws UpdateException, UnsupportedEncodingException {
       if ("http://purl.org/ontology/bibo/Article".equals(type)) {
           
           String query = queriesService.getPublicationDetails(object);
           List<HashMap> describePub = e.querySource(query );
-        
+          executeInsert(constantService.getAuthorsGraph(), object , RDF.TYPE.toString() , BIBO.ACADEMIC_ARTICLE.toString() );
           for ( HashMap result: describePub ) {
             String property ="";
             String value = "";
@@ -491,6 +493,10 @@ public class AuthorServiceImpl implements AuthorService {
              value =   result.get("hasValue").toString();
            
             switch  (property ){
+           case "http://purl.org/ontology/bibo/uri": 
+                 executeInsert(constantService.getAuthorsGraph(), object , BIBO.URI.toString() , value );
+      
+                break;
             case "http://purl.org/dc/terms/abstract": 
                  executeInsert(constantService.getAuthorsGraph(), object , BIBO.ABSTRACT.toString() , value );
       
@@ -500,7 +506,7 @@ public class AuthorServiceImpl implements AuthorService {
              
                 break;
             case "http://purl.org/dc/terms/subject":
-                 String uriSubject = constantService.getSubjectResource()+value.toUpperCase().replace(" ", "_");
+                 String uriSubject = URLEncoder.encode(constantService.getSubjectResource()+value.toUpperCase().replace(" ", "_"), "UTF-8");
                  executeInsert(constantService.getAuthorsGraph(), object, DCTERMS.SUBJECT.toString() , uriSubject  );
                  executeInsert(constantService.getAuthorsGraph(), uriSubject, RDFS.LABEL.toString() , value.toUpperCase() , STR );
                 
