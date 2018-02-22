@@ -17,6 +17,8 @@ package org.apache.marmotta.ucuenca.wk.pubman.services.providers;
 
 import com.google.common.base.Preconditions;
 import edu.emory.mathcs.backport.java.util.Collections;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
@@ -48,31 +50,35 @@ public class SpringerProviderService extends AbstractProviderService {
         firstname = StringUtils.stripAccents(firstname).trim().toLowerCase().replace("'", "");
         lastname = StringUtils.stripAccents(lastname).trim().toLowerCase().replace("'", "");
 
-        StringBuilder expr = new StringBuilder("(");
-
         String[] fName = firstname.split(" ");
         String[] lName = lastname.split(" ");
+        String[] orgs = new String[organization.size()];
+        orgs = organization.toArray(orgs);
+        String gname = null;
         if (lName.length > 0) {
-            lastname = lName[0];
+            gname = lName[0];
         }
-        for (int i = 0; i < fName.length; i++) {
-            if (i == 0) {
-                expr.append("(");
-            }
-            expr.append("name:").append(fName[i]);
-            if (i == fName.length - 1) {
-                expr.append(")");
-            } else {
-                expr.append("+OR+");
-            }
-        }
-        if (!"".equals(lastname)) {
-            expr.append("+AND+name:").append(lastname);
-        }
-        expr.append(")");
 
-        String query = String.format(TEMPLATE, expr.toString(), apiKey);
-        return Collections.singletonList(query);
+        for (int i = 0; i < fName.length; i++) {
+            fName[i] = "name:" + fName[i];
+        }
+        for (int i = 0; i < orgs.length; i++) {
+            orgs[i] = "orgname:\"" + orgs[i] + "\"";
+        }
+        String queryNames = StringUtils.join(fName, " OR ");
+        String queryOrgs = StringUtils.join(orgs, " OR ");
+
+        try {
+            if (gname == null) {
+                throw new RuntimeException(new NullPointerException("The lastname is mandatory"));
+            }
+            String query = String.format("((%s) AND (name:%s) AND (%s))", queryNames, gname, queryOrgs);
+            query = URLEncoder.encode(query, "UTF-8");
+            String url = String.format(TEMPLATE, query, apiKey);
+            return Collections.singletonList(url);
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override

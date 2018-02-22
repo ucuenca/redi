@@ -43,7 +43,7 @@ public class TestDBLPProvider extends ProviderTestBase {
     public void testLegacyResolveURI() throws Exception {
 //    	testResource("http://dblp.uni-trier.de/pers/hd/b/Bl=aacute=zquez:Luis_Manuel_Vilches");
         
-          testResource(DBLP);
+          //testResource("http://rdf.dblp.com/ns/search/victor_saquicela");
     }
 
 }

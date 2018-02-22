@@ -15,7 +15,7 @@ public final class Delay {
     }
 
     public static void call() {
-        long get1 = 5 + (long) (Math.round(5.0 * Math.random()));
+        long get1 = 1 + (long) (Math.round(2.0 * Math.random()));
         try {
             Thread.sleep(get1*1000);
         } catch (InterruptedException ex) {

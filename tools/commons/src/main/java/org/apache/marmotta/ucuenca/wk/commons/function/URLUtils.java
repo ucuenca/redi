@@ -7,6 +7,7 @@ package org.apache.marmotta.ucuenca.wk.commons.function;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  *
@@ -44,6 +45,43 @@ public final class URLUtils {
         } catch (Exception ex) {
         }
         return url;
+    }
+
+    public static String unEscapeHTML4(String name) {
+        char eq = '=';
+        String finalResult = "";
+        boolean betweenEqs = false;
+        String partialText = "";
+        for (char a : name.toCharArray()) {
+            partialText += a;
+            if (a == eq) {
+                if (!betweenEqs) {
+                    betweenEqs = true;
+                    partialText = "=";
+                } else {
+                    String unescapeText = partialText.replaceAll("\\=([^=:]{1,})\\=", "&$1;");
+                    String escapeText = StringEscapeUtils.unescapeHtml4(unescapeText);
+                    if (!escapeText.equals(unescapeText)) {
+                        finalResult += escapeText;
+                        betweenEqs = false;
+                        partialText = "";
+                        continue;
+                    } else {
+                        finalResult += partialText.substring(0, partialText.length() - 1);
+                        partialText = "=";
+                        betweenEqs = true;
+                    }
+                }
+            }
+            if (!betweenEqs) {
+                partialText = "";
+                finalResult += a;
+            }
+        }
+        finalResult += partialText;
+        String stopChars = "\\=|\\-|\\_|\\.|\\||\\&|\\?";
+        finalResult = finalResult.replaceAll(stopChars, " ").replaceAll("(\\s+)", " ");
+        return finalResult.trim();
     }
 
 }

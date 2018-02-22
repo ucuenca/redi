@@ -57,11 +57,6 @@
         </dependency>
         <dependency>
             <groupId>org.apache.marmotta</groupId>
-            <artifactId>ldclient-core</artifactId>
-            <version>${marmotta.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.marmotta</groupId>
             <artifactId>ldclient-provider-xml</artifactId>
             <version>3.3.0</version>
         </dependency>
