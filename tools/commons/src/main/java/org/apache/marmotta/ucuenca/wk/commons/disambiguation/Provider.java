@@ -24,11 +24,13 @@ public class Provider {
     public String Name;
     public String Graph;
     private SparqlService sparql;
+    public Boolean isMain  ;
 
-    public Provider(String Name, String Graph, SparqlService sparql) {
+    public Provider(String Name, String Graph, SparqlService sparql , Boolean main) {
         this.Name = Name;
         this.Graph = Graph;
         this.sparql = sparql;
+        this.isMain = main;
     }
 
     public List<Person> getAuthors() throws MarmottaException {
@@ -36,8 +38,6 @@ public class Provider {
                 + "{\n"
                 + "	graph <" + Graph + "> {\n"
                 + "  		?a a <http://xmlns.com/foaf/0.1/Person> . \n"
-                //+ "  		values ?a { <http://redi.cedia.edu.ec/resource/authors/UCUENCA/file/_SAQUICELA_GALARZA_____VICTOR_HUGO_> } . \n"
-                //+ "  		?a <http://purl.org/dc/terms/provenance> <http://redi.cedia.edu.ec/resource/endpoint/file/UCUENCA> . \n"
                 + "	}\n"
                 + "}";
         List<Map<String, Value>> persons = sparql.query(QueryLanguage.SPARQL, qry);

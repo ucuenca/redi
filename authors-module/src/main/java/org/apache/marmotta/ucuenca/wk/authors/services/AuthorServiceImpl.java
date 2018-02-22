@@ -231,7 +231,7 @@ public class AuthorServiceImpl implements AuthorService {
                     e = new EndpointOAI (status , org , url , type , endpoint, mode); 
                     extractResult =  extractAuthorGeneric (e , "1" , mode  );
                      if (extractResult.contains("Success")) {
-                        String providerUri = createProvider (OAIPROVNAME,constantService.getAuthorsGraph()); 
+                        String providerUri = createProvider (OAIPROVNAME,constantService.getAuthorsGraph() , true); 
                          registerDate( org,  providerUri, extractResult , OAIPROVNAME , constantService.getAuthorsGraph());
                      }
                    // EndpointsObject.add(e);
@@ -270,7 +270,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
     
     
-    private String createProvider(String providerName , String providerGraph) throws UpdateException {
+    private String createProvider(String providerName , String providerGraph , Boolean main) throws UpdateException {
         String providerUri = constantService.getProviderBaseUri() + "/" + providerName.toUpperCase().replace(" ", "_");
         String queryProvider = queriesService.getAskResourceQuery(providerGraph, providerUri);
         try {
@@ -280,12 +280,12 @@ public class AuthorServiceImpl implements AuthorService {
                  executeInsert( providerGraph, providerUri, RDF.TYPE.toString(), REDI.PROVIDER.toString());
                  executeInsert (providerGraph, providerUri, RDFS.LABEL.toString(), providerName, "string");
                  
-                if ("Dspace".equals(providerName)) {
+                if (main) {
                  //   sparqlFunctionsService.executeInsert(providerGraph, providerUri, REDI.MAIN.toString(), "True", "boolean");
-                 executeInsert(providerGraph, providerUri, REDI.MAIN.toString(), "True", "boolean");
+                 executeInsert(providerGraph, providerUri, REDI.MAIN.toString(), "true", "boolean");
                 
                 } else {
-                executeInsert(providerGraph, providerUri, REDI.MAIN.toString(), "False", "boolean");
+                executeInsert(providerGraph, providerUri, REDI.MAIN.toString(), "false", "boolean");
  
                 }
             }
@@ -455,7 +455,8 @@ public class AuthorServiceImpl implements AuthorService {
                     log.info( endpoint.getName()+ " . Se cargaron " + (contAutoresNuevosEncontrados - contAutoresNuevosNoCargados) + " autores nuevos exitosamente");
                     log.info( endpoint.getName() + "  . Se cargaron " + tripletasCargadas + " tripletas ");
                     log.info( endpoint.getName() + " . No se pudieron cargar " + contAutoresNuevosNoCargados + " autores");
-                    
+                 //    List<HashMap> describeAuthor0 = endpoint.querySource("Select * where {?a ?b ?c }limit 100");
+                 //    List<HashMap> describeAuthor1 = endpoint.querySource("PREFIX bibo: <http://purl.org/ontology/bibo/> Select * where {?a  a bibo:Document}limit 10");
                    // log.info ("Extrayendo Subjects");
           /*  try {
              //   extractSubjects (endpoint);
@@ -499,7 +500,7 @@ public class AuthorServiceImpl implements AuthorService {
              
                 break;
             case "http://purl.org/dc/terms/subject":
-                 String uriSubject = constantService.getSubjectResource()+value.toUpperCase();
+                 String uriSubject = constantService.getSubjectResource()+value.toUpperCase().replace(" ", "_");
                  executeInsert(constantService.getAuthorsGraph(), object, DCTERMS.SUBJECT.toString() , uriSubject  );
                  executeInsert(constantService.getAuthorsGraph(), uriSubject, RDFS.LABEL.toString() , value.toUpperCase() , STR );
                 
@@ -517,10 +518,7 @@ public class AuthorServiceImpl implements AuthorService {
             default:        
             }
             } 
-           
-           
-            
-        //  http://purl.org/ontology/bibo/abstract
+
           }
            String rel;
            if ("http://rdaregistry.info/Elements/a/P50195".equals(relation)) {

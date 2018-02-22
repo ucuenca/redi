@@ -148,7 +148,10 @@ public class DisambiguationServiceImpl implements DisambiguationService {
 
     private List<Provider> getProviders() throws MarmottaException {
         List<Provider> Providers = comPub.getProviders();
-        Providers.add(0, new Provider("AuthorsProvider", constantService.getAuthorsProviderGraph(), sparqlService));
+         if (!Providers.get(0).isMain) {
+        Providers.add(0, new Provider("AuthorsProvider", constantService.getAuthorsProviderGraph(), sparqlService, true));  } 
+
+         // Providers.add(0, new Provider("AuthorsProvider", constantService.getAuthorsProviderGraph(), sparqlService));
         return Providers;
     }
 

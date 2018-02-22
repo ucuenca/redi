@@ -135,7 +135,7 @@ public abstract class AbstractProviderService implements ProviderService {
     @Override
     public void extractAuthors(String[] organizations) {
         Map<String, String> msgOrg = new HashMap();
-        String providerUri = createProvider(getProviderName());
+        String providerUri = createProvider(getProviderName() , false);
         Task task = taskManagerService.createSubTask(String.format("%s Extraction", getProviderName()), "Publication Extractor");
         task.updateMessage(String.format("Extracting publications from %s Provider", getProviderName()));
         task.updateDetailMessage("Graph", getProviderGraph());
@@ -297,7 +297,7 @@ public abstract class AbstractProviderService implements ProviderService {
         log.info("{}: processed authors ({}%) {} of {} for organization {}.", name, processpercent, actual, total, org);
     }
 
-    private String createProvider(String providerName) {
+    private String createProvider(String providerName , Boolean main) {
         String providerUri = constantService.getProviderBaseUri() + "/" + providerName.toUpperCase().replace(" ", "_");
         String queryProvider = queriesService.getAskResourceQuery(getProviderGraph(), providerUri);
         try {
@@ -307,7 +307,7 @@ public abstract class AbstractProviderService implements ProviderService {
                 sparqlFunctionsService.executeInsert(getProviderGraph(), providerUri, RDF.TYPE, REDI.PROVIDER.toString());
                 sparqlFunctionsService.executeInsert(getProviderGraph(), providerUri, RDFS.LABEL, providerName, "string");
                 // insertStatement(providerUri, RDF.TYPE.toString(),  , STR);
-                if ("SCOPUS".equals(providerName)) {
+                if (main) {
                     sparqlFunctionsService.executeInsert(getProviderGraph(), providerUri, REDI.MAIN.toString(), "True", "boolean");
                 } else {
                     sparqlFunctionsService.executeInsert(getProviderGraph(), providerUri, REDI.MAIN.toString(), "False", "boolean");

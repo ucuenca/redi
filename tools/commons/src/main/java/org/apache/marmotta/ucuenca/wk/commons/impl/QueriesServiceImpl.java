@@ -57,22 +57,21 @@ public class QueriesServiceImpl implements QueriesService {
             return  PREFIXES
                     + " SELECT DISTINCT ?s WHERE { "
                     + "                 ?s a foaf:Person . "
-                    + "                  ?s ?property ?docu . "
+                    + "                  ?docu ?property ?s  . "
                     + "                  ?docu a bibo:Article. "
-                    + "} GROUP BY ?s HAVING (count(?docu)> 0  )";
+                    + "}  GROUP BY ?s HAVING (count(?docu)> 0  )";
 
         } else {
             return PREFIXES
-                    + " SELECT (count (?s) as ?count) {"
-                    + " SELECT DISTINCT ?s WHERE { " + getGraphString(graph) + "{ "
+                    + " SELECT DISTINCT ?s WHERE {  "
                     + "                 ?s a foaf:Person . "
                     + "                  { "
-                    + "                   ?s ?property ?article  . "
+                    + "                  ?article ?property  ?s   . "
                     + "                   ?article a bibo:Article "
                     + "                  }UNION { "
-                    + "                   ?s ?property ?docu . "
+                    + "                    ?docu ?property  ?s  . "
                     + "                  ?docu a bibo:Document "
-                    + "                  } } "
+                    + "                   } "
                     + "} GROUP BY ?s HAVING (count(?docu)> " + num + " || count (?article) > 0  ) ";
         }
         
@@ -366,7 +365,7 @@ public class QueriesServiceImpl implements QueriesService {
                     + "  OPTIONAL { "
                     + "  ?event rdfs:label  ?label" + provset.getValue() + " } "
                     + "  OPTIONAL { "
-                    + "  ?event  <" + REDI.EXTRACTIONDATE.toString() + "> ?eventdate" + provset.getValue() + " } "
+                    + "  ?event  <" + RDF.TYPE.toString()+ "> <"+REDI.EXTRACTION_EVENT.toString()+"> } "
                     + "  } " + prov;
 
         }
@@ -668,25 +667,25 @@ public class QueriesServiceImpl implements QueriesService {
         if (modo) {
             return  PREFIXES
                     +" SELECT (count (?s) as ?count) { "
-                    + " SELECT DISTINCT ?s WHERE { "
+                    + " SELECT DISTINCT ?s WHERE {   "
                     + "                 ?s a foaf:Person . "
-                    + "                  ?s ?property ?docu . "
+                    + "                  ?docu ?property ?s . "
                     + "                  ?docu a bibo:Article. "
-                    + "} GROUP BY ?s HAVING (count(?docu)> 0  )"
+                    + " } GROUP BY ?s HAVING (count(?docu)> 0  )"
                     + "}";
 
         } else {
             return PREFIXES
                     + " SELECT (count (?s) as ?count) {"
-                    + " SELECT DISTINCT ?s WHERE { " + getGraphString(graph) + "{ "
+                    + " SELECT DISTINCT ?s WHERE { "
                     + "                 ?s a foaf:Person . "
                     + "                  { "
-                    + "                   ?s ?property ?article  . "
+                    + "                  ?article   ?property  ?s . "
                     + "                   ?article a bibo:Article "
                     + "                  }UNION { "
-                    + "                   ?s ?property ?docu . "
+                    + "                  ?docu  ?property ?s  . "
                     + "                  ?docu a bibo:Document "
-                    + "                  } } "
+                    + "                  }  "
                     + "} GROUP BY ?s HAVING (count(?docu)> " + num + " || count (?article) > 0  ) "
                     + "}";
         }

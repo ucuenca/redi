@@ -268,15 +268,16 @@ public class CommonServiceImpl implements CommonService {
     public List<Provider> getProviders() throws MarmottaException {
         List<Provider> Providers = new ArrayList();
         String queryProviders = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
-                + "SELECT ?uri ?name ?graph WHERE { "
+                + "SELECT ?uri ?name ?graph ?main WHERE { "
                 + "  GRAPH ?graph { "
                 + "  ?uri a <" + REDI.PROVIDER.toString() + "> . "
-                + "  ?uri rdfs:label ?name "
-                + "  }}";
+                + "  ?uri rdfs:label ?name  ."
+                + "  ?uri <http://ucuenca.edu.ec/ontology#main> ?main"
+                + "  }}order  by desc (?main)";
 
         List<Map<String, Value>> response = sparqlService.query(QueryLanguage.SPARQL, queryProviders);
         for (Map<String, Value> prov : response) {
-            Provider p = new Provider(prov.get("name").stringValue().replace(" ", ""), prov.get("graph").stringValue(), sparqlService);
+            Provider p = new Provider(prov.get("name").stringValue().replace(" ", ""), prov.get("graph").stringValue(), sparqlService , Boolean.parseBoolean(prov.get("main").stringValue()));
             Providers.add(p);
         }
         return Providers;

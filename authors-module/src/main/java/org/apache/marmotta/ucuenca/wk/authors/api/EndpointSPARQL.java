@@ -92,8 +92,10 @@ public class EndpointSPARQL extends EndpointObject {
                  HashMap hm = new HashMap ();
                  for (String name : resultsName )
                  {   
+                      if (bd.hasBinding(name)){
                       String value =  bd.getBinding(name).getValue().stringValue();
                       hm.put(name, value);
+                      }
                  }
                    listResults.add(hm);
                 } 
