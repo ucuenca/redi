@@ -498,17 +498,17 @@ public class AuthorServiceImpl implements AuthorService {
       
                 break;
             case "http://purl.org/dc/terms/abstract": 
-                 executeInsert(constantService.getAuthorsGraph(), object , BIBO.ABSTRACT.toString() , value );
+                 executeInsert(constantService.getAuthorsGraph(), object , BIBO.ABSTRACT.toString() , value.replaceAll("[&@;^\"\\\\]","") );
       
                 break;
             case "http://purl.org/dc/terms/title":
-                executeInsert(constantService.getAuthorsGraph(), object, DCTERMS.TITLE.toString() , value );
+                executeInsert(constantService.getAuthorsGraph(), object, DCTERMS.TITLE.toString() , value.replaceAll("[&@;^\"\\\\]","")  );
              
                 break;
             case "http://purl.org/dc/terms/subject":
-                 String uriSubject = URLEncoder.encode(constantService.getSubjectResource()+value.toUpperCase().replace(" ", "_"), "UTF-8");
+                 String uriSubject = constantService.getSubjectResource()+URLEncoder.encode(value.toUpperCase().replace(" ", "_"), "UTF-8");
                  executeInsert(constantService.getAuthorsGraph(), object, DCTERMS.SUBJECT.toString() , uriSubject  );
-                 executeInsert(constantService.getAuthorsGraph(), uriSubject, RDFS.LABEL.toString() , value.toUpperCase() , STR );
+                 executeInsert(constantService.getAuthorsGraph(), uriSubject, RDFS.LABEL.toString() , value.toUpperCase().replaceAll("[&@;^\"\\\\]","") , STR );
                 
                 break;
             case "http://purl.org/ontology/bibo/issn":

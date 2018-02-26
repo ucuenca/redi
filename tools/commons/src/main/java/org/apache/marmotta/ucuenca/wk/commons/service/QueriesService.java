@@ -62,6 +62,8 @@ public interface QueriesService {
     String removeGenericType(String graph, String type, String resource);
 
     String removeGenericRelation(String graph, String relation, String resource);
+    
+    String removeGenericRelationwithDependecies (String graph, String relation, String resource, String relationdel);
 
     String getListOrganizationQuery();
 

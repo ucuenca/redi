@@ -622,6 +622,20 @@ public class QueriesServiceImpl implements QueriesService {
                 + "FILTER ( ?e = <" + resource + "> )} ";
 
     }
+    
+    
+    @Override
+    @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
+    public String removeGenericRelationwithDependecies (String graph, String relation, String resource, String relationdel) {
+
+        
+          return  "WITH <" + graph + "> DELETE {"
+                  + " ?a1  ?b1 ?c1 } WHERE { VALUES ?e { <" + resource + "> } . "
+                  + "?a  <" + relation + "> ?e . "
+                  + "?a <"+relationdel+"> ?a1 . ?a1 ?b1 ?c1 } ";
+          
+    }
+
 
     @Override
     public String getAuthors() {
