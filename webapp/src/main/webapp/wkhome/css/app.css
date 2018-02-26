@@ -1,11 +1,87 @@
 /* app css stylesheet */
 
-body {
-    /*padding-top: 70px;*/
+
+/* begin navbar styles */
+.dropdown > .dropdown-toggle {
+  padding:10px;
 }
 
+.navbar { margin-bottom:0px !important; }
+/*.carousel-caption { margin-top:0px !important }*/
+
+.icon-small {
+    height:25px;
+    margin:0;
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.icon-xsmall {
+  height:18px;
+  margin:0;
+ padding:0;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+#lang_locale {
+  cursor: pointer;
+}
+
+#lang_locale a > span {
+  padding-right: 25px;
+}
+
+/* Increase point which navbar collapses */
+@media (max-width: 841px) {
+    .navbar-header {
+        float: none;
+    }
+    .navbar-toggle {
+        display: block;
+    }
+
+    .navbar-collapse {
+        border-top: 1px solid transparent;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .navbar-collapse.collapse {
+        display: none!important;
+    }
+    .navbar-nav {
+        float: none!important;
+        margin: 7.5px -15px;
+    }
+    .navbar-nav>li {
+        float: none;
+    }
+    .navbar-nav>li>a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .navbar-text {
+        float: none;
+        margin: 15px 0;
+    }
+    /* since 3.1.0 */
+    .navbar-collapse.collapse.in {
+        display: block!important;
+    }
+    .collapsing {
+        overflow: hidden!important;
+    }
+}
+
+/* End navbar styles*/
+
+
+
+
+
+
+
+
 .header {
-    /*background-image: linear-gradient(to bottom,#3c3c3c 0,#222 100%);*/
     width: 100%;
     height: 50px;
     position: relative;
@@ -13,11 +89,9 @@ body {
 }
 
 .header h1 {
-    /*width: 80%;*/
     margin: 0 auto;
     font-size: 18px;
     font-weight: normal;
-    /*color: rgb(186, 186, 186);*/
 }
 
 .header div {
@@ -31,12 +105,8 @@ body {
 }
 
 nav.navbar ul.dropdown-menu {
-  
+
 }
-/*
-div.main {
-    margin-top: -20px;
-}*/
 
 .left-column
 {
@@ -60,48 +130,9 @@ background-color:black;
 height: 100%
 }
 
-.presentation > div {
-    height: 67vh;
-    /*padding: 0;*/
-    background-image: url('../images/background.png'); //grey_book2.png*/
-    background-color: white;
-    background-size: 100%;
-    background-repeat: no-repeat;
-    /*opacity: 1;*/
-}
-
-
-.middlecontainer{
-    height: 50vh;
-    /*padding: 0;*/
-    //background-image: url('../images/fondo2.jpg'); //grey_book2.png*/
-    background-color: #2E9AFE;
-    fill: #2E9AFE;
-    /*opacity: 1;*/
-}
-
 table { empty-cells: show; }
 
-.carousel-caption {
-    color: #2a3439;
-}
 
-.carousel-inner, .carousel-inner .item {
-     height:100%;
-}
-
-.carousel-indicators .active{
-    background-color: orange;
-}
-
-.carousel-caption-text {
-    text-align: center;
-    color: #337ab7;
-}
-
-.carousel-indicators li {
-    background-color: khaki;
-}
 
 
 .stats > div {
@@ -144,7 +175,7 @@ div.body-snap h4 {
     color: #2a3439;
     padding: 5px 15px;
 }
-      
+
 
       .indicators {
         position: fixed;
@@ -178,7 +209,7 @@ div.body-snap h4 {
       .indicators .active {
         background: orange;
       }
-      
+
       @media screen and (min-width: 768px) {
         .indicators {
           right: 11px;
@@ -192,7 +223,7 @@ div.body-snap h4 {
           right: 25px;
         }
       }*/
-      
+
       .text-success {
           color: #678C03;
       }
@@ -205,7 +236,7 @@ div.body-snap h4 {
     cursor:pointer;
     overflow: hidden;
     outline:none;
-}  
+}
 
 
 ul {
