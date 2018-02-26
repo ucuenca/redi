@@ -10,30 +10,54 @@
  [ "UCUENCA", "", "", "12/12/12", "2011/07/25", "50/81/90" ],
  [ "UTPL", "", "", "", "2009/01/12", "" ]
  ];*/
-// var host = "http://localhost:8080/";
-var host = _SERVER_URL;
+// var host = "http://localhost:8080/"; 
+  var host = _SERVER_URL;
 // var host = "https://rediclon.cedia.edu.ec/";
 function loadTables() {
-
+     var Providers = ["Dspace","SCOPUS","AcademicsKnowledge", "DBLP", "GoogleScholar","Springer","SCIELO"];  
+     
+      var columns = [ {"data":"Selection"} , { "data":"name"}];
+      
+      var colum1 =  {  "render": function (data, type, row) {
+                     return   '<input id="' + row["name"] + '" type="checkbox" name="selection" value="' + row["uri"] + '">';},
+                     targets: 0};
+                     
+                     
+      var colum2 =   { "render": function (data, type, row) {  return  data; },
+                        targets: 1 }
+                     
+      var columnDefs  = [];
+      columnDefs.push(colum1);
+      columnDefs.push(colum2);
+      $.each( Providers, function( i, val ) {
+     // alert( key + ": " + value );
+         var newField = { "data": "Adv"+val};
+         columns.push(newField);
+         
+         var columdefn = { "render": function (data, type, row) {
+                        if (typeof (row["Adv"+val]) === "undefined") {
+                        return "";
+                        } else {
+                        return row["Adv"+val].split(";").sort(function (a, b) {
+                            return CompareDate(a, b);
+                        })[0];    
+                    }
+                },
+                targets: i+2
+            };
+            
+            columnDefs.push(columdefn);
+      });
+     
     console.log("Graficando");
     $('#provTable').DataTable({
         ajax: host + "pubman/publication/organization/list",
-        columns: [
-            {"data": "Selection"},
-            {"data": "name"},
-            {"data": "AdvAcademicsKnowledge"},
-            {"data": "AdvDBLP"},
-            {"data": "AdvSCOPUS"},
-            {"data": "AdvGS"},
-            {"data": "AdvSCIELO"},
-            {"data": "AdvSpringer"}
-        ],
-        columnDefs: [
+        columns: columns,
+        columnDefs:  columnDefs
+                /* [
             {
                 "render": function (data, type, row) {
-
                     return   '<input id="' + row["name"] + '" type="checkbox" name="selection" value="' + row["uri"] + '">';
-
                 },
                 targets: 0
             },
@@ -55,9 +79,7 @@ function loadTables() {
                             return CompareDate(a, b);
                         })[0];
                         // return row["DateAk"].split(";").sort(function(a,b){ return CompareDate( a, b ); }) +" | " +row["AdvAK"].split(";")[0];    
-
                     }
-
                 },
                 targets: 2
             },
@@ -141,7 +163,7 @@ function loadTables() {
                 },
                 targets: 7
             }
-        ]
+        ]*/
 
     });
 }
@@ -223,16 +245,7 @@ function ExtractScopus() {
             url: host + "pubman/publicationsScopusByOrg",
             success: function (Result) {
                 console.log(Result);
-                // table.ajax.reload( null, false );
-                /* var resultados = JSON.parse(Result);
-                 console.log(Result);
-                 for (var key in resultados) {
-                 console.log (key+""+resultados[key]);*/
-                //$('span#'+key+'').text(resultados[key]);
-                // $("span[id='"+key+"']").text(resultados[key]);
-
-                //}
-                // alert (Result);
+             
 
             },
             error: function (data) {

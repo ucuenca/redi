@@ -112,6 +112,9 @@ myApp.labels_es = {
 //SOURCE HTML
 "Authors Sources":"Fuentes de datos de autores",
 "Publications Data Source":"Fuentes de datos de publicaciones",
+"NDSources":"En proceso de cosecha / desambiguación.",
+
+
 
 // PUBLICATIONS LIST
 "num.pub":"Total de publicaciones",

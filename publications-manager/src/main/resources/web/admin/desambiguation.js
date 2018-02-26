@@ -1,25 +1,79 @@
 //var host = "http://localhost:8080
-// var host = "https://rediclon.cedia.edu.ec/";
+ //var host = "https://rediclon.cedia.edu.ec/";
 var host = _SERVER_URL;
 function loadTables() {
+ var Providers = ["SCOPUS","AcademicsKnowledge", "DBLP", "GoogleScholar","Springer","SCIELO"];
+ 
+  var columns = [ {"data":"Selection"} , { "data":"label"}];
+  
+  var colum1 =  {  "render": function (data, type, row) {
+                      return   '<input id="' + row["name"] + '" type="checkbox" name="selection" value="' + row["org"] + '">';},
+                     targets: 0};
+                     
+                     
+  var colum2 =   { "render": function (data, type, row) {  return  data; },
+                        targets: 1 }
+  var columnDefs  = [];
+      columnDefs.push(colum1);
+      columnDefs.push(colum2);
+      
+      
+       $.each( Providers, function( i, val ) {
+  
+         var newField = { "data": val};
+         columns.push(newField);
+         
+         var columdefn = { "render": function(data, type, row) {
+                    if (typeof (row[val]) === "undefined") {
+                        return "";
+                    } else {
+                        var color ="color:gray";
+                        var title = "";
+                            if (row[val+"l"] !== undefined){
+                                var color = "color:green"
+                                 title = "| Disambiguate";
+                            }
 
+                        if (data / row["total"] > 0.9) {
+                            
+                                                       
+                            return '<span title="Complete Data'+title+'" style="font-family: wingdings; font-size: 200%;'+color+' ">&#10004;</span>';
+  
+                        } else {
+
+                            return  '<span title="Incomplete Data" style="font-family: wingdings; font-size: 200%;'+color+'">&#9684;</span>';
+                        }
+                    }
+                },
+                targets: i+2
+            };
+            
+            columnDefs.push(columdefn);
+      });
+      
+        var log = { "render": function(data, type, row) {
+                
+                    var log = "";
+                   Providers.forEach( function(valor, indice, array) {
+                  
+                       if (row[valor+"l"] !== undefined) {
+                         
+                          log = row[valor+"l"].split(";").sort (function (a,b){ return CompareDate( a, b );})[0];
+                       }
+                   });
+                   return log;
+                },
+                targets: columnDefs.length };
+        columnDefs.push(log);    
+            
+       columns.push({ "data":"Logs"});
+  
     console.log("Graficando");
     $('#provTableDis').DataTable({
         ajax: host + "pubman/publication/organization/disambiguationList",
-        columns: [
-            {"data": "Selection"},
-            {"data": "label"},
-            {"data": "AcademicsKnowledge"},
-            {"data": "DBLP"},
-            {"data": "SCOPUS"},
-            {"data": "GS"} ,
-            {"data": "SCIELO"} ,
-            {"data": "Logs"}
-
-
-
-        ],
-        columnDefs: [
+        columns: columns ,
+        columnDefs: columnDefs
+              /*  [
             {
                 "render": function(data, type, row) {
 
@@ -177,7 +231,7 @@ function loadTables() {
                 },
                 targets: 7
             }
-        ]
+        ]*/
 
     });
 }

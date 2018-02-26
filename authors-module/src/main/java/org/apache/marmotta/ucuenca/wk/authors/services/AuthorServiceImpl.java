@@ -31,6 +31,8 @@ import java.io.BufferedReader;
 //import java.io.FileWriter;
 //import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 //import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 //import java.net.URL;
@@ -231,7 +233,7 @@ public class AuthorServiceImpl implements AuthorService {
                     e = new EndpointOAI (status , org , url , type , endpoint, mode); 
                     extractResult =  extractAuthorGeneric (e , "1" , mode  );
                      if (extractResult.contains("Success")) {
-                        String providerUri = createProvider (OAIPROVNAME,constantService.getAuthorsGraph()); 
+                        String providerUri = createProvider (OAIPROVNAME,constantService.getAuthorsGraph() , true); 
                          registerDate( org,  providerUri, extractResult , OAIPROVNAME , constantService.getAuthorsGraph());
                      }
                    // EndpointsObject.add(e);
@@ -270,7 +272,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
     
     
-    private String createProvider(String providerName , String providerGraph) throws UpdateException {
+    private String createProvider(String providerName , String providerGraph , Boolean main) throws UpdateException {
         String providerUri = constantService.getProviderBaseUri() + "/" + providerName.toUpperCase().replace(" ", "_");
         String queryProvider = queriesService.getAskResourceQuery(providerGraph, providerUri);
         try {
@@ -280,12 +282,12 @@ public class AuthorServiceImpl implements AuthorService {
                  executeInsert( providerGraph, providerUri, RDF.TYPE.toString(), REDI.PROVIDER.toString());
                  executeInsert (providerGraph, providerUri, RDFS.LABEL.toString(), providerName, "string");
                  
-                if ("Dspace".equals(providerName)) {
+                if (main) {
                  //   sparqlFunctionsService.executeInsert(providerGraph, providerUri, REDI.MAIN.toString(), "True", "boolean");
-                 executeInsert(providerGraph, providerUri, REDI.MAIN.toString(), "True", "boolean");
+                 executeInsert(providerGraph, providerUri, REDI.MAIN.toString(), "true", "boolean");
                 
                 } else {
-                executeInsert(providerGraph, providerUri, REDI.MAIN.toString(), "False", "boolean");
+                executeInsert(providerGraph, providerUri, REDI.MAIN.toString(), "false", "boolean");
  
                 }
             }
@@ -444,7 +446,7 @@ public class AuthorServiceImpl implements AuthorService {
                                //conn.commit();
                                //conn.close();
 
-                           }  } catch (    AskException | UpdateException ex) {
+                           }  } catch (    AskException | UnsupportedEncodingException | UpdateException ex) {
                            java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
                            return "Fail"+ex;
                            }
@@ -455,7 +457,8 @@ public class AuthorServiceImpl implements AuthorService {
                     log.info( endpoint.getName()+ " . Se cargaron " + (contAutoresNuevosEncontrados - contAutoresNuevosNoCargados) + " autores nuevos exitosamente");
                     log.info( endpoint.getName() + "  . Se cargaron " + tripletasCargadas + " tripletas ");
                     log.info( endpoint.getName() + " . No se pudieron cargar " + contAutoresNuevosNoCargados + " autores");
-                    
+                 //    List<HashMap> describeAuthor0 = endpoint.querySource("Select * where {?a ?b ?c }limit 100");
+                 //    List<HashMap> describeAuthor1 = endpoint.querySource("PREFIX bibo: <http://purl.org/ontology/bibo/> Select * where {?a  a bibo:Document}limit 10");
                    // log.info ("Extrayendo Subjects");
           /*  try {
              //   extractSubjects (endpoint);
@@ -476,12 +479,12 @@ public class AuthorServiceImpl implements AuthorService {
        // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
      
-      private void createDoc(String uri , String object , String type , EndpointObject e , String relation) throws UpdateException {
+      private void createDoc(String uri , String object , String type , EndpointObject e , String relation) throws UpdateException, UnsupportedEncodingException {
       if ("http://purl.org/ontology/bibo/Article".equals(type)) {
           
           String query = queriesService.getPublicationDetails(object);
           List<HashMap> describePub = e.querySource(query );
-        
+          executeInsert(constantService.getAuthorsGraph(), object , RDF.TYPE.toString() , BIBO.ACADEMIC_ARTICLE.toString() );
           for ( HashMap result: describePub ) {
             String property ="";
             String value = "";
@@ -490,18 +493,22 @@ public class AuthorServiceImpl implements AuthorService {
              value =   result.get("hasValue").toString();
            
             switch  (property ){
+           case "http://purl.org/ontology/bibo/uri": 
+                 executeInsert(constantService.getAuthorsGraph(), object , BIBO.URI.toString() , value );
+      
+                break;
             case "http://purl.org/dc/terms/abstract": 
-                 executeInsert(constantService.getAuthorsGraph(), object , BIBO.ABSTRACT.toString() , value );
+                 executeInsert(constantService.getAuthorsGraph(), object , BIBO.ABSTRACT.toString() , value.replaceAll("[&@;^\"\\\\]","") );
       
                 break;
             case "http://purl.org/dc/terms/title":
-                executeInsert(constantService.getAuthorsGraph(), object, DCTERMS.TITLE.toString() , value );
+                executeInsert(constantService.getAuthorsGraph(), object, DCTERMS.TITLE.toString() , value.replaceAll("[&@;^\"\\\\]","")  );
              
                 break;
             case "http://purl.org/dc/terms/subject":
-                 String uriSubject = constantService.getSubjectResource()+value.toUpperCase();
+                 String uriSubject = constantService.getSubjectResource()+URLEncoder.encode(value.toUpperCase().replace(" ", "_"), "UTF-8");
                  executeInsert(constantService.getAuthorsGraph(), object, DCTERMS.SUBJECT.toString() , uriSubject  );
-                 executeInsert(constantService.getAuthorsGraph(), uriSubject, RDFS.LABEL.toString() , value.toUpperCase() , STR );
+                 executeInsert(constantService.getAuthorsGraph(), uriSubject, RDFS.LABEL.toString() , value.toUpperCase().replaceAll("[&@;^\"\\\\]","") , STR );
                 
                 break;
             case "http://purl.org/ontology/bibo/issn":
@@ -517,10 +524,7 @@ public class AuthorServiceImpl implements AuthorService {
             default:        
             }
             } 
-           
-           
-            
-        //  http://purl.org/ontology/bibo/abstract
+
           }
            String rel;
            if ("http://rdaregistry.info/Elements/a/P50195".equals(relation)) {

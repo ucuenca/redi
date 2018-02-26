@@ -52,7 +52,7 @@ public class EndpointFile  extends EndpointObject {
     private static final String FILENAME = "R2RMLtoRDF.ttl";
   //  private static final String OUTPUT_RDF_PATH = System.getProperty("user.home")+"/REDITRANSF/CSV/R2RMLtoRDF.ttl";
     private static final String TEMPORAL_URI = "http://redi/file";
-    private static final String TEMPORAL_GRAPH = "http://localhost:8080/";
+    private static final String TEMPORAL_GRAPH = "http://localhost:8080/"; 
     
     
      public Repository getRepo() {
@@ -176,8 +176,10 @@ public class EndpointFile  extends EndpointObject {
                  HashMap hm = new HashMap ();
                  for (String name : resultsName )
                  {   
+                      if (bd.hasBinding(name)){
                       String value =  bd.getBinding(name).getValue().stringValue();
                       hm.put(name, value);
+                      }
                  }
                    listResults.add(hm);
                 } 

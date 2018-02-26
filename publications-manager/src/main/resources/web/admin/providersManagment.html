@@ -24,10 +24,15 @@
         <title>Providers Manager</title>
         <!-- <script type="text/javascript" src="../../webjars/jquery/1.8.2/jquery.min.js"></script> -->
       <!--  <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script> -->
+     <!--   <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.16/datatables.min.js"></script>
+           <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.16/datatables.min.css"> -->
+           
         <script type="text/javascript" src="../../webjars/jquery/1.8.2/jquery.min.js"></script>  
-        <script type="text/javascript" src="providersManager.js"></script>
         <script type="text/javascript" src="lib/dataTables/datatables.min.js"></script>
         <link rel="stylesheet" type="text/css" href="lib/dataTables/datatables.min.css">
+        <script type="text/javascript" src="providersManager.js"></script>
+
         <script type="text/javascript">
             $(document).ready(function () {
                 //  console.log(_SERVER_URL);
@@ -44,16 +49,15 @@
         <table id="provTable" class="display" width="90%">
             <thead>
                 <tr>
-
                 <th>Selection</th>
                 <th>Organization</th>
-                <th>Ac</th>
+                <th>Dspace </th>
+                <th>SCOPUS</th>
+                <th>AcademicsKnowledge</th>
                 <th>DBLP</th>
-                <th>Scopus</th>
-                <th>Google</th>
-                <th>Scielo</th>
+                <th>GoogleScholar</th>
                 <th>Springer</th>
-                <th>Latin</th>
+                <th>SCIELO</th>
             </tr> 
         </thead>  
           </table>

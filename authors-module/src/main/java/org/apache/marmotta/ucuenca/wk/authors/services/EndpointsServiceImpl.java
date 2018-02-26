@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
+import org.apache.marmotta.commons.vocabulary.FOAF;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
@@ -211,15 +212,17 @@ public class EndpointsServiceImpl implements EndpointsService {
         try {
           //   String queryRemove = queriesService.removeGeneric ( con.getOrganizationsGraph() , resourceid , RDF.TYPE.toString() , FOAF.ORGANIZATION.toString() , STR );
               //String queryRemove = queriesService.removeGeneric ( con.getEndpointsGraph() , resourceid , RDF.TYPE.toString() , REDI.ENDPOINT.toString() , STR );
+            String queryDependecies  = queriesService.removeGenericRelationwithDependecies(con.getAuthorsGraph(), DCTERMS.PROVENANCE.toString(), resourceid , FOAF.publications.toString() );
+            sparqlService.update(QueryLanguage.SPARQL, queryDependecies);
             String queryAsociation   = queriesService.removeGenericRelation(con.getAuthorsGraph() , DCTERMS.PROVENANCE.toString(), resourceid);
             sparqlService.update(QueryLanguage.SPARQL, queryAsociation);
             String queryRemove   = queriesService.removeGenericType(con.getEndpointsGraph(), REDI.ENDPOINT.toString(), resourceid);
             sparqlService.update(QueryLanguage.SPARQL, queryRemove);
-              return "Success";
+              return "Success delete";
              //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
          } catch ( InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
              Logger.getLogger(EndpointsServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-             return "Fail";
+             return "Fail delete";
          }
     }
     
