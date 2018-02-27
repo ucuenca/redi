@@ -70,7 +70,7 @@ wkhomeApp.service('globalData', ['$window', function ($window) {
     this.urltofindinACADEMICS = 'https://academic.microsoft.com/#/search?iq=@{0}@&q={1}&filters=&from=0&sort=0';
 }]);
 
-wkhomeApp.config(
+wkhomeApp.config(["$routeProvider", "$locationProvider",
     function ($routeProvider, $locationProvider) {
       $locationProvider.hashPrefix('');
       $routeProvider.
@@ -150,10 +150,10 @@ wkhomeApp.config(
                     redirectTo: '/es/'
                 })
                 ;
-    });
+    }]);
 
     wkhomeApp.config(['$compileProvider', function ($compileProvider) {
-        $compileProvider.debugInfoEnabled(false);
+        $compileProvider.debugInfoEnabled(true);
     }]);
 
     wkhomeApp.config(["$translateProvider", function ($translateProvider) {

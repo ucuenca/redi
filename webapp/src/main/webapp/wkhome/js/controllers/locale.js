@@ -1,4 +1,4 @@
-wkhomeControllers.controller('localeController', function ($localeSelectorDialog, avilableLocales, $translate) {
+wkhomeControllers.controller('localeController', ["$localeSelectorDialog", "avilableLocales", "$translate", function ($localeSelectorDialog, avilableLocales, $translate) {
     var vm = this;
 
     // default locale values
@@ -22,4 +22,4 @@ wkhomeControllers.controller('localeController', function ($localeSelectorDialog
     // $scope.isActive = function (viewLocation) {
     //     return viewLocation === $location.path();
     // };
-});
+}]);
