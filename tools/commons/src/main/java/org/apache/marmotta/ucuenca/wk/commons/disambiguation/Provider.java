@@ -9,6 +9,7 @@ import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.openrdf.model.Value;
@@ -24,12 +25,14 @@ public class Provider {
     public String Name;
     public String Graph;
     private SparqlService sparql;
-    public Boolean isMain  ;
+    private ConcurrentHashMap<String, List<List<String>>> cache;
+    public Boolean isMain;
 
-    public Provider(String Name, String Graph, SparqlService sparql , Boolean main) {
+    public Provider(String Name, String Graph, SparqlService sparql, Boolean main) {
         this.Name = Name;
         this.Graph = Graph;
         this.sparql = sparql;
+        cache = new ConcurrentHashMap<>();
         this.isMain = main;
     }
 
@@ -112,15 +115,12 @@ public class Provider {
 
         String qryCA = "prefix dct: <http://purl.org/dc/terms/>\n"
                 + "prefix foaf: <http://xmlns.com/foaf/0.1/>\n"
-                + "select distinct ?fun ?fn ?ln {\n"
+                + "select distinct ?p {\n"
                 + "     graph <" + Graph + ">{\n"
                 + "             values ?per { <URI> } . \n"
                 + "            ?per      foaf:publications  ?publication .\n"
-                + "      		?publication  dct:contributor | dct:creator   ?p .\n"
+                + "             ?p      foaf:publications  ?publication .\n"
                 + "            filter (?p != ?per) .\n"
-                + "          	optional { ?p foaf:name ?fun . }\n"
-                + "             optional { ?p foaf:givenName ?fn . }\n"
-                + "          	optional { ?p foaf:familyName ?ln . }\n"
                 + "    }\n"
                 + "}";
         String qryP = "prefix dct: <http://purl.org/dc/terms/>\n"
@@ -179,15 +179,27 @@ public class Provider {
             List<Map<String, Value>> rsCA = sparql.query(QueryLanguage.SPARQL, qryCA_);
             n.Coauthors = new ArrayList<>();
             for (Map<String, Value> ar : rsCA) {
-                if (ar.get("fun") != null) {
-                    n.Coauthors.add(Lists.newArrayList(ar.get("fun").stringValue()));
+                String pURI = ar.get("p").stringValue();
+                List<List<String>> r = new ArrayList<>();
+                if (cache.containsKey(pURI)) {
+                    List<List<String>> get = cache.get(pURI);
+                    r.addAll(get);
+                } else {
+                    String qryName_C = qryName.replaceAll("URI", pURI);
+                    String qryName2_C = qryName2.replaceAll("URI", pURI);
+                    List<Map<String, Value>> rsCAN1 = sparql.query(QueryLanguage.SPARQL, qryName_C);
+                    for (Map<String, Value> arN : rsCAN1) {
+                        r.add(Lists.newArrayList(arN.get("fun").stringValue()));
+                    }
+                    List<Map<String, Value>> rsCAN2 = sparql.query(QueryLanguage.SPARQL, qryName2_C);
+                    for (Map<String, Value> arN : rsCAN2) {
+                        ArrayList<String> names = Lists.newArrayList(arN.get("fn").stringValue());
+                        names.add(arN.get("ln").stringValue());
+                        r.add(names);
+                    }
+                    cache.put(pURI, r);
                 }
-
-                if (ar.get("fn") != null && ar.get("ln") != null) {
-                    ArrayList<String> names = Lists.newArrayList(ar.get("fn").stringValue());
-                    names.add(ar.get("ln").stringValue());
-                    n.Coauthors.add(names);
-                }
+                n.Coauthors.addAll(r);
             }
             //get Publications
             List<Map<String, Value>> rsP = sparql.query(QueryLanguage.SPARQL, qryP_);
