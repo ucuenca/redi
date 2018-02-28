@@ -27,6 +27,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.api.task.Task;
 import org.apache.marmotta.platform.core.api.task.TaskManagerService;
+import org.apache.marmotta.platform.core.api.triplestore.SesameService;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
@@ -41,11 +42,15 @@ import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Person;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Provider;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.utils.PublicationUtils;
+import org.openrdf.model.Model;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.LinkedHashModel;
+import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.UpdateExecutionException;
+import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFHandlerException;
 import org.semarglproject.vocab.RDF;
@@ -83,6 +88,9 @@ public class DisambiguationServiceImpl implements DisambiguationService {
 
     @Inject
     private SparqlFunctionsService sparqlFunctionsService;
+
+    @Inject
+    private SesameService sesameService;
 
     private Task task;
 
@@ -148,10 +156,10 @@ public class DisambiguationServiceImpl implements DisambiguationService {
 
     private List<Provider> getProviders() throws MarmottaException {
         List<Provider> Providers = comPub.getProviders();
-         if (!Providers.get(0).isMain) {
-        Providers.add(0, new Provider("AuthorsProvider", constantService.getAuthorsProviderGraph(), sparqlService, true));  } 
-
-         // Providers.add(0, new Provider("AuthorsProvider", constantService.getAuthorsProviderGraph(), sparqlService));
+        if (!Providers.get(0).isMain) {
+            Providers.add(0, new Provider("AuthorsProvider", constantService.getAuthorsProviderGraph(), sparqlService, true));
+        }
+        // Providers.add(0, new Provider("AuthorsProvider", constantService.getAuthorsProviderGraph(), sparqlService));
         return Providers;
     }
 
@@ -383,7 +391,12 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                         for (Map.Entry<Provider, List<Person>> aCandidateList : Candidates) {
                             aCandidateList.getKey().FillData(aCandidateList.getValue());
                         }
-                        Disambiguate(Candidates, 0, new Person());
+                        Model Disambiguate = Disambiguate(Candidates, 0, new Person());
+                        RepositoryConnection connection = sesameService.getConnection();
+                        ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
+                        connection.add(Disambiguate, instance.createURI(constantService.getAuthorsSameAsGraph()));
+                        connection.commit();
+                        connection.close();
                         task.updateDetailMessage("Status", String.format("Finish disambiguating %s out of %s authors", ix, allx));
                         log.info("Finish disambiguating {} out of {} authors", ix, allx);
 
@@ -398,9 +411,10 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         return ProvidersElements;
     }
 
-    public void Disambiguate(List<Map.Entry<Provider, List<Person>>> Candidates, int level, Person superAuthor) throws MarmottaException, RepositoryException, MalformedQueryException, QueryEvaluationException, RDFHandlerException, InvalidArgumentException, UpdateExecutionException {
+    public Model Disambiguate(List<Map.Entry<Provider, List<Person>>> Candidates, int level, Person superAuthor) throws MarmottaException, RepositoryException, MalformedQueryException, QueryEvaluationException, RDFHandlerException, InvalidArgumentException, UpdateExecutionException {
+        Model r = new LinkedHashModel();
         if (level >= Candidates.size()) {
-            return;
+            return r;
         }
         List<Person> CandidateListLevel = Candidates.get(level).getValue();
         boolean up = true;
@@ -408,13 +422,16 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             if (superAuthor.check(aCandidate)) {
                 up = false;
                 Person enrich = superAuthor.enrich(aCandidate);
-                registerSameAs(constantService.getAuthorsSameAsGraph(), superAuthor.URI, aCandidate.URI);
-                Disambiguate(Candidates, level + 1, enrich);
+                registerSameAsModel(r, superAuthor.URI, aCandidate.URI);
+                Model Disambiguate = Disambiguate(Candidates, level + 1, enrich);
+                r.addAll(Disambiguate);
             }
         }
         if (up) {
-            Disambiguate(Candidates, level + 1, superAuthor);
+            Model Disambiguate = Disambiguate(Candidates, level + 1, superAuthor);
+            r.addAll(Disambiguate);
         }
+        return r;
     }
 
     public void ProcessCoauthors(final List<Provider> ProvidersList, final boolean onlySameAs, boolean asyn) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, InterruptedException {
@@ -684,6 +701,12 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         }
     }
 
+    public void registerSameAsModel(Model graph, String URIO, String URIP) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
+        if (URIO != null && URIP != null && URIO.compareTo(URIP) != 0) {
+            ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
+            graph.add(instance.createURI(URIO), instance.createURI("http://www.w3.org/2002/07/owl#sameAs"), instance.createURI(URIP));
+        }
+    }
     private String buildInsertQuery(String grapfhProv, String sujeto, String predicado, String objeto) {
         if (commonsServices.isURI(objeto)) {
             return queriesService.getInsertDataUriQuery(grapfhProv, sujeto, predicado, objeto);
