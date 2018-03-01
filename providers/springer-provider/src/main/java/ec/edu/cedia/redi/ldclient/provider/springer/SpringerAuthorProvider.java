@@ -64,7 +64,8 @@ public class SpringerAuthorProvider extends AbstractJSONDataProvider implements 
     public static final String NAME = "Springer Author Provider";
     public static final String PATTERN = "http://api\\.springer\\.com/meta/v1/json\\?q=(.*)&api_key=.*&p=50&s=(.*)";
     public static final String SPRINGER_URL = "https://link.springer.com/";
-
+    
+    private static final double THRESHOLD_NAME = 0.9;
     private final ConcurrentMap<String, JsonPathValueMapper> mapper = new ConcurrentHashMap<>();
 
     /**
@@ -108,7 +109,7 @@ public class SpringerAuthorProvider extends AbstractJSONDataProvider implements 
                 List<String> creators = ctx.read(String.format("$.records[%s].creators[*].creator", i));
                 boolean isValidCreator = false;
                 for (String creator : creators) {
-                    if (NameUtils.compareName(creator, authorname) >= 0.9) {
+                    if (NameUtils.compareName(creator, authorname) >= THRESHOLD_NAME) {
                         isValidCreator = true;
                     }
                 }
