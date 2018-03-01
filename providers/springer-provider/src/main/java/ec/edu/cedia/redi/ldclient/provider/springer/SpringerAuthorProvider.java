@@ -39,6 +39,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
 import org.apache.marmotta.ldclient.api.provider.DataProvider;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
+import org.apache.marmotta.ucuenca.wk.commons.disambiguation.utils.NameUtils;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.BIBO;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
 import org.openrdf.model.Model;
@@ -103,6 +104,18 @@ public class SpringerAuthorProvider extends AbstractJSONDataProvider implements 
             int start = Integer.parseInt((String) resultsStatistics.get("start"));
 
             for (int i = 0; i < docs; i++) {
+                // Store only publications that the contributor name matches the name of the target author.
+                List<String> creators = ctx.read(String.format("$.records[%s].creators[*].creator", i));
+                boolean isValidCreator = false;
+                for (String creator : creators) {
+                    if (NameUtils.compareName(creator, authorname) >= 0.9) {
+                        isValidCreator = true;
+                    }
+                }
+                if (!isValidCreator) {
+                    continue;
+                }
+
                 String id = String.valueOf(ctx.read(String.format("$.records[%s].identifier", i)))
                         .replace("doi:", "");
 
