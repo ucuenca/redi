@@ -21,18 +21,16 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import org.apache.commons.io.IOUtils;
-import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openrdf.model.Model;
 import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.Rio;
 import org.openrdf.rio.UnsupportedRDFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -137,11 +135,11 @@ public class OntologyMapperTest {
      * Test ontology mapping of Springer vocabulary.
      */
     @Test
-    public void testSpringOntologyMapping() {
+    public void testSpringerOntologyMapping() {
         assertEquals(springerModel.size(), 320);
         Model resultWithMapperFile = OntologyMapper.map(springerModel, springerMapper, vocabulary);
         Model resultEmptyMapperFile = OntologyMapper.map(springerModel, emptyMapper, vocabulary);
-        assertEquals(resultWithMapperFile.size(), 493);
+        assertEquals(resultWithMapperFile.size(), 533);
         assertEquals(resultEmptyMapperFile.size(), 0);
     }
     
@@ -149,7 +147,7 @@ public class OntologyMapperTest {
      * Test ontology mapping of Scielo vocabulary.
      */
     @Test
-    public void testScieloOntologyMapping() throws RDFHandlerException {
+    public void testScieloOntologyMapping() {
         assertEquals(scieloModel.size(), 108);
         Model resultWithMapperFile = OntologyMapper.map(scieloModel, scieloMapper, vocabulary);
         Model resultEmptyMapperFile = OntologyMapper.map(scieloModel, emptyMapper, vocabulary);
