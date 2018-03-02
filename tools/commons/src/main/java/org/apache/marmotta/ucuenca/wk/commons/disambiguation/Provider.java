@@ -9,7 +9,6 @@ import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.openrdf.model.Value;
@@ -25,14 +24,12 @@ public class Provider {
     public String Name;
     public String Graph;
     private SparqlService sparql;
-    private ConcurrentHashMap<String, List<List<String>>> cache;
     public Boolean isMain;
 
     public Provider(String Name, String Graph, SparqlService sparql, Boolean main) {
         this.Name = Name;
         this.Graph = Graph;
         this.sparql = sparql;
-        cache = new ConcurrentHashMap<>();
         this.isMain = main;
     }
 
@@ -112,17 +109,26 @@ public class Provider {
                 + "          	?per1 <http://xmlns.com/foaf/0.1/familyName> ?ln .\n"
                 + "    }\n"
                 + "}";
-
-        String qryCA = "prefix dct: <http://purl.org/dc/terms/>\n"
+        String qryPCA = "prefix dct: <http://purl.org/dc/terms/>\n"
                 + "prefix foaf: <http://xmlns.com/foaf/0.1/>\n"
                 + "select distinct ?p {\n"
                 + "     graph <" + Graph + ">{\n"
                 + "             values ?per { <URI> } . \n"
-                + "            ?per      foaf:publications  ?publication .\n"
-                + "             ?p      foaf:publications  ?publication .\n"
-                + "            filter (?p != ?per) .\n"
+                + "            ?per      foaf:publications  ?p .\n"
                 + "    }\n"
                 + "}";
+
+        String qryPCAA = "prefix dct: <http://purl.org/dc/terms/>\n"
+                + "prefix foaf: <http://xmlns.com/foaf/0.1/>\n"
+                + "select distinct ?p {\n"
+                + "     graph <" + Graph + ">{\n"
+                + "             values ?per { <URI> } . \n"
+                + "             values ?pub { <PIRI> } . \n"
+                + "             ?p      foaf:publications  ?pub .\n"
+                + "            filter (?p != ?per) .\n"
+                + "    }\n"
+                + "} limit 20";
+
         String qryP = "prefix dct: <http://purl.org/dc/terms/>\n"
                 + "prefix foaf: <http://xmlns.com/foaf/0.1/>\n"
                 + "select distinct ?p {\n"
@@ -155,7 +161,7 @@ public class Provider {
         for (Person n : lsa) {
             String qryName_ = qryName.replaceAll("URI", n.URI);
             String qryName2_ = qryName2.replaceAll("URI", n.URI);
-            String qryCA_ = qryCA.replaceAll("URI", n.URI);
+            String qryCA_ = qryPCA.replaceAll("URI", n.URI);
             String qryP_ = qryP.replaceAll("URI", n.URI);
             String qryA_ = qryA.replaceAll("URI", n.URI);
             String qryT_ = qryT.replaceAll("URI", n.URI);
@@ -179,12 +185,12 @@ public class Provider {
             List<Map<String, Value>> rsCA = sparql.query(QueryLanguage.SPARQL, qryCA_);
             n.Coauthors = new ArrayList<>();
             for (Map<String, Value> ar : rsCA) {
-                String pURI = ar.get("p").stringValue();
-                List<List<String>> r = new ArrayList<>();
-                if (cache.containsKey(pURI)) {
-                    List<List<String>> get = cache.get(pURI);
-                    r.addAll(get);
-                } else {
+                String pubURI = ar.get("p").stringValue();
+                String qryCA_S = qryPCAA.replaceAll("URI", n.URI).replaceAll("PIRI", pubURI);
+                List<Map<String, Value>> query = sparql.query(QueryLanguage.SPARQL, qryCA_S);
+                for (Map<String, Value> arp : query) {
+                    String pURI = arp.get("p").stringValue();
+                    List<List<String>> r = new ArrayList<>();
                     String qryName_C = qryName.replaceAll("URI", pURI);
                     String qryName2_C = qryName2.replaceAll("URI", pURI);
                     List<Map<String, Value>> rsCAN1 = sparql.query(QueryLanguage.SPARQL, qryName_C);
@@ -197,9 +203,8 @@ public class Provider {
                         names.add(arN.get("ln").stringValue());
                         r.add(names);
                     }
-                    cache.put(pURI, r);
+                    n.Coauthors.addAll(r);
                 }
-                n.Coauthors.addAll(r);
             }
             //get Publications
             List<Map<String, Value>> rsP = sparql.query(QueryLanguage.SPARQL, qryP_);
