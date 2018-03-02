@@ -42,6 +42,7 @@ import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Person;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Provider;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.utils.PublicationUtils;
+import org.apache.marmotta.ucuenca.wk.commons.util.LongUpdateQueryExecutor;
 import org.openrdf.model.Model;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.LinkedHashModel;
@@ -63,7 +64,7 @@ import org.semarglproject.vocab.RDFS;
 @ApplicationScoped
 public class DisambiguationServiceImpl implements DisambiguationService {
 
-    final int MAXTHREADS = 10;
+    final int MAXTHREADS = 50;
 
     @Inject
     private org.slf4j.Logger log;
@@ -260,57 +261,36 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         if (ask) {
             return;
         }
-
-        String delete = "delete {\n"
-                + "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
+        //copy
+        new LongUpdateQueryExecutor(sparqlService,
+                "	graph <" + constantService.getAuthorsGraph() + "> {\n"
                 + "		?a ?b ?c .\n"
-                + "	}\n"
-                + "} where {\n"
-                + "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
+                + "	}\n",
+                "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
                 + "		?a ?b ?c .\n"
-                + "	}\n"
-                + "}";
-        String copy = "insert {\n"
-                + "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
-                + "		?a ?b ?c .\n"
-                + "	}\n"
-                + "} where {\n"
-                + "	graph <" + constantService.getAuthorsGraph() + "> {\n"
-                + "		?a ?b ?c .\n"
-                + "	}\n"
-                + "}";
-        String givName = "prefix foaf: <http://xmlns.com/foaf/0.1/>\n"
-                + "insert {\n"
-                + "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
-                + "		?a foaf:givenName ?c .\n"
-                + "	}\n"
-                + "} where {\n"
-                + "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
+                + "	}\n", null, "prefix foaf: <http://xmlns.com/foaf/0.1/>\n", "?a ?b ?c").execute();
+        //givName
+        new LongUpdateQueryExecutor(sparqlService,
+                "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
                 + "		?a foaf:firstName ?c .\n"
-                + "	}\n"
-                + "}";
-        String famName = "prefix foaf: <http://xmlns.com/foaf/0.1/>\n"
-                + "insert {\n"
-                + "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
-                + "		?a foaf:familyName ?c .\n"
-                + "	}\n"
-                + "} where {\n"
-                + "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
+                + "	}\n",
+                "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
+                + "		?a foaf:givenName ?c .\n"
+                + "	}\n", null, "prefix foaf: <http://xmlns.com/foaf/0.1/>\n", "?a ?c").execute();
+        //famName
+        new LongUpdateQueryExecutor(sparqlService,
+                "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
                 + "		?a foaf:lastName ?c .\n"
-                + "	}\n"
-                + "}";
-        String org = "prefix foaf: <http://xmlns.com/foaf/0.1/>\n"
-                + "prefix  schema: <http://schema.org/>\n"
-                + "insert {\n"
-                + "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
-                + "		?a schema:memberOf ?o .\n"
-                + "		?o a foaf:Organization .\n"
-                + "		?o foaf:name ?n .\n"
-                + "		?o foaf:name ?nn .\n"
-                + "	}\n"
-                + "} where {\n"
-                + "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
+                + "	}\n",
+                "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
+                + "		?a foaf:familyName ?c .\n"
+                + "	}\n", null, "prefix foaf: <http://xmlns.com/foaf/0.1/>\n", "?a ?c").execute();
+
+        //org
+        new LongUpdateQueryExecutor(sparqlService,
+                "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
                 + "		?a <http://purl.org/dc/terms/provenance> ?p .\n"
+                + "		?a a foaf:Person .\n"
                 + "	}\n"
                 + "	graph <" + constantService.getEndpointsGraph() + "> {\n"
                 + "		?p <http://ucuenca.edu.ec/ontology#belongTo> ?o .\n"
@@ -318,13 +298,15 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 + "	graph <" + constantService.getOrganizationsGraph() + "> {\n"
                 + "		?o <http://ucuenca.edu.ec/ontology#fullName> ?n .\n"
                 + "		?o <http://ucuenca.edu.ec/ontology#name> ?nn .\n"
-                + "	}\n"
-                + "}";
-        sparqlService.update(QueryLanguage.SPARQL, delete);
-        sparqlService.update(QueryLanguage.SPARQL, copy);
-        sparqlService.update(QueryLanguage.SPARQL, givName);
-        sparqlService.update(QueryLanguage.SPARQL, famName);
-        sparqlService.update(QueryLanguage.SPARQL, org);
+                + "	}\n",
+                "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
+                + "		?a schema:memberOf ?o .\n"
+                + "		?o a foaf:Organization .\n"
+                + "		?o foaf:name ?n .\n"
+                + "		?o foaf:name ?nn .\n"
+                + "	}\n", null, "prefix foaf: <http://xmlns.com/foaf/0.1/>\n"
+                + "prefix  schema: <http://schema.org/>\n", "?a ?o ?n ?nn").execute();
+
         //alias
         String orgAlias = "prefix foaf: <http://xmlns.com/foaf/0.1/>\n"
                 + "prefix  schema: <http://schema.org/>\n"
@@ -757,43 +739,37 @@ public class DisambiguationServiceImpl implements DisambiguationService {
     }
 
     public void replaceSameAs(String D, String SAG, String DG, String IG, boolean s) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
-        String qry1 = "insert {\n"
-                + "	graph <" + DG + "> {\n"
-                + "		?c ?p ?v .\n"
-                + "	}\n"
-                + "	graph <" + IG + "> {\n"
-                + "		?a ?p ?v .\n"
-                + "	}\n"
-                + "}\n"
-                + "where {\n"
-                + "	graph <" + SAG + "> {\n"
-                + "		?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
-                + "	}\n"
-                + "	graph <" + D + "> {\n"
-                + "		?c ?p ?v .\n"
-                + "	}\n"
-                + "}";
-
-        String qry2 = "insert {\n"
-                + "	graph <" + DG + "> {\n"
-                + "		?v ?p ?c .\n"
-                + "	}\n"
-                + "	graph <" + IG + "> {\n"
-                + "		?v ?p ?a .\n"
-                + "	}\n"
-                + "}\n"
-                + "where {\n"
-                + "	graph <" + SAG + "> {\n"
-                + "		?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
-                + "	}\n"
-                + "	graph <" + D + "> {\n"
-                + "		?v ?p ?c .\n"
-                + "	}\n"
-                + "}";
         if (s) {
-            sparqlService.update(QueryLanguage.SPARQL, qry1);
+            new LongUpdateQueryExecutor(sparqlService,
+                    "	graph <" + SAG + "> {\n"
+                    + "		?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
+                    + "	}\n"
+                    + "	graph <" + D + "> {\n"
+                    + "		?c ?p ?v .\n"
+                    + "	}\n",
+                    "	graph <" + DG + "> {\n"
+                    + "		?c ?p ?v .\n"
+                    + "	}\n"
+                    + "	graph <" + IG + "> {\n"
+                    + "		?a ?p ?v .\n"
+                    + "	}\n",
+                    null, "", "?c ?p ?v ?a").execute();
+
         } else {
-            sparqlService.update(QueryLanguage.SPARQL, qry2);
+            new LongUpdateQueryExecutor(sparqlService,
+                    "	graph <" + SAG + "> {\n"
+                    + "		?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
+                    + "	}\n"
+                    + "	graph <" + D + "> {\n"
+                    + "		?v ?p ?c .\n"
+                    + "	}\n",
+                    "	graph <" + DG + "> {\n"
+                    + "		?v ?p ?c .\n"
+                    + "	}\n"
+                    + "	graph <" + IG + "> {\n"
+                    + "		?v ?p ?a .\n"
+                    + "	}\n",
+                    null, "", "?c ?p ?v ?a").execute();
         }
     }
 
@@ -802,50 +778,44 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         for (Provider aProvider : ProvidersList) {
             providersGraphs += " <" + aProvider.Graph + "> ";
         }
-        String qry1 = "insert {\n"
-                + "    graph <" + graph + "> {\n"
-                + "        ?c ?p ?v .\n"
-                + "    }\n"
-                + "} where {\n"
-                + "    graph <" + constantService.getAuthorsSameAsGraph() + "> {\n"
+        new LongUpdateQueryExecutor(sparqlService,
+                "    graph <" + constantService.getAuthorsSameAsGraph() + "> {\n"
                 + "        ?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
                 + "    }\n"
                 + "    values ?g { " + providersGraphs + " } graph ?g {\n"
                 + "        ?c ?p ?v .\n"
-                + "    }\n"
-                + "}";
+                + "    }\n",
+                "    graph <" + graph + "> {\n"
+                + "        ?c ?p ?v .\n"
+                + "    }\n",
+                null, "", "?c ?p ?v").execute();
 
-        String qry2 = "insert {\n"
-                + "    graph <" + graph + "> {\n"
+        new LongUpdateQueryExecutor(sparqlService,
+                "    graph <" + constantService.getAuthorsSameAsGraph() + "> {\n"
+                + "        ?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
+                + "    }\n"
+                + "    values ?g { " + providersGraphs + " } graph ?g {\n"
+                + "         ?c ?p ?v .\n"
+                + "         ?v ?w ?q .\n"
+                + "    }\n",
+                "    graph <" + graph + "> {\n"
                 + "        ?v ?w ?q .\n"
-                + "    }\n"
-                + "} where {\n"
-                + "    graph <" + constantService.getAuthorsSameAsGraph() + "> {\n"
-                + "        ?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
-                + "    }\n"
-                + "    values ?g { " + providersGraphs + " } graph ?g {\n"
-                + "         ?c ?p ?v .\n"
-                + "         ?v ?w ?q .\n"
-                + "    }\n"
-                + "}";
-        String qry3 = "insert {\n"
-                + "    graph <" + graph + "> {\n"
-                + "        ?q ?z ?m .\n"
-                + "    }\n"
-                + "} where {\n"
-                + "    graph <" + constantService.getAuthorsSameAsGraph() + "> {\n"
-                + "        ?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
-                + "    }\n"
-                + "    values ?g { " + providersGraphs + " } graph ?g {\n"
-                + "         ?c ?p ?v .\n"
-                + "         ?v ?w ?q .\n"
-                + "        ?q ?z ?m .\n"
-                + "    }\n"
-                + "}";
+                + "    }\n",
+                null, "", "?v ?w ?q").execute();
 
-        sparqlService.update(QueryLanguage.SPARQL, qry1);
-        sparqlService.update(QueryLanguage.SPARQL, qry2);
-        sparqlService.update(QueryLanguage.SPARQL, qry3);
+        new LongUpdateQueryExecutor(sparqlService,
+                "    graph <" + constantService.getAuthorsSameAsGraph() + "> {\n"
+                + "        ?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
+                + "    }\n"
+                + "    values ?g { " + providersGraphs + " } graph ?g {\n"
+                + "         ?c ?p ?v .\n"
+                + "         ?v ?w ?q .\n"
+                + "        ?q ?z ?m .\n"
+                + "    }\n",
+                "    graph <" + graph + "> {\n"
+                + "        ?q ?z ?m .\n"
+                + "    }\n",
+                null, "", "?q ?z ?m").execute();
     }
 
     public int count(String graph) throws MarmottaException {
@@ -860,27 +830,27 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         sparqlService.update(QueryLanguage.SPARQL, d);
     }
 
-    public void addAll(String graph, String graph1) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
-        String d = "insert { graph <" + graph + "> { ?a ?b ?c }} where { graph <" + graph1 + "> { ?a ?b ?c }} ";
-        sparqlService.update(QueryLanguage.SPARQL, d);
+    public void addAll(String graphTarget, String graphSource) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
+        new LongUpdateQueryExecutor(sparqlService,
+                "graph <" + graphSource + "> { ?a ?b ?c }",
+                "graph <" + graphTarget + "> { ?a ?b ?c }",
+                null, "", "?a ?b ?c").execute();
     }
 
-    public void minus(String graph, String graph1, String graph2) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
-        String d = "insert {\n"
-                + "	graph <" + graph + "> {\n"
-                + "		?a ?b ?c .\n"
-                + "	}\n"
-                + "} where {	\n"
-                + "	graph <" + graph1 + "> {\n"
+    public void minus(String graphTarget, String graphUniverse, String graphNot) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
+        new LongUpdateQueryExecutor(sparqlService,
+                "	graph <" + graphUniverse + "> {\n"
                 + "		?a ?b ?c \n"
                 + "		filter not exists {\n"
-                + "			graph <" + graph2 + "> {\n"
+                + "			graph <" + graphNot + "> {\n"
                 + "				?a ?b ?c .\n"
                 + "			}\n"
                 + "		}		\n"
-                + "	}\n"
-                + "}";
-        sparqlService.update(QueryLanguage.SPARQL, d);
+                + "	}\n",
+                "	graph <" + graphTarget + "> {\n"
+                + "		?a ?b ?c .\n"
+                + "	}\n",
+                null, "", "?a ?b ?c").execute();
     }
 
     @Override
