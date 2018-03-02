@@ -19,7 +19,7 @@ import org.apache.marmotta.ucuenca.wk.commons.util.ModifiedJaccardMod;
  */
 @SuppressWarnings("PMD")
 public class NameUtils {
- 
+
     public static double compareName(String name1, String name2) {
         return compareName(Collections.singletonList(name1), Collections.singletonList(name2));
     }
@@ -57,6 +57,7 @@ public class NameUtils {
             nl2 = name2.get(1);
         }
         ModifiedJaccardMod metric = new ModifiedJaccardMod();
+        metric.SoundexBoost = true;
         switch (tipo) {
             case 1:
                 metric.prioritizeWordOrder = false;
