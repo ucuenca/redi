@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 import static org.simmetrics.StringMetricBuilder.with;
 import org.simmetrics.metrics.JaroWinkler;
 import org.simmetrics.metrics.Levenshtein;
@@ -88,6 +89,8 @@ public class ModifiedJaccardMod {
     }
 
     public double syntacticSim(String t1, String t2) {
+        t2 = StringUtils.stripAccents(t2);
+        t1 = StringUtils.stripAccents(t1);
         Soundex sm = new Soundex();
         boolean equals = sm.simplify(t1).equals(sm.simplify(t2));
         double val = (soundexBoost ? (equals ? 1.05 : 0.95) : 1) * (with(new Levenshtein()).simplify(Simplifiers.removeDiacritics()).build().compare(t2, t1) + 2 * with(new JaroWinkler()).simplify(Simplifiers.removeDiacritics()).build().compare(t2, t1)) / 3;
