@@ -24,7 +24,7 @@
 
     <groupId>edu.ucuenca</groupId>
     <artifactId>mongo-storage</artifactId>
-    <name>Marmotta Module: Mongo Storage</name>
+    <name>REDI Module: Mongo Storage</name>
     <description>Manages communication with mongodb.</description>
 
     <build>

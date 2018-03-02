@@ -11,8 +11,8 @@
     <artifactId>commons</artifactId>
     <packaging>jar</packaging>
 
-    <name>Wkhuska-commons</name>
-    <description>Common tools for WKhuska Platform</description>
+    <name>REDI - commons</name>
+    <description>Common tools for REDI Platform</description>
     <url>http://maven.apache.org</url>
 
     <properties>

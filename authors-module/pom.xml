@@ -29,7 +29,7 @@
     <packaging>jar</packaging>
     
     
-    <name>Marmotta Module: Authors Module</name>
+    <name>REDI Module: Authors Module</name>
     <description>The Authors Update Module</description>
  
     <build>
