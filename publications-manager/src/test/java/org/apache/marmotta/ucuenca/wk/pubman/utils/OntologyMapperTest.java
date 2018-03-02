@@ -21,6 +21,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import org.apache.commons.io.IOUtils;
+import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openrdf.model.Model;
@@ -30,7 +31,6 @@ import org.openrdf.rio.Rio;
 import org.openrdf.rio.UnsupportedRDFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -127,7 +127,7 @@ public class OntologyMapperTest {
         assertEquals(scholarModel.size(), 919);
         Model resultWithMapperFile = OntologyMapper.map(scholarModel, scholarMapper, vocabulary);
         Model resultEmptyMapperFile = OntologyMapper.map(scholarModel, emptyMapper, vocabulary);
-        assertEquals(resultWithMapperFile.size(), 1538);
+        assertEquals(resultWithMapperFile.size(), 1848);
         assertEquals(resultEmptyMapperFile.size(), 0);
     }
 
