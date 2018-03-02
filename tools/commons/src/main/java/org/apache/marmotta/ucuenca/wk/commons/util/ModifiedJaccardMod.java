@@ -23,7 +23,7 @@ import org.simmetrics.simplifiers.Soundex;
  */
 public class ModifiedJaccardMod {
 
-    public boolean SoundexBoost = false;
+    public boolean soundexBoost = false;
     public boolean prioritizeWordOrder = false;
     public boolean onlyCompleteMatchs = false;
     public double syntacticThreshold = 0.89;
@@ -90,7 +90,7 @@ public class ModifiedJaccardMod {
     public double syntacticSim(String t1, String t2) {
         Soundex sm = new Soundex();
         boolean equals = sm.simplify(t1).equals(sm.simplify(t2));
-        double val = (SoundexBoost ? (equals ? 1.05 : 0.95) : 1) * (with(new Levenshtein()).simplify(Simplifiers.removeDiacritics()).build().compare(t2, t1) + 2 * with(new JaroWinkler()).simplify(Simplifiers.removeDiacritics()).build().compare(t2, t1)) / 3;
+        double val = (soundexBoost ? (equals ? 1.05 : 0.95) : 1) * (with(new Levenshtein()).simplify(Simplifiers.removeDiacritics()).build().compare(t2, t1) + 2 * with(new JaroWinkler()).simplify(Simplifiers.removeDiacritics()).build().compare(t2, t1)) / 3;
         return val > 1.0 ? 1.0 : val;
     }
 

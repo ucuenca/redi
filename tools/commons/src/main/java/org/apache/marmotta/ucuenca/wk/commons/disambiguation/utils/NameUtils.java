@@ -57,7 +57,7 @@ public class NameUtils {
             nl2 = name2.get(1);
         }
         ModifiedJaccardMod metric = new ModifiedJaccardMod();
-        metric.SoundexBoost = true;
+        metric.soundexBoost = true;
         switch (tipo) {
             case 1:
                 metric.prioritizeWordOrder = false;
