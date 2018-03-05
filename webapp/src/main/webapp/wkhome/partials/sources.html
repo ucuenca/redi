@@ -1,6 +1,6 @@
-<div class="col-md-12" ng-controller="translate" style="padding-top: 5%">
+<div >
     <div class="authorssources" >
-        <h3 class="source text-success">{{'Authors Sources'| translate}}</h3>
+        <h3 class="source text-success">{{'SOURCES'| translate}}</h3>
         <br/>
         <p class="source">
             Los datos de los autores provienen de la plataforma DSPACE de cada una de las Universidades
@@ -27,9 +27,9 @@
                     <td><a href="{{ source.url}}" target="blank">{{ source.name}}</a></td>
                     <td>{{ source.fullName}}</td>
                     <td>{{ source.city}}</td>
-                    <td align="right">{{ source.totAuthors}}<a ng-if="source.empty" href="#" data-tooltip="{{'NDSources'| translate}}">N/D*</a></td>
-                    <td align="right">{{ source.totPublications}}<a ng-if="source.empty" href="#" data-tooltip="{{'NDSources'| translate}}">N/D*</a></td>
-                    
+                    <td align="right">{{ source.totAuthors}}<a ng-if="source.empty" href="#" data-tooltip="{{'ND_SOURCES'| translate}}">N/D*</a></td>
+                    <td align="right">{{ source.totPublications}}<a ng-if="source.empty" href="#" data-tooltip="{{'ND_SOURCES'| translate}}">N/D*</a></td>
+
                     <td style="text-align: center;" ng-controller="exportController">
                       <button ng-hide="loading" ng-click="exportData('pdf', 'ReportResearchersbyIES', source.name)" title="Export list of authors">
                           <img src="./resources/pdf.png" height="25" width="25" />

@@ -7,7 +7,6 @@
   "SEARCH_RESULTS":"Resultados de búsqueda",
 
 "home":"",
-"about":"Nosotros",
 "help":"Ayuda",
 "contact":"Contacto",
 "Search":"",
@@ -77,6 +76,7 @@
 "Longitude": "Longitud",
 
 
+"ND_SOURCES":"En proceso de cosecha / desambiguación.",
 
 "Clustering Publications":"Agrupamiento de autores por areas de conocimiento",
 "All":"Todos",
