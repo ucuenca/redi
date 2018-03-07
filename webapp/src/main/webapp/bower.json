@@ -42,6 +42,7 @@
     "restangular": "~1.4.0",
     "angular-translate": "^2.9.0",
     "angular-translate-handler-log": "^2.17.0",
+    "angular-translate-loader-static-files": "^2.17.0",
     "autotrack": "^1.0.3",
     "angular-material": "^1.1.1",
     "angular-read-more": "^1.0.5",
