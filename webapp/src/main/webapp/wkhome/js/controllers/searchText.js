@@ -46,13 +46,11 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
 
     $scope.submit = function() {
       if ($scope.searchText) {
-        var searchTextVar=$scope.searchText;
         waitingDialog.show();
         AuthorsService.get({
-          search: searchTextVar
+          search: $scope.searchText
         }, function(result) {
           if (result.response.docs.length > 0) {
-          	waitingDialog.hide();
             var authors = result.response.docs;
             if (authors.length > 1) {
               var path = "/w/author/";
@@ -77,11 +75,11 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
             } else if (authors.length === 1) {
               var authorId = authors[0]["lmf.uri"];
               waitingDialog.hide();
-              $window.location.hash =  "/w/author/" + authorId;
+              $window.location.hash = "/" + $routeParams.lang + "/w/author/" + authorId;
             }
           } else {
             KeywordsService.get({
-              search: searchTextVar
+              search: $scope.searchText
             }, function(result) {
               var keywords = _.uniq(result.response.docs, function(item) {
                 return item['lmf.uri'];
@@ -99,18 +97,13 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
               } else if (keywords.length === 1) {
                 var keyword = _(keywords[0].keyword).first();
                 waitingDialog.hide();
-                setTimeout(function(){ 
-					//$location.path("/cloud/group-by/").search({
-                  	//area: keyword
-                	//});
-                	$window.location.hash =  "/cloud/group-by?area=" + keyword;
-                }, 500);
-                
-                //
-                
+                $location.path($routeParams.lang + "/cloud/group-by/").search({
+                  area: keyword
+                });
+                $window.location.hash = "/" + $routeParams.lang + "/cloud/group-by?area=" + keyword;
               } else {
                 PublicationsService.get({
-                  search: searchTextVar
+                  search: $scope.searchText
                 }, function(result) {
                   if (result.response.docs.length > 0) {
                     var publications = result.response.docs;

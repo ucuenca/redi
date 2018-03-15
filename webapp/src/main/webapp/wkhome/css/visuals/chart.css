@@ -6,6 +6,7 @@
 .tick	{
 	font: 10px sans-serif;
 }
-circle	{
+
+ circle #circles	{
 	fill: steelblue;
 }

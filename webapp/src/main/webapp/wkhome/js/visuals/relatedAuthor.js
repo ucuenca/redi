@@ -5,31 +5,32 @@ var rela = angular.module('relatedAuthor', []);
 rela.factory('d3', function () {
     return	d3;
 });
-rela.directive('relatedAuthor', ["d3", 'globalData','sparqlQuery',
-    function (d3, globalData, sparqlQuery) {
+rela.directive('relatedAuthor', ["d3", 'globalData','sparqlQuery', '$routeParams' , '$window' ,
+    function (d3, globalData, sparqlQuery , $routeParams, $window ) {
 
- var draw = function draw(data){
+       var draw = function draw(uri){
 
   
   var organization =  {};
   var norg = 0;
 
   var color = d3.scaleOrdinal(d3.schemeCategory20);
+  var newhost =  $window.location.protocol + '//' + $window.location.hostname + ($window.location.port ? ':8080' : '') + '';
+  console.log (newhost);
 
-  render (data);
-  etiquetas ();
-  /*
+  var host = "http://localhost:8080";
+  
   $.ajax({
         type: "GET",
         dataType: "JSON", //result data type
        // url: host + "/pubman/reports/collaboratorsData?URI=https://redi.cedia.edu.ec/resource/authors/UCUENCA/file/_SAQUICELA_GALARZA_____VICTOR_HUGO_" ,
       // url: host + "/pubman/reports/collaboratorsData?URI=https://redi.cedia.edu.ec/resource/authors/UCUENCA/file/_FEYEN_____JAN_" ,
-         url: host + "/pubman/reports/collaboratorsData?URI=https://redi.cedia.edu.ec/resource/authors/UTPL/oai-pmh/PIEDRA__NELSON" ,
+         url: newhost + "/pubman/reports/collaboratorsData?URI="+uri ,
         success: function(Result) {
             //document.getElementById("imgloading").style.visibility = "hidden";
            // alert("Correcto: " + Result);
           
-         
+         render (Result) ;
          etiquetas ();
     
         },
@@ -37,32 +38,23 @@ rela.directive('relatedAuthor', ["d3", 'globalData','sparqlQuery',
             //document.getElementById("imgloading").style.visibility = "hidden";
             alert("Error" + data.responseText);
         }
-    }); */
+    }); 
 
-//numero color
-var graph = {
-  "nodes": [
-    {"id": "Saquicela", "group": 1,},
-    {"id": "Palacios", "group": 1 } ,
-    {"id": "Espinoza", "group": 2 }
-  ],
-  "links": [
-    {"source": "Saquicela", "target": "Palacios", "value": 1 , "distance":80},
-    {"source": "Espinoza", "target": "Palacios", "value": 20 , "distance":100},
-  ]
-};
+
 
 function etiquetas () {
+  $( "#colores" ).append("<li class='list-group-item' style='font-weight: bold' >  LEYEND  </li>");
+  $( "#colores" ).append("<li class='list-group-item'> <svg height='5' width='8'> <line x1='0' y1='0' x2='10' y2='0' style='stroke:#999;stroke-width:3'/> </svg>  Related Author  </li>");
+  $( "#colores" ).append("<li class='list-group-item'> <svg height='5' width='8'> <line x1='0' y1='0' x2='10' y2='0' style='stroke:#999;stroke-width:10'/> </svg> Coauthor Relation  </li>");
+  $( "#colores" ).append("<li class='list-group-item' style='font-weight: bold' >  ORGANIZATIONS  </li>");
 
- 
   for (var org in organization){
     console.log (color (organization [org]));
  //  $( "#colores" ).append( "<span style='color:"+color (organization [org])+"'> &#9658 "+org+" </span> " );
-    $( "#colores" ).append("<li class='list-group-item'> <span class='badge' style='color:"+color(organization [org])+"' >&#9632 </span>"+ org +" </li>");
+    $( "#colores" ).append("<li class='list-group-item'> <span class='badge leyend' style='color:"+color(organization [org])+"' >&#9632 </span>"+ org +" </li>");
   }
 
-  $( "#colores" ).append("<li class='list-group-item'> <svg height='5' width='8'> <line x1='0' y1='0' x2='10' y2='0' style='stroke:#999;stroke-width:10'/> Coauthor Relationship  </li>");
-  $( "#colores" ).append("<li class='list-group-item'> <svg height='5' width='8'> <line x1='0' y1='0' x2='10' y2='0' style='stroke:#999;stroke-width:5'/>Possible Relationship  </li>");
+  
 }
 
 function orgcolor (org) {
@@ -119,6 +111,9 @@ var simulation = d3.forceSimulation()
     .data(graph.links)
     .enter().append("line")
       .attr("stroke-width", function(d) {  console.log (d.coauthor); return coauthorFactor (d.coauthor); });
+
+  link.append("title")
+  .text(function(d) { return  d.coauthor ?  "coauthor": ""; }); 
 
   var node = svg.append("g")
       .attr("class", "nodes")
@@ -235,83 +230,25 @@ function dragended(d) {
                 });
             }
 
+} 
 }
 
+   
+           return { 
+                       restrict: 'E',
+                       scope: {
+                       relatedAuthorData: '='
+                   },
+                  compile: function (element, attrs, transclude) {
+                
 
-      }
+                return function (scope, element, attrs) { 
 
-        return {
-            restrict: 'E',
-            scope: {
-                'ctrlFn': "&",
-                data: '='
-            },
-            compile: function (element, attrs, transclude) {
-                //	Create	a	SVG	root	element
-                /*var	svg	=	d3.select(element[0]).append('svg');
-                 svg.append('g').attr('class', 'data');
-                 svg.append('g').attr('class', 'x-axis axis');
-                 svg.append('g').attr('class', 'y-axis axis');*/
-                //	Define	the	dimensions	for	the	chart
-                //var width = 960, height = 500;
-                console.log (element);
-                console.log (attrs);
-                console.log (transclude);
-                var elementWidth = parseInt(element.css('width'));
-                var elementHeight = parseInt(element.css('height'));
-                var width = attrs.ctWidth ? attrs.ctWidth : elementWidth;
-                var height = attrs.ctHeight ? attrs.ctHeight : elementHeight;
+                     draw(  $routeParams.authorId );
 
-
-
-                var svg = d3.select(element[0]);
-
-                //	Return	the	link	function
-                return	function (scope, element, attrs) {
-                 //   draw();
-                    //	Watch	the	data	attribute	of	the	scope
-                    /*scope.$watch('$parent.logs', function(newVal, oldVal, scope) {
-                     //	Update	the	chart
-                     var data = scope.$parent.logs.map(function(d) {
-                     return {
-                     x: d.time,
-                     y: d.visitors
-                     }
-
-                     });
-
-
-                     draw(svg, width, height, data);
-                     },	true);*/
-                    scope.$watch('relatedAuthorData', function (newVal, oldVal, scope) {
-                        //	Update	the	chart
-                           console.log (scope);
-                           console.log(newVal);
-                           console.log(oldVal);
-                             var data = scope.relatedAuthorData;
-                           draw(data);
-                    /*
-                        if (data) {
-                            var jsonld = data.data;
-                            var schema = data.schema;
-                            var fields = schema.fields;
-                            var mappedData = [];
-
-                            _.each(jsonld['@graph'], function (keyword, idx) {
-                                if (keyword["rdfs:label"])
-                                {
-                                  var pubsvalue =  keyword[fields[1]]["@value"] > 50 ?  "+50" : keyword[fields[1]]["@value"];
-                                  var name = typeof keyword[fields[0]] === 'string' ? keyword[fields[0]] : _(keyword[fields[0]]).first();
-                                  mappedData.push({id:keyword["@id"], label: name, value: pubsvalue});
-                                }
-                            });
-                            var pageTitle = "";
-                            pageTitle = _.findWhere(jsonld['@graph'],{"@type": "uc:pagetitle"})["uc:viewtitle"];
-                            draw(svg, width, height, mappedData, scope, attrs, pageTitle);
-                        }*/
-                    }, true);
-
-                };
+   
+               }
+                }
             }
-        };
-    }]);
+        }
+    ]);

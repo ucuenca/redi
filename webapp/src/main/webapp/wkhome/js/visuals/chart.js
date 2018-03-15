@@ -55,6 +55,7 @@ myChart.directive('myScatterChart', ["d3",
 				//	Updated	all	data	points
 				svg.select('.data')
 						.selectAll('circle').data(data)
+						.attr("id", "circles")
 						.attr('r',	2.5)
 						.attr('cx',	function(d)	{	return	xScale(d.x);	})
 						.attr('cy',	function(d)	{	return	yScale(d.y);	});
