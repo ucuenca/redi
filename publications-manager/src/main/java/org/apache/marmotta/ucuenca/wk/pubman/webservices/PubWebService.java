@@ -70,6 +70,7 @@ public class PubWebService {
     public static final String INDEX_CENTRAL_GRAPH = "/indexing";
     public static final String GET_SEARCH_QUERY = "/searchQuery";
     public static final String APPLICATIONJSON = "application/json";
+    public static final String COLABORATORDATA = "reports/collaboratorsData";
 
     /*
      * Get Publications Data from Source and Load into Provider Graph
@@ -200,6 +201,17 @@ public class PubWebService {
     public Response listExtractedOrganization() {
 
         String result = commonService.organizationListExtracted();
+        //  result = organizationService.listOrganization();
+        return Response.ok().entity(result).build();
+
+    }
+    
+    @GET
+    @Path(COLABORATORDATA)
+    @Produces(APPLICATIONJSON)
+    public Response getCollaboratorsData(@QueryParam("URI") String uri) {
+
+        String result = commonService.getCollaboratorsData(uri);
         //  result = organizationService.listOrganization();
         return Response.ok().entity(result).build();
 

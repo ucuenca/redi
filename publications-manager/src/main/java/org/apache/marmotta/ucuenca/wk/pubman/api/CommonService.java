@@ -46,4 +46,6 @@ public interface CommonService {
     String organizationListEnrichment();
 
     List<Provider> getProviders() throws MarmottaException;
+    
+    String getCollaboratorsData (String uri);
 }

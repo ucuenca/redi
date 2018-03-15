@@ -1,0 +1,71 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements. See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership. The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+
+
+<html>
+    <head>
+        <!--###BEGIN_HEAD###-->
+        <title>Desambiguation Proccess</title>
+     
+       <!--  <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>-->
+        <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.js"></script>
+           <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+       
+      <!--   <script type="text/javascript" src="../../webjars/jquery/1.8.2/jquery.min.js"></script>  -->
+        <script type="text/javascript" src="providersManager.js"></script>
+      <!--   <script type="text/javascript" src="lib/dataTables/datatables.min.js"></script> -->
+        <!--  <link rel="stylesheet" type="text/css" href="lib/dataTables/datatables.min.css"> -->
+        <script type="text/javascript">
+            $(document).ready(function() {
+              //  console.log(_SERVER_URL);
+                loadTables();
+            });
+        </script> 
+        
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+         <!--###END_HEAD###-->
+    </head>
+    <body>
+         <!--###BEGIN_CONTENT###-->
+        <div>TODO write content</div>
+          <table id="provTable" class="display" width="90%">
+                  <thead>
+                <tr>
+                <th>Selection</th>
+                <th>Organization</th>
+                <th>Ac</th>
+                <th>DBLP</th>
+                <th>Scopus</th>
+                <th>Google</th>
+                <th>Latin</th>
+            </tr> 
+        </thead>  
+          </table>
+        
+        <button id="buttonAk" onclick="ExtractAk()"> Extract AK </button>
+         <button id="buttonScopus" onclick="ExtractScopus()"> Extract Scopus </button>
+          <button id="buttonScopus" onclick="ExtractDBLP()"> Extract DBLP </button>
+           <button id="buttonScopus" onclick="ExtractGoogleScholar()"> Extract Google Scholar </button>     
+           <button id="buttonScopus" onclick="unifiedProviders()"> Unified </button>
+        
+        <!--###END_CONTENT###-->
+    </body>
+</html>
