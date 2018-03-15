@@ -150,7 +150,6 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
             sparqlQuery.querySrv({query: queryBySource},
             function (rdf) {
                 jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
-                  debugger;
                     if (compacted["@graph"])
                     {
                         waitingDialog.hide();

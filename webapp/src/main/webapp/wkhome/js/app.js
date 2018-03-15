@@ -13,7 +13,9 @@ var wkhomeApp = angular.module('wkhomeApp', [
     'wkhomeServices',
     'ngAnimate',
     'ngMaterial',
-    'hm.readmore'
+    'hm.readmore',
+    'ui.bootstrap',
+    'ui.bootstrap.locale-dialog'
 ]);
 
 
@@ -30,7 +32,7 @@ wkhomeApp.service('searchData', function () {
 });
 
 wkhomeApp.service('globalData', ['$window', function ($window) {
-     //var baseURL = "http://redi.cedia.edu.ec/";
+    //  var baseURL = "http://redi.cedia.edu.ec/";
      var baseURL = $window.location.origin + $window.location.pathname;
      baseURL = baseURL.replace("clon","");
      baseURL = baseURL.replace("localhost:8080","redi.cedia.edu.ec");
@@ -68,13 +70,45 @@ wkhomeApp.service('globalData', ['$window', function ($window) {
     this.urltofindinACADEMICS = 'https://academic.microsoft.com/#/search?iq=@{0}@&q={1}&filters=&from=0&sort=0';
 }]);
 
-wkhomeApp.config(['$routeProvider',
-    function ($routeProvider) {
-
-        $routeProvider.
-                when('/:lang/', {
+wkhomeApp.config(["$routeProvider", "$locationProvider",
+    function ($routeProvider, $locationProvider) {
+      $locationProvider.hashPrefix('');
+      $routeProvider.
+                when('/', {
                     templateUrl: '/wkhome/partials/home.html',
                 }).
+                when('/about', {
+                  templateUrl: '/wkhome/partials/about.html'
+                }).
+                when('/sources', {
+                  templateUrl: '/wkhome/partials/sources.html'
+                }).
+                when('/help', {
+                  templateUrl: '/wkhome/partials/help.html'
+                }).
+                when('/tags/cloud', {
+                  templateUrl: '/wkhome/partials/keywordsCloud.html',
+                }).
+                when('/cloud/group-by?area=:area', {
+                  templateUrl: '/wkhome/partials/groupbyCloud.html',
+                }).
+                when('/cloud/group-by', {
+                  templateUrl: '/wkhome/partials/groupbyCloud.html',
+                }).
+                when('/geo-views/sources', {
+                  templateUrl: '/wkhome/partials/map.html',
+                }).
+                when('/cloud/clusters', {
+                  templateUrl: '/wkhome/partials/clusterGroupByCloud.html',
+                }).
+                when('/statistics', {
+                  templateUrl: '/wkhome/partials/statistics.html',
+                }).
+                when('/datacube', {
+                  templateUrl: '/wkhome/partials/dataCube.html',
+                }).
+
+
                 when('/:lang/:section', {
                     templateUrl: '/wkhome/partials/home.html',
                 }).
@@ -82,7 +116,7 @@ wkhomeApp.config(['$routeProvider',
                     templateUrl: '/wkhome/partials/search.html',
                     //      controller: 'ExploreController'
                 }).
-                when('/:lang/w/author/:text*', {//when user search an author in textbox
+                when('/w/author/:text*', {//when user search an author in textbox
                     templateUrl: '/wkhome/partials/search.html',
                 }).
                 when('/:lang/w/listAllText', {
@@ -97,48 +131,15 @@ wkhomeApp.config(['$routeProvider',
                 when('/:lang/w/clusters?:text', {
                     templateUrl: '/wkhome/partials/clustersCloud.html',
                 }).
-                when('/:lang/data/datacube', {
-                    templateUrl: '/wkhome/partials/dataCube.html',
-                }).
-                when('/:lang/data/statistics', {
-                    templateUrl: '/wkhome/partials/statistics.html',
-                }).
                 when('/:lang/b/', {
                     templateUrl: '/wkhome/partials/geoplain.html',
                     controller: 'worldPath'
                 }).
-                when('/:lang/tags/cloud', {
-                    templateUrl: '/wkhome/partials/keywordsCloud.html',
-                }).
                 when('/:lang/d3/:geoId.json', {
                     templateUrl: '/wkhome/partials/phone-detail.html',
                 }).
-                when('/:lang/cloud/group-by?area=:area', {
-                    templateUrl: '/wkhome/partials/groupbyCloud.html',
-                }).
-                when('/:lang/cloud/group-by', {
-                    templateUrl: '/wkhome/partials/groupbyCloud.html',
-                }).
-                when('/:lang/geo-views/sources', {
-                    templateUrl: '/wkhome/partials/map.html',
-                }).
-                when('/:lang/cloud/clusters', {
-                    templateUrl: '/wkhome/partials/clusterGroupByCloud.html',
-                }).
                 when('/:lang/cloud/keywords', {
                     templateUrl: '/wkhome/partials/clusterKeywordsCloud.html',
-                }).
-                when('/:lang/info/about', {
-                    templateUrl: '/wkhome/partials/about.html'
-                }).
-                when('/:lang/info/help', {
-                    templateUrl: '/wkhome/partials/help.html'
-                }).
-                when('/:lang/info/contact', {
-                    templateUrl: '/wkhome/partials/contact.html'
-                }).
-                when('/:lang/info/sources', {
-                    templateUrl: '/wkhome/partials/sources.html'
                 }).
 //                .
                 /*when('/phones/:phoneId', {
@@ -151,10 +152,20 @@ wkhomeApp.config(['$routeProvider',
                 ;
     }]);
 
-    wkhomeApp.config(['$locationProvider', function($locationProvider) {
-      $locationProvider.hashPrefix('');
+    wkhomeApp.config(['$compileProvider', function ($compileProvider) {
+        $compileProvider.debugInfoEnabled(true);
     }]);
 
-    wkhomeApp.config(['$compileProvider', function ($compileProvider) {
-        $compileProvider.debugInfoEnabled(false);
+    wkhomeApp.config(["$translateProvider", function ($translateProvider) {
+      $translateProvider.useStaticFilesLoader({
+          prefix: '/wkhome/translations/locale-',
+          suffix: '.json'
+      });
+      // $translateProvider.translations("en", wkhomeApp.labels_en);
+      // $translateProvider.translations("es", wkhomeApp.labels_es);
+      $translateProvider.preferredLanguage("en");
+      // To get warnings in the developer console, regarding forgotten IDs in translations
+      // $translateProvider.useMissingTranslationHandlerLog ();
+      // Enable escaping of HTML
+      $translateProvider.useSanitizeValueStrategy('escape');
     }]);

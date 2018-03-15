@@ -9,6 +9,7 @@
         <title>redi</title>
         <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="../bower_components/angular-material/angular-material.min.css">
+        <link rel="stylesheet" href="../bower_components/flag-icon-css/css/flag-icon.min.css">
 
         <script src="../bower_components/jquery/dist/jquery.js"></script>
         <script src="../bower_components/jquery/dist/jquery.min.js"></script>
@@ -25,6 +26,8 @@
         <script src="../bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
         <script src="../bower_components/angular-resource/angular-resource.js"></script>
         <script src="../bower_components/angular-translate/angular-translate.js"></script>
+        <script src="../bower_components/angular-translate-handler-log/angular-translate-handler-log.min.js"></script>
+        <script src="../bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js"></script>
         <script src="../bower_components/angular-ui-bootstrap/src/pagination/pagination.js"></script>
         <script src="../bower_components/topojson/topojson.js"></script>
         <script src="../bower_components/underscore/underscore-min.js"></script>
@@ -35,6 +38,8 @@
         <script src="../bower_components/angular-aria/angular-aria.min.js"></script>
         <script src="../bower_components/angular-material/angular-material.min.js"></script>
         <script src="../bower_components/angular-read-more/dist/readmore.min.js"></script>
+        <script src="../bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+        <script src="../bower_components/angular-bootstrap-locale-dialog/angular-bootstrap-locale-dialog.min.js"></script>
 
         <!-- DESARROLLO/DEBUG -->
         <link rel="stylesheet" href="wkhome/css/animations.css">
@@ -55,6 +60,7 @@
         <link rel="stylesheet" href="wkhome/css/visuals/lists.css">
         <link rel="stylesheet" href="wkhome/css/visuals/footnote.css">
         <link rel="stylesheet" href="wkhome/css/visuals/searchText.css">
+        <link rel="stylesheet" href="wkhome/css/visuals/navbar.css">
         <link rel="stylesheet" href="wkhome/css/app.css">
 
         <script src="wkhome/js/app.js"></script>
@@ -86,6 +92,8 @@
         <script src="wkhome/js/controllers/dataCube.js"></script>
         <script src="wkhome/js/controllers/publications.js"></script>
         <script src="wkhome/js/controllers/searchTextResults.js"></script>
+        <script src="wkhome/js/controllers/locale.js"></script>
+        <script src="wkhome/js/controllers/navbar.js"></script>
 
         <script src="wkhome/js/services.js"></script>
 
@@ -96,6 +104,7 @@
         <script src="wkhome/js/components/FileSaver.js"></script>
         <script src="wkhome/js/components/stringsDistance.js"></script>
         <script src="wkhome/js/components/d3.geo.js"></script>
+        <script src="wkhome/js/components/locals.js"></script>
 
 
         <script src="wkhome/js/visuals/pieChart.js"></script>
@@ -129,6 +138,7 @@
         <link rel="stylesheet" href="wkhome/cssmin/visuals/lists.min.css">
         <link rel="stylesheet" href="wkhome/cssmin/visuals/footnote.min.css">
         <link rel="stylesheet" href="wkhome/cssmin/visuals/searchText.min.css">
+        <link rel="stylesheet" href="wkhome/cssmin/visuals/navbar.min.css">
         <link rel="stylesheet" href="wkhome/cssmin/app.min.css">
 
         <script src="wkhome/jsmin/app.min.js"></script>
@@ -160,6 +170,8 @@
         <script src="wkhome/jsmin/controllers/dataCube.min.js"></script>
         <script src="wkhome/jsmin/controllers/publications.min.js"></script>
         <script src="wkhome/jsmin/controllers/searchTextResults.min.js"></script>
+        <script src="wkhome/jsmin/controllers/locale.min.js"></script>
+        <script src="wkhome/jsmin/controllers/navbar.min.js"></script>
 
         <script src="wkhome/jsmin/services.min.js"></script>
 
@@ -170,6 +182,7 @@
         <script src="wkhome/jsmin/components/FileSaver.min.js"></script>
         <script src="wkhome/jsmin/components/stringsDistance.min.js"></script>
         <script src="wkhome/jsmin/components/d3.geo.min.js"></script>
+        <script src="wkhome/jsmin/components/locals.min.js"></script>
 
         <script src="wkhome/jsmin/visuals/pieChart.min.js"></script>
         <script src="wkhome/jsmin/visuals/barChart.min.js"></script>
@@ -216,98 +229,48 @@
         <script async src='bower_components/autotrack/autotrack.js'></script>
     </head>
     <body ng-controller="analytics">
-        <div  ng-view class="container-fluid">
 
-        </div>
-        <div ng-controller="loadData"></div>
+      <footer ng-include="'/wkhome/partials/navbar.html'"></footer>
+      <div class="container-fluid">
+        <div ng-view></div>
+        <footer ng-include="'/wkhome/partials/footnote.html'"></footer>
+      </div>
 
-        <!-- <div class="view-container"> -->
-        <nav class="navbar navbar-inverse navbar-fixed-top" style="opacity:1; margin-bottom:0; border:0; z-index: 0;">
 
-            <!-- MENU DESPLEGABLE -->
-            <div id="headerdesplegable">
-                <!--<nav> <!-- Aqui estamos iniciando la nueva etiqueta nav -->
-                <ul class="nav desplegable">
-                    <li><img style="height: 45px;padding-right: 4px;" src='wkhome/images/logo_wk.png'  alt="REDI"><img style="width: 7%" src='wkhome/images/icono_menu.png'  alt="REDI">
-                        <ul ng-controller="translate">
-                            <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/">{{'Home'| translate}}</a></li>
-                            <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/tags/cloud">{{'Keywords Cloud'| translate}}</a></li>
-                            <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/cloud/group-by">{{'Group By Keyword'| translate}}</a></li>
-                            <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/geo-views/sources">{{'Map View'| translate}}</a></li>
-                            <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/cloud/clusters">{{'Clustering by Research Area'| translate}}</a></li>
-                            <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/data/datacube">{{'data_cube' | translate}}</a></li>
-                            <!--<li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/cloud/keywords">{{'Clusters by Keyword'| translate}}</a></li>-->
-                            <li><a class="opcion" ng-click="refreshLang()" href="#/{{lang}}/data/statistics">{{'Statistics'| translate}}</a></li>
-                        </ul>
-                    </li>
-                </ul>
-                <!--</nav><!-- Aqui estamos cerrando la nueva etiqueta nav -->
-            </div>
-
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav" ng-controller="translate">
-                    <li><a ng-click="refreshLang()" href="#/{{lang}}/">{{'home'| translate}}<span class="sr-only">(current)</span></a></li>
-                    <li><a ng-click="refreshLang()" href="#/{{lang}}/info/about">{{'about'| translate}}</a></li>
-                    <li><a ng-click="refreshLang()" href="#/{{lang}}/info/help">{{'help'| translate}}</a></li>
-                    <li><a ng-click="refreshLang()" href="#/{{lang}}/info/contact">{{'contact'| translate}}</a></li>
-                    <li><a ng-click="refreshLang()" href="#/{{lang}}/info/sources">{{'sources'| translate}}</a></li>
-                </ul>
-
-                <ul class="nav navbar-nav navbar-right" style="padding-right:0px" ng-controller="translate">
-                    <li>
-                        <a style="padding-top: 10px;" ng-click="setLanguage('en')">
-                            <img style="height:15px" src='wkhome/images/en-icon.gif'>
-                        </a>
-                    </li>
-                    <li>
-                        <a style="padding-top: 10px;" ng-click="setLanguage('es')" >
-                            <img style="height: 15px" src='wkhome/images/es-icon.gif'>
-                        </a>
-                    </li>
-                    <form class="navbar-form navbar-left" role="search" ng-submit="submit()" ng-controller="searchText" style="padding-right: 30px; ">
-                        <div class="form-group">
-                            <input  name="searchText" ng-model="searchText" type="text" class="form-control input-md" placeholder="{{'Search'| translate}}..">
-                        </div>
-                    </form>
-                </ul>
-            </div>
-    </nav>
-<!--        Fulltext search results modal-->
-            <div class="container" ng-controller="searchTextResults" >
-              <div id="searchResults" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="Search Results" aria-hidden="true">
-                <div class="modal-dialog  modal-lg" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                      <h4 class="modal-title" id="myModalLabel">{{'search results'|translate}} <small>{{candidates.length}} resultados</small></h4>
-                    </div>
-                    <div class="modal-body">
-                      <div class="row table-responsive">
-                        <table class="table table-striped">
-                          <thead>
-                            <tr>
-                              <th>{{'name'|translate}}</th>
-                              <th ng-show="showSubjects(candidates)">{{'palabras clave'|translate}}</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr ng-repeat="candidate in candidates">
-                              <!--TODO: Check why grid sys is not working -->
-                              <td class="col-md-3"><a class="candidate" ng-click="selectedOption($event, candidate.path, candidate.id)" href="">{{candidate.val}}</a></td>
-                              <td class="col-md-9" style="font-size: x-small">
-                                <p>{{candidate.desc | uppercase}}</p>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
+      <!-- Fulltext search results modal-->
+      <div class="container" ng-controller="searchTextResults" >
+        <div id="searchResults" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="Search Results" aria-hidden="true">
+          <div class="modal-dialog  modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">{{'SEARCH_RESULTS'|translate}} <small>{{candidates.length}} resultados</small></h4>
+              </div>
+              <div class="modal-body">
+                <div class="row table-responsive">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>{{'name'|translate}}</th>
+                        <th ng-show="showSubjects(candidates)">{{'palabras clave'|translate}}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat="candidate in candidates">
+                        <!-- TODO: Check why grid sys is not working -->
+                        <td class="col-md-3"><a class="candidate" ng-click="selectedOption($event, candidate.path, candidate.id)" href="">{{candidate.val}}</a></td>
+                        <td class="col-md-9" style="font-size: x-small">
+                          <p>{{candidate.desc | uppercase}}</p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
 
-
-    <!-- <div ng-view class="view-frame"></div> -->
 </body>
 </html>

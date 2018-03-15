@@ -28,8 +28,8 @@
     <artifactId>webapp</artifactId>
     <packaging>war</packaging>
 
-    <name>Watiqay Khuska WebAPP</name>
-    <description>The Watiqay Khuska WAR bundle</description>
+    <name>REDI WebAPP</name>
+    <description>The REDI WAR bundle</description>
     
     <properties>
         <tomcat7-deploy>true</tomcat7-deploy>

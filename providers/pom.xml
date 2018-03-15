@@ -9,7 +9,7 @@
     
     <groupId>ec.edu.cedia.redi</groupId>
     <artifactId>providers</artifactId>
-    <name>REDI - Providers</name>
+    <name>REDI - LDClient Providers</name>
     <packaging>pom</packaging>
     
     <modules>

@@ -18,6 +18,8 @@
 package ec.edu.cedia.redi.ldclient.test.springer;
 
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import org.apache.marmotta.commons.sesame.model.ModelCommons;
 import org.apache.marmotta.ldclient.model.ClientResponse;
 import org.apache.marmotta.ldclient.test.provider.ProviderTestBase;
@@ -47,27 +49,38 @@ public class TestSpringerProvider extends ProviderTestBase {
      */
     @Test
     public void testSpringerAuthorWithIsbn() throws Exception {
-        String uri = String.format(TEMPLATE, "((name:victor OR name:hugo) AND name:saquicela)");
+        String uri = String.format(TEMPLATE, encodeQuery("((name:victor OR name:hugo) AND name:saquicela)"));
         testResource(uri);
     }
 
     /**
      *
+     * @throws java.lang.Exception
      */
     @Test
     public void testSpringerAuthorWithIssn() throws Exception {
-        String uri = String.format(TEMPLATE, "name:Xi+Hongxia");
+        String uri = String.format(TEMPLATE, encodeQuery("name:Xi+Hongxia"));
         testResource(uri);
     }
 
     /**
      *
+     * @throws java.lang.Exception
      */
     @Test
-    @Ignore("This test makes many requests bc of pagination.")
+    @Ignore("This test makes many requests bc of pagination. Disabled because makes many calls.")
     public void testSpringerAuthorPagination() throws Exception {
-        String uri = String.format(TEMPLATE, "name:Xi AND name:Mei");
+        String uri = String.format(TEMPLATE, encodeQuery("name:Xi AND name:Mei"));
         testResource(uri);
+    }
+
+    private String encodeQuery(String query) {
+        try {
+            return URLEncoder.encode(query, "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            log.error("Cannot encode query: " + query, ex);
+            return null;
+        }
     }
 
     @Override

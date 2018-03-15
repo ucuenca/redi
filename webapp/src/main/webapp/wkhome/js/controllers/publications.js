@@ -1,6 +1,5 @@
 wkhomeControllers.controller('publicationsController', ['$scope', '$window', 'globalData', 'sparqlQuery', 'searchData', '$routeParams', '$translate',
     function ($scope, $window, globalData, sparqlQuery, searchData, $routeParams, $translate) {
-      $translate.use($routeParams.lang);
       $scope.publications = [];
       $scope.author = {} ;
 
@@ -65,7 +64,7 @@ wkhomeControllers.controller('publicationsController', ['$scope', '$window', 'gl
           if (compacted){
               var entities = _.where(compacted["@graph"], {"@type": "bibo:AcademicArticle"});
               var values = entities.length ? entities : [entities];
-
+              // debugger;
                   var model = {};
                   _.map(values, function (pub) {
                       model["id"] = pub["@id"];

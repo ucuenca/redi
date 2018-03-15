@@ -41,10 +41,13 @@
     "jsonproxy": "0.3.1",
     "restangular": "~1.4.0",
     "angular-translate": "^2.9.0",
+    "angular-translate-handler-log": "^2.17.0",
+    "angular-translate-loader-static-files": "^2.17.0",
     "autotrack": "^1.0.3",
     "angular-material": "^1.1.1",
     "angular-read-more": "^1.0.5",
-    "d3-scale": "^2.0.0"
+    "angular-bootstrap-locale-dialog": "^1.2.3",
+    "flag-icon-css": "^3.0.0"
   },
   "resolutions": {
     "angular-animate": "1.6.4",

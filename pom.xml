@@ -4,7 +4,7 @@
     <groupId>org.apache.marmotta</groupId>
     <artifactId>ucuenca</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Watiqay Khuska LOD Platform</name>
+    <name>REDI LOD Platform</name>
     <packaging>pom</packaging>
     <build>
         <plugins>

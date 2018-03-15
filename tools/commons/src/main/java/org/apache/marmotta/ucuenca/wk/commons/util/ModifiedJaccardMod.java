@@ -13,7 +13,9 @@ import java.util.List;
 import java.util.Map;
 import static org.simmetrics.StringMetricBuilder.with;
 import org.simmetrics.metrics.JaroWinkler;
+import org.simmetrics.metrics.Levenshtein;
 import org.simmetrics.simplifiers.Simplifiers;
+import org.simmetrics.simplifiers.Soundex;
 
 /**
  *
@@ -21,10 +23,12 @@ import org.simmetrics.simplifiers.Simplifiers;
  */
 public class ModifiedJaccardMod {
 
+    public boolean soundexBoost = false;
     public boolean prioritizeWordOrder = false;
     public boolean onlyCompleteMatchs = false;
     public double syntacticThreshold = 0.89;
     public double abvPenalty = 0.95;
+    public double abvMatchsPenalty = 0.95;
 
     public double distanceName(String name1, String name2) {
         List<String> tks1 = tokenizer(name1.toLowerCase());
@@ -34,8 +38,8 @@ public class ModifiedJaccardMod {
         onlyCompleteMatchs = false;
         Map.Entry<Integer, Double> c1 = countMatchs(tks1, tks2);
         double mx = Math.min(tks1.size(), tks2.size());
-
-        return (c.getValue() + c1.getValue()) / (c.getKey() + c1.getKey() + mx);
+        double pn = c.getKey() >= c1.getKey() ? 1.0 : abvMatchsPenalty;
+        return pn * (c.getValue() + c1.getValue()) / (c.getKey() + c1.getKey() + mx);
     }
 
     private Map.Entry<Integer, Double> countMatchs(List<String> tokens1, List<String> tokens2) {
@@ -84,7 +88,15 @@ public class ModifiedJaccardMod {
     }
 
     public double syntacticSim(String t1, String t2) {
-        return with(new JaroWinkler()).simplify(Simplifiers.removeDiacritics()).build().compare(t2, t1);
+        double boost = 1.0;
+        try {
+            Soundex sm = new Soundex();
+            boolean equals = sm.simplify(Simplifiers.removeDiacritics().simplify(t1)).equals(sm.simplify(Simplifiers.removeDiacritics().simplify(t2)));
+            boost = (soundexBoost ? (equals ? 1.05 : 0.95) : 1);
+        } catch (Exception e) {
+        }
+        double val = boost * (with(new Levenshtein()).simplify(Simplifiers.removeDiacritics()).build().compare(t2, t1) + 2 * with(new JaroWinkler()).simplify(Simplifiers.removeDiacritics()).build().compare(t2, t1)) / 3;
+        return val > 1.0 ? 1.0 : val;
     }
 
     public String specialCharactersClean(String n) {

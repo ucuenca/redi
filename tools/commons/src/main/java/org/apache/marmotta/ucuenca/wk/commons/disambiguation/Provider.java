@@ -24,9 +24,9 @@ public class Provider {
     public String Name;
     public String Graph;
     private SparqlService sparql;
-    public Boolean isMain  ;
+    public Boolean isMain;
 
-    public Provider(String Name, String Graph, SparqlService sparql , Boolean main) {
+    public Provider(String Name, String Graph, SparqlService sparql, Boolean main) {
         this.Name = Name;
         this.Graph = Graph;
         this.sparql = sparql;
@@ -109,20 +109,26 @@ public class Provider {
                 + "          	?per1 <http://xmlns.com/foaf/0.1/familyName> ?ln .\n"
                 + "    }\n"
                 + "}";
-
-        String qryCA = "prefix dct: <http://purl.org/dc/terms/>\n"
+        String qryPCA = "prefix dct: <http://purl.org/dc/terms/>\n"
                 + "prefix foaf: <http://xmlns.com/foaf/0.1/>\n"
-                + "select distinct ?fun ?fn ?ln {\n"
+                + "select distinct ?p {\n"
                 + "     graph <" + Graph + ">{\n"
                 + "             values ?per { <URI> } . \n"
-                + "            ?per      foaf:publications  ?publication .\n"
-                + "      		?publication  dct:contributor | dct:creator   ?p .\n"
-                + "            filter (?p != ?per) .\n"
-                + "          	optional { ?p foaf:name ?fun . }\n"
-                + "             optional { ?p foaf:givenName ?fn . }\n"
-                + "          	optional { ?p foaf:familyName ?ln . }\n"
+                + "            ?per      foaf:publications  ?p .\n"
                 + "    }\n"
                 + "}";
+
+        String qryPCAA = "prefix dct: <http://purl.org/dc/terms/>\n"
+                + "prefix foaf: <http://xmlns.com/foaf/0.1/>\n"
+                + "select distinct ?p {\n"
+                + "     graph <" + Graph + ">{\n"
+                + "             values ?per { <URI> } . \n"
+                + "             values ?pub { <PIRI> } . \n"
+                + "             ?p      foaf:publications  ?pub .\n"
+                + "            filter (?p != ?per) .\n"
+                + "    }\n"
+                + "} limit 20";
+
         String qryP = "prefix dct: <http://purl.org/dc/terms/>\n"
                 + "prefix foaf: <http://xmlns.com/foaf/0.1/>\n"
                 + "select distinct ?p {\n"
@@ -155,7 +161,7 @@ public class Provider {
         for (Person n : lsa) {
             String qryName_ = qryName.replaceAll("URI", n.URI);
             String qryName2_ = qryName2.replaceAll("URI", n.URI);
-            String qryCA_ = qryCA.replaceAll("URI", n.URI);
+            String qryCA_ = qryPCA.replaceAll("URI", n.URI);
             String qryP_ = qryP.replaceAll("URI", n.URI);
             String qryA_ = qryA.replaceAll("URI", n.URI);
             String qryT_ = qryT.replaceAll("URI", n.URI);
@@ -179,14 +185,25 @@ public class Provider {
             List<Map<String, Value>> rsCA = sparql.query(QueryLanguage.SPARQL, qryCA_);
             n.Coauthors = new ArrayList<>();
             for (Map<String, Value> ar : rsCA) {
-                if (ar.get("fun") != null) {
-                    n.Coauthors.add(Lists.newArrayList(ar.get("fun").stringValue()));
-                }
-
-                if (ar.get("fn") != null && ar.get("ln") != null) {
-                    ArrayList<String> names = Lists.newArrayList(ar.get("fn").stringValue());
-                    names.add(ar.get("ln").stringValue());
-                    n.Coauthors.add(names);
+                String pubURI = ar.get("p").stringValue();
+                String qryCA_S = qryPCAA.replaceAll("URI", n.URI).replaceAll("PIRI", pubURI);
+                List<Map<String, Value>> query = sparql.query(QueryLanguage.SPARQL, qryCA_S);
+                for (Map<String, Value> arp : query) {
+                    String pURI = arp.get("p").stringValue();
+                    List<List<String>> r = new ArrayList<>();
+                    String qryName_C = qryName.replaceAll("URI", pURI);
+                    String qryName2_C = qryName2.replaceAll("URI", pURI);
+                    List<Map<String, Value>> rsCAN1 = sparql.query(QueryLanguage.SPARQL, qryName_C);
+                    for (Map<String, Value> arN : rsCAN1) {
+                        r.add(Lists.newArrayList(arN.get("fun").stringValue()));
+                    }
+                    List<Map<String, Value>> rsCAN2 = sparql.query(QueryLanguage.SPARQL, qryName2_C);
+                    for (Map<String, Value> arN : rsCAN2) {
+                        ArrayList<String> names = Lists.newArrayList(arN.get("fn").stringValue());
+                        names.add(arN.get("ln").stringValue());
+                        r.add(names);
+                    }
+                    n.Coauthors.addAll(r);
                 }
             }
             //get Publications

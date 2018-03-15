@@ -50,7 +50,7 @@ uc:publicationUri2 a r2r:Mapping ;
 uc:publicationContributor a r2r:Mapping;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ dct:contributor ?contributor." ;
-    r2r:transformation "?contributorIRI=concat('https://redi.cedia.edu.ec/resource/author/springer/', xpath:encode-for-uri(?contributor))" ;
+    r2r:transformation "?contributorIRI=concat('https://redi.cedia.edu.ec/resource/author/springer/', xpath:encode-for-uri(concat(xpath:substring-after(?SUBJ, 'https://link.springer.com/'), ?contributor)))";
     r2r:targetPattern "?SUBJ dct:contributor ?<contributorIRI>";
     r2r:targetPattern "?contributorIRI foaf:publications ?SUBJ";
     r2r:targetPattern "?contributorIRI a foaf:Person";
