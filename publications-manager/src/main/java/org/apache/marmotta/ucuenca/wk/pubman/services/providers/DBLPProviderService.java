@@ -12,14 +12,11 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javax.inject.Inject;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
@@ -30,6 +27,7 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.marmotta.ldclient.model.ClientConfiguration;
 import org.apache.marmotta.ldclient.services.ldclient.LDClient;
+import org.apache.marmotta.ucuenca.wk.commons.function.StrNamesUtils;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.pubman.api.AbstractProviderService;
 
@@ -46,8 +44,8 @@ public class DBLPProviderService extends AbstractProviderService {
     protected List<String> buildURLs(String firstName, String lastName, List<String> organizations) {
         Preconditions.checkArgument(firstName != null && !"".equals(firstName.trim()));
         Preconditions.checkArgument(lastName != null && !"".equals(lastName.trim()));
-        firstName = or(firstName);
-        lastName = or(lastName);
+        firstName = StrNamesUtils.or(firstName);
+        lastName = StrNamesUtils.or(lastName, 1);
         String NS_DBLP = "http://rdf.dblp.com/ns/search/";
         String URI = NS_DBLP + URLEncoder.encode(firstName + "_" + lastName);
         return Collections.singletonList(URI);
@@ -61,18 +59,6 @@ public class DBLPProviderService extends AbstractProviderService {
     @Override
     protected String getProviderName() {
         return "DBLP";
-    }
-
-    public String or(String name) {
-        name = StringUtils.stripAccents(name).trim().toLowerCase().replaceAll("\\.|,|;|:|-|\n|\\\\|\\||\"|\'|_|/", " ").trim();
-        String s = "";
-        String[] tokens = name.split(" ");
-        List<String> list = new ArrayList<String>(Arrays.asList(tokens));
-        list.removeAll(Arrays.asList("", null));
-        for (int i = 0; i < list.size(); i++) {
-            s += list.get(i) + (i == list.size() - 1 ? "" : "-");
-        }
-        return s;
     }
 
     @Override
