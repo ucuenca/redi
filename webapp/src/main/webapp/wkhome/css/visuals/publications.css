@@ -1,0 +1,11 @@
+.facet-value {
+  cursor: pointer;
+}
+
+.facet-value:hover {
+  text-decoration: line-through;
+}
+
+.pagination a {
+  cursor: pointer !important;
+}
