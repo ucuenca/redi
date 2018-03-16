@@ -47,10 +47,14 @@
     "angular-material": "^1.1.1",
     "angular-read-more": "^1.0.5",
     "angular-bootstrap-locale-dialog": "^1.2.3",
-    "flag-icon-css": "^3.0.0"
+    "flag-icon-css": "^3.0.0",
+    "ngSolr": "rediSolr#*",
+    "fontawesome": "~4.2.0"
   },
   "resolutions": {
     "angular-animate": "1.6.4",
-    "angular": "1.6.4"
+    "angular": "1.6.4",
+    "angular-sanitize": "1.6.4",
+    "d3": "~3.5.x"
   }
 }

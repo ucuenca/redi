@@ -15,7 +15,8 @@ var wkhomeApp = angular.module('wkhomeApp', [
     'ngMaterial',
     'hm.readmore',
     'ui.bootstrap',
-    'ui.bootstrap.locale-dialog'
+    'ui.bootstrap.locale-dialog',
+    'ngSolr'
 ]);
 
 
@@ -45,6 +46,7 @@ wkhomeApp.service('globalData', ['$window', function ($window) {
     this.organizationsGraph = baseURL + "context/organization";
     this.latindexGraph = baseURL + "context/latindex";
     this.translateData = null;
+    this.publicationsCore = 'https://rediclon.cedia.edu.ec/solr/publications';
     this.PREFIX = 'PREFIX bibo: <http://purl.org/ontology/bibo/>'
             + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>  '
             + ' PREFIX dct: <http://purl.org/dc/terms/> '
@@ -61,7 +63,8 @@ wkhomeApp.service('globalData', ['$window', function ($window) {
         "bibo": "http://purl.org/ontology/bibo/",
         "dc": "http://purl.org/dc/elements/1.1/",
         "dct": "http://purl.org/dc/terms/",
-        "dcterms": "http://purl.org/dc/terms/"
+        "dcterms": "http://purl.org/dc/terms/",
+        "schema": "http://schema.org/"
     };
 
     this.urltofindinGOOGLE = 'https://scholar.google.com/scholar?q={0}';
@@ -107,6 +110,12 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                 when('/datacube', {
                   templateUrl: '/wkhome/partials/dataCube.html',
                 }).
+                when('/publications/:query*/author/:authorId*', {
+                  templateUrl: '/wkhome/partials/publications.html',
+                }).
+                when('/author/:text*', {
+                  templateUrl: '/wkhome/partials/search.html',
+                }).
 
 
                 when('/:lang/:section', {
@@ -116,17 +125,11 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                     templateUrl: '/wkhome/partials/search.html',
                     //      controller: 'ExploreController'
                 }).
-                when('/:lang/w/author/:text*', {//when user search an author in textbox
-                    templateUrl: '/wkhome/partials/search.html',
-                }).
                 when('/:lang/w/listAllText', {
                     templateUrl: '/wkhome/partials/listPublications.html', //'/wkhome/partials/searchListPublications.html',
                 }).
                 when('/:lang/w/cloud?:text', {
                     templateUrl: '/wkhome/partials/genericPageCloud.html',
-                }).
-                when('/:lang/w/publications/:authorId*\/', {
-                    templateUrl: '/wkhome/partials/publications.html',
                 }).
                 when('/:lang/w/clusters?:text', {
                     templateUrl: '/wkhome/partials/clustersCloud.html',
@@ -141,13 +144,8 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                 when('/:lang/cloud/keywords', {
                     templateUrl: '/wkhome/partials/clusterKeywordsCloud.html',
                 }).
-//                .
-                /*when('/phones/:phoneId', {
-                 templateUrl: 'partials/phone-detail.html',
-                 controller: 'PhoneDetailCtrl'
-                 }).*/
                 otherwise({
-                    redirectTo: '/es/'
+                    redirectTo: '/'
                 })
                 ;
     }]);
