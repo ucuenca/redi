@@ -298,8 +298,18 @@ public class SolrIndexingServiceImpl extends WorkerServiceImpl<SolrCoreRuntime,S
                 // set shortcut fields
                 Set<Value> dependencies = new HashSet<Value>();
                 for (FieldMapping<?, Value> rule : program.getFields()) {
-                    Map<Value, List<Value>> paths = new HashMap<Value, List<Value>>();
-                    Collection<?> values = rule.getValues(backend, resource, paths);
+//                    Map<Value, List<Value>> paths = new HashMap<Value, List<Value>>();
+//                    Collection<?> values = rule.getValues(backend, resource, paths);
+                    //FIXME: Temporary fixing due LDPath reverse properties selector bug
+                    Map<Value, List<Value>> paths = null;
+                    Collection<?> values = null;
+                    if(runtime.getConfiguration().isUpdateDependencies()) {
+                        paths = new HashMap<Value, List<Value>>();
+                        values = rule.getValues(backend, resource, paths);
+                    }else{
+                        values = rule.getValues(backend, resource);
+                    }
+                    //
                     try {
                         final boolean isSinge = !isMultiValuedField(rule);
                         for (Object value : values) {

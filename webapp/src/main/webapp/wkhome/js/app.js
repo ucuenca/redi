@@ -128,8 +128,8 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                 when('/:lang/w/listAllText', {
                     templateUrl: '/wkhome/partials/listPublications.html', //'/wkhome/partials/searchListPublications.html',
                 }).
-                when('/:lang/w/cloud?:text', {
-                    templateUrl: '/wkhome/partials/genericPageCloud.html',
+                when('/:lang/w/cloud/:authorId*\/', {
+                    templateUrl: '/wkhome/partials/genericRelatedAuthor.html',
                 }).
                 when('/:lang/w/clusters?:text', {
                     templateUrl: '/wkhome/partials/clustersCloud.html',

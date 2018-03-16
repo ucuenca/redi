@@ -294,7 +294,7 @@ public class AuthorServiceImpl implements AuthorService {
 
             return providerUri;
         } catch (MarmottaException ex) {
-            //java.util.logging.Logger.getLogger(AbstractProviderService.class.getName()).log(Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return "";
         }
     }

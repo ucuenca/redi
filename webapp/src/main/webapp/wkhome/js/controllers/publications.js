@@ -1,5 +1,6 @@
 wkhomeControllers.controller('PublicationsController', ['$scope', '$window', 'globalData', 'sparqlQuery', 'searchData', '$routeParams', '$translate',
     function ($scope, $window, globalData, sparqlQuery, searchData, $routeParams, $translate) {
+
       $scope.author = {} ;
       $scope.authorURI = $routeParams.authorId;
       $scope.core = globalData.publicationsCore;
@@ -35,7 +36,7 @@ wkhomeControllers.controller('PublicationsController', ['$scope', '$window', 'gl
               + "    LIMIT 1"
               + "  }"
               + "}";
-
+      // waitingDialog.show("Searching: ");
       sparqlQuery.querySrv({query: sparqlAuthor}, function(rdf) {
         jsonld.compact(rdf, globalData.CONTEXT, function(error, compacted){
           if (!error) {
@@ -52,5 +53,5 @@ wkhomeControllers.controller('PublicationsController', ['$scope', '$window', 'gl
           }
         });
       });
-      
+
     }]);

@@ -46,10 +46,9 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
 
     $scope.submit = function() {
       if ($scope.searchText) {
-        var searchTextVar=$scope.searchText;
         waitingDialog.show();
         AuthorsService.get({
-          search: searchTextVar
+          search: $scope.searchText
         }, function(result) {
           if (result.response.docs.length > 0) {
             var authors = result.response.docs;
@@ -80,7 +79,7 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
             }
           } else {
             KeywordsService.get({
-              search: searchTextVar
+              search: $scope.searchText
             }, function(result) {
               var keywords = _.uniq(result.response.docs, function(item) {
                 return item['lmf.uri'];
@@ -104,7 +103,7 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
                 $window.location.hash = "/" + $routeParams.lang + "/cloud/group-by?area=" + keyword;
               } else {
                 PublicationsService.get({
-                  search: searchTextVar
+                  search: $scope.searchText
                 }, function(result) {
                   if (result.response.docs.length > 0) {
                     var publications = result.response.docs;
