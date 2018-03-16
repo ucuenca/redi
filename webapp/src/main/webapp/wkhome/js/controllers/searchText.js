@@ -14,7 +14,7 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
       return theString;
     };
 
-    
+
 
     function Candidate(id, val, desc, path) {
       this.id = id;
@@ -54,7 +54,7 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
           if (result.response.docs.length > 0) {
             var authors = result.response.docs;
             if (authors.length > 1) {
-              var path = "/w/author/";
+              var path = "/author/";
               var candidates = _.map(authors, function(author) {
                 var id = author["lmf.uri"];
                 var name = _.max(author.name, function(name) {
@@ -76,7 +76,7 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
             } else if (authors.length === 1) {
               var authorId = authors[0]["lmf.uri"];
               waitingDialog.hide();
-              $window.location.hash = "/" + $routeParams.lang + "/w/author/" + authorId;
+              $window.location.hash = "/author/" + authorId;
             }
           } else {
             KeywordsService.get({

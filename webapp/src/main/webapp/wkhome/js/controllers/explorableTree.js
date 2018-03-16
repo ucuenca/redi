@@ -36,7 +36,8 @@ wkhomeControllers.controller('exploreAuthor', ['$routeParams', '$scope', '$rootS
         };
 
         $scope.clickPublications = function () {
-            $window.location.hash = "/" + $routeParams.lang + "/w/publications/" + $scope.authorId;
+          var uri = encodeURIComponent($scope.authorId);
+          $window.location.hash = '/publications/q=author:"' + uri + '"&fl=*&rows=10&wt=json/author/' + $scope.authorId;
         };
 
         $scope.buildnetworks = function () {

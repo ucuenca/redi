@@ -9,7 +9,7 @@ wkhomeControllers.controller('searchTextResults', ['$scope', '$window', '$routeP
         $scope.selectedOption = function ($event, path, param, paramsQuery) {
             $('#searchResults').modal('hide');
             $('#searchResults').on('hidden.bs.modal', function () {
-                $window.location.hash = "/" + $routeParams.lang + path + param;
+                $window.location.hash = path + param;
                 $('#searchResults').off('hidden.bs.modal');
             });
         };
@@ -18,4 +18,3 @@ wkhomeControllers.controller('searchTextResults', ['$scope', '$window', '$routeP
             return _.some(values, 'desc');
         }
     }]);
-
