@@ -19,12 +19,13 @@ footer>hr {
 }
 
 .ucuenca {
-  background: rgba(0, 0, 0, 0) url("../../images/ucuenca.png") no-repeat scroll 0 0 / contain;
+  background: rgba(0, 0, 0, 0) url("../../images/ucuenca1.png") no-repeat scroll 0 0 / contain;
 }
 
 .dcc {
   background: rgba(0, 0, 0, 0) url("../../images/dcc.png") no-repeat scroll 0 0 / contain;
 }
+
 
 .footer-bottom > .container > h6 {
   line-height: 3;

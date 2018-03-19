@@ -38,7 +38,7 @@
           <a ng-click="l.changeLocale(setLanguage)"><span class="flag-icon flag-icon-{{l.selectedLocaleVals.country}}"></span><span>{{l.selectedLocaleVals.language | uppercase}}</span></a>
         </li>
       </ul>
-      <form class="navbar-form navbar-right" ng-submit="submit()" ng-controller="searchText">
+      <form class="navbar-form navbar-right" ng-submit="submit()" ng-controller="searchText" ng-hide="isHome()">
         <div class="form-group">
           <input type="text" class="form-control" ng-model="searchText" placeholder="{{'SEARCH'| translate}}..">
         </div>
