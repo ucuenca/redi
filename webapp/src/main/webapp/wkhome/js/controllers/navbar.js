@@ -3,7 +3,6 @@ wkhomeControllers.controller('navbarController', ["$scope", "$location", functio
           return viewLocation === $location.path();
     };
     $scope.isHome = function() {
-      console.log($location);
       return $location.path() === '/';
     }
 }]);

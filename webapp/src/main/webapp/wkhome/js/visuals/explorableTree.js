@@ -224,10 +224,8 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                                     var values = entity[key].length ? entity[key] : [entity[key]];
                                     if(key==='foaf:name')
                                       values = typeof(values) === 'string' ? values : _.first(values);
-                                    if(location.href.indexOf('/es/') !== -1 && key === 'uc:fullName')
+                                    if(key === 'uc:fullName')
                                       values = _.findWhere(entity["uc:fullName"], {"@language": "es"})["@value"];
-                                    else if (location.href.indexOf('/en/') !== -1 && key === 'uc:fullName')
-                                      values = _.findWhere(entity["uc:fullName"], {"@language": "en"})["@value"];
                                     if (typeof (values) === 'string') {
                                         var span = $('<span class="field-value">').text(values);
                                         div.append(span);

@@ -80,13 +80,13 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                 when('/', {
                     templateUrl: '/wkhome/partials/home.html',
                 }).
-                when('/about', {
+                when('/info/about', {
                   templateUrl: '/wkhome/partials/about.html'
                 }).
-                when('/sources', {
+                when('/info/sources', {
                   templateUrl: '/wkhome/partials/sources.html'
                 }).
-                when('/help', {
+                when('/info/help', {
                   templateUrl: '/wkhome/partials/help.html'
                 }).
                 when('/tags/cloud', {
@@ -98,16 +98,16 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                 when('/cloud/group-by', {
                   templateUrl: '/wkhome/partials/groupbyCloud.html',
                 }).
-                when('/geo-views/sources', {
+                when('/view/map', {
                   templateUrl: '/wkhome/partials/map.html',
                 }).
                 when('/cloud/clusters', {
                   templateUrl: '/wkhome/partials/clusterGroupByCloud.html',
                 }).
-                when('/statistics', {
+                when('/info/statistics', {
                   templateUrl: '/wkhome/partials/statistics.html',
                 }).
-                when('/datacube', {
+                when('/view/datacube', {
                   templateUrl: '/wkhome/partials/dataCube.html',
                 }).
                 when('/publications/:query*/author/:authorId*', {
@@ -116,20 +116,17 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                 when('/author/:text*', {
                   templateUrl: '/wkhome/partials/search.html',
                 }).
-
-
-                when('/:lang/:section', {
-                    templateUrl: '/wkhome/partials/home.html',
+                when('/view/network/:authorId*', {
+                  templateUrl: '/wkhome/partials/genericRelatedAuthor.html',
                 }).
+
+
                 when('/:lang/w/search?:text', {//when user search an author in textbox
                     templateUrl: '/wkhome/partials/search.html',
                     //      controller: 'ExploreController'
                 }).
                 when('/:lang/w/listAllText', {
                     templateUrl: '/wkhome/partials/listPublications.html', //'/wkhome/partials/searchListPublications.html',
-                }).
-                when('/:lang/w/cloud/:authorId*\/', {
-                    templateUrl: '/wkhome/partials/genericRelatedAuthor.html',
                 }).
                 when('/:lang/w/clusters?:text', {
                     templateUrl: '/wkhome/partials/clustersCloud.html',

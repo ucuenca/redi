@@ -3,7 +3,6 @@ wkhomeControllers.controller('keywordsCloud', ['$translate', '$routeParams', '$s
     $("html, body").animate({
       scrollTop: 0
     }, 'slow', 'swing');
-    $translate.use($routeParams.lang);
 
     Statistics.query({
       id: 'keywords_frequencypub_gt4'
