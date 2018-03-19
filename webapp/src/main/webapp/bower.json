@@ -55,6 +55,7 @@
     "angular-animate": "1.6.4",
     "angular": "1.6.4",
     "angular-sanitize": "1.6.4",
-    "d3": "~3.5.x"
+    "d3": "~3.5.x",
+    "jquery": "^3.3.1"
   }
 }
