@@ -388,9 +388,9 @@ public class AuthorServiceImpl implements AuthorService {
                                    String predicate = des.get("property").toString();
                                           // tripletsResource.getValue("y").stringValue();
                                    String object = des.get("object").toString();
-                                   
+                                   log.info (des+"");
                                           // tripletsResource.getValue("z").stringValue();
-                                   log.info(predicate +"-"+ object);
+                                   log.info(predicate +"-"+ object+"-"+des.get("type"));
                                    
                                    String insert = "";
                                    switch (predicate) {

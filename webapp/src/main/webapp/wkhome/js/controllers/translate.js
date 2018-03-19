@@ -1,6 +1,6 @@
 wkhomeControllers.controller('translate', ['sparqlQuery', 'searchData', '$translate', '$routeParams', '$scope', '$window', 'translateService', 'globalData',
     function (sparqlQuery, searchData, $translate, $routeParams, $scope, $window, translateService, globalData) {
-        $translate.use($routeParams.lang);
+ /*       $translate.use($routeParams.lang);
 
         $scope.lang = globalData.language;
 
@@ -17,7 +17,7 @@ wkhomeControllers.controller('translate', ['sparqlQuery', 'searchData', '$transl
 
         $scope.refreshLang = function () {
             $scope.lang = $routeParams.lang;
-        };
+        };*/
 
 
     }]); //end translate controller
