@@ -1,42 +1,11 @@
-<div class="row">
-  <div id="carousel" class="carousel slide" data-ride="carousel" ng-controller="translate">
-    <ol class="carousel-indicators">
-      <li data-target="#carousel" data-slide-to="0" class="active"></li>
-      <li data-target="#carousel" data-slide-to="1"></li>
-      <li data-target="#carousel" data-slide-to="2"></li>
-    </ol>
-
-    <div class="carousel-inner" role="listbox">
-      <div class="item active">
-          <img src="wkhome/images/background.png" />
-          <div class="carousel-caption">
-            <img src="wkhome/images/title2.png">
-            <h2>{{'Ecuadorian Semantic Repository'| translate}}</h2>
-          </div>
+<div id="header">
+  <div="search-box">
+    <form class="col-sm-12" id="searchForm" ng-controller="searchText" ng-submit="submit()">
+      <div class="form-group col-sm-6 col-sm-offset-3">
+        <div class="input-group input-group-lg search">
+          <input type="text" ng-model="searchText" class="form-control" placeholder="{{'Search Author or Keyword'| translate}}...">
+          <a class="input-group-addon" href="#" ng-click="submit()"><span ><i class="glyphicon glyphicon-search"></i></span></a>
+        </div>
       </div>
-      <div class="item">
-          <img src="wkhome/images/background.png">
-          <div class="carousel-caption">
-            <img src="wkhome/images/network.png">
-            <h2>{{'Search related researchers'| translate}}</h2>
-          </div>
-      </div>
-      <div class="item">
-          <img src="wkhome/images/background.png">
-          <div class="carousel-caption">
-            <img src="wkhome/images/search_ec2.png">
-            <h2>{{'Search publications'| translate}}</h2>
-          </div>
-      </div>
-    </div>
-  </div>
-
-  <form class="col-sm-12" id="searchForm" ng-controller="searchText" ng-submit="submit()">
-    <div class="form-group col-sm-6 col-sm-offset-3">
-      <div class="input-group input-group-lg">
-        <input type="text" ng-model="searchText" class="form-control" placeholder="{{'Search Author or Keyword'| translate}}...">
-        <a class="input-group-addon" href="#" ng-click="submit()"><span ><i class="glyphicon glyphicon-search"></i></span></a>
-      </div>
-    </div>
-  </form>
+    </form>
 </div>

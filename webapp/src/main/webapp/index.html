@@ -204,7 +204,7 @@
         <script src="wkhome/jsmin/visuals/publication.min.js"></script>
         <script src="wkhome/jsmin/visuals/relatedAuthor.min.js"></script>
 
-        <script src="wkhome/js/filters.js"></script>
+        <script src="wkhome/js/filters.js"></script>-->
 
         <!--Fin Importacion de Scripts-->
 
@@ -240,7 +240,8 @@
     </head>
     <body ng-controller="analytics">
 
-      <footer ng-include="'/wkhome/partials/navbar.html'"></footer>
+
+      <div class="container" ng-include="'/wkhome/partials/navbar.html'"></div>
       <div class="container-fluid">
         <div ng-view></div>
         <footer ng-include="'/wkhome/partials/footnote.html'"></footer>
