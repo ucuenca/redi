@@ -197,6 +197,7 @@ public class AuthorServiceImpl implements AuthorService {
     
 
     @Override
+    @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
     public String extractAuthorsGeneric (String... endpoints) {
         
       
@@ -346,7 +347,7 @@ public class AuthorServiceImpl implements AuthorService {
      }
     
     
-    @SuppressWarnings({"PMD.ExcessiveMethodLength","PMD.UnusedPrivateMethod"})
+    @SuppressWarnings({"PMD.ExcessiveMethodLength","PMD.UnusedPrivateMethod","PMD.AvoidDuplicateLiterals"})
     private String extractAuthorGeneric (EndpointObject endpoint , String min , Boolean mode) {
         int tripletasCargadas = 0; //cantidad de tripletas actualizadaas
         int contAutoresNuevosNoCargados = 0; //cantidad de actores nuevos no cargados
@@ -424,9 +425,11 @@ public class AuthorServiceImpl implements AuthorService {
                                        case "http://rdaregistry.info/Elements/a/P50195":
                                            
                                        case "http://rdaregistry.info/Elements/a/P50161":
-                                           
+                                        
+                                           if (des.containsKey("type") ){
                                            String type = des.get("type").toString();
                                            createDoc (localResource , object , type , endpoint , predicate);
+                                           }
                                            break;
                                        default:
                                    }

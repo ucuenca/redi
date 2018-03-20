@@ -31,8 +31,9 @@ wkhomeControllers.controller('exploreAuthor', ['$routeParams', '$scope', '$rootS
         };
 
         $scope.ifrightClick = function (value) {
-            searchData.genericData = value;
-            $window.location.hash = "/" + $routeParams.lang + "/w/cloud?" + "datacloud";
+           // searchData.genericData = value;
+          //  $window.location.hash = "/" + $routeParams.lang + "/w/cloud?" + "datacloud";
+            $window.location.hash = "/view/network/" + authorId;
         };
 
         $scope.clickPublications = function () {
@@ -40,8 +41,11 @@ wkhomeControllers.controller('exploreAuthor', ['$routeParams', '$scope', '$rootS
           $window.location.hash = '/publications/q=author:"' + uri + '"&fl=*&rows=10&wt=json/author/' + $scope.authorId;
         };
 
-        $scope.buildnetworks = function () {
-            var author = _.findWhere($scope.data["@graph"], {"@type": "foaf:Person"});
+        $scope.buildnetworks = function (authorId) {
+
+             $window.location.hash = "/view/network/" + authorId;
+
+            /*var author = _.findWhere($scope.data["@graph"], {"@type": "foaf:Person"});
             if (author["foaf:name"]) {
                 var getRelatedAuthors = globalData.PREFIX
                         + 'CONSTRUCT {  <http://ucuenca.edu.ec/wkhuska/resultTitle> a uc:pagetitle. <http://ucuenca.edu.ec/wkhuska/resultTitle> uc:viewtitle "Authors Related With ' + author["foaf:name"] + '"  .         ?subject rdfs:label ?name.         ?subject uc:total ?totalPub   } '
@@ -79,7 +83,7 @@ wkhomeControllers.controller('exploreAuthor', ['$routeParams', '$scope', '$rootS
                         }
                     });
                 });
-            }
+            }*/
         }
 
         $scope.numeroPub = function (publications)
