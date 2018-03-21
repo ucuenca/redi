@@ -5,7 +5,6 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.services;
 
-import com.hp.hpl.jena.sparql.lib.org.json.JSONException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -284,7 +283,7 @@ public class CommonServiceImpl implements CommonService {
 
         List<Map<String, Value>> response = sparqlService.query(QueryLanguage.SPARQL, queryProviders);
         for (Map<String, Value> prov : response) {
-            Provider p = new Provider(prov.get("name").stringValue().replace(" ", ""), prov.get("graph").stringValue(), sparqlService, Boolean.parseBoolean(prov.get("main").stringValue()));
+            Provider p = new Provider(prov.get("name").stringValue().replace(" ", ""), prov.get("graph").stringValue(), sparqlService);
             Providers.add(p);
         }
         return Providers;
@@ -435,7 +434,7 @@ public class CommonServiceImpl implements CommonService {
             java.util.logging.Logger.getLogger(CommonServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             log.debug(ex.getMessage());
         }
-        log.debug("No data found for related authors: "+uri);
+        log.debug("No data found for related authors: " + uri);
         return "{\"Error\":\"No Data\"}";
     }
 

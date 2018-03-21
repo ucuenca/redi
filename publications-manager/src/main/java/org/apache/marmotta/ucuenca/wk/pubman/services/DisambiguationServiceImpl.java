@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -31,7 +32,6 @@ import org.apache.marmotta.platform.core.api.triplestore.SesameService;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
-import org.apache.marmotta.ucuenca.wk.commons.function.Cache;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
@@ -80,9 +80,6 @@ public class DisambiguationServiceImpl implements DisambiguationService {
 
     @Inject
     private CommonsServices commonsServices;
-
-    @Inject
-    private CommonService comPub;
 
     @Inject
     private TaskManagerService taskManagerService;
@@ -156,11 +153,14 @@ public class DisambiguationServiceImpl implements DisambiguationService {
     }
 
     private List<Provider> getProviders() throws MarmottaException {
-        List<Provider> Providers = comPub.getProviders();
-        if (!Providers.get(0).isMain) {
-            Providers.add(0, new Provider("AuthorsProvider", constantService.getAuthorsProviderGraph(), sparqlService, true));
-        }
-        // Providers.add(0, new Provider("AuthorsProvider", constantService.getAuthorsProviderGraph(), sparqlService));
+        List<Provider> Providers = new ArrayList<>();
+        Providers.add(new Provider("Authors", constantService.getAuthorsProviderGraph(), sparqlService));
+        Providers.add(new Provider("Scopus", constantService.getScopusGraph(), sparqlService));
+        Providers.add(new Provider("Scholar", constantService.getGoogleScholarGraph(), sparqlService));
+        Providers.add(new Provider("Academics", constantService.getAcademicsKnowledgeGraph(), sparqlService));
+        Providers.add(new Provider("Scielo", constantService.getScieloGraph(), sparqlService));
+        Providers.add(new Provider("DBLP", constantService.getDBLPGraph(), sparqlService));
+        Providers.add(new Provider("Springer", constantService.getSpringerGraph(), sparqlService));
         return Providers;
     }
 
@@ -187,7 +187,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
 
             int iasa = count(constantService.getAuthorsSameAsGraph());
             do {
-                ProcessCoauthors(Providers, true, true);
+                ProcessCoauthors(Providers, true);
                 int asa = count(constantService.getAuthorsSameAsGraph());
                 if (asa != iasa) {
                     iasa = asa;
@@ -197,7 +197,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             } while (true);
             task.updateDetailMessage("Status", String.format("%s Disambiguation", "Coauthors"));
             delete(constantService.getCoauthorsSameAsGraph());
-            ProcessCoauthors(Providers, false, true);
+            ProcessCoauthors(Providers, false);
             task.updateDetailMessage("Status", String.format("%s Disambiguation", "Publications"));
             delete(constantService.getPublicationsSameAsGraph());
             ProcessPublications(Providers);
@@ -356,7 +356,6 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 List<Person> aProviderCandidates = aSecondaryProvider.getCandidates(aSeedAuthor.URI);
                 if (!aProviderCandidates.isEmpty()) {
                     Candidates.add(new AbstractMap.SimpleEntry<>(aSecondaryProvider, aProviderCandidates));
-
                 }
                 ProvidersElements.put(AuthorsProviderslist.get(j), aProviderCandidates.size());
             }
@@ -369,8 +368,8 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                         for (Map.Entry<Provider, List<Person>> aCandidateList : Candidates) {
                             aCandidateList.getKey().FillData(aCandidateList.getValue());
                         }
-                        List<Entry<Provider, List<Person>>> subList = Candidates.subList(1, Candidates.size());
-                        Candidates.addAll(Lists.reverse(subList));
+                        //List<Entry<Provider, List<Person>>> subList = Candidates.subList(1, Candidates.size());
+                        //Candidates.addAll(Lists.reverse(subList));
                         Model Disambiguate = Disambiguate(Candidates, 0, new Person());
                         RepositoryConnection connection = sesameService.getConnection();
                         ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
@@ -414,9 +413,9 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         return r;
     }
 
-    public void ProcessCoauthors(final List<Provider> ProvidersList, final boolean onlySameAs, boolean asyn) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, InterruptedException {
-        ExecutorService executorServicex = Executors.newFixedThreadPool(asyn ? MAXTHREADS : 1);
-        BoundedExecutor bexecutorService = new BoundedExecutor(executorServicex, asyn ? MAXTHREADS : 1);
+    public void ProcessCoauthors(final List<Provider> ProvidersList, final boolean onlySameAs) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, InterruptedException {
+        ExecutorService executorServicex = Executors.newFixedThreadPool(MAXTHREADS);
+        BoundedExecutor bexecutorService = new BoundedExecutor(executorServicex, MAXTHREADS);
 
         String qryDisambiguatedCoauthors = " select distinct ?p { graph <" + constantService.getAuthorsSameAsGraph() + "> { ?p <http://www.w3.org/2002/07/owl#sameAs> ?o } }";
         final List<Map<String, Value>> queryResponse = sparqlService.query(QueryLanguage.SPARQL, qryDisambiguatedCoauthors);
@@ -499,12 +498,9 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         Set<Set<String>> coauthorsGroups = new HashSet<>();
         for (int i = 0; i < queryResponse.size(); i++) {
             for (int j = i + 1; j < queryResponse.size(); j++) {
-
                 Person auxPersoni = queryResponse.get(i);
                 Person auxPersonj = queryResponse.get(j);
-
                 Boolean checkName = auxPersoni.checkName(auxPersonj);
-
                 if (checkName != null && checkName) {
                     Set<String> aGroup = new HashSet<>();
                     aGroup.add(auxPersoni.URI);
@@ -544,13 +540,12 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         coauthorsGroups.addAll(ls_alone);
 
         for (Set<String> eachGroup : coauthorsGroups) {
-            String firstIndex = null;
-
+            String eachGroupUUID = UUID.randomUUID().toString();
+            String PossibleNewURI = constantService.getAuthorResource() + eachGroupUUID;
             String coauthoruris = "  ";
             for (String aProvider : eachGroup) {
                 coauthoruris += " <" + aProvider + "> ";
             }
-
             String qry = "select distinct ?a {\n"
                     + "		graph <" + constantService.getAuthorsSameAsGraph() + "> {\n"
                     + "			values ?pa { " + coauthoruris + "  } .\n"
@@ -560,17 +555,11 @@ public class DisambiguationServiceImpl implements DisambiguationService {
 
             List<Map<String, Value>> query = sparqlService.query(QueryLanguage.SPARQL, qry);
             for (String groupIndex : eachGroup) {
-                if (firstIndex == null) {
-                    firstIndex = groupIndex;
-                }
-                String URICoauthorA = firstIndex;
-                String URICoauthorB = groupIndex;
-                String newURI = constantService.getAuthorResource() + Cache.getMD5(URICoauthorA);
                 if (query.isEmpty() && !onlySameAs) {
-                    registerSameAs(constantService.getCoauthorsSameAsGraph(), newURI, URICoauthorB);
+                    registerSameAsCheck(constantService.getCoauthorsSameAsGraph(), PossibleNewURI, groupIndex);
                 } else {
                     for (Map<String, Value> re : query) {
-                        registerSameAs(constantService.getAuthorsSameAsGraph(), re.get("a").stringValue(), URICoauthorB);
+                        registerSameAs(constantService.getAuthorsSameAsGraph(), re.get("a").stringValue(), groupIndex);
                     }
                 }
             }
@@ -642,7 +631,6 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 }
             }
         }
-
         Set<Set<String>> ls_alone = new HashSet<>();
         for (int i = 0; i < queryResponse.size(); i++) {
             boolean alone = true;
@@ -659,17 +647,28 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             }
         }
         publicationsGroups.addAll(ls_alone);
-
         for (Set<String> eachGroup : publicationsGroups) {
-            String firstIndex = null;
+            String eachGroupUUID = UUID.randomUUID().toString();
+            String PossibleNewURI = constantService.getPublicationResource() + eachGroupUUID;
             for (String groupIndex : eachGroup) {
-                if (firstIndex == null) {
-                    firstIndex = groupIndex;
+                registerSameAsCheck(constantService.getPublicationsSameAsGraph(), PossibleNewURI, groupIndex);
+            }
+        }
+    }
+
+    public void registerSameAsCheck(String graph, String URIO, String URIP) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
+        if (URIO != null && URIP != null && URIO.compareTo(URIP) != 0) {
+            String q = "select distinct ?o { graph <" + graph + "> { values ?p { <" + URIP + "> } . ?o <http://www.w3.org/2002/07/owl#sameAs> ?p. } }";
+            List<Map<String, Value>> query = sparqlService.query(QueryLanguage.SPARQL, q);
+            if (query.isEmpty()) {
+                String buildInsertQuery = buildInsertQuery(graph, URIO, "http://www.w3.org/2002/07/owl#sameAs", URIP);
+                sparqlService.update(QueryLanguage.SPARQL, buildInsertQuery);
+            } else {
+                for (Map<String, Value> mp : query) {
+                    String stringValue = mp.get("o").stringValue();
+                    String buildInsertQuery = buildInsertQuery(graph, stringValue, "http://www.w3.org/2002/07/owl#sameAs", URIP);
+                    sparqlService.update(QueryLanguage.SPARQL, buildInsertQuery);
                 }
-                String URIPublicationA = firstIndex;
-                String URIPublicationB = groupIndex;
-                String newURI = constantService.getPublicationResource() + Cache.getMD5(URIPublicationA);
-                registerSameAs(constantService.getPublicationsSameAsGraph(), newURI, URIPublicationB);
             }
         }
     }
