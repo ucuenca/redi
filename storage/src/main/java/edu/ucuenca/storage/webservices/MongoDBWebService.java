@@ -80,5 +80,18 @@ public class MongoDBWebService {
         mongoService.connect();
         return Response.ok().build();
     }
+    
+    @GET
+    @Path("/relatedauthors")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getRelatedAuthors(@QueryParam("uri") String uri) throws FailMongoConnectionException {
+        String response;
+        try {
+            response = mongoService.getRelatedAuthors(uri);
+        } catch (Exception e) {
+            throw new FailMongoConnectionException(String.format("Cannot retrieve author %s", uri), e);
+        }
+        return Response.ok().entity(response).build();
+    }
 
 }

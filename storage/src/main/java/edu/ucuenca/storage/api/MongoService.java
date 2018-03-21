@@ -32,6 +32,8 @@ public interface MongoService {
     public String getAuthor(String uri);
 
     public String getStatistics(String id);
+    
+    public String getRelatedAuthors(String uri);
 
     /**
      * Create a connection to {@link com.mongodb.MongoClient}.
@@ -41,7 +43,7 @@ public interface MongoService {
     public void connect() throws FailMongoConnectionException;
 
     public enum Collection {
-        AUTHORS("authors"), PUBLICATIONS("publications"), STATISTICS("statistics");
+        AUTHORS("authors"), PUBLICATIONS("publications"), STATISTICS("statistics"), RELATEDAUTHORS("relatedauthors");
 
         private final String value;
 

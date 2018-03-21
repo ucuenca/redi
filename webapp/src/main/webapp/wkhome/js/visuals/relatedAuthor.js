@@ -25,7 +25,8 @@ rela.directive('relatedAuthor', ["d3", 'globalData','sparqlQuery', '$routeParams
         dataType: "JSON", //result data type
        // url: host + "/pubman/reports/collaboratorsData?URI=https://redi.cedia.edu.ec/resource/authors/UCUENCA/file/_SAQUICELA_GALARZA_____VICTOR_HUGO_" ,
       // url: host + "/pubman/reports/collaboratorsData?URI=https://redi.cedia.edu.ec/resource/authors/UCUENCA/file/_FEYEN_____JAN_" ,
-         url: newhost + "/pubman/reports/collaboratorsData?URI="+uri ,
+         //url: newhost + "/pubman/reports/collaboratorsData?URI="+uri ,
+         url: newhost + "/mongo/relatedauthors?uri="+uri ,
         success: function(Result) {
             //document.getElementById("imgloading").style.visibility = "hidden";
            // alert("Correcto: " + Result);

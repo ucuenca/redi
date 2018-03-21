@@ -147,7 +147,13 @@ public class ScieloRawProvider extends AbstractHttpProvider {
             Model triples = new LinkedHashModel();
             ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
             byte[] data = IOUtils.toByteArray(input);
-            DocumentContext parse = JsonPath.parse(new ByteArrayInputStream(data), getConfiguration());
+            DocumentContext parse = null;
+            try {
+                parse = JsonPath.parse(new ByteArrayInputStream(data), getConfiguration());
+            } catch (Exception e) {
+                e.printStackTrace();
+                return Collections.emptyList();
+            }
             String code = URLEncoder.encode(extractDocCode(requestUrl));
             mapProperty(triples, parse, SCIELOBASEPUBLICATION + code, SCIELOPREFIX + "created", "$.publication_date", null, null, false);
             mapProperty(triples, parse, SCIELOBASEPUBLICATION + code, SCIELOPREFIX + "abstract", "$.article.v83[?(@.l=='es')].a", null, "es", false);

@@ -372,4 +372,7 @@ public interface QueriesService {
     String getAggregationAreas();
 
     String getKeywordsFrequencyPub();
+    
+    // Related authors
+    String getAuthorsCentralGraph();
 }

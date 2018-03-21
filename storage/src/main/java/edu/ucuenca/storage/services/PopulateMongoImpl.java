@@ -17,13 +17,20 @@ import edu.ucuenca.storage.api.PopulateMongo;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
+import org.apache.marmotta.platform.core.api.task.Task;
+import org.apache.marmotta.platform.core.api.task.TaskManagerService;
 import org.apache.marmotta.platform.core.api.triplestore.SesameService;
+import org.apache.marmotta.platform.core.exception.MarmottaException;
+import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
+import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
 import org.bson.Document;
+import org.openrdf.model.Value;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
@@ -42,7 +49,7 @@ import org.slf4j.Logger;
  */
 @ApplicationScoped
 public class PopulateMongoImpl implements PopulateMongo {
-
+    
     @Inject
     private ConfigurationService conf;
     @Inject
@@ -50,10 +57,17 @@ public class PopulateMongoImpl implements PopulateMongo {
     @Inject
     private QueriesService queriesService;
     @Inject
+    private SparqlService sparqlService;
+    @Inject
     private Logger log;
-
+    @Inject
+    private CommonService commonService;
+    @Inject
+    private TaskManagerService taskManagerService;
+    private Task task;
+    
     private static final Map context = new HashMap();
-
+    
     static {
         context.put("dct", "http://purl.org/dc/terms/");
         context.put("owl", "http://www.w3.org/2002/07/owl#");
@@ -66,22 +80,22 @@ public class PopulateMongoImpl implements PopulateMongo {
     /**
      *
      * @param queryResources query to load resources to describe.
-     * @param queryDescribe  query to describe each candidate; it has to be a
-     *                       describe/construct.
-     * @param collection     collection name in Mongo db.
+     * @param queryDescribe query to describe each candidate; it has to be a
+     * describe/construct.
+     * @param collection collection name in Mongo db.
      */
     private void loadResources(String queryResources, String queryDescribe, String c) {
         try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));
                 StringWriter writter = new StringWriter();) {
             RepositoryConnection conn = sesameService.getConnection();
-
+            
             int num_candidates = 0;
             try {
                 MongoDatabase db = client.getDatabase(MongoService.DATABASE);
                 // Delete and create collection
                 MongoCollection<Document> collection = db.getCollection(c);
                 collection.drop();
-
+                
                 RDFWriter jsonldWritter = Rio.createWriter(RDFFormat.JSONLD, writter);
                 TupleQueryResult resources = conn.prepareTupleQuery(QueryLanguage.SPARQL, queryResources).evaluate();
                 while (resources.hasNext()) {
@@ -113,18 +127,18 @@ public class PopulateMongoImpl implements PopulateMongo {
             log.error("IO error", ex);
         }
     }
-
+    
     private void loadStadistics(String c, HashMap<String, String> queries) {
         try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));
                 StringWriter writter = new StringWriter();) {
             RepositoryConnection conn = sesameService.getConnection();
-
+            
             try {
                 MongoDatabase db = client.getDatabase(MongoService.DATABASE);
                 // Delete and create collection
                 MongoCollection<Document> collection = db.getCollection(c);
                 collection.drop();
-
+                
                 RDFWriter jsonldWritter = Rio.createWriter(RDFFormat.JSONLD, writter);
                 for (String key : queries.keySet()) {
                     conn.prepareGraphQuery(QueryLanguage.SPARQL, queries.get(key))
@@ -153,7 +167,7 @@ public class PopulateMongoImpl implements PopulateMongo {
             log.error("IO error", ex);
         }
     }
-
+    
     @Override
     public void authors() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -167,7 +181,7 @@ public class PopulateMongoImpl implements PopulateMongo {
 //        String queryDescribe = "DESCRIBE <{}> FROM <http://localhost:8080/context/redi>";
 //        loadResources(queryCandidates, queryDescribe, MongoService.Collection.AUTHORS.getValue());
     }
-
+    
     @Override
     public void statistics() {
         HashMap<String, String> queries = new HashMap<>();
@@ -177,12 +191,46 @@ public class PopulateMongoImpl implements PopulateMongo {
         queries.put("count_research_areas", queriesService.getAggregationAreas());
         queries.put("keywords_frequencypub_gt4", queriesService.getKeywordsFrequencyPub());
         loadStadistics(MongoService.Collection.STATISTICS.getValue(), queries);
-
+        try {
+            loadRelatedAuthors();
+        } catch (MarmottaException ex) {
+            log.debug("Unknown error {} while caching related authos", ex);
+        }
     }
-
+    
+    public void loadRelatedAuthors() throws MarmottaException {
+        task = taskManagerService.createSubTask("Caching related authors", "Mongo Service");
+        try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
+            
+            MongoDatabase db = client.getDatabase(MongoService.DATABASE);
+            // Delete and create collection
+            MongoCollection<Document> collection = db.getCollection(MongoService.Collection.RELATEDAUTHORS.getValue());
+            collection.drop();
+            task.updateMessage("Calculating related authors");
+            List<Map<String, Value>> query = sparqlService.query(QueryLanguage.SPARQL, queriesService.getAuthorsCentralGraph());
+            int i = 0;
+            for (Map<String, Value> mp : query) {
+                i++;
+                String stringValue = mp.get("a").stringValue();
+                log.info("Relating {} ", stringValue);
+                log.info("Relating {}/{} ", i, query.size());
+                task.updateDetailMessage("URI", stringValue);
+                task.updateDetailMessage("Status", i + "/" + query.size());
+                String collaboratorsData = commonService.getCollaboratorsData(stringValue);
+                Document parse = Document.parse(collaboratorsData);
+                parse.append("_id", stringValue);
+                collection.insertOne(parse);
+            }
+        } catch (Exception w) {
+            w.printStackTrace();
+            log.debug(w.getMessage());
+        }
+        taskManagerService.endTask(task);
+    }
+    
     @Override
     public void publications() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
 }

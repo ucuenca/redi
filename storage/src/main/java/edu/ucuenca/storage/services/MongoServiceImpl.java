@@ -47,6 +47,7 @@ public class MongoServiceImpl implements MongoService {
     private MongoDatabase db;
     private MongoCollection<Document> authors;
     private MongoCollection<Document> statistics;
+    private MongoCollection<Document> relatedauthors;
 
     @PostConstruct
     public void initialize() throws FailMongoConnectionException {
@@ -61,6 +62,7 @@ public class MongoServiceImpl implements MongoService {
         mongoClient = new MongoClient(host, port);
         db = mongoClient.getDatabase(DATABASE);
         authors = db.getCollection(Collection.AUTHORS.getValue());
+        relatedauthors=db.getCollection(Collection.RELATEDAUTHORS.getValue());
         statistics = db.getCollection(Collection.STATISTICS.getValue());
     }
 
@@ -81,5 +83,12 @@ public class MongoServiceImpl implements MongoService {
     public void shutdown() {
         log.info("Killing connection to MongoDB.");
         mongoClient.close();
+    }
+
+    @Override
+    public String getRelatedAuthors(String uri) {
+        return relatedauthors.find(eq("_id", uri))
+                .first()
+                .toJson();
     }
 }
