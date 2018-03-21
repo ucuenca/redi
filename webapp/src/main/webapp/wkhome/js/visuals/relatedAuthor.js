@@ -51,7 +51,7 @@ function etiquetas () {
   for (var org in organization){
     console.log (color (organization [org]));
  //  $( "#colores" ).append( "<span style='color:"+color (organization [org])+"'> &#9658 "+org+" </span> " );
-    $( "#colores" ).append("<li class='list-group-item'> <span class='badge leyend' style='color:"+color(organization [org])+"' >&#9632 </span>"+ org +" </li>");
+    $( "#colores" ).append("<li class='list-group-item'> <span class='badge ' id='leyend' style='color:"+color(organization [org])+"' >&#9632 </span>"+ org +" </li>");
   }
 
   
@@ -161,7 +161,7 @@ var simulation = d3.forceSimulation()
 
   var lables = node.append("text")
       .text(function(d) {
-        return d.lastname.split(" ")[0].split(",")[0];
+        return d.lastname.split(" ")[0].split(",")[0].toUpperCase();
       })
       .attr('x', -20)
       .attr('y',  40);

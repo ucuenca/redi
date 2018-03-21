@@ -445,7 +445,7 @@ public class CommonServiceImpl implements CommonService {
         String querySubject = "PREFIX dct: <http://purl.org/dc/terms/> "
                 + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>  "
                 + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>  "
-                + "SELECT ?author (GROUP_CONCAT (DISTINCT ?lsubject ;separator= \",\") as ?lsubjects) WHERE { "
+                + "SELECT ?author (GROUP_CONCAT (DISTINCT ?lsubject ;separator= \", \") as ?lsubjects) WHERE { "
                 + "SELECT ?subject  (SAMPLE ( ?slabel ) as ?lsubject)  (COUNT (?pub) as ?npub)    { "
                 + " VALUES ?author { <" + coUri + "> } .  \n"
                 + "   ?author     foaf:publications ?pub . "

@@ -3,6 +3,7 @@ wkhomeControllers.controller('exploreAuthor', ['$routeParams', '$scope', '$rootS
         $('html,body').animate({
             scrollTop: 0
         }, "slow");
+        console.log ($routeParams);
 
         $scope.authorId = $routeParams.text;
         $scope.publication = undefined;
@@ -30,7 +31,7 @@ wkhomeControllers.controller('exploreAuthor', ['$routeParams', '$scope', '$rootS
           $window.location.hash = "/" + $routeParams.lang + "/w/author/" + authorId;
         };
 
-        $scope.ifrightClick = function (value) {
+        $scope.ifrightClick = function (authorId) {
            // searchData.genericData = value;
           //  $window.location.hash = "/" + $routeParams.lang + "/w/cloud?" + "datacloud";
             $window.location.hash = "/view/network/" + authorId;
@@ -41,9 +42,9 @@ wkhomeControllers.controller('exploreAuthor', ['$routeParams', '$scope', '$rootS
           $window.location.hash = '/publications/q=author:"' + uri + '"&fl=*&rows=10&wt=json/author/' + $scope.authorId;
         };
 
-        $scope.buildnetworks = function (authorId) {
-
-             $window.location.hash = "/view/network/" + authorId;
+        $scope.buildnetworks = function () {
+            
+             $window.location.hash = "/view/network/" + $scope.authorId ;
 
             /*var author = _.findWhere($scope.data["@graph"], {"@type": "foaf:Person"});
             if (author["foaf:name"]) {
