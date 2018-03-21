@@ -66,15 +66,15 @@ import org.openrdf.model.vocabulary.RDFS;
 public class AcademicsKnowledgeProvider extends AbstractJSONDataProvider implements DataProvider {
 
     public static final String NAME = "Academics Knowledge Provider";
-    public static final String PATTERN_AUTHOR = "https://westus\\.api\\.cognitive\\.microsoft\\.com/academic/v1\\.0/evaluate.+subscription-key=(.*).*";
-    public static final String PATTERN_PUBLICATION = "https://westus\\.api\\.cognitive\\.microsoft\\.com/academic/v1\\.0/evaluate.expr=Composite\\(AA.AuId=(.*)\\)&.*";
+    public static final String PATTERN_AUTHOR = "https://api\\.labs\\.cognitive\\.microsoft\\.com/academic/v1\\.0/evaluate.+subscription-key=(.*).*";
+    public static final String PATTERN_PUBLICATION = "https://api\\.labs\\.cognitive\\.microsoft\\.com/academic/v1\\.0/evaluate.expr=Composite\\(AA.AuId=(.*)\\)&.*";
     /**
      * Default Academics Knowledge for resources.
      */
     public static final String ACADEMICS_URL = "https://academic.microsoft.com/#/detail/";
 
     private final ConcurrentMap<String, JsonPathValueMapper> ontologyMapping = new ConcurrentHashMap<>();
-    private final String templatePublication = "https://westus.api.cognitive.microsoft.com/academic/v1.0/evaluate?"
+    private final String templatePublication = "https://api.labs.cognitive.microsoft.com/academic/v1.0/evaluate?"
             + "expr=Composite(AA.AuId=%s)&attributes=Id,Ti,L,Y,D,CC,ECC,AA.AuN,AA.AuId,AA.AfN,AA.AfId,AA.S,F.FN,F.FId,"
             + "J.JN.J.JId,C.CN,C.CId,RId,W,E&model=latest&subscription-key=%s";
 
