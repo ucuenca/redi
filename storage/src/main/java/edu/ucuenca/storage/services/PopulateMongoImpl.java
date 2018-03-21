@@ -17,13 +17,19 @@ import edu.ucuenca.storage.api.PopulateMongo;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
+import org.apache.marmotta.platform.core.api.task.Task;
+import org.apache.marmotta.platform.core.api.task.TaskManagerService;
 import org.apache.marmotta.platform.core.api.triplestore.SesameService;
+import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
+import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
 import org.bson.Document;
+import org.openrdf.model.Value;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
@@ -50,7 +56,14 @@ public class PopulateMongoImpl implements PopulateMongo {
     @Inject
     private QueriesService queriesService;
     @Inject
+    private SparqlService sparqlService;
+    @Inject
     private Logger log;
+    @Inject
+    private CommonService commonService;
+    @Inject
+    private TaskManagerService taskManagerService;
+    private Task task;
 
     private static final Map context = new HashMap();
 
@@ -177,7 +190,36 @@ public class PopulateMongoImpl implements PopulateMongo {
         queries.put("count_research_areas", queriesService.getAggregationAreas());
         queries.put("keywords_frequencypub_gt4", queriesService.getKeywordsFrequencyPub());
         loadStadistics(MongoService.Collection.STATISTICS.getValue(), queries);
+    }
 
+    @Override
+    public void networks() {
+        task = taskManagerService.createSubTask("Caching related authors", "Mongo Service");
+        try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
+
+            MongoDatabase db = client.getDatabase(MongoService.DATABASE);
+            // Delete and create collection
+            MongoCollection<Document> collection = db.getCollection(MongoService.Collection.RELATEDAUTHORS.getValue());
+            collection.drop();
+            task.updateMessage("Calculating related authors");
+            List<Map<String, Value>> query = sparqlService.query(QueryLanguage.SPARQL, queriesService.getAuthorsCentralGraph());
+            int i = 0;
+            for (Map<String, Value> mp : query) {
+                i++;
+                String stringValue = mp.get("a").stringValue();
+                log.info("Relating {} ", stringValue);
+                log.info("Relating {}/{} ", i, query.size());
+                task.updateDetailMessage("URI", stringValue);
+                task.updateDetailMessage("Status", i + "/" + query.size());
+                String collaboratorsData = commonService.getCollaboratorsData(stringValue);
+                Document parse = Document.parse(collaboratorsData);
+                parse.append("_id", stringValue);
+                collection.insertOne(parse);
+            }
+        } catch (Exception w) {
+            log.debug(w.getMessage(), w);
+        }
+        taskManagerService.endTask(task);
     }
 
     @Override

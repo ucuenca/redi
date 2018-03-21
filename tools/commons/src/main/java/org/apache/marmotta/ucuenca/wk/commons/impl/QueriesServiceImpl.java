@@ -54,7 +54,7 @@ public class QueriesServiceImpl implements QueriesService {
     @Override
     public String getAuthorsQuery(String datagraph, String num, Boolean mode) {
         if (mode) {
-            return  PREFIXES
+            return PREFIXES
                     + " SELECT DISTINCT ?s WHERE { "
                     + "                 ?s a foaf:Person . "
                     + "                  ?docu ?property ?s  . "
@@ -74,9 +74,8 @@ public class QueriesServiceImpl implements QueriesService {
                     + "                   } "
                     + "} GROUP BY ?s HAVING (count(?docu)> " + num + " || count (?article) > 0  ) ";
         }
-        
-        
-       /* return PREFIXES
+
+        /* return PREFIXES
                 + " SELECT ?s WHERE { " + getGraphString(datagraph) + "{"
                 + " ?doc rdf:type bibo:Document ;"
                 + " ?c ?s ."
@@ -365,7 +364,7 @@ public class QueriesServiceImpl implements QueriesService {
                     + "  OPTIONAL { "
                     + "  ?event rdfs:label  ?label" + provset.getValue() + " } "
                     + "  OPTIONAL { "
-                    + "  ?event  <" + RDF.TYPE.toString()+ "> <"+REDI.EXTRACTION_EVENT.toString()+"> } "
+                    + "  ?event  <" + RDF.TYPE.toString() + "> <" + REDI.EXTRACTION_EVENT.toString() + "> } "
                     + "  } " + prov;
 
         }
@@ -622,20 +621,17 @@ public class QueriesServiceImpl implements QueriesService {
                 + "FILTER ( ?e = <" + resource + "> )} ";
 
     }
-    
-    
+
     @Override
     @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
-    public String removeGenericRelationwithDependecies (String graph, String relation, String resource, String relationdel) {
+    public String removeGenericRelationwithDependecies(String graph, String relation, String resource, String relationdel) {
 
-        
-          return  "WITH <" + graph + "> DELETE {"
-                  + " ?a1  ?b1 ?c1 } WHERE { VALUES ?e { <" + resource + "> } . "
-                  + "?a  <" + relation + "> ?e . "
-                  + "?a <"+relationdel+"> ?a1 . ?a1 ?b1 ?c1 } ";
-          
+        return "WITH <" + graph + "> DELETE {"
+                + " ?a1  ?b1 ?c1 } WHERE { VALUES ?e { <" + resource + "> } . "
+                + "?a  <" + relation + "> ?e . "
+                + "?a <" + relationdel + "> ?a1 . ?a1 ?b1 ?c1 } ";
+
     }
-
 
     @Override
     public String getAuthors() {
@@ -679,8 +675,8 @@ public class QueriesServiceImpl implements QueriesService {
          + " GROUP BY ?s"
          + " HAVING (count(?docu)>" + num + ")}";*/
         if (modo) {
-            return  PREFIXES
-                    +" SELECT (count (?s) as ?count) { "
+            return PREFIXES
+                    + " SELECT (count (?s) as ?count) { "
                     + " SELECT DISTINCT ?s WHERE {   "
                     + "                 ?s a foaf:Person . "
                     + "                  ?docu ?property ?s . "
@@ -753,13 +749,12 @@ public class QueriesServiceImpl implements QueriesService {
                 + "  VALUES ?organization {" + StringUtils.join(orgs, " ") + "}"
                 + "  GRAPH <" + con.getEndpointsGraph() + ">  {"
                 + "      ?provenance uc:belongTo ?organization."
-
                 + "  }"
                 + "  GRAPH <" + con.getAuthorsGraph() + ">  {"
                 + "    ?subject a foaf:Person;"
                 + "               foaf:name ?name_;"
                 + "               foaf:firstName ?fname_;"
-                + "               foaf:lastName ?lname_;" 
+                + "               foaf:lastName ?lname_;"
                 + "               dct:provenance ?provenance."
                 //                + "filter (mm:fulltext-search(?name_,\"Saquicela\")) "
                 //                + "filter (mm:fulltext-search(?name_,\"Mauricio espinoza\")) "
@@ -1709,6 +1704,20 @@ public class QueriesServiceImpl implements QueriesService {
 //                + "  HAVING(?total > 4)"
 //                + "}";
 //</editor-fold>
+    }
+
+    @Override
+    public String getAuthorsCentralGraph() {
+        return PREFIXES
+                + "select distinct ?a {\n"
+                + "  graph <"+con.getCentralGraph()+"> {\n"
+                + "    ?a foaf:publications [] .\n"
+                + "    ?a <http://schema.org/memberOf> ?o.\n"
+                + "  }\n"
+                + "  graph <"+con.getOrganizationsGraph()+"> {\n"
+                + "  	?o a foaf:Organization .\n"
+                + "  }\n"
+                + "}";
     }
 
 }
