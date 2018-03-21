@@ -49,7 +49,7 @@ import org.slf4j.Logger;
  */
 @ApplicationScoped
 public class PopulateMongoImpl implements PopulateMongo {
-    
+
     @Inject
     private ConfigurationService conf;
     @Inject
@@ -65,9 +65,9 @@ public class PopulateMongoImpl implements PopulateMongo {
     @Inject
     private TaskManagerService taskManagerService;
     private Task task;
-    
+
     private static final Map context = new HashMap();
-    
+
     static {
         context.put("dct", "http://purl.org/dc/terms/");
         context.put("owl", "http://www.w3.org/2002/07/owl#");
@@ -88,14 +88,14 @@ public class PopulateMongoImpl implements PopulateMongo {
         try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));
                 StringWriter writter = new StringWriter();) {
             RepositoryConnection conn = sesameService.getConnection();
-            
+
             int num_candidates = 0;
             try {
                 MongoDatabase db = client.getDatabase(MongoService.DATABASE);
                 // Delete and create collection
                 MongoCollection<Document> collection = db.getCollection(c);
                 collection.drop();
-                
+
                 RDFWriter jsonldWritter = Rio.createWriter(RDFFormat.JSONLD, writter);
                 TupleQueryResult resources = conn.prepareTupleQuery(QueryLanguage.SPARQL, queryResources).evaluate();
                 while (resources.hasNext()) {
@@ -127,18 +127,18 @@ public class PopulateMongoImpl implements PopulateMongo {
             log.error("IO error", ex);
         }
     }
-    
+
     private void loadStadistics(String c, HashMap<String, String> queries) {
         try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));
                 StringWriter writter = new StringWriter();) {
             RepositoryConnection conn = sesameService.getConnection();
-            
+
             try {
                 MongoDatabase db = client.getDatabase(MongoService.DATABASE);
                 // Delete and create collection
                 MongoCollection<Document> collection = db.getCollection(c);
                 collection.drop();
-                
+
                 RDFWriter jsonldWritter = Rio.createWriter(RDFFormat.JSONLD, writter);
                 for (String key : queries.keySet()) {
                     conn.prepareGraphQuery(QueryLanguage.SPARQL, queries.get(key))
@@ -167,7 +167,7 @@ public class PopulateMongoImpl implements PopulateMongo {
             log.error("IO error", ex);
         }
     }
-    
+
     @Override
     public void authors() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -181,7 +181,7 @@ public class PopulateMongoImpl implements PopulateMongo {
 //        String queryDescribe = "DESCRIBE <{}> FROM <http://localhost:8080/context/redi>";
 //        loadResources(queryCandidates, queryDescribe, MongoService.Collection.AUTHORS.getValue());
     }
-    
+
     @Override
     public void statistics() {
         HashMap<String, String> queries = new HashMap<>();
@@ -197,11 +197,11 @@ public class PopulateMongoImpl implements PopulateMongo {
             log.debug("Unknown error {} while caching related authos", ex);
         }
     }
-    
+
     public void loadRelatedAuthors() throws MarmottaException {
         task = taskManagerService.createSubTask("Caching related authors", "Mongo Service");
         try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
-            
+
             MongoDatabase db = client.getDatabase(MongoService.DATABASE);
             // Delete and create collection
             MongoCollection<Document> collection = db.getCollection(MongoService.Collection.RELATEDAUTHORS.getValue());
@@ -222,15 +222,14 @@ public class PopulateMongoImpl implements PopulateMongo {
                 collection.insertOne(parse);
             }
         } catch (Exception w) {
-            w.printStackTrace();
-            log.debug(w.getMessage());
+            log.debug(w.getMessage(), w);
         }
         taskManagerService.endTask(task);
     }
-    
+
     @Override
     public void publications() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }
