@@ -58,7 +58,7 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
               var candidates = _.map(authors, function(author) {
                 var id = author["lmf.uri"];
                 var name = _.max(author.name, function(name) {
-                  return name.length
+                  return name.length;
                 });
                 var topics = _.chain(author.topics)
                   .uniq()

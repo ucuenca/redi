@@ -106,7 +106,7 @@ wkhomeServices.factory('AuthorsService', ['$resource', '$http', '$window',
     function ($resource, $http, $window) {
         var serverInstance = $window.location.protocol + '//' +  $window.location.hostname
                 + ($window.location.port ? ':8080' : '') + '';
-        return $resource(serverInstance + '/solr/authors/select?q=:search&wt=json&fl=lmf.uri,name,topics', {search:'@id'});
+        return $resource(serverInstance + '/solr/authors/select?q=name%3A(:search)&wt=json&fl=lmf.uri,name,topics', {search:'@id'});
     }]);
 wkhomeServices.factory('PublicationsService', ['$resource', '$http', '$window',
     function ($resource, $http, $window) {
