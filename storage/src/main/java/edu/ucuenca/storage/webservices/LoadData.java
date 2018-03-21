@@ -65,4 +65,17 @@ public class LoadData {
         return Response.ok().entity("Statistics load successfully").build();
     }
 
+    @POST
+    @Path("/networks")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response loadNetworks() throws FailMongoConnectionException {
+        try {
+            loadService.networks();
+        } catch (Exception e) {
+            log.error("Cannot load pre-calculated networks into Mongo DB", e);
+            throw new FailMongoConnectionException(String.format("Cannot load pre-calculated networks into Mongo DB"), e);
+        }
+        return Response.ok().entity("Statistics load successfully").build();
+    }
+
 }

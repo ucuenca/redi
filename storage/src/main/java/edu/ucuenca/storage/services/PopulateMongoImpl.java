@@ -25,7 +25,6 @@ import org.apache.marmotta.platform.core.api.config.ConfigurationService;
 import org.apache.marmotta.platform.core.api.task.Task;
 import org.apache.marmotta.platform.core.api.task.TaskManagerService;
 import org.apache.marmotta.platform.core.api.triplestore.SesameService;
-import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
@@ -80,9 +79,9 @@ public class PopulateMongoImpl implements PopulateMongo {
     /**
      *
      * @param queryResources query to load resources to describe.
-     * @param queryDescribe query to describe each candidate; it has to be a
-     * describe/construct.
-     * @param collection collection name in Mongo db.
+     * @param queryDescribe  query to describe each candidate; it has to be a
+     *                       describe/construct.
+     * @param collection     collection name in Mongo db.
      */
     private void loadResources(String queryResources, String queryDescribe, String c) {
         try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));
@@ -191,14 +190,10 @@ public class PopulateMongoImpl implements PopulateMongo {
         queries.put("count_research_areas", queriesService.getAggregationAreas());
         queries.put("keywords_frequencypub_gt4", queriesService.getKeywordsFrequencyPub());
         loadStadistics(MongoService.Collection.STATISTICS.getValue(), queries);
-        try {
-            loadRelatedAuthors();
-        } catch (MarmottaException ex) {
-            log.debug("Unknown error {} while caching related authos", ex);
-        }
     }
 
-    public void loadRelatedAuthors() throws MarmottaException {
+    @Override
+    public void networks() {
         task = taskManagerService.createSubTask("Caching related authors", "Mongo Service");
         try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
 

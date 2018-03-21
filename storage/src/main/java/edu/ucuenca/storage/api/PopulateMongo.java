@@ -20,5 +20,15 @@ public interface PopulateMongo {
      * Load information of publications in collection publications.
      */
     public void publications();
+
+    /**
+     * Load aggregations for statistics of publications/keywords/authors and
+     * store areas with a frequency greater than 4.F
+     */
     public void statistics();
+
+    /**
+     * Pre-calculate information to network building.
+     */
+    public void networks();
 }
