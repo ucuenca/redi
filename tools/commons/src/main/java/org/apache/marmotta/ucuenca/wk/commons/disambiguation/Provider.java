@@ -24,13 +24,11 @@ public class Provider {
     public String Name;
     public String Graph;
     private SparqlService sparql;
-    public Boolean isMain;
 
-    public Provider(String Name, String Graph, SparqlService sparql, Boolean main) {
+    public Provider(String Name, String Graph, SparqlService sparql) {
         this.Name = Name;
         this.Graph = Graph;
         this.sparql = sparql;
-        this.isMain = main;
     }
 
     public List<Person> getAuthors() throws MarmottaException {
