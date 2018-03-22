@@ -30,9 +30,12 @@ rela.directive('relatedAuthor', ["d3", 'globalData','sparqlQuery', '$routeParams
         success: function(Result) {
             //document.getElementById("imgloading").style.visibility = "hidden";
            // alert("Correcto: " + Result);
-          
-         render (Result) ;
-         etiquetas ();
+            if ( "Error" in Result ){
+            $('#relatedArea').css("display", "block");
+           } else {
+            render (Result) ;
+           etiquetas (); 
+                }
     
         },
         error: function(data) {

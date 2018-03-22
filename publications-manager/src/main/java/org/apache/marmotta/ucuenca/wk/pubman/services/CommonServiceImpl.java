@@ -357,8 +357,8 @@ public class CommonServiceImpl implements CommonService {
                     imgbase = response.get(0).get("img").stringValue();
                 }
 
-                int maxScoreAuthor = 0;
-                Double maXScoreCoauthor = 0.0;
+                double maxScoreAuthor = 0;
+                double maXScoreCoauthor = 0;
                 String authorKeywords = "";
 
                 LinkedHashMap<String, collaborator> cMap = new LinkedHashMap();
@@ -373,7 +373,7 @@ public class CommonServiceImpl implements CommonService {
                     }
 
                     authorKeywords = author.get("label").stringValue() + "," + authorKeywords;
-                    int authorSubjectS = Integer.parseInt(author.get("npub").stringValue());
+                    double authorSubjectS = (double) Integer.parseInt(author.get("npub").stringValue());
 
                     String querySubjectCo = "PREFIX dct: <http://purl.org/dc/terms/> "
                             + "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
@@ -411,7 +411,7 @@ public class CommonServiceImpl implements CommonService {
                         if (coauthor.containsKey("img")) {
                             imgUri = coauthor.get("img").stringValue();
                         }
-                        double Score = authorSubjectS / maxScoreAuthor;
+                        double Score = authorSubjectS / (double) maxScoreAuthor;
 
                         if (!cMap.containsKey(couri)) {
                             collaborator c = new collaborator(uri, couri, coName, lName, Score * coScore, isCoauthor(uri, couri), isClusterPartner(uri, couri), coOrg, getSubjectAuthor(couri));
@@ -493,7 +493,7 @@ public class CommonServiceImpl implements CommonService {
         return mergeJSON(listmapTojson(lnodes, "nodes"), listmapTojson(llinks, "links"), "nodes", "links");
 
     }
-
+    @Deprecated
     public String getCollaboratorsData(String uri, String nada) {
 
         try {
@@ -605,6 +605,7 @@ public class CommonServiceImpl implements CommonService {
         return sparqlService.ask(QueryLanguage.SPARQL, queryC);
     }
 
+      @Deprecated
     public JSONArray listmapTojson(List<Map<String, String>> list, String nameobject) throws org.json.JSONException {
         JSONObject jsonh1 = new JSONObject();
 
