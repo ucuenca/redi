@@ -354,17 +354,16 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             Candidates.add(new AbstractMap.SimpleEntry<Provider, List<Person>>(MainAuthorsProvider, Lists.newArrayList(aSeedAuthor)));
             List<Provider> providersHarvested = new ArrayList<>();
             //Check Harvested Data
-            Set<String> sortedProvidersHarvested = new TreeSet<>();
+            String harvestedProvidersList = "";
             for (int j = 1; j < AuthorsProviderslist.size(); j++) {
                 Provider aSecondaryProvider = AuthorsProviderslist.get(j);
                 boolean harvested = aSecondaryProvider.isHarvested(aSeedAuthor.URI);
                 if (harvested) {
                     providersHarvested.add(aSecondaryProvider);
-                    sortedProvidersHarvested.add(aSecondaryProvider.Graph);
                 }
+                harvestedProvidersList += (harvested ? "1" : "0");
             }
-            String harvestedProvidersList = sortedProvidersHarvested.toString();
-            final String harvestedProvidersListURI = constantService.getDisambiguationStatusResource() + Cache.getMD5(harvestedProvidersList);
+            final String harvestedProvidersListURI = constantService.getDisambiguationStatusResource() + harvestedProvidersList;
             boolean alreadyProcessed = sparqlService.ask(QueryLanguage.SPARQL, "ask from <" + constantService.getAuthorsSameAsGraph() + "> { <" + aSeedAuthor.URI + "> <http://dbpedia.org/ontology/status> <" + harvestedProvidersListURI + "> }");
             if (alreadyProcessed) {
                 //No need to disambiguate again
