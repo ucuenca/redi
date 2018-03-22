@@ -52,6 +52,7 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
           search: searchTextVar
         }, function(result) {
           if (result.response.docs.length > 0) {
+            waitingDialog.hide();
             var authors = result.response.docs;
             if (authors.length > 1) {
               var path = "/author/";
@@ -71,11 +72,9 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
               });
               $scope.candidates = candidates;
               searchTextResultsService.saveData(candidates);
-              waitingDialog.hide();
               $('#searchResults').modal('show');
             } else if (authors.length === 1) {
               var authorId = authors[0]["lmf.uri"];
-              waitingDialog.hide();
               $window.location.hash = "/author/" + authorId;
             }
           } else {
@@ -96,12 +95,12 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
                 waitingDialog.hide();
                 $('#searchResults').modal('show');
               } else if (keywords.length === 1) {
-                var keyword = _(keywords[0].keyword).first();
+                var keyword = _.first(keywords[0].keyword);
                 waitingDialog.hide();
-                $location.path($routeParams.lang + "/cloud/group-by/").search({
-                  area: keyword
-                });
-                $window.location.hash = "/" + $routeParams.lang + "/cloud/group-by?area=" + keyword;
+                setTimeout(function(){ 
+                    $window.location.hash =  "/cloud/group-by?area=" + keyword
+                }, 500);
+
               } else {
                 PublicationsService.get({
                  search: searchTextVar
