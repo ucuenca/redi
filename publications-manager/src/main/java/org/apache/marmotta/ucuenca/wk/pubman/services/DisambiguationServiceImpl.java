@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
@@ -33,7 +34,6 @@ import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
-import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.DisambiguationService;
@@ -42,6 +42,7 @@ import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Person;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Provider;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.utils.PublicationUtils;
+import org.apache.marmotta.ucuenca.wk.commons.function.Cache;
 import org.apache.marmotta.ucuenca.wk.commons.util.LongUpdateQueryExecutor;
 import org.openrdf.model.Model;
 import org.openrdf.model.Value;
@@ -348,43 +349,66 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         for (int i = 0; i < allAuthors.size(); i++) {
             final int ix = i;
             final int allx = allAuthors.size();
-            Person aSeedAuthor = allAuthors.get(i);
+            final Person aSeedAuthor = allAuthors.get(i);
             final List<Map.Entry<Provider, List<Person>>> Candidates = new ArrayList<>();
             Candidates.add(new AbstractMap.SimpleEntry<Provider, List<Person>>(MainAuthorsProvider, Lists.newArrayList(aSeedAuthor)));
+            List<Provider> providersHarvested = new ArrayList<>();
+            //Check Harvested Data
+            Set<String> sortedProvidersHarvested = new TreeSet<>();
             for (int j = 1; j < AuthorsProviderslist.size(); j++) {
                 Provider aSecondaryProvider = AuthorsProviderslist.get(j);
-                List<Person> aProviderCandidates = aSecondaryProvider.getCandidates(aSeedAuthor.URI);
-                if (!aProviderCandidates.isEmpty()) {
-                    Candidates.add(new AbstractMap.SimpleEntry<>(aSecondaryProvider, aProviderCandidates));
+                boolean harvested = aSecondaryProvider.isHarvested(aSeedAuthor.URI);
+                if (harvested) {
+                    providersHarvested.add(aSecondaryProvider);
+                    sortedProvidersHarvested.add(aSecondaryProvider.Graph);
                 }
-                ProvidersElements.put(AuthorsProviderslist.get(j), aProviderCandidates.size());
             }
-            bexecutorService.submitTask(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        task.updateDetailMessage("Status", String.format("Start disambiguating %s  out of %s  authors", ix, allx));
-                        log.info("Start disambiguating {} out of {} authors", ix, allx);
-                        for (Map.Entry<Provider, List<Person>> aCandidateList : Candidates) {
-                            aCandidateList.getKey().FillData(aCandidateList.getValue());
+            String harvestedProvidersList = String.join(",", sortedProvidersHarvested);
+            final String harvestedProvidersListURI = constantService.getDisambiguationStatusResource() + Cache.getMD5(harvestedProvidersList);
+            boolean alreadyProcessed = sparqlService.ask(QueryLanguage.SPARQL, "ask from <" + constantService.getAuthorsSameAsGraph() + "> { <" + aSeedAuthor.URI + "> <http://dbpedia.org/ontology/status> <" + harvestedProvidersListURI + "> }");
+            if (alreadyProcessed) {
+                //No need to disambiguate again
+                continue;
+            } else {
+                //Get candidated and distambiguate
+                for (int j = 1; j < AuthorsProviderslist.size(); j++) {
+                    Provider aSecondaryProvider = AuthorsProviderslist.get(j);
+                    if (providersHarvested.contains(aSecondaryProvider)) {
+                        List<Person> aProviderCandidates = aSecondaryProvider.getCandidates(aSeedAuthor.URI);
+                        if (!aProviderCandidates.isEmpty()) {
+                            Candidates.add(new AbstractMap.SimpleEntry<>(aSecondaryProvider, aProviderCandidates));
                         }
-                        //List<Entry<Provider, List<Person>>> subList = Candidates.subList(1, Candidates.size());
-                        //Candidates.addAll(Lists.reverse(subList));
-                        Model Disambiguate = Disambiguate(Candidates, 0, new Person());
-                        RepositoryConnection connection = sesameService.getConnection();
-                        ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
-                        connection.add(Disambiguate, instance.createURI(constantService.getAuthorsSameAsGraph()));
-                        connection.commit();
-                        connection.close();
-                        task.updateDetailMessage("Status", String.format("Finish disambiguating %s out of %s authors", ix, allx));
-                        log.info("Finish disambiguating {} out of {} authors", ix, allx);
-
-                    } catch (Exception ex) {
-                        log.error("Unknown error while disambiguating");
-                        ex.printStackTrace();
+                        ProvidersElements.put(AuthorsProviderslist.get(j), aProviderCandidates.size());
                     }
                 }
-            });
+                bexecutorService.submitTask(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            task.updateDetailMessage("Status", String.format("Start disambiguating %s  out of %s  authors", ix, allx));
+                            log.info("Start disambiguating {} out of {} authors", ix, allx);
+                            for (Map.Entry<Provider, List<Person>> aCandidateList : Candidates) {
+                                aCandidateList.getKey().FillData(aCandidateList.getValue());
+                            }
+                            //List<Entry<Provider, List<Person>>> subList = Candidates.subList(1, Candidates.size());
+                            //Candidates.addAll(Lists.reverse(subList));
+                            ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
+                            Model Disambiguate = Disambiguate(Candidates, 0, new Person());
+                            Disambiguate.add(instance.createURI(aSeedAuthor.URI), instance.createURI("http://dbpedia.org/ontology/status"), instance.createURI(harvestedProvidersListURI));
+                            RepositoryConnection connection = sesameService.getConnection();
+                            connection.add(Disambiguate, instance.createURI(constantService.getAuthorsSameAsGraph()));
+                            connection.commit();
+                            connection.close();
+                            task.updateDetailMessage("Status", String.format("Finish disambiguating %s out of %s authors", ix, allx));
+                            log.info("Finish disambiguating {} out of {} authors", ix, allx);
+
+                        } catch (Exception ex) {
+                            log.error("Unknown error while disambiguating");
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+            }
         }
         bexecutorService.end();
         return ProvidersElements;

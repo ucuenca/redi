@@ -146,4 +146,6 @@ public interface ConstantService {
     String getCoauthorsSameAsGraph();
 
     String getAuthorsProviderGraph();
+    
+    String getDisambiguationStatusResource();
 }

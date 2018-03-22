@@ -91,6 +91,15 @@ public class Provider {
         return lsp;
     }
 
+    public boolean isHarvested(String URI) throws MarmottaException {
+        String qry = "ask { \n"
+                + "  graph <"+Graph+"> {\n"
+                + "  	[] <http://www.w3.org/2002/07/owl#oneOf> <"+URI+"> .\n"
+                + "  }\n"
+                + "} ";
+        return sparql.ask(QueryLanguage.SPARQL, qry);
+    }
+
     public void FillData(List<Person> lsa) throws MarmottaException {
 
         String qryName = "select distinct ?fun {\n"
