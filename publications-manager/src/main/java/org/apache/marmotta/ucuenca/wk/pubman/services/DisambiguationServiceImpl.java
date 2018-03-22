@@ -363,14 +363,14 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                     sortedProvidersHarvested.add(aSecondaryProvider.Graph);
                 }
             }
-            String harvestedProvidersList = String.join(",", sortedProvidersHarvested);
+            String harvestedProvidersList = sortedProvidersHarvested.toString();
             final String harvestedProvidersListURI = constantService.getDisambiguationStatusResource() + Cache.getMD5(harvestedProvidersList);
             boolean alreadyProcessed = sparqlService.ask(QueryLanguage.SPARQL, "ask from <" + constantService.getAuthorsSameAsGraph() + "> { <" + aSeedAuthor.URI + "> <http://dbpedia.org/ontology/status> <" + harvestedProvidersListURI + "> }");
             if (alreadyProcessed) {
                 //No need to disambiguate again
                 continue;
             } else {
-                //Get candidated and distambiguate
+                //Get candidates and disambiguate
                 for (int j = 1; j < AuthorsProviderslist.size(); j++) {
                     Provider aSecondaryProvider = AuthorsProviderslist.get(j);
                     if (providersHarvested.contains(aSecondaryProvider)) {
