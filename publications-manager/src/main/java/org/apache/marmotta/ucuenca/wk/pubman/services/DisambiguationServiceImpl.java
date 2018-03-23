@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
@@ -42,7 +41,6 @@ import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Person;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Provider;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.utils.PublicationUtils;
-import org.apache.marmotta.ucuenca.wk.commons.function.Cache;
 import org.apache.marmotta.ucuenca.wk.commons.util.LongUpdateQueryExecutor;
 import org.openrdf.model.Model;
 import org.openrdf.model.Value;
@@ -270,6 +268,19 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
                 + "		?a ?b ?c .\n"
                 + "	}\n", null, "prefix foaf: <http://xmlns.com/foaf/0.1/>\n", "?a ?b ?c").execute();
+        
+        //delete provider triple
+        String deleteProviderType = "delete {\n"
+                + "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
+                + "		?a a <http://ucuenca.edu.ec/ontology#Provider> .\n"
+                + "	}\n"
+                + "} where {\n"
+                + "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
+                + "		?a a <http://ucuenca.edu.ec/ontology#Provider> .\n"
+                + "	}\n"
+                + "}";
+        sparqlService.update(QueryLanguage.SPARQL, deleteProviderType);
+        
         //givName
         new LongUpdateQueryExecutor(sparqlService,
                 "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
