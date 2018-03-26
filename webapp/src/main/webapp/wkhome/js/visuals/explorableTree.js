@@ -1,8 +1,8 @@
 'use strict';
 var explorableTree = angular.module('explorableTree', []);
-//	D3	Factory
+//  D3  Factory
 explorableTree.factory('d3', function () {
-    return	d3;
+    return  d3;
 });
 explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', 'authorRestQuery', '$window',
     function (d3, globalData, sparqlQuery, authorRestQuery, $window) {
@@ -390,19 +390,19 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
 //                    var query = globalData.PREFIX
 //                      + "CONSTRUCT {"
 //                      + "  <" + id + "> a bibo:AcademicArticle ;"
-//                      + "								dct:title ?title; "
-//                      + "								bibo:abstract ?abstract; "
-//                      + "								bibo:uri ?uri; "
-//                      + "								bibo:doi ?doi; "
-//                      + "								bibo:pages ?pages; "
-//                      + "								bibo:created ?created; "
-//                      + "								bibo:issue ?issue; "
-//                      + "								bibo:volume ?volumne; "
-//                      + "								dct:contributor ?contributorURI; "
-//                      + "								dct:creator ?creatorURI; "
-//                      + "								dct:publisher ?publisher; "
-//                      + "								dct:subject ?keyword; "
-//                      + "								dct:isPartOf ?isPartOfURI. "
+//                      + "                             dct:title ?title; "
+//                      + "                             bibo:abstract ?abstract; "
+//                      + "                             bibo:uri ?uri; "
+//                      + "                             bibo:doi ?doi; "
+//                      + "                             bibo:pages ?pages; "
+//                      + "                             bibo:created ?created; "
+//                      + "                             bibo:issue ?issue; "
+//                      + "                             bibo:volume ?volumne; "
+//                      + "                             dct:contributor ?contributorURI; "
+//                      + "                             dct:creator ?creatorURI; "
+//                      + "                             dct:publisher ?publisher; "
+//                      + "                             dct:subject ?keyword; "
+//                      + "                             dct:isPartOf ?isPartOfURI. "
 //                      + " ?contributorURI foaf:name ?contributor."
 //                      + " ?contributorURI foaf:img ?imgContributor."
 //                      + " ?creatorURI foaf:name ?creator."
@@ -438,7 +438,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                      var query = globalData.PREFIX+" construct { ?a a bibo:AcademicArticle . ?a ?b ?c .   ?c ?d ?e .   ?c ?p ?v . } where ";
 
                       query += "{  graph <"+globalData.centralGraph+"> { bind (<"+id+"> as ?a) . "
-                            +"  	?a ?b ?c ."
+                            +"      ?a ?b ?c ."
                             +" filter (?b = dct:isPartOf ||"
                             +" ?b = dct:subject ||"
                             +" ?b = dct:publisher ||"
@@ -454,7 +454,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                             +" ?b = <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>   ) ."
                             +"  }"
                             +"  optional {"
-                            +"  	select * {"
+                            +"      select * {"
                             +"              ?c ?d ?e ."
                             +"              filter (?d = foaf:name || "
                             +"                      ?d = <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> || "
@@ -464,9 +464,9 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                             +"          }"
                             +"  }"
                             +"  optional {"
-                            +"  	select * { "
+                            +"      select * { "
                             +"              ?c <http://www.w3.org/2002/07/owl#sameAs> ?eq ."
-                            //+"  	graph <"+globalData.latindexGraph+"> { "
+                            //+"    graph <"+globalData.latindexGraph+"> { "
                             +"              ?eq a <http://redi.cedia.edu.ec/ontology/journal> ."
                             +"              ?eq ?p ?v. "
                             +"              filter ( ?p=rdfs:label || ?p=bibo:uri || (?p=<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> && ?v = bibo:Journal) ). "
@@ -479,7 +479,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
 
                     sparqlQuery.querySrv({query: query}, function (rdf) {
                         jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
-                       	  waitingDialog.hide();
+                          waitingDialog.hide();
                           var authors = [];
                           var pubclean = {};
                           var jouclean = {};
@@ -567,7 +567,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                             }
                             return val;
                           };
-						  /**
+                          /**
                           * Get string literals from subject resources.
                           */
                           var getSubjects = function(val, key) {
@@ -1169,18 +1169,18 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
             },
             compile: function (element, attrs, transclude) {
 
-                //	Define	the	dimensions	for	the	chart
+                //  Define  the dimensions  for the chart
                 //var width = 960, height = 500;
                 var width = $(element).width(),
                         height = $(element).height();
-                //	Create	a	SVG	root	element
+                //  Create  a   SVG root    element
                 var svg = d3.select(element[0]).append("svg");
 
-                //	Return	the	link	function
-                return	function (scope, element, attrs) {
-                    //	Watch	the	data	attribute	of	the	scope
+                //  Return  the link    function
+                return  function (scope, element, attrs) {
+                    //  Watch   the data    attribute   of  the scope
                     scope.$watch('data', function (newVal, oldVal, scope) {
-                        //	Update	the	chart
+                        //  Update  the chart
                         if (scope.data && scope.data["@graph"]){
                           //&&
                             //    (JSON.stringify(newVal["@graph"]) != JSON.stringify(oldVal ? oldVal["@graph"] : oldVal))) {

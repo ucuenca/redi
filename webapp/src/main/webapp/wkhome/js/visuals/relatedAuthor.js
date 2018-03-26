@@ -1,9 +1,9 @@
 'use strict';
 
 var rela = angular.module('relatedAuthor', []);
-//	D3	Factory
+//  d3  Factory
 rela.factory('d3', function () {
-    return	d3;
+    return  d3;
 });
 rela.directive('relatedAuthor', ["d3", 'globalData','sparqlQuery', '$routeParams' , '$window' ,
     function (d3, globalData, sparqlQuery , $routeParams, $window ) {
@@ -14,7 +14,7 @@ rela.directive('relatedAuthor', ["d3", 'globalData','sparqlQuery', '$routeParams
   var organization =  {};
   var norg = 0;
 
-  var color = d3.scaleOrdinal(d3.schemeCategory20);
+  //var color = d3.scaleOrdinal(d3.schemeCategory20);
   var newhost =  $window.location.protocol + '//' + $window.location.hostname + ($window.location.port ? ':8080' : '') + '';
   console.log (newhost);
 
@@ -25,11 +25,10 @@ rela.directive('relatedAuthor', ["d3", 'globalData','sparqlQuery', '$routeParams
         dataType: "JSON", //result data type
        // url: host + "/pubman/reports/collaboratorsData?URI=https://redi.cedia.edu.ec/resource/authors/UCUENCA/file/_SAQUICELA_GALARZA_____VICTOR_HUGO_" ,
       // url: host + "/pubman/reports/collaboratorsData?URI=https://redi.cedia.edu.ec/resource/authors/UCUENCA/file/_FEYEN_____JAN_" ,
-         //url: newhost + "/pubman/reports/collaboratorsData?URI="+uri ,
+       //    url: newhost + "/pubman/reports/collaboratorsData?URI="+uri ,
          url: newhost + "/mongo/relatedauthors?uri="+uri ,
         success: function(Result) {
-            //document.getElementById("imgloading").style.visibility = "hidden";
-           // alert("Correcto: " + Result);
+        
             if ( "Error" in Result ){
             $('#relatedArea').css("display", "block");
            } else {
@@ -96,122 +95,39 @@ var svg = d3.select("svg"),
     height = +svg.attr("height");
 
 
+var color = d3.scale.category10();
 
+var simulation = d3.layout.force()
+            .gravity(0.05).
+   linkDistance(function(d) {
+    console.log (d);
+       return distanceCalc(d.distance);
+    })
+            .charge(-700)
+            .size([width, height]);
 
-var simulation = d3.forceSimulation()
-    .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(function(d) { console.log (d); return distanceCalc(d.distance);}))
-    //.force("link", d3.forceLink().distance(function(d) {return d.distance;}).strength(0.1))
-    .force("charge", d3.forceManyBody())
-    .force("center", d3.forceCenter(width / 2.5, height / 2))
-    .force('collision', d3.forceCollide().radius(function(d) {
-    return 30;
-  }))
+function coauthorFactor (coauthor) {
 
-
-
-  var link = svg.append("g")
-      .attr("class", "links")
-    .selectAll("line")
-    .data(graph.links)
-    .enter().append("line")
-      .attr("stroke-width", function(d) {  console.log (d.coauthor); return coauthorFactor (d.coauthor); });
-
-  link.append("title")
-  .text(function(d) { return  d.coauthor ?  "coauthor": ""; }); 
-
-  var node = svg.append("g")
-      .attr("class", "nodes")
-    .selectAll("g")
-    .data(graph.nodes)
-    .enter().append("g");
-    
-  var circles = node.append("circle")
-      .attr("r", 30)
-      .attr("fill", function(d) { console.log (orgcolor(d.group)+" "+d.group) ;return orgcolor(d.group); }) ;
-
-
-      node.append("clipPath")
-                        .attr("id", "clipCircle")
-                        .append("circle")
-                        .attr("r", 26);
-
-
-     var imagen = node.append ("image")
-       .attr("xlink:href", function (d) { if (d.img != ""){return d.img}else{return "wkhome/images/author-borderless.png"; }})
-       .attr("class", "node")
-       .attr("x", "-30px")
-       .attr("y", "-30px")
-       .attr("width", function (d) { return 60})
-       .attr("height", function (d) { return 60})
-       .attr("clip-path", "url(#clipCircle)")
-       .call(d3.drag()
-          .on("start", dragstarted)
-          .on("drag", dragged)
-          .on("end", dragended))
-        .on("mouseover", function (d) {
-                               // tip.html(d.subject);
-                               // tip.show(d);
-        //showPopover.call(this, d);
-        showPopover.call(this, d);
-                    }) 
-        .on("mouseout", function (d) {
-                        removePopovers();
-                    });  
-
-    /*   .on("mouseover", function (d) {
-                              tip.html(d.subject);
-                                tip.show(d);
-                        });*/
-
-  var lables = node.append("text")
-      .text(function(d) {
-        return d.lastname.split(" ")[0].split(",")[0].toUpperCase();
-      })
-      .attr('x', -20)
-      .attr('y',  40);
-
- /* node.append("title")
-      .text(function(d) { return "hola"; }); */
-
-  simulation
-      .nodes(graph.nodes)
-      .on("tick", ticked);
-
-  simulation.force("link")
-      .links(graph.links);
-
-  function ticked() {
-    link
-        .attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.y; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; });
-
-    node
-        .attr("transform", function(d) {
-          return "translate(" + d.x + "," + d.y + ")";
-        })
+  if (coauthor == "true"){
+    return Math.sqrt(20);
+  }else {
+    return Math.sqrt(1);
   }
-//}
-//);
+ };
 
-function dragstarted(d) {
-  if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-  d.fx = d.x;
-  d.fy = d.y;
-}
 
-function dragged(d) {
-  d.fx = d3.event.x;
-  d.fy = d3.event.y;
-}
+    function distanceCalc (distance) {
 
-function dragended(d) {
-  if (!d3.event.active) simulation.alphaTarget(0);
-  d.fx = null;
-  d.fy = null;
-}
- function showPopover(d) {
+    if (distance <  100 ){
+
+     return parseInt(distance) + 100;
+    }else {
+     return parseInt(distance) ;  
+    }
+ }
+
+
+function showPopover(d) {
     console.log ("OVER");
                 $(this).popover({
                     placement: 'top',
@@ -233,6 +149,108 @@ function dragended(d) {
                     $(this).remove();
                 });
             }
+
+ 
+
+  for(var g in graph.links) {
+   graph.links[g].source = 0;
+   graph.links[g].target = parseInt(g)+1;
+ //  console.log(graph.links[g].source );
+}
+
+ simulation
+      .nodes(graph.nodes)
+      .links(graph.links)
+      .start();
+
+  var link = svg.append("g")
+      .attr("class", "links")
+    .selectAll("line")
+    .data(graph.links)
+    .enter().append("line")
+      .attr("stroke-width", function(d) { return coauthorFactor (d.coauthor); });
+
+     link.append("title")
+  .text(function(d) { return  d.coauthor ?  "coauthor": ""; }); 
+
+  var node = svg.append("g")
+      .attr("class", "nodes")
+    .selectAll("g")
+    .data(graph.nodes)
+    .enter().append("g")
+     .call(simulation.drag);
+
+    
+  var circles = node.append("circle")
+      .attr("r", 26)
+      .attr("fill", function(d) { return orgcolor(d.group); });
+
+   node.append("clipPath")
+                        .attr("id", "clipCircle")
+                        .append("circle")
+                        .attr("r", 22);
+
+
+     var imagen = node.append ("image")
+       .attr("xlink:href", function (d) { if (d.img != ""){return d.img}else{return "wkhome/images/author-borderless.png"; }})
+       .attr("class", "node")
+       .attr("x", "-30px")
+       .attr("y", "-30px")
+       .attr("width", function (d) { return 60})
+       .attr("height", function (d) { return 60})
+       .attr("clip-path", "url(#clipCircle)")
+       .on("mouseover", function (d) {
+        showPopover.call(this, d);
+                    }) 
+        .on("mouseout", function (d) {
+                        removePopovers();
+                    }); 
+
+
+       var lables = node.append("text")
+      .text(function(d) {
+        return d.lastname.split(" ")[0].split(",")[0].toUpperCase();
+      })
+      .attr('x', -20)
+      .attr('y',  40);
+
+
+   simulation.on("tick", function () {
+                link.attr("x1", function (d) {
+                        return d.source.x;
+                    })
+                    .attr("y1", function (d) {
+                        return d.source.y;
+                    })
+                    .attr("x2", function (d) {
+                        return d.target.x;
+                    })
+                    .attr("y2", function (d) {
+                        return d.target.y;
+                    }); 
+                node.attr("transform", function (d) { 
+                    return "translate(" + d.x + "," + d.y + ")";
+                });
+            }); 
+      //  });
+
+function dragstarted(d) {
+  if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+  d.fx = d.x;
+  d.fy = d.y;
+}
+
+function dragged(d) {
+  d.fx = d3.event.x;
+  d.fy = d3.event.y;
+}
+
+function dragended(d) {
+  if (!d3.event.active) simulation.alphaTarget(0);
+  d.fx = null;
+  d.fy = null;
+}
+
 
 } 
 }
