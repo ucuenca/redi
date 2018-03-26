@@ -326,4 +326,9 @@ public class ConstantServiceImpl implements ConstantService {
         return confService.getBaseContext() + "provider/DspaceProvider";
     }
 
+    @Override
+    public String getDisambiguationStatusResource() {
+        return getBaseResource() + "status/";
+    }
+
 }
