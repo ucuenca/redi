@@ -160,7 +160,7 @@ uc:publicationPublisher a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ dct:publisher ?publisher" ;
     r2r:transformation "?publisherIRI=concat('https://redi.cedia.edu.ec/resource/publisher/', xpath:lower-case(xpath:encode-for-uri(?publisher)))" ;
-    r2r:targetPattern "?SUBJ dct:isPartOf ?<publisherIRI>" ;
+    r2r:targetPattern "?SUBJ dct:publisher ?<publisherIRI>" ;
     r2r:targetPattern "?publisherIRI a foaf:Organization" ;
     r2r:targetPattern "?publisherIRI rdfs:label ?publisher" .
 
