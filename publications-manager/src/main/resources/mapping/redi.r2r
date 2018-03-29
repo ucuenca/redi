@@ -26,7 +26,7 @@ bibo:Collection+(bibo:Collection, rdfs:label)
     nature:coverDate,
     scoro:hasOrcid,scoro:hasPersonalIdentifier,
     uc:academicsId,uc:scopusId,uc:citationCount,uc:h-index,uc:i10-index,uc:domain,uc:citedbyCount,uc:pubmedId,
-    foaf:holdsAccount,foaf:topic_interest,foaf:publications,foaf:name,foaf:givenName,foaf:familyName,foaf:img,
+    foaf:holdsAccount,foaf:topic_interest,foaf:publications,foaf:name,foaf:givenName,foaf:familyName,foaf:img,foaf:homepage,
     dct:contributor,dct:creator,dct:provenance,dct:identifier,dct:language,dct:title,dct:isPartOf,dct:subject,dct:publisher,
     bibo:created,bibo:issue,bibo:abstract,bibo:doi,bibo:pageStart,bibo:pageEnd,bibo:volume,bibo:uri,bibo:quote,bibo:cites,bibo:isbn,bibo:issn,bibo:pages
 )

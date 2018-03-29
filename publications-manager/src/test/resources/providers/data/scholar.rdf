@@ -78,7 +78,8 @@
 			<topic_interest xmlns="http://xmlns.com/foaf/0.1/">Linkeddata</topic_interest>
 			<topic_interest xmlns="http://xmlns.com/foaf/0.1/">Semantic Web</topic_interest>
 			<topic_interest xmlns="http://xmlns.com/foaf/0.1/">Web Services</topic_interest>
-			<topic_interest xmlns="http://xmlns.com/foaf/0.1/">semantic annotations</topic_interest>
+			<topic_interest xmlns="http://xmlns.com/foaf/0.1/">semantic annotations</topic_interest>			
+                        <homepage xmlns="http://xmlns.com/foaf/0.1/">http://vsaquicela.edu</homepage>
 		</rdf:Description>
 	</holdsAccount>
 </rdf:Description>
