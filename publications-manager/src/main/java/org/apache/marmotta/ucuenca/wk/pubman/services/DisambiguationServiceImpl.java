@@ -41,6 +41,7 @@ import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Person;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Provider;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.utils.PublicationUtils;
+import org.apache.marmotta.ucuenca.wk.commons.util.BoundedExecutor;
 import org.apache.marmotta.ucuenca.wk.commons.util.LongUpdateQueryExecutor;
 import org.openrdf.model.Model;
 import org.openrdf.model.Value;
@@ -268,7 +269,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
                 + "		?a ?b ?c .\n"
                 + "	}\n", null, "prefix foaf: <http://xmlns.com/foaf/0.1/>\n", "?a ?b ?c").execute();
-        
+
         //delete provider triple
         String deleteProviderType = "delete {\n"
                 + "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
@@ -280,7 +281,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 + "	}\n"
                 + "}";
         sparqlService.update(QueryLanguage.SPARQL, deleteProviderType);
-        
+
         //givName
         new LongUpdateQueryExecutor(sparqlService,
                 "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
@@ -346,8 +347,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
 
     public Map<Provider, Integer> ProcessAuthors(List<Provider> AuthorsProviderslist, String organization) throws MarmottaException, RepositoryException, MalformedQueryException, QueryEvaluationException, RDFHandlerException, InvalidArgumentException, UpdateExecutionException, InterruptedException {
         Map<Provider, Integer> ProvidersElements = new HashMap();
-        ExecutorService executorServicex = Executors.newFixedThreadPool(MAXTHREADS);
-        BoundedExecutor bexecutorService = new BoundedExecutor(executorServicex, MAXTHREADS);
+        BoundedExecutor bexecutorService = BoundedExecutor.getThreadPool(MAXTHREADS);
         Provider MainAuthorsProvider = AuthorsProviderslist.get(0);
 
         List<Person> allAuthors = null;
@@ -448,9 +448,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
     }
 
     public void ProcessCoauthors(final List<Provider> ProvidersList, final boolean onlySameAs) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, InterruptedException {
-        ExecutorService executorServicex = Executors.newFixedThreadPool(MAXTHREADS);
-        BoundedExecutor bexecutorService = new BoundedExecutor(executorServicex, MAXTHREADS);
-
+        BoundedExecutor bexecutorService = BoundedExecutor.getThreadPool(MAXTHREADS);
         String qryDisambiguatedCoauthors = " select distinct ?p { graph <" + constantService.getAuthorsSameAsGraph() + "> { ?p <http://www.w3.org/2002/07/owl#sameAs> ?o } }";
         final List<Map<String, Value>> queryResponse = sparqlService.query(QueryLanguage.SPARQL, qryDisambiguatedCoauthors);
         int i = 0;
@@ -601,8 +599,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
     }
 
     public void ProcessPublications(final List<Provider> ProvidersList) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, InterruptedException {
-        ExecutorService executorServicex = Executors.newFixedThreadPool(MAXTHREADS);
-        BoundedExecutor bexecutorService = new BoundedExecutor(executorServicex, MAXTHREADS);
+        BoundedExecutor bexecutorService = BoundedExecutor.getThreadPool(MAXTHREADS);
         String qryDisambiguatedAuthors = " select distinct ?p { graph <" + constantService.getAuthorsSameAsGraph() + "> { ?p <http://www.w3.org/2002/07/owl#sameAs> ?o } }";
         final List<Map<String, Value>> queryResponse = sparqlService.query(QueryLanguage.SPARQL, qryDisambiguatedAuthors);
         int i = 0;
@@ -966,40 +963,4 @@ public class DisambiguationServiceImpl implements DisambiguationService {
     public void Proccess() {
         Proccess(null);
     }
-
-    class BoundedExecutor {
-
-        private final Executor exec;
-        private final Semaphore semaphore;
-
-        public BoundedExecutor(Executor exec, int bound) {
-            this.exec = exec;
-            this.semaphore = new Semaphore(bound);
-        }
-
-        public void submitTask(final Runnable command)
-                throws InterruptedException {
-            semaphore.acquire();
-            try {
-                exec.execute(new Runnable() {
-                    public void run() {
-                        try {
-                            command.run();
-                        } finally {
-                            semaphore.release();
-                        }
-                    }
-                });
-            } catch (RejectedExecutionException e) {
-                semaphore.release();
-            }
-        }
-
-        public void end() throws InterruptedException {
-            ExecutorService sexec = (ExecutorService) exec;
-            sexec.shutdown();
-            sexec.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
-        }
-    }
-
 }
