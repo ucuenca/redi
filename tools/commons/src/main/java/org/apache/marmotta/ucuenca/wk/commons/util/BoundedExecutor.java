@@ -17,9 +17,11 @@ import java.util.concurrent.TimeUnit;
  * @author Jose Ortiz
  */
 public class BoundedExecutor {
+
     private final Executor exec;
     private final Semaphore semaphore;
-    
+    private int maxThreads = 0;
+
     public static BoundedExecutor getThreadPool(int mx) {
         ExecutorService executorServicex = Executors.newFixedThreadPool(mx);
         return new BoundedExecutor(executorServicex, mx);
@@ -28,6 +30,11 @@ public class BoundedExecutor {
     public BoundedExecutor(Executor exec, int bound) {
         this.exec = exec;
         this.semaphore = new Semaphore(bound);
+        this.maxThreads = bound;
+    }
+
+    public int availableThreads() {
+        return this.maxThreads - semaphore.availablePermits();
     }
 
     public void submitTask(final Runnable command)

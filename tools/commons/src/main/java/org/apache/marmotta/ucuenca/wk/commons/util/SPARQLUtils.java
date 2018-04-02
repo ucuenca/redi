@@ -36,8 +36,7 @@ public class SPARQLUtils {
     }
 
     public void delete(String graph) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
-        String d = "delete { graph <" + graph + "> { ?a ?b ?c }} where { graph <" + graph + "> { ?a ?b ?c }} ";
-        sparqlService.update(QueryLanguage.SPARQL, d);
+        new LongUpdateQueryExecutor(sparqlService).deleteGraph(graph);
     }
 
     public void addAll(String graphTarget, String graphSource) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
@@ -142,4 +141,46 @@ public class SPARQLUtils {
                 + "    }\n",
                 null, "", "?q ?z ?m").execute();
     }
+
+    public void removeDuplicates(String graph) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
+        String q = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
+                + "\n"
+                + "delete {\n"
+                + "	graph <" + graph + "> {\n"
+                + "		?no owl:sameAs ?p .\n"
+                + "	}\n"
+                + "}\n"
+                + "insert {\n"
+                + "	graph <" + graph + "> {\n"
+                + "		?r owl:sameAs ?p .\n"
+                + "		?r owl:sameAs ?no .\n"
+                + "	}\n"
+                + "}\n"
+                + "where {\n"
+                + "	graph <" + graph + "> {\n"
+                + "		?no owl:sameAs ?p .\n"
+                + "	} .\n"
+                + "	{\n"
+                + "		select ?p (count(distinct ?o) as ?c) (max(str(?o)) as ?u) ( iri (?u) as ?r) {\n"
+                + "	  		graph <" + graph + "> {\n"
+                + "	  			?o owl:sameAs ?p .\n"
+                + "	  		}\n"
+                + "		} group by ?p having (?c > 1)\n"
+                + "	}\n"
+                + "}";
+        String qq = "PREFIX owl: <http://www.w3.org/2002/07/owl#> \n"
+                + "insert {	\n"
+                + "	graph <" + graph + "> {\n"
+                + "		?o owl:sameAs ?o .\n"
+                + "	}\n"
+                + "} \n"
+                + "where {\n"
+                + "	graph <" + graph + "> {\n"
+                + "		?o owl:sameAs ?p .\n"
+                + "	}\n"
+                + "}";
+        sparqlService.update(QueryLanguage.SPARQL, q);
+        sparqlService.update(QueryLanguage.SPARQL, qq);
+    }
+
 }
