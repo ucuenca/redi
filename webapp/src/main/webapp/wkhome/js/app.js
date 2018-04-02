@@ -47,6 +47,8 @@ wkhomeApp.service('globalData', ['$window', function ($window) {
     this.latindexGraph = baseURL + "context/latindex";
     this.translateData = null;
     this.publicationsCore = 'https://rediclon.cedia.edu.ec/solr/publications';
+    // this.publicationsCore = 'https://redi.cedia.edu.ec/solr/publications';
+    // this.publicationsCore = 'http://localhost:8080/solr/publications';
     this.PREFIX = 'PREFIX bibo: <http://purl.org/ontology/bibo/>'
             + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>  '
             + ' PREFIX dct: <http://purl.org/dc/terms/> '
@@ -110,14 +112,18 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                 when('/view/datacube', {
                   templateUrl: '/wkhome/partials/dataCube.html',
                 }).
-                when('/publications/:query*/author/:authorId*', {
+                when('/author/publications/:query*/author/:authorId*', {
                   templateUrl: '/wkhome/partials/publications.html',
                 }).
-                when('/author/:text*', {
+                when('/author/tree/:text*', {
                   templateUrl: '/wkhome/partials/search.html',
                 }).
-                when('/view/network/:authorId*', {
+                when('/author/network/:authorId*', {
                   templateUrl: '/wkhome/partials/genericRelatedAuthor.html',
+                }).
+                when('/author/profile/:author*', {
+                  templateUrl: '/wkhome/partials/authorProfile.html',
+                  controller: 'AuthorProfile'
                 }).
 
 

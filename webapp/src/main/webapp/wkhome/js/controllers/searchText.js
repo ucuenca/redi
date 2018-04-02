@@ -55,7 +55,7 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
             waitingDialog.hide();
             var authors = result.response.docs;
             if (authors.length > 1) {
-              var path = "/author/";
+              var path = "/author/profile/";
               var candidates = _.map(authors, function(author) {
                 var id = author["lmf.uri"];
                 var name = _.max(author.name, function(name) {
@@ -75,7 +75,7 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
               $('#searchResults').modal('show');
             } else if (authors.length === 1) {
               var authorId = authors[0]["lmf.uri"];
-              $window.location.hash = "/author/" + authorId;
+              $window.location.hash = "/author/profile/" + authorId;
             }
           } else {
             KeywordsService.get({
@@ -97,7 +97,7 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
               } else if (keywords.length === 1) {
                 var keyword = _.first(keywords[0].keyword);
                 waitingDialog.hide();
-                setTimeout(function(){ 
+                setTimeout(function(){
                     $window.location.hash =  "/cloud/group-by?area=" + keyword
                 }, 500);
 

@@ -1,0 +1,11 @@
+  <h1>Author Information</h1>
+  <span>Name:</span>{{author.name}}
+
+  <span>Email:</span>{{author.email}}
+
+  <span ng-repeat="area in author.areas">{{area}}</span>
+
+<br>
+<a ng-href="#/author/tree/{{author.uri}}">Tree</a>
+<a ng-href="#/author/network/{{author.uri}}">Network</a>
+<a ng-href='#/author/publications/q=author:"{{author.encodedUri}}"&fl=*&rows=10&wt=json/author/{{author.uri}}'>Publications</a>
