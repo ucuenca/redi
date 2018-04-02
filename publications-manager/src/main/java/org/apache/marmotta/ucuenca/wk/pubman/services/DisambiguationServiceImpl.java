@@ -167,7 +167,6 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             InitAuthorsProvider();
             List<Provider> Providers = getProviders();
             List<Map<String, Map<Provider, Integer>>> providersResult = new ArrayList();
-
             if (orgs != null) {
                 for (String org : orgs) {
                     task.updateMessage(String.format("Disambiguate  author from %s organization", org));
@@ -180,7 +179,6 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             } else {
                 ProcessAuthors(Providers, null);
             }
-
             int iasa = sparqlUtils.count(constantService.getAuthorsSameAsGraph());
             do {
                 ProcessCoauthors(Providers, true);
@@ -199,9 +197,9 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             ProcessPublications(Providers);
             task.updateDetailMessage("Status", String.format("%s Remove", "Duplicates"));
             log.info("Remove Duplicates");
-            removeDuplicates(constantService.getAuthorsSameAsGraph());
-            removeDuplicates(constantService.getPublicationsSameAsGraph());
-            removeDuplicates(constantService.getCoauthorsSameAsGraph());
+            //sparqlUtils.removeDuplicates(constantService.getAuthorsSameAsGraph());
+            sparqlUtils.removeDuplicates(constantService.getPublicationsSameAsGraph());
+            sparqlUtils.removeDuplicates(constantService.getCoauthorsSameAsGraph());
             log.info("Upload Logs");
             updateLogs(providersResult);
         } catch (Exception ex) {
@@ -209,47 +207,6 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             ex.printStackTrace();
         }
         taskManagerService.endTask(task);
-    }
-
-    public void removeDuplicates(String graph) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
-        String q = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
-                + "\n"
-                + "delete {\n"
-                + "	graph <" + graph + "> {\n"
-                + "		?no owl:sameAs ?p .\n"
-                + "	}\n"
-                + "}\n"
-                + "insert {\n"
-                + "	graph <" + graph + "> {\n"
-                + "		?r owl:sameAs ?p .\n"
-                + "		?r owl:sameAs ?no .\n"
-                + "	}\n"
-                + "}\n"
-                + "where {\n"
-                + "	graph <" + graph + "> {\n"
-                + "		?no owl:sameAs ?p .\n"
-                + "	} .\n"
-                + "	{\n"
-                + "		select ?p (count(distinct ?o) as ?c) (max(str(?o)) as ?u) ( iri (?u) as ?r) {\n"
-                + "	  		graph <" + graph + "> {\n"
-                + "	  			?o owl:sameAs ?p .\n"
-                + "	  		}\n"
-                + "		} group by ?p having (?c > 1)\n"
-                + "	}\n"
-                + "}";
-        String qq = "PREFIX owl: <http://www.w3.org/2002/07/owl#> \n"
-                + "insert {	\n"
-                + "	graph <" + graph + "> {\n"
-                + "		?o owl:sameAs ?o .\n"
-                + "	}\n"
-                + "} \n"
-                + "where {\n"
-                + "	graph <" + graph + "> {\n"
-                + "		?o owl:sameAs ?p .\n"
-                + "	}\n"
-                + "}";
-        sparqlService.update(QueryLanguage.SPARQL, q);
-        sparqlService.update(QueryLanguage.SPARQL, qq);
     }
 
     public void InitAuthorsProvider() throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
@@ -345,14 +302,12 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         Map<Provider, Integer> ProvidersElements = new HashMap();
         BoundedExecutor bexecutorService = BoundedExecutor.getThreadPool(MAXTHREADS);
         Provider MainAuthorsProvider = AuthorsProviderslist.get(0);
-
         List<Person> allAuthors = null;
         if (organization != null) {
             allAuthors = MainAuthorsProvider.getAuthorsByOrganization(organization);
         } else {
             allAuthors = MainAuthorsProvider.getAuthors();
         }
-
         for (int i = 0; i < allAuthors.size(); i++) {
             final int ix = i;
             final int allx = allAuthors.size();
@@ -387,6 +342,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                         ProvidersElements.put(AuthorsProviderslist.get(j), aProviderCandidates.size());
                     }
                 }
+                task.updateDetailMessage("Threads", bexecutorService.availableThreads() + "");
                 bexecutorService.submitTask(new Runnable() {
                     @Override
                     public void run() {
@@ -414,6 +370,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                         }
                     }
                 });
+                task.updateDetailMessage("Threads", bexecutorService.availableThreads() + "");
             }
         }
         bexecutorService.end();
@@ -452,6 +409,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             final int ix = i;
             final String authorURI = anAuthor.get("p").stringValue();
             log.info("Start disambiguating coauthors {} out of {}", i, queryResponse.size());
+            task.updateDetailMessage("Threads", bexecutorService.availableThreads() + "");
             bexecutorService.submitTask(new Runnable() {
                 @Override
                 public void run() {
@@ -464,6 +422,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                     }
                 }
             });
+            task.updateDetailMessage("Threads", bexecutorService.availableThreads() + "");
             i++;
         }
         bexecutorService.end();
@@ -603,6 +562,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             final int ix = i;
             final String authorURI = anAuthor.get("p").stringValue();
             log.info("Start disambiguating publications {} out of {} authors", i, queryResponse.size());
+            task.updateDetailMessage("Threads", bexecutorService.availableThreads() + "");
             bexecutorService.submitTask(new Runnable() {
                 @Override
                 public void run() {
@@ -615,6 +575,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                     }
                 }
             });
+            task.updateDetailMessage("Threads", bexecutorService.availableThreads() + "");
             i++;
         }
         bexecutorService.end();
@@ -765,12 +726,6 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         }
     }
 
-    
-
-    
-
-    
-
     @Override
     public String startDisambiguation() {
         String State = "";
@@ -815,7 +770,6 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                         ex.printStackTrace();
                     }
                 }
-
             };
             DisambiguationWorker.start();
         }
