@@ -33,7 +33,7 @@ public class BoundedExecutor {
         this.maxThreads = bound;
     }
 
-    public int availableThreads() {
+    public int workingThreads() {
         return this.maxThreads - semaphore.availablePermits();
     }
 

@@ -59,7 +59,7 @@ import org.semarglproject.vocab.RDFS;
 @ApplicationScoped
 public class DisambiguationServiceImpl implements DisambiguationService {
 
-    final int MAXTHREADS = 50;
+    final int MAXTHREADS = 25;
 
     @Inject
     private org.slf4j.Logger log;
@@ -342,7 +342,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                         ProvidersElements.put(AuthorsProviderslist.get(j), aProviderCandidates.size());
                     }
                 }
-                task.updateDetailMessage("Threads", bexecutorService.availableThreads() + "");
+                task.updateDetailMessage("Threads", bexecutorService.workingThreads() + "");
                 bexecutorService.submitTask(new Runnable() {
                     @Override
                     public void run() {
@@ -356,6 +356,13 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                             //Candidates.addAll(Lists.reverse(subList));
                             ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
                             Model Disambiguate = Disambiguate(Candidates, 0, new Person());
+                            boolean alreadyHasPublications = sparqlService.ask(QueryLanguage.SPARQL, "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                                    + "ask from <"+constantService.getAuthorsProviderGraph()+"> {\n"
+                                    + "	<"+aSeedAuthor.URI+"> foaf:publications [] .\n"
+                                    + "}");
+                            if (alreadyHasPublications){
+                                Disambiguate.add(instance.createURI(aSeedAuthor.URI), instance.createURI("http://www.w3.org/2002/07/owl#sameAs"), instance.createURI(aSeedAuthor.URI));
+                            }
                             Disambiguate.add(instance.createURI(aSeedAuthor.URI), instance.createURI("http://dbpedia.org/ontology/status"), instance.createURI(harvestedProvidersListURI));
                             RepositoryConnection connection = sesameService.getConnection();
                             connection.add(Disambiguate, instance.createURI(constantService.getAuthorsSameAsGraph()));
@@ -370,7 +377,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                         }
                     }
                 });
-                task.updateDetailMessage("Threads", bexecutorService.availableThreads() + "");
+                task.updateDetailMessage("Threads", bexecutorService.workingThreads() + "");
             }
         }
         bexecutorService.end();
@@ -409,7 +416,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             final int ix = i;
             final String authorURI = anAuthor.get("p").stringValue();
             log.info("Start disambiguating coauthors {} out of {}", i, queryResponse.size());
-            task.updateDetailMessage("Threads", bexecutorService.availableThreads() + "");
+            task.updateDetailMessage("Threads", bexecutorService.workingThreads() + "");
             bexecutorService.submitTask(new Runnable() {
                 @Override
                 public void run() {
@@ -422,7 +429,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                     }
                 }
             });
-            task.updateDetailMessage("Threads", bexecutorService.availableThreads() + "");
+            task.updateDetailMessage("Threads", bexecutorService.workingThreads() + "");
             i++;
         }
         bexecutorService.end();
@@ -562,7 +569,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             final int ix = i;
             final String authorURI = anAuthor.get("p").stringValue();
             log.info("Start disambiguating publications {} out of {} authors", i, queryResponse.size());
-            task.updateDetailMessage("Threads", bexecutorService.availableThreads() + "");
+            task.updateDetailMessage("Threads", bexecutorService.workingThreads() + "");
             bexecutorService.submitTask(new Runnable() {
                 @Override
                 public void run() {
@@ -575,7 +582,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                     }
                 }
             });
-            task.updateDetailMessage("Threads", bexecutorService.availableThreads() + "");
+            task.updateDetailMessage("Threads", bexecutorService.workingThreads() + "");
             i++;
         }
         bexecutorService.end();
