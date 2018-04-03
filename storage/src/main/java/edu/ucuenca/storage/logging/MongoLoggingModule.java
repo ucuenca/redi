@@ -27,7 +27,7 @@ import org.apache.marmotta.platform.core.logging.BaseLoggingModule;
  * Configure Logging for the MyService Module
  */
 @ApplicationScoped
-public class MyServiceLoggingModule extends BaseLoggingModule {
+public class MongoLoggingModule extends BaseLoggingModule {
 
     /**
      * Return the default (logback) level used by this logging module. Should in most cases be INFO or WARN.

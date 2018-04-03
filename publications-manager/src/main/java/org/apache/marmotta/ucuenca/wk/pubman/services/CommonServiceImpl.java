@@ -323,6 +323,11 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
+    public String getAuthorDataProfile(String author) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
     public String getCollaboratorsData(String uri) {
         String describeAuthor = "PREFIX dct: <http://purl.org/dc/terms/> "
                 + "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "

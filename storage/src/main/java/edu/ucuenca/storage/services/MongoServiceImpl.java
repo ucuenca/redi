@@ -62,7 +62,7 @@ public class MongoServiceImpl implements MongoService {
         mongoClient = new MongoClient(host, port);
         db = mongoClient.getDatabase(DATABASE);
         authors = db.getCollection(Collection.AUTHORS.getValue());
-        relatedauthors=db.getCollection(Collection.RELATEDAUTHORS.getValue());
+        relatedauthors = db.getCollection(Collection.RELATEDAUTHORS.getValue());
         statistics = db.getCollection(Collection.STATISTICS.getValue());
     }
 
@@ -79,16 +79,17 @@ public class MongoServiceImpl implements MongoService {
                 .first().toJson();
     }
 
-    @PreDestroy
-    public void shutdown() {
-        log.info("Killing connection to MongoDB.");
-        mongoClient.close();
-    }
-
     @Override
     public String getRelatedAuthors(String uri) {
         return relatedauthors.find(eq("_id", uri))
                 .first()
                 .toJson();
     }
+
+    @PreDestroy
+    public void shutdown() {
+        log.info("Killing connection to MongoDB.");
+        mongoClient.close();
+    }
+
 }

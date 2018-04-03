@@ -26,7 +26,7 @@ public interface MongoService {
     /**
      * Returns JSON-LD from an URI of an author given.
      *
-     * @param iri
+     * @param uri
      * @return
      */
     public String getAuthor(String uri);
