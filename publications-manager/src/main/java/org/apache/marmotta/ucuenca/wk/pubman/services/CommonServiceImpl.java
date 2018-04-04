@@ -32,6 +32,8 @@ import org.apache.marmotta.ucuenca.wk.pubman.services.providers.SpringerProvider
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.openrdf.model.Value;
 import org.openrdf.query.QueryLanguage;
 import org.slf4j.Logger;
@@ -492,6 +494,7 @@ public class CommonServiceImpl implements CommonService {
         return mergeJSON(listmapTojson(lnodes, "nodes"), listmapTojson(llinks, "links"), "nodes", "links");
 
     }
+
     @Deprecated
     public String getCollaboratorsData(String uri, String nada) {
 
@@ -604,7 +607,7 @@ public class CommonServiceImpl implements CommonService {
         return sparqlService.ask(QueryLanguage.SPARQL, queryC);
     }
 
-      @Deprecated
+  
     public JSONArray listmapTojson(List<Map<String, String>> list, String nameobject) throws org.json.JSONException {
         JSONObject jsonh1 = new JSONObject();
 
@@ -669,4 +672,246 @@ public class CommonServiceImpl implements CommonService {
 
     }
 
+    @Override
+    public String getAuthorDataProfile(String uri) {
+
+        String Prefix = "prefix foaf: <http://xmlns.com/foaf/0.1/> "
+                + "prefix vcard: <http://www.w3.org/2006/vcard/ns#> "
+                + "prefix scoro: <http://purl.org/spar/scoro/> "
+                + "prefix schema: <http://schema.org/> "
+                + "prefix uc: <http://ucuenca.edu.ec/ontology#> ";
+
+        uri = "https://redi.cedia.edu.ec/resource/authors/UCUENCA/file/_SAQUICELA_GALARZA_____VICTOR_HUGO_";
+        try {
+
+            String numpubquery = Prefix + "Select (count( distinct ?pub) as ?tot) where { "
+                    + "GRAPH   <"+con.getCentralGraph()+"> {"
+                    + "   <" + uri + ">  foaf:publications ?pub  }"
+                    + "}";
+
+            String querytopics = "Select (GROUP_CONCAT( DISTINCT ?topicl ;  SEPARATOR = \"|\") as ?topicls )  where { "
+                    + "GRAPH   <"+con.getCentralGraph()+"> { "
+                    + "   <" + uri + ">  foaf:topic_interest [rdfs:label ?topicl]                                                                                            	}\n"
+                    + "}";
+
+            String queryCluster = Prefix
+                    + "Select distinct ?lc where { "
+                    + "GRAPH   <"+con.getClusterGraph()+"> {"
+                    + "     ?pubc uc:hasPerson <" + uri + "> ."
+                    + "             ?c   foaf:publications     ?pubc .  "
+                    + "                       ?c      rdfs:label ?lc ."
+                    + "                      FILTER (lang(?lc) = 'en')       "
+                    + "           } "
+                    + "}";
+
+            String metaAuthor = Prefix
+                    + "SELECT   ?names  ?orgnames ?members ?orcids ?imgs ?emails ?homepages ?citations ?hindexs ?i10indexs ?afs ?scs  where { "
+                    + "GRAPH <"+con.getCentralGraph()+"> { "
+                    + " { "
+                    + "    select (GROUP_CONCAT( DISTINCT ?name ;  SEPARATOR = \"|\") as ?names)  "
+                    + "   (GROUP_CONCAT( DISTINCT ?orcid ;  SEPARATOR = \"|\") as ?orcids  )  "
+                    + "   (GROUP_CONCAT( DISTINCT ?img ;  SEPARATOR = \"|\") as ?imgs  )  "
+                    + "   (GROUP_CONCAT( DISTINCT ?email ;  SEPARATOR = \"|\") as ?emails ) "
+                    + "   (GROUP_CONCAT( DISTINCT ?homepage ;  SEPARATOR = \"|\") as ?homepages  ) "
+                    + "   (GROUP_CONCAT( DISTINCT ?citation ;  SEPARATOR = \"|\") as ?citations  )           	"
+                    + "   (GROUP_CONCAT( DISTINCT ?hindex  ;  SEPARATOR = \"|\") as ?hindexs  ) "
+                    + "   (GROUP_CONCAT( DISTINCT ?i10index  ;  SEPARATOR = \"|\") as ?i10indexs  )  "
+                    + "   (GROUP_CONCAT( DISTINCT ?sc  ;  SEPARATOR = \"|\") as ?scs  ) "
+                    + "   (GROUP_CONCAT( DISTINCT ?af  ;  SEPARATOR = \"|\") as ?afs  ) "
+                    + "   { "
+                    + "    <"+uri+">   foaf:name ?name . "
+                    + "    <"+uri+"> schema:memberOf ?member . "
+                    + "     OPTIONAL { "
+                    + "     ?member foaf:name ?afname . "
+                    + "     BIND(CONCAT(STR(?member), ';' , STR(?afname) ) AS ?af)  "
+                    + "     } "
+                    + "   OPTIONAL { "
+                    + "    <"+uri+"> scoro:hasORCID ?orcid "
+                    + "  } "
+                    + "  OPTIONAL{  "
+                    + "    <"+uri+"> foaf:img  ?img   "
+                    + "  } "
+                    + "       OPTIONAL { "
+                    + "    <"+uri+"> vcard:hasEmail ?email "
+                    + "  } "
+                    + "   OPTIONAL { "
+                    + "     <"+uri+">  foaf:homepage  ?homepage "
+                    + "  } "
+                    + "   OPTIONAL { "
+                    + "     <"+uri+">  uc:citationCount  ?citation "
+                    + "      }  "
+                    + "   OPTIONAL { "
+                    + "     <"+uri+">       uc:h-index ?hindex "
+                    + "       }  "
+                    + "     OPTIONAL { "
+                    + "    <"+uri+">       uc:i10-index ?i10index "
+                    + "       }  "
+                    + "    OPTIONAL { "
+                    + "      <"+uri+"> foaf:holdsAccount ?sc  "
+                    + "       } "
+                    + "        } "
+                    + "  } "
+                    + "    GRAPH <"+con.getOrganizationsGraph()+"> { "
+                    + "    select (GROUP_CONCAT( DISTINCT ?orgname ;  SEPARATOR = \"|\")  as ?orgnames ) {  "
+                    + "    ?member uc:name ?orgname . "
+                    + "    GRAPH <"+con.getCentralGraph()+"> { "
+                    + "    <"+uri+"> schema:memberOf ?member "
+                    + "      }  "
+                    + "      } "
+                    + "      } "
+                    + "  }  "
+                    + "} ";
+            
+            List<Map<String, Value>> responseAuthor = sparqlService.query(QueryLanguage.SPARQL, metaAuthor);
+            AuthorProfile a = new AuthorProfile ();
+            if (!responseAuthor.isEmpty()) {
+            a = proccessAuthor (responseAuthor);
+            
+           
+            List<Map<String, Value>> responsetopics = sparqlService.query(QueryLanguage.SPARQL, querytopics);
+            if (!responsetopics.isEmpty()){
+            String topics = responsetopics.get(0).get("topicls").stringValue();
+            a.setTopics(topics.split("|"));
+            }
+            
+            List<Map<String, Value>> responseCluster = sparqlService.query(QueryLanguage.SPARQL, queryCluster);
+            if (!responseCluster.isEmpty()){
+               String lc = responseCluster.get(0).get("lc").stringValue();
+                a.setCluster(lc.split("|"));
+            }
+            
+            List<Map<String, Value>> responseNpub = sparqlService.query(QueryLanguage.SPARQL, numpubquery);
+            if (!responseNpub.isEmpty()) {
+              String num = responseNpub.get(0).get("").stringValue();
+              a.setNpub(num);
+            }
+            }
+            return objecttoJson(a);
+        } catch (MarmottaException ex) {
+            java.util.logging.Logger.getLogger(CommonServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "{Status:Error}";
+    }
+
+    private AuthorProfile proccessAuthor(List<Map<String, Value>> responseAuthor) {
+        AuthorProfile a = new AuthorProfile ();
+        Map<String,Value> author =  responseAuthor.get(0);
+        
+        if (author.containsKey("names")){
+        a.setName( getUniqueName (author.get("names").stringValue()));
+        }
+        if (author.containsKey("orcids"))
+        {
+        a.setOrcid( getUniqueOrcid(author.get("orcids").stringValue()));
+        }
+         if (author.containsKey("imgs"))
+        {
+        a.setImgs( author.get("imgs").stringValue().split("|")[0]);
+        }
+         if (author.containsKey("emails"))
+        {
+        a.setEmails(author.get("emails").stringValue().split("|"));
+        } 
+         
+         if (author.containsKey("homepages")) {
+          a.setHomepages(author.get("homepages").stringValue().split("|"));
+         }
+         
+         if (author.containsKey("citations")) {
+          a.setCitation(getMaxValue(author.get("citations").stringValue().split("|"))+"");
+         }
+            
+         if (author.containsKey("homepages")) {
+          a.setHomepages(author.get("homepages").stringValue().split("|"));
+         }
+         
+            if (author.containsKey("hindexs")) {
+          a.setHindex(getMaxValue (author.get("hindexs").stringValue().split("|"))+"");
+         }
+               if (author.containsKey("i10indexs")) {
+          a.setI10(getMaxValue (author.get("i10indexs").stringValue().split("|"))+"");
+         }
+               
+               if (author.containsKey("afs")) {
+          a.setOtheraf(getListOrg (author.get("afs").stringValue().split("|")));
+         }
+               
+               if (author.containsKey("scs")) {
+          a.setOtherProfile(getListOrg (author.get("scs").stringValue().split("|")));
+         }
+       
+       return a;
+    }
+    
+    private String getUniqueName (String names) 
+    {    int tokenmax = 0;
+         int lengthmax = 0; 
+         String candidate = "";
+         String [] listNames = names.split("|");
+         
+         for (String name :listNames) {
+          int  tokens = name.split(" ").length;
+           int  length = name.length();
+           if (tokens > tokenmax &&  length > length) {
+           candidate = name;
+           }
+            
+         }  
+        return candidate;
+    }
+    
+    private String getUniqueOrcid (String orcids) {
+        
+        return orcids.split("|")[0];
+    
+    }
+
+    private int getMaxValue(String [] split) {
+         //String [] citations = split.split("|");
+         int citasmax = 0;
+         for (String c : split) {
+                if (citasmax < Integer.parseInt(c)) {
+                  citasmax = Integer.parseInt(c);
+                }
+         }
+        return citasmax;
+    }
+
+    private  String [] getListOrg(String[] org) {
+        List<String>  afiliations = new ArrayList<String> () ;
+        for (String af :org) {
+        String uri = af.split(";")[0];
+        String name = af.split(";")[1];
+        if (!uri.contains(con.getBaseURI())) {
+           afiliations.add(name);
+        }
+        }
+       return afiliations.toArray(new String[0]);
+    }
+    
+    private String objecttoJson (Object o) {
+     ObjectMapper mapper = new ObjectMapper();
+        try {        
+            return mapper.writeValueAsString(o);
+        } catch (JsonProcessingException ex) {
+            java.util.logging.Logger.getLogger(CommonServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "";
+    }    
+  /*  private void objecttoListMap (AuthorProfile o) {
+       List<Map<String, String>> lauthor = new ArrayList();
+       Map<String,String> authormap =  new HashMap();
+       
+     
+         authormap.put("uri", o.getUri());
+         authormap.put("name", o.getName());
+         authormap.put("", "");
+         authormap.put("", "");
+         authormap.put("", "");
+         authormap.put("", "");
+         authormap.put("", "");
+         authormap.put("", "");
+         authormap.put("", "");
+       
+    }*/
 }

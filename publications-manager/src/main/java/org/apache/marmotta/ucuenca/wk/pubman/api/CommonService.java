@@ -48,4 +48,6 @@ public interface CommonService {
     List<Provider> getProviders() throws MarmottaException;
     
     String getCollaboratorsData (String uri);
+    
+    String getAuthorDataProfile (String uri);
 }
