@@ -60,6 +60,8 @@ function etiquetas () {
   
 }
 
+var color = d3.scale.category10();
+
 function orgcolor (org) {
   if (! (org in organization)) {
      organization [org] = norg;
@@ -95,7 +97,7 @@ var svg = d3.select("svg"),
     height = +svg.attr("height");
 
 
-var color = d3.scale.category10();
+
 
 var simulation = d3.layout.force()
             .gravity(0.05).

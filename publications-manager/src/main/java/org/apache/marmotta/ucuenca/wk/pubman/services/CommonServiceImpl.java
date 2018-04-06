@@ -34,6 +34,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map.Entry;
 import org.openrdf.model.Value;
 import org.openrdf.query.QueryLanguage;
 import org.slf4j.Logger;
@@ -324,6 +325,8 @@ public class CommonServiceImpl implements CommonService {
         return startProcess;
     }
 
+  
+    
     @Override
     public String getCollaboratorsData(String uri) {
         String describeAuthor = "PREFIX dct: <http://purl.org/dc/terms/> "
@@ -681,7 +684,7 @@ public class CommonServiceImpl implements CommonService {
                 + "prefix schema: <http://schema.org/> "
                 + "prefix uc: <http://ucuenca.edu.ec/ontology#> ";
 
-        uri = "https://redi.cedia.edu.ec/resource/authors/UCUENCA/file/_SAQUICELA_GALARZA_____VICTOR_HUGO_";
+       // uri = "https://redi.cedia.edu.ec/resource/authors/UCUENCA/file/_SAQUICELA_GALARZA_____VICTOR_HUGO_";
         try {
 
             String numpubquery = Prefix + "Select (count( distinct ?pub) as ?tot) where { "
@@ -689,7 +692,8 @@ public class CommonServiceImpl implements CommonService {
                     + "   <" + uri + ">  foaf:publications ?pub  }"
                     + "}";
 
-            String querytopics = "Select (GROUP_CONCAT( DISTINCT ?topicl ;  SEPARATOR = \"|\") as ?topicls )  where { "
+            String querytopics = Prefix + 
+                    "Select (GROUP_CONCAT( DISTINCT ?topicl ;  SEPARATOR = \"|\") as ?topicls )  where { "
                     + "GRAPH   <"+con.getCentralGraph()+"> { "
                     + "   <" + uri + ">  foaf:topic_interest [rdfs:label ?topicl]                                                                                            	}\n"
                     + "}";
@@ -771,18 +775,18 @@ public class CommonServiceImpl implements CommonService {
             List<Map<String, Value>> responsetopics = sparqlService.query(QueryLanguage.SPARQL, querytopics);
             if (!responsetopics.isEmpty()){
             String topics = responsetopics.get(0).get("topicls").stringValue();
-            a.setTopics(topics.split("|"));
+            a.setTopics(getRelevantTopics (topics.split("\\|")));
             }
             
             List<Map<String, Value>> responseCluster = sparqlService.query(QueryLanguage.SPARQL, queryCluster);
             if (!responseCluster.isEmpty()){
                String lc = responseCluster.get(0).get("lc").stringValue();
-                a.setCluster(lc.split("|"));
+                a.setCluster(lc.split("\\|"));
             }
             
             List<Map<String, Value>> responseNpub = sparqlService.query(QueryLanguage.SPARQL, numpubquery);
             if (!responseNpub.isEmpty()) {
-              String num = responseNpub.get(0).get("").stringValue();
+              String num = responseNpub.get(0).get("tot").stringValue();
               a.setNpub(num);
             }
             }
@@ -800,44 +804,49 @@ public class CommonServiceImpl implements CommonService {
         if (author.containsKey("names")){
         a.setName( getUniqueName (author.get("names").stringValue()));
         }
+        
+         if (author.containsKey("orgnames")){
+        a.setOrg(author.get("orgnames").stringValue().split("\\|"));
+        }
+         
         if (author.containsKey("orcids"))
         {
         a.setOrcid( getUniqueOrcid(author.get("orcids").stringValue()));
         }
          if (author.containsKey("imgs"))
         {
-        a.setImgs( author.get("imgs").stringValue().split("|")[0]);
+        a.setImg( author.get("imgs").stringValue().split("\\|")[0]);
         }
          if (author.containsKey("emails"))
         {
-        a.setEmails(author.get("emails").stringValue().split("|"));
+        a.setEmails(author.get("emails").stringValue().split("\\|"));
         } 
          
          if (author.containsKey("homepages")) {
-          a.setHomepages(author.get("homepages").stringValue().split("|"));
+          a.setHomepages(author.get("homepages").stringValue().split("\\|"));
          }
          
          if (author.containsKey("citations")) {
-          a.setCitation(getMaxValue(author.get("citations").stringValue().split("|"))+"");
+          a.setCitation(getMaxValue(author.get("citations").stringValue().split("\\|"))+"");
          }
             
          if (author.containsKey("homepages")) {
-          a.setHomepages(author.get("homepages").stringValue().split("|"));
+          a.setHomepages(author.get("homepages").stringValue().split("\\|"));
          }
          
             if (author.containsKey("hindexs")) {
-          a.setHindex(getMaxValue (author.get("hindexs").stringValue().split("|"))+"");
+          a.setHindex(getMaxValue (author.get("hindexs").stringValue().split("\\|"))+"");
          }
                if (author.containsKey("i10indexs")) {
-          a.setI10(getMaxValue (author.get("i10indexs").stringValue().split("|"))+"");
+          a.setI10(getMaxValue (author.get("i10indexs").stringValue().split("\\|"))+"");
          }
                
                if (author.containsKey("afs")) {
-          a.setOtheraf(getListOrg (author.get("afs").stringValue().split("|")));
+          a.setOtheraf(getListOrg (author.get("afs").stringValue().split("\\|")));
          }
                
                if (author.containsKey("scs")) {
-          a.setOtherProfile(getListOrg (author.get("scs").stringValue().split("|")));
+          a.setOtherProfile(getListOtherProfile (author.get("scs").stringValue().split("\\|")));
          }
        
        return a;
@@ -847,12 +856,14 @@ public class CommonServiceImpl implements CommonService {
     {    int tokenmax = 0;
          int lengthmax = 0; 
          String candidate = "";
-         String [] listNames = names.split("|");
+         String [] listNames = names.split("\\|");
          
          for (String name :listNames) {
           int  tokens = name.split(" ").length;
            int  length = name.length();
-           if (tokens > tokenmax &&  length > length) {
+           if (tokens > tokenmax &&  length > lengthmax) {
+               tokenmax = tokens;
+               lengthmax = length;
            candidate = name;
            }
             
@@ -862,7 +873,7 @@ public class CommonServiceImpl implements CommonService {
     
     private String getUniqueOrcid (String orcids) {
         
-        return orcids.split("|")[0];
+        return orcids.split("\\|")[0];
     
     }
 
@@ -870,8 +881,8 @@ public class CommonServiceImpl implements CommonService {
          //String [] citations = split.split("|");
          int citasmax = 0;
          for (String c : split) {
-                if (citasmax < Integer.parseInt(c)) {
-                  citasmax = Integer.parseInt(c);
+                if (citasmax < Integer.parseInt(c.trim())) {
+                  citasmax = Integer.parseInt(c.trim());
                 }
          }
         return citasmax;
@@ -889,6 +900,16 @@ public class CommonServiceImpl implements CommonService {
        return afiliations.toArray(new String[0]);
     }
     
+    private String [] getListOtherProfile (String [] scs){
+        List<String>  otherprof = new ArrayList<String> () ;
+        for (String prof :scs){
+        if (!prof.contains(con.getBaseURI())) {
+           otherprof.add(prof);
+        }
+        }
+     return otherprof.toArray(new String[0]);
+    }
+    
     private String objecttoJson (Object o) {
      ObjectMapper mapper = new ObjectMapper();
         try {        
@@ -898,20 +919,47 @@ public class CommonServiceImpl implements CommonService {
         }
         return "";
     }    
-  /*  private void objecttoListMap (AuthorProfile o) {
-       List<Map<String, String>> lauthor = new ArrayList();
-       Map<String,String> authormap =  new HashMap();
+    private String[] getRelevantTopics(String[] split) {
+         Map <String,Integer>  aux = new HashMap ();
+        for ( String topic  : split ) {
+            for ( String comparetopic : split ) {
+                  if (comparetopic.contains(topic)){
+                      if (aux.containsKey(topic)) {
+                          aux.put(topic, aux.get(topic)+1);
+                      }else {
+                          aux.put(topic, 0);
+                      }
+                  }
+            }
+         }
+        
+        List<String> ordertopic =  orderMap (aux);
        
+        
+        return ordertopic.size()>5 ? ordertopic.subList(0, 5).toArray(new String[0]) : ordertopic.toArray(new String[0]);
+    }
+    
+    private List<String> orderMap (Map <String,Integer>  aux) {
      
-         authormap.put("uri", o.getUri());
-         authormap.put("name", o.getName());
-         authormap.put("", "");
-         authormap.put("", "");
-         authormap.put("", "");
-         authormap.put("", "");
-         authormap.put("", "");
-         authormap.put("", "");
-         authormap.put("", "");
-       
-    }*/
+        Comparator<Entry<String, Integer>> valueComparator = new Comparator<Entry<String,Integer>>() {
+            
+            @Override
+            public int compare(Entry<String, Integer> e1, Entry<String, Integer> e2) {
+                int v1 = e1.getValue();
+                int v2 = e2.getValue();
+                return  v2 - v1 ;
+            }
+        };
+        
+        // Sort method needs a List, so let's first convert Set to List in Java
+        List<Entry<String, Integer>> listOfEntries = new ArrayList<Entry<String, Integer>>(aux.entrySet());
+        
+        // sorting HashMap by values using comparator
+        Collections.sort(listOfEntries, valueComparator);
+        List <String> auxlist = new ArrayList ();
+        for (Entry<String, Integer> e:listOfEntries) {
+            auxlist.add(  e.getKey());
+        }
+        return auxlist;
+    }
 }

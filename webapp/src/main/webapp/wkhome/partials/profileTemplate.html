@@ -1,0 +1,66 @@
+<div class="row" >
+      <div class="col-sm-4 text-center">   
+       <img src="{{ngModel.img}}" class="img-thumbnail" >
+
+
+      </div>
+
+      <div class="col-sm-8"> 
+     
+         <ul>
+          <li style="width: 60%""><font weight= "bold" size=5 color=#0095db  >{{ngModel.name}}  </font> </li>
+          <li>  {{ngModel.orcid}}  </li>
+          <li>  <span ng-repeat="org in ngModel.orgs">{{org}} </span>   </li>
+          <li >  <span ng-repeat="email in ngModel.emails">{{email}} </span> </li>
+          <li>  <a ng-show="ngModel.homepage" href="{{ngModel.homepage}}">  <img width="17" src="https://rescue-one.com/wp-content/uploads/2015/05/HOME.png" class="img" title="homepage">
+                 </a>
+
+                 <span ng-show="ngModel.otherProfile" ng-repeat="prof in ngModel.otherProfile">
+                 
+                  <a href="{{prof}}">  <img width="17" src="http://www.uniagraria.edu.co/images/images_1.jpg" class="img" title="Scopus Profile">
+                 </a>
+
+          
+                 </span>
+                
+                 
+           </li>
+
+
+         </ul>  
+
+      </div>
+
+
+
+   </div>
+ 
+     <div class="row" style="margin-top: 5%; min-height:15vh ;">
+      <div class="col-sm-4">   
+        <ul> 
+          <li class="head-list"> <font  color=#243082 > <strong> INFORMACIÓN GENERAL </strong> </font>   </li>
+          <li> N. Pub : {{ngModel.npub}} </li>
+          <li> N. Citation : {{ngModel.citation}} </li>
+          <li> H index: {{ngModel.hindex}} </li>
+          <li> i10 : {{ngModel.i10}} </li>
+          </ul>
+
+
+      </div>
+         
+      <div class="col-sm-4"> 
+           <ul>
+            <li class="head-list" > <font  color=#243082  > <strong> AREAS DE INVESTIGACION </strong> </font>  </li>
+        <span ng-repeat="area in ngModel.topics"><li>{{area}} </li> </span>  
+            </ul>
+          </div>
+
+      <div class="col-sm-4"> 
+      <ul>
+        <li class="head-list" > <font  color=#243082   > <strong> AREAS DE CONOCIMIENTO </strong> </font> </li>
+        <span ng-repeat="clust in ngModel.cluster"><li>{{clust}} </li> </span>  
+        </ul>
+
+       </div>
+
+      </div>

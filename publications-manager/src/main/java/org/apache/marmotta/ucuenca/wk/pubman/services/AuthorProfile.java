@@ -14,8 +14,8 @@ public class AuthorProfile {
     private String uri;
     private String name;
     private String orcid;
-    private String [] org;
-    private String imgs;
+    private String [] orgs;
+    private String img;
     private String [] emails;
     private String [] homepages;
     private String citation;
@@ -56,20 +56,20 @@ public class AuthorProfile {
         this.orcid = orcid;
     }
 
-    public String[] getOrg() {
-        return org;
+    public String[] getOrgs() {
+        return orgs;
     }
 
-    public void setOrg(String[] org) {
-        this.org = org;
+    public void setOrg(String[] orgs) {
+        this.orgs = orgs;
     }
 
-    public String getImgs() {
-        return imgs;
+    public String getImg() {
+        return img;
     }
 
-    public void setImgs(String imgs) {
-        this.imgs = imgs;
+    public void setImg(String img) {
+        this.img = img;
     }
 
     public String[] getEmails() {
@@ -121,11 +121,11 @@ public class AuthorProfile {
     }
 
     public String[] getCluster() {
-        return cluster;
+        return clusters;
     }
 
     public void setCluster(String[] cluster) {
-        this.cluster = cluster;
+        this.clusters = cluster;
     }
 
     public String[] getTopics() {
@@ -143,7 +143,7 @@ public class AuthorProfile {
     public void setOtherProfile(String[] otherProfile) {
         this.otherProfile = otherProfile;
     }
-    private String [] cluster;
+    private String [] clusters;
     private String [] topics;
     private String [] otherProfile;
     

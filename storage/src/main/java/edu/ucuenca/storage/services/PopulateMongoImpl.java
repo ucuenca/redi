@@ -25,6 +25,7 @@ import org.apache.marmotta.platform.core.api.config.ConfigurationService;
 import org.apache.marmotta.platform.core.api.task.Task;
 import org.apache.marmotta.platform.core.api.task.TaskManagerService;
 import org.apache.marmotta.platform.core.api.triplestore.SesameService;
+import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
@@ -63,7 +64,6 @@ public class PopulateMongoImpl implements PopulateMongo {
     private CommonService commonService;
     @Inject
     private TaskManagerService taskManagerService;
-    private Task task;
 
     private static final Map context = new HashMap();
 
@@ -169,16 +169,31 @@ public class PopulateMongoImpl implements PopulateMongo {
 
     @Override
     public void authors() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-
-//        String queryCandidates = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
-//                + "SELECT DISTINCT ?subject\n"
-//                + "FROM <http://localhost:8080/context/redi> \n"
-//                + "WHERE {                  \n"
-//                + "  ?subject foaf:publications []. \n"
-//                + "}";
-//        String queryDescribe = "DESCRIBE <{}> FROM <http://localhost:8080/context/redi>";
-//        loadResources(queryCandidates, queryDescribe, MongoService.Collection.AUTHORS.getValue());
+        Task task = taskManagerService.createSubTask("Caching authors profiles", "Mongo Service");
+        try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
+            MongoDatabase db = client.getDatabase(MongoService.DATABASE);
+            // Delete and create collection
+            MongoCollection<Document> collection = db.getCollection(MongoService.Collection.AUTHORS.getValue());
+            collection.drop();
+            List<Map<String, Value>> authorsRedi = sparqlService.query(QueryLanguage.SPARQL, queriesService.getAuthorsCentralGraph());
+            task.updateTotalSteps(authorsRedi.size());
+            for (int i = 0; i < authorsRedi.size(); i++) {
+                String author = authorsRedi.get(i).get("a").stringValue();
+                // Print progress
+                log.info("Relating {} ", author);
+                log.info("Relating {}/{}. Author: '{}' ", i, authorsRedi.size(), author);
+                task.updateDetailMessage("URI", author);
+                task.updateProgress(i);
+                // Get and store author data (json) from SPARQL repository.
+                String profiledata = commonService.getAuthorDataProfile(author);
+                Document parse = Document.parse(profiledata);
+                parse.append("_id", author);
+                collection.insertOne(parse);
+            }
+        } catch (MarmottaException ex) {
+            log.error(ex.getMessage(), ex);
+        }
+        taskManagerService.endTask(task);
     }
 
     @Override
@@ -194,7 +209,7 @@ public class PopulateMongoImpl implements PopulateMongo {
 
     @Override
     public void networks() {
-        task = taskManagerService.createSubTask("Caching related authors", "Mongo Service");
+        Task task = taskManagerService.createSubTask("Caching related authors", "Mongo Service");
         try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
 
             MongoDatabase db = client.getDatabase(MongoService.DATABASE);

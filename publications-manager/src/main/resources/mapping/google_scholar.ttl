@@ -78,6 +78,13 @@ uc:authorPhoto a r2r:Mapping ;
     r2r:targetPattern "?SUBJ foaf:img ?<img>" ;
     r2r:targetPattern "?img a foaf:Image" .
 
+uc:authorHomepage a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:authorType ;
+    r2r:sourcePattern "?SUBJ foaf:homepage ?page" ;
+    r2r:targetPattern "?SUBJ foaf:homepage ?<page>" ;
+    r2r:targetPattern "?<page> a foaf:Document" .
+
 uc:authorAccount a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:classMappingRef uc:authorType ;
@@ -160,7 +167,7 @@ uc:publicationPublisher a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ dct:publisher ?publisher" ;
     r2r:transformation "?publisherIRI=concat('https://redi.cedia.edu.ec/resource/publisher/', xpath:lower-case(xpath:encode-for-uri(?publisher)))" ;
-    r2r:targetPattern "?SUBJ dct:isPartOf ?<publisherIRI>" ;
+    r2r:targetPattern "?SUBJ dct:publisher ?<publisherIRI>" ;
     r2r:targetPattern "?publisherIRI a foaf:Organization" ;
     r2r:targetPattern "?publisherIRI rdfs:label ?publisher" .
 

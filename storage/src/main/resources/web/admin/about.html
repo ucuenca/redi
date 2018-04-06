@@ -38,11 +38,7 @@
                 <span style="font-size: 9pt;"> Loading data into MongoDB...</span>
             </span>
         </h1>
-        <p style="display: none">
-            <button id="btn_authors" type="button"  onclick="run('authors')"  value="Authors" disabled>Authors</button>
-        </p>
-            
-            
+
         <h2>Cache Statistics</h2>
         <p>
             For some aggregations, information is stored in Mongo DB, which you can 
@@ -51,21 +47,29 @@
             <i>redi</i> will be created. The aggregations results are in <i>statistics</i>
             collection. Each result of a query is stored as a document. Until now, there are
             five queries preprocessed.
-        
-            <ul>
-                <li><b>barchar</b>: contains information of total of authors and publications for each institution. 
-                    This information is used in the barchar view within REDI.</li>
-                <li><b>count_authors</b>: Total of authors on each institution.</li>
-                <li><b>count_publications</b>: Total of publications on each institution.</li>
-                <li><b>count_research_areas</b>: Frequency of research areas.</li>
-                <li><b>keywords_frequencypub_gt4</b>: keywords than have a frequency greater than four.</li>
-            </ul>
-            <button id="btn_statistics" type="button"  onclick="run('statistics')"  value="Statistics">Reload aggregations</button>
-        </p>
-        
-        <h2>Cache pre-calculated networks</h2>
-        <button id="btn_networks" type="button"  onclick="run('networks')"  value="Statistics">Reload networks</button>
 
-        <!--###END_CONTENT###-->
-    </body>
+        <ul>
+            <li><b>barchar</b>: contains information of total of authors and publications for each institution. 
+                This information is used in the barchar view within REDI.</li>
+            <li><b>count_authors</b>: Total of authors on each institution.</li>
+            <li><b>count_publications</b>: Total of publications on each institution.</li>
+            <li><b>count_research_areas</b>: Frequency of research areas.</li>
+            <li><b>keywords_frequencypub_gt4</b>: keywords than have a frequency greater than four.</li>
+        </ul>
+        <button id="btn_statistics" type="button"  onclick="run('statistics')"  value="Statistics">Reload aggregations</button>
+    </p>
+
+    <h2>Cache authors profiles</h2>
+    <p>
+        Authors profiles are stored in Mongo DB in the collection <i>authors</i>.
+        <button id="btn_authors" type="button"  onclick="run('authors')"  value="Authors">Reload authors</button>
+    </p>
+
+    <h2>Cache pre-calculated networks</h2>
+    <p>
+        <button id="btn_networks" type="button"  onclick="run('networks')"  value="Statistics">Reload networks</button>
+    </p>
+
+    <!--###END_CONTENT###-->
+</body>
 </html>

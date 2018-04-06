@@ -98,11 +98,12 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
             postMappings.put(REDI.NAMESPACE + "affiliationName", new CssTextLiteralMapper(".gsc_prf_il:nth-child(2) a"));
             postMappings.put(FOAF.NAMESPACE + "topic_interest", new CssTextLiteralMapper("div#gsc_prf_int a"));
             postMappings.put(REDI.NAMESPACE + "domain", new ScholarEmailTextLiteralMapper("#gsc_prf_ivh"));
+            postMappings.put(FOAF.NAMESPACE + "homepage", new CssUriAttrMapper("#gsc_prf_ivh a", "href"));
             postMappings.put(REDI.NAMESPACE + "citationCount", new ScholarIndexesTextLiteralMapper("#gsc_rsb_st tbody tr", "gsc_rsb_sc1", ".gsc_rsb_std", "Citations"));
             postMappings.put(REDI.NAMESPACE + "hindex", new ScholarIndexesTextLiteralMapper("#gsc_rsb_st tbody tr", "gsc_rsb_sc1", ".gsc_rsb_std", "h-index"));
             postMappings.put(REDI.NAMESPACE + "i10", new ScholarIndexesTextLiteralMapper("#gsc_rsb_st tbody tr", "gsc_rsb_sc1", ".gsc_rsb_std", "i10-index"));
         } else if (requestUrl.matches(PUBLICATION)) {
-            postMappings.put(DCTERMS.NAMESPACE + "title", new CssTextLiteralMapper("div#gsc_vcd_title a"));
+            postMappings.put(DCTERMS.NAMESPACE + "title", new CssTextLiteralMapper("div#gsc_vcd_title"));
             postMappings.put(BIBO.NAMESPACE + "uri1", new CssUriAttrMapper("div#gsc_vcd_title a", "href"));
             postMappings.put(BIBO.NAMESPACE + "uri2", new CssUriAttrMapper("div#gsc_vcd_title_gg a", "href"));
             postMappings.put(DCTERMS.NAMESPACE + "contributor", new ScholarAuthorTextLiteralMapper("div#gsc_vcd_table .gs_scl", "gsc_vcd_field", ".gsc_vcd_value", "Authors"));

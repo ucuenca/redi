@@ -7,8 +7,10 @@ package org.apache.marmotta.ucuenca.wk.commons.disambiguation;
 
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.openrdf.model.Value;
@@ -72,19 +74,26 @@ public class Provider {
     }
 
     public List<Person> getCandidates(String URI) throws MarmottaException {
-        String qry = "select distinct ?a {\n"
+        String qry = "select ?q {\n"
                 + "	graph <" + Graph + "> {\n"
-                + "             values ?per { <" + URI + "> } . \n"
-                + "  		?q <http://www.w3.org/2002/07/owl#oneOf> ?per .\n"
-                + "      	?a <http://www.w3.org/2002/07/owl#oneOf> ?q .\n"
+                + "  		?q <http://www.w3.org/2002/07/owl#oneOf> <URI> .\n"
                 + "	}\n"
                 + "}";
-        List<Map<String, Value>> persons = sparql.query(QueryLanguage.SPARQL, qry);
+        List<Map<String, Value>> queries = sparql.query(QueryLanguage.SPARQL, qry.replaceAll("URI", URI));
+        Set<String> candidatesURIs = new LinkedHashSet();
+        for (Map<String, Value> mp : queries) {
+            String queryURI = mp.get("q").stringValue();
+            List<Map<String, Value>> query = sparql.query(QueryLanguage.SPARQL, qry.replaceAll("URI", queryURI));
+            for (Map<String, Value> mp2 : query) {
+                String candidateURI = mp2.get("q").stringValue();
+                candidatesURIs.add(candidateURI);
+            }
+        }
         List<Person> lsp = new ArrayList<>();
-        for (Map<String, Value> row : persons) {
+        for (String row : candidatesURIs) {
             Person p = new Person();
             p.Origin = this;
-            p.URI = row.get("a").stringValue();
+            p.URI = row;
             p.URIS.add(p.URI);
             lsp.add(p);
         }
@@ -93,8 +102,8 @@ public class Provider {
 
     public boolean isHarvested(String URI) throws MarmottaException {
         String qry = "ask { \n"
-                + "  graph <"+Graph+"> {\n"
-                + "  	[] <http://www.w3.org/2002/07/owl#oneOf> <"+URI+"> .\n"
+                + "  graph <" + Graph + "> {\n"
+                + "  	[] <http://www.w3.org/2002/07/owl#oneOf> <" + URI + "> .\n"
                 + "  }\n"
                 + "} ";
         return sparql.ask(QueryLanguage.SPARQL, qry);

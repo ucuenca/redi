@@ -27,6 +27,11 @@ public class LongUpdateQueryExecutor {
     private String prefix;
     private String project;
     private SparqlService sparql;
+    private static final int BULK = 1000;
+
+    public LongUpdateQueryExecutor(SparqlService sparql) {
+        this.sparql = sparql;
+    }
 
     public LongUpdateQueryExecutor(SparqlService sparql, String where, String insert, String delete, String prefix, String project) {
         this.where = where;
@@ -38,15 +43,34 @@ public class LongUpdateQueryExecutor {
     }
 
     public void execute() throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
-        int bulk = 1000;
         String select = prefix + " select (count (*) as ?c_count) { " + where + " }";
         List<Map<String, Value>> query = sparql.query(QueryLanguage.SPARQL, select);
         int parseInt = Integer.parseInt(query.get(0).get("c_count").stringValue());
-        for (int i = 0; i < parseInt; i += bulk) {
-            String lo = " limit " + bulk + " offset " + i;
+        for (int i = 0; i < parseInt; i += BULK) {
+            String lo = " limit " + BULK + " offset " + i;
             String q = prefix + (delete != null ? " delete {" + delete + "} " : "") + (insert != null ? "insert {" + insert + "} " : "")
                     + " where { select " + project + " {" + where + "} " + lo + " }";
             sparql.update(QueryLanguage.SPARQL, q);
+        }
+    }
+
+    public void deleteGraph(String graph) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
+        String data = "ask from <" + graph + "> { ?a ?b ?c }";
+        boolean thereIsData = true;
+        while (thereIsData) {
+            String del = "delete {\n"
+                    + "	graph <" + graph + "> {\n"
+                    + "    	?a ?b ?c\n"
+                    + "    }\n"
+                    + "} where {\n"
+                    + "  select ?a ?b ?c {\n"
+                    + "      graph <" + graph + "> {\n"
+                    + "          ?a ?b ?c\n"
+                    + "      }\n"
+                    + "  } limit " + BULK + "\n"
+                    + "} ";
+            sparql.update(QueryLanguage.SPARQL, del);
+            thereIsData = sparql.ask(QueryLanguage.SPARQL, data);
         }
     }
 

@@ -6,7 +6,7 @@ wkhomeControllers.controller('relatedAuthor', ['$scope', '$window', 'globalData'
          var authorURI = $routeParams.authorId;
 
 
-        console.log ("NADA q hacer");
+    //    console.log ("NADA q hacer");
 
 
     }]); //end genericcloudController

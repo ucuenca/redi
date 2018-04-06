@@ -31,7 +31,7 @@ public class ScholarEmailTextLiteralMapper extends CssTextLiteralMapper {
 
     @Override
     protected String cleanValue(String value) {
-        value = value.replace("Verified email at", "");
+        value = value.replace("Verified email at", "").replace(" - Homepage", "");
         return super.cleanValue(value);
     }
 

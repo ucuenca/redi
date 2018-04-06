@@ -1,0 +1,54 @@
+.profile  { 
+	 /*color:#9d9d9c;*/
+color:  #515a5a  ;
+/*background-image: url("/wkhome/images/cedia.png");*/
+background-image: url("/wkhome/images/logoCedia.PNG");
+background-repeat: no-repeat;
+ background-size: 300px 250px;
+ background-position: left top;
+/*background-position: center;*/
+backface-visibility: 
+	/*background-color: #F6F6F6;*/
+}
+
+.coauthor-panel {
+  padding: 5%;
+  border: 1px;
+  border-color: #3333cc;
+  border-style: solid;
+  margin-right: 10%;
+  min-height: 60vh;
+/*background-color: #6600ff ; */
+
+
+}
+
+.coauthor-list { 
+ margin : 5px;
+ text-align: left;
+ }
+.prof-btn {
+   margin: 10px;
+
+}
+
+.head-list {
+	margin-bottom: 5px;
+}
+
+
+
+@font-face { 
+	font-family: "Conduit-IT"; 
+	src: url("wkhome/fonts/ConduitITCStd-Italic.otf");  
+}
+
+@font-face { 
+	font-family: "Conduit-BI"; 
+	src: url("ConduitITCStd-BlackItalic.otf");  
+}
+
+@font-face { 
+	font-family: "Conduit-EL"; 
+	src: url("wkhome/fonts/ConduitITCStd-ExtraLightIta.otf");  
+}
