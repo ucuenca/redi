@@ -59,7 +59,7 @@ import org.semarglproject.vocab.RDFS;
 @ApplicationScoped
 public class DisambiguationServiceImpl implements DisambiguationService {
 
-    final int MAXTHREADS = 25;
+    final int MAXTHREADS = 6;
 
     @Inject
     private org.slf4j.Logger log;
@@ -198,8 +198,8 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             task.updateDetailMessage("Status", String.format("%s Remove", "Duplicates"));
             log.info("Remove Duplicates");
             //sparqlUtils.removeDuplicates(constantService.getAuthorsSameAsGraph());
-            sparqlUtils.removeDuplicates(constantService.getPublicationsSameAsGraph());
-            sparqlUtils.removeDuplicates(constantService.getCoauthorsSameAsGraph());
+            //sparqlUtils.removeDuplicates(constantService.getPublicationsSameAsGraph());
+            //sparqlUtils.removeDuplicates(constantService.getCoauthorsSameAsGraph());
             log.info("Upload Logs");
             updateLogs(providersResult);
         } catch (Exception ex) {
@@ -352,15 +352,15 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                             for (Map.Entry<Provider, List<Person>> aCandidateList : Candidates) {
                                 aCandidateList.getKey().FillData(aCandidateList.getValue());
                             }
-                            //List<Entry<Provider, List<Person>>> subList = Candidates.subList(1, Candidates.size());
-                            //Candidates.addAll(Lists.reverse(subList));
+                            List<Entry<Provider, List<Person>>> subList = Candidates.subList(1, Candidates.size());
+                            Candidates.addAll(Lists.reverse(subList));
                             ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
                             Model Disambiguate = Disambiguate(Candidates, 0, new Person());
                             boolean alreadyHasPublications = sparqlService.ask(QueryLanguage.SPARQL, "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
-                                    + "ask from <"+constantService.getAuthorsProviderGraph()+"> {\n"
-                                    + "	<"+aSeedAuthor.URI+"> foaf:publications [] .\n"
+                                    + "ask from <" + constantService.getAuthorsProviderGraph() + "> {\n"
+                                    + "	<" + aSeedAuthor.URI + "> foaf:publications [] .\n"
                                     + "}");
-                            if (alreadyHasPublications){
+                            if (alreadyHasPublications) {
                                 Disambiguate.add(instance.createURI(aSeedAuthor.URI), instance.createURI("http://www.w3.org/2002/07/owl#sameAs"), instance.createURI(aSeedAuthor.URI));
                             }
                             Disambiguate.add(instance.createURI(aSeedAuthor.URI), instance.createURI("http://dbpedia.org/ontology/status"), instance.createURI(harvestedProvidersListURI));
