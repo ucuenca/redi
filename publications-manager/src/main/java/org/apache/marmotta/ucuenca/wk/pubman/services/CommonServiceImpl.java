@@ -724,7 +724,7 @@ public class CommonServiceImpl implements CommonService {
                     + "   (GROUP_CONCAT( DISTINCT ?af  ;  SEPARATOR = \"|\") as ?afs  ) "
                     + "   { "
                     + "    <"+uri+">   foaf:name ?name . "
-                    + "    <"+uri+"> schema:memberOf ?member . "
+                    + "    OPTIONAL { <"+uri+"> schema:memberOf ?member . } "
                     + "     OPTIONAL { "
                     + "     ?member foaf:name ?afname . "
                     + "     BIND(CONCAT(STR(?member), ';' , STR(?afname) ) AS ?af)  "
@@ -773,7 +773,7 @@ public class CommonServiceImpl implements CommonService {
             
            
             List<Map<String, Value>> responsetopics = sparqlService.query(QueryLanguage.SPARQL, querytopics);
-            if (!responsetopics.isEmpty()){
+            if ( responsetopics.size() > 0 && !responsetopics.get(0).isEmpty()){
             String topics = responsetopics.get(0).get("topicls").stringValue();
             a.setTopics(getRelevantTopics (topics.split("\\|")));
             }
@@ -785,7 +785,7 @@ public class CommonServiceImpl implements CommonService {
             }
             
             List<Map<String, Value>> responseNpub = sparqlService.query(QueryLanguage.SPARQL, numpubquery);
-            if (!responseNpub.isEmpty()) {
+            if (responsetopics.size() > 0 && !responsetopics.get(0).isEmpty()) {
               String num = responseNpub.get(0).get("tot").stringValue();
               a.setNpub(num);
             }
@@ -861,7 +861,7 @@ public class CommonServiceImpl implements CommonService {
          for (String name :listNames) {
           int  tokens = name.split(" ").length;
            int  length = name.length();
-           if (tokens > tokenmax &&  length > lengthmax) {
+           if (tokens >= tokenmax &&  length > lengthmax) {
                tokenmax = tokens;
                lengthmax = length;
            candidate = name;
