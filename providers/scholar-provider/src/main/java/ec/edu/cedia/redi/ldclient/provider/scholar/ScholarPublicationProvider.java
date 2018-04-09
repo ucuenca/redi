@@ -161,7 +161,7 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
                 log.debug("Encoding fix failed on resource <{}>, Exception:{}", requestUrl, ex);
             }
             //Using default encoding
-            if (in == null && streamCopy != null) {
+            if (in == input && streamCopy != null) {
                 in = new ByteArrayInputStream(streamCopy);
             }
             urls = super.parseResponse(requestUrl, requestUrl, triples, in, contentType);
