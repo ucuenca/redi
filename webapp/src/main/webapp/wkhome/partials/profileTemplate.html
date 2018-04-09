@@ -1,6 +1,6 @@
 <div class="row" >
       <div class="col-sm-4 text-center">   
-       <img src="{{ngModel.img}}" class="img-thumbnail" >
+       <img src="{{ngModel.img}}" class="img-thumbnail" style="max-width: 150px;" >
 
 
       </div>
@@ -9,7 +9,7 @@
      
          <ul>
           <li style="width: 60%""><font weight= "bold" size=5 color=#0095db  >{{ngModel.name}}  </font> </li>
-          <li>  {{ngModel.orcid}}  </li>
+          <li>  <a href="https://orcid.org/{{ngModel.orcid}}"> {{ngModel.orcid}} </a>  </li>
           <li>  <span ng-repeat="org in ngModel.orgs">{{org}} </span>   </li>
           <li >  <span ng-repeat="email in ngModel.emails">{{email}} </span> </li>
           <li>  <a ng-show="ngModel.homepage" href="{{ngModel.homepage}}">  <img width="17" src="https://rescue-one.com/wp-content/uploads/2015/05/HOME.png" class="img" title="homepage">
@@ -39,10 +39,10 @@
       <div class="col-sm-4">   
         <ul> 
           <li class="head-list"> <font  color=#243082 > <strong> INFORMACIÓN GENERAL </strong> </font>   </li>
-          <li> N. Pub : {{ngModel.npub}} </li>
-          <li> N. Citation : {{ngModel.citation}} </li>
-          <li> H index: {{ngModel.hindex}} </li>
-          <li> i10 : {{ngModel.i10}} </li>
+          <li ng-show="ngModel.npub"> N. Pub : {{ngModel.npub}} </li>
+          <li ng-show="ngModel.citation" > N. Citation : {{ngModel.citation}} </li>
+          <li ng-show="ngModel.hindex" > H index: {{ngModel.hindex}} </li>
+          <li ng-show="ngModel.i10" > i10 : {{ngModel.i10}} </li>
           </ul>
 
 

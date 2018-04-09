@@ -13,7 +13,8 @@ wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$windo
     }, function(Result) {
 
             $scope.author= Result;
-            console.log (Result);
+            var img =  Result.img == null ?  "/wkhome/images/no_photo.png" : Result.img;
+            $scope.author.img = img;
   
     });
 
