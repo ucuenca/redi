@@ -138,38 +138,49 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
 
     @Override
     public List<String> parseResponse(String resource, String requestUrl, Model triples, InputStream input, String contentType) throws DataRetrievalException {
+        InputStream in = fixEncoding(input, requestUrl);
         List<String> urls = new ArrayList<>();
         if (requestUrl.matches(AUTHORS_SEARCH)) {
-            urls = super.parseResponse(resource, requestUrl, triples, input, contentType);
+            urls = super.parseResponse(resource, requestUrl, triples, in, contentType);
             registerAuthorProfile(resource, triples);
         } else if (requestUrl.matches(PROFILE)) {
             String r = requestUrl.replaceAll("&cstart=.*&pagesize=.*", "");
-            urls = super.parseResponse(r, requestUrl, triples, input, contentType);
+            urls = super.parseResponse(r, requestUrl, triples, in, contentType);
         } else if (requestUrl.matches(PUBLICATION)) {
-            InputStream in = input;
-            byte[] streamCopy = null;
-            try {
-                streamCopy = IOUtils.toByteArray(input);
-                CharsetDetector charsetDetector = new CharsetDetector();
-                charsetDetector.setText(streamCopy);
-                CharsetMatch matchFound = charsetDetector.detect();
-                if (matchFound != null) {
-                    String correctlyEncodedString = new String(streamCopy, matchFound.getName());
-                    in = new ByteArrayInputStream(correctlyEncodedString.getBytes("UTF-8"));
-                }
-            } catch (IOException ex) {
-                log.debug("Encoding fix failed on resource <{}>, Exception:{}", requestUrl, ex);
-            }
-            //Using default encoding
-            if (in == input && streamCopy != null) {
-                in = new ByteArrayInputStream(streamCopy);
-            }
             urls = super.parseResponse(requestUrl, requestUrl, triples, in, contentType);
             URI r = vf.createURI(requestUrl);
             triples.add(r, BIBO.URI, r);
         }
         delay(); // wait after each call.
         return urls;
+    }
+
+    /**
+     * Detect the stream's encoding using Tika and transforms it to UTF-8
+     * @param input InputStream to be transformed 
+     * @param requestUrl Resource URL - Just for logging
+     * @return New ByteArray Stream transformed to the UTF-8 Charset.
+     */
+    public InputStream fixEncoding(InputStream input, String requestUrl/*Just for logging purposes*/) {
+        InputStream in = input;
+        byte[] streamCopy = null;
+        try {
+            streamCopy = IOUtils.toByteArray(input);
+            CharsetDetector charsetDetector = new CharsetDetector();
+            charsetDetector.setText(streamCopy);
+            CharsetMatch matchFound = charsetDetector.detect();
+            if (matchFound != null) {
+                String correctlyEncodedString = new String(streamCopy, matchFound.getName());
+                in = new ByteArrayInputStream(correctlyEncodedString.getBytes("UTF-8"));
+            }
+        } catch (IOException ex) {
+            log.debug("Encoding fix failed on resource <{}>, Exception:{}", requestUrl, ex);
+        }
+        //Using default encoding
+        if (in.equals(input) && streamCopy != null) {
+            in = new ByteArrayInputStream(streamCopy);
+        }
+        return in;
     }
 
     @Override
