@@ -146,7 +146,7 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
             String r = requestUrl.replaceAll("&cstart=.*&pagesize=.*", "");
             urls = super.parseResponse(r, requestUrl, triples, input, contentType);
         } else if (requestUrl.matches(PUBLICATION)) {
-            InputStream in = null;
+            InputStream in = input;
             byte[] streamCopy = null;
             try {
                 streamCopy = IOUtils.toByteArray(input);
