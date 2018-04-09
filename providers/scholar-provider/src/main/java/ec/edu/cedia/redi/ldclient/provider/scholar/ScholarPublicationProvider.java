@@ -26,6 +26,8 @@ import ec.edu.cedia.redi.ldclient.provider.scholar.mapping.ScholarImageUriAttrMa
 import ec.edu.cedia.redi.ldclient.provider.scholar.mapping.ScholarIndexesTextLiteralMapper;
 import ec.edu.cedia.redi.ldclient.provider.scholar.mapping.ScholarTableDateMapper;
 import ec.edu.cedia.redi.ldclient.provider.scholar.mapping.ScholarTableTextLiteralMapper;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,6 +37,7 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.io.IOUtils;
 import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
 import org.apache.marmotta.ldclient.api.provider.DataProvider;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
@@ -46,6 +49,8 @@ import org.apache.marmotta.ldclient.provider.html.mapping.CssUriAttrWhitelistQue
 import org.apache.marmotta.ldclient.provider.html.mapping.JSoupMapper;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.BIBO;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
+import org.apache.tika.parser.txt.CharsetDetector;
+import org.apache.tika.parser.txt.CharsetMatch;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -57,6 +62,8 @@ import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.model.vocabulary.DCTERMS;
 import org.openrdf.model.vocabulary.FOAF;
 import org.openrdf.model.vocabulary.OWL;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -64,6 +71,7 @@ import org.openrdf.model.vocabulary.OWL;
  */
 public class ScholarPublicationProvider extends AbstractHTMLDataProvider implements DataProvider {//NOPMD
 
+    private static Logger log = LoggerFactory.getLogger(ScholarPublicationProvider.class);
     public static final String PROVIDER_NAME = "Google Scholar Publications";
     private final ConcurrentHashMap<String, JSoupMapper> postMappings = new ConcurrentHashMap<>();
     private final ValueFactory vf = ValueFactoryImpl.getInstance();
@@ -138,7 +146,25 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
             String r = requestUrl.replaceAll("&cstart=.*&pagesize=.*", "");
             urls = super.parseResponse(r, requestUrl, triples, input, contentType);
         } else if (requestUrl.matches(PUBLICATION)) {
-            urls = super.parseResponse(requestUrl, requestUrl, triples, input, contentType);
+            InputStream in = null;
+            byte[] streamCopy = null;
+            try {
+                streamCopy = IOUtils.toByteArray(input);
+                CharsetDetector charsetDetector = new CharsetDetector();
+                charsetDetector.setText(streamCopy);
+                CharsetMatch matchFound = charsetDetector.detect();
+                if (matchFound != null) {
+                    String correctlyEncodedString = new String(streamCopy, matchFound.getName());
+                    in = new ByteArrayInputStream(correctlyEncodedString.getBytes("UTF-8"));
+                }
+            } catch (IOException ex) {
+                log.debug("Encoding fix failed on resource <{}>, Exception:{}", requestUrl, ex);
+            }
+            //Using default encoding
+            if (in == null && streamCopy != null) {
+                in = new ByteArrayInputStream(streamCopy);
+            }
+            urls = super.parseResponse(requestUrl, requestUrl, triples, in, contentType);
             URI r = vf.createURI(requestUrl);
             triples.add(r, BIBO.URI, r);
         }
