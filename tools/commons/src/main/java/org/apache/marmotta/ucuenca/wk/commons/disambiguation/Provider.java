@@ -200,27 +200,31 @@ public class Provider {
             //get CA
             List<Map<String, Value>> rsCA = sparql.query(QueryLanguage.SPARQL, qryCA_);
             n.Coauthors = new ArrayList<>();
+            Set<String> lspub = new LinkedHashSet<>();
             for (Map<String, Value> ar : rsCA) {
                 String pubURI = ar.get("p").stringValue();
                 String qryCA_S = qryPCAA.replaceAll("URI", n.URI).replaceAll("PIRI", pubURI);
                 List<Map<String, Value>> query = sparql.query(QueryLanguage.SPARQL, qryCA_S);
                 for (Map<String, Value> arp : query) {
                     String pURI = arp.get("p").stringValue();
-                    List<List<String>> r = new ArrayList<>();
-                    String qryName_C = qryName.replaceAll("URI", pURI);
-                    String qryName2_C = qryName2.replaceAll("URI", pURI);
-                    List<Map<String, Value>> rsCAN1 = sparql.query(QueryLanguage.SPARQL, qryName_C);
-                    for (Map<String, Value> arN : rsCAN1) {
-                        r.add(Lists.newArrayList(arN.get("fun").stringValue()));
-                    }
-                    List<Map<String, Value>> rsCAN2 = sparql.query(QueryLanguage.SPARQL, qryName2_C);
-                    for (Map<String, Value> arN : rsCAN2) {
-                        ArrayList<String> names = Lists.newArrayList(arN.get("fn").stringValue());
-                        names.add(arN.get("ln").stringValue());
-                        r.add(names);
-                    }
-                    n.Coauthors.addAll(r);
+                    lspub.add(pURI);
                 }
+            }
+            for (String arp : lspub) {
+                List<List<String>> r = new ArrayList<>();
+                String qryName_C = qryName.replaceAll("URI", arp);
+                String qryName2_C = qryName2.replaceAll("URI", arp);
+                List<Map<String, Value>> rsCAN1 = sparql.query(QueryLanguage.SPARQL, qryName_C);
+                for (Map<String, Value> arN : rsCAN1) {
+                    r.add(Lists.newArrayList(arN.get("fun").stringValue()));
+                }
+                List<Map<String, Value>> rsCAN2 = sparql.query(QueryLanguage.SPARQL, qryName2_C);
+                for (Map<String, Value> arN : rsCAN2) {
+                    ArrayList<String> names = Lists.newArrayList(arN.get("fn").stringValue());
+                    names.add(arN.get("ln").stringValue());
+                    r.add(names);
+                }
+                n.Coauthors.addAll(r);
             }
             //get Publications
             List<Map<String, Value>> rsP = sparql.query(QueryLanguage.SPARQL, qryP_);
