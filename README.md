@@ -1,4 +1,5 @@
 # REDI - Ecuadorian Semantic Repository  #
+[![Join the chat at https://gitter.im/ucuenca/redi](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ucuenca/redi)
 [![Build Status](https://travis-ci.org/ucuenca/redi.svg?branch=master)](https://travis-ci.org/ucuenca/REDI)
 
 Ecuadorian Semantic Repository of Ecuadorian Academics that allows the discovery of common research areas. The platform is based on the Apache Marmotta Linked Data Platform. If you want to see the lastest developments, just build the master branch or jump to [rediclon.cedia.edu.ec](https://rediclon.cedia.edu.ec/)
