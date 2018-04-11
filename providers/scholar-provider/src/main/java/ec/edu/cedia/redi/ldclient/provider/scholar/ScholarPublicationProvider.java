@@ -138,49 +138,54 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
 
     @Override
     public List<String> parseResponse(String resource, String requestUrl, Model triples, InputStream input, String contentType) throws DataRetrievalException {
-        InputStream in = fixEncoding(input, requestUrl);
-        List<String> urls = new ArrayList<>();
-        if (requestUrl.matches(AUTHORS_SEARCH)) {
-            urls = super.parseResponse(resource, requestUrl, triples, in, contentType);
-            registerAuthorProfile(resource, triples);
-        } else if (requestUrl.matches(PROFILE)) {
-            String r = requestUrl.replaceAll("&cstart=.*&pagesize=.*", "");
-            urls = super.parseResponse(r, requestUrl, triples, in, contentType);
-        } else if (requestUrl.matches(PUBLICATION)) {
-            urls = super.parseResponse(requestUrl, requestUrl, triples, in, contentType);
-            URI r = vf.createURI(requestUrl);
-            triples.add(r, BIBO.URI, r);
+        try {
+            // Set the correct encoding.
+            byte[] data = IOUtils.toByteArray(input);
+            InputStream in = new ByteArrayInputStream(data);
+            if (!contentType.contains("charset")) {
+                String charset = detectEncoding(new ByteArrayInputStream(data), requestUrl);
+                contentType += "; charset=" + charset;
+            }
+
+            List<String> urls = new ArrayList<>();
+            if (requestUrl.matches(AUTHORS_SEARCH)) {
+                urls = super.parseResponse(resource, requestUrl, triples, in, contentType);
+                registerAuthorProfile(resource, triples);
+            } else if (requestUrl.matches(PROFILE)) {
+                String r = requestUrl.replaceAll("&cstart=.*&pagesize=.*", "");
+                urls = super.parseResponse(r, requestUrl, triples, in, contentType);
+            } else if (requestUrl.matches(PUBLICATION)) {
+                urls = super.parseResponse(requestUrl, requestUrl, triples, in, contentType);
+                URI r = vf.createURI(requestUrl);
+                triples.add(r, BIBO.URI, r);
+            }
+            delay(); // wait after each call.
+            return urls;
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
-        delay(); // wait after each call.
-        return urls;
     }
 
     /**
-     * Detect the stream's encoding using Tika and transforms it to UTF-8
-     * @param input InputStream to be transformed 
+     * Detect the stream's encoding using Tika, otherwise return default
+     * encoding utf-8.
+     *
+     * @param input      InputStream to be transformed
      * @param requestUrl Resource URL - Just for logging
      * @return New ByteArray Stream transformed to the UTF-8 Charset.
      */
-    public InputStream fixEncoding(InputStream input, String requestUrl/*Just for logging purposes*/) {
-        InputStream in = input;
-        byte[] streamCopy = null;
+    public String detectEncoding(InputStream input, String requestUrl/*Just for logging purposes*/) {
         try {
-            streamCopy = IOUtils.toByteArray(input);
             CharsetDetector charsetDetector = new CharsetDetector();
-            charsetDetector.setText(streamCopy);
+            charsetDetector.setText(input);
             CharsetMatch matchFound = charsetDetector.detect();
-            if (matchFound != null) {
-                String correctlyEncodedString = new String(streamCopy, matchFound.getName());
-                in = new ByteArrayInputStream(correctlyEncodedString.getBytes("UTF-8"));
+            if (matchFound != null && matchFound.getName() != null) {
+                return matchFound.getName();
             }
         } catch (IOException ex) {
-            log.debug("Encoding fix failed on resource <{}>, Exception:{}", requestUrl, ex);
+            log.error("cannot detect encodig for url {}", requestUrl);
         }
-        //Using default encoding
-        if (in.equals(input) && streamCopy != null) {
-            in = new ByteArrayInputStream(streamCopy);
-        }
-        return in;
+        return "utf-8";
     }
 
     @Override
