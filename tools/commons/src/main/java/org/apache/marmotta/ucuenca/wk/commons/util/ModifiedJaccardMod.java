@@ -22,14 +22,14 @@ import org.simmetrics.simplifiers.Soundex;
  * @author cedia
  */
 public class ModifiedJaccardMod {
-
+    
     public boolean soundexBoost = false;
     public boolean prioritizeWordOrder = false;
     public boolean onlyCompleteMatchs = false;
     public double syntacticThreshold = 0.89;
     public double abvPenalty = 0.95;
-    public double abvMatchsPenalty = 0.95;
-
+    public double abvMatchsPenalty = 0.90;
+    
     public double distanceName(String name1, String name2) {
         List<String> tks1 = tokenizer(name1.toLowerCase());
         List<String> tks2 = tokenizer(name2.toLowerCase());
@@ -38,10 +38,10 @@ public class ModifiedJaccardMod {
         onlyCompleteMatchs = false;
         Map.Entry<Integer, Double> c1 = countMatchs(tks1, tks2);
         double mx = Math.min(tks1.size(), tks2.size());
-        double pn = c.getKey() >= c1.getKey() ? 1.0 : abvMatchsPenalty;
+        double pn = c.getKey() >= c1.getKey() && c.getKey() > 0 ? 1.0 : abvMatchsPenalty;
         return pn * (c.getValue() + c1.getValue()) / (c.getKey() + c1.getKey() + mx);
     }
-
+    
     private Map.Entry<Integer, Double> countMatchs(List<String> tokens1, List<String> tokens2) {
         double sumSimilarity = 0;
         int countMatchs = 0;
@@ -76,33 +76,35 @@ public class ModifiedJaccardMod {
         }
         Collections.sort(usedTokens1, Collections.reverseOrder());
         Collections.sort(usedTokens2, Collections.reverseOrder());
-
+        
         for (int i : usedTokens1) {
             tokens1.remove(i);
         }
         for (int i : usedTokens2) {
             tokens2.remove(i);
         }
-
+        
         return new AbstractMap.SimpleEntry<>(countMatchs, sumSimilarity);
     }
-
+    
     public double syntacticSim(String t1, String t2) {
         double boost = 1.0;
         try {
+            double minlen = Math.min(t1.length(), t2.length());
+            double fx = 0.05 * (1.0 / (1.0 + Math.exp(-1.25 * minlen + 5.0)));
             Soundex sm = new Soundex();
             boolean equals = sm.simplify(Simplifiers.removeDiacritics().simplify(t1)).equals(sm.simplify(Simplifiers.removeDiacritics().simplify(t2)));
-            boost = (soundexBoost ? (equals ? 1.05 : 0.95) : 1);
+            boost = (soundexBoost ? (equals ? 1.0 + fx : 0.95) : 1);
         } catch (Exception e) {
         }
         double val = boost * (with(new Levenshtein()).simplify(Simplifiers.removeDiacritics()).build().compare(t2, t1) + 2 * with(new JaroWinkler()).simplify(Simplifiers.removeDiacritics()).build().compare(t2, t1)) / 3;
         return val > 1.0 ? 1.0 : val;
     }
-
+    
     public String specialCharactersClean(String n) {
         return n.replaceAll("\\.|,|;|:|-|\n|\\\\|\\||\"|\'|_|/", " ");
     }
-
+    
     public List<String> tokenizer(String n) {
         n = specialCharactersClean(n);
         String[] tokens = n.split(" ");
