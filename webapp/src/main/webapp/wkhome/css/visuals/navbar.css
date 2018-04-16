@@ -76,6 +76,7 @@
     .navbar-nav {
         float: none!important;
         margin: 7.5px -15px;
+        font-size:0.9vw;
     }
     .navbar-nav>li {
         float: none;

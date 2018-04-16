@@ -39,7 +39,8 @@ rela.directive('relatedAuthor', ["d3", 'globalData','sparqlQuery', '$routeParams
         },
         error: function(data) {
             //document.getElementById("imgloading").style.visibility = "hidden";
-            alert("Error" + data.responseText);
+           $('#relatedArea').css("display", "block");
+           // alert("Error" + data.responseText);
         }
     }); 
 

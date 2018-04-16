@@ -1,20 +1,29 @@
+
+
+
+
 .profile  { 
 	 /*color:#9d9d9c;*/
 color:  #515a5a  ;
 /*background-image: url("/wkhome/images/cedia.png");*/
 background-image: url("/wkhome/images/logoCedia.PNG");
+/*background-image: url("/wkhome/images/Asset.png");*/
+
 background-repeat: no-repeat;
- background-size: 300px 250px;
- background-position: left top;
+background-size: 18%;
+background-position: 1.5vw -1vw;
 /*background-position: center;*/
-backface-visibility: 
+ width: 80vw;
+ font-size: 1vw;
 	/*background-color: #F6F6F6;*/
 }
 
 .coauthor-panel {
   padding: 5%;
-  border: 1px;
-  border-color: #3333cc;
+  border: 2px;
+ /* border: 1px; 
+  border-color: #3333cc;*/
+  border-color: #c8c8d7;
   border-style: solid;
   margin-right: 10%;
   min-height: 60vh;
@@ -24,17 +33,31 @@ backface-visibility:
 }
 
 .coauthor-list { 
- margin : 5px;
+ margin : 5%;
  text-align: left;
  }
 .prof-btn {
-   margin: 10px;
+  /* margin: 10px;*/
+   width: 25%;
+   min-width: 200px;
+ /*  margin-left: 5px;*/
+   margin-right: 1vw;
 
 }
 
 .head-list {
 	margin-bottom: 5px;
 }
+
+
+
+
+.prof-btn span {
+margin-left: 5px;
+font-size: 0.9vw;
+
+}
+
 
 
 
