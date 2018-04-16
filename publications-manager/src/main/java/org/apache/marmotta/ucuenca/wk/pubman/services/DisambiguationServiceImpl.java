@@ -6,18 +6,27 @@
 package org.apache.marmotta.ucuenca.wk.pubman.services;
 
 import com.google.common.collect.Lists;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.api.task.Task;
@@ -59,7 +68,7 @@ import org.semarglproject.vocab.RDFS;
 @ApplicationScoped
 public class DisambiguationServiceImpl implements DisambiguationService {
 
-    final int MAXTHREADS = 6;
+    final int MAXTHREADS = 10;
 
     @Inject
     private org.slf4j.Logger log;
@@ -166,22 +175,23 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             task = taskManagerService.createSubTask(String.format("%s Disambiguation", "Author"), "Disambiguation Process");
             InitAuthorsProvider();
             List<Provider> Providers = getProviders();
-            List<Map<String, Map<Provider, Integer>>> providersResult = new ArrayList();
-            if (orgs != null) {
-                for (String org : orgs) {
-                    task.updateMessage(String.format("Disambiguate  author from %s organization", org));
-                    log.debug("Procesing" + org);
-                    Map<String, Map<Provider, Integer>> mp = new HashMap();
-                    Map<Provider, Integer> ProvidersElements = ProcessAuthors(Providers, org);
-                    mp.put(org, ProvidersElements);
-                    providersResult.add(mp);
-                }
-            } else {
-                ProcessAuthors(Providers, null);
-            }
+//            List<Map<String, Map<Provider, Integer>>> providersResult = new ArrayList();
+//            if (orgs != null) {
+//                for (String org : orgs) {
+//                    task.updateMessage(String.format("Disambiguate  author from %s organization", org));
+//                    log.debug("Procesing" + org);
+//                    Map<String, Map<Provider, Integer>> mp = new HashMap();
+//                    Map<Provider, Integer> ProvidersElements = ProcessAuthors(Providers, org);
+//                    mp.put(org, ProvidersElements);
+//                    providersResult.add(mp);
+//                }
+//            } else {
+//                ProcessAuthors(Providers, null);
+//            }
             int iasa = sparqlUtils.count(constantService.getAuthorsSameAsGraph());
             do {
                 ProcessCoauthors(Providers, true);
+                sparqlUtils.addAll(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "1");
                 int asa = sparqlUtils.count(constantService.getAuthorsSameAsGraph());
                 if (asa != iasa) {
                     iasa = asa;
@@ -189,19 +199,19 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                     break;
                 }
             } while (true);
-            task.updateDetailMessage("Status", String.format("%s Disambiguation", "Coauthors"));
-            sparqlUtils.delete(constantService.getCoauthorsSameAsGraph());
-            ProcessCoauthors(Providers, false);
-            task.updateDetailMessage("Status", String.format("%s Disambiguation", "Publications"));
-            sparqlUtils.delete(constantService.getPublicationsSameAsGraph());
-            ProcessPublications(Providers);
-            task.updateDetailMessage("Status", String.format("%s Remove", "Duplicates"));
-            log.info("Remove Duplicates");
-            //sparqlUtils.removeDuplicates(constantService.getAuthorsSameAsGraph());
-            //sparqlUtils.removeDuplicates(constantService.getPublicationsSameAsGraph());
-            //sparqlUtils.removeDuplicates(constantService.getCoauthorsSameAsGraph());
-            log.info("Upload Logs");
-            updateLogs(providersResult);
+//            task.updateDetailMessage("Status", String.format("%s Disambiguation", "Coauthors"));
+//            sparqlUtils.delete(constantService.getCoauthorsSameAsGraph());
+//            ProcessCoauthors(Providers, false);
+//            task.updateDetailMessage("Status", String.format("%s Disambiguation", "Publications"));
+//            sparqlUtils.delete(constantService.getPublicationsSameAsGraph());
+//            ProcessPublications(Providers);
+//            task.updateDetailMessage("Status", String.format("%s Remove", "Duplicates"));
+//            log.info("Remove Duplicates");
+//            //sparqlUtils.removeDuplicates(constantService.getAuthorsSameAsGraph());
+//            //sparqlUtils.removeDuplicates(constantService.getPublicationsSameAsGraph());
+//            //sparqlUtils.removeDuplicates(constantService.getCoauthorsSameAsGraph());
+//            log.info("Upload Logs");
+//            updateLogs(providersResult);
         } catch (Exception ex) {
             log.error("Unknown error while disambiguating");
             ex.printStackTrace();
@@ -435,7 +445,13 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         bexecutorService.end();
     }
 
-    public List<Person> getPersons(List<Map<String, Value>> list) {
+    public Map<String, Person> getPersons(String query, List<Map<String, Value>> ls) throws MarmottaException {
+        List<Map<String, Value>> queryResponsex = sparqlService.query(QueryLanguage.SPARQL, query);
+        ls.addAll(queryResponsex);
+        return getPersons(ls);
+    }
+
+    public Map<String, Person> getPersons(List<Map<String, Value>> list) {
         Map<String, Person> mp = new HashMap<>();
         for (Map<String, Value> a : list) {
             Person auxPerson = getAuxPerson(a);
@@ -447,7 +463,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 mp.put(auxPerson.URI, auxPerson);
             }
         }
-        return new ArrayList(mp.values());
+        return mp;
     }
 
     public Person getAuxPerson(Map<String, Value> ar) {
@@ -469,6 +485,19 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         return n;
     }
 
+    public Map<String, Set<String>> getGroups(List<Map<String, Value>> ar) {
+        Map<String, Set<String>> mp = new HashMap<>();
+        for (Map<String, Value> i : ar) {
+            String g = i.get("pq").stringValue();
+            String u = i.get("af").stringValue();
+            if (!mp.containsKey(g)) {
+                mp.put(g, new LinkedHashSet<String>());
+            }
+            mp.get(g).add(u);
+        }
+        return mp;
+    }
+
     public void groupCoauthors(List<Provider> ProvidersList, String authorURI, boolean onlySameAs) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
         String providersGraphs = "  ";
         for (Provider aProvider : ProvidersList) {
@@ -487,9 +516,41 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 + "			optional { ?a <http://xmlns.com/foaf/0.1/familyName> ?ln}\n"
                 + "		}\n"
                 + "}";
-        List<Map<String, Value>> queryResponsex = sparqlService.query(QueryLanguage.SPARQL, qryAllAuthors);
-        List<Person> queryResponse = getPersons(queryResponsex);
+        String initialGroups = "select distinct ?pq ?af { \n"
+                + "        graph <" + constantService.getAuthorsSameAsGraph() + "> { \n"
+                + "                values ?pu { <" + authorURI + "> } . \n"
+                + "                        ?pu <http://www.w3.org/2002/07/owl#sameAs> ?ax . \n"
+                + "                        ?pq <http://www.w3.org/2002/07/owl#sameAs> ?a . \n"
+                + "                        ?pq <http://www.w3.org/2002/07/owl#sameAs> ?af .\n"
+                + "                } \n"
+                + "                values ?g { " + providersGraphs + " } graph ?g { \n"
+                + "                        ?ax <http://xmlns.com/foaf/0.1/publications> ?p . \n"
+                + "                        ?a <http://xmlns.com/foaf/0.1/publications> ?p . \n"
+                + "                } \n"
+                + "}";
+
+        List<Map<String, Value>> iGroups = sparqlService.query(QueryLanguage.SPARQL, initialGroups);
+        Map<String, Set<String>> iniGroups = getGroups(iGroups);
+        List<Map<String, Value>> namesList = new ArrayList<>();
+        for (String aGroupURI : iniGroups.keySet()) {
+            String gGroup = "select distinct ?a ?n ?fn ?ln { \n"
+                    + "        graph <" + constantService.getAuthorsSameAsGraph() + "> { \n"
+                    + "                values ?pu { <" + aGroupURI + "> } . \n"
+                    + "                        ?pu <http://www.w3.org/2002/07/owl#sameAs> ?a . \n"
+                    + "                } \n"
+                    + "                values ?g { " + providersGraphs + " } graph ?g { \n"
+                    + "                        optional { ?a <http://xmlns.com/foaf/0.1/name> ?n}\n"
+                    + "                        optional { ?a <http://xmlns.com/foaf/0.1/givenName> ?fn}\n"
+                    + "                        optional { ?a <http://xmlns.com/foaf/0.1/familyName> ?ln}\n"
+                    + "                } \n"
+                    + "}";
+            List<Map<String, Value>> aGroupNames = sparqlService.query(QueryLanguage.SPARQL, gGroup);
+            namesList.addAll(aGroupNames);
+        }
+        Map<String, Person> queryResponse_mp = getPersons(qryAllAuthors, namesList);
+        List<Person> queryResponse = new ArrayList<>(queryResponse_mp.values());
         Set<Set<String>> coauthorsGroups = new HashSet<>();
+        coauthorsGroups.addAll(iniGroups.values());
         for (int i = 0; i < queryResponse.size(); i++) {
             for (int j = i + 1; j < queryResponse.size(); j++) {
                 Person auxPersoni = queryResponse.get(i);
@@ -499,17 +560,31 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                     Set<String> aGroup = new HashSet<>();
                     aGroup.add(auxPersoni.URI);
                     aGroup.add(auxPersonj.URI);
-                    Set<String> auxGroup = null;
+                    Set<String> lastPotentialGroup = null;
                     for (Set<String> potentialGroup : coauthorsGroups) {
                         if (potentialGroup.contains(auxPersoni.URI) || potentialGroup.contains(auxPersonj.URI)) {
-                            auxGroup = potentialGroup;
-                            break;
+                            boolean pass = true;
+                            for (String pgURI : potentialGroup) {
+                                Person aPersonGroup = queryResponse_mp.get(pgURI);
+                                if (aPersonGroup == null) {
+                                    log.debug("Author {} , no data found", pgURI);
+                                    continue;
+                                }
+                                Boolean checkNameA = aPersonGroup.checkName(auxPersoni);
+                                Boolean checkNameB = aPersonGroup.checkName(auxPersonj);
+                                pass = checkNameA != null && checkNameA && checkNameB != null && checkNameB;
+                                if (!pass) {
+                                    break;
+                                }
+                            }
+                            if (pass) {
+                                lastPotentialGroup = potentialGroup;
+                                lastPotentialGroup.addAll(aGroup);
+                            }
                         }
                     }
-                    if (auxGroup == null) {
+                    if (lastPotentialGroup == null) {
                         coauthorsGroups.add(aGroup);
-                    } else {
-                        auxGroup.addAll(aGroup);
                     }
                 }
             }
@@ -536,28 +611,43 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         for (Set<String> eachGroup : coauthorsGroups) {
             String eachGroupUUID = UUID.randomUUID().toString();
             String PossibleNewURI = constantService.getAuthorResource() + eachGroupUUID;
-            String coauthoruris = "  ";
-            for (String aProvider : eachGroup) {
-                coauthoruris += " <" + aProvider + "> ";
+            String GroupIDURI = null;
+            for (Entry<String, Set<String>> next : iniGroups.entrySet()) {
+                if (next.getValue() == eachGroup) {
+                    GroupIDURI = next.getKey();
+                    break;
+                }
             }
-            String qry = "select distinct ?a {\n"
-                    + "		graph <" + constantService.getAuthorsSameAsGraph() + "> {\n"
-                    + "			values ?pa { " + coauthoruris + "  } .\n"
-                    + "			?a <http://www.w3.org/2002/07/owl#sameAs> ?pa .\n"
-                    + "		}\n"
-                    + "}";
-
-            List<Map<String, Value>> query = sparqlService.query(QueryLanguage.SPARQL, qry);
             for (String groupIndex : eachGroup) {
-                if (query.isEmpty() && !onlySameAs) {
+                if (GroupIDURI == null && !onlySameAs) {
                     registerSameAsCheck(constantService.getCoauthorsSameAsGraph(), PossibleNewURI, groupIndex);
                 } else {
-                    for (Map<String, Value> re : query) {
-                        registerSameAs(constantService.getAuthorsSameAsGraph(), re.get("a").stringValue(), groupIndex);
-                    }
+                    registerSameAs(constantService.getAuthorsSameAsGraph() + "1", GroupIDURI, groupIndex);
                 }
             }
         }
+    }
+
+    private synchronized void log(String text) {
+        try {
+            Files.write(Paths.get("/tmp/logredi.txt"), text.getBytes(), StandardOpenOption.APPEND);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private Set<String> get() throws MarmottaException {
+        String q = "select ?c {\n"
+                + "	graph <https://redi.cedia.edu.ec/context/authorsSameAs>{\n"
+                + "    	<https://redi.cedia.edu.ec/resource/authors/UCUENCA/oai-pmh/GARCIA_ALVEAR__JORGE_LUIS> <http://www.w3.org/2002/07/owl#sameAs> ?c\n"
+                + "    }\n"
+                + "} ";
+        List<Map<String, Value>> query = sparqlService.query(QueryLanguage.SPARQL, q);
+        Set<String> ls = new LinkedHashSet<>();
+        for (Map<String, Value> v : query) {
+            ls.add(v.get("c").stringValue());
+        }
+        return ls;
     }
 
     public void ProcessPublications(final List<Provider> ProvidersList) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, InterruptedException {
