@@ -159,7 +159,7 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
                             var model = {};
                             model["id"] = resource["@id"];
                             model["name"] = resource["uc:name"];
-                            model["fullname"] = _.findWhere(resource["uc:fullName"],{'@language': $routeParams.lang})['@value'];
+                            model["fullname"] = _.first(resource["uc:fullName"])['@value'];
                             model["total"] = resource["uc:totalpublications"]["@value"];
                             model["lat"] = resource["uc:latitude"];
                             model["long"] = resource["uc:longitude"];
