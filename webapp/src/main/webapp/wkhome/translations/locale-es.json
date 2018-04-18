@@ -98,5 +98,13 @@
 "area.study":"Areas de Estudio",
 
 "developer": "Desarrollador",
-"coordinadora":"Coordinadora"
+"coordinadora":"Coordinadora",
+
+"publications":"Publicaciones",
+"explore":"Explorar",
+"network":"Redes" ,
+"relevant.coauthor" : "Coautores Relevantes" ,
+"general.information":"INFORMACION GENERAL",
+"research.areas" : "AREAS DE INVESTIGACION" ,
+"knowledge.areas" : "AREAS DE CONOCIMIENTO "
 }

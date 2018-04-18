@@ -38,7 +38,7 @@
      <div class="row" style="margin-top: 5%; min-height:15vh ;">
       <div class="col-sm-4">   
         <ul> 
-          <li class="head-list"> <font  color=#243082 > <strong> INFORMACIÓN GENERAL </strong> </font>   </li>
+          <li class="head-list"> <font  color=#243082 > <strong> {{ "general.information" | translate }}  </strong> </font>   </li>
           <li ng-show="ngModel.npub"> N. Pub : {{ngModel.npub}} </li>
           <li ng-show="ngModel.citation" > N. Citation : {{ngModel.citation}} </li>
           <li ng-show="ngModel.hindex" > H index: {{ngModel.hindex}} </li>
@@ -50,14 +50,14 @@
          
       <div class="col-sm-4"> 
            <ul>
-            <li class="head-list" > <font  color=#243082  > <strong> AREAS DE INVESTIGACION </strong> </font>  </li>
+            <li class="head-list" > <font  color=#243082  > <strong> {{ "research.areas" | translate }} </strong> </font>  </li>
         <span ng-repeat="area in ngModel.topics"><li>{{area}} </li> </span>  
             </ul>
           </div>
 
       <div class="col-sm-4"> 
       <ul>
-        <li class="head-list" > <font  color=#243082   > <strong> AREAS DE CONOCIMIENTO </strong> </font> </li>
+        <li class="head-list" > <font  color=#243082   > <strong> {{ "knowledge.areas" | translate }} </strong> </font> </li>
         <span ng-repeat="clust in ngModel.cluster"><li>{{clust}} </li> </span>  
         </ul>
 

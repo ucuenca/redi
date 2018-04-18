@@ -2,7 +2,7 @@
   padding:10px;
 }
 
-.navbar { margin-bottom:0px !important; }
+.navbar { margin-bottom:0px !important; font-size: 0.9vw;}
 /*.carousel-caption { margin-top:0px !important }*/
 .navbar-right {
   margin-right: 0px;

@@ -7,9 +7,9 @@
 
        <div class="row text-center" style="margin-top: 5%;" >   
         <br>
-        <button type="button"  class="prof-btn btn btn-default" ng-click="publication()"  > <img  src="/wkhome/images/publication.png"  width="40" > <span> Publications </span> </button> 
-         <button type="button"  class="prof-btn btn btn-default" ng-click="tree()"  > <img  src="/wkhome/images/Tree.png"  width="56" > <span> Explore </span> </button> 
-         <button type="button"  class="prof-btn btn btn-default" ng-click="network()"   > <img  src="/wkhome/images/Cluster.png"  width="40" > <span> Network </span> </button> 
+        <button type="button"  class="prof-btn btn btn-default" ng-click="publication()"  > <img  src="/wkhome/images/publication.png"  width="40" > <span> {{"publications" | translate}} </span> </button> 
+         <button type="button"  class="prof-btn btn btn-default" ng-click="tree()"  > <img  src="/wkhome/images/Tree.png"  width="56" > <span> {{"explore" | translate}} </span> </button> 
+         <button type="button"  class="prof-btn btn btn-default" ng-click="network()"   > <img  src="/wkhome/images/Cluster.png"  width="40" > <span> {{"network"| translate}} </span> </button> 
          
     
       </div>
@@ -19,7 +19,7 @@
 
     <div class="col-sm-4 second-panel" style="min-height: 70vh">
     	<div class="coauthor-panel text-center">
-    		<font  color=#243082  > <strong> Coautores Relevantes </strong> </font>
+    		<font  color=#243082  > <strong> {{ "relevant.coauthor" | translate}} </strong> </font>
     	<div class="coauthor-list">   </div>	 			
       
       </div>

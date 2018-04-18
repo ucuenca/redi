@@ -87,5 +87,13 @@
 "area.study":"Fields of study",
 
 "developer": "Developer",
-"coordinadora":"Coordinator"
+"coordinadora":"Coordinator",
+
+"publications":"Publications",
+"explore":"Explore",
+"network":"Network",
+"relevant.coauthor" : "Relevant Coauthors" ,
+"general.information": "GENERAL INFORMATION" ,
+"research.areas" : "RESEARCH AREAS" ,
+"knowledge.areas" : "KNOWLEDGE AREAS "
 }
