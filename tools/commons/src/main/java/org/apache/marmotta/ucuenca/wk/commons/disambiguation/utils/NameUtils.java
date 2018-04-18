@@ -143,7 +143,7 @@ public class NameUtils {
             int v1 = get.size();
             int v2 = 0;
             for (String n : get) {
-                v2 += n.length();
+                v2 += n.replaceAll("\\s+", " ").trim().length();
             }
 
             int score = v1 * v2;
@@ -154,6 +154,27 @@ public class NameUtils {
             }
         }
         return options.get(selection);
+    }
+
+    public static int bestNameLen(List<List<String>> options) {
+
+        int selectionScore = -1;
+        for (int i = 0; i < options.size(); i++) {
+            List<String> get = options.get(i);
+
+            int v1 = get.size();
+            int v2 = 0;
+            for (String n : get) {
+                v2 += n.replaceAll("\\s+", " ").trim().length();
+            }
+
+            int score = v1 * v2;
+
+            if (score > selectionScore) {
+                selectionScore = score;
+            }
+        }
+        return selectionScore;
     }
 
 }

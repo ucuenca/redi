@@ -98,48 +98,52 @@ public class SPARQLUtils {
     }
 
     public void mergeRawDataSameAs(List<Provider> providersList, String graph, String graphOrigin) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
-        String providersGraphs = "  ";
-        for (Provider aProvider : providersList) {
-            providersGraphs += " <" + aProvider.Graph + "> ";
+        String q = "select distinct ?a { graph <" + graphOrigin + "> { ?a <http://www.w3.org/2002/07/owl#sameAs> ?c . } }";
+        List<Map<String, Value>> query = sparqlService.query(QueryLanguage.SPARQL, q);
+        for (Map<String, Value> ar : query) {
+            String aAU = ar.get("a").stringValue();
+            for (Provider aProvider : providersList) {
+                String providersGraph = aProvider.Graph;
+                new LongUpdateQueryExecutor(sparqlService,
+                        "    graph <" + graphOrigin + "> {\n"
+                        + "        <" + aAU + "> <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
+                        + "    }\n"
+                        + "  graph <" + providersGraph + "> {\n"
+                        + "        ?c ?p ?v .\n"
+                        + "    }\n",
+                        "    graph <" + graph + "> {\n"
+                        + "        ?c ?p ?v .\n"
+                        + "    }\n",
+                        null, "", "?c ?p ?v").execute();
+
+                new LongUpdateQueryExecutor(sparqlService,
+                        "    graph <" + graphOrigin + "> {\n"
+                        + "        <" + aAU + "> <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
+                        + "    }\n"
+                        + "    graph <" + providersGraph + "> {\n"
+                        + "         ?c ?p ?v .\n"
+                        + "         ?v ?w ?q .\n"
+                        + "    }\n",
+                        "    graph <" + graph + "> {\n"
+                        + "        ?v ?w ?q .\n"
+                        + "    }\n",
+                        null, "", "?v ?w ?q").execute();
+
+                new LongUpdateQueryExecutor(sparqlService,
+                        "    graph <" + graphOrigin + "> {\n"
+                        + "        <" + aAU + "> <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
+                        + "    }\n"
+                        + "    graph <" + providersGraph + "> {\n"
+                        + "         ?c ?p ?v .\n"
+                        + "         ?v ?w ?q .\n"
+                        + "        ?q ?z ?m .\n"
+                        + "    }\n",
+                        "    graph <" + graph + "> {\n"
+                        + "        ?q ?z ?m .\n"
+                        + "    }\n",
+                        null, "", "?q ?z ?m").execute();
+            }
         }
-        new LongUpdateQueryExecutor(sparqlService,
-                "    graph <" + graphOrigin + "> {\n"
-                + "        ?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
-                + "    }\n"
-                + "    values ?g { " + providersGraphs + " } graph ?g {\n"
-                + "        ?c ?p ?v .\n"
-                + "    }\n",
-                "    graph <" + graph + "> {\n"
-                + "        ?c ?p ?v .\n"
-                + "    }\n",
-                null, "", "?c ?p ?v").execute();
-
-        new LongUpdateQueryExecutor(sparqlService,
-                "    graph <" + graphOrigin + "> {\n"
-                + "        ?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
-                + "    }\n"
-                + "    values ?g { " + providersGraphs + " } graph ?g {\n"
-                + "         ?c ?p ?v .\n"
-                + "         ?v ?w ?q .\n"
-                + "    }\n",
-                "    graph <" + graph + "> {\n"
-                + "        ?v ?w ?q .\n"
-                + "    }\n",
-                null, "", "?v ?w ?q").execute();
-
-        new LongUpdateQueryExecutor(sparqlService,
-                "    graph <" + graphOrigin + "> {\n"
-                + "        ?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
-                + "    }\n"
-                + "    values ?g { " + providersGraphs + " } graph ?g {\n"
-                + "         ?c ?p ?v .\n"
-                + "         ?v ?w ?q .\n"
-                + "        ?q ?z ?m .\n"
-                + "    }\n",
-                "    graph <" + graph + "> {\n"
-                + "        ?q ?z ?m .\n"
-                + "    }\n",
-                null, "", "?q ?z ?m").execute();
     }
 
     public void removeDuplicates(String graph) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {

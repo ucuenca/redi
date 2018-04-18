@@ -14,7 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,8 +24,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.api.task.Task;
@@ -44,6 +41,7 @@ import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Person;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Provider;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.utils.PublicationUtils;
+import org.apache.marmotta.ucuenca.wk.commons.function.Cache;
 import org.apache.marmotta.ucuenca.wk.commons.util.BoundedExecutor;
 import org.apache.marmotta.ucuenca.wk.commons.util.LongUpdateQueryExecutor;
 import org.apache.marmotta.ucuenca.wk.commons.util.SPARQLUtils;
@@ -188,28 +186,34 @@ public class DisambiguationServiceImpl implements DisambiguationService {
 //            } else {
 //                ProcessAuthors(Providers, null);
 //            }
-            int iasa = sparqlUtils.count(constantService.getAuthorsSameAsGraph());
-            do {
-                ProcessCoauthors(Providers, true);
-                sparqlUtils.addAll(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "1");
-                int asa = sparqlUtils.count(constantService.getAuthorsSameAsGraph());
-                if (asa != iasa) {
-                    iasa = asa;
-                } else {
-                    break;
-                }
-            } while (true);
+//            int iasa = sparqlUtils.count(constantService.getAuthorsSameAsGraph());
+//            do {
+//                ProcessCoauthors(Providers, true);
+//                sparqlUtils.addAll(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "1");
+//                int asa = sparqlUtils.count(constantService.getAuthorsSameAsGraph());
+//                if (asa != iasa) {
+//                    iasa = asa;
+//                } else {
+//                    break;
+//                }
+//            } while (true);
+//            sparqlUtils.delete(constantService.getAuthorsSameAsGraph() + "1");
 //            task.updateDetailMessage("Status", String.format("%s Disambiguation", "Coauthors"));
 //            sparqlUtils.delete(constantService.getCoauthorsSameAsGraph());
 //            ProcessCoauthors(Providers, false);
 //            task.updateDetailMessage("Status", String.format("%s Disambiguation", "Publications"));
 //            sparqlUtils.delete(constantService.getPublicationsSameAsGraph());
 //            ProcessPublications(Providers);
+            //mergeAuthors();
+            //sparqlUtils.replaceSameAs(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "2",
+            //        constantService.getAuthorsSameAsGraph() + "2d", constantService.getAuthorsSameAsGraph() + "2i", true);
+            sparqlUtils.minus(constantService.getAuthorsSameAsGraph() + "3", constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "2d");
+            sparqlUtils.addAll(constantService.getAuthorsSameAsGraph() + "3", constantService.getAuthorsSameAsGraph() + "2i");
 //            task.updateDetailMessage("Status", String.format("%s Remove", "Duplicates"));
 //            log.info("Remove Duplicates");
 //            //sparqlUtils.removeDuplicates(constantService.getAuthorsSameAsGraph());
-//            //sparqlUtils.removeDuplicates(constantService.getPublicationsSameAsGraph());
-//            //sparqlUtils.removeDuplicates(constantService.getCoauthorsSameAsGraph());
+            sparqlUtils.removeDuplicates(constantService.getPublicationsSameAsGraph());
+            sparqlUtils.removeDuplicates(constantService.getCoauthorsSameAsGraph());
 //            log.info("Upload Logs");
 //            updateLogs(providersResult);
         } catch (Exception ex) {
@@ -217,6 +221,148 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             ex.printStackTrace();
         }
         taskManagerService.endTask(task);
+    }
+
+    public void mergeAuthors() throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
+        String qryDisambiguatedCoauthors = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                + "select distinct ?a ?n ?fn ?ln { \n"
+                + "  graph <" + constantService.getAuthorsSameAsGraph() + "> { \n"
+                + "    ?a <http://www.w3.org/2002/07/owl#sameAs> [] . \n"
+                + "  }\n"
+                + "  graph <" + constantService.getAuthorsProviderGraph() + "> { \n"
+                + "  	optional { ?a <http://xmlns.com/foaf/0.1/name> ?n}\n"
+                + "    optional { ?a <http://xmlns.com/foaf/0.1/givenName> ?fn}\n"
+                + "    optional { ?a <http://xmlns.com/foaf/0.1/familyName> ?ln}\n"
+                + "  }\n"
+                + "}";
+        List<Map<String, Value>> queryResponse = sparqlService.query(QueryLanguage.SPARQL, qryDisambiguatedCoauthors);
+        Map<String, Person> persons = getPersons(queryResponse);
+        String qryGroups = "select distinct ?a ?b { \n"
+                + "  graph <" + constantService.getAuthorsSameAsGraph() + "> { \n"
+                + "    ?a <http://www.w3.org/2002/07/owl#sameAs> ?c . \n"
+                + "    ?b <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
+                + "    filter (?a > ?b)\n"
+                + "  }\n"
+                + "}";
+        List<Map<String, Value>> query = sparqlService.query(QueryLanguage.SPARQL, qryGroups);
+        Set<Set<String>> groupsAuthors = getGroupsAuthors(query);
+
+        Map<String, Set<String>> ngroups = new HashMap<>();
+        for (Set<String> ag : groupsAuthors) {
+            List<String> ls = new ArrayList<>(ag);
+            Set<String> paterns = new HashSet<>();
+            String u = null;
+            int score = -1;
+            for (int i = 0; i < ls.size(); i++) {
+                Person get1 = persons.get(ls.get(i));
+                int bestNameLen = get1.bestNameLen();
+                if (bestNameLen > score) {
+                    u = get1.URI;
+                    score = bestNameLen;
+                }
+                for (int j = 0; j < ls.size(); j++) {
+                    if (i != j) {
+                        Person get2 = persons.get(ls.get(j));
+                        Boolean checkName = get1.checkName(get2);
+                        if (checkName != null && !checkName) {
+                            paterns.add(ls.get(i));
+                            paterns.add(ls.get(j));
+                        }
+                    }
+                }
+            }
+            if (paterns.isEmpty()) {
+                paterns.add(u);
+            }
+
+            int size;
+            int size2;
+            do {
+                size = paterns.size();
+                Set<String> paternsRemove = new HashSet<>();
+                for (String ap : paterns) {
+                    for (String ap2 : paterns) {
+                        if (!ap.equals(ap2) && !paternsRemove.contains(ap) && !paternsRemove.contains(ap2)) {
+                            Person get1 = persons.get(ap);
+                            Person get2 = persons.get(ap2);
+                            Boolean checkName = get1.checkName(get2);
+                            if (checkName != null && checkName) {
+                                paternsRemove.add(get1.bestNameLen() > get2.bestNameLen() ? ap2 : ap);
+                            }
+                        }
+                    }
+                }
+                paterns.removeAll(paternsRemove);
+                size2 = paterns.size();
+            } while (size != size2);
+
+            for (String ap : paterns) {
+                Set<String> nst = new HashSet<>();
+                Person get2 = persons.get(ap);
+                for (int i = 0; i < ls.size(); i++) {
+                    Person get1 = persons.get(ls.get(i));
+                    Boolean checkName = get2.checkName(get1);
+                    if (checkName != null && checkName) {
+                        nst.add(ls.get(i));
+                    }
+                }
+                ngroups.put(ap, nst);
+            }
+        }
+        Map<String, Set<String>> ngroupsbn = new HashMap<>();
+        for (Set<String> st : ngroups.values()) {
+            String u = null;
+            int score = -1;
+            for (String stt : st) {
+                Person get = persons.get(stt);
+                int bestNameLen = get.bestNameLen();
+                if (bestNameLen > score) {
+                    u = get.URI;
+                    score = bestNameLen;
+                }
+            }
+            ngroupsbn.put(u, st);
+        }
+
+        for (Entry<String, Set<String>> next : ngroupsbn.entrySet()) {
+            for (String next1 : next.getValue()) {
+                registerSameAs(constantService.getAuthorsSameAsGraph() + "2", next.getKey(), next1);
+            }
+        }
+
+    }
+
+    public Set<Set<String>> getGroupsAuthors(List<Map<String, Value>> query) {
+        Set<Set<String>> g = new HashSet<>();
+        Set<Map<String, Value>> usedT = new HashSet<>();
+        for (Map<String, Value> a : query) {
+            if (!usedT.contains(a)) {
+                usedT.add(a);
+                Set<String> ans = new HashSet<>();
+                String UA = a.get("a").stringValue();
+                String UB = a.get("b").stringValue();
+                ans.add(UA);
+                ans.add(UB);
+                int size;
+                do {
+                    size = ans.size();
+                    for (Map<String, Value> b : query) {
+                        if (!usedT.contains(b)) {
+                            String UAx = b.get("a").stringValue();
+                            String UBx = b.get("b").stringValue();
+                            if (ans.contains(UAx) || ans.contains(UBx)) {
+                                usedT.add(b);
+                                ans.add(UAx);
+                                ans.add(UBx);
+                            }
+                        }
+                    }
+                } while (ans.size() > size);
+                g.add(ans);
+            }
+        }
+
+        return g;
     }
 
     public void InitAuthorsProvider() throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
@@ -370,7 +516,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                                     + "ask from <" + constantService.getAuthorsProviderGraph() + "> {\n"
                                     + "	<" + aSeedAuthor.URI + "> foaf:publications [] .\n"
                                     + "}");
-                            if (alreadyHasPublications) {
+                            if (alreadyHasPublications || Disambiguate.size() > 0) {
                                 Disambiguate.add(instance.createURI(aSeedAuthor.URI), instance.createURI("http://www.w3.org/2002/07/owl#sameAs"), instance.createURI(aSeedAuthor.URI));
                             }
                             Disambiguate.add(instance.createURI(aSeedAuthor.URI), instance.createURI("http://dbpedia.org/ontology/status"), instance.createURI(harvestedProvidersListURI));
@@ -609,7 +755,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         coauthorsGroups.addAll(ls_alone);
 
         for (Set<String> eachGroup : coauthorsGroups) {
-            String eachGroupUUID = UUID.randomUUID().toString();
+            String eachGroupUUID = Cache.getMD5(UUID.randomUUID().toString());
             String PossibleNewURI = constantService.getAuthorResource() + eachGroupUUID;
             String GroupIDURI = null;
             for (Entry<String, Set<String>> next : iniGroups.entrySet()) {
@@ -733,7 +879,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         }
         publicationsGroups.addAll(ls_alone);
         for (Set<String> eachGroup : publicationsGroups) {
-            String eachGroupUUID = UUID.randomUUID().toString();
+            String eachGroupUUID = Cache.getMD5(UUID.randomUUID().toString());
             String PossibleNewURI = constantService.getPublicationResource() + eachGroupUUID;
             for (String groupIndex : eachGroup) {
                 registerSameAsCheck(constantService.getPublicationsSameAsGraph(), PossibleNewURI, groupIndex);
@@ -786,9 +932,9 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             SPARQLUtils sparqlUtils = new SPARQLUtils(sparqlService);
             List<Provider> Providers = getProviders();
             log.info("Merging raw data ...");
-            sparqlUtils.mergeRawDataSameAs(Providers, constantService.getCentralGraph() + "TempRaw", constantService.getAuthorsSameAsGraph());
+            sparqlUtils.mergeRawDataSameAs(Providers, constantService.getCentralGraph() + "TempRaw", constantService.getAuthorsSameAsGraph() + "3");
             log.info("Merging Same As ...");
-            sparqlUtils.addAll(constantService.getCentralGraph() + "TempAllSameAs", constantService.getAuthorsSameAsGraph());
+            sparqlUtils.addAll(constantService.getCentralGraph() + "TempAllSameAs", constantService.getAuthorsSameAsGraph() + "3");
             sparqlUtils.addAll(constantService.getCentralGraph() + "TempAllSameAs", constantService.getPublicationsSameAsGraph());
             sparqlUtils.addAll(constantService.getCentralGraph() + "TempAllSameAs", constantService.getCoauthorsSameAsGraph());
             log.info("Replacing subjects ...");
@@ -802,11 +948,11 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             sparqlUtils.replaceSameAs(constantService.getCentralGraph() + "TempRaw2", constantService.getCentralGraph() + "TempAllSameAs",
                     constantService.getCentralGraph() + "TempAllSameAsD2", constantService.getCentralGraph() + "TempAllSameAsI2", false);
             log.info("Deleting old objects ...");
-            sparqlUtils.minus(constantService.getCentralGraph(), constantService.getCentralGraph() + "TempRaw2", constantService.getCentralGraph() + "TempAllSameAsD2");
+            sparqlUtils.minus(constantService.getCentralGraph() + "2", constantService.getCentralGraph() + "TempRaw2", constantService.getCentralGraph() + "TempAllSameAsD2");
             log.info("Adding new objects ...");
-            sparqlUtils.addAll(constantService.getCentralGraph(), constantService.getCentralGraph() + "TempAllSameAsI2");
+            sparqlUtils.addAll(constantService.getCentralGraph() + "2", constantService.getCentralGraph() + "TempAllSameAsI2");
             log.info("Adding sameAs triples ...");
-            sparqlUtils.addAll(constantService.getCentralGraph(), constantService.getCentralGraph() + "TempAllSameAs");
+            sparqlUtils.addAll(constantService.getCentralGraph() + "2", constantService.getCentralGraph() + "TempAllSameAs");
             log.info("Deleting temporals ...");
             sparqlUtils.delete(constantService.getCentralGraph() + "TempRaw");
             sparqlUtils.delete(constantService.getCentralGraph() + "TempRaw2");
