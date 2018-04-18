@@ -90,6 +90,10 @@ public class Person {
         return sim >= thresholdName;
     }
 
+    public int bestNameLen() {
+        return NameUtils.bestNameLen(Name);
+    }
+
     public Boolean checkCoauthors(Person p) {
         if (Coauthors.isEmpty() || p.Coauthors.isEmpty()) {
             return null;

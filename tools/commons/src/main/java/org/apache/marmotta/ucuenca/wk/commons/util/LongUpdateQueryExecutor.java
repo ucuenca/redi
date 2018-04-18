@@ -43,7 +43,7 @@ public class LongUpdateQueryExecutor {
     }
 
     public void execute() throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
-        String select = prefix + " select (count (*) as ?c_count) { " + where + " }";
+        String select = prefix + " select (count (*) as ?c_count) { select * { " + where + " } }";
         List<Map<String, Value>> query = sparql.query(QueryLanguage.SPARQL, select);
         int parseInt = Integer.parseInt(query.get(0).get("c_count").stringValue());
         for (int i = 0; i < parseInt; i += BULK) {
