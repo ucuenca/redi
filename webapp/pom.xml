@@ -42,7 +42,7 @@
     </properties>
 
     <build>
-        <finalName>ROOT</finalName>
+        <finalName>kimuk</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>
