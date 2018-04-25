@@ -14,9 +14,9 @@
       ng-controller="FacetSelectionController"
       ng-show="items.length>0"
       ng-cloak>
-        <div class="panel-heading">Filtering By</div>
         <div class="panel-body">
           <ul class="items unstyled">
+            <div class="panel-heading">{{'FILTERING_BY' | translate}}</div>
             <li class="facet" ng-repeat="item in items">
               <i class="fa fa-tag"></i>
               <a class="facet-value" ng-click="remove($index)">
@@ -34,7 +34,7 @@
       data-field="contributor-name"
       ng-init="source = core"
       ng-cloak>
-        <div class="panel-heading">Contributor</div>
+        <div class="panel-heading">{{'CONTRIBUTOR' | translate}}</div>
         <div class="panel-body">
           <ul class="facets unstyled">
             <li ng-repeat="item in items" ng-show="items">
@@ -52,7 +52,7 @@
       data-field="subjects"
       ng-init="source = core"
       ng-cloak>
-        <div class="panel-heading">Subjects</div>
+        <div class="panel-heading">{{'palabras clave' | translate}}</div>
         <div class="panel-body">
           <ul class="facets unstyled">
             <li ng-repeat="item in items" ng-show="items">
@@ -70,7 +70,7 @@
       data-field="type-all"
       ng-init="source = core"
       ng-cloak>
-        <div class="panel-heading">Journal / Conference / Book</div>
+        <div class="panel-heading">{{'JOURNAL_CONFERENCE_BOOK' | translate}}</div>
         <div class="panel-body">
           <ul class="facets unstyled">
             <li ng-repeat="item in items" ng-show="items">
@@ -88,7 +88,7 @@
       data-field="partof"
       ng-init="source = core"
       ng-cloak>
-        <div class="panel-heading">Type</div>
+        <div class="panel-heading">{{'TYPE' | translate}}</div>
         <div class="panel-body">
           <ul class="facets unstyled">
             <li ng-repeat="item in items" ng-show="items">
@@ -108,11 +108,11 @@
     ng-cloak>
       <div class="reading-column">
         <div class="loading" ng-show="loading" ng-cloak>
-          <p>Loading search results ...</p>
+          <p>{{'LOAD_SEACH_RESULTS' | translate}} ...</p>
           <img src="/wkhome/images/ajax-loader-bar.gif" alt="Loading search results" />
         </div>
         <div class="small" ng-show="documents.length > 0" ng-cloak>
-          <div style="padding-bottom: 20px;">Search Results ({{totalResults}} found)</div>
+          <div style="padding-bottom: 20px;">{{'SEARCH_RESULTS' | translate}} ({{totalResults}} {{'FOUND' | translate}})</div>
           <div class="alert alert-error" ng-show="error">{{error}}</div>
           <div class="alert alert-info" ng-show="message">{{message}}</div>
         </div>
