@@ -9,7 +9,7 @@
      
          <ul>
           <li style="width: 60%""><font weight= "bold" size=5 color=#0095db  >{{ngModel.name}}  </font> </li>
-          <li>  <a href="https://orcid.org/{{ngModel.orcid}}"> {{ngModel.orcid}} </a>  </li>
+          <li ng-show="ngModel.orcid" >  <a ng-show="ngModel.orcid" href="https://orcid.org/{{ngModel.orcid}}"> ORCID: {{ngModel.orcid}} </a>  </li>
           <li>  <span ng-repeat="org in ngModel.orgs">{{org}} </span>   </li>
           <li >  <span ng-repeat="email in ngModel.emails">{{email}} </span> </li>
           <li>  <a ng-show="ngModel.homepage" href="{{ngModel.homepage}}">  <img width="17" src="https://rescue-one.com/wp-content/uploads/2015/05/HOME.png" class="img" title="homepage">

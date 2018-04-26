@@ -1,6 +1,6 @@
 #header {
   height: 80vh;
-  background: url(../../images/banner.png) no-repeat;
+  background: url(../../images/banner-redi-final.png) no-repeat;
   border-bottom: #FFFFFF solid 1px;
  /* position: relative; */
  /* width: 100%; */
@@ -8,8 +8,12 @@
   background-size: contain;
   background-position: center;
   max-height: 1000px;
+
+  
 }
 
 #header .search {
-  bottom: -65vh;
+  bottom: -55vh;
+width: 40vw;
+margin-right: 90vw;
 }

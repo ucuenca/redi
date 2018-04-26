@@ -5,6 +5,12 @@
   "SEARCH":"Search",
   "SOURCES": "Data Sources",
   "SEARCH_RESULTS":"Search Results",
+  "FOUND":"found",
+  "JOURNAL_CONFERENCE_BOOK":"Journal / Conference / Book",
+  "CONTRIBUTOR":"Contributor",
+  "TYPE":"Type",
+  "FILTERING_BY":"Filtering By",
+  "LOAD_SEACH_RESULTS":"Loading search results",
 
 "results":"results",
 
