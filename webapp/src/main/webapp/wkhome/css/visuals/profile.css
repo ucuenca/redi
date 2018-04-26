@@ -3,19 +3,30 @@
 
 
 .profile  { 
-	 /*color:#9d9d9c;*/
-color:  #515a5a  ;
+   /*color:#9d9d9c;*/
+/*color:  #515a5a  ;*/
+color:#788080;
 /*background-image: url("/wkhome/images/cedia.png");*/
-background-image: url("/wkhome/images/logoCedia.PNG");
-/*background-image: url("/wkhome/images/Asset.png");*/
+/*background-image: url("/wkhome/images/logoCedia.PNG");*/
+background-image: url("/wkhome/images/Asset.png");
 
 background-repeat: no-repeat;
-background-size: 18%;
-background-position: 1.5vw -1vw;
+background-size: 15%;
+background-position: 0vw 3vw;
+
 /*background-position: center;*/
- width: 80vw;
+/* width: 80vw; */
+ width: 99vw;
  font-size: 1vw;
-	/*background-color: #F6F6F6;*/
+ background-color: #F6F6F6;
+ margin-top: 1.5%;
+
+
+}
+
+.authorData {
+   margin-top: 2vh;
+
 }
 
 .coauthor-panel {
@@ -27,51 +38,105 @@ background-position: 1.5vw -1vw;
   border-style: solid;
   margin-right: 10%;
   min-height: 60vh;
+  background-image: url("/wkhome/images/manos2.PNG");
+  background-size: 65vh;
 /*background-color: #6600ff ; */
 
 
 }
 
+.coauthor-list {
+  font-family: "Conduit-IT";
+  font-size:  1.1vw;
+
+}
+
+.coauthor-list  a {
+  color: white ;
+}
+
+ #NameAuthorProfile {
+
+  font-family: "Conduit-BI";
+  font-size: 2.2vw;
+  color: #0095db;
+}
+
 .coauthor-list { 
  margin : 5%;
  text-align: left;
+ border-top-style: solid;
+    border-top-width: 1px;
+    border-color: white;
+
  }
-.prof-btn {
-  /* margin: 10px;*/
-   width: 25%;
+
+.coauthorDiv {
+    margin-top: 5%;
+}
+
+.listCoauthors  {
+
+  margin-bottom: 5%;
+}
+
+
+
+#profBtn button {
+ height: 9vh;
+
+}
+
+.profbtn {
+
    min-width: 200px;
- /*  margin-left: 5px;*/
-   margin-right: 1vw;
+ 
+   height: 9vh;
 
 }
 
 .head-list {
-	margin-bottom: 5px;
+  margin-bottom: 5px;
+  color: #243082;
+  font-family: "Conduit-IT";
+  font-size: 1.3vw;
 }
 
+.aditionalInformation {
+  margin-top: 10%; 
+  min-height:15vh ;
+  /* margin-left: 8vh; */
+}
 
 
 
 .prof-btn span {
-margin-left: 5px;
-font-size: 0.9vw;
+margin-left: 20px;
+font-size: 1.1vw;
+font-family: "Conduit-IT";
+color: #253081;
+
+
+}
+
+.second-panel {
+  margin-top: 2vw;
 
 }
 
 
 
-
 @font-face { 
-	font-family: "Conduit-IT"; 
-	src: url("wkhome/fonts/ConduitITCStd-Italic.otf");  
+  font-family: "Conduit-IT"; 
+  src: url("/wkhome/fonts/ConduitITCStd-Italic.otf") format("opentype"); ;  
 }
 
 @font-face { 
-	font-family: "Conduit-BI"; 
-	src: url("ConduitITCStd-BlackItalic.otf");  
+  font-family: "Conduit-BI"; 
+  src: url("/wkhome/fonts/ConduitITCStd-BlackItalic.otf") format("opentype"); ;  
 }
 
 @font-face { 
-	font-family: "Conduit-EL"; 
-	src: url("wkhome/fonts/ConduitITCStd-ExtraLightIta.otf");  
+  font-family: "Conduit-EL"; 
+  src: url("/wkhome/fonts/ConduitITCStd-ExtraLightIta.otf") format("opentype"); ;  
 }

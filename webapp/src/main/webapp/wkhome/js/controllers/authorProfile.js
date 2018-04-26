@@ -1,12 +1,15 @@
 wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$window', 'globalData', 'sparqlQuery', 'queryProfile',
   function($scope, $routeParams, $window , globalData , sparqlQuery ,queryProfile) {
     // Define a new author object
-    $scope.author = {}
+    $scope.author = {} ;
+    $scope.coauthors =  {}; 
+  /*  $scope.coauthors  = [];*/
     var author = $scope.author;
     author.uri = $routeParams.author;
     author.encodedUri = encodeURIComponent(author.uri);
     var newhost =  $window.location.protocol + '//' + $window.location.hostname + ($window.location.port ? ':8080' : '') + '';
-
+   
+    
 
     queryProfile.query({
       id: author.uri
@@ -15,12 +18,11 @@ wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$windo
             $scope.author= Result;
             var img =  Result.img == null ?  "/wkhome/images/no_photo.png" : Result.img;
             $scope.author.img = img;
+           
   
     });
 
-
-
-    
+     
 
         $scope.tree = function () {  
           $window.location.hash = '/author/tree/' + author.uri;
@@ -36,16 +38,19 @@ wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$windo
           $window.location.hash = 'author/publications/q=author:"' + author.encodedUri + '"&fl=*&rows=10&wt=json/author/' + author.uri;
         };
      
-         clickonRelatedauthor = function (uri) {
+          $scope.clickonRelatedauthor = function (uri) {
+
           $window.location.hash = '/author/profile/' + uri;
           }
 
 
         function executeRelatedAuthors1(querytoExecute, divtoload) {
+
                 sparqlQuery.querySrv({query: querytoExecute}, function (rdf) {
+                  
                     jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                         var authorInfo = $('div.coauthor-panel .' + divtoload);
-                        authorInfo.html('');
+                    /*    authorInfo.html('');*/
 
                         if (compacted) {
                             var entity = compacted["@graph"];
@@ -62,21 +67,31 @@ wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$windo
                                 }).reverse();
 
                                 values = _.first(values, 20);
-
+                                 var coauthors = [];
                                 _.map(values, function (value) {
+
                                     if (value["rdfs:label"] && value["uc:total"]["@value"]) {
+                                        var coauthor = {};
                                         var authorname = typeof value["rdfs:label"] == "string" ? value["rdfs:label"] : _.first(value["rdfs:label"], 1);
                                         var anchor = $("<a class='listCoauthor' target='blank' onclick='return clickonRelatedauthor(\""+value["@id"]+"\")'  >").text("");
                                         var img = value["foaf:img"] ? value["foaf:img"]["@id"] : "/wkhome/images/author-ec.png";
-                                        anchor.append('<img src="' + img + '" class="img-rounded" alt="Logo Cedia" width="30" height="30"        >');
-                                        anchor.append("  "+ authorname + "(" + value["uc:total"]["@value"] + ")");
-                                        div.append(anchor);
-                                        div.append("</br>");
-                                        div.append("</br>");
+                                        coauthor.authorname = authorname; 
+                                        coauthor.id = value["@id"];
+                                        coauthor.img = img;
+                                        coauthor.total = value["uc:total"]["@value"];
+                                        coauthors.push (coauthor);
+                         
 
-                                        return anchor;
+                                        return "";
                                     }
                                 });
+
+                                $scope.$apply (function () {
+                                $scope.coauthors.data =  coauthors;
+                                });
+                                  
+                                 //$scope.coauthors = coauthors;
+                                 console.log ( $scope.coauthors);
                             }
                          //   waitingDialog.hide();
                         }
@@ -114,7 +129,7 @@ wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$windo
                     executeRelatedAuthors1(getRelatedAuthorsByPublicationsQuery, "coauthor-list");
                 
             };
-                  relatedAuthors (author.uri);
+                 relatedAuthors (author.uri);
 
 
 
