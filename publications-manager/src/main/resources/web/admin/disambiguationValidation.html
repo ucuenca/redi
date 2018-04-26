@@ -123,8 +123,6 @@
                 });
 
                 $("button#addTargetURI").click(function () {
-                    alert(window.graph);
-                    return false;
                     var uri = $("input#targetURI").val().trim();
                     describeURI(uri, "#target_resource_text");
                     loadSameAs(uri, window.graph);
