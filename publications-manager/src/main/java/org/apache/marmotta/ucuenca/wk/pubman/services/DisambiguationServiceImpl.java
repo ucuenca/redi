@@ -17,7 +17,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -207,13 +206,13 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             //mergeAuthors();
             //sparqlUtils.replaceSameAs(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "2",
             //        constantService.getAuthorsSameAsGraph() + "2d", constantService.getAuthorsSameAsGraph() + "2i", true);
-            sparqlUtils.minus(constantService.getAuthorsSameAsGraph() + "3", constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "2d");
-            sparqlUtils.addAll(constantService.getAuthorsSameAsGraph() + "3", constantService.getAuthorsSameAsGraph() + "2i");
+            //sparqlUtils.minus(constantService.getAuthorsSameAsGraph() + "3", constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "2d");
+            //sparqlUtils.addAll(constantService.getAuthorsSameAsGraph() + "3", constantService.getAuthorsSameAsGraph() + "2i");
 //            task.updateDetailMessage("Status", String.format("%s Remove", "Duplicates"));
 //            log.info("Remove Duplicates");
 //            //sparqlUtils.removeDuplicates(constantService.getAuthorsSameAsGraph());
-            sparqlUtils.removeDuplicates(constantService.getPublicationsSameAsGraph());
-            sparqlUtils.removeDuplicates(constantService.getCoauthorsSameAsGraph());
+            //sparqlUtils.removeDuplicates(constantService.getPublicationsSameAsGraph());
+            //sparqlUtils.removeDuplicates(constantService.getCoauthorsSameAsGraph());
 //            log.info("Upload Logs");
 //            updateLogs(providersResult);
         } catch (Exception ex) {
@@ -380,11 +379,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 + "	}\n", null, "prefix foaf: <http://xmlns.com/foaf/0.1/>\n", "?a ?b ?c").execute();
 
         //delete provider triple
-        String deleteProviderType = "delete {\n"
-                + "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
-                + "		?a a <http://ucuenca.edu.ec/ontology#Provider> .\n"
-                + "	}\n"
-                + "} where {\n"
+        String deleteProviderType = "delete where {\n"
                 + "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
                 + "		?a a <http://ucuenca.edu.ec/ontology#Provider> .\n"
                 + "	}\n"
@@ -550,7 +545,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         for (Person aCandidate : CandidateListLevel) {
             if (superAuthor.check(aCandidate)) {
                 up = false;
-                Person enrich = superAuthor.enrich(aCandidate);
+                Person enrich = superAuthor.enrich(aCandidate, true);
                 registerSameAsModel(r, superAuthor.URI, aCandidate.URI);
                 Model Disambiguate = Disambiguate(Candidates, level + 1, enrich);
                 r.addAll(Disambiguate);
@@ -603,7 +598,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             Person auxPerson = getAuxPerson(a);
             if (mp.containsKey(auxPerson.URI)) {
                 Person get = mp.get(auxPerson.URI);
-                Person enrich = get.enrich(auxPerson);
+                Person enrich = get.enrich(auxPerson, false);
                 mp.put(auxPerson.URI, enrich);
             } else {
                 mp.put(auxPerson.URI, auxPerson);

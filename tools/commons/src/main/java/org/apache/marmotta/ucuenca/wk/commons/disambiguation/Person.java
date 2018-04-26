@@ -173,7 +173,7 @@ public class Person {
         return null;
     }
 
-    public Person enrich(Person p) {
+    public Person enrich(Person p, boolean ignoreName) {
         Person newPersonClon = new Person();
         newPersonClon.URIS.addAll(URIS);
         newPersonClon.URIS.addAll(p.URIS);
@@ -190,8 +190,10 @@ public class Person {
                 newPersonClon.Name.add(new ArrayList<>(i));
             }
         }
-        for (List<String> i : p.Name) {
-            newPersonClon.Name.add(new ArrayList<>(i));
+        if (!ignoreName || newPersonClon.Name.isEmpty()) {
+            for (List<String> i : p.Name) {
+                newPersonClon.Name.add(new ArrayList<>(i));
+            }
         }
         newPersonClon.Coauthors = new ArrayList<>();
         if (Coauthors != null) {
