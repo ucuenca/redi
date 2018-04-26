@@ -27,6 +27,18 @@ wkhomeApp.directive('logoPublication', function(){
     scope.type = "web";
     if (scope.uri.indexOf(".pdf") !== -1) {
       scope.type = "pdf";
+    } else if (scope.uri.indexOf("www.scopus.com") !== -1){
+      scope.type = "scopus";
+    } else if (scope.uri.indexOf("ieee.org") !== -1){
+      scope.type = "ieee";
+    } else if (scope.uri.indexOf("springer.com") !== -1){
+      scope.type = "springer";
+    }  else if (scope.uri.indexOf("dblp") !== -1){
+      scope.type = "dblp";
+    } else if (scope.uri.indexOf("dspace") !== -1){
+      scope.type = "dspace";
+    } else if (scope.uri.indexOf("www.sciencedirect.com") !== -1){
+      scope.type = "science_direct";
     }
   }
 

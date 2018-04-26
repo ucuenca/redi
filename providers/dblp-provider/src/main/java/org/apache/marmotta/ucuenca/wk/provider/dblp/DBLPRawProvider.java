@@ -141,9 +141,9 @@ public class DBLPRawProvider extends AbstractHttpProvider {
         Delay.call();
         if (requestUrl.startsWith("http://dblp.uni-trier.de")) {
             return parseAuthorSearch(requestUrl, input, triples, resource);
-        } else if (requestUrl.startsWith("http://dblp.org/pers")) {
+        } else if (requestUrl.startsWith("http://dblp.org/pers") || requestUrl.startsWith("https://dblp.org/pers")) {
             return parseAuthor(input, triples);
-        } else if (requestUrl.startsWith("http://dblp.org/rec")) {
+        } else if (requestUrl.startsWith("http://dblp.org/rec") || requestUrl.startsWith("https://dblp.org/rec")) {
             return parsePublication(requestUrl, input, triples);
         }
 

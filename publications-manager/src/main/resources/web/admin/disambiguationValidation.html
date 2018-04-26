@@ -1,0 +1,217 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements. See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership. The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<html>
+    <head>
+        <!--###BEGIN_HEAD###-->
+        <title>Disambiguation Validation</title>
+        <!--<script type="text/javascript" src="../../webjars/jquery/1.8.2/jquery.min.js"></script> -->
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.js"></script> 
+        <script type="text/javascript">
+            var host = _SERVER_URL;
+            window.graph = host + "context/authorsSameAs";
+            function updateType() {
+                var x = document.getElementById("mySelect").value;
+                                window.graph = host + "context/"+x;
+            }
+            $(function () {
+                function describeURI(uri, continer) {
+                    (function () {
+                        $.ajax({
+                            headers: {Accept: "application/rdf+json"},
+                            url: host + "sparql/select?query=describe%20%3C" + encodeURIComponent(uri) + "%3E",
+                            success: function (result) {
+                                var jsr = JSON.stringify(result, undefined, 1);
+                                $(continer).text(jsr);
+                            }});
+                    })();
+                }
+                window.loadSameAsDescribe = function (uri) {
+                    describeURI(uri, "#same_resource_text");
+                }
+
+                window.removeSameAs = function (uri) {
+                    var r = -1;
+                    $('#sameURIs li #auri').each(function (i)
+                    {
+                        if ($(this).text() == uri) {
+                            r = i;
+                        }
+                    });
+                    $('#sameURIs li')[r].remove();
+                }
+
+
+                function appendSame(uri) {
+                    $("#sameURIs").append("<li><button id='auri' onclick='loadSameAsDescribe(\"" + uri + "\")' >" + uri + "</button><button onclick='removeSameAs(\"" + uri + "\")'>X</button></li>");
+                }
+
+                function loadSameAs(uri, graph) {
+                    (function () {
+                        $.ajax({
+                            headers: {Accept: "application/sparql-results+json"},
+                            url: host + "sparql/select?query=select%20%3Fl%20%7B%20graph%20%3C" + encodeURIComponent(graph) + "%3E%20%7B%20%3C" + encodeURIComponent(uri) + "%3E%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23sameAs%3E%20%3Fl%20%7D%7D",
+                            success: function (result) {
+                                $("#sameURIs").html("");
+                                for (var i = 0; i < result.results.bindings.length; i++) {
+                                    var urisa = result.results.bindings[i].l.value;
+                                    appendSame(urisa);
+                                }
+                            }});
+                    })();
+                }
+
+
+                function saveData(uri, graph) {
+                    var links = [];
+                    $('#sameURIs li #auri').each(function (i)
+                    {
+                        links.push($(this).text());
+                    });
+
+                    $.ajax({
+                        type: "POST",
+                        headers: {"Content-Type": "application/sparql-update;charset=UTF-8"},
+                        url: host + "sparql/update",
+                        data: "delete where { graph <" + graph + "> { <" + uri + "> <http://www.w3.org/2002/07/owl#sameAs> ?l . } }",
+                        success: function (result) {
+                            addlinkesData(uri, graph, links);
+                        }});
+                }
+
+                function addlinkesData(uri, graph, links) {
+
+                    var lslinks = "";
+                    for (var i = 0; i < links.length; i++) {
+                        lslinks += "<" + uri + "> <http://www.w3.org/2002/07/owl#sameAs> <" + links[i] + "> . \n";
+                    }
+                    var upq = "insert data { graph <" + graph + "> { " + lslinks + "  }}";
+
+                    $.ajax({
+                        type: "POST",
+                        headers: {"Content-Type": "application/sparql-update;charset=UTF-8"},
+                        url: host + "sparql/update",
+                        data: upq,
+                        success: function (result) {
+                            alert("It's done");
+                        }});
+                }
+
+
+
+
+                $("button#aSameAsI").click(function () {
+                    var uri = $("button#aSameAsI").text();
+                    describeURI(uri, "#same_resource_text");
+                    return false;
+                });
+
+                $("button#addTargetURI").click(function () {
+                    alert(window.graph);
+                    return false;
+                    var uri = $("input#targetURI").val().trim();
+                    describeURI(uri, "#target_resource_text");
+                    loadSameAs(uri, window.graph);
+                    return false;
+                });
+                $("button#addSameURI").click(function () {
+                    var uri = $("input#sameURI").val().trim();
+                    appendSame(uri);
+                    return false;
+                });
+
+                $("button#saveSameAs").click(function () {
+                    var v = confirm("Are you sure of committing  the current SameAs Links?");
+                    if (v) {
+                        var uri = $("input#targetURI").val().trim();
+                        saveData(uri, window.graph);
+                    }
+                    return false;
+                });
+
+            });
+        </script> 
+        <!--###END_HEAD###-->
+    </head>
+    <body>
+
+        <!--<h1><a id="Introduction"></a>Introduction on Base Module<a class="section_anchor" href="#Introduction"></a></h1>
+        -->
+
+        <!--###BEGIN_CONTENT###-->
+        <h1>MANUALLY FIX DISAMBIGUATION ERRORS</h1>
+        <h2>SOLVE SAMEAS LINKS</h2>
+        <p>
+            This module allows manual modifications to REDI disambiguation results. A list of same-As links is provided for the target resource, which can be changed according to the user's criteria.
+        </p>
+
+        Resource Type to edit:
+        <select id="mySelect" onchange="updateType()">
+            <option value="authorsSameAs">Authors</option>
+            <option value="coauthorsSameAs">Coauthors</option>
+            <option value="publicationsSameAs">Publications</option>
+        </select>
+
+        <table style="width:100%;">
+            <tr>
+                <th>Target resource</th>
+                <th>SameAs resource</th> 
+            </tr>
+            <tr>
+                <td width="50%">
+                    <div>
+                        <input id="targetURI" type=text />
+                        <button id="addTargetURI">Describe URI</button>
+                    </div>
+                    <div id="target_resource" >
+                        <textarea id="target_resource_text" style="width: 100%;" rows="30">
+                            
+                        </textarea> 
+                    </div>
+                </td>
+                <td width="50%">                    
+                    <div>
+                        <div id="same_resource" >
+                            <textarea id="same_resource_text" style="width: 100%;" rows="30">
+                            
+                            </textarea> 
+                        </div>
+                    </div>
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button id="saveSameAs">Save changes</button>
+                </td>
+                <td>
+                    <h2>Links</h2>
+                    <input id="sameURI" type=text />
+                    <button id="addSameURI">Add URI</button>
+                    <ul id ="sameURIs">
+                    </ul>
+                </td>
+            </tr>
+        </table>
+
+
+        <!--###END_CONTENT###-->
+    </body>
+</html>
+

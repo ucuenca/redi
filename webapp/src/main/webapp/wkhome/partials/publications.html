@@ -14,9 +14,9 @@
       ng-controller="FacetSelectionController"
       ng-show="items.length>0"
       ng-cloak>
-        <div class="panel-heading">Filtering By</div>
         <div class="panel-body">
           <ul class="items unstyled">
+            <div class="panel-heading">{{'FILTERING_BY' | translate}}</div>
             <li class="facet" ng-repeat="item in items">
               <i class="fa fa-tag"></i>
               <a class="facet-value" ng-click="remove($index)">
@@ -34,7 +34,7 @@
       data-field="contributor-name"
       ng-init="source = core"
       ng-cloak>
-        <div class="panel-heading">Contributor</div>
+        <div class="panel-heading">{{'CONTRIBUTOR' | translate}}</div>
         <div class="panel-body">
           <ul class="facets unstyled">
             <li ng-repeat="item in items" ng-show="items">
@@ -52,7 +52,7 @@
       data-field="subjects"
       ng-init="source = core"
       ng-cloak>
-        <div class="panel-heading">Subjects</div>
+        <div class="panel-heading">{{'palabras clave' | translate}}</div>
         <div class="panel-body">
           <ul class="facets unstyled">
             <li ng-repeat="item in items" ng-show="items">
@@ -70,7 +70,7 @@
       data-field="type-all"
       ng-init="source = core"
       ng-cloak>
-        <div class="panel-heading">Journal / Conference / Book</div>
+        <div class="panel-heading">{{'JOURNAL_CONFERENCE_BOOK' | translate}}</div>
         <div class="panel-body">
           <ul class="facets unstyled">
             <li ng-repeat="item in items" ng-show="items">
@@ -88,7 +88,7 @@
       data-field="partof"
       ng-init="source = core"
       ng-cloak>
-        <div class="panel-heading">Type</div>
+        <div class="panel-heading">{{'TYPE' | translate}}</div>
         <div class="panel-body">
           <ul class="facets unstyled">
             <li ng-repeat="item in items" ng-show="items">
@@ -108,16 +108,16 @@
     ng-cloak>
       <div class="reading-column">
         <div class="loading" ng-show="loading" ng-cloak>
-          <p>Loading search results ...</p>
+          <p>{{'LOAD_SEACH_RESULTS' | translate}} ...</p>
           <img src="/wkhome/images/ajax-loader-bar.gif" alt="Loading search results" />
         </div>
         <div class="small" ng-show="documents.length > 0" ng-cloak>
-          <div style="padding-bottom: 20px;">Search Results ({{totalResults}} found)</div>
+          <div style="padding-bottom: 20px;">{{'SEARCH_RESULTS' | translate}} ({{totalResults}} {{'FOUND' | translate}})</div>
           <div class="alert alert-error" ng-show="error">{{error}}</div>
           <div class="alert alert-info" ng-show="message">{{message}}</div>
         </div>
         <article ng-repeat="doc in documents" class="document" ng-cloak>
-          <a ng-href="{{doc['lmf.uri']}}" class="title" target="_blank">{{doc.title}}</a>
+          <img src="/wkhome/images/journal.png" alt="type" width="12" style="margin-right: 5px"><a ng-href="{{doc['lmf.uri']}}" class="title" target="_blank"><b>{{doc.title}}</b></a>
           <div ng-show="doc.abstract">
             <hm-read-more
               hm-text="{{doc.abstract}}" hm-limit="250" hm-more-text="{{ 'read.more' | translate }}"
@@ -127,7 +127,7 @@
           <div class="inline text-muted small">
             <ul class="list-inline" ng-show="doc.subjects">
               <li ng-repeat = "subject in doc.subjects">
-                {{subject | camelCase}} {{$last ? '' : ' -'}}
+                <i>{{subject | camelCase}} {{$last ? '' : ' -'}}</i>
               </li>
               <br>
             </ul>
@@ -142,10 +142,11 @@
             <span ng-show="doc.book"><strong>Book:</strong> {{doc.book[0]}}<br></span>
             <span ng-show="doc.journal"><strong>Journal:</strong> {{doc.journal[0]}}<br></span>
             <ul class="list-inline" ng-show="doc.uri">
-              <li ng-repeat = "uri in doc.uri">
+              <li ng-repeat = "uri in doc.uri | limitTo:5">
                 <logo-publication uri="{{uri}}"></logo-publication>
               </li>
             </ul>
+            <hr style="margin: 10px;">
         </article>
         <ul class="pagination" ng-hide="error" ng-cloak>
           <li ng-repeat="page in pages" ng-class="{active: page.isCurrent}">
@@ -156,7 +157,7 @@
     </div>
     <div class="col-lg-2" ng-cloak>
       <img ng-show="author.photo" ng-src="{{author.photo}}" class="img-responsive" alt="{{author.name}}">
-      <a ng-href="#/author/{{authorURI}}"><h3 style="margin: 0px 0px">{{author.name | camelCase}}</h3></a>
+      <a ng-href="#/author/profile/{{authorURI}}"><h3 style="margin: 0px 0px">{{author.name | camelCase}}</h3></a>
       <h5 style="margin: 0px 0px" ng-repeat="institution in author.institutions">{{institution.name}}, <small><i>{{institution.city}}</i></small></h5>
       <br>
       <div ng-show="author.areas">
