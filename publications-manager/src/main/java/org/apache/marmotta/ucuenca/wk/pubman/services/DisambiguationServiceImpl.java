@@ -173,19 +173,19 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             task = taskManagerService.createSubTask(String.format("%s Disambiguation", "Author"), "Disambiguation Process");
             InitAuthorsProvider();
             List<Provider> Providers = getProviders();
-//            List<Map<String, Map<Provider, Integer>>> providersResult = new ArrayList();
-//            if (orgs != null) {
-//                for (String org : orgs) {
-//                    task.updateMessage(String.format("Disambiguate  author from %s organization", org));
-//                    log.debug("Procesing" + org);
-//                    Map<String, Map<Provider, Integer>> mp = new HashMap();
-//                    Map<Provider, Integer> ProvidersElements = ProcessAuthors(Providers, org);
-//                    mp.put(org, ProvidersElements);
-//                    providersResult.add(mp);
-//                }
-//            } else {
-//                ProcessAuthors(Providers, null);
-//            }
+            List<Map<String, Map<Provider, Integer>>> providersResult = new ArrayList();
+            if (orgs != null) {
+                for (String org : orgs) {
+                    task.updateMessage(String.format("Disambiguate  author from %s organization", org));
+                    log.debug("Procesing" + org);
+                    Map<String, Map<Provider, Integer>> mp = new HashMap();
+                    Map<Provider, Integer> ProvidersElements = ProcessAuthors(Providers, org);
+                    mp.put(org, ProvidersElements);
+                    providersResult.add(mp);
+                }
+            } else {
+                ProcessAuthors(Providers, null);
+            }
 //            int iasa = sparqlUtils.count(constantService.getAuthorsSameAsGraph());
 //            do {
 //                ProcessCoauthors(Providers, true);
