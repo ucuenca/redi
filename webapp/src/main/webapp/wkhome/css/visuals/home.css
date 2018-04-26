@@ -8,8 +8,12 @@
   background-size: contain;
   background-position: center;
   max-height: 1000px;
+
+  
 }
 
 #header .search {
-  bottom: -65vh;
+  bottom: -55vh;
+width: 40vw;
+margin-right: 90vw;
 }
