@@ -95,11 +95,74 @@ background-position: 0vw 3vw;
 
 }
 
+ 
+
+  
+#pubButton  {
+background: url(/wkhome/images/pub.png);
+background-repeat: no-repeat;
+background-position: 35% 50%;
+border-bottom: none;
+border-right-width: 1.5px;
+}
+
+#pubButton:hover  {
+ /*background: url(/wkhome/images/pubactive.png);
+  background-repeat: no-repeat;*/
+  background: url(/wkhome/images/pubactive.png);
+  background-repeat: no-repeat;
+  background-position: 35% 50%;
+  border-bottom: none;
+  border-right-width: 1.5px;
+}
+
+
+#treebtn {
+background: url(/wkhome/images/tree.png);
+background-repeat: no-repeat;
+background-position: 35% 50%;
+border-bottom: none;
+border-right-width: 1.5px;
+/*border-right-color: #e0d4d4;*/
+
+
+}
+
+#treebtn:hover  {
+ /*background: url(/wkhome/images/pubactive.png);
+  background-repeat: no-repeat;*/
+  background: url(/wkhome/images/treeactive.png);
+  background-repeat: no-repeat;
+  background-position: 35% 50%;
+  /*text-decoration: underline blue; */
+ /* background-color: #F6F6F6;*/
+
+
+}
+
+#netbtn {
+background: url(/wkhome/images/red.png);
+background-repeat: no-repeat;
+background-position: 35% 50%;
+border: none;
+}
+
+#netbtn:hover {
+background: url(/wkhome/images/redactive.png);
+background-repeat: no-repeat;
+background-position: 35% 50%;
+
+  
+}
+
 .head-list {
   margin-bottom: 5px;
   color: #243082;
   font-family: "Conduit-IT";
   font-size: 1.3vw;
+  border-bottom-style: solid;
+  border-color: #E94E1B;
+  border-width: 1px;
 }
 
 .aditionalInformation {
