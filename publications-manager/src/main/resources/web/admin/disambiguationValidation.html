@@ -25,10 +25,11 @@
 <!--        <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.js"></script> -->
         <script type="text/javascript">
             var host = _SERVER_URL;
-            window.graph = host + "context/authorsSameAs";
+            var uhost= _BASIC_URL;
+            window.graph = uhost + "context/authorsSameAs";
             function updateType() {
                 var x = document.getElementById("mySelect").value;
-                                window.graph = host + "context/"+x;
+                window.graph = uhost + "context/"+x;
             }
             $(function () {
                 function describeURI(uri, continer) {
