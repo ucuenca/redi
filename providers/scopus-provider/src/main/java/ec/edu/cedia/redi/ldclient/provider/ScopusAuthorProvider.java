@@ -87,11 +87,11 @@ public class ScopusAuthorProvider extends AbstractXMLDataProvider {
     public static final String PATTERN = "http://api\\.elsevier\\.com/content/search/author\\?.*\\&apiKey\\=(.*)?\\&?.*";
     private final Pattern patternAuthorSearch = Pattern.compile(PATTERN);
     // Matches author's profile in RDF.
-    private final Pattern patternAuthorRetrieve = Pattern.compile("http://api.elsevier.com/content/author/author_id/.*");
+    private final Pattern patternAuthorRetrieve = Pattern.compile("https?://api.elsevier.com/content/author/author_id/.*");
     // Matches query to search a Scopus to find all publications from an author. It returns XML.
-    private final Pattern patternPublicationSearch = Pattern.compile("http://api.elsevier.com/content/search/scopus.*");
+    private final Pattern patternPublicationSearch = Pattern.compile("https?://api.elsevier.com/content/search/scopus.*");
     // Matches a publication resource.
-    private final Pattern patternPublicationRetrieve = Pattern.compile("http://api.elsevier.com/content/abstract/scopus_id/.*");
+    private final Pattern patternPublicationRetrieve = Pattern.compile("https?://api.elsevier.com/content/abstract/scopus_id/.*");
 
     /**
      * Return the name of this data provider. To be used e.g. in the
