@@ -173,33 +173,33 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             InitAuthorsProvider();
             List<Provider> Providers = getProviders();
             List<Map<String, Map<Provider, Integer>>> providersResult = new ArrayList();
-            if (orgs != null) {
-                for (String org : orgs) {
-                    task.updateMessage(String.format("Disambiguate  author from %s organization", org));
-                    log.debug("Procesing" + org);
-                    Map<String, Map<Provider, Integer>> mp = new HashMap();
-                    Map<Provider, Integer> ProvidersElements = ProcessAuthors(Providers, org);
-                    mp.put(org, ProvidersElements);
-                    providersResult.add(mp);
-                }
-            } else {
-                ProcessAuthors(Providers, null);
-            }
-//            int iasa = sparqlUtils.count(constantService.getAuthorsSameAsGraph());
-//            do {
-//                ProcessCoauthors(Providers, true);
-//                sparqlUtils.addAll(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "1");
-//                int asa = sparqlUtils.count(constantService.getAuthorsSameAsGraph());
-//                if (asa != iasa) {
-//                    iasa = asa;
-//                } else {
-//                    break;
+//            if (orgs != null) {
+//                for (String org : orgs) {
+//                    task.updateMessage(String.format("Disambiguate  author from %s organization", org));
+//                    log.debug("Procesing" + org);
+//                    Map<String, Map<Provider, Integer>> mp = new HashMap();
+//                    Map<Provider, Integer> ProvidersElements = ProcessAuthors(Providers, org);
+//                    mp.put(org, ProvidersElements);
+//                    providersResult.add(mp);
 //                }
-//            } while (true);
-//            sparqlUtils.delete(constantService.getAuthorsSameAsGraph() + "1");
-//            task.updateDetailMessage("Status", String.format("%s Disambiguation", "Coauthors"));
-//            sparqlUtils.delete(constantService.getCoauthorsSameAsGraph());
-//            ProcessCoauthors(Providers, false);
+//            } else {
+//                ProcessAuthors(Providers, null);
+//            }
+            int iasa = sparqlUtils.count(constantService.getAuthorsSameAsGraph());
+            do {
+                ProcessCoauthors(Providers, true);
+                sparqlUtils.addAll(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "1");
+                int asa = sparqlUtils.count(constantService.getAuthorsSameAsGraph());
+                if (asa != iasa) {
+                    iasa = asa;
+                } else {
+                    break;
+                }
+            } while (true);
+            //sparqlUtils.delete(constantService.getAuthorsSameAsGraph() + "1");
+            //task.updateDetailMessage("Status", String.format("%s Disambiguation", "Coauthors"));
+            //sparqlUtils.delete(constantService.getCoauthorsSameAsGraph());
+            //ProcessCoauthors(Providers, false);
 //            task.updateDetailMessage("Status", String.format("%s Disambiguation", "Publications"));
 //            sparqlUtils.delete(constantService.getPublicationsSameAsGraph());
 //            ProcessPublications(Providers);
