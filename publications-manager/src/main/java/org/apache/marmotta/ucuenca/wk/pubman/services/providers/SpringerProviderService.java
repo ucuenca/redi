@@ -35,6 +35,7 @@ public class SpringerProviderService extends AbstractProviderService {
     @Inject
     private ConfigurationService configurationService;
     private final String TEMPLATE = "http://api.springer.com/meta/v1/json?q=%s&api_key=%s&p=50&s=0";
+    private String query;
 
     @Override
     protected List<String> buildURLs(String firstname, String lastname, List<String> organization) {
@@ -72,7 +73,7 @@ public class SpringerProviderService extends AbstractProviderService {
             if (gname == null) {
                 throw new RuntimeException(new NullPointerException("The lastname is mandatory"));
             }
-            String query = String.format("((%s) AND (name:%s) AND (%s))", queryNames, gname, queryOrgs);
+            query = String.format("((%s) AND (name:%s) AND (%s))", queryNames, gname, queryOrgs);
             query = URLEncoder.encode(query, "UTF-8");
             String url = String.format(TEMPLATE, query, apiKey);
             return Collections.singletonList(url);
@@ -84,6 +85,13 @@ public class SpringerProviderService extends AbstractProviderService {
     @Override
     protected String getProviderGraph() {
         return constantService.getSpringerGraph();
+    }
+
+    @Override
+    protected String filterExpressionSearch() {
+        // Escape only percentages (%) and plus (+) characters.
+        // StringEscapeUtils.escapeJava(query)
+        return query.replaceAll("%", "\\\\\\\\%").replaceAll("\\+", "\\\\\\\\+");
     }
 
     @Override
