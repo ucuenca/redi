@@ -22,14 +22,15 @@ import org.simmetrics.simplifiers.Soundex;
  * @author cedia
  */
 public class ModifiedJaccardMod {
-    
+
     public boolean soundexBoost = false;
     public boolean prioritizeWordOrder = false;
     public boolean onlyCompleteMatchs = false;
     public double syntacticThreshold = 0.89;
     public double abvPenalty = 0.95;
     public double abvMatchsPenalty = 0.90;
-    
+    public static int abvThreshold = 3;
+
     public double distanceName(String name1, String name2) {
         List<String> tks1 = tokenizer(name1.toLowerCase());
         List<String> tks2 = tokenizer(name2.toLowerCase());
@@ -41,7 +42,7 @@ public class ModifiedJaccardMod {
         double pn = c.getKey() >= c1.getKey() && c.getKey() > 0 ? 1.0 : abvMatchsPenalty;
         return pn * (c.getValue() + c1.getValue()) / (c.getKey() + c1.getKey() + mx);
     }
-    
+
     private Map.Entry<Integer, Double> countMatchs(List<String> tokens1, List<String> tokens2) {
         double sumSimilarity = 0;
         int countMatchs = 0;
@@ -53,7 +54,7 @@ public class ModifiedJaccardMod {
                     String token1 = tokens1.get(i);
                     String token2 = tokens2.get(j);
                     double sim = syntacticSim(token1, token2);
-                    boolean abv = (token1.length() < 3 && token2.length() >= 3) || (token2.length() < 3 && token1.length() >= 3);
+                    boolean abv = (token1.length() <= abvThreshold && token2.length() > abvThreshold) || (token2.length() <= abvThreshold && token1.length() > abvThreshold);
                     boolean startsw = token1.startsWith(token2) || token2.startsWith(token1);
                     boolean condFullMatch = sim >= syntacticThreshold;
                     boolean condAbvMatch = abv && startsw;
@@ -76,17 +77,17 @@ public class ModifiedJaccardMod {
         }
         Collections.sort(usedTokens1, Collections.reverseOrder());
         Collections.sort(usedTokens2, Collections.reverseOrder());
-        
+
         for (int i : usedTokens1) {
             tokens1.remove(i);
         }
         for (int i : usedTokens2) {
             tokens2.remove(i);
         }
-        
+
         return new AbstractMap.SimpleEntry<>(countMatchs, sumSimilarity);
     }
-    
+
     public double syntacticSim(String t1, String t2) {
         double boost = 1.0;
         try {
@@ -100,11 +101,11 @@ public class ModifiedJaccardMod {
         double val = boost * (with(new Levenshtein()).simplify(Simplifiers.removeDiacritics()).build().compare(t2, t1) + 2 * with(new JaroWinkler()).simplify(Simplifiers.removeDiacritics()).build().compare(t2, t1)) / 3;
         return val > 1.0 ? 1.0 : val;
     }
-    
+
     public String specialCharactersClean(String n) {
         return n.replaceAll("\\.|,|;|:|-|\n|\\\\|\\||\"|\'|_|/", " ");
     }
-    
+
     public List<String> tokenizer(String n) {
         n = specialCharactersClean(n);
         String[] tokens = n.split(" ");

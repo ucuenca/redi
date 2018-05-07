@@ -9,11 +9,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.marmotta.ucuenca.wk.commons.util.ModifiedJaccardMod;
 
 /**
  *
  * @author Jose Ortiz
  */
+@SuppressWarnings("PMD")
 public final class StrNamesUtils {
 
     private StrNamesUtils() {
@@ -31,10 +33,8 @@ public final class StrNamesUtils {
         list.removeAll(Arrays.asList("", null));
         List<String> list2 = new ArrayList<String>();
         for (int i = 0; i < list.size(); i++) {
-            if (max == -1 || max != -1 && list2.size() < max) {
-                if (list.get(i).length() > 2) {
-                    list2.add(list.get(i));
-                }
+            if ((max == -1 || max != -1 && list2.size() < max) && list.get(i).length() > ModifiedJaccardMod.abvThreshold) {
+                list2.add(list.get(i));
             }
         }
         if (list2.isEmpty()) {
