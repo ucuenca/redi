@@ -41,7 +41,7 @@ function loadTables() {
   
                         } else {
 
-                            return  '<span title="Incomplete Data" style="font-family: wingdings; font-size: 200%;'+color+'">&#9684;</span>';
+                            return  '<span title="Incomplete Data ('+data+"/"+row["total"]+')"+ style="font-family: wingdings; font-size: 200%;'+color+'">&#9684;</span>';
                         }
                     }
                 },

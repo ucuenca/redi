@@ -76,13 +76,13 @@ public class QueriesServiceImpl implements QueriesService {
         }
 
         /* return PREFIXES
-                + " SELECT ?s WHERE { " + getGraphString(datagraph) + "{"
-                + " ?doc rdf:type bibo:Document ;"
-                + " ?c ?s ."
-                + "?s a foaf:Person."
-                + "} }"
-                + " GROUP BY ?s"
-                + " HAVING (count(?doc)>" + num + ")";*/
+         + " SELECT ?s WHERE { " + getGraphString(datagraph) + "{"
+         + " ?doc rdf:type bibo:Document ;"
+         + " ?c ?s ."
+         + "?s a foaf:Person."
+         + "} }"
+         + " GROUP BY ?s"
+         + " HAVING (count(?doc)>" + num + ")";*/
     }
 
     @Override
@@ -421,6 +421,7 @@ public class QueriesServiceImpl implements QueriesService {
 
     }
 
+    @Deprecated
     @Override
     public String getOrgEnrichmentProvider(Map<String, String> providers) {
         String varprov = "";
@@ -456,6 +457,39 @@ public class QueriesServiceImpl implements QueriesService {
                 + "      ?authort a foaf:Person . "
                 + "     }  "
                 + "     " + prov + " }GROUP BY ?org  ?label" + varprov;
+
+        return head;
+    }
+
+    @Override
+    public String getEnrichmentQueryResult(Map<String, String> providers) {
+
+        String varprov = "";
+        String prov = "";
+
+        for (Map.Entry<String, String> provset : providers.entrySet()) {
+            varprov = "(COUNT  (distinct ?r" + provset.getValue() + ") as ?" + provset.getValue() + ")  " + varprov;
+            prov = " OPTIONAL {       "
+                    + "   GRAPH <" + provset.getKey() + "> { "
+                    + "       ?s" + provset.getValue() + " owl:oneOf ?authort ."
+                    + " OPTIONAL { ?r" + provset.getValue() + " owl:oneOf ?s" + provset.getValue() + " }"
+                    + "    } } " + prov;
+
+        }
+        String prefix = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n"
+                + "PREFIX dct: <http://purl.org/dc/terms/> \n"
+                + "PREFIX foaf: <http://xmlns.com/foaf/0.1/> \n"
+                + "PREFIX owl: <http://www.w3.org/2002/07/owl#> ";
+
+        String head = prefix +"SELECT ?org  ?label (COUNT  (DISTINCT ?authort) as ?total) " + varprov + " "
+                + "WHERE { "
+                + "  GRAPH <" + con.getOrganizationsGraph() + "> {  "
+                + "  ?org  <" + REDI.NAME.toString() + "> ?label . "
+                + "  GRAPH <" + con.getEndpointsGraph() + "> {     "
+                + "  ?endp  <" + REDI.BELONGTO.toString() + ">  ?org "
+                + "  GRAPH <"+con.getAuthorsGraph()+"> {  \n"
+                + "  ?authort dct:provenance ?endp .  "
+                + "  ?authort a foaf:Person . }  } } " + prov + "} Group by ?org ?label  ";
 
         return head;
     }
@@ -1710,11 +1744,11 @@ public class QueriesServiceImpl implements QueriesService {
     public String getAuthorsCentralGraph() {
         return PREFIXES
                 + "select distinct ?a {\n"
-                + "  graph <"+con.getCentralGraph()+"> {\n"
+                + "  graph <" + con.getCentralGraph() + "> {\n"
                 + "    ?a foaf:publications [] .\n"
                 + "    ?a <http://schema.org/memberOf> ?o.\n"
                 + "  }\n"
-                + "  graph <"+con.getOrganizationsGraph()+"> {\n"
+                + "  graph <" + con.getOrganizationsGraph() + "> {\n"
                 + "  	?o a foaf:Organization .\n"
                 + "  }\n"
                 + "}";

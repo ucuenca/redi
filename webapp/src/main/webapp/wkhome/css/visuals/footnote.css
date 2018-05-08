@@ -30,3 +30,10 @@ footer>hr {
   line-height: 3;
   font-size: 80%
 }
+
+.footer-bottom  {
+    margin-top: 1%;
+    width: 100%;
+   position:relative;
+   bottom:0;
+}

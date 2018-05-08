@@ -240,10 +240,11 @@ public class CommonServiceImpl implements CommonService {
                 mprov.put(p.Graph, p.Name);
 
             }
-            String queryOrg = queriesService.getOrgEnrichmentProvider(mprov);
+            String queryOrg = queriesService.getEnrichmentQueryResult(mprov);
             List<Map<String, Value>> response1;
 
             String queryd = queriesService.getOrgDisambiguationResult(mprov);
+            //   String queryd = queriesService.getOrgDisambiguationResult(mprov);
             log.info(queryd);
             List<Map<String, Value>> response2;
 
@@ -276,13 +277,22 @@ public class CommonServiceImpl implements CommonService {
     @Override
     public List<Provider> getProviders() throws MarmottaException {
         List<Provider> Providers = new ArrayList();
-        String queryProviders = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
-                + "SELECT DISTINCT ?uri ?name ?graph ?main WHERE { "
-                + "  GRAPH ?graph { "
-                + "  ?uri a <" + REDI.PROVIDER.toString() + "> . "
-                + "  ?uri rdfs:label ?name  ."
-                + "  ?uri <http://ucuenca.edu.ec/ontology#main> ?main"
-                + "  }}order  by desc (?main)";
+        /*String queryProviders = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
+         + "SELECT DISTINCT ?uri ?name ?graph ?main WHERE { "
+         + "  GRAPH ?graph { "
+         + "  ?uri a <" + REDI.PROVIDER.toString() + "> . "
+         + "  ?uri rdfs:label ?name  ."
+         + "  ?uri <http://ucuenca.edu.ec/ontology#main> ?main"
+         + "  }}order  by desc (?main)";*/
+
+        String queryProviders = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>  "
+                + "SELECT DISTINCT ?uri (SAMPLE (?sname) as ?name) (SAMPLE (?sgraph) as ?graph) (SAMPLE (?smain) as ?main) "
+                + "WHERE {  "
+                + " GRAPH ?sgraph {  "
+                + "  ?uri a <"+REDI.PROVIDER.toString()+"> . "
+                + "  ?uri rdfs:label ?sname  . "
+                + " ?uri <http://ucuenca.edu.ec/ontology#main> ?smain "
+                + " }} GROUP BY ?uri  Order  by  desc (?main)";
 
         List<Map<String, Value>> response = sparqlService.query(QueryLanguage.SPARQL, queryProviders);
         for (Map<String, Value> prov : response) {
@@ -325,8 +335,6 @@ public class CommonServiceImpl implements CommonService {
         return startProcess;
     }
 
-  
-    
     @Override
     public String getCollaboratorsData(String uri) {
         String describeAuthor = "PREFIX dct: <http://purl.org/dc/terms/> "
@@ -610,7 +618,6 @@ public class CommonServiceImpl implements CommonService {
         return sparqlService.ask(QueryLanguage.SPARQL, queryC);
     }
 
-  
     public JSONArray listmapTojson(List<Map<String, String>> list, String nameobject) throws org.json.JSONException {
         JSONObject jsonh1 = new JSONObject();
 
@@ -684,23 +691,23 @@ public class CommonServiceImpl implements CommonService {
                 + "prefix schema: <http://schema.org/> "
                 + "prefix uc: <http://ucuenca.edu.ec/ontology#> ";
 
-       // uri = "https://redi.cedia.edu.ec/resource/authors/UCUENCA/file/_SAQUICELA_GALARZA_____VICTOR_HUGO_";
+        // uri = "https://redi.cedia.edu.ec/resource/authors/UCUENCA/file/_SAQUICELA_GALARZA_____VICTOR_HUGO_";
         try {
 
             String numpubquery = Prefix + "Select (count( distinct ?pub) as ?tot) where { "
-                    + "GRAPH   <"+con.getCentralGraph()+"> {"
+                    + "GRAPH   <" + con.getCentralGraph() + "> {"
                     + "   <" + uri + ">  foaf:publications ?pub  }"
                     + "}";
 
-            String querytopics = Prefix + 
-                    "Select (GROUP_CONCAT( DISTINCT ?topicl ;  SEPARATOR = \"|\") as ?topicls )  where { "
-                    + "GRAPH   <"+con.getCentralGraph()+"> { "
+            String querytopics = Prefix
+                    + "Select (GROUP_CONCAT( DISTINCT ?topicl ;  SEPARATOR = \"|\") as ?topicls )  where { "
+                    + "GRAPH   <" + con.getCentralGraph() + "> { "
                     + "   <" + uri + ">  foaf:topic_interest [rdfs:label ?topicl]                                                                                            	}\n"
                     + "}";
 
             String queryCluster = Prefix
                     + "Select distinct ?lc where { "
-                    + "GRAPH   <"+con.getClusterGraph()+"> {"
+                    + "GRAPH   <" + con.getClusterGraph() + "> {"
                     + "     ?pubc uc:hasPerson <" + uri + "> ."
                     + "             ?c   foaf:publications     ?pubc .  "
                     + "                       ?c      rdfs:label ?lc ."
@@ -710,7 +717,7 @@ public class CommonServiceImpl implements CommonService {
 
             String metaAuthor = Prefix
                     + "SELECT   ?names  ?orgnames ?members ?orcids ?imgs ?emails ?homepages ?citations ?hindexs ?i10indexs ?afs ?scs  where { "
-                    + "GRAPH <"+con.getCentralGraph()+"> { "
+                    + "GRAPH <" + con.getCentralGraph() + "> { "
                     + " { "
                     + "    select (GROUP_CONCAT( DISTINCT ?name ;  SEPARATOR = \"|\") as ?names)  "
                     + "   (GROUP_CONCAT( DISTINCT ?orcid ;  SEPARATOR = \"|\") as ?orcids  )  "
@@ -723,72 +730,71 @@ public class CommonServiceImpl implements CommonService {
                     + "   (GROUP_CONCAT( DISTINCT ?sc  ;  SEPARATOR = \"|\") as ?scs  ) "
                     + "   (GROUP_CONCAT( DISTINCT ?af  ;  SEPARATOR = \"|\") as ?afs  ) "
                     + "   { "
-                    + "    <"+uri+">   foaf:name ?name . "
-                    + "    OPTIONAL { <"+uri+"> schema:memberOf ?member . } "
+                    + "    <" + uri + ">   foaf:name ?name . "
+                    + "    OPTIONAL { <" + uri + "> schema:memberOf ?member . } "
                     + "     OPTIONAL { "
                     + "     ?member foaf:name ?afname . "
                     + "     BIND(CONCAT(STR(?member), ';' , STR(?afname) ) AS ?af)  "
                     + "     } "
                     + "   OPTIONAL { "
-                    + "    <"+uri+"> scoro:hasORCID ?orcid "
+                    + "    <" + uri + "> scoro:hasORCID ?orcid "
                     + "  } "
                     + "  OPTIONAL{  "
-                    + "    <"+uri+"> foaf:img  ?img   "
+                    + "    <" + uri + "> foaf:img  ?img   "
                     + "  } "
                     + "       OPTIONAL { "
-                    + "    <"+uri+"> vcard:hasEmail ?email "
+                    + "    <" + uri + "> vcard:hasEmail ?email "
                     + "  } "
                     + "   OPTIONAL { "
-                    + "     <"+uri+">  foaf:homepage  ?homepage "
+                    + "     <" + uri + ">  foaf:homepage  ?homepage "
                     + "  } "
                     + "   OPTIONAL { "
-                    + "     <"+uri+">  uc:citationCount  ?citation "
+                    + "     <" + uri + ">  uc:citationCount  ?citation "
                     + "      }  "
                     + "   OPTIONAL { "
-                    + "     <"+uri+">       uc:h-index ?hindex "
+                    + "     <" + uri + ">       uc:h-index ?hindex "
                     + "       }  "
                     + "     OPTIONAL { "
-                    + "    <"+uri+">       uc:i10-index ?i10index "
+                    + "    <" + uri + ">       uc:i10-index ?i10index "
                     + "       }  "
                     + "    OPTIONAL { "
-                    + "      <"+uri+"> foaf:holdsAccount ?sc  "
+                    + "      <" + uri + "> foaf:holdsAccount ?sc  "
                     + "       } "
                     + "        } "
                     + "  } "
-                    + "    GRAPH <"+con.getOrganizationsGraph()+"> { "
+                    + "    GRAPH <" + con.getOrganizationsGraph() + "> { "
                     + "    select (GROUP_CONCAT( DISTINCT ?orgname ;  SEPARATOR = \"|\")  as ?orgnames ) {  "
                     + "    ?member uc:name ?orgname . "
-                    + "    GRAPH <"+con.getCentralGraph()+"> { "
-                    + "    <"+uri+"> schema:memberOf ?member "
+                    + "    GRAPH <" + con.getCentralGraph() + "> { "
+                    + "    <" + uri + "> schema:memberOf ?member "
                     + "      }  "
                     + "      } "
                     + "      } "
                     + "  }  "
                     + "} ";
-            
+
             List<Map<String, Value>> responseAuthor = sparqlService.query(QueryLanguage.SPARQL, metaAuthor);
-            AuthorProfile a = new AuthorProfile ();
+            AuthorProfile a = new AuthorProfile();
             if (!responseAuthor.isEmpty()) {
-            a = proccessAuthor (responseAuthor);
-            
-           
-            List<Map<String, Value>> responsetopics = sparqlService.query(QueryLanguage.SPARQL, querytopics);
-            if ( responsetopics.size() > 0 && !responsetopics.get(0).isEmpty()){
-            String topics = responsetopics.get(0).get("topicls").stringValue();
-            a.setTopics(getRelevantTopics (topics.split("\\|")));
-            }
-            
-            List<Map<String, Value>> responseCluster = sparqlService.query(QueryLanguage.SPARQL, queryCluster);
-            if (!responseCluster.isEmpty()){
-               String lc = responseCluster.get(0).get("lc").stringValue();
-                a.setCluster(lc.split("\\|"));
-            }
-            
-            List<Map<String, Value>> responseNpub = sparqlService.query(QueryLanguage.SPARQL, numpubquery);
-            if (responsetopics.size() > 0 && !responsetopics.get(0).isEmpty()) {
-              String num = responseNpub.get(0).get("tot").stringValue();
-              a.setNpub(num);
-            }
+                a = proccessAuthor(responseAuthor);
+
+                List<Map<String, Value>> responsetopics = sparqlService.query(QueryLanguage.SPARQL, querytopics);
+                if (responsetopics.size() > 0 && !responsetopics.get(0).isEmpty()) {
+                    String topics = responsetopics.get(0).get("topicls").stringValue();
+                    a.setTopics(getRelevantTopics(topics.split("\\|")));
+                }
+
+                List<Map<String, Value>> responseCluster = sparqlService.query(QueryLanguage.SPARQL, queryCluster);
+                if (!responseCluster.isEmpty()) {
+                    String lc = responseCluster.get(0).get("lc").stringValue();
+                    a.setCluster(lc.split("\\|"));
+                }
+
+                List<Map<String, Value>> responseNpub = sparqlService.query(QueryLanguage.SPARQL, numpubquery);
+                if (responsetopics.size() > 0 && !responsetopics.get(0).isEmpty()) {
+                    String num = responseNpub.get(0).get("tot").stringValue();
+                    a.setNpub(num);
+                }
             }
             return objecttoJson(a);
         } catch (MarmottaException ex) {
@@ -798,167 +804,164 @@ public class CommonServiceImpl implements CommonService {
     }
 
     private AuthorProfile proccessAuthor(List<Map<String, Value>> responseAuthor) {
-        AuthorProfile a = new AuthorProfile ();
-        Map<String,Value> author =  responseAuthor.get(0);
-        
-        if (author.containsKey("names")){
-        a.setName( getUniqueName (author.get("names").stringValue()));
+        AuthorProfile a = new AuthorProfile();
+        Map<String, Value> author = responseAuthor.get(0);
+
+        if (author.containsKey("names")) {
+            a.setName(getUniqueName(author.get("names").stringValue()));
         }
-        
-         if (author.containsKey("orgnames")){
-        a.setOrg(author.get("orgnames").stringValue().split("\\|"));
+
+        if (author.containsKey("orgnames")) {
+            a.setOrg(author.get("orgnames").stringValue().split("\\|"));
         }
-         
-        if (author.containsKey("orcids"))
-        {
-        a.setOrcid( getUniqueOrcid(author.get("orcids").stringValue()));
+
+        if (author.containsKey("orcids")) {
+            a.setOrcid(getUniqueOrcid(author.get("orcids").stringValue()));
         }
-         if (author.containsKey("imgs"))
-        {
-        a.setImg( author.get("imgs").stringValue().split("\\|")[0]);
+        if (author.containsKey("imgs")) {
+            a.setImg(author.get("imgs").stringValue().split("\\|")[0]);
         }
-         if (author.containsKey("emails"))
-        {
-        a.setEmails(author.get("emails").stringValue().split("\\|"));
-        } 
-         
-         if (author.containsKey("homepages")) {
-          a.setHomepages(author.get("homepages").stringValue().split("\\|"));
-         }
-         
-         if (author.containsKey("citations")) {
-          a.setCitation(getMaxValue(author.get("citations").stringValue().split("\\|"))+"");
-         }
-            
-         if (author.containsKey("homepages")) {
-          a.setHomepages(author.get("homepages").stringValue().split("\\|"));
-         }
-         
-            if (author.containsKey("hindexs")) {
-          a.setHindex(getMaxValue (author.get("hindexs").stringValue().split("\\|"))+"");
-         }
-               if (author.containsKey("i10indexs")) {
-          a.setI10(getMaxValue (author.get("i10indexs").stringValue().split("\\|"))+"");
-         }
-               
-               if (author.containsKey("afs")) {
-          a.setOtheraf(getListOrg (author.get("afs").stringValue().split("\\|")));
-         }
-               
-               if (author.containsKey("scs")) {
-          a.setOtherProfile(getListOtherProfile (author.get("scs").stringValue().split("\\|")));
-         }
-       
-       return a;
-    }
-    
-    private String getUniqueName (String names) 
-    {    int tokenmax = 0;
-         int lengthmax = 0; 
-         String candidate = "";
-         String [] listNames = names.split("\\|");
-         
-         for (String name :listNames) {
-          int  tokens = name.split(" ").length;
-           int  length = name.length();
-           if (tokens >= tokenmax &&  length > lengthmax) {
-               tokenmax = tokens;
-               lengthmax = length;
-           candidate = name;
-           }
-            
-         }  
-        return candidate;
-    }
-    
-    private String getUniqueOrcid (String orcids) {
-        
-        return orcids.split("\\|")[0];
-    
+        if (author.containsKey("emails")) {
+            a.setEmails(author.get("emails").stringValue().split("\\|"));
+        }
+
+        if (author.containsKey("homepages")) {
+            a.setHomepages(author.get("homepages").stringValue().split("\\|"));
+        }
+
+        if (author.containsKey("citations")) {
+            a.setCitation(getMaxValue(author.get("citations").stringValue().split("\\|")) + "");
+        }
+
+        if (author.containsKey("homepages")) {
+            a.setHomepages(author.get("homepages").stringValue().split("\\|"));
+        }
+
+        if (author.containsKey("hindexs")) {
+            a.setHindex(getMaxValue(author.get("hindexs").stringValue().split("\\|")) + "");
+        }
+        if (author.containsKey("i10indexs")) {
+            a.setI10(getMaxValue(author.get("i10indexs").stringValue().split("\\|")) + "");
+        }
+
+        if (author.containsKey("afs")) {
+            a.setOtheraf(getListOrg(author.get("afs").stringValue().split("\\|")));
+        }
+
+        if (author.containsKey("scs")) {
+            a.setOtherProfile(getListOtherProfile(author.get("scs").stringValue().split("\\|")));
+        }
+
+        return a;
     }
 
-    private int getMaxValue(String [] split) {
-         //String [] citations = split.split("|");
-         int citasmax = 0;
-         for (String c : split) {
-                if (citasmax < Integer.parseInt(c.trim())) {
-                  citasmax = Integer.parseInt(c.trim());
-                }
-         }
+    private String getUniqueName(String names) {
+        int tokenmax = 0;
+        int lengthmax = 0;
+        String candidate = "";
+        String[] listNames = names.split("\\|");
+
+        for (String name : listNames) {
+            int tokens = name.split(" ").length;
+            int length = name.length();
+            if (tokens >= tokenmax && length > lengthmax) {
+                tokenmax = tokens;
+                lengthmax = length;
+                candidate = name;
+            }
+
+        }
+        return candidate;
+    }
+
+    private String getUniqueOrcid(String orcids) {
+
+        return orcids.split("\\|")[0];
+
+    }
+
+    private int getMaxValue(String[] split) {
+        //String [] citations = split.split("|");
+        int citasmax = 0;
+        for (String c : split) {
+            if (citasmax < Integer.parseInt(c.trim())) {
+                citasmax = Integer.parseInt(c.trim());
+            }
+        }
         return citasmax;
     }
 
-    private  String [] getListOrg(String[] org) {
-        List<String>  afiliations = new ArrayList<String> () ;
-        for (String af :org) {
-        String uri = af.split(";")[0];
-        String name = af.split(";")[1];
-        if (!uri.contains(con.getBaseURI())) {
-           afiliations.add(name);
+    private String[] getListOrg(String[] org) {
+        List<String> afiliations = new ArrayList<String>();
+        for (String af : org) {
+            String uri = af.split(";")[0];
+            String name = af.split(";")[1];
+            if (!uri.contains(con.getBaseURI())) {
+                afiliations.add(name);
+            }
         }
-        }
-       return afiliations.toArray(new String[0]);
+        return afiliations.toArray(new String[0]);
     }
-    
-    private String [] getListOtherProfile (String [] scs){
-        List<String>  otherprof = new ArrayList<String> () ;
-        for (String prof :scs){
-        if (!prof.contains(con.getBaseURI())) {
-           otherprof.add(prof);
+
+    private String[] getListOtherProfile(String[] scs) {
+        List<String> otherprof = new ArrayList<String>();
+        for (String prof : scs) {
+            if (!prof.contains(con.getBaseURI())) {
+                otherprof.add(prof);
+            }
         }
-        }
-     return otherprof.toArray(new String[0]);
+        return otherprof.toArray(new String[0]);
     }
-    
-    private String objecttoJson (Object o) {
-     ObjectMapper mapper = new ObjectMapper();
-        try {        
+
+    private String objecttoJson(Object o) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
             return mapper.writeValueAsString(o);
         } catch (JsonProcessingException ex) {
             java.util.logging.Logger.getLogger(CommonServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return "";
-    }    
-    private String[] getRelevantTopics(String[] split) {
-         Map <String,Integer>  aux = new HashMap ();
-        for ( String topic  : split ) {
-            for ( String comparetopic : split ) {
-                  if (comparetopic.contains(topic)){
-                      if (aux.containsKey(topic)) {
-                          aux.put(topic, aux.get(topic)+1);
-                      }else {
-                          aux.put(topic, 0);
-                      }
-                  }
-            }
-         }
-        
-        List<String> ordertopic =  orderMap (aux);
-       
-        
-        return ordertopic.size()>5 ? ordertopic.subList(0, 5).toArray(new String[0]) : ordertopic.toArray(new String[0]);
     }
-    
-    private List<String> orderMap (Map <String,Integer>  aux) {
-     
-        Comparator<Entry<String, Integer>> valueComparator = new Comparator<Entry<String,Integer>>() {
-            
+
+    private String[] getRelevantTopics(String[] split) {
+        Map<String, Integer> aux = new HashMap();
+        for (String topic : split) {
+            for (String comparetopic : split) {
+                if (comparetopic.contains(topic)) {
+                    if (aux.containsKey(topic)) {
+                        aux.put(topic, aux.get(topic) + 1);
+                    } else {
+                        aux.put(topic, 0);
+                    }
+                }
+            }
+        }
+
+        List<String> ordertopic = orderMap(aux);
+
+        return ordertopic.size() > 5 ? ordertopic.subList(0, 5).toArray(new String[0]) : ordertopic.toArray(new String[0]);
+    }
+
+    private List<String> orderMap(Map<String, Integer> aux) {
+
+        Comparator<Entry<String, Integer>> valueComparator = new Comparator<Entry<String, Integer>>() {
+
             @Override
             public int compare(Entry<String, Integer> e1, Entry<String, Integer> e2) {
                 int v1 = e1.getValue();
                 int v2 = e2.getValue();
-                return  v2 - v1 ;
+                return v2 - v1;
             }
         };
-        
+
         // Sort method needs a List, so let's first convert Set to List in Java
         List<Entry<String, Integer>> listOfEntries = new ArrayList<Entry<String, Integer>>(aux.entrySet());
-        
+
         // sorting HashMap by values using comparator
         Collections.sort(listOfEntries, valueComparator);
-        List <String> auxlist = new ArrayList ();
-        for (Entry<String, Integer> e:listOfEntries) {
-            auxlist.add(  e.getKey());
+        List<String> auxlist = new ArrayList();
+        for (Entry<String, Integer> e : listOfEntries) {
+            auxlist.add(e.getKey());
         }
         return auxlist;
     }
