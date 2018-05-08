@@ -103,6 +103,7 @@ background: url(/wkhome/images/pub.png);
 background-repeat: no-repeat;
 background-position: 35% 50%;
 border-bottom: none;
+border-top: none;
 border-right-width: 1.5px;
 }
 
@@ -113,6 +114,7 @@ border-right-width: 1.5px;
   background-repeat: no-repeat;
   background-position: 35% 50%;
   border-bottom: none;
+  border-top: none;
   border-right-width: 1.5px;
 }
 
@@ -122,6 +124,7 @@ background: url(/wkhome/images/tree.png);
 background-repeat: no-repeat;
 background-position: 35% 50%;
 border-bottom: none;
+border-top: none;
 border-right-width: 1.5px;
 /*border-right-color: #e0d4d4;*/
 
@@ -134,6 +137,7 @@ border-right-width: 1.5px;
   background: url(/wkhome/images/treeactive.png);
   background-repeat: no-repeat;
   background-position: 35% 50%;
+
   /*text-decoration: underline blue; */
  /* background-color: #F6F6F6;*/
 
@@ -144,7 +148,10 @@ border-right-width: 1.5px;
 background: url(/wkhome/images/red.png);
 background-repeat: no-repeat;
 background-position: 35% 50%;
-border: none;
+/*border: none;*/
+border-bottom: none;
+border-top: none;
+border-right:  none;
 }
 
 #netbtn:hover {
@@ -166,7 +173,7 @@ background-position: 35% 50%;
 }
 
 .aditionalInformation {
-  margin-top: 10%; 
+  margin-top: 1%; 
   min-height:15vh ;
   /* margin-left: 8vh; */
 }
@@ -185,6 +192,10 @@ color: #253081;
 .second-panel {
   margin-top: 2vw;
 
+}
+
+.profileTop {
+  min-height: 40vh;
 }
 
 
