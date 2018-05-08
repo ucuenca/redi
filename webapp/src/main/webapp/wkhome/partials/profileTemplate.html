@@ -1,4 +1,4 @@
-<div class="row" >
+<div class="row profileTop" >
       <div class="col-sm-4 text-center">   
        <img src="{{ngModel.img}}" class="img-thumbnail" style="max-width: 150px; margin-top: 5%" >
 
@@ -17,7 +17,7 @@
 
                  <span ng-show="ngModel.otherProfile" ng-repeat="prof in ngModel.otherProfile">
                  
-                  <a href="{{prof}}">  <img width="20" src="http://www.uniagraria.edu.co/images/images_1.jpg" class="img" title="Scopus Profile">
+                  <a href="{{prof}}">  <img width="20" src="/wkhome/images/scopusicon.png" class="img" title="Scopus Profile">
                  </a>
 
           
@@ -51,14 +51,14 @@
       <div class="col-sm-4"> 
            <ul>
             <li class="head-list" > <font  color=#243082  > <strong> {{ "research.areas" | translate }} </strong> </font>  </li>
-        <span ng-repeat="area in ngModel.topics"><li>{{area}} </li> </span>  
+        <span ng-repeat="area in ngModel.topics"><li>{{area | camelCase}} </li> </span>  
             </ul>
           </div>
 
       <div class="col-sm-4"> 
       <ul>
         <li class="head-list" > <font  color=#243082   > <strong> {{ "knowledge.areas" | translate }} </strong> </font> </li>
-        <span ng-repeat="clust in ngModel.cluster"><li>{{clust}} </li> </span>  
+        <span ng-repeat="clust in ngModel.cluster"><li>{{clust | camelCase}} </li> </span>  
         </ul>
 
        </div>
