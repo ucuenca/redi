@@ -1,0 +1,4 @@
+<https://api.elsevier.com/content/author/author_id/6506281895> <http://purl.org/dc/elements/1.1/identifier> "https://api.elsevier.com/content/author/eid/9-s2.0-6506281895" ;
+	<http://ucuenca.edu.ec/ontology#orcid> "0000-0001-6678-4774" ;
+        <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.elsevier.com/xml/svapi/rdf/dtd/Author> ;
+	<http://www.elsevier.com/xml/svapi/rdf/dtd/orcid> "0000-0001-6678-4774" .
