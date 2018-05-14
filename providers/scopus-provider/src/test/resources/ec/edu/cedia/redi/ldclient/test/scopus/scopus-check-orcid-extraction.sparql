@@ -18,13 +18,10 @@
 
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX uc: <http://ucuenca.edu.ec/ontology#>
+PREFIX elsevier: <http://www.elsevier.com/xml/svapi/rdf/dtd/>
 PREFIX : <https://api.elsevier.com/content/author/author_id/>
 
 ASK {
-    :54894361600 rdf:type uc:ScopusProvider.
-    :56371191200 rdf:type uc:ScopusProvider.
-    :56963644500 rdf:type uc:ScopusProvider.
-    :57193429229 rdf:type uc:ScopusProvider.
-    :7004827658 rdf:type uc:ScopusProvider.
-    :9248002800 rdf:type uc:ScopusProvider.
+    :6506281895 uc:orcid "0000-0001-6678-4774".
+    :6506281895 elsevier:orcid "0000-0001-6678-4774".
 }

@@ -5,9 +5,9 @@
  * licenses this file to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -17,11 +17,9 @@
 package ec.edu.cedia.redi.ldclient.provider;
 
 import com.google.common.collect.ImmutableList;
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -146,7 +144,7 @@ public class ScopusAuthorProvider extends AbstractXMLDataProvider {
      * so if it can return all data, it throws a {@link DataRetrievalException}.
      * <p>
      * The logic to return authors with its publications consists in four steps:
-     *
+     * <p>
      * <ol>
      * <li>Search for authors.</li>
      * <li>Retrieve authors data.</li>
@@ -248,23 +246,23 @@ public class ScopusAuthorProvider extends AbstractXMLDataProvider {
      * @param triples
      * @param contentType
      * @return list of resources of abstract documents associated with an
-     * author.
+     *         author.
      * @throws DataRetrievalException
      */
     private List<String> parseResponseAuthorsProfile(InputStream input, String requestUrl, final Model triples, String contentType) throws DataRetrievalException {
         try {
             //<editor-fold defaultstate="collapsed" desc="Fix URIs of scopus. There's no protocol in resources. Delete this section once Scopus fix this issue.">
-            BufferedReader buffer = new BufferedReader(new InputStreamReader(input));
-            StringBuilder parsed = new StringBuilder();
-            String line = buffer.readLine();
-            while (line != null) {
-                if (line.contains("://api.elsevier.com")) {
-                    line = line.replaceAll("://api.elsevier.com", "http://api.elsevier.com");
-                }
-                parsed.append(line);
-                line = buffer.readLine();
-            }
-            input = IOUtils.toInputStream(parsed.toString());
+//            BufferedReader buffer = new BufferedReader(new InputStreamReader(input));
+//            StringBuilder parsed = new StringBuilder();
+//            String line = buffer.readLine();
+//            while (line != null) {
+//                if (line.contains("://api.elsevier.com")) {
+//                    line = line.replaceAll("://api.elsevier.com", "http://api.elsevier.com");
+//                }
+//                parsed.append(line);
+//                line = buffer.readLine();
+//            }
+//            input = IOUtils.toInputStream(parsed.toString());
             //</editor-fold>
 
             RDFFormat format = RDFParserRegistry.getInstance().getFileFormatForMIMEType(contentType, RDFFormat.RDFXML);
