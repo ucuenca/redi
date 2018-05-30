@@ -26,14 +26,14 @@ footer>hr {
   background: rgba(0, 0, 0, 0) url("../../images/dcc.png") no-repeat scroll 0 0 / contain;
 }
 
-.footer-bottom > .container > h6 {
+.footer-bottom>.container>h6 {
   line-height: 3;
   font-size: 80%
 }
 
-.footer-bottom  {
-    margin-top: 1%;
-    width: 100%;
-   position:relative;
-   bottom:0;
+.footer-bottom {
+  margin-top: 1%;
+  width: 100%;
+  /*position:relative;*/
+  bottom: 0;
 }
