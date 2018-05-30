@@ -481,13 +481,13 @@ public class QueriesServiceImpl implements QueriesService {
                 + "PREFIX foaf: <http://xmlns.com/foaf/0.1/> \n"
                 + "PREFIX owl: <http://www.w3.org/2002/07/owl#> ";
 
-        String head = prefix +"SELECT ?org  ?label (COUNT  (DISTINCT ?authort) as ?total) " + varprov + " "
+        String head = prefix + "SELECT ?org  ?label (COUNT  (DISTINCT ?authort) as ?total) " + varprov + " "
                 + "WHERE { "
                 + "  GRAPH <" + con.getOrganizationsGraph() + "> {  "
                 + "  ?org  <" + REDI.NAME.toString() + "> ?label . "
                 + "  GRAPH <" + con.getEndpointsGraph() + "> {     "
                 + "  ?endp  <" + REDI.BELONGTO.toString() + ">  ?org "
-                + "  GRAPH <"+con.getAuthorsGraph()+"> {  \n"
+                + "  GRAPH <" + con.getAuthorsGraph() + "> {  \n"
                 + "  ?authort dct:provenance ?endp .  "
                 + "  ?authort a foaf:Person . }  } } " + prov + "} Group by ?org ?label  ";
 
@@ -1679,11 +1679,12 @@ public class QueriesServiceImpl implements QueriesService {
                 + "             uc:total ?total."
                 + "} WHERE {   "
                 + "  {  "
-                + "SELECT ?area (COUNT(DISTINCT ?person) as ?total) (SAMPLE(?name) as ?label) "
+                + "SELECT ?area (COUNT(DISTINCT ?author) as ?total) (SAMPLE(?name) as ?label) "
                 + "WHERE {  "
-                + "  GRAPH <" + con.getClusterGraph() + "> {"
-                + "    ?area foaf:publications  [uc:hasPerson ?person];       "
+                + "  GRAPH < " + con.getClusterGraph() + "> {"
+                + "    ?area rdf:type uc:Cluster;"
                 + "          rdfs:label ?name."
+                + "    ?author dct:isPartOf ?area."
                 + "  }"
                 + "} GROUP BY ?area "
                 + "  }"
@@ -1720,7 +1721,8 @@ public class QueriesServiceImpl implements QueriesService {
                 + "  SELECT  ?area (sample(?name) as ?label)"
                 + "  WHERE {    "
                 + "    GRAPH <" + con.getClusterGraph() + "> {            "
-                + "      ?area rdfs:label ?name.    "
+                + "      ?area rdf:type uc:Cluster; "
+                + "            rdfs:label ?name.    "
                 + "    }  "
                 + "  }group by ?area"
                 + "}";
