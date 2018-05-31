@@ -1,55 +1,29 @@
-
-<div class="container profile" ng-controller="authorProfile"  style="margin-top: 2%;">
+<div class="container profile" ng-controller="authorProfile" style="margin-top: 2%;">
   <div class="row">
     <div class="col-sm-8">
-      <profile-template   ng-model='author'>      </profile-template >
-
-
-
-      </div>
-
+      <profile-template ng-model='author'> </profile-template>
+    </div>
 
     <div class="col-sm-4 second-panel" style="min-height: 65vh">
-      <div class=" coauthor-panel text-center"> 
-       <div class="row" >
-        <span class="col-sm-3"> <img  src="/wkhome/images/coauthorlogo.png"  width="40vw" >  </span>
-        <span class="col-sm-6" >
+      <div class=" coauthor-panel text-center">
+        <div class="row">
+          <span class="col-sm-3"> <img  src="/wkhome/images/coauthorlogo.png"  width="40vw" >  </span>
+          <span class="col-sm-6">
         <font  color="white"  > <strong> {{ "relevant.coauthor" | translate}} </strong> </font> </span>
-             </div>
-      <div class="coauthor-list" style="color: white">   
-       <div class="coauthorDiv">
-         <coauthor-template  ng-model='coauthors' clickon-relatedauthor='clickonRelatedauthor(uri)'>     
-
-         </coauthor-template>
-       </div>
-      </div>        
-   
+        </div>
+        <div class="coauthor-list" style="color: white">
+          <div class="coauthorDiv">
+            <coauthor-template ng-model='coauthors' clickon-relatedauthor='clickonRelatedauthor(uri)'>
+            </coauthor-template>
+          </div>
+        </div>
       </div>
-
-
     </div>
 
-       <!-- <div class="col-sm-12 row text-center" style=" background-color: white;" >   
-           <button id="profBtn pub" type="button"  class="col-sm-4  prof-btn btn btn-default" ng-click="publication()"  style="height: 9vh;"> <img  src="/wkhome/images/pub.png"  width="30" >  <span> &#9679 &nbsp {{"publications" | translate}} </span> </button>  
-         <button  id="profBtn" type="button"  class="col-sm-4  prof-btn btn btn-default" ng-click="tree()"  style="height: 9vh;"> <img  src="/wkhome/images/tree.png"  width="40" >   <span>  &#9679 &nbsp {{"explore" | translate}} </span> </button> 
-         <button  id="profBtn" type="button"  class="col-sm-4  prof-btn btn btn-default" ng-click="network()"  style="height: 9vh;" > <img  src="/wkhome/images/red.png"  width="40" >   <span>  &#9679 &nbsp {{"network"| translate}} </span> </button> 
-    
-      </div> -->
-
-
-      <div class="col-sm-12 row text-center" style=" background-color: white;" >   
-           <button  id = "pubButton"  class="col-sm-4  prof-btn " ng-click="publication()"  style="height: 9vh;">   <span> &#9679 &nbsp {{"publications" | translate}} </span> </button>  
-         <button  id="treebtn"  class="col-sm-4  prof-btn " ng-click="tree()"  style="height: 9vh;">   <span>  &#9679 &nbsp {{"explore" | translate}} </span> </button> 
-         <button  id="netbtn"   class="col-sm-4  prof-btn " ng-click="network()"  style="height: 9vh;" >  <span>  &#9679 &nbsp {{"network"| translate}} </span> </button> 
-    
-      </div> 
-
+    <div class="col-sm-12 row text-center" style=" background-color: white;">
+      <button id="pubButton" class="col-sm-4  prof-btn " ng-click="publication()" style="height: 9vh;">   <span> &#9679 &nbsp {{"publications" | translate}} </span> </button>
+      <button id="treebtn" class="col-sm-4  prof-btn " ng-click="tree()" style="height: 9vh;">   <span>  &#9679 &nbsp {{"explore" | translate}} </span> </button>
+      <button id="netbtn" class="col-sm-4  prof-btn " ng-click="network()" style="height: 9vh;">  <span>  &#9679 &nbsp {{"network"| translate}} </span> </button>
+    </div>
   </div>
-
-  
-    </div>
-
-
-
-
-
+</div>

@@ -37,10 +37,16 @@ uc:authorElectronicIdentifier a r2r:Mapping;
     r2r:sourcePattern "?SUBJ elsevier:eid ?eid" ;
     r2r:targetPattern "?SUBJ scoro:hasPersonalIdentifier ?'eid'^^xsd:string" .
 
-uc:authorOrcid a r2r:Mapping;
+uc:authorOrcid1 a r2r:Mapping;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:classMappingRef uc:authorType ;
     r2r:sourcePattern "?SUBJ elsevier:orcid ?orcid" ;
+    r2r:targetPattern "?SUBJ scoro:hasORCID ?'orcid'^^xsd:string" .
+
+uc:authorOrcid2 a r2r:Mapping;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:authorType ;
+    r2r:sourcePattern "?SUBJ uc:orcid ?orcid" ;
     r2r:targetPattern "?SUBJ scoro:hasORCID ?'orcid'^^xsd:string" .
 
 uc:authorHIndex a r2r:Mapping;

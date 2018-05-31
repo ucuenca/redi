@@ -77,6 +77,8 @@ public interface QueriesService {
     String getOrgEnrichmentProvider( Map <String, String> mp);
     
     String getOrgDisambiguationResult(Map<String, String> providers);
+    
+      String getEnrichmentQueryResult(Map<String, String> providers);
 
     /**
      * return query to obtain all subject ( keywords ) of an author , using

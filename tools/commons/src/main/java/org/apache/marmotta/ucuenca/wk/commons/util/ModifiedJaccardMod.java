@@ -102,7 +102,7 @@ public class ModifiedJaccardMod {
         return val > 1.0 ? 1.0 : val;
     }
 
-    public String specialCharactersClean(String n) {
+    public static String specialCharactersClean(String n) {
         return n.replaceAll("\\.|,|;|:|-|\n|\\\\|\\||\"|\'|_|/", " ");
     }
 

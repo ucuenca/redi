@@ -41,12 +41,14 @@ public class OntologyMapperTest {
     private static String vocabulary;
     private static Model academicsKnowledgeModel;
     private static Model scopusModel;
+    private static Model scopusModelORCID;
     private static Model dblpModel;
     private static Model scholarModel;
     private static Model scieloModel;
     private static Model springerModel;
     private static InputStream academicsKnowledgeMapper;
     private static InputStream scopusMapper;
+    private static InputStream scopusMapperORCID;
     private static InputStream dblpMapper;
     private static InputStream scholarMapper;
     private static InputStream scieloMapper;
@@ -59,6 +61,7 @@ public class OntologyMapperTest {
         try {
             academicsKnowledgeModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/academics_knowledge.n3"), "", RDFFormat.N3);
             scopusModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/scopus.n3"), "", RDFFormat.N3);
+            scopusModelORCID = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/scopus_orcid.ttl"), "", RDFFormat.TURTLE);
             dblpModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/dblp.ttl"), "", RDFFormat.TURTLE);
             scholarModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/scholar.rdf"), "", RDFFormat.RDFXML);
             scieloModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/scielo.rdf"), "", RDFFormat.RDFXML);
@@ -68,6 +71,7 @@ public class OntologyMapperTest {
         }
         academicsKnowledgeMapper = OntologyMapper.class.getResourceAsStream("/mapping/academics_knowledge.ttl");
         scopusMapper = OntologyMapper.class.getResourceAsStream("/mapping/scopus.ttl");
+        scopusMapperORCID = OntologyMapper.class.getResourceAsStream("/mapping/scopus.ttl");
         dblpMapper = OntologyMapper.class.getResourceAsStream("/mapping/dblp.ttl");
         scholarMapper = OntologyMapper.class.getResourceAsStream("/mapping/google_scholar.ttl");
         springerMapper = OntologyMapper.class.getResourceAsStream("/mapping/springer.ttl");
@@ -108,6 +112,18 @@ public class OntologyMapperTest {
     }
 
     /**
+     * Test ontology mapping of Scopus of ORCID property.
+     */
+    @Test
+    public void testScopusOntologyMappingORCID() {
+        assertEquals(scopusModelORCID.size(), 4);
+        Model resultWithMapperFile = OntologyMapper.map(scopusModelORCID, scopusMapperORCID, vocabulary);
+        Model resultEmptyMapperFile = OntologyMapper.map(scopusModelORCID, emptyMapper, vocabulary);
+        assertEquals(resultWithMapperFile.size(), 3);
+        assertEquals(resultEmptyMapperFile.size(), 0);
+    }
+
+    /**
      * Test ontology mapping of DBLP vocabulary.
      */
     @Test
@@ -142,7 +158,7 @@ public class OntologyMapperTest {
         assertEquals(resultWithMapperFile.size(), 533);
         assertEquals(resultEmptyMapperFile.size(), 0);
     }
-    
+
     /**
      * Test ontology mapping of Scielo vocabulary.
      */
@@ -154,5 +170,5 @@ public class OntologyMapperTest {
         assertEquals(resultWithMapperFile.size(), 214);
         assertEquals(resultEmptyMapperFile.size(), 0);
     }
-    
+
 }

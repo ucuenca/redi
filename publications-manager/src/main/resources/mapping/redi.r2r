@@ -24,7 +24,7 @@ bibo:Collection+(bibo:Collection, rdfs:label)
     rdfs:label,
     schema:memberOf,schema:copyrightYear,
     nature:coverDate,
-    scoro:hasOrcid,scoro:hasPersonalIdentifier,
+    scoro:hasORCID,scoro:hasPersonalIdentifier,
     uc:academicsId,uc:scopusId,uc:citationCount,uc:h-index,uc:i10-index,uc:domain,uc:citedbyCount,uc:pubmedId,
     foaf:holdsAccount,foaf:topic_interest,foaf:publications,foaf:name,foaf:givenName,foaf:familyName,foaf:img,foaf:homepage,
     dct:contributor,dct:creator,dct:provenance,dct:identifier,dct:language,dct:title,dct:isPartOf,dct:subject,dct:publisher,
