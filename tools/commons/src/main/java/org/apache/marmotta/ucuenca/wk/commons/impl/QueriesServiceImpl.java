@@ -1681,7 +1681,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + "  {  "
                 + "SELECT ?area (COUNT(DISTINCT ?author) as ?total) (SAMPLE(?name) as ?label) "
                 + "WHERE {  "
-                + "  GRAPH < " + con.getClusterGraph() + "> {"
+                + "  GRAPH <" + con.getClusterGraph() + "> {"
                 + "    ?area rdf:type uc:Cluster;"
                 + "          rdfs:label ?name."
                 + "    ?author dct:isPartOf ?area."
