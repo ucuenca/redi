@@ -689,7 +689,9 @@ public class CommonServiceImpl implements CommonService {
                 + "prefix vcard: <http://www.w3.org/2006/vcard/ns#> "
                 + "prefix scoro: <http://purl.org/spar/scoro/> "
                 + "prefix schema: <http://schema.org/> "
-                + "prefix uc: <http://ucuenca.edu.ec/ontology#> ";
+                + "prefix uc: <http://ucuenca.edu.ec/ontology#> "
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "PREFIX dct: <http://purl.org/dc/terms/>";
 
         // uri = "https://redi.cedia.edu.ec/resource/authors/UCUENCA/file/_SAQUICELA_GALARZA_____VICTOR_HUGO_";
         try {
@@ -723,7 +725,7 @@ public class CommonServiceImpl implements CommonService {
 
             String querySubCluster = Prefix
                     + "SELECT  ?cl   ?clabel FROM <" + con.getClusterGraph() + "> WHERE  {\n"
-                    + "     <"+uri+">  dct:isPartOf ?cl .\n"
+                    + "     <" + uri + ">  dct:isPartOf ?cl .\n"
                     + " ?cl a <http://ucuenca.edu.ec/ontology#SubCluster> .\n"
                     + "  ?cl rdfs:label ?clabel .\n"
                     + "  filter (lang(?clabel ) = \"en\") "
@@ -793,13 +795,13 @@ public class CommonServiceImpl implements CommonService {
                 a = proccessAuthor(responseAuthor);
                //DEPRECATED
               /*  List<Map<String, Value>> responsetopics = sparqlService.query(QueryLanguage.SPARQL, querytopics);
-                if (responsetopics.size() > 0 && !responsetopics.get(0).isEmpty()) {
-                    String topics = responsetopics.get(0).get("topicls").stringValue();
-                    a.setTopics(getRelevantTopics(topics.split("\\|")));
-                }*/
-                
-                 List<Map<String, Value>> responseSubclusters = sparqlService.query(QueryLanguage.SPARQL, querySubCluster);
-               if (!responseSubclusters.isEmpty()) {
+                 if (responsetopics.size() > 0 && !responsetopics.get(0).isEmpty()) {
+                 String topics = responsetopics.get(0).get("topicls").stringValue();
+                 a.setTopics(getRelevantTopics(topics.split("\\|")));
+                 }*/
+
+                List<Map<String, Value>> responseSubclusters = sparqlService.query(QueryLanguage.SPARQL, querySubCluster);
+                if (!responseSubclusters.isEmpty()) {
                     //   String[] arrayaux = new String[responseCluster.size()];
                     List<String> subclusters = new ArrayList();
                     for (Map<String, Value> mp : responseSubclusters) {
@@ -807,10 +809,8 @@ public class CommonServiceImpl implements CommonService {
                     }
                     String[] arrayaux = new String[subclusters.size()];
                     arrayaux = subclusters.toArray(arrayaux);
-                    a.setTopics(arrayaux); 
-               }
-                
-                
+                    a.setTopics(arrayaux);
+                }
 
                 List<Map<String, Value>> responseCluster = sparqlService.query(QueryLanguage.SPARQL, queryCluster);
                 if (!responseCluster.isEmpty()) {
