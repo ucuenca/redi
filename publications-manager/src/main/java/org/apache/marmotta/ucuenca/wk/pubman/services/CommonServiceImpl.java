@@ -289,7 +289,7 @@ public class CommonServiceImpl implements CommonService {
                 + "SELECT DISTINCT ?uri (SAMPLE (?sname) as ?name) (SAMPLE (?sgraph) as ?graph) (SAMPLE (?smain) as ?main) "
                 + "WHERE {  "
                 + " GRAPH ?sgraph {  "
-                + "  ?uri a <"+REDI.PROVIDER.toString()+"> . "
+                + "  ?uri a <" + REDI.PROVIDER.toString() + "> . "
                 + "  ?uri rdfs:label ?sname  . "
                 + " ?uri <http://ucuenca.edu.ec/ontology#main> ?smain "
                 + " }} GROUP BY ?uri  Order  by  desc (?main)";
@@ -689,7 +689,9 @@ public class CommonServiceImpl implements CommonService {
                 + "prefix vcard: <http://www.w3.org/2006/vcard/ns#> "
                 + "prefix scoro: <http://purl.org/spar/scoro/> "
                 + "prefix schema: <http://schema.org/> "
-                + "prefix uc: <http://ucuenca.edu.ec/ontology#> ";
+                + "prefix uc: <http://ucuenca.edu.ec/ontology#> "
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "PREFIX dct: <http://purl.org/dc/terms/>";
 
         // uri = "https://redi.cedia.edu.ec/resource/authors/UCUENCA/file/_SAQUICELA_GALARZA_____VICTOR_HUGO_";
         try {
@@ -705,15 +707,29 @@ public class CommonServiceImpl implements CommonService {
                     + "   <" + uri + ">  foaf:topic_interest [rdfs:label ?topicl]                                                                                            	}\n"
                     + "}";
 
+            /* String queryCluster = Prefix
+             + "Select distinct ?lc where { "
+             + "GRAPH   <" + con.getClusterGraph() + "> {"
+             + "     ?pubc uc:hasPerson <" + uri + "> ."
+             + "             ?c   foaf:publications     ?pubc .  "
+             + "                       ?c      rdfs:label ?lc ."
+             + "                      FILTER (lang(?lc) = 'en')       "
+             + "           } "
+             + "}";*/
             String queryCluster = Prefix
-                    + "Select distinct ?lc where { "
-                    + "GRAPH   <" + con.getClusterGraph() + "> {"
-                    + "     ?pubc uc:hasPerson <" + uri + "> ."
-                    + "             ?c   foaf:publications     ?pubc .  "
-                    + "                       ?c      rdfs:label ?lc ."
-                    + "                      FILTER (lang(?lc) = 'en')       "
-                    + "           } "
-                    + "}";
+                    + "SELECT  ?cl   ?clabel FROM <" + con.getClusterGraph() + "> WHERE  {\n"
+                    + "     <" + uri + ">  dct:isPartOf ?cl .\n"
+                    + " ?cl a <http://ucuenca.edu.ec/ontology#Cluster> .\n"
+                    + "  ?cl rdfs:label ?clabel\n"
+                    + "      }";
+
+            String querySubCluster = Prefix
+                    + "SELECT  ?cl   ?clabel FROM <" + con.getClusterGraph() + "> WHERE  {\n"
+                    + "     <" + uri + ">  dct:isPartOf ?cl .\n"
+                    + " ?cl a <http://ucuenca.edu.ec/ontology#SubCluster> .\n"
+                    + "  ?cl rdfs:label ?clabel .\n"
+                    + "  filter (lang(?clabel ) = \"en\") "
+                    + "      } limit 5";
 
             String metaAuthor = Prefix
                     + "SELECT   ?names  ?orgnames ?members ?orcids ?imgs ?emails ?homepages ?citations ?hindexs ?i10indexs ?afs ?scs  where { "
@@ -777,21 +793,53 @@ public class CommonServiceImpl implements CommonService {
             AuthorProfile a = new AuthorProfile();
             if (!responseAuthor.isEmpty()) {
                 a = proccessAuthor(responseAuthor);
+               //DEPRECATED
+              /*  List<Map<String, Value>> responsetopics = sparqlService.query(QueryLanguage.SPARQL, querytopics);
+                 if (responsetopics.size() > 0 && !responsetopics.get(0).isEmpty()) {
+                 String topics = responsetopics.get(0).get("topicls").stringValue();
+                 a.setTopics(getRelevantTopics(topics.split("\\|")));
+                 }*/
 
-                List<Map<String, Value>> responsetopics = sparqlService.query(QueryLanguage.SPARQL, querytopics);
-                if (responsetopics.size() > 0 && !responsetopics.get(0).isEmpty()) {
-                    String topics = responsetopics.get(0).get("topicls").stringValue();
-                    a.setTopics(getRelevantTopics(topics.split("\\|")));
+                List<Map<String, Value>> responseSubclusters = sparqlService.query(QueryLanguage.SPARQL, querySubCluster);
+                if (!responseSubclusters.isEmpty()) {
+                    //   String[] arrayaux = new String[responseCluster.size()];
+                    List<String> subclusters = new ArrayList();
+                    for (Map<String, Value> mp : responseSubclusters) {
+                        subclusters.add(mp.get("clabel").stringValue());
+                    }
+                    String[] arrayaux = new String[subclusters.size()];
+                    arrayaux = subclusters.toArray(arrayaux);
+                    a.setTopics(arrayaux);
                 }
 
                 List<Map<String, Value>> responseCluster = sparqlService.query(QueryLanguage.SPARQL, queryCluster);
                 if (!responseCluster.isEmpty()) {
-                    String lc = responseCluster.get(0).get("lc").stringValue();
-                    a.setCluster(lc.split("\\|"));
+                    //   String[] arrayaux = new String[responseCluster.size()];
+                    List<String> clusters = new ArrayList();
+                    for (Map<String, Value> mp : responseCluster) {
+                        clusters.add(mp.get("clabel").stringValue());
+                    }
+                    String[] arrayaux = new String[clusters.size()];
+                    arrayaux = clusters.toArray(arrayaux);
+                    a.setCluster(arrayaux);
+
+                    /*   int np = Integer.parseInt(responseCluster.get(0).get("pub").stringValue());
+                     int min = (int) (np - np * 0.1);
+                     List<String> clusters = new ArrayList();
+                     for (Map<String, Value> mp : responseCluster) {
+                     if (Integer.parseInt(mp.get("pub").stringValue()) > min) {
+                     clusters.add(mp.get("lc").stringValue());
+                     }
+                     }
+                     String[] arrayaux = new String[clusters.size()];
+                     arrayaux = clusters.toArray(arrayaux);
+                     a.setCluster(arrayaux);*/
+                    /* String lc = responseCluster.get(0).get("lc").stringValue();
+                     a.setCluster(lc.split("\\|"));*/
                 }
 
                 List<Map<String, Value>> responseNpub = sparqlService.query(QueryLanguage.SPARQL, numpubquery);
-                if (responsetopics.size() > 0 && !responsetopics.get(0).isEmpty()) {
+                if (responseNpub.size() > 0 && !responseNpub.get(0).isEmpty()) {
                     String num = responseNpub.get(0).get("tot").stringValue();
                     a.setNpub(num);
                 }

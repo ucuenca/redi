@@ -104,6 +104,7 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
             postMappings.put(FOAF.NAMESPACE + "img", new ScholarImageUriAttrMapper("div#gsc_prf_pua img", "src", "view_op", "user"));
             postMappings.put(FOAF.NAMESPACE + "name", new CssTextLiteralMapper("div#gsc_prf_in"));
             postMappings.put(REDI.NAMESPACE + "affiliationName", new CssTextLiteralMapper(".gsc_prf_il:nth-child(2) a"));
+            postMappings.put(REDI.NAMESPACE + "altAffiliationName", new CssTextLiteralMapper(".gsc_prf_il:nth-child(2)"));
             postMappings.put(FOAF.NAMESPACE + "topic_interest", new CssTextLiteralMapper("div#gsc_prf_int a"));
             postMappings.put(REDI.NAMESPACE + "domain", new ScholarEmailTextLiteralMapper("#gsc_prf_ivh"));
             postMappings.put(FOAF.NAMESPACE + "homepage", new CssUriAttrMapper("#gsc_prf_ivh a", "href"));

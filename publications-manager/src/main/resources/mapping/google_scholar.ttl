@@ -39,6 +39,16 @@ uc:authorAffiliation a r2r:Mapping ;
     r2r:targetPattern "?affIRI a foaf:Organization" ;
     r2r:targetPattern "?affIRI foaf:name ?'affName'^^xsd:string" .
 
+uc:authorAffiliationAlternative a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:classMappingRef uc:authorType ;
+    r2r:sourcePattern "?SUBJ uc:altAffiliationName ?altAffName." ;
+    r2r:transformation "?altAffIRI=concat('https://redi.cedia.edu.ec/resource/organization/', xpath:encode-for-uri(?altAffName))" ;
+    r2r:targetPattern "?SUBJ schema:memberOf ?<altAffIRI>" ;
+    r2r:targetPattern "?altAffIRI a foaf:Organization" ;
+    r2r:targetPattern "?altAffIRI a foaf:GoogleOrganization" ;
+    r2r:targetPattern "?altAffIRI foaf:name ?'altAffName'^^xsd:string" .
+
 uc:authorTopic a r2r:Mapping;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:classMappingRef uc:authorType ;
