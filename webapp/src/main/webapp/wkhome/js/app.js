@@ -35,6 +35,7 @@ wkhomeApp.service('searchData', function () {
 wkhomeApp.service('globalData', ['$window', function ($window) {
     //  var baseURL = "http://redi.cedia.edu.ec/";
      var baseURL = $window.location.origin + $window.location.pathname;
+     this.serverInstance=baseURL;
      baseURL = baseURL.replace("clon","");
      baseURL = baseURL.replace("localhost:8080","redi.cedia.edu.ec");
     this.language = "es";
@@ -46,7 +47,7 @@ wkhomeApp.service('globalData', ['$window', function ($window) {
     this.organizationsGraph = baseURL + "context/organization";
     this.latindexGraph = baseURL + "context/latindex";
     this.translateData = null;
-    this.publicationsCore = 'https://rediclon.cedia.edu.ec/solr/publications';
+    this.publicationsCore = this.serverInstance + 'solr/publications';
     // this.publicationsCore = 'https://redi.cedia.edu.ec/solr/publications';
     // this.publicationsCore = 'http://localhost:8080/solr/publications';
     this.PREFIX = 'PREFIX bibo: <http://purl.org/ontology/bibo/>'

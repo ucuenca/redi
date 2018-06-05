@@ -23,33 +23,28 @@ wkhomeServices.factory('Phone', ['$resource',
 
 
 /* RESTful client Service */
-wkhomeServices.factory('authorRestQuery', ['$resource', '$http', '$window',
-    function ($resource, $http, $window) {
+wkhomeServices.factory('authorRestQuery', ['$resource', '$http', 'globalData',
+    function ($resource, $http, globalData) {
         $http.defaults.headers.common['content-type'] = 'application/x-www-form-urlencoded';
         $http.defaults.headers.common['Accept'] = 'application/ld+json';
         var transform = function (data) {
             return $.param(data);
-            //return data;
         };
-        var serverInstance = wkhomeServices.serverInstance ? wkhomeServices.serverInstance :
-                //'http://' + $window.location.hostname + ($window.location.port ? ':8080' : '') + '/marmotta';
-                $window.location.protocol + '//' + $window.location.hostname + ($window.location.port ? ':8080' : '') + '';
+        var serverInstance = globalData.serverInstance;
         return $resource(serverInstance + '/pubman/pubsearch', {}, {
             query: {method: 'POST', isArray: true, transformRequest: transform, headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}}
         });
     }]);
 
 
-wkhomeServices.factory('sparqlQuery', ['$resource', '$http', '$window',
-    function ($resource, $http, $window) {
+wkhomeServices.factory('sparqlQuery', ['$resource', '$http', 'globalData',
+    function ($resource, $http, globalData) {
         $http.defaults.headers.common['content-type'] = 'application/x-www-form-urlencoded';
         $http.defaults.headers.common['Accept'] = 'application/ld+json';
         var transform = function (data) {
             return $.param(data);
         }
-        var serverInstance = wkhomeServices.serverInstance ? wkhomeServices.serverInstance :
-                //'http://' + $window.location.hostname + ($window.location.port ? ':8080' : '') + '/marmotta';
-                $window.location.protocol + '//' + $window.location.hostname + ($window.location.port ? ':8080' : '') + '';
+        var serverInstance = globalData.serverInstance;
         return $resource(serverInstance + '/sparql/select', {}, {
            querySrv: {method: 'POST', isArray: true, transformRequest: transform, headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}}
          });
@@ -85,62 +80,54 @@ wkhomeServices.factory('translateService', ['$resource', '$http', '$window', 'gl
 
     }]);
 
-wkhomeServices.factory('reportService', ['$resource', '$http', '$window',
-    function ($resource, $http, $window) {
+wkhomeServices.factory('reportService', ['$resource', '$http', 'globalData',
+    function ($resource, $http, globalData) {
         $http.defaults.headers.common['content-type'] = 'application/x-www-form-urlencoded';
         $http.defaults.headers.common['Accept'] = 'application/ld+json';
         var transform = function (data) {
-            data.hostname = wkhomeServices.serverInstance ? wkhomeServices.serverInstance : ($window.location.protocol + '//' +  $window.location.hostname
-                + ($window.location.port ? ':8080' : '') + '');
+            data.hostname = globalData.serverInstance;
             return $.param(data);
         }
-        var serverInstance = $window.location.protocol + '//' + $window.location.hostname
-                + ($window.location.port ? ':8080' : '') + '';
+        var serverInstance = globalData.serverInstance;
         return $resource(
                 serverInstance + '/pubman/report', {}, {
             querySrv: {method: 'POST', isArray: false, transformRequest: transform, headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}}
         });
     }]);
 
-wkhomeServices.factory('AuthorsService', ['$resource', '$http', '$window',
-    function ($resource, $http, $window) {
-        var serverInstance = $window.location.protocol + '//' +  $window.location.hostname
-                + ($window.location.port ? ':8080' : '') + '';
+wkhomeServices.factory('AuthorsService', ['$resource', '$http', 'globalData',
+    function ($resource, $http, globalData) {
+        var serverInstance = globalData.serverInstance;
         return $resource(serverInstance + '/solr/authors/select?q=name%3A(:search)&wt=json&fl=lmf.uri,name,topics', {search:'@id'});
     }]);
-wkhomeServices.factory('PublicationsService', ['$resource', '$http', '$window',
-    function ($resource, $http, $window) {
-        var serverInstance = $window.location.protocol + '//' +  $window.location.hostname
-                + ($window.location.port ? ':8080' : '') + '';
+wkhomeServices.factory('PublicationsService', ['$resource', '$http', 'globalData',
+    function ($resource, $http, globalData) {
+        var serverInstance = globalData.serverInstance;
         return $resource(serverInstance + '/solr/publications/select?q=":search"&wt=json&fl=lmf.uri', {search:'@id'});
     }]);
-wkhomeServices.factory('KeywordsService', ['$resource', '$http', '$window',
-    function ($resource, $http, $window) {
-        var serverInstance = $window.location.protocol + '//' +  $window.location.hostname
-                + ($window.location.port ? ':8080' : '') + '';
+wkhomeServices.factory('KeywordsService', ['$resource', '$http', 'globalData',
+    function ($resource, $http, globalData) {
+        var serverInstance = globalData.serverInstance;
         return $resource(serverInstance + '/solr/keywords/select?q=":search"&fl=lmf.uri,keyword&wt=json&', {search:'@id'});
     }]);
-wkhomeServices.factory('searchQueryService', ['$resource', '$http', '$window',
-    function ($resource, $http, $window) {
+wkhomeServices.factory('searchQueryService', ['$resource', '$http', 'globalData',
+    function ($resource, $http, globalData) {
         $http.defaults.headers.common['content-type'] = 'application/x-www-form-urlencoded';
         $http.defaults.headers.common['Accept'] = 'application/ld+json';
         var transform = function (data) {
-            data.hostname = wkhomeServices.serverInstance ? wkhomeServices.serverInstance : ($window.location.protocol + '//' +  $window.location.hostname
-                + ($window.location.port ? ':8080' : '') + '');
+            data.hostname = globalData.serverInstance;
             return $.param(data);
         }
-        var serverInstance = $window.location.protocol + '//' +  $window.location.hostname
-                + ($window.location.port ? ':8080' : '') + '';
+        var serverInstance = globalData.serverInstance;
         return $resource(
                 serverInstance + '/pubman/searchQuery', {}, {
             querySrv: {method: 'POST', isArray: false, transformRequest: transform, headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}}
         });
     }]);
 
-wkhomeServices.factory('Statistics', ['$resource', '$http', '$window',
-          function($resource, $http, $window) {
-            var serverInstance = $window.location.protocol + '//' +  $window.location.hostname
-                    + ($window.location.port ? ':8080' : '') + '';
+wkhomeServices.factory('Statistics', ['$resource', '$http', 'globalData',
+          function($resource, $http, globalData) {
+            var serverInstance = globalData.serverInstance;
             return $resource(serverInstance + '/mongo/statistics?id=:id', {}, {
               query: {
                 method: 'GET',
@@ -153,10 +140,9 @@ wkhomeServices.factory('Statistics', ['$resource', '$http', '$window',
           }
         ]);
 
-wkhomeServices.factory('queryProfile', ['$resource', '$http', '$window',
-          function($resource, $http, $window) {
-            var serverInstance = $window.location.protocol + '//' +  $window.location.hostname
-                    + ($window.location.port ? ':8080' : '') + '';
+wkhomeServices.factory('queryProfile', ['$resource', '$http', 'globalData',
+          function($resource, $http, globalData) {
+            var serverInstance = globalData.serverInstance;
             return $resource(serverInstance + '/pubman/reports/AuthorData?URI=:id', {}, {
               query: {
                 method: 'GET',
