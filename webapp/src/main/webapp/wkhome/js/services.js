@@ -31,7 +31,7 @@ wkhomeServices.factory('authorRestQuery', ['$resource', '$http', 'globalData',
             return $.param(data);
         };
         var serverInstance = globalData.serverInstance;
-        return $resource(serverInstance + '/pubman/pubsearch', {}, {
+        return $resource(serverInstance + 'pubman/pubsearch', {}, {
             query: {method: 'POST', isArray: true, transformRequest: transform, headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}}
         });
     }]);
@@ -45,7 +45,7 @@ wkhomeServices.factory('sparqlQuery', ['$resource', '$http', 'globalData',
             return $.param(data);
         }
         var serverInstance = globalData.serverInstance;
-        return $resource(serverInstance + '/sparql/select', {}, {
+        return $resource(serverInstance + 'sparql/select', {}, {
            querySrv: {method: 'POST', isArray: true, transformRequest: transform, headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}}
          });
     }]);
@@ -90,7 +90,7 @@ wkhomeServices.factory('reportService', ['$resource', '$http', 'globalData',
         }
         var serverInstance = globalData.serverInstance;
         return $resource(
-                serverInstance + '/pubman/report', {}, {
+                serverInstance + 'pubman/report', {}, {
             querySrv: {method: 'POST', isArray: false, transformRequest: transform, headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}}
         });
     }]);
@@ -98,17 +98,17 @@ wkhomeServices.factory('reportService', ['$resource', '$http', 'globalData',
 wkhomeServices.factory('AuthorsService', ['$resource', '$http', 'globalData',
     function ($resource, $http, globalData) {
         var serverInstance = globalData.serverInstance;
-        return $resource(serverInstance + '/solr/authors/select?q=name%3A(:search)&wt=json&fl=lmf.uri,name,topics', {search:'@id'});
+        return $resource(serverInstance + 'solr/authors/select?q=name%3A(:search)&wt=json&fl=lmf.uri,name,topics', {search:'@id'});
     }]);
 wkhomeServices.factory('PublicationsService', ['$resource', '$http', 'globalData',
     function ($resource, $http, globalData) {
         var serverInstance = globalData.serverInstance;
-        return $resource(serverInstance + '/solr/publications/select?q=":search"&wt=json&fl=lmf.uri', {search:'@id'});
+        return $resource(serverInstance + 'solr/publications/select?q=":search"&wt=json&fl=lmf.uri', {search:'@id'});
     }]);
 wkhomeServices.factory('KeywordsService', ['$resource', '$http', 'globalData',
     function ($resource, $http, globalData) {
         var serverInstance = globalData.serverInstance;
-        return $resource(serverInstance + '/solr/keywords/select?q=":search"&fl=lmf.uri,keyword&wt=json&', {search:'@id'});
+        return $resource(serverInstance + 'solr/keywords/select?q=":search"&fl=lmf.uri,keyword&wt=json&', {search:'@id'});
     }]);
 wkhomeServices.factory('searchQueryService', ['$resource', '$http', 'globalData',
     function ($resource, $http, globalData) {
@@ -120,7 +120,7 @@ wkhomeServices.factory('searchQueryService', ['$resource', '$http', 'globalData'
         }
         var serverInstance = globalData.serverInstance;
         return $resource(
-                serverInstance + '/pubman/searchQuery', {}, {
+                serverInstance + 'pubman/searchQuery', {}, {
             querySrv: {method: 'POST', isArray: false, transformRequest: transform, headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}}
         });
     }]);
@@ -128,7 +128,7 @@ wkhomeServices.factory('searchQueryService', ['$resource', '$http', 'globalData'
 wkhomeServices.factory('Statistics', ['$resource', '$http', 'globalData',
           function($resource, $http, globalData) {
             var serverInstance = globalData.serverInstance;
-            return $resource(serverInstance + '/mongo/statistics?id=:id', {}, {
+            return $resource(serverInstance + 'mongo/statistics?id=:id', {}, {
               query: {
                 method: 'GET',
                 params: {id: 'id'},
@@ -143,7 +143,7 @@ wkhomeServices.factory('Statistics', ['$resource', '$http', 'globalData',
 wkhomeServices.factory('queryProfile', ['$resource', '$http', 'globalData',
           function($resource, $http, globalData) {
             var serverInstance = globalData.serverInstance;
-            return $resource(serverInstance + '/pubman/reports/AuthorData?URI=:id', {}, {
+            return $resource(serverInstance + 'pubman/reports/AuthorData?URI=:id', {}, {
               query: {
                 method: 'GET',
                 params: {id: 'id'},
