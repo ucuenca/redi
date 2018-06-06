@@ -135,35 +135,43 @@
         </div>
         <article ng-repeat="doc in documents" class="document" ng-cloak>
           <img src="/wkhome/images/journal.png" alt="type" width="12" style="margin-right: 5px"><a ng-href="{{doc['lmf.uri']}}" class="title" target="_blank"><b>{{doc.title}}</b></a>
-          <div ng-show="doc.abstract">
-            <hm-read-more
-              hm-text="{{doc.abstract}}" hm-limit="250" hm-more-text="{{ 'read.more' | translate }}"
-              hm-less-text="{{ 'read.less' | translate}}" hm-dots-class="dots" hm-link-class="links">
-            </hm-read-more>
-          </div>
-          <div class="inline text-muted small">
-            <ul class="list-inline" ng-show="doc.subjects">
-              <li ng-repeat = "subject in doc.subjects">
-                <i>{{subject | camelCase}} {{$last ? '' : ' -'}}</i>
-              </li>
-              <br>
-            </ul>
+           <div class="row">
+            <div class="col-lg-1" ng-show="doc['journal-img']">
+              <img ng-src="{{doc['journal-img'][0]}}" alt="" height="95px">
+            </div>
+            <div ng-class="doc['journal-img'][0] ? 'col-lg-11' : 'col-lg-12'">
+              <div ng-show="doc.abstract">
+                <hm-read-more
+                  hm-text="{{doc.abstract}}" hm-limit="250" hm-more-text="{{ 'read.more' | translate }}"
+                  hm-less-text="{{ 'read.less' | translate}}" hm-dots-class="dots" hm-link-class="links">
+                </hm-read-more>
+              </div>
+              <div class="inline text-muted small">
+                <ul class="list-inline" ng-show="doc.subjects">
+                  <li ng-repeat = "subject in doc.subjects">
+                    <i>{{subject | camelCase}} {{$last ? '' : ' -'}}</i>
+                  </li>
+                  <br>
+                </ul>
 
-            <ul class="list-inline" ng-show="doc['contributor-name']">
-              <li ng-repeat = "contributor in doc['contributor-name']">
-                <span>{{contributor | camelCase:true}}</span><span>{{ $last ? '' : ','}}</span>
-              </li>
-            </ul>
-            <span ng-show="doc.publisher"><strong>Publisher:</strong> {{doc.publisher[0]}}<br></span>
-            <span ng-show="doc.conference"><strong>Conference:</strong> {{doc.conference[0]}}<br></span>
-            <span ng-show="doc.book"><strong>Book:</strong> {{doc.book[0]}}<br></span>
-            <span ng-show="doc.journal"><strong>Journal:</strong> {{doc.journal[0]}}<br></span>
-            <ul class="list-inline" ng-show="doc.uri">
-              <li ng-repeat = "uri in doc.uri | limitTo:5">
-                <logo-publication uri="{{uri}}"></logo-publication>
-              </li>
-            </ul>
-            <hr style="margin: 10px;">
+                <ul class="list-inline" ng-show="doc['contributor-name']">
+                  <li ng-repeat = "contributor in doc['contributor-name']">
+                    <span>{{contributor | camelCase:true}}</span><span>{{ $last ? '' : ','}}</span>
+                  </li>
+                </ul>
+                <span ng-show="doc.publisher"><strong>Publisher:</strong> {{doc.publisher[0]}}<br></span>
+                <span ng-show="doc.conference"><strong>Conference:</strong> {{doc.conference[0]}}<br></span>
+                <span ng-show="doc.book"><strong>Book:</strong> {{doc.book[0]}}<br></span>
+                <span ng-show="doc.journal"><strong>Journal:</strong> {{doc.journal[0]}}<br></span>
+              </div>
+            </div>
+          </div>
+          <ul class="list-inline" ng-show="doc.uri">
+            <li ng-repeat = "uri in doc.uri | limitTo:5">
+              <logo-publication uri="{{uri}}"></logo-publication>
+            </li>
+          </ul>
+          <hr style="margin: 10px;">
         </article>
         <ul class="pagination" ng-hide="error" ng-cloak>
           <li ng-repeat="page in pages" ng-class="{active: page.isCurrent}">
