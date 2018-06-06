@@ -102,7 +102,7 @@ wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$windo
       '  ?subject foaf:img ?img .' +
       '} WHERE  {' +
       '  SELECT ?subject (MAX(str(?name_)) as ?name) (COUNT( DISTINCT ?pub) as ?totalPub) (MAX(str(?img_)) as ?imgm) (IRI (?imgm) as ?img)' +
-      '  WHERE { GRAPH <https://redi.cedia.edu.ec/context/redi> {' +
+      '  WHERE { GRAPH <' + globalData.centralGraph + '> {' +
       '    <' + author.uri + '> foaf:publications ?pub.' +
       '    ?subject foaf:publications ?pub;' +
       '             foaf:name ?name_.' +
