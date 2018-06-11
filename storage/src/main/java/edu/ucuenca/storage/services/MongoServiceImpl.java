@@ -60,7 +60,7 @@ public class MongoServiceImpl implements MongoService {
         int port = configurationService.getIntConfiguration("mongo.port");
 
         mongoClient = new MongoClient(host, port);
-        db = mongoClient.getDatabase(DATABASE);
+        db = mongoClient.getDatabase(Database.NAME.getDBName());
         authors = db.getCollection(Collection.AUTHORS.getValue());
         relatedauthors = db.getCollection(Collection.RELATEDAUTHORS.getValue());
         statistics = db.getCollection(Collection.STATISTICS.getValue());

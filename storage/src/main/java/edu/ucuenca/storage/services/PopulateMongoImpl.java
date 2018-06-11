@@ -49,7 +49,7 @@ import org.slf4j.Logger;
  */
 @ApplicationScoped
 public class PopulateMongoImpl implements PopulateMongo {
-    
+
     @Inject
     private ConfigurationService conf;
     @Inject
@@ -64,9 +64,9 @@ public class PopulateMongoImpl implements PopulateMongo {
     private CommonService commonService;
     @Inject
     private TaskManagerService taskManagerService;
-    
+
     private static final Map context = new HashMap();
-    
+
     static {
         context.put("dct", "http://purl.org/dc/terms/");
         context.put("owl", "http://www.w3.org/2002/07/owl#");
@@ -88,14 +88,14 @@ public class PopulateMongoImpl implements PopulateMongo {
         try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));
                 StringWriter writter = new StringWriter();) {
             RepositoryConnection conn = sesameService.getConnection();
-            
+
             int num_candidates = 0;
             try {
-                MongoDatabase db = client.getDatabase(MongoService.DATABASE);
+                MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
                 // Delete and create collection
                 MongoCollection<Document> collection = db.getCollection(c);
                 collection.drop();
-                
+
                 RDFWriter jsonldWritter = Rio.createWriter(RDFFormat.JSONLD, writter);
                 TupleQueryResult resources = conn.prepareTupleQuery(QueryLanguage.SPARQL, queryResources).evaluate();
                 while (resources.hasNext()) {
@@ -127,18 +127,18 @@ public class PopulateMongoImpl implements PopulateMongo {
             log.error("IO error", ex);
         }
     }
-    
+
     private void loadStadistics(String c, HashMap<String, String> queries) {
         try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));
                 StringWriter writter = new StringWriter();) {
             RepositoryConnection conn = sesameService.getConnection();
-            
+
             try {
-                MongoDatabase db = client.getDatabase(MongoService.DATABASE);
+                MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
                 // Delete and create collection
                 MongoCollection<Document> collection = db.getCollection(c);
                 collection.drop();
-                
+
                 RDFWriter jsonldWritter = Rio.createWriter(RDFFormat.JSONLD, writter);
                 for (String key : queries.keySet()) {
                     log.info("Getting {} query", key);
@@ -168,12 +168,12 @@ public class PopulateMongoImpl implements PopulateMongo {
             log.error("IO error", ex);
         }
     }
-    
+
     @Override
     public void authors() {
         Task task = taskManagerService.createSubTask("Caching authors profiles", "Mongo Service");
         try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
-            MongoDatabase db = client.getDatabase(MongoService.DATABASE);
+            MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
             // Delete and create collection
             MongoCollection<Document> collection = db.getCollection(MongoService.Collection.AUTHORS.getValue());
             collection.drop();
@@ -197,7 +197,7 @@ public class PopulateMongoImpl implements PopulateMongo {
         }
         taskManagerService.endTask(task);
     }
-    
+
     @Override
     public void statistics() {
         HashMap<String, String> queries = new HashMap<>();
@@ -208,13 +208,13 @@ public class PopulateMongoImpl implements PopulateMongo {
         queries.put("keywords_frequencypub_gt4", queriesService.getKeywordsFrequencyPub());
         loadStadistics(MongoService.Collection.STATISTICS.getValue(), queries);
     }
-    
+
     @Override
     public void networks() {
         Task task = taskManagerService.createSubTask("Caching related authors", "Mongo Service");
         try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
-            
-            MongoDatabase db = client.getDatabase(MongoService.DATABASE);
+
+            MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
             // Delete and create collection
             MongoCollection<Document> collection = db.getCollection(MongoService.Collection.RELATEDAUTHORS.getValue());
             collection.drop();
@@ -238,10 +238,10 @@ public class PopulateMongoImpl implements PopulateMongo {
         }
         taskManagerService.endTask(task);
     }
-    
+
     @Override
     public void publications() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }
