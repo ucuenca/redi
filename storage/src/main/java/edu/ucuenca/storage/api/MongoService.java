@@ -18,10 +18,9 @@
 package edu.ucuenca.storage.api;
 
 import edu.ucuenca.storage.exceptions.FailMongoConnectionException;
+import java.net.URL;
 
 public interface MongoService {
-
-    static final String DATABASE = "redi";
 
     /**
      * Returns JSON-LD from an URI of an author given.
@@ -32,7 +31,7 @@ public interface MongoService {
     public String getAuthor(String uri);
 
     public String getStatistics(String id);
-    
+
     public String getRelatedAuthors(String uri);
 
     /**
@@ -58,6 +57,26 @@ public interface MongoService {
         @Override
         public String toString() {
             return this.value;
+        }
+    }
+
+    public enum Database {
+        NAME;
+        private String dbname;
+        private final String redi = "redi";
+
+        private Database() {
+        }
+
+        public String getDBName() {
+            URL resource = getClass().getResource("/");
+            String path = resource.getPath();
+            String appName = path.substring(path.substring(0, path.indexOf("/WEB-INF")).lastIndexOf('/') + 1, path.indexOf("/WEB-INF"));
+            dbname = redi + "_" + appName;
+            if (appName.equals("ROOT")) {
+                dbname = redi;
+            }
+            return dbname;
         }
     }
 }
