@@ -58,7 +58,9 @@ public class GoogleScholarProviderService extends AbstractProviderService {
             firstname = names[0];
         }
 
-        lastname = lastname.split(" ")[0];
+        // (^\\h*)|(\\h*$) = Replace non breaking space (#160 ascii)
+        firstname = firstname.replaceAll("(^\\h*)|(\\h*$)","");
+        lastname = lastname.split(" ")[0].replaceAll("(^\\h*)|(\\h*$)","");
         for (String organization : organizations) {
             organization = organization.toLowerCase();
             String query = String.format("%s %s %s", firstname, lastname, organization)
