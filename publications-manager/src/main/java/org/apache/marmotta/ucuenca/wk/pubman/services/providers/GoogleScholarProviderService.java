@@ -59,8 +59,9 @@ public class GoogleScholarProviderService extends AbstractProviderService {
         }
 
         // (^\\h*)|(\\h*$) = Replace non breaking space (#160 ascii)
-        firstname = firstname.replaceAll("(^\\h*)|(\\h*$)","");
-        lastname = lastname.split(" ")[0].replaceAll("(^\\h*)|(\\h*$)","");
+        String pattern = "(^[\t\u00A0\u1680\u180e\u2000\u200a\u202f\u205f\u3000]*)|([\t\u00A0\u1680\u180e\u2000\u200a\u202f\u205f\u3000]*$)";
+        firstname = firstname.replaceAll(pattern, "");
+        lastname = lastname.split(" ")[0].replaceAll(pattern, "");
         for (String organization : organizations) {
             organization = organization.toLowerCase();
             String query = String.format("%s %s %s", firstname, lastname, organization)
