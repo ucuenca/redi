@@ -72,6 +72,7 @@ public class PubWebService {
     public static final String APPLICATIONJSON = "application/json";
     public static final String COLABORATORDATA = "reports/collaboratorsData";
     public static final String AUTHORDATA = "/reports/AuthorData";
+    public static final String SUBCL = "/reports/subclusterData";
 
     /*
      * Get Publications Data from Source and Load into Provider Graph
@@ -228,6 +229,18 @@ public class PubWebService {
         return Response.ok().entity(result).build();
 
     }
+    
+       @GET
+    @Path(SUBCL)
+    @Produces(APPLICATIONJSON)
+    public Response getSubClusterGraph(@QueryParam("cluster") String cl , @QueryParam("subcluster") String subcl) {
+
+        String result = commonService.getsubClusterGraph(cl , subcl);
+        //  result = organizationService.listOrganization();
+        return Response.ok().entity(result).build();
+
+    }
+    
 
     @GET
     @Path("publication/organization/disambiguationList")
@@ -346,6 +359,7 @@ public class PubWebService {
 
         return Response.ok().entity(result).build();
     }
+    
 
     @POST
     @Path(CENTRAL_GRAPH_PUBLICATIONS)
