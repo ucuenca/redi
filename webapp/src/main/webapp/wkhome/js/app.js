@@ -125,7 +125,9 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                   templateUrl: '/wkhome/partials/authorProfile.html',
                  // controller: 'AuthorProfile'
                 }).
-
+                when('/group/area/:area*/subarea/:subarea*', {
+                  templateUrl: '/wkhome/partials/genericSubClusterGraph.html',
+                }).
 
                 when('/:lang/w/search?:text', {//when user search an author in textbox
                     templateUrl: '/wkhome/partials/search.html',

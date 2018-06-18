@@ -52,5 +52,7 @@ public interface CommonService {
 
     String getAuthorDataProfile(String author);
 
+    public String getsubClusterGraph(String cl, String subcl);
+
 
 }

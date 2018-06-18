@@ -24,6 +24,15 @@ public class collaborator {
     private String organization;
     private String imgUri;
     private String lastName;
+    private String [] targets;
+
+    public String[] getTargets() {
+        return targets;
+    }
+
+    public void setTargets(String[] targets) {
+        this.targets = targets;
+    }
 
     public String getImgUri() {
         return imgUri;

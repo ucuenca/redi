@@ -506,6 +506,108 @@ public class CommonServiceImpl implements CommonService {
 
     }
 
+    @Override
+    public String getsubClusterGraph(String cluster, String subcluster) {
+        try {
+           // cluster = "http://skos.um.es/unesco6/1203";
+           // subcluster = "http://dbpedia.org/resource/Semantic_Web";
+            
+            String query = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                    + "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                    + "prefix schema: <http://schema.org/>  \n"
+                    + "prefix uc: <http://ucuenca.edu.ec/ontology#> \n"
+                    + "SELECT ?person (group_concat(DISTINCT ?s ; separator=\";\") as ?subjects ) (group_concat(DISTINCT ?orgname ; separator=\";\") as ?orgnames )  (group_concat(DISTINCT ?name ; separator=\";\") as ?names)  (group_concat(DISTINCT ?coauthor ; separator=\";\") as ?coauthors) "
+                    + "( SAMPLE (?lastname) as ?lastn) ( SAMPLE (?imgs) as ?img) WHERE {\n"
+                    // + "   GRAPH <https://redi.cedia.edu.ec/context/clusters> {\n"
+                    + "   GRAPH <"+con.getClusterGraph()+"> {\n"
+                    + " ?person dct:isPartOf <"+cluster+"> .\n"
+                    + "   ?person dct:isPartOf <"+subcluster+"> .\n"
+                    //   + "     GRAPH <https://redi.cedia.edu.ec/context/redi>  { \n"
+                    + "     GRAPH <"+con.getCentralGraph()+">  { \n"
+                    + "     ?person foaf:publications ?pub .\n"
+                    + "       ?pub dct:subject [rdfs:label ?s] .\n"
+                    + "      ?person foaf:name ?name .\n   "
+                    + "       OPTIONAL { ?person foaf:familyName ?lastname } ."
+                    + "       OPTIONAL {  ?person  foaf:img  ?imgs }  ."
+                    + "      ?person  schema:memberOf ?member .\n"
+                    + "      \n"
+                    + "       ?coauthor foaf:publications ?pub\n"
+                    + "     filter ( ?person != ?coauthor)            \n"
+                    + "     }\n"
+                    + "      GRAPH <"+con.getOrganizationsGraph()+">  { \n"
+                    // + "      GRAPH <https://redi.cedia.edu.ec/context/organization>  { \n"
+                    + "       ?member uc:name ?orgname \n"
+                    + "       }\n"
+                    + "     ?coauthor dct:isPartOf <"+cluster+"> .   \n"
+                    + "     ?coauthor dct:isPartOf <"+subcluster+"> .  \n"
+                    + "}\n"
+                    + "} GROUP by ?person ";
+            
+            List<Map<String, Value>> responseSubClAuthor = sparqlService.query(QueryLanguage.SPARQL, query);
+            List <collaborator> collaborators = new ArrayList ();
+            for (Map<String, Value> authors : responseSubClAuthor) {
+                //Author a = new Author ();
+                
+                String uri = authors.get("person").stringValue();
+                String names =   getUniqueName (authors.get("names").stringValue() ,";"); 
+                String lastname  = authors.get("lastn").stringValue(); 
+                String img ="";
+                if (authors.containsKey("img")){
+                 img  = authors.get("img").stringValue(); 
+                }
+              /*  String[] subjects = getRelevantTopics(authors.get("subjects").stringValue().split(";"));
+                String join = "";
+                for (String str :subjects){
+                  join = join+", "+str;
+                }   */
+                String subject = getSubjectAuthor( uri);
+                String orgs = authors.get("orgnames").stringValue();
+                String[] coauthors = authors.get("coauthors").stringValue().split(";");
+               collaborator cl = new collaborator ( uri ,  uri , names , lastname ,  orgs , subject);
+               cl.setTargets(coauthors);
+               cl.setImgUri(img);
+               collaborators.add(cl);
+                
+            }
+            
+            return coauthorsSubClToJson (collaborators);
+             
+        } catch (MarmottaException ex) {
+            java.util.logging.Logger.getLogger(CommonServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+
+    }
+    
+    
+     public String coauthorsSubClToJson(List <collaborator> collaborators) throws org.json.JSONException {
+        List<Map<String, String>> lnodes = new ArrayList();
+
+
+        List<Map<String, String>> llinks = new ArrayList();
+        for (collaborator cl : collaborators) {
+           Map newm = new HashMap();
+            newm.put("id", cl.getUri());
+            newm.put("group", cl.getOrganization());
+            newm.put("label", cl.getcName());
+            newm.put("lastname", cl.getLastName());
+            newm.put("img", cl.getImgUri());
+            newm.put("subject", cl.getSubjects());
+            lnodes.add(newm);
+            for (String target :cl.getTargets()) {
+            Map newlink = new HashMap();
+            newlink.put("source", cl.getUri());
+            newlink.put("target", target );
+            newlink.put("distance", "10");
+            newlink.put("coauthor", "true");
+            llinks.add(newlink);
+            }
+        }
+
+        return mergeJSON(listmapTojson(lnodes, "nodes"), listmapTojson(llinks, "links"), "nodes", "links");
+
+    }
+
     @Deprecated
     public String getCollaboratorsData(String uri, String nada) {
 
@@ -793,7 +895,7 @@ public class CommonServiceImpl implements CommonService {
             AuthorProfile a = new AuthorProfile();
             if (!responseAuthor.isEmpty()) {
                 a = proccessAuthor(responseAuthor);
-               //DEPRECATED
+                //DEPRECATED
               /*  List<Map<String, Value>> responsetopics = sparqlService.query(QueryLanguage.SPARQL, querytopics);
                  if (responsetopics.size() > 0 && !responsetopics.get(0).isEmpty()) {
                  String topics = responsetopics.get(0).get("topicls").stringValue();
@@ -856,7 +958,7 @@ public class CommonServiceImpl implements CommonService {
         Map<String, Value> author = responseAuthor.get(0);
 
         if (author.containsKey("names")) {
-            a.setName(getUniqueName(author.get("names").stringValue()));
+            a.setName(getUniqueName(author.get("names").stringValue(),"\\|"));
         }
 
         if (author.containsKey("orgnames")) {
@@ -903,11 +1005,11 @@ public class CommonServiceImpl implements CommonService {
         return a;
     }
 
-    private String getUniqueName(String names) {
+    private String getUniqueName(String names, String separator) {
         int tokenmax = 0;
         int lengthmax = 0;
         String candidate = "";
-        String[] listNames = names.split("\\|");
+        String[] listNames = names.split(separator);
 
         for (String name : listNames) {
             int tokens = name.split(" ").length;
@@ -940,13 +1042,14 @@ public class CommonServiceImpl implements CommonService {
     }
 
     private String[] getListOrg(String[] org) {
-        List<String> afiliations = new ArrayList<String>();
+        List<String> afiliations = new ArrayList();
         for (String af : org) {
+            if (af.split(";").length > 1){
             String uri = af.split(";")[0];
             String name = af.split(";")[1];
             if (!uri.contains(con.getBaseURI())) {
                 afiliations.add(name);
-            }
+            }}
         }
         return afiliations.toArray(new String[0]);
     }
