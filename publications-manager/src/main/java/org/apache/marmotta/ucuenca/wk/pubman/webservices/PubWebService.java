@@ -71,7 +71,6 @@ public class PubWebService {
     public static final String GET_SEARCH_QUERY = "/searchQuery";
     public static final String APPLICATIONJSON = "application/json";
     public static final String COLABORATORDATA = "reports/collaboratorsData";
-    public static final String AUTHORDATA = "/reports/AuthorData";
 
     /*
      * Get Publications Data from Source and Load into Provider Graph
@@ -213,17 +212,6 @@ public class PubWebService {
     public Response getCollaboratorsData(@QueryParam("URI") String uri) {
 
         String result = commonService.getCollaboratorsData(uri);
-        //  result = organizationService.listOrganization();
-        return Response.ok().entity(result).build();
-
-    }
-    
-    @GET
-    @Path(AUTHORDATA)
-    @Produces(APPLICATIONJSON)
-    public Response getProfile(@QueryParam("URI") String uri) {
-
-        String result = commonService.getAuthorDataProfile(uri);
         //  result = organizationService.listOrganization();
         return Response.ok().entity(result).build();
 

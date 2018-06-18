@@ -140,10 +140,10 @@ wkhomeServices.factory('Statistics', ['$resource', '$http', 'globalData',
           }
         ]);
 
-wkhomeServices.factory('queryProfile', ['$resource', '$http', 'globalData',
+wkhomeServices.factory('Authors', ['$resource', '$http', 'globalData',
           function($resource, $http, globalData) {
             var serverInstance = globalData.serverInstance;
-            return $resource(serverInstance + 'pubman/reports/AuthorData?URI=:id', {}, {
+            return $resource(serverInstance + 'mongo/author?uri=:id', {}, {
               query: {
                 method: 'GET',
                 params: {id: 'id'},

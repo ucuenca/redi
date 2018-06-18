@@ -1,4 +1,4 @@
-wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$window', 'globalData', 'sparqlQuery', 'queryProfile',
+wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$window', 'globalData', 'sparqlQuery', 'Authors',
   function($scope, $routeParams, $window, globalData, sparqlQuery, queryProfile) {
     // Define a new author object
     $scope.author = {};
@@ -9,12 +9,11 @@ wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$windo
     author.encodedUri = encodeURIComponent(author.uri);
     var newhost = $window.location.protocol + '//' + $window.location.hostname + ($window.location.port ? ':8080' : '') + '';
 
-    queryProfile.query({
+    Authors.query({
       id: author.uri
-    }, function(Result) {
-
-      $scope.author = Result;
-      var img = Result.img == null ? "/wkhome/images/no_photo.png" : Result.img;
+    }, function(data) {
+      $scope.author = data;
+      var img = data.img == null ? "/wkhome/images/no_photo.png" : data.img;
       $scope.author.img = img;
     });
 
