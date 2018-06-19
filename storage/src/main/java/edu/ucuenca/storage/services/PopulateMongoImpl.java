@@ -183,17 +183,11 @@ public class PopulateMongoImpl implements PopulateMongo {
                 String author = authorsRedi.get(i).get("a").stringValue();
                 // Print progress
                 log.info("Relating {} ", author);
-                log.info("Relating {}/{}. Author: '{}' ", i, authorsRedi.size(), author);
+                log.info("Relating {}/{}. Author: '{}' ", i + 1, authorsRedi.size(), author);
                 task.updateDetailMessage("URI", author);
-                task.updateProgress(i);
+                task.updateProgress(i + 1);
                 // Get and store author data (json) from SPARQL repository.
-                String profiledata = null;
-                try {
-                    profiledata = commonService.getAuthorDataProfile(author);
-                } catch (Exception ex) {
-                    log.error("Cannot get profile of author " + author, ex);
-                }
-//                String profiledata = commonService.getAuthorDataProfile(author);
+                String profiledata = commonService.getAuthorDataProfile(author);
                 Document parse = Document.parse(profiledata);
                 parse.append("_id", author);
                 collection.insertOne(parse);

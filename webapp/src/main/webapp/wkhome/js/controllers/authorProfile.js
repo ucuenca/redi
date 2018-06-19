@@ -1,5 +1,5 @@
 wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$window', 'globalData', 'sparqlQuery', 'Authors',
-  function($scope, $routeParams, $window, globalData, sparqlQuery, queryProfile) {
+  function($scope, $routeParams, $window, globalData, sparqlQuery, Authors) {
     // Define a new author object
     $scope.author = {};
     $scope.coauthors = {};
