@@ -62,6 +62,19 @@ public class MongoDBWebService {
     }
 
     @GET
+    @Path("/cluster")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCluster(@QueryParam("uri") String uri) throws FailMongoConnectionException {
+        String response;
+        try {
+            response = mongoService.getCluster(uri);
+        } catch (Exception e) {
+            throw new FailMongoConnectionException(String.format("Cannot retrieve cluster %s", uri), e);
+        }
+        return Response.ok().entity(response).build();
+    }
+
+    @GET
     @Path("/statistics")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getStatistics(@QueryParam("id") String id) throws FailMongoConnectionException {
@@ -80,7 +93,7 @@ public class MongoDBWebService {
         mongoService.connect();
         return Response.ok().build();
     }
-    
+
     @GET
     @Path("/relatedauthors")
     @Produces(MediaType.APPLICATION_JSON)

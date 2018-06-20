@@ -240,6 +240,39 @@ public class PopulateMongoImpl implements PopulateMongo {
     }
 
     @Override
+    public void clusters() {
+        Task task = taskManagerService.createSubTask("Caching clusters", "Mongo Service");
+        try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
+            MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
+
+            // Delete and create collection
+            MongoCollection<Document> collection = db.getCollection(MongoService.Collection.CLUSTERS.getValue());
+            collection.drop();
+
+            List<Map<String, Value>> clusters = sparqlService.query(QueryLanguage.SPARQL, queriesService.getClusterURIs());
+
+            task.updateTotalSteps(clusters.size());
+
+            for (int i = 0; i < clusters.size(); i++) {
+                String cluster = clusters.get(i).get("c").stringValue();
+                // Print progress
+                log.info("Relating {}/{}. Cluster: '{}' ", i + 1, clusters.size(), cluster);
+                task.updateDetailMessage("URI", cluster);
+                task.updateProgress(i + 1);
+                // Get and store author data (json) from SPARQL repository.
+                String clusterData = commonService.getCluster(cluster);
+                Document parse = Document.parse(clusterData);
+                parse.append("_id", cluster);
+                collection.insertOne(parse);
+            }
+        } catch (MarmottaException ex) {
+            log.error(ex.getMessage(), ex);
+        } finally {
+            taskManagerService.endTask(task);
+        }
+    }
+
+    @Override
     public void publications() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

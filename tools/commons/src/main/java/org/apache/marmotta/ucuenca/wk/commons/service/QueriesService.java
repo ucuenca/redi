@@ -377,4 +377,7 @@ public interface QueriesService {
     
     // Related authors
     String getAuthorsCentralGraph();
+    
+    // Clusters
+    String getClusterURIs();
 }

@@ -46,13 +46,13 @@ public interface CommonService {
     String organizationListEnrichment();
 
     List<Provider> getProviders() throws MarmottaException;
-    
-    String getCollaboratorsData (String uri);
 
+    String getCollaboratorsData(String uri);
 
     String getAuthorDataProfile(String author);
 
-    public String getsubClusterGraph(String cl, String subcl);
+    String getsubClusterGraph(String cl, String subcl);
 
+    String getCluster(String cl);
 
 }
