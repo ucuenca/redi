@@ -148,7 +148,6 @@ wkhomeControllers.controller('keywordsCloud', ['$translate', '$routeParams', '$s
 
 
     $scope.$watch('selectedItem', function() { //Funcion para cuando se selecciona la Research Area
-      debugger;
       if ($scope.selectedItem != undefined && $scope.selectedItem.length > 0) {
         waitingDialog.show();
         var queryKeywords = globalData.PREFIX
