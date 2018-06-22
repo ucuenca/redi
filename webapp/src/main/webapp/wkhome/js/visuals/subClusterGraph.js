@@ -103,14 +103,14 @@ var svg = d3.select("svg"),
 
 
 
-
+ //    .charge(-700)
 var simulation = d3.layout.force()
-            .gravity(0.05).
+            .gravity(0.09).
    linkDistance(function(d) {
     console.log (d);
        return distanceCalc(d.source.coautor);
     })
-            .charge(-700)
+              .charge(-600)
             .size([width, height]);
 
 function coauthorFactor (coauthor) {
@@ -136,6 +136,10 @@ function coauthorFactor (coauthor) {
 
 function showPopover(d) {
     console.log ("OVER");
+    console.log (d);
+
+    $( "line[id*='"+d.id+"']" ).css("stroke","#777171");
+
                 $(this).popover({
                     placement: 'top',
                     container: 'body',
@@ -151,10 +155,13 @@ function showPopover(d) {
                $(this).popover('show')
             }
 
- function removePopovers() {
+ function removePopovers(d) {
+   $( "line[id*='"+d.id+"']" ).css("stroke","#c9c3c3");
                 $('.popover').each(function () {
                     $(this).remove();
                 });
+
+                
             }
 
  
@@ -184,11 +191,14 @@ for(var g in graph.links) {
       .start();
 
   var link = svg.append("g")
-      .attr("class", "links")
+      .attr("class", "links_scl")
     .selectAll("line")
     .data(graph.links)
     .enter().append("line")
-      .attr("stroke-width", function(d) { return coauthorFactor (d.coauthor); });
+      .attr("stroke-width", function(d) { return coauthorFactor (d.coauthor); })
+      .attr("stroke", function(d) { return "#c9c3c3"; })
+      .attr("id", function(d) {   return d.source.id+" "+d.target.id; });
+  //  .attr("class", "subcluster");
 
      link.append("title")
   .text(function(d) { return  d.coauthor ?  "coauthor": ""; }); 
@@ -223,7 +233,7 @@ for(var g in graph.links) {
         showPopover.call(this, d);
                     }) 
         .on("mouseout", function (d) {
-                        removePopovers();
+                        removePopovers(d);
                     }); 
 
 

@@ -1,9 +1,23 @@
 
 
     <!--<div class='col-md-2' ng-include="'/wkhome/partials/mainmenu.html'"/> -->
-      <div class="col-md-12">
+      <div class="col-md-12" ng-controller="subCluster" >
+           <!--  <div class="row  justify-content-around" >
+            <div class="col-md-2">
+                <h3 class="text-success">{{'Select Research Area'| translate}}:</h3>
+                <select class="form-control" name="board" id="board" ng-change="changeCombo()" ng-model="areaCombo"  ng-options="key.id as key.tag for key  in relatedtags">
+                    <option value="">Select Area</option>
+                </select>
+            </div>
+              <div class="col-md-2 .offset-md-4">
+                <h3 class="text-success"> Area de investigación:</h3>
+                <select class="form-control" name="board" id="board" ng-change="changeCombo()" ng-model="areaCombo"  ng-options="key.id as key.tag for key  in relatedtags">
+                    <option value="">Select Area</option>
+                </select>
+            </div>
+         </div>-->
         <div class="row ">
-            <div class="col-md-12" ng-controller="subCluster" >
+            <div class="col-md-12"  >
 
                 <div class="head-pagetitle text-success" style="font-size: 30px">
                     <div id="title"  class="text-success"></div>
@@ -13,11 +27,26 @@
                 <div class="container"> 
 
                 <div class="row"> 
-                <div class="col-md-2" id="legendBox" >
+                  <div class="col-md-3 left-panel-subcl">
+                <div class="col-md-auto element-subcl">
+                <h3 class="text-success">{{'Select Research Area'| translate}}:</h3>
+                <select class="form-control" name="board" id="board" ng-change="changeCombo()" ng-model="areaCombo"  ng-options="key.id as key.tag for key  in relatedtags">
+                    <option value="">Select Area</option>
+                </select>
+                </div>
+                <div class="col-md-auto element-subcl">
+                <h3 class="text-success"> Areas de investigación :</h3>
+                <select class="form-control" name="board" id="subcluster" ng-change="changeCombo()" ng-model="areaCombo"  ng-options="key.id as key.tag for key  in subtags">
+                    <option value="">Select Area</option>
+                </select>
+                </div>
+
+                <div class="col-md-auto element-subcl" id="legendBox" >
+                </div>
                 <ul class="list-group" id="colores">
                 </ul>
                 </div> 
-                <div class="col-md-10">
+                <div class="col-md-9">
                 <svg width="960" height="600">
                      <text id="relatedArea" x="20%" y="50%" style="fill:gray;  font-size: 25px; display:none;">
                   NO DATA AVAILABLE
