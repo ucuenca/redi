@@ -66,6 +66,19 @@ public class LoadData {
     }
 
     @POST
+    @Path("/clusters")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getClusters() throws FailMongoConnectionException {
+        try {
+            loadService.clusters();
+        } catch (Exception e) {
+            log.error("Cannot load clusters into Mongo DB", e);
+            throw new FailMongoConnectionException(String.format("Cannot load clusters into Mongo DB"), e);
+        }
+        return Response.ok().entity("Clusters loaded successfully").build();
+    }
+
+    @POST
     @Path("/networks")
     @Produces(MediaType.APPLICATION_JSON)
     public Response loadNetworks() throws FailMongoConnectionException {

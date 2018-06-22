@@ -10,53 +10,11 @@ wkhomeControllers.controller('keywordsCloud', ['$translate', '$routeParams', '$s
       $scope.areas = [];
       _.map(data["@graph"], function(keyword) {
         $scope.areas.push({
-          tag: keyword["rdfs:label"]["@value"]
+          label: keyword["rdfs:label"]["@value"],
+          id: keyword["@id"]
         });
       });
     });
-
-    // if (!searchData.allkeywordsList) {
-    //   $scope.themes = [];
-    //   var queryKeywords = globalData.PREFIX
-    //     + 'CONSTRUCT { ?kw_ rdfs:label ?key } 	'
-    //     + ' WHERE {      '
-    //     + '  SELECT ?kw_ (COUNT(DISTINCT ?p) as ?tot) (SAMPLE(?kw) as ?key)'
-    //     + '  WHERE {              '
-    //     + '    GRAPH <' + globalData.centralGraph + '> {'
-    //     + '      ?author foaf:publications ?p.'
-    //     + '      ?p dct:subject ?kw_.              '
-    //     + '      ?kw_ rdfs:label ?kw.              '
-    //     + '      '
-    //     + '    }'
-    //     + '  } GROUP BY ?kw_     '
-    //     + '}';
-    //   sparqlQuery.querySrv({
-    //     query: queryKeywords
-    //   }, function(rdf) {
-    //     var context = {
-    //       "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-    //     };
-    //     jsonld.compact(rdf, globalData.CONTEXT, function(err, compacted) {
-    //       _.map(compacted["@graph"], function(pub) {
-    //         var model = {};
-    //         model["id"] = pub["@id"];
-    //         model["tag"] = pub["rdfs:label"];
-    //         $scope.themes.push({
-    //           tag: model["tag"]
-    //         });
-    //       });
-    //       $scope.$apply(function() {
-    //         searchData.allkeywordsList = $scope.themes;
-    //         $scope.relatedthemes = searchData.allkeywordsList;
-    //         $scope.selectedItem = "";
-    //       });
-    //
-    //     });
-    //   });
-    // } else {
-    //   $scope.relatedthemes = searchData.allkeywordsList;
-    //   $scope.selectedItem = "";
-    // }
 
     /**
      * Search for areas...
@@ -150,40 +108,36 @@ wkhomeControllers.controller('keywordsCloud', ['$translate', '$routeParams', '$s
       });
     };
 
-    if (!searchData.allkeywordsCloud) // if no load data by default
-    {
+    if (!searchData.allkeywordsCloud) {
       waitingDialog.show();
       var queryKeywords = globalData.PREFIX
-            + 'CONSTRUCT {  ?keyword rdfs:label ?k;  uc:total ?totalPub }  '
-            + 'FROM <' + globalData.centralGraph + '>  '
-            + 'WHERE {      '
-            + '  SELECT ?keyword (SAMPLE(?label) as ?k) (COUNT(DISTINCT ?publication) AS ?totalPub)      '
-            + '  WHERE {          '
-            + '    ?person foaf:publications ?publication.          '
-            + '    ?publication dcterms:subject  ?keyword.         '
-            + '    ?keyword rdfs:label ?label .      '
-            + '  }      GROUP BY ?keyword  LIMIT 50'
+            + 'CONSTRUCT {  ?area rdfs:label ?k;  uc:total ?totalAuthors } '
+            + 'WHERE {   '
+            + '  SELECT ?area (SAMPLE(?label) as ?k) (COUNT(DISTINCT ?authors) AS ?totalAuthors)'
+            + '  WHERE {'
+            + '    GRAPH <' + globalData.clustersGraph + '> { '
+            + '      ?area a uc:Cluster;'
+            + '            rdfs:label ?label.'
+            + '      ?authors dct:isPartOf ?area;'
+            + '               a foaf:Person. '
+            + '    } '
+            + '  } '
+            + '  GROUP BY ?area'
             + '}';
 
       sparqlQuery.querySrv({
         query: queryKeywords
       }, function(rdf) {
-        jsonld.compact(rdf, globalData.CONTEXT, function(err, compacted) {
+        jsonld.compact(rdf, globalData.CONTEXT, function(err, res) {
           $scope.$apply(function() {
-            $scope.data = {
-              schema: {
-                "context": globalData.CONTEXT,
-                fields: ["rdfs:label", "uc:total"]
-              },
-              data: compacted
-            };
-            searchData.allkeywordsCloud = {
-              schema: {
-                "context": globalData.CONTEXT,
-                fields: ["rdfs:label", "uc:total"]
-              },
-              data: compacted
-            };
+            $scope.data = [];
+            _.map(res["@graph"], function(area) {
+              $scope.data.push({
+                id: area["@id"],
+                label: area["rdfs:label"]["@value"],
+                value: area["uc:total"]["@value"]
+              });
+            });
             waitingDialog.hide();
           });
         });
@@ -194,38 +148,37 @@ wkhomeControllers.controller('keywordsCloud', ['$translate', '$routeParams', '$s
 
 
     $scope.$watch('selectedItem', function() { //Funcion para cuando se selecciona la Research Area
-      // $scope.selectedItemChange = function (item) {
       if ($scope.selectedItem != undefined && $scope.selectedItem.length > 0) {
         waitingDialog.show();
-        var queryKeywords = globalData.PREFIX +
-          'CONSTRUCT {  ?keyword_ rdfs:label ?lbl;  uc:total ?totalPub  }  ' +
-          'WHERE  {  ' +
-          'SELECT DISTINCT ?keyword_ (SAMPLE(?keyword) as ?lbl) (COUNT(DISTINCT(?publications)) AS ?totalPub) ' +
-          '  WHERE {     ' +
-          '    graph <' + globalData.centralGraph + '>         {         ' +
-          '    	?publications dcterms:subject ?keyword_.         ' +
-          '    	?keyword_ rdfs:label ?keyword' +
-          '  	} ' +
-          '    GRAPH <' + globalData.clustersGraph + '> {' +
-          '    	?area rdfs:label ?label;' +
-          '              foaf:publications ?publications.' +
-          '      	FILTER REGEX(?label, "' + $scope.selectedItem + '")' +
-          '    }' +
-          ' }  GROUP BY ?keyword_  LIMIT 50' +
-          '}';
+        var queryKeywords = globalData.PREFIX
+              + 'CONSTRUCT {  ?sc rdfs:label ?k;  uc:total ?totalAuthors }'
+              + 'WHERE {'
+              + '  SELECT ?sc (SAMPLE(?label) as ?k) (COUNT(DISTINCT ?authors) AS ?totalAuthors) '
+              + '  WHERE {'
+              + '    GRAPH <' + globalData.clustersGraph + '> { '
+              + '      <' + $scope.selectedItem + '> a uc:Cluster.'
+              + '      ?sc dct:isPartOf <' + $scope.selectedItem + '>;'
+              + '          a uc:SubCluster;'
+              + '          rdfs:label ?label.'
+              + '      ?authors a foaf:Person;'
+              + '                 dct:isPartOf ?sc. '
+              + '    }'
+              + '  } GROUP BY ?sc '
+              + '}';
 
         sparqlQuery.querySrv({
           query: queryKeywords
         }, function(rdf) {
-          jsonld.compact(rdf, globalData.CONTEXT, function(err, compacted) {
+          jsonld.compact(rdf, globalData.CONTEXT, function(err, res) {
             $scope.$apply(function() {
-              $scope.data = {
-                schema: {
-                  "context": globalData.CONTEXT,
-                  fields: ["rdfs:label", "uc:total"]
-                },
-                data: compacted
-              };
+              $scope.data = [];
+              _.map(res["@graph"], function(area) {
+                $scope.data.push({
+                  id: area["@id"],
+                  label: area["rdfs:label"]["@value"],
+                  value: area["uc:total"]["@value"]
+                });
+              });
               waitingDialog.hide();
             });
           });

@@ -1,7 +1,19 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package edu.ucuenca.storage.services;
 
@@ -183,9 +195,9 @@ public class PopulateMongoImpl implements PopulateMongo {
                 String author = authorsRedi.get(i).get("a").stringValue();
                 // Print progress
                 log.info("Relating {} ", author);
-                log.info("Relating {}/{}. Author: '{}' ", i, authorsRedi.size(), author);
+                log.info("Relating {}/{}. Author: '{}' ", i + 1, authorsRedi.size(), author);
                 task.updateDetailMessage("URI", author);
-                task.updateProgress(i);
+                task.updateProgress(i + 1);
                 // Get and store author data (json) from SPARQL repository.
                 String profiledata = commonService.getAuthorDataProfile(author);
                 Document parse = Document.parse(profiledata);
@@ -237,6 +249,39 @@ public class PopulateMongoImpl implements PopulateMongo {
             log.debug(w.getMessage(), w);
         }
         taskManagerService.endTask(task);
+    }
+
+    @Override
+    public void clusters() {
+        Task task = taskManagerService.createSubTask("Caching clusters", "Mongo Service");
+        try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
+            MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
+
+            // Delete and create collection
+            MongoCollection<Document> collection = db.getCollection(MongoService.Collection.CLUSTERS.getValue());
+            collection.drop();
+
+            List<Map<String, Value>> clusters = sparqlService.query(QueryLanguage.SPARQL, queriesService.getClusterURIs());
+
+            task.updateTotalSteps(clusters.size());
+
+            for (int i = 0; i < clusters.size(); i++) {
+                String cluster = clusters.get(i).get("c").stringValue();
+                // Print progress
+                log.info("Relating {}/{}. Cluster: '{}' ", i + 1, clusters.size(), cluster);
+                task.updateDetailMessage("URI", cluster);
+                task.updateProgress(i + 1);
+                // Get and store author data (json) from SPARQL repository.
+                String clusterData = commonService.getCluster(cluster);
+                Document parse = Document.parse(clusterData);
+                parse.append("_id", cluster);
+                collection.insertOne(parse);
+            }
+        } catch (MarmottaException ex) {
+            log.error(ex.getMessage(), ex);
+        } finally {
+            taskManagerService.endTask(task);
+        }
     }
 
     @Override

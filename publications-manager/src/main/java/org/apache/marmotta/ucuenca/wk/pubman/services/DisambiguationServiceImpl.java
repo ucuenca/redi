@@ -17,13 +17,12 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.UUID;
+import java.util.TreeSet;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.api.task.Task;
@@ -702,7 +701,8 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         coauthorsGroups.addAll(ls_alone);
 
         for (Set<String> eachGroup : coauthorsGroups) {
-            String eachGroupUUID = Cache.getMD5(UUID.randomUUID().toString());
+            String UUID = (new TreeSet<String>(eachGroup)).toString();
+            String eachGroupUUID = Cache.getMD5(UUID);
             String PossibleNewURI = constantService.getAuthorResource() + eachGroupUUID;
             String autUris = " ";
             for (String groupIndex : eachGroup) {
@@ -734,7 +734,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 }
                 if (!pros) {
                     if (!onlySameAs) {
-                        registerSameAsCheck(constantService.getCoauthorsSameAsGraph(), PossibleNewURI, groupIndex);
+                        registerSameAs(constantService.getCoauthorsSameAsGraph(), PossibleNewURI, groupIndex);
                     }
                 }
             }
@@ -846,10 +846,11 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         }
         publicationsGroups.addAll(ls_alone);
         for (Set<String> eachGroup : publicationsGroups) {
-            String eachGroupUUID = Cache.getMD5(UUID.randomUUID().toString());
+            String UUID = (new TreeSet<String>(eachGroup)).toString();
+            String eachGroupUUID = Cache.getMD5(UUID);
             String PossibleNewURI = constantService.getPublicationResource() + eachGroupUUID;
             for (String groupIndex : eachGroup) {
-                registerSameAsCheck(constantService.getPublicationsSameAsGraph(), PossibleNewURI, groupIndex);
+                registerSameAs(constantService.getPublicationsSameAsGraph(), PossibleNewURI, groupIndex);
             }
         }
     }

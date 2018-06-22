@@ -98,7 +98,7 @@ wkhomeServices.factory('reportService', ['$resource', '$http', 'globalData',
 wkhomeServices.factory('AuthorsService', ['$resource', '$http', 'globalData',
     function ($resource, $http, globalData) {
         var serverInstance = globalData.serverInstance;
-        return $resource(serverInstance + 'solr/authors/select?q=name%3A(:search)&wt=json&fl=lmf.uri,name,topics', {search:'@id'});
+        return $resource(serverInstance + 'solr/authors/select?q=name%3A(:search)&fq=org%3A*&wt=json&fl=lmf.uri,name,topics', {search:'@id'});
     }]);
 wkhomeServices.factory('PublicationsService', ['$resource', '$http', 'globalData',
     function ($resource, $http, globalData) {
@@ -140,10 +140,10 @@ wkhomeServices.factory('Statistics', ['$resource', '$http', 'globalData',
           }
         ]);
 
-wkhomeServices.factory('queryProfile', ['$resource', '$http', 'globalData',
+wkhomeServices.factory('Authors', ['$resource', '$http', 'globalData',
           function($resource, $http, globalData) {
             var serverInstance = globalData.serverInstance;
-            return $resource(serverInstance + 'pubman/reports/AuthorData?URI=:id', {}, {
+            return $resource(serverInstance + 'mongo/author?uri=:id', {}, {
               query: {
                 method: 'GET',
                 params: {id: 'id'},

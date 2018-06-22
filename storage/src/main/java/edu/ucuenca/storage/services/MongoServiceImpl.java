@@ -48,6 +48,7 @@ public class MongoServiceImpl implements MongoService {
     private MongoCollection<Document> authors;
     private MongoCollection<Document> statistics;
     private MongoCollection<Document> relatedauthors;
+    private MongoCollection<Document> clusters;
 
     @PostConstruct
     public void initialize() throws FailMongoConnectionException {
@@ -64,6 +65,7 @@ public class MongoServiceImpl implements MongoService {
         authors = db.getCollection(Collection.AUTHORS.getValue());
         relatedauthors = db.getCollection(Collection.RELATEDAUTHORS.getValue());
         statistics = db.getCollection(Collection.STATISTICS.getValue());
+        clusters = db.getCollection(Collection.CLUSTERS.getValue());
     }
 
     @Override
@@ -82,6 +84,13 @@ public class MongoServiceImpl implements MongoService {
     @Override
     public String getRelatedAuthors(String uri) {
         return relatedauthors.find(eq("_id", uri))
+                .first()
+                .toJson();
+    }
+
+    @Override
+    public String getCluster(String uri) {
+        return clusters.find(eq("_id", uri))
                 .first()
                 .toJson();
     }

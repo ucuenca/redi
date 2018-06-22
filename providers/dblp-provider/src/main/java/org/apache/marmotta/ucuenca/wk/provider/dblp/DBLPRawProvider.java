@@ -129,7 +129,10 @@ public class DBLPRawProvider extends AbstractHttpProvider {
             url = resource;
         } else {
             Preconditions.checkState(StringUtils.isNotBlank(resource));
-            String id = URLDecoder.decode(resource.substring(resource.lastIndexOf('/') + 1));
+            String query = resource.substring(resource.lastIndexOf('/') + 1);
+            //remove special character ’ which is not supported by DBLP
+            query = query.replaceAll("%E2%80%99", "");
+            String id = URLDecoder.decode(query);
             url = String.format(SEARCHAPI, URLEncoder.encode(id.replace('_', ' ').replace('-', '|')));
         }
         return Collections.singletonList(url);

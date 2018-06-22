@@ -68,8 +68,9 @@ import org.openrdf.model.vocabulary.OWL;
  * Author: Jose Ortiz
  */
 public class ScieloRawProvider extends AbstractHttpProvider {
-    
+
     private static Logger log = LoggerFactory.getLogger(ScieloRawProvider.class);
+    public static final int MAX_RESULTS = 1000;
     public static final String NAME = "Scielo Raw Provider";
     public static final String PATTERN = "https://search\\.scielo\\.org/search/.*";
     public static final String SEARCHAPI = "https://search.scielo.org/?q=%s&output=xml";
@@ -130,7 +131,7 @@ public class ScieloRawProvider extends AbstractHttpProvider {
         url = String.format(SEARCHAPI, URLEncoder.encode(createSolrQuery(id)));
         return Collections.singletonList(url);
     }
-    
+
     @Override
     public List<String> parseResponse(String resource, String requestUrl, Model triples, InputStream input, String contentType) throws DataRetrievalException {
         log.debug("Request Successful to {0}", requestUrl);
@@ -141,7 +142,7 @@ public class ScieloRawProvider extends AbstractHttpProvider {
         }
         return Collections.emptyList();
     }
-    
+
     private List<String> parseDocs(String requestUrl, InputStream input, Model triplesx) throws NumberFormatException, DataRetrievalException {
         try {
             Model triples = new LinkedHashModel();
@@ -191,7 +192,7 @@ public class ScieloRawProvider extends AbstractHttpProvider {
             mapProperty(triples, parse, SCIELOBASEPUBLICATION + code, SCIELOPREFIX + "publisher", "$.article.v62[*]._", null, null, false);
             mapProperty(triples, parse, SCIELOBASEPUBLICATION + code, SCIELOPREFIX + SN, "$.article.v435[*]._", null, null, false);
             mapProperty(triples, parse, SCIELOBASEPUBLICATION + code, SCIELOPREFIX + SN, "$.article.v936[*].i", null, null, false);
-            
+
             mapProperty(triples, parse, SCIELOBASEAUTHOR + code, SCIELOPREFIX + "fname", "$.article.v10[*].s", null, null, true);
             mapProperty(triples, parse, SCIELOBASEAUTHOR + code, SCIELOPREFIX + "gname", "$.article.v10[*].n", null, null, true);
             mapProperty(triples, parse, SCIELOBASEAUTHOR + code, SCIELOPREFIX + "aff", "$.article.v10[*]['1']", SCIELOBASEAFFILIATION + code, null, true);
@@ -212,20 +213,20 @@ public class ScieloRawProvider extends AbstractHttpProvider {
             mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + AFFNAME, AFFIDPATH2, "$.article.v240[*].3", null);
             mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + AFFNAME, AFFIDPATH1, "$.article.v70[*].9", null);
             mapRelation(triples, parse, SCIELOBASEAFFILIATION + code, SCIELOPREFIX + AFFNAME, AFFIDPATH2, "$.article.v240[*].9", null);
-            
+
             Model unmodifiable = triples.unmodifiable();
-            
+
             Model filter = unmodifiable.filter(null, instance.createURI(SCIELOPREFIX + "fname"), null);
             Model filter1 = unmodifiable.filter(null, instance.createURI(SCIELOPREFIX + "gname"), null);
             Model filter2 = unmodifiable.filter(null, instance.createURI(SCIELOPREFIX + "email"), null);
             Model filter3 = unmodifiable.filter(null, instance.createURI(SCIELOPREFIX + "aff"), null);
-            
+
             Model t = new LinkedHashModel();
             t.addAll(filter);
             t.addAll(filter1);
             t.addAll(filter2);
             t.addAll(filter3);
-            
+
             Model t2 = new LinkedHashModel();
             for (Resource r : t.subjects()) {
                 t2.add(instance.createURI(SCIELOBASEPUBLICATION + code), instance.createURI(SCIELOPREFIX + "contributor"), r);
@@ -238,10 +239,10 @@ public class ScieloRawProvider extends AbstractHttpProvider {
         } catch (IOException ex) {
             throw new DataRetrievalException("Error while parsing response", ex);
         }
-        
+
         return Collections.emptyList();
     }
-    
+
     private List<String> parseSearchDocs(String requestUrl, InputStream input, String resource, Model triples) throws NumberFormatException, DataRetrievalException {
         List<String> docsURLs = new ArrayList<>();
         String pageControl = "&from=%s&count=15";
@@ -256,6 +257,10 @@ public class ScieloRawProvider extends AbstractHttpProvider {
                         String value = element.getAttributeValue("numFound");
                         max = Integer.parseInt(value);
                     }
+                }
+                if (max > MAX_RESULTS) {
+                    log.warn("Results found {}, limiting to {} for URI {}", max, MAX_RESULTS, resource);
+                    max = MAX_RESULTS;
                 }
                 List<String> e = new ArrayList<>();
                 for (int i = 1; i <= max; i += 15) {
@@ -291,16 +296,16 @@ public class ScieloRawProvider extends AbstractHttpProvider {
         }
         return docsURLs;
     }
-    
+
     protected static List<Element> queryElements(Document n, String query) {
         return XPathFactory.instance().compile(query, new ElementFilter()).evaluate(n);
     }
-    
+
     private String getExtractName(String resource) {
         String id = URLDecoder.decode(resource.substring(resource.lastIndexOf('/') + 1));
         return id.replaceAll("_", " ").replaceAll("-", " ");
     }
-    
+
     private String createSolrQuery(String id) {
         String[] split = id.split("_");
         String query = "";
@@ -314,18 +319,18 @@ public class ScieloRawProvider extends AbstractHttpProvider {
                 queryP += tk.toLowerCase() + (j == ls.size() - 1 ? " " : " OR ");
             }
             queryP += ")";
-            
+
             query += queryP + (i == split.length - 1 ? " " : " AND ");
         }
         return "au:(" + query + ")";
     }
-    
+
     private String getValueXML(Element m, String key) {
         List<String> values = getValuesXML(m, key);
         assert values.size() == 1;
         return values.get(0);
     }
-    
+
     private List<String> getValuesXML(Element m, String key) {
         List<String> v = new ArrayList<>();
         List<Element> children = m.getChildren();
@@ -339,20 +344,20 @@ public class ScieloRawProvider extends AbstractHttpProvider {
                         v.add(aE2.getText());
                     }
                 }
-                
+
             }
         }
         return v;
     }
-    
+
     private List<String> readJsonStr(DocumentContext jsonDocument, String query) {
         return jsonDocument.read(query);
     }
-    
+
     private List<LinkedHashMap<String, String>> readJsonObj(DocumentContext jsonDocument, String query) {
         return jsonDocument.read(query);
     }
-    
+
     private void mapRelation(Model model, DocumentContext document, String subject, String property, String query1, String query2, String lang) {
         ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
         List<String> gValues = readJsonStr(document, query1);
@@ -375,7 +380,7 @@ public class ScieloRawProvider extends AbstractHttpProvider {
             model.add(createIRI, createIRI1, createLiteral);
         }
     }
-    
+
     private void mapProperty(Model model, DocumentContext document, String subject, String property, String query, String prefixObject, String lang, boolean addSequence) {
         ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
         List<String> gValues = readJsonStr(document, query);
@@ -398,12 +403,12 @@ public class ScieloRawProvider extends AbstractHttpProvider {
                 } else {
                     createLiteral = instance.createURI(prefixObject + "_" + URLEncoder.encode(v));
                 }
-                
+
             }
             model.add(createIRI, createIRI1, createLiteral);
         }
     }
-    
+
     private void mapEmail(Model triples, DocumentContext parse2, String code, String q) {
         ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
         List<LinkedHashMap<String, String>> affData = readJsonObj(parse2, q);
@@ -444,7 +449,7 @@ public class ScieloRawProvider extends AbstractHttpProvider {
             matchEmails(per, k, emails, code, triples, instance);
         }
     }
-    
+
     private void matchEmails(List<Set<String>> per, int k, ConcurrentHashMap<String, Queue<String>> emails, String code, Model triples, ValueFactoryImpl instance) {
         Set<String> affls = per.get(k);
         for (String oaff : affls) {
@@ -460,11 +465,11 @@ public class ScieloRawProvider extends AbstractHttpProvider {
             }
         }
     }
-    
+
     private String extractDocCode(String resource) {
         return URLDecoder.decode(resource.substring(resource.lastIndexOf('=') + 1));
     }
-    
+
     protected Configuration getConfiguration() {
         return Configuration.defaultConfiguration()
                 .addOptions(Option.ALWAYS_RETURN_LIST)
