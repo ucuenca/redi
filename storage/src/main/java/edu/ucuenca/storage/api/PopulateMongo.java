@@ -31,4 +31,9 @@ public interface PopulateMongo {
      * Pre-calculate information to network building.
      */
     public void networks();
+
+    /**
+     * Information of clusters and subclusters.
+     */
+    public void clusters();
 }

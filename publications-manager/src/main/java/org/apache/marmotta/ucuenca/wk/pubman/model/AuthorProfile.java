@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package org.apache.marmotta.ucuenca.wk.pubman.services;
+package org.apache.marmotta.ucuenca.wk.pubman.model;
 
 /**
  *

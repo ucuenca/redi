@@ -443,14 +443,7 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
                         //	Update	the	chart
                         var data = scope.data;
                         if (data) {
-                            var jsonld = data.data;
-                            var schema = data.schema;
-                            var fields = schema.fields;
-                            var mappedData = [];
-                            _.each(jsonld['@graph'], function (keyword, idx) {
-                                mappedData.push({label: keyword[fields[0]], value: keyword[fields[1]]["@value"]});
-                            });
-                            draw(svg, width, height, mappedData, scope, attrs);
+                            draw(svg, width, height, data, scope, attrs);
                         }
                     }, true);
                 };

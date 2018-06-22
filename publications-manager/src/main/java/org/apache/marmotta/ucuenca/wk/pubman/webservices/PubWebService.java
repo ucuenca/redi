@@ -71,7 +71,8 @@ public class PubWebService {
     public static final String GET_SEARCH_QUERY = "/searchQuery";
     public static final String APPLICATIONJSON = "application/json";
     public static final String COLABORATORDATA = "reports/collaboratorsData";
-    public static final String AUTHORDATA = "/reports/AuthorData";
+
+    public static final String SUBCL = "/reports/subclusterData";
 
     /*
      * Get Publications Data from Source and Load into Provider Graph
@@ -206,7 +207,7 @@ public class PubWebService {
         return Response.ok().entity(result).build();
 
     }
-    
+
     @GET
     @Path(COLABORATORDATA)
     @Produces(APPLICATIONJSON)
@@ -217,13 +218,13 @@ public class PubWebService {
         return Response.ok().entity(result).build();
 
     }
-    
-    @GET
-    @Path(AUTHORDATA)
-    @Produces(APPLICATIONJSON)
-    public Response getProfile(@QueryParam("URI") String uri) {
 
-        String result = commonService.getAuthorDataProfile(uri);
+    @GET
+    @Path(SUBCL)
+    @Produces(APPLICATIONJSON)
+    public Response getSubClusterGraph(@QueryParam("cluster") String cl, @QueryParam("subcluster") String subcl) {
+
+        String result = commonService.getsubClusterGraph(cl, subcl);
         //  result = organizationService.listOrganization();
         return Response.ok().entity(result).build();
 

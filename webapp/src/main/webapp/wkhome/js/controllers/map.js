@@ -14,137 +14,39 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
           $scope.relatedtags = [];
           _.map(data["@graph"], function(keyword) {
             $scope.relatedtags.push({
-              tag: keyword["rdfs:label"]["@value"]
+              id: keyword["@id"],
+              value: keyword["rdfs:label"]["@value"]
             });
           });
         });
-        // if (!searchData.allkeywords)
-        // {
-        //     waitingDialog.show("Loading Research Areas");
-        //     var queryKeywords = globalData.PREFIX
-        //             + ' CONSTRUCT { ?keyword rdfs:label ?key } '
-        //             + ' WHERE { '
-        //             + '     SELECT  (count(?pubs) as ?total) ' //(SAMPLE(?keyword) as ?keywordp) (SAMPLE(?key) as ?keyp)  '
-        //             + '     WHERE { '
-        //             + '         graph <'+globalData.centralGraph+'> {'
-        //             + '             ?subject foaf:publications ?pubs. '
-        //             //+ '           ?subject dct:subject ?key. '
-        //             + '             ?pubs dcterms:subject ?keywordSubject. '
-        //             + '             ?keywordSubject rdfs:label ?key. '
-        //             + '             BIND(REPLACE(?key, " ", "_", "i") AS ?unickey). '
-        //             + '             BIND(IRI(?unickey) as ?keyword) '
-        //             + '         }'
-        //             + '     } '
-        //             + '     GROUP BY ?keyword  ?key '
-        //             //+ '     GROUP BY ?subject'
-        //
-        //             + '     HAVING(?total > 4) ' //si la keyword aparece en mas de 5 publicaciones
-        //             + '}';
-        //     sparqlQuery.querySrv({query: queryKeywords}, function (rdf) {
-        //         jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
-        //             _.map(compacted["@graph"], function (pub) {
-        //                 var model = {};
-        //                 model["id"] = pub["@id"];
-        //                 model["tag"] = pub["rdfs:label"];
-        //                 $scope.themes.push({tag: model["tag"]});
-        //             });
-        //             $scope.$apply(function () {
-        //                 $scope.relatedtags = $scope.themes;
-        //                 $scope.selectedTagItem = 'Semantic Web';
-        //                 searchData.allkeywords = $scope.themes;
-        //             });
-        //             waitingDialog.hide();
-        //         });
-        //     });
-        // }
-        // else
-        // {
-        //     $scope.relatedtags = searchData.allkeywords;
-        //     $scope.selectedTagItem = 'Semantic Web';
-        // }
-
-
 
         //default selectedTagItem =  Semantic Web  - > see in app.js
         $scope.$watch('selectedTagItem', function () {
-            //alert($scope.selectedItem);
             if ($scope.selectedTagItem) {
 
             waitingDialog.show("Consultando Ubicacion de Autores Relacionados con:  \"" + $scope.selectedTagItem + "\"");
-            var queryBySource = globalData.PREFIX +
-            "CONSTRUCT {                      " +
-            "?org dcterms:subject ?label_;             " +
-            " uc:totalpublications ?totPub;             " +
-            "   ?b ?c.  } where { " +
-            "SELECT ?org ?b ?c  (count(DISTINCT ?pub) as ?totPub) (SAMPLE(?label) as ?label_) " +
-            "WHERE { " +
-            "  GRAPH  <"+globalData.clustersGraph+">{ " +
-            "   " +
-            "  ?clu rdfs:label  ?label . " +
-            "  FILTER REGEX(?label, '"+$scope.selectedTagItem+"') . " +
-            "   ?clu foaf:publications ?pub . " +
-            "    ?pub uc:hasPerson  ?author . " +
-            "     " +
-            "       GRAPH <"+ globalData.centralGraph +"> { " +
-            "      ?author schema:memberOf  ?org . " +
-            "         GRAPH   <"+ globalData.organizationsGraph+"> { " +
-            "         ?org ?b ?c " +
-            "         } " +
-            "       } " +
-            "         } " +
-            "} GROUP BY ?org ?b ?c " +
-            "           }";
-
-
-
-
-
-                  /*  + 'CONSTRUCT {            '
-                    + '         ?org dcterms:subject ?label_;'
-                    + '              uc:totalpublications ?totPub;'
-                    + '              ?b ?c.'
-                    + '} WHERE { '
-                    + '  {	'
-                    + '    SELECT ?org (count(DISTINCT ?publications) as ?totPub) (SAMPLE(?label) as ?label_)'
-                    + '     WHERE {             '
-                    + '       GRAPH <' + globalData.centralGraph + '>  {                   	'
-                    + '         [] foaf:publications ?publications;'
-                    + '                   schema:memberOf ?org.	'
-                    + '       }    '
-                    + '       GRAPH <' + globalData.clustersGraph + '> {   		'
-                    + '         [] foaf:publications ?publications;'
-                    + '                rdfs:label ?label.      '
-                    + '         FILTER REGEX(?label, "' + $scope.selectedTagItem + '")    '
-                    + '       }          '
-                    + '     } GROUP BY ?org'
-                    + '  }'
-                    + '  {'
-                    + '     GRAPH <' + globalData.organizationsGraph + '> {   		'
-                    + '       ?org ?b ?c.                        '
-                    + '     }    '
-                    + '  }'
-                    + '}';*/
-                    // + 'CONSTRUCT {          '
-                    // + '  ?org dcterms:subject ?label_;'
-                    // + '              uc:totalpublications ?totPub;'
-                    // + '              ?b_ ?c_.'
-                    // + '} WHERE {     '
-                    // + '  SELECT ?org ?area (count(DISTINCT ?publications) as ?totPub) (SAMPLE(?label) as ?label_) (SAMPLE(?b) as ?b_) (SAMPLE(?c) as ?c_)'
-                    // + '  WHERE {         '
-                    // + '    GRAPH <' + globalData.centralGraph + '>  {             '
-                    // + '      	[] foaf:publications ?publications;'
-                    // + '                 schema:memberOf ?org.'
-                    // + '	}'
-                    // + '    GRAPH <' + globalData.clustersGraph + '> {'
-                    // + '   		?area foaf:publications ?publications;'
-                    // + '              rdfs:label ?label.'
-                    // + '      FILTER REGEX(?label, "' + $scope.selectedTagItem + '")'
-                    // + '    } '
-                    // + '    GRAPH <' + globalData.organizationsGraph + '> {'
-                    // + '   		?org ?b ?c;'
-                    // + '    }       '
-                    // + '  } GROUP BY ?org ?area'
-                    // + '}';
+            var queryBySource = globalData.PREFIX
+                + 'CONSTRUCT {'
+                + '  ?org dcterms:subject ?label_;'
+                + '       uc:totalpublications ?totAuth;'
+                + '       ?b ?c.'
+                + '} WHERE {'
+                + '  SELECT ?org ?b ?c  (count(DISTINCT ?author) as ?totAuth) (SAMPLE(?label) as ?label_)'
+                + '  WHERE {   '
+                + '    GRAPH  <' + globalData.clustersGraph + '>{   '
+                + '      <' + $scope.selectedTagItem + '> a uc:Cluster;'
+                + '           rdfs:label  ?label .'
+                + '      ?author dct:isPartOf <' + $scope.selectedTagItem + '>;'
+                + '               a foaf:Person.'
+                + '    }'
+                + '    GRAPH <' + globalData.centralGraph + '> {  '
+                + '        ?author schema:memberOf  ?org .'
+                + '    }'
+                + '    GRAPH   <' + globalData.organizationsGraph + '> { '
+                + '		      ?org ?b ?c '
+                + '    }'
+                + '  } GROUP BY ?org ?b ?c '
+                + '}';
 
             $scope.publicationsBySource = [];
             sparqlQuery.querySrv({query: queryBySource},

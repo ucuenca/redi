@@ -1756,4 +1756,15 @@ public class QueriesServiceImpl implements QueriesService {
                 + "}";
     }
 
+    @Override
+    public String getClusterURIs() {
+        return PREFIXES
+                + "SELECT distinct *\n"
+                + "WHERE {\n"
+                + "  GRAPH <" + con.getClusterGraph() + "> {\n"
+                + "    ?c a uc:Cluster\n"
+                + "  }\n"
+                + "}";
+    }
+
 }

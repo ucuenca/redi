@@ -33,8 +33,8 @@ wkhomeApp.service('searchData', function () {
 });
 
 wkhomeApp.service('globalData', ['$window', function ($window) {
-    //  var baseURL = "http://redi.cedia.edu.ec/";
      var baseURL = $window.location.origin + $window.location.pathname;
+    //  baseURL = baseURL.replace("http","https").replace(":" + $window.location.port, "");
      this.serverInstance=baseURL;
      baseURL = baseURL.replace("clon","");
      baseURL = baseURL.replace("localhost:8080","redi.cedia.edu.ec");
@@ -125,7 +125,9 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                   templateUrl: '/wkhome/partials/authorProfile.html',
                  // controller: 'AuthorProfile'
                 }).
-
+                when('/group/area/:area*/subarea/:subarea*', {
+                  templateUrl: '/wkhome/partials/genericSubClusterGraph.html',
+                }).
 
                 when('/:lang/w/search?:text', {//when user search an author in textbox
                     templateUrl: '/wkhome/partials/search.html',

@@ -4,13 +4,13 @@
  * and open the template in the editor.
  */
 
-package org.apache.marmotta.ucuenca.wk.pubman.services;
+package org.apache.marmotta.ucuenca.wk.pubman.model;
 
 /**
  *
  * @author joe
  */
-public class collaborator {
+public class Collaborator {
     private String authorBase ;
     private String uri ;
     private Double subjectScore;
@@ -24,6 +24,15 @@ public class collaborator {
     private String organization;
     private String imgUri;
     private String lastName;
+    private String [] targets;
+
+    public String[] getTargets() {
+        return targets;
+    }
+
+    public void setTargets(String[] targets) {
+        this.targets = targets;
+    }
 
     public String getImgUri() {
         return imgUri;
@@ -52,7 +61,7 @@ public class collaborator {
         this.lastName = lastName;
     }
     
-     public  collaborator (String authorBase , String uri , String cName , String lName,  String org , String Subjects ){
+     public  Collaborator (String authorBase , String uri , String cName , String lName,  String org , String Subjects ){
    this.authorBase = authorBase;
    this.uri = uri;
    this.cName = cName ;
@@ -61,7 +70,7 @@ public class collaborator {
    this.lastName = lName;
    }
    
-   public  collaborator (String authorBase , String uri , String cName , String lName,  Double subjectScore ,Boolean coauthor, Boolean cluster , String org , String Subjects ){
+   public  Collaborator (String authorBase , String uri , String cName , String lName,  Double subjectScore ,Boolean coauthor, Boolean cluster , String org , String Subjects ){
    this.authorBase = authorBase;
    this.uri = uri;
    this.cName = cName ;
