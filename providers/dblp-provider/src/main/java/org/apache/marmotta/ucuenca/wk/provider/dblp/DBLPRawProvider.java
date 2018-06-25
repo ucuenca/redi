@@ -131,7 +131,8 @@ public class DBLPRawProvider extends AbstractHttpProvider {
             Preconditions.checkState(StringUtils.isNotBlank(resource));
             String query = resource.substring(resource.lastIndexOf('/') + 1);
             //remove special character ’ which is not supported by DBLP
-            query = query.replaceAll("%E2%80%99", "");
+            query = query.replaceAll("%E2%80%99", "'"); // Ex. A'mir
+            query = query.replaceAll("%E2%80%93", "-"); //Ex. Gomez-Lopes
             String id = URLDecoder.decode(query);
             url = String.format(SEARCHAPI, URLEncoder.encode(id.replace('_', ' ').replace('-', '|')));
         }
