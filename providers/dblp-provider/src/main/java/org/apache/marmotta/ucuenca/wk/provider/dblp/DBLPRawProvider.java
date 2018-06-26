@@ -76,8 +76,10 @@ public class DBLPRawProvider extends AbstractHttpProvider {
     public static final String SERVICE_PATTERN = "http://dblp\\.uni\\-trier\\.de/search/author/api\\?q\\=(.*)(\\&format\\=xml)?$";
     public static ConcurrentMap<String, String> dblpNamespaces = new ConcurrentHashMap<String, String>();
     private static final String DBLP = "dblp";
+    private static final String DBLPS = "dblps";
 
     static {
+        dblpNamespaces.put("dblps", "https://dblp.org/rdf/schema-2017-04-18#");
         dblpNamespaces.put("dblp", "http://dblp.org/rdf/schema-2017-04-18#");
         dblpNamespaces.put("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
         dblpNamespaces.put("owl", "http://www.w3.org/2002/07/owl#");
@@ -197,7 +199,11 @@ public class DBLPRawProvider extends AbstractHttpProvider {
         } catch (IOException e) {
             throw new DataRetrievalException("I/O error while parsing response", e);
         }
-        Model publications = triples.filter(null, factory.createURI(dblpNamespaces.get(DBLP) + "authorOf"), null);
+        Model publications = new LinkedHashModel();
+        Model publications1 = triples.filter(null, factory.createURI(dblpNamespaces.get(DBLP) + "authorOf"), null);
+        publications.addAll(publications1);
+        Model publications2 = triples.filter(null, factory.createURI(dblpNamespaces.get(DBLPS) + "authorOf"), null);
+        publications.addAll(publications2);
         Set<Value> resources = publications.objects();
         for (Value dblpResource : resources) {
             String resourceDoc = ((Resource) dblpResource).stringValue();
@@ -217,7 +223,11 @@ public class DBLPRawProvider extends AbstractHttpProvider {
             ValueFactory factory = ValueFactoryImpl.getInstance();
             ModelCommons.add(triples, input, dblpNamespaces.get("dblp"), RDFFormat.RDFXML);
             Model unmodifiable = triples.unmodifiable();
-            Model coauthors = unmodifiable.filter(null, factory.createURI(dblpNamespaces.get(DBLP) + "authoredBy"), null);
+            Model coauthors = new LinkedHashModel();
+            Model coauthors1 = unmodifiable.filter(null, factory.createURI(dblpNamespaces.get(DBLP) + AUTHORED_BY), null);
+            coauthors.addAll(coauthors1);
+            Model coauthors2 = unmodifiable.filter(null, factory.createURI(dblpNamespaces.get(DBLPS) + AUTHORED_BY), null);
+            coauthors.addAll(coauthors2);
             Set<Value> coauthorsList = coauthors.objects();
             ConcurrentHashMap<String, String> lfn = new ConcurrentHashMap();
             ConcurrentHashMap<String, String> lln = new ConcurrentHashMap();
@@ -242,7 +252,11 @@ public class DBLPRawProvider extends AbstractHttpProvider {
             for (Map.Entry<String, String> en : lffn.entrySet()) {
                 triples.add(factory.createURI(en.getKey()), factory.createURI(dblpNamespaces.get(DBLP) + "otherFullPersonName"), factory.createLiteral(en.getValue()));
             }
-            Model superpublication = unmodifiable.filter(null, factory.createURI(dblpNamespaces.get(DBLP) + "publishedAsPartOf"), null);
+            Model superpublication = new LinkedHashModel();
+            Model superpublication1 = unmodifiable.filter(null, factory.createURI(dblpNamespaces.get(DBLP) + "publishedAsPartOf"), null);
+            superpublication.addAll(superpublication1);
+            Model superpublication2 = unmodifiable.filter(null, factory.createURI(dblpNamespaces.get(DBLPS) + "publishedAsPartOf"), null);
+            superpublication.addAll(superpublication2);
             Set<Value> pubList = superpublication.objects();
             for (Value superp : pubList) {
                 String supURI = ((Resource) superp).stringValue();
@@ -258,6 +272,7 @@ public class DBLPRawProvider extends AbstractHttpProvider {
         }
         return lsl;
     }
+    private static final String AUTHORED_BY = "authoredBy";
 
     protected static List<Element> queryElements(Document n, String query) {
         return XPathFactory.instance().compile(query, new ElementFilter()).evaluate(n);
@@ -266,7 +281,11 @@ public class DBLPRawProvider extends AbstractHttpProvider {
     private void addCreator(Model triples) {
         ValueFactory factory = ValueFactoryImpl.getInstance();
         Model unmodifiable = triples.unmodifiable();
-        Model coauthors = unmodifiable.filter(null, factory.createURI(dblpNamespaces.get(DBLP) + "authoredBy"), null);
+        Model coauthors = new LinkedHashModel();
+        Model coauthors1 = unmodifiable.filter(null, factory.createURI(dblpNamespaces.get(DBLP) + AUTHORED_BY), null);
+        coauthors.addAll(coauthors1);
+        Model coauthors2 = unmodifiable.filter(null, factory.createURI(dblpNamespaces.get(DBLPS) + AUTHORED_BY), null);
+        coauthors.addAll(coauthors2);
         String creator = null;
         String document = null;
         for (Statement one : coauthors) {

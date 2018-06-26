@@ -1,0 +1,1087 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+
+<rdf:Description rdf:about="https://dblp.org/pers/a/Alban:Humberto">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Humberto</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Alban</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Alban , Humberto</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/a/Astudillo:D=">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">D</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Astudillo</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Astudillo , D</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/a/Avila:J=">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">J</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Avila</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Avila , J</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/b/Baculima:Fernando">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Fernando</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Baculima</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Baculima , Fernando</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/b/Bl=aacute=zquez:Luis_Manuel_Vilches">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Luis Manuel Vilches</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Blázquez</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Blázquez , Luis Manuel Vilches</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/c/Corcho:=Oacute=scar">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Óscar</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Corcho</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Corcho , Óscar</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/c/Cruz:Alexandra_La">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Alexandra La</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Cruz</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Cruz , Alexandra La</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/c/Cullcay:Jose">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Jose</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Cullcay</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Cullcay , Jose</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/e/Espinoza:Mauricio">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Mauricio</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Espinoza</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Espinoza , Mauricio</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/e/Espinoza=Mejla:M=">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">M</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Espinoza Mejla</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Espinoza Mejla , M</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/g/G=oacute=mez=P=eacute=rez:Asunci=oacute=n">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Asunción</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Gómez Pérez</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Gómez Pérez , Asunción</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/l/Le=oacute=n:Alexander_de">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Alexander de</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">León</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">León , Alexander de</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/l/Lupercio:Lucia">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Lucia</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Lupercio</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Lupercio , Lucia</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/m/Medina:Jose">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Jose</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Medina</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Medina , Jose</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/m/Medina:Rub=eacute=n">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Rubén</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Medina</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Medina , Rubén</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/m/Mej=iacute=a:Mauricio_Espinoza">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Mauricio Espinoza</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Mejía</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Mejía , Mauricio Espinoza</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/m/Mendoza:Daniel">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Daniel</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Mendoza</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Mendoza , Daniel</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/o/Ochoa:Blanca">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Blanca</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Ochoa</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Ochoa , Blanca</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/o/Orellana:Gerardo">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Gerardo</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Orellana</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Orellana , Gerardo</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/o/Orellana:Marcos">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Marcos</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Orellana</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Orellana , Marcos</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/o/Ortiz:Jose">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Jose</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Ortiz</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Ortiz , Jose</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/p/Palacio:Kenneth">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Kenneth</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Palacio</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Palacio , Kenneth</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/p/Palacio=Baus:Kenneth">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Kenneth</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Palacio Baus</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Palacio Baus , Kenneth</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/p/Perez:Wilson">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Wilson</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Perez</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Perez , Wilson</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/p/Piedra:Nelson">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Nelson</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Piedra</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Piedra , Nelson</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/p/Priyatna:Freddy">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Freddy</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Priyatna</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Priyatna , Freddy</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/r/Riofrlo:X=">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">X</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Riofrlo</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Riofrlo , X</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/s/Saquicela:Victor">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Victor</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Saquicela</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Saquicela , Victor</otherFullPersonName>
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Person"/>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="http://rdf.dblp.com/ns/search/victor-h_saquicela"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://orcid.org/0000-0002-2438-9220"/>
+	<authorOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/agile/BlazquezSC12"/>
+	<authorOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/bigdataconf/SaquicelaBT17"/>
+	<authorOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/clei/AvilaRPASE16"/>
+	<authorOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/clei/OrtizSSCES17"/>
+	<authorOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/clei/SaquicelaMPA14"/>
+	<authorOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/clei/SegarraOES16"/>
+	<authorOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/clei/VegaMMSE17"/>
+	<authorOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/clei/VegaMSPE17"/>
+	<authorOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/embc/CruzMVPOSESV16"/>
+	<authorOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/embc/PerezTSVC15"/>
+	<authorOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/esws/SaquicelaBC11"/>
+	<authorOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/gis/BlazquezVSLCG10"/>
+	<authorOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/i-semantics/LeonSVVPC10"/>
+	<authorOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/icwe/SaquicelaVC10"/>
+	<authorOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/iwsw/LupercioEBS18"/>
+	<authorOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/iwsw/SaquicelaBOPOE18"/>
+	<authorOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/journals/entcs/SumbaSTBES16"/>
+	<authorOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/journals/ijswis/SaquicelaBC12"/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/a/Alban:Humberto"/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/a/Astudillo:D="/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/a/Avila:J="/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/b/Baculima:Fernando"/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/b/Bl=aacute=zquez:Luis_Manuel_Vilches"/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/c/Corcho:=Oacute=scar"/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/c/Cruz:Alexandra_La"/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/c/Cullcay:Jose"/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/e/Espinoza:Mauricio"/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/e/Espinoza=Mejla:M="/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/g/G=oacute=mez=P=eacute=rez:Asunci=oacute=n"/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/l/Le=oacute=n:Alexander_de"/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/l/Lupercio:Lucia"/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/m/Medina:Jose"/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/m/Medina:Rub=eacute=n"/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/m/Mendoza:Daniel"/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/o/Ochoa:Blanca"/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/o/Orellana:Gerardo"/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/o/Orellana:Marcos"/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/o/Ortiz:Jose"/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/p/Palacio=Baus:Kenneth"/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/p/Perez:Wilson"/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/p/Piedra:Nelson"/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/p/Priyatna:Freddy"/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/r/Riofrlo:X="/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Segarra:Jose"/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Solano=Quinde:Lizandro_D="/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Sumba:Freddy"/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Sumba:Xavier"/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/t/Tello:Andres"/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/v/Vega:Francisco"/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/v/Vidal:Maria=Esther"/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/v/Vilches:Luis_M="/>
+	<coCreatorWith xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/v/Villaz=oacute=n=Terrazas:Boris"/>
+	<primaryFullPersonName xmlns="https://dblp.org/rdf/schema-2017-04-18#">Victor Saquicela</primaryFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/s/Saquicela:Victor.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2018-05-23T22:27:55+0200</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp person 's/Saquicela:Victor'</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/s/Segarra:Jose">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Jose</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Segarra</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Segarra , Jose</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/s/Solano=Quinde:Lizandro_D=">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Lizandro D</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Solano Quinde</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Solano Quinde , Lizandro D</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/s/Sumba:Freddy">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Freddy</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Sumba</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Sumba , Freddy</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/s/Sumba:Xavier">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Xavier</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Sumba</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Sumba , Xavier</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/t/Tello:Andres">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Andres</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Tello</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Tello , Andres</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/v/Vega:Francisco">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Francisco</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Vega</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Vega , Francisco</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/v/Vidal:Maria=Esther">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Maria Esther</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Vidal</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Vidal , Maria Esther</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/v/Vilches:Luis_M=">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Luis M</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Vilches</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Vilches , Luis M</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/pers/v/Villaz=oacute=n=Terrazas:Boris">
+	<firstName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Boris</firstName>
+	<lastName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Villazón Terrazas</lastName>
+	<otherFullPersonName xmlns="http://dblp.org/rdf/schema-2017-04-18#">Villazón Terrazas , Boris</otherFullPersonName>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/agile/2012">
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Publication"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="http://dx.doi.org/10.1007/978-3-642-29063-3"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="urn:isbn:978-3-642-29062-6"/>
+	<bibtexType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://data.bibbase.org/ontology/#Proceedings"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/g/Gensel:J=eacute=r=ocirc=me"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/j/Josselin:Didier"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/v/Vandenbroucke:Danny"/>
+	<isbn13 xmlns="https://dblp.org/rdf/schema-2017-04-18#">978-3-642-29062-6</isbn13>
+	<listedOnTocPage xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/db/conf/agile/agile2012"/>
+	<primaryElectronicEdition xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://doi.org/10.1007/978-3-642-29063-3"/>
+	<publicationType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Editorship"/>
+	<publishedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#">Springer</publishedBy>
+	<publishedInSeries xmlns="https://dblp.org/rdf/schema-2017-04-18#">Lecture Notes in Geoinformation and Cartography</publishedInSeries>
+	<title xmlns="https://dblp.org/rdf/schema-2017-04-18#">Bridging the Geographic Information Sciences - International AGILE'2012 Conference, Avignon, France, April, 24-27, 2012</title>
+	<yearOfPublication xmlns="https://dblp.org/rdf/schema-2017-04-18#">2012</yearOfPublication>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/agile/2012.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2017-05-25T00:37:50+0200</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp record 'conf/agile/2012'</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/agile/BlazquezSC12">
+	<creator xmlns="http://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/b/Bl=aacute=zquez:Luis_Manuel_Vilches"/>
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Publication"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="http://dx.doi.org/10.1007/978-3-642-29063-3_7"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/b/Bl=aacute=zquez:Luis_Manuel_Vilches"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/c/Corcho:=Oacute=scar"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Saquicela:Victor"/>
+	<bibtexType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://data.bibbase.org/ontology/#Inproceedings"/>
+	<listedOnTocPage xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/db/conf/agile/agile2012"/>
+	<pageNumbers xmlns="https://dblp.org/rdf/schema-2017-04-18#">119-139</pageNumbers>
+	<primaryElectronicEdition xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://doi.org/10.1007/978-3-642-29063-3_7"/>
+	<publicationType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Inproceedings"/>
+	<publishedAsPartOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/agile/2012"/>
+	<publishedInBook xmlns="https://dblp.org/rdf/schema-2017-04-18#">AGILE Conf.</publishedInBook>
+	<title xmlns="https://dblp.org/rdf/schema-2017-04-18#">Interlinking Geospatial Information in the Web of Data.</title>
+	<yearOfPublication xmlns="https://dblp.org/rdf/schema-2017-04-18#">2012</yearOfPublication>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/agile/BlazquezSC12.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2017-05-29T13:41:09+0200</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp record 'conf/agile/BlazquezSC12'</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/bigdataconf/2017">
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Publication"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="urn:isbn:978-1-5386-2715-0"/>
+	<bibtexType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://data.bibbase.org/ontology/#Proceedings"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/b/Baeza=Yates:Ricardo_A="/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/c/Cuzzocrea:Alfredo"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/g/Ghosh:Rumi"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/h/Hu:Xiaohua"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/k/Kepner:Jeremy"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/n/Nambiar:Raghunath"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/n/Nie:Jian=Yun"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/o/Obradovic:Zoran"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Suzumura:Toyotaro"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/t/Tang:Jian"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/t/Toyoda:Masashi"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/w/Wang:Chonggang"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/z/Zang:Hui"/>
+	<isbn13 xmlns="https://dblp.org/rdf/schema-2017-04-18#">978-1-5386-2715-0</isbn13>
+	<listedOnTocPage xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/db/conf/bigdataconf/bigdataconf2017"/>
+	<primaryElectronicEdition xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://ieeexplore.ieee.org/xpl/mostRecentIssue.jsp?punumber=8241556"/>
+	<publicationType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Editorship"/>
+	<publishedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#">IEEE</publishedBy>
+	<title xmlns="https://dblp.org/rdf/schema-2017-04-18#">2017 IEEE International Conference on Big Data, BigData 2017, Boston, MA, USA, December 11-14, 2017</title>
+	<yearOfPublication xmlns="https://dblp.org/rdf/schema-2017-04-18#">2017</yearOfPublication>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/bigdataconf/2017.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2018-01-23T12:40:22+0100</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp record 'conf/bigdataconf/2017'</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/bigdataconf/SaquicelaBT17">
+	<creator xmlns="http://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Saquicela:Victor"/>
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Publication"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="http://dx.doi.org/10.1109/BigData.2017.8258335"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/b/Bl=aacute=zquez:Luis_Manuel_Vilches"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Saquicela:Victor"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/t/Tello:Andres"/>
+	<bibtexType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://data.bibbase.org/ontology/#Inproceedings"/>
+	<listedOnTocPage xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/db/conf/bigdataconf/bigdataconf2017"/>
+	<pageNumbers xmlns="https://dblp.org/rdf/schema-2017-04-18#">3471-3475</pageNumbers>
+	<primaryElectronicEdition xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://doi.org/10.1109/BigData.2017.8258335"/>
+	<publicationType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Inproceedings"/>
+	<publishedAsPartOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/bigdataconf/2017"/>
+	<publishedInBook xmlns="https://dblp.org/rdf/schema-2017-04-18#">BigData</publishedInBook>
+	<title xmlns="https://dblp.org/rdf/schema-2017-04-18#">Challenges and trends about smart big geospatial data: A position paper.</title>
+	<yearOfPublication xmlns="https://dblp.org/rdf/schema-2017-04-18#">2017</yearOfPublication>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/bigdataconf/SaquicelaBT17.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2018-01-23T12:40:42+0100</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp record 'conf/bigdataconf/SaquicelaBT17'</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/clei/2014">
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Publication"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="urn:isbn:978-1-4799-6130-6"/>
+	<bibtexType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://data.bibbase.org/ontology/#Proceedings"/>
+	<isbn13 xmlns="https://dblp.org/rdf/schema-2017-04-18#">978-1-4799-6130-6</isbn13>
+	<listedOnTocPage xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/db/conf/clei/clei2014"/>
+	<primaryElectronicEdition xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://ieeexplore.ieee.org/xpl/mostRecentIssue.jsp?punumber=6939950"/>
+	<publicationType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Editorship"/>
+	<publishedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#">IEEE</publishedBy>
+	<title xmlns="https://dblp.org/rdf/schema-2017-04-18#">XL Latin American Computing Conference, CLEI 2014, Montevideo, Uruguay, September 15-19, 2014</title>
+	<yearOfPublication xmlns="https://dblp.org/rdf/schema-2017-04-18#">2014</yearOfPublication>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/clei/2014.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2016-01-04T12:11:13+0100</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp record 'conf/clei/2014'</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/clei/2016">
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Publication"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="urn:isbn:978-1-5090-1633-4"/>
+	<bibtexType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://data.bibbase.org/ontology/#Proceedings"/>
+	<isbn13 xmlns="https://dblp.org/rdf/schema-2017-04-18#">978-1-5090-1633-4</isbn13>
+	<listedOnTocPage xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/db/conf/clei/clei2016"/>
+	<primaryElectronicEdition xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://ieeexplore.ieee.org/xpl/mostRecentIssue.jsp?punumber=7814932"/>
+	<publicationType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Editorship"/>
+	<publishedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#">IEEE</publishedBy>
+	<title xmlns="https://dblp.org/rdf/schema-2017-04-18#">XLII Latin American Computing Conference, CLEI 2016, Valparaíso, Chile, October 10-14, 2016</title>
+	<yearOfPublication xmlns="https://dblp.org/rdf/schema-2017-04-18#">2016</yearOfPublication>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/clei/2016.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2017-01-31T14:38:33+0100</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp record 'conf/clei/2016'</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/clei/2017">
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Publication"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="urn:isbn:978-1-5386-3057-0"/>
+	<bibtexType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://data.bibbase.org/ontology/#Proceedings"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/m/Monteverde:H=eacute=ctor"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Santos:Rodrigo"/>
+	<isbn13 xmlns="https://dblp.org/rdf/schema-2017-04-18#">978-1-5386-3057-0</isbn13>
+	<listedOnTocPage xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/db/conf/clei/clei2017"/>
+	<primaryElectronicEdition xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://ieeexplore.ieee.org/xpl/mostRecentIssue.jsp?punumber=8171462"/>
+	<publicationType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Editorship"/>
+	<publishedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#">IEEE</publishedBy>
+	<title xmlns="https://dblp.org/rdf/schema-2017-04-18#">2017 XLIII Latin American Computer Conference, CLEI 2017, Córdoba, Argentina, September 4-8, 2017</title>
+	<yearOfPublication xmlns="https://dblp.org/rdf/schema-2017-04-18#">2017</yearOfPublication>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/clei/2017.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2017-12-30T17:42:13+0100</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp record 'conf/clei/2017'</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/clei/AvilaRPASE16">
+	<creator xmlns="http://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/a/Avila:J="/>
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Publication"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="http://dx.doi.org/10.1109/CLEI.2016.7833408"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/a/Astudillo:D="/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/a/Avila:J="/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/e/Espinoza=Mejla:M="/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/p/Palacio=Baus:Kenneth"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/r/Riofrlo:X="/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Saquicela:Victor"/>
+	<bibtexType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://data.bibbase.org/ontology/#Inproceedings"/>
+	<listedOnTocPage xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/db/conf/clei/clei2016"/>
+	<pageNumbers xmlns="https://dblp.org/rdf/schema-2017-04-18#">1-7</pageNumbers>
+	<primaryElectronicEdition xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://doi.org/10.1109/CLEI.2016.7833408"/>
+	<publicationType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Inproceedings"/>
+	<publishedAsPartOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/clei/2016"/>
+	<publishedInBook xmlns="https://dblp.org/rdf/schema-2017-04-18#">CLEI</publishedInBook>
+	<title xmlns="https://dblp.org/rdf/schema-2017-04-18#">Decategorizing demographically stereotyped users in a semantic recommender system.</title>
+	<yearOfPublication xmlns="https://dblp.org/rdf/schema-2017-04-18#">2016</yearOfPublication>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/clei/AvilaRPASE16.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2017-11-06T12:14:29+0100</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp record 'conf/clei/AvilaRPASE16'</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/clei/OrtizSSCES17">
+	<creator xmlns="http://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/o/Ortiz:Jose"/>
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Publication"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="http://dx.doi.org/10.1109/CLEI.2017.8226389"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/c/Cullcay:Jose"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/e/Espinoza:Mauricio"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/o/Ortiz:Jose"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Saquicela:Victor"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Segarra:Jose"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Sumba:Xavier"/>
+	<bibtexType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://data.bibbase.org/ontology/#Inproceedings"/>
+	<listedOnTocPage xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/db/conf/clei/clei2017"/>
+	<pageNumbers xmlns="https://dblp.org/rdf/schema-2017-04-18#">1-9</pageNumbers>
+	<primaryElectronicEdition xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://doi.org/10.1109/CLEI.2017.8226389"/>
+	<publicationType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Inproceedings"/>
+	<publishedAsPartOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/clei/2017"/>
+	<publishedInBook xmlns="https://dblp.org/rdf/schema-2017-04-18#">CLEI</publishedInBook>
+	<title xmlns="https://dblp.org/rdf/schema-2017-04-18#">Authors semantic disambiguation on heterogeneous bibliographic sources.</title>
+	<yearOfPublication xmlns="https://dblp.org/rdf/schema-2017-04-18#">2017</yearOfPublication>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/clei/OrtizSSCES17.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2017-12-30T18:19:56+0100</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp record 'conf/clei/OrtizSSCES17'</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/clei/SaquicelaMPA14">
+	<creator xmlns="http://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Saquicela:Victor"/>
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Publication"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="http://dx.doi.org/10.1109/CLEI.2014.6965173"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/a/Alban:Humberto"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/m/Mej=iacute=a:Mauricio_Espinoza"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/p/Palacio:Kenneth"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Saquicela:Victor"/>
+	<bibtexType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://data.bibbase.org/ontology/#Inproceedings"/>
+	<listedOnTocPage xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/db/conf/clei/clei2014"/>
+	<pageNumbers xmlns="https://dblp.org/rdf/schema-2017-04-18#">1-8</pageNumbers>
+	<primaryElectronicEdition xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://doi.org/10.1109/CLEI.2014.6965173"/>
+	<publicationType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Inproceedings"/>
+	<publishedAsPartOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/clei/2014"/>
+	<publishedInBook xmlns="https://dblp.org/rdf/schema-2017-04-18#">CLEI</publishedInBook>
+	<title xmlns="https://dblp.org/rdf/schema-2017-04-18#">Enriching Electronic Program Guides using semantic technologies and external resources.</title>
+	<yearOfPublication xmlns="https://dblp.org/rdf/schema-2017-04-18#">2014</yearOfPublication>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/clei/SaquicelaMPA14.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2017-06-02T20:48:15+0200</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp record 'conf/clei/SaquicelaMPA14'</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/clei/SegarraOES16">
+	<creator xmlns="http://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Segarra:Jose"/>
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Publication"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="http://dx.doi.org/10.1109/CLEI.2016.7833406"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/e/Espinoza:Mauricio"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/o/Ortiz:Jose"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Saquicela:Victor"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Segarra:Jose"/>
+	<bibtexType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://data.bibbase.org/ontology/#Inproceedings"/>
+	<listedOnTocPage xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/db/conf/clei/clei2016"/>
+	<pageNumbers xmlns="https://dblp.org/rdf/schema-2017-04-18#">1-9</pageNumbers>
+	<primaryElectronicEdition xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://doi.org/10.1109/CLEI.2016.7833406"/>
+	<publicationType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Inproceedings"/>
+	<publishedAsPartOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/clei/2016"/>
+	<publishedInBook xmlns="https://dblp.org/rdf/schema-2017-04-18#">CLEI</publishedInBook>
+	<title xmlns="https://dblp.org/rdf/schema-2017-04-18#">Integration of digital repositories through federated queries using semantic technologies.</title>
+	<yearOfPublication xmlns="https://dblp.org/rdf/schema-2017-04-18#">2016</yearOfPublication>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/clei/SegarraOES16.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2017-11-06T12:14:29+0100</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp record 'conf/clei/SegarraOES16'</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/clei/VegaMMSE17">
+	<creator xmlns="http://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/v/Vega:Francisco"/>
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Publication"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="http://dx.doi.org/10.1109/CLEI.2017.8226396"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/e/Espinoza:Mauricio"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/m/Medina:Jose"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/m/Mendoza:Daniel"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Saquicela:Victor"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/v/Vega:Francisco"/>
+	<bibtexType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://data.bibbase.org/ontology/#Inproceedings"/>
+	<listedOnTocPage xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/db/conf/clei/clei2017"/>
+	<pageNumbers xmlns="https://dblp.org/rdf/schema-2017-04-18#">1-10</pageNumbers>
+	<primaryElectronicEdition xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://doi.org/10.1109/CLEI.2017.8226396"/>
+	<publicationType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Inproceedings"/>
+	<publishedAsPartOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/clei/2017"/>
+	<publishedInBook xmlns="https://dblp.org/rdf/schema-2017-04-18#">CLEI</publishedInBook>
+	<title xmlns="https://dblp.org/rdf/schema-2017-04-18#">A robust video identification framework using perceptual image hashing.</title>
+	<yearOfPublication xmlns="https://dblp.org/rdf/schema-2017-04-18#">2017</yearOfPublication>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/clei/VegaMMSE17.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2017-12-30T18:19:56+0100</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp record 'conf/clei/VegaMMSE17'</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/clei/VegaMSPE17">
+	<creator xmlns="http://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/v/Vega:Francisco"/>
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Publication"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="http://dx.doi.org/10.1109/CLEI.2017.8226400"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/e/Espinoza:Mauricio"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/m/Medina:Jose"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/p/Palacio=Baus:Kenneth"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Saquicela:Victor"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/v/Vega:Francisco"/>
+	<bibtexType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://data.bibbase.org/ontology/#Inproceedings"/>
+	<listedOnTocPage xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/db/conf/clei/clei2017"/>
+	<pageNumbers xmlns="https://dblp.org/rdf/schema-2017-04-18#">1-10</pageNumbers>
+	<primaryElectronicEdition xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://doi.org/10.1109/CLEI.2017.8226400"/>
+	<publicationType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Inproceedings"/>
+	<publishedAsPartOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/clei/2017"/>
+	<publishedInBook xmlns="https://dblp.org/rdf/schema-2017-04-18#">CLEI</publishedInBook>
+	<title xmlns="https://dblp.org/rdf/schema-2017-04-18#">Towards a multi-screen interactive ad delivery platform.</title>
+	<yearOfPublication xmlns="https://dblp.org/rdf/schema-2017-04-18#">2017</yearOfPublication>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/clei/VegaMSPE17.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2017-12-30T18:19:56+0100</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp record 'conf/clei/VegaMSPE17'</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/embc/2015">
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Publication"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="urn:isbn:978-1-4244-9271-8"/>
+	<bibtexType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://data.bibbase.org/ontology/#Proceedings"/>
+	<isbn13 xmlns="https://dblp.org/rdf/schema-2017-04-18#">978-1-4244-9271-8</isbn13>
+	<listedOnTocPage xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/db/conf/embc/embc2015"/>
+	<primaryElectronicEdition xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://ieeexplore.ieee.org/xpl/mostRecentIssue.jsp?punumber=7302811"/>
+	<publicationType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Editorship"/>
+	<publishedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#">IEEE</publishedBy>
+	<title xmlns="https://dblp.org/rdf/schema-2017-04-18#">37th Annual International Conference of the IEEE Engineering in Medicine and Biology Society, EMBC 2015, Milan, Italy, August 25-29, 2015</title>
+	<yearOfPublication xmlns="https://dblp.org/rdf/schema-2017-04-18#">2015</yearOfPublication>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/embc/2015.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2015-11-30T15:43:33+0100</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp record 'conf/embc/2015'</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/embc/2016">
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Publication"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="urn:isbn:978-1-4577-0220-4"/>
+	<bibtexType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://data.bibbase.org/ontology/#Proceedings"/>
+	<isbn13 xmlns="https://dblp.org/rdf/schema-2017-04-18#">978-1-4577-0220-4</isbn13>
+	<listedOnTocPage xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/db/conf/embc/embc2016"/>
+	<primaryElectronicEdition xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://ieeexplore.ieee.org/xpl/mostRecentIssue.jsp?punumber=7580725"/>
+	<publicationType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Editorship"/>
+	<publishedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#">IEEE</publishedBy>
+	<title xmlns="https://dblp.org/rdf/schema-2017-04-18#">38th Annual International Conference of the IEEE Engineering in Medicine and Biology Society, EMBC 2016, Orlando, FL, USA, August 16-20, 2016</title>
+	<yearOfPublication xmlns="https://dblp.org/rdf/schema-2017-04-18#">2016</yearOfPublication>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/embc/2016.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2016-10-28T14:09:25+0200</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp record 'conf/embc/2016'</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/embc/CruzMVPOSESV16">
+	<creator xmlns="http://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/c/Cruz:Alexandra_La"/>
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Publication"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="http://dx.doi.org/10.1109/EMBC.2016.7591943"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/c/Cruz:Alexandra_La"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/e/Espinoza:Mauricio"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/m/Medina:Rub=eacute=n"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/o/Ochoa:Blanca"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/p/Perez:Wilson"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Saquicela:Victor"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Solano=Quinde:Lizandro_D="/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/v/Vega:Francisco"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/v/Vidal:Maria=Esther"/>
+	<bibtexType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://data.bibbase.org/ontology/#Inproceedings"/>
+	<listedOnTocPage xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/db/conf/embc/embc2016"/>
+	<pageNumbers xmlns="https://dblp.org/rdf/schema-2017-04-18#">5380-5383</pageNumbers>
+	<primaryElectronicEdition xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://doi.org/10.1109/EMBC.2016.7591943"/>
+	<publicationType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Inproceedings"/>
+	<publishedAsPartOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/embc/2016"/>
+	<publishedInBook xmlns="https://dblp.org/rdf/schema-2017-04-18#">EMBC</publishedInBook>
+	<title xmlns="https://dblp.org/rdf/schema-2017-04-18#">Mobile teleradiology system suitable for m-health services supporting content and semantic based image retrieval on a grid infrastructure.</title>
+	<yearOfPublication xmlns="https://dblp.org/rdf/schema-2017-04-18#">2016</yearOfPublication>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/embc/CruzMVPOSESV16.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2017-11-06T12:14:58+0100</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp record 'conf/embc/CruzMVPOSESV16'</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/embc/PerezTSVC15">
+	<creator xmlns="http://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/p/Perez:Wilson"/>
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Publication"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="http://dx.doi.org/10.1109/EMBC.2015.7318912"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/c/Cruz:Alexandra_La"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/p/Perez:Wilson"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Saquicela:Victor"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/t/Tello:Andres"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/v/Vidal:Maria=Esther"/>
+	<bibtexType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://data.bibbase.org/ontology/#Inproceedings"/>
+	<listedOnTocPage xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/db/conf/embc/embc2015"/>
+	<pageNumbers xmlns="https://dblp.org/rdf/schema-2017-04-18#">2551-2554</pageNumbers>
+	<primaryElectronicEdition xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://doi.org/10.1109/EMBC.2015.7318912"/>
+	<publicationType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Inproceedings"/>
+	<publishedAsPartOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/embc/2015"/>
+	<publishedInBook xmlns="https://dblp.org/rdf/schema-2017-04-18#">EMBC</publishedInBook>
+	<title xmlns="https://dblp.org/rdf/schema-2017-04-18#">An automatic method for the enrichment of DICOM metadata using biomedical ontologies.</title>
+	<yearOfPublication xmlns="https://dblp.org/rdf/schema-2017-04-18#">2015</yearOfPublication>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/embc/PerezTSVC15.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2017-11-06T12:14:58+0100</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp record 'conf/embc/PerezTSVC15'</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/esws/2011-2">
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Publication"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="http://dx.doi.org/10.1007/978-3-642-21064-8"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="urn:isbn:978-3-642-21063-1"/>
+	<bibtexType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://data.bibbase.org/ontology/#Proceedings"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/a/Antoniou:Grigoris"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/g/Grobelnik:Marko"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/l/Leenheer:Pieter_De"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/p/Pan:Jeff_Z="/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/p/Parsia:Bijan"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/p/Plexousakis:Dimitris"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Simperl:Elena_Paslaru_Bontas"/>
+	<isbn13 xmlns="https://dblp.org/rdf/schema-2017-04-18#">978-3-642-21063-1</isbn13>
+	<listedOnTocPage xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/db/conf/esws/eswc2011-2"/>
+	<primaryElectronicEdition xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://doi.org/10.1007/978-3-642-21064-8"/>
+	<publicationType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Editorship"/>
+	<publishedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#">Springer</publishedBy>
+	<publishedInSeries xmlns="https://dblp.org/rdf/schema-2017-04-18#">Lecture Notes in Computer Science</publishedInSeries>
+	<publishedInSeriesVolume xmlns="https://dblp.org/rdf/schema-2017-04-18#">6644</publishedInSeriesVolume>
+	<title xmlns="https://dblp.org/rdf/schema-2017-04-18#">The Semanic Web: Research and Applications - 8th Extended Semantic Web Conference, ESWC 2011, Heraklion, Crete, Greece, May 29 - June 2, 2011, Proceedings, Part II</title>
+	<yearOfPublication xmlns="https://dblp.org/rdf/schema-2017-04-18#">2011</yearOfPublication>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/esws/2011-2.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2017-05-24T08:29:36+0200</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp record 'conf/esws/2011-2'</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/esws/SaquicelaBC11">
+	<creator xmlns="http://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Saquicela:Victor"/>
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Publication"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="http://dx.doi.org/10.1007/978-3-642-21064-8_23"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/b/Bl=aacute=zquez:Luis_Manuel_Vilches"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/c/Corcho:=Oacute=scar"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Saquicela:Victor"/>
+	<bibtexType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://data.bibbase.org/ontology/#Inproceedings"/>
+	<listedOnTocPage xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/db/conf/esws/eswc2011-2"/>
+	<pageNumbers xmlns="https://dblp.org/rdf/schema-2017-04-18#">330-344</pageNumbers>
+	<primaryElectronicEdition xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://doi.org/10.1007/978-3-642-21064-8_23"/>
+	<publicationType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Inproceedings"/>
+	<publishedAsPartOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/esws/2011-2"/>
+	<publishedInBook xmlns="https://dblp.org/rdf/schema-2017-04-18#">ESWC (2)</publishedInBook>
+	<title xmlns="https://dblp.org/rdf/schema-2017-04-18#">Lightweight Semantic Annotation of Geospatial RESTful Services.</title>
+	<yearOfPublication xmlns="https://dblp.org/rdf/schema-2017-04-18#">2011</yearOfPublication>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/esws/SaquicelaBC11.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2017-06-02T20:49:46+0200</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp record 'conf/esws/SaquicelaBC11'</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/gis/2010">
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Publication"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="urn:isbn:978-1-4503-0428-3"/>
+	<bibtexType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://data.bibbase.org/ontology/#Proceedings"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/a/Abbadi:Amr_El"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/a/Agrawal:Divyakant"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/m/Mokbel:Mohamed_F="/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/z/Zhang:Pusheng"/>
+	<isbn13 xmlns="https://dblp.org/rdf/schema-2017-04-18#">978-1-4503-0428-3</isbn13>
+	<listedOnTocPage xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/db/conf/gis/gis2010"/>
+	<publicationType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Editorship"/>
+	<publishedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#">ACM</publishedBy>
+	<title xmlns="https://dblp.org/rdf/schema-2017-04-18#">18th ACM SIGSPATIAL International Symposium on Advances in Geographic Information Systems, ACM-GIS 2010, November 3-5, 2010, San Jose, CA, USA, Proceedings</title>
+	<yearOfPublication xmlns="https://dblp.org/rdf/schema-2017-04-18#">2010</yearOfPublication>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/gis/2010.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2010-11-25T11:42:34+0100</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp record 'conf/gis/2010'</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/gis/BlazquezVSLCG10">
+	<creator xmlns="http://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/b/Bl=aacute=zquez:Luis_Manuel_Vilches"/>
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Publication"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="http://dx.doi.org/10.1145/1869790.1869858"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/b/Bl=aacute=zquez:Luis_Manuel_Vilches"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/c/Corcho:=Oacute=scar"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/g/G=oacute=mez=P=eacute=rez:Asunci=oacute=n"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/l/Le=oacute=n:Alexander_de"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Saquicela:Victor"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/v/Villaz=oacute=n=Terrazas:Boris"/>
+	<bibtexType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://data.bibbase.org/ontology/#Inproceedings"/>
+	<listedOnTocPage xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/db/conf/gis/gis2010"/>
+	<pageNumbers xmlns="https://dblp.org/rdf/schema-2017-04-18#">446-449</pageNumbers>
+	<primaryElectronicEdition xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://doi.acm.org/10.1145/1869790.1869858"/>
+	<publicationType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Inproceedings"/>
+	<publishedAsPartOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/gis/2010"/>
+	<publishedInBook xmlns="https://dblp.org/rdf/schema-2017-04-18#">GIS</publishedInBook>
+	<title xmlns="https://dblp.org/rdf/schema-2017-04-18#">GeoLinked data and INSPIRE through an application case.</title>
+	<yearOfPublication xmlns="https://dblp.org/rdf/schema-2017-04-18#">2010</yearOfPublication>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/gis/BlazquezVSLCG10.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2017-06-02T20:46:45+0200</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp record 'conf/gis/BlazquezVSLCG10'</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/i-semantics/2010">
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Publication"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="urn:isbn:978-1-4503-0014-8"/>
+	<bibtexType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://data.bibbase.org/ontology/#Proceedings"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/h/Henze:Nicola"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/p/Paschke:Adrian"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/p/Pellegrini:Tassilo"/>
+	<isbn13 xmlns="https://dblp.org/rdf/schema-2017-04-18#">978-1-4503-0014-8</isbn13>
+	<listedOnTocPage xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/db/conf/i-semantics/i-semantics2010"/>
+	<publicationType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Editorship"/>
+	<publishedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#">ACM</publishedBy>
+	<publishedInSeries xmlns="https://dblp.org/rdf/schema-2017-04-18#">ACM International Conference Proceeding Series</publishedInSeries>
+	<title xmlns="https://dblp.org/rdf/schema-2017-04-18#">Proceedings the 6th International Conference on Semantic Systems, I-SEMANTICS 2010, Graz, Austria, September 1-3, 2010</title>
+	<yearOfPublication xmlns="https://dblp.org/rdf/schema-2017-04-18#">2010</yearOfPublication>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/i-semantics/2010.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2011-11-20T19:37:41+0100</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp record 'conf/i-semantics/2010'</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/i-semantics/LeonSVVPC10">
+	<creator xmlns="http://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/l/Le=oacute=n:Alexander_de"/>
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Publication"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="http://dx.doi.org/10.1145/1839707.1839753"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/c/Corcho:=Oacute=scar"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/l/Le=oacute=n:Alexander_de"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/p/Priyatna:Freddy"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Saquicela:Victor"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/v/Vilches:Luis_M="/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/v/Villaz=oacute=n=Terrazas:Boris"/>
+	<bibtexType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://data.bibbase.org/ontology/#Inproceedings"/>
+	<listedOnTocPage xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/db/conf/i-semantics/i-semantics2010"/>
+	<primaryElectronicEdition xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://doi.acm.org/10.1145/1839707.1839753"/>
+	<publicationType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Inproceedings"/>
+	<publishedAsPartOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/i-semantics/2010"/>
+	<publishedInBook xmlns="https://dblp.org/rdf/schema-2017-04-18#">I-SEMANTICS</publishedInBook>
+	<title xmlns="https://dblp.org/rdf/schema-2017-04-18#">Geographical linked data: a Spanish use case.</title>
+	<yearOfPublication xmlns="https://dblp.org/rdf/schema-2017-04-18#">2010</yearOfPublication>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/i-semantics/LeonSVVPC10.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2017-06-02T20:49:35+0200</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp record 'conf/i-semantics/LeonSVVPC10'</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/icwe/2010w">
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Publication"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="http://dx.doi.org/10.1007/978-3-642-16985-4"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="urn:isbn:978-3-642-16984-7"/>
+	<bibtexType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://data.bibbase.org/ontology/#Proceedings"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/d/Daniel:Florian"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/f/Facca:Federico_Michele"/>
+	<isbn13 xmlns="https://dblp.org/rdf/schema-2017-04-18#">978-3-642-16984-7</isbn13>
+	<listedOnTocPage xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/db/conf/icwe/icwe2010w"/>
+	<primaryElectronicEdition xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://doi.org/10.1007/978-3-642-16985-4"/>
+	<publicationType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Editorship"/>
+	<publishedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#">Springer</publishedBy>
+	<publishedInSeries xmlns="https://dblp.org/rdf/schema-2017-04-18#">Lecture Notes in Computer Science</publishedInSeries>
+	<publishedInSeriesVolume xmlns="https://dblp.org/rdf/schema-2017-04-18#">6385</publishedInSeriesVolume>
+	<title xmlns="https://dblp.org/rdf/schema-2017-04-18#">Current Trends in Web Engineering - 10th International Conference on Web Engineering, ICWE 2010 Workshops, Vienna, Austria, July 2010, Revised Selected Papers</title>
+	<yearOfPublication xmlns="https://dblp.org/rdf/schema-2017-04-18#">2010</yearOfPublication>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/icwe/2010w.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2017-05-24T08:28:08+0200</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp record 'conf/icwe/2010w'</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/icwe/SaquicelaVC10">
+	<creator xmlns="http://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Saquicela:Victor"/>
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Publication"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="http://dx.doi.org/10.1007/978-3-642-16985-4_24"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/b/Bl=aacute=zquez:Luis_Manuel_Vilches"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/c/Corcho:=Oacute=scar"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Saquicela:Victor"/>
+	<bibtexType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://data.bibbase.org/ontology/#Inproceedings"/>
+	<listedOnTocPage xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/db/conf/icwe/icwe2010w"/>
+	<pageNumbers xmlns="https://dblp.org/rdf/schema-2017-04-18#">266-276</pageNumbers>
+	<primaryElectronicEdition xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://doi.org/10.1007/978-3-642-16985-4_24"/>
+	<publicationType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Inproceedings"/>
+	<publishedAsPartOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/icwe/2010w"/>
+	<publishedInBook xmlns="https://dblp.org/rdf/schema-2017-04-18#">ICWE Workshops</publishedInBook>
+	<title xmlns="https://dblp.org/rdf/schema-2017-04-18#">Semantic Annotation of RESTful Services Using External Resources.</title>
+	<yearOfPublication xmlns="https://dblp.org/rdf/schema-2017-04-18#">2010</yearOfPublication>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/icwe/SaquicelaVC10.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2017-06-04T10:05:16+0200</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp record 'conf/icwe/SaquicelaVC10'</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/iwsw/2018">
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Publication"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="urn:nbn:de:0074-2096-0"/>
+	<bibtexType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://data.bibbase.org/ontology/#Proceedings"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/d/Delgado:Yusniel_Hidalgo"/>
+	<editedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/m/Mederos:Amed_Abel_Leiva"/>
+	<listedOnTocPage xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/db/conf/iwsw/iwsw2018"/>
+	<otherElectronicEdition xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://nbn-resolving.de/urn:nbn:de:0074-2096-0"/>
+	<primaryElectronicEdition xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://ceur-ws.org/Vol-2096"/>
+	<publicationType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Editorship"/>
+	<publishedBy xmlns="https://dblp.org/rdf/schema-2017-04-18#">CEUR-WS.org</publishedBy>
+	<publishedInSeries xmlns="https://dblp.org/rdf/schema-2017-04-18#">CEUR Workshop Proceedings</publishedInSeries>
+	<publishedInSeriesVolume xmlns="https://dblp.org/rdf/schema-2017-04-18#">2096</publishedInSeriesVolume>
+	<title xmlns="https://dblp.org/rdf/schema-2017-04-18#">Proceedings of the 3rd International Workshop on Semantic Web 2018 co-located with 15th International Congress on Information (INFO 2018), Havana, Cuba, March 7, 2018.</title>
+	<yearOfPublication xmlns="https://dblp.org/rdf/schema-2017-04-18#">2018</yearOfPublication>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/iwsw/2018.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2018-05-22T07:44:49+0200</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp record 'conf/iwsw/2018'</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/iwsw/LupercioEBS18">
+	<creator xmlns="http://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/l/Lupercio:Lucia"/>
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Publication"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/b/Baculima:Fernando"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/e/Espinoza:Mauricio"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/l/Lupercio:Lucia"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Saquicela:Victor"/>
+	<bibtexType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://data.bibbase.org/ontology/#Inproceedings"/>
+	<listedOnTocPage xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/db/conf/iwsw/iwsw2018"/>
+	<pageNumbers xmlns="https://dblp.org/rdf/schema-2017-04-18#">63-75</pageNumbers>
+	<primaryElectronicEdition xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://ceur-ws.org/Vol-2096/paper6.pdf"/>
+	<publicationType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Inproceedings"/>
+	<publishedAsPartOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/iwsw/2018"/>
+	<publishedInBook xmlns="https://dblp.org/rdf/schema-2017-04-18#">IWSW</publishedInBook>
+	<title xmlns="https://dblp.org/rdf/schema-2017-04-18#">Una Ontología para Representar la Información Geográfica en el Dominio Hídrico Ecuatoriano (An Ontology to Represent Geographical Information in the Ecuadorian Hydric Domain).</title>
+	<yearOfPublication xmlns="https://dblp.org/rdf/schema-2017-04-18#">2018</yearOfPublication>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/iwsw/LupercioEBS18.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2018-05-22T07:50:11+0200</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp record 'conf/iwsw/LupercioEBS18'</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/iwsw/SaquicelaBOPOE18">
+	<creator xmlns="http://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Saquicela:Victor"/>
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Publication"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/b/Baculima:Fernando"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/e/Espinoza:Mauricio"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/o/Orellana:Gerardo"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/o/Orellana:Marcos"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/p/Piedra:Nelson"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Saquicela:Victor"/>
+	<bibtexType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://data.bibbase.org/ontology/#Inproceedings"/>
+	<listedOnTocPage xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/db/conf/iwsw/iwsw2018"/>
+	<pageNumbers xmlns="https://dblp.org/rdf/schema-2017-04-18#">1-12</pageNumbers>
+	<primaryElectronicEdition xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://ceur-ws.org/Vol-2096/paper1.pdf"/>
+	<publicationType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Inproceedings"/>
+	<publishedAsPartOf xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rec/conf/iwsw/2018"/>
+	<publishedInBook xmlns="https://dblp.org/rdf/schema-2017-04-18#">IWSW</publishedInBook>
+	<title xmlns="https://dblp.org/rdf/schema-2017-04-18#">Similarity Detection among Academic Contents through Semantic Technologies and Text Mining.</title>
+	<yearOfPublication xmlns="https://dblp.org/rdf/schema-2017-04-18#">2018</yearOfPublication>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/conf/iwsw/SaquicelaBOPOE18.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2018-05-22T07:50:11+0200</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp record 'conf/iwsw/SaquicelaBOPOE18'</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/journals/entcs/SumbaSTBES16">
+	<creator xmlns="http://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Sumba:Xavier"/>
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Publication"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="http://dx.doi.org/10.1016/j.entcs.2016.12.009"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/b/Baculima:Fernando"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/e/Espinoza:Mauricio"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Saquicela:Victor"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Sumba:Freddy"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Sumba:Xavier"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/t/Tello:Andres"/>
+	<bibtexType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://data.bibbase.org/ontology/#Article"/>
+	<listedOnTocPage xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/db/journals/entcs/entcs329"/>
+	<pageNumbers xmlns="https://dblp.org/rdf/schema-2017-04-18#">149-167</pageNumbers>
+	<primaryElectronicEdition xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://doi.org/10.1016/j.entcs.2016.12.009"/>
+	<publicationType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Article"/>
+	<publishedInJournal xmlns="https://dblp.org/rdf/schema-2017-04-18#">Electr. Notes Theor. Comput. Sci.</publishedInJournal>
+	<publishedInJournalVolume xmlns="https://dblp.org/rdf/schema-2017-04-18#">329</publishedInJournalVolume>
+	<title xmlns="https://dblp.org/rdf/schema-2017-04-18#">Detecting Similar Areas of Knowledge Using Semantic and Data Mining Technologies.</title>
+	<yearOfPublication xmlns="https://dblp.org/rdf/schema-2017-04-18#">2016</yearOfPublication>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/journals/entcs/SumbaSTBES16.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2017-11-06T12:13:50+0100</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp record 'journals/entcs/SumbaSTBES16'</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/journals/ijswis/SaquicelaBC12">
+	<creator xmlns="http://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Saquicela:Victor"/>
+	<rdf:type rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Publication"/>
+	<sameAs xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="http://dx.doi.org/10.4018/jswis.2012040103"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/b/Bl=aacute=zquez:Luis_Manuel_Vilches"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/c/Corcho:=Oacute=scar"/>
+	<authoredBy xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/pers/s/Saquicela:Victor"/>
+	<bibtexType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="http://data.bibbase.org/ontology/#Article"/>
+	<listedOnTocPage xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/db/journals/ijswis/ijswis8"/>
+	<pageNumbers xmlns="https://dblp.org/rdf/schema-2017-04-18#">51-71</pageNumbers>
+	<primaryElectronicEdition xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://doi.org/10.4018/jswis.2012040103"/>
+	<publicationType xmlns="https://dblp.org/rdf/schema-2017-04-18#" rdf:resource="https://dblp.org/rdf/schema-2017-04-18#Article"/>
+	<publishedInJournal xmlns="https://dblp.org/rdf/schema-2017-04-18#">Int. J. Semantic Web Inf. Syst.</publishedInJournal>
+	<publishedInJournalVolume xmlns="https://dblp.org/rdf/schema-2017-04-18#">8</publishedInJournalVolume>
+	<publishedInJournalVolumeIssue xmlns="https://dblp.org/rdf/schema-2017-04-18#">2</publishedInJournalVolumeIssue>
+	<title xmlns="https://dblp.org/rdf/schema-2017-04-18#">Adding Semantic Annotations into (Geospatial) RESTful Services.</title>
+	<yearOfPublication xmlns="https://dblp.org/rdf/schema-2017-04-18#">2012</yearOfPublication>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://dblp.org/rec/journals/ijswis/SaquicelaBC12.rdf">
+	<creator xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org"/>
+	<isPartOf xmlns="http://purl.org/dc/terms/" rdf:resource="https://dblp.org/rdf/dblp.rdf"/>
+	<license xmlns="http://purl.org/dc/terms/" rdf:resource="https://opendatacommons.org/licenses/by/1.0"/>
+	<modified xmlns="http://purl.org/dc/terms/">2017-06-06T22:21:42+0200</modified>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">provenance information for RDF data of dblp record 'journals/ijswis/SaquicelaBC12'</label>
+</rdf:Description>
+
+</rdf:RDF>

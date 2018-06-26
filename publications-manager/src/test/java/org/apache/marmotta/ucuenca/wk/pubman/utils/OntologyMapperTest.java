@@ -26,6 +26,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openrdf.model.Model;
 import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.Rio;
 import org.openrdf.rio.UnsupportedRDFormatException;
@@ -62,7 +63,7 @@ public class OntologyMapperTest {
             academicsKnowledgeModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/academics_knowledge.n3"), "", RDFFormat.N3);
             scopusModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/scopus.n3"), "", RDFFormat.N3);
             scopusModelORCID = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/scopus_orcid.ttl"), "", RDFFormat.TURTLE);
-            dblpModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/dblp.ttl"), "", RDFFormat.TURTLE);
+            dblpModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/dblp.rdf"), "", RDFFormat.RDFXML);
             scholarModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/scholar.rdf"), "", RDFFormat.RDFXML);
             scieloModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/scielo.rdf"), "", RDFFormat.RDFXML);
             springerModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/springer.ttl"), "", RDFFormat.TURTLE);
@@ -128,10 +129,10 @@ public class OntologyMapperTest {
      */
     @Test
     public void testDBLPOntologyMapping() {
-        assertEquals(dblpModel.size(), 229307);
+        assertEquals(dblpModel.size(), 788);
         Model resultWithMapperFile = OntologyMapper.map(dblpModel, dblpMapper, vocabulary);
         Model resultEmptyMapperFile = OntologyMapper.map(dblpModel, emptyMapper, vocabulary);
-        assertEquals(resultWithMapperFile.size(), 189011);
+        assertEquals(resultWithMapperFile.size(), 667);
         assertEquals(resultEmptyMapperFile.size(), 0);
     }
 
