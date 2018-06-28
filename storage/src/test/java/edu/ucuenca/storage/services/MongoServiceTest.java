@@ -34,6 +34,7 @@ public class MongoServiceTest extends AbstractREDIMongoEnv {
     }
 
     @Test
+    @Ignore
     public void testConnect() throws FailMongoConnectionException {
         mongoService.connect();
     }
