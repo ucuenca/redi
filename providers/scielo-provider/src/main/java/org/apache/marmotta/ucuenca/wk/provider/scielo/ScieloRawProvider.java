@@ -71,6 +71,7 @@ public class ScieloRawProvider extends AbstractHttpProvider {
 
     private static Logger log = LoggerFactory.getLogger(ScieloRawProvider.class);
     public static final int MAX_RESULTS = 1000;
+    private ConcurrentHashMap<String, Integer> stats = new ConcurrentHashMap<String, Integer>();
     public static final String NAME = "Scielo Raw Provider";
     public static final String PATTERN = "https://search\\.scielo\\.org/search/.*";
     public static final String SEARCHAPI = "https://search.scielo.org/?q=%s&output=xml";
@@ -129,6 +130,7 @@ public class ScieloRawProvider extends AbstractHttpProvider {
         Preconditions.checkState(StringUtils.isNotBlank(resource));
         String id = URLDecoder.decode(resource.substring(resource.lastIndexOf('/') + 1));
         url = String.format(SEARCHAPI, URLEncoder.encode(createSolrQuery(id)));
+        stats.put(resource, 0);
         return Collections.singletonList(url);
     }
 
@@ -258,10 +260,6 @@ public class ScieloRawProvider extends AbstractHttpProvider {
                         max = Integer.parseInt(value);
                     }
                 }
-                if (max > MAX_RESULTS) {
-                    log.warn("Results found {}, limiting to {} for URI {}", max, MAX_RESULTS, resource);
-                    max = MAX_RESULTS;
-                }
                 List<String> e = new ArrayList<>();
                 for (int i = 1; i <= max; i += 15) {
                     e.add(requestUrl + String.format(pageControl, i));
@@ -281,10 +279,19 @@ public class ScieloRawProvider extends AbstractHttpProvider {
                         p2.Name = new ArrayList<>();
                         p2.Name.add(Lists.newArrayList(values.get(i)));
                         if (p1.checkName(p2)) {
-                            String aDocURL = String.format(DESCRIBEAPI, value);
-                            docsURLs.add(aDocURL);
-                            String authorURI = SCIELOBASEAUTHOR + code + "_" + i;
-                            triples.add(factory.createURI(authorURI), OWL.ONEOF, factory.createURI(resource));
+                            if (!stats.containsKey(resource)) {
+                                stats.put(resource, 0);
+                            }
+                            int num = stats.get(resource);
+                            if (num <= MAX_RESULTS) {
+                                stats.put(resource, num + 1);
+                                String aDocURL = String.format(DESCRIBEAPI, value);
+                                docsURLs.add(aDocURL);
+                                String authorURI = SCIELOBASEAUTHOR + code + "_" + i;
+                                triples.add(factory.createURI(authorURI), OWL.ONEOF, factory.createURI(resource));
+                            } else {
+                                log.warn("Ignoring {} from {}, due excessive results", code, resource);
+                            }
                         }
                     }
                 }

@@ -17,9 +17,13 @@
  */
 package org.apache.marmotta.ucuenca.wk.provider.test.dblp;
 
+import org.apache.marmotta.ldclient.model.ClientResponse;
 import org.apache.marmotta.ldclient.test.provider.ProviderTestBase;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.openrdf.model.Model;
+import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.Rio;
 
 /**
  * Some tests over random data to DBLP
@@ -42,8 +46,10 @@ public class TestDBLPProvider extends ProviderTestBase {
     @Ignore
     public void testLegacyResolveURI() throws Exception {
 //    	testResource("http://dblp.uni-trier.de/pers/hd/b/Bl=aacute=zquez:Luis_Manuel_Vilches");
-        
-         // testResource("http://rdf.dblp.com/ns/search/william-j_rodriguez");
+        ClientResponse retrieveResource = ldclient.retrieveResource("http://rdf.dblp.com/ns/search/victor-h_saquicela");
+        Model data = retrieveResource.getData();
+        Rio.write(data, System.out, RDFFormat.RDFXML);
+        //testResource();
     }
 
 }
