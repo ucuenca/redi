@@ -19,6 +19,8 @@ package edu.ucuenca.storage.api;
 
 import edu.ucuenca.storage.exceptions.FailMongoConnectionException;
 import java.net.URL;
+import java.util.List;
+import org.bson.Document;
 
 public interface MongoService {
 
@@ -35,6 +37,8 @@ public interface MongoService {
     public String getRelatedAuthors(String uri);
 
     public String getCluster(String uri);
+
+    public List<Document> getClusters();
 
     /**
      * Create a connection to {@link com.mongodb.MongoClient}.

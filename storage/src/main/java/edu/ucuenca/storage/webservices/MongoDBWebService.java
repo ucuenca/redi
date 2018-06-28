@@ -19,6 +19,7 @@ package edu.ucuenca.storage.webservices;
 
 import edu.ucuenca.storage.api.MongoService;
 import edu.ucuenca.storage.exceptions.FailMongoConnectionException;
+import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -26,6 +27,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
 import org.apache.marmotta.platform.core.api.triplestore.SesameService;
+import org.bson.Document;
 import org.slf4j.Logger;
 
 /**
@@ -70,6 +72,19 @@ public class MongoDBWebService {
             response = mongoService.getCluster(uri);
         } catch (Exception e) {
             throw new FailMongoConnectionException(String.format("Cannot retrieve cluster %s", uri), e);
+        }
+        return Response.ok().entity(response).build();
+    }
+
+    @GET
+    @Path("/clusters")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getClusters() throws FailMongoConnectionException {
+        List<Document> response;
+        try {
+            response = mongoService.getClusters();
+        } catch (Exception e) {
+            throw new FailMongoConnectionException("Cannot retrieve clusters", e);
         }
         return Response.ok().entity(response).build();
     }
