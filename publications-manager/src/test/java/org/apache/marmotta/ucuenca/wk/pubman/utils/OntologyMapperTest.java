@@ -26,7 +26,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openrdf.model.Model;
 import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.Rio;
 import org.openrdf.rio.UnsupportedRDFormatException;
@@ -108,7 +107,7 @@ public class OntologyMapperTest {
         assertEquals(scopusModel.size(), 3911);
         Model resultWithMapperFile = OntologyMapper.map(scopusModel, scopusMapper, vocabulary);
         Model resultEmptyMapperFile = OntologyMapper.map(scopusModel, emptyMapper, vocabulary);
-        assertEquals(resultWithMapperFile.size(), 2677);
+        assertEquals(resultWithMapperFile.size(), 2681);
         assertEquals(resultEmptyMapperFile.size(), 0);
     }
 
