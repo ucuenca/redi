@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.Set;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
+import org.apache.marmotta.ucuenca.wk.commons.disambiguation.utils.NameUtils;
+import org.apache.marmotta.ucuenca.wk.commons.disambiguation.utils.PublicationUtils;
 import org.openrdf.model.Value;
 import org.openrdf.query.QueryLanguage;
 
@@ -250,6 +252,10 @@ public class Provider {
                     n.Topics.add(ar.get("p").stringValue());
                 }
             }
+            //
+            n.Coauthors = NameUtils.uniqueName(n.Coauthors);
+            n.Publications = PublicationUtils.uniqueTitle(n.Publications);
+            //
         }
     }
 
