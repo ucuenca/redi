@@ -124,8 +124,10 @@ function coauthorFactor (coauthor) {
     if (distance <  100 ){
 
      return parseInt(distance) + 100;
+    }else if (distance > 500){
+     return parseInt(400) ;  
     }else {
-     return parseInt(distance) ;  
+      return parseInt(distance) ;
     }
  }
 
@@ -207,7 +209,11 @@ function showPopover(d) {
                     }) 
         .on("mouseout", function (d) {
                         removePopovers();
-                    }); 
+                    }).on("dblclick", function(d){ 
+                     
+           removePopovers(d);
+           $window.location.hash = '/author/profile/' +d.id;
+        });  
 
 
        var lables = node.append("text")

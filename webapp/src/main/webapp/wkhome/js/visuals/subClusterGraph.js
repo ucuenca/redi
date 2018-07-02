@@ -18,6 +18,8 @@ wkhomeApp.directive('subCluster', ["d3", 'globalData','sparqlQuery', '$routePara
   var newhost =  $window.location.protocol + '//' + $window.location.hostname + ($window.location.port ? ':8080' : '') + '';
   console.log (newhost);
   console.log ("Cargando Subcluster");
+  var newsub = subcluster.replace("#","%23");
+  console.log (newsub);
 
   var host = "http://localhost:8080";
   
@@ -26,7 +28,7 @@ wkhomeApp.directive('subCluster', ["d3", 'globalData','sparqlQuery', '$routePara
         dataType: "JSON", //result data type
        // url: host + "/pubman/reports/collaboratorsData?URI=https://redi.cedia.edu.ec/resource/authors/UCUENCA/file/_SAQUICELA_GALARZA_____VICTOR_HUGO_" ,
       // url: host + "/pubman/reports/collaboratorsData?URI=https://redi.cedia.edu.ec/resource/authors/UCUENCA/file/_FEYEN_____JAN_" ,
-         url: newhost + "/pubman/reports/subclusterData?cluster="+cluster+"&subcluster="+subcluster ,
+         url: newhost + "/pubman/reports/subclusterData?cluster="+cluster+"&subcluster="+newsub ,
        //  url: newhost + "/mongo/relatedauthors?uri="+uri ,
         success: function(Result) {
         
@@ -96,11 +98,55 @@ function orgcolor (org) {
 
 //numero ancho enlace
 function render (graph) {
+//var marginleft = 600;
+//var margintop = 400;
 
-var svg = d3.select("svg"),
+var margin = {top: -5, right: -5, bottom: -5, left: -5},
+    width = 960 - margin.left - margin.right,
+    height = 600 - margin.top - margin.bottom;
+
+    /*var zomi =   d3.behavior.zoom().center([width / 2, height / 2]).on("zoom", function () {
+    svg.attr("transform", " scale(" + d3.event.scale + ")")
+   //svg.attr("transform", "translate(scale(" + d3.event.scale + ")")
+  // svg.attr("transform", d3.event.transform)
+  });*/
+
+
+
+
+var zoom = d3.behavior.zoom()
+    .center([width / 2, height / 2])
+    .scale(1)
+    .scaleExtent([0.6, 1])
+    .on("zoom", zoomed);
+
+   
+
+
+/*.call(d3.behavior.zoom().on("zoom", function () {
+   svg.attr("transform", " scale(" + d3.event.scale + ")")
+   //svg.attr("transform", "translate(scale(" + d3.event.scale + ")")
+  // svg.attr("transform", d3.event.transform)
+  }))
+  .append("g").attr("transform", "translate(" + marginleft + "," + margintop + ")")*/
+var svg = d3.select("svg")
+  .attr("transform", "translate(" + margin.left + "," + margin.right + ")").call(zoom)
+  ,
     width = +svg.attr("width"),
     height = +svg.attr("height");
 
+ var container = d3.select("svg");
+
+
+        function zoomed() {
+         // container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+     container.attr("transform", "translate( "+(width / 2)*(1-d3.event.scale)+", "+(height / 4)*(1-d3.event.scale)+" )scale(" + d3.event.scale + ")");
+}
+
+// svg.call (zoom);
+
+
+           
 
 
  //    .charge(-700)
@@ -234,7 +280,11 @@ for(var g in graph.links) {
                     }) 
         .on("mouseout", function (d) {
                         removePopovers(d);
-                    }); 
+                    })
+        .on("dblclick", function(d){ 
+           removePopovers(d);
+           $window.location.hash = '/author/profile/' +d.id;
+        }); 
 
 
        var lables = node.append("text")
@@ -243,6 +293,11 @@ for(var g in graph.links) {
       })
       .attr('x', -20)
       .attr('y',  40);
+
+    /*  $scope.clickonRelatedauthor = function(uri) {
+
+      $window.location.hash = '/author/profile/' + uri;
+    }*/
 
 
    simulation.on("tick", function () {
@@ -289,7 +344,7 @@ function dragended(d) {
            return { 
                        restrict: 'E',
                        scope: {
-                       relatedAuthorData: '='
+                         datacl : '=',
                    },
                   compile: function (element, attrs, transclude) {
                 
@@ -297,7 +352,17 @@ function dragended(d) {
                 return function (scope, element, attrs) { 
                            console.log ("SUBCL");
                           console.log ( $routeParams.cluster);
-                     draw(  $routeParams.area ,  $routeParams.subarea);
+
+                      scope.$watch('datacl', function (newVal, oldVal, scope) {
+                         $("#colores").html("");
+                          $("svg").html("");
+                        if (scope.datacl )
+                        {
+                            draw(scope.datacl.cluster  , scope.datacl.subcluster);
+                        }
+                    }, true);
+
+                  //   draw(  $routeParams.area ,  $routeParams.subarea);
 
    
                }

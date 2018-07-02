@@ -5,7 +5,7 @@ wkhomeControllers.controller('subCluster', ['$scope', '$window', 'globalData', '
          var host = "http://localhost:8080";
          var authorURI = $routeParams;
 
-              Statistics.query({
+      	Statistics.query({
           id: 'keywords_frequencypub_gt4'
         }, function(data) {
           $scope.relatedtags = [];
@@ -25,7 +25,7 @@ wkhomeControllers.controller('subCluster', ['$scope', '$window', 'globalData', '
           });*/
          $scope.changeCombo = function () {
          	querySubcluster.query({
-          id: $scope.areaCombo.id
+          id: $scope.areaCombo
         }, function(data) {
           $scope.subtags = [];
           _.map(data.subclusters , function(keyword) {
@@ -33,12 +33,21 @@ wkhomeControllers.controller('subCluster', ['$scope', '$window', 'globalData', '
               id : keyword["uri"],
               tag: keyword["label-en"]
             });
-            console.log (keyword);
           });
         });
+         }
 
-            console.log ($scope.areaCombo); 	
-              console.log ($scope.areaCombo.id); 
+         $scope.changeComboSub = function () {
+         	    //$scope.$apply(function () {
+         	    	$scope.datacl = {} ;
+         	    	$scope.datacl = {
+         	    	  	  cluster : $scope.areaCombo ,
+         	    	  	  subcluster: $scope.areaCombosub
+         	    	  };                          
+         	    	   
+                  //      });
+
+         	//$scope.draw ($scope.areaCombo , $scope.areaCombosub); 
          }
 
          console.log ("COMBO");

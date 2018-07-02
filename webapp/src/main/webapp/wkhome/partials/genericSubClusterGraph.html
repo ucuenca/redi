@@ -23,7 +23,7 @@
                     <div id="title"  class="text-success"></div>
                 </div>
 
-                <sub-cluster data="data" style="display: block; height: 90%"  >
+                <sub-cluster datacl="datacl" style="display: block; height: 90%"  >
                 <div class="container"> 
 
                 <div class="row"> 
@@ -36,7 +36,7 @@
                 </div>
                 <div class="col-md-auto element-subcl">
                 <h3 class="text-success"> Areas de investigación :</h3>
-                <select class="form-control" name="board" id="subcluster" ng-change="changeCombo()" ng-model="areaCombo"  ng-options="key.id as key.tag for key  in subtags">
+                <select class="form-control" name="board" id="subcluster" ng-change="changeComboSub()" ng-model="areaCombosub"  ng-options="key.id as key.tag for key  in subtags">
                     <option value="">Select Area</option>
                 </select>
                 </div>
