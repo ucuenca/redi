@@ -18,11 +18,18 @@
 package edu.ucuenca.storage.services;
 
 import com.mongodb.MongoClient;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Projections.exclude;
+import static com.mongodb.client.model.Projections.include;
+import static com.mongodb.client.model.Sorts.ascending;
 import edu.ucuenca.storage.api.MongoService;
 import edu.ucuenca.storage.exceptions.FailMongoConnectionException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
@@ -91,8 +98,23 @@ public class MongoServiceImpl implements MongoService {
     @Override
     public String getCluster(String uri) {
         return clusters.find(eq("_id", uri))
+                .projection(include("subclusters"))
+                .sort(ascending("label-en"))
                 .first()
                 .toJson();
+    }
+
+    @Override
+    public List<Document> getClusters() {
+        List<Document> c = new ArrayList<>();
+        FindIterable<Document> cls = clusters.find()
+                .projection(exclude("subclusters"))
+                .sort(ascending("label-en", "label-es"));
+        MongoCursor<Document> it = cls.iterator();
+        while (it.hasNext()) {
+            c.add(it.next());
+        }
+        return c;
     }
 
     @PreDestroy

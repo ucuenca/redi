@@ -121,12 +121,12 @@ uc:publicationTitle a r2r:Mapping ;
 uc:publicationISSN a r2r:Mapping ; 
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ prism:issn ?issn; prism:contentType 'Abstract'" ;
-    r2r:targetPattern "?SUBJ bibo:issn ?'issn'^^xsd:integer" .
+    r2r:targetPattern "?SUBJ bibo:issn ?'issn'^^xsd:string" .
 
 uc:publicationISBN a r2r:Mapping ; 
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ prism:isbn ?isbn; prism:contentType 'Abstract'" ;
-    r2r:targetPattern "?SUBJ bibo:isbn ?'isbn'^^xsd:integer" .
+    r2r:targetPattern "?SUBJ bibo:isbn ?'isbn'^^xsd:string" .
 
 uc:publicationDOI a r2r:Mapping ; 
     r2r:partOfMappingCollection uc:mapColl1 ;
