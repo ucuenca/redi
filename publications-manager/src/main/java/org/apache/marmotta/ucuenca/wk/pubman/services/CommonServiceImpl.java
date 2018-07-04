@@ -473,12 +473,12 @@ public class CommonServiceImpl implements CommonService {
 
         List<Map<String, Value>> response = sparqlService.query(QueryLanguage.SPARQL, querySubject);
         if (!response.isEmpty()) {
-            String resp="";
+            String resp = "";
             String subject = response.get(0).get("lsubjects").stringValue();
-            for ( String r:getRelevantTopics(subject.toLowerCase().split(","))) {
-            resp = r+", "+resp;
+            for (String r : getRelevantTopics(subject.toLowerCase().split(","))) {
+                resp = r + ", " + resp;
             }
-            return resp ;
+            return resp;
         } else {
             return "";
         }
@@ -629,25 +629,25 @@ public class CommonServiceImpl implements CommonService {
                     + "SELECT * { "
                     + "  { "
                     + "    select ?person (group_concat(DISTINCT ?orgname ; separator=\";\") as ?orgnames ) {\n"
-                    + "      GRAPH <"+con.getClusterGraph()+"> {\n"
-                    + "          ?person dct:isPartOf <"+cluster+"> .\n"
-                    + "          ?person dct:isPartOf <"+subcluster+"> .\n"
+                    + "      GRAPH <" + con.getClusterGraph() + "> {\n"
+                    + "          ?person dct:isPartOf <" + cluster + "> .\n"
+                    + "          ?person dct:isPartOf <" + subcluster + "> .\n"
                     + "      } "
-                    + "      GRAPH <"+con.getCentralGraph()+">  {  "
+                    + "      GRAPH <" + con.getCentralGraph() + ">  {  "
                     + "      	?person  schema:memberOf ?member . "
                     + "      }  "
-                    + "      GRAPH <"+con.getOrganizationsGraph()+">  { \n"
+                    + "      GRAPH <" + con.getOrganizationsGraph() + ">  { \n"
                     + "       	?member uc:name ?orgname "
                     + "      } "
                     + "     } GROUP by ?person "
                     + "}\n"
                     + "  {select ?person (group_concat(Distinct ?name ; separator=\";\") as ?names ) \n"
                     + "                {\n"
-                    + "      GRAPH <"+con.getClusterGraph()+"> { "
-                    + "          ?person dct:isPartOf <"+cluster+"> . "
-                    + "          ?person dct:isPartOf <"+subcluster+"> ."
+                    + "      GRAPH <" + con.getClusterGraph() + "> { "
+                    + "          ?person dct:isPartOf <" + cluster + "> . "
+                    + "          ?person dct:isPartOf <" + subcluster + "> ."
                     + "      }\n"
-                    + "      GRAPH <"+con.getCentralGraph()+">  { "
+                    + "      GRAPH <" + con.getCentralGraph() + ">  { "
                     + "        ?person foaf:name ?name . "
                     + "      } "
                     + "     } GROUP by ?person\n"
@@ -656,11 +656,11 @@ public class CommonServiceImpl implements CommonService {
                     + "      \n"
                     + "      select ?person ( sample (?lastname) as ?lastn) ( sample (?imgs) as ?img)  \n"
                     + "      {select * {\n"
-                    + "      GRAPH <"+con.getClusterGraph()+"> { "
-                    + "          ?person dct:isPartOf <"+cluster+"> . "
-                    + "          ?person dct:isPartOf <"+subcluster+"> . "
+                    + "      GRAPH <" + con.getClusterGraph() + "> { "
+                    + "          ?person dct:isPartOf <" + cluster + "> . "
+                    + "          ?person dct:isPartOf <" + subcluster + "> . "
                     + "      } "
-                    + "      GRAPH <"+con.getCentralGraph()+">  { \n"
+                    + "      GRAPH <" + con.getCentralGraph() + ">  { \n"
                     + "        OPTIONAL { ?person foaf:familyName ?lastname } . "
                     + "        OPTIONAL {  ?person  foaf:img  ?imgs }  . "
                     + "      }  "
@@ -669,11 +669,11 @@ public class CommonServiceImpl implements CommonService {
                     + "}\n"
                     + "{\n"
                     + "  select ?person (group_concat( Distinct ?s ; separator=\";\") as ?subjects ) {\n"
-                    + "      GRAPH <"+con.getClusterGraph()+"> { "
-                    + "          ?person dct:isPartOf <"+cluster+"> . "
-                    + "          ?person dct:isPartOf <"+subcluster+"> .\n"
+                    + "      GRAPH <" + con.getClusterGraph() + "> { "
+                    + "          ?person dct:isPartOf <" + cluster + "> . "
+                    + "          ?person dct:isPartOf <" + subcluster + "> .\n"
                     + "      }\n"
-                    + "      GRAPH <"+con.getCentralGraph()+">  { \n"
+                    + "      GRAPH <" + con.getCentralGraph() + ">  { \n"
                     + "        ?person foaf:publications ?pub . \n"
                     + "        ?pub dct:subject [rdfs:label ?s] .\n"
                     + "      } \n"
@@ -681,13 +681,13 @@ public class CommonServiceImpl implements CommonService {
                     + "}\n"
                     + "     optional {\n"
                     + "      select ?person (group_concat(DISTINCT ?coauthor ; separator=\";\") as ?coauthors) {\n"
-                    + "        GRAPH <"+con.getClusterGraph()+"> {\n"
-                    + "            ?coauthor dct:isPartOf <"+cluster+"> .\n"
-                    + "            ?coauthor dct:isPartOf <"+subcluster+"> .\n"
-                    + "          	?person dct:isPartOf <"+cluster+"> .\n"
-                    + "            ?person dct:isPartOf <"+subcluster+"> .\n"
+                    + "        GRAPH <" + con.getClusterGraph() + "> {\n"
+                    + "            ?coauthor dct:isPartOf <" + cluster + "> .\n"
+                    + "            ?coauthor dct:isPartOf <" + subcluster + "> .\n"
+                    + "          	?person dct:isPartOf <" + cluster + "> .\n"
+                    + "            ?person dct:isPartOf <" + subcluster + "> .\n"
                     + "        }\n"
-                    + "        graph <"+con.getCentralGraph()+"> {\n"
+                    + "        graph <" + con.getCentralGraph() + "> {\n"
                     + "            ?coauthor foaf:publications ?pub . \n"
                     + "        	?person foaf:publications ?pub . \n"
                     + "        	filter (?coauthor!=?person )\n"
@@ -716,8 +716,8 @@ public class CommonServiceImpl implements CommonService {
                 String subject = getSubjectAuthor(uri);
                 String orgs = authors.get("orgnames").stringValue();
                 String[] coauthors = {};
-                if (authors.containsKey("coauthors") ) {
-                coauthors = authors.get("coauthors").stringValue().split(";");
+                if (authors.containsKey("coauthors")) {
+                    coauthors = authors.get("coauthors").stringValue().split(";");
                 }
                 Collaborator cl = new Collaborator(uri, uri, names, lastname, orgs, subject);
                 cl.setTargets(coauthors);
@@ -863,12 +863,12 @@ public class CommonServiceImpl implements CommonService {
     }
 
     public Boolean isClusterPartner(String uri, String candidate) throws MarmottaException {
-        String queryC = "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
-                + "ASK  FROM <" + con.getClusterGraph() + ">    {\n"
-                + "   ?p  <http://ucuenca.edu.ec/ontology#hasPerson> <" + uri + ">  .\n"
-                + "   ?c foaf:publications ?p . "
-                + "   ?c foaf:publications ?op . "
-                + "  ?op <http://ucuenca.edu.ec/ontology#hasPerson> <" + candidate + ">   \n"
+        String queryC = "PREFIX dct: <http://purl.org/dc/terms/> "
+                + "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
+                + "ASK  FROM <"+con.getClusterGraph()+">    {  "
+                + "<"+uri+">   dct:isPartOf ?scl   .\n"
+                + "?scl  a <http://ucuenca.edu.ec/ontology#SubCluster> .\n"
+                + "<"+candidate+">  dct:isPartOf  ?scl "
                 + "}";
 
         return sparqlService.ask(QueryLanguage.SPARQL, queryC);
