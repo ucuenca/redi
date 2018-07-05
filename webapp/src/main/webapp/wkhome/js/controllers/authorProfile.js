@@ -107,7 +107,8 @@ wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$windo
       '             foaf:name ?name_.' +
       '     OPTIONAL{?subject  foaf:img ?img_.}' +
       '    FILTER(<' + author.uri + '> != ?subject)' +
-      '  }} GROUP BY ?subject  order by desc(?totalPub) limit 6' +
+      '  } GRAPH <'+globalData.authorsGraph+'> { ?subject ?prop ?val   } ' +
+      ' .  } GROUP BY ?subject  order by desc(?totalPub) limit 6' +
       '}';
 
     function relatedAuthors(id) {

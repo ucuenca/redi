@@ -473,7 +473,12 @@ public class CommonServiceImpl implements CommonService {
 
         List<Map<String, Value>> response = sparqlService.query(QueryLanguage.SPARQL, querySubject);
         if (!response.isEmpty()) {
-            return response.get(0).get("lsubjects").stringValue();
+            String resp = "";
+            String subject = response.get(0).get("lsubjects").stringValue();
+            for (String r : getRelevantTopics(subject.toLowerCase().split(","))) {
+                resp = r + ", " + resp;
+            }
+            return resp;
         } else {
             return "";
         }
@@ -587,36 +592,109 @@ public class CommonServiceImpl implements CommonService {
             // cluster = "http://skos.um.es/unesco6/1203";
             // subcluster = "http://dbpedia.org/resource/Semantic_Web";
 
+            /* String query = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+             + "PREFIX dct: <http://purl.org/dc/terms/>\n"
+             + "prefix schema: <http://schema.org/>  \n"
+             + "prefix uc: <http://ucuenca.edu.ec/ontology#> \n"
+             + "SELECT ?person (group_concat(DISTINCT ?s ; separator=\";\") as ?subjects ) (group_concat(DISTINCT ?orgname ; separator=\";\") as ?orgnames )  (group_concat(DISTINCT ?name ; separator=\";\") as ?names)  (group_concat(DISTINCT ?coauthor ; separator=\";\") as ?coauthors) "
+             + "( SAMPLE (?lastname) as ?lastn) ( SAMPLE (?imgs) as ?img) WHERE {\n"
+             // + "   GRAPH <https://redi.cedia.edu.ec/context/clusters> {\n"
+             + "   GRAPH <" + con.getClusterGraph() + "> {\n"
+             + " ?person dct:isPartOf <" + cluster + "> .\n"
+             + "   ?person dct:isPartOf <" + subcluster + "> .\n"
+             //   + "     GRAPH <https://redi.cedia.edu.ec/context/redi>  { \n"
+             + "     GRAPH <" + con.getCentralGraph() + ">  { \n"
+             + "     ?person foaf:publications ?pub .\n"
+             + "       ?pub dct:subject [rdfs:label ?s] .\n"
+             + "      ?person foaf:name ?name .\n   "
+             + "       OPTIONAL { ?person foaf:familyName ?lastname } ."
+             + "       OPTIONAL {  ?person  foaf:img  ?imgs }  ."
+             + "      ?person  schema:memberOf ?member .\n"
+             + "      \n"
+             + "       ?coauthor foaf:publications ?pub\n"
+             + "     filter ( ?person != ?coauthor)            \n"
+             + "     }\n"
+             + "      GRAPH <" + con.getOrganizationsGraph() + ">  { \n"
+             // + "      GRAPH <https://redi.cedia.edu.ec/context/organization>  { \n"
+             + "       ?member uc:name ?orgname \n"
+             + "       }\n"
+             + "     ?coauthor dct:isPartOf <" + cluster + "> .   \n"
+             + "     ?coauthor dct:isPartOf <" + subcluster + "> .  \n"
+             + "}\n"
+             + "} GROUP by ?person ";*/
             String query = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
                     + "PREFIX dct: <http://purl.org/dc/terms/>\n"
                     + "prefix schema: <http://schema.org/>  \n"
                     + "prefix uc: <http://ucuenca.edu.ec/ontology#> \n"
-                    + "SELECT ?person (group_concat(DISTINCT ?s ; separator=\";\") as ?subjects ) (group_concat(DISTINCT ?orgname ; separator=\";\") as ?orgnames )  (group_concat(DISTINCT ?name ; separator=\";\") as ?names)  (group_concat(DISTINCT ?coauthor ; separator=\";\") as ?coauthors) "
-                    + "( SAMPLE (?lastname) as ?lastn) ( SAMPLE (?imgs) as ?img) WHERE {\n"
-                    // + "   GRAPH <https://redi.cedia.edu.ec/context/clusters> {\n"
-                    + "   GRAPH <" + con.getClusterGraph() + "> {\n"
-                    + " ?person dct:isPartOf <" + cluster + "> .\n"
-                    + "   ?person dct:isPartOf <" + subcluster + "> .\n"
-                    //   + "     GRAPH <https://redi.cedia.edu.ec/context/redi>  { \n"
-                    + "     GRAPH <" + con.getCentralGraph() + ">  { \n"
-                    + "     ?person foaf:publications ?pub .\n"
-                    + "       ?pub dct:subject [rdfs:label ?s] .\n"
-                    + "      ?person foaf:name ?name .\n   "
-                    + "       OPTIONAL { ?person foaf:familyName ?lastname } ."
-                    + "       OPTIONAL {  ?person  foaf:img  ?imgs }  ."
-                    + "      ?person  schema:memberOf ?member .\n"
-                    + "      \n"
-                    + "       ?coauthor foaf:publications ?pub\n"
-                    + "     filter ( ?person != ?coauthor)            \n"
-                    + "     }\n"
+                    + "SELECT * { "
+                    + "  { "
+                    + "    select ?person (group_concat(DISTINCT ?orgname ; separator=\";\") as ?orgnames ) {\n"
+                    + "      GRAPH <" + con.getClusterGraph() + "> {\n"
+                    + "          ?person dct:isPartOf <" + cluster + "> .\n"
+                    + "          ?person dct:isPartOf <" + subcluster + "> .\n"
+                    + "      } "
+                    + "      GRAPH <" + con.getCentralGraph() + ">  {  "
+                    + "      	?person  schema:memberOf ?member . "
+                    + "      }  "
                     + "      GRAPH <" + con.getOrganizationsGraph() + ">  { \n"
-                    // + "      GRAPH <https://redi.cedia.edu.ec/context/organization>  { \n"
-                    + "       ?member uc:name ?orgname \n"
-                    + "       }\n"
-                    + "     ?coauthor dct:isPartOf <" + cluster + "> .   \n"
-                    + "     ?coauthor dct:isPartOf <" + subcluster + "> .  \n"
+                    + "       	?member uc:name ?orgname "
+                    + "      } "
+                    + "     } GROUP by ?person "
                     + "}\n"
-                    + "} GROUP by ?person ";
+                    + "  {select ?person (group_concat(Distinct ?name ; separator=\";\") as ?names ) \n"
+                    + "                {\n"
+                    + "      GRAPH <" + con.getClusterGraph() + "> { "
+                    + "          ?person dct:isPartOf <" + cluster + "> . "
+                    + "          ?person dct:isPartOf <" + subcluster + "> ."
+                    + "      }\n"
+                    + "      GRAPH <" + con.getCentralGraph() + ">  { "
+                    + "        ?person foaf:name ?name . "
+                    + "      } "
+                    + "     } GROUP by ?person\n"
+                    + "}\n"
+                    + "    {\n"
+                    + "      \n"
+                    + "      select ?person ( sample (?lastname) as ?lastn) ( sample (?imgs) as ?img)  \n"
+                    + "      {select * {\n"
+                    + "      GRAPH <" + con.getClusterGraph() + "> { "
+                    + "          ?person dct:isPartOf <" + cluster + "> . "
+                    + "          ?person dct:isPartOf <" + subcluster + "> . "
+                    + "      } "
+                    + "      GRAPH <" + con.getCentralGraph() + ">  { \n"
+                    + "        OPTIONAL { ?person foaf:familyName ?lastname } . "
+                    + "        OPTIONAL {  ?person  foaf:img  ?imgs }  . "
+                    + "      }  "
+                    + "	} "
+                    + "} GROUP by ?person "
+                    + "}\n"
+                    + "{\n"
+                    + "  select ?person (group_concat( Distinct ?s ; separator=\";\") as ?subjects ) {\n"
+                    + "      GRAPH <" + con.getClusterGraph() + "> { "
+                    + "          ?person dct:isPartOf <" + cluster + "> . "
+                    + "          ?person dct:isPartOf <" + subcluster + "> .\n"
+                    + "      }\n"
+                    + "      GRAPH <" + con.getCentralGraph() + ">  { \n"
+                    + "        ?person foaf:publications ?pub . \n"
+                    + "        ?pub dct:subject [rdfs:label ?s] .\n"
+                    + "      } \n"
+                    + "     } GROUP by ?person \n"
+                    + "}\n"
+                    + "     optional {\n"
+                    + "      select ?person (group_concat(DISTINCT ?coauthor ; separator=\";\") as ?coauthors) {\n"
+                    + "        GRAPH <" + con.getClusterGraph() + "> {\n"
+                    + "            ?coauthor dct:isPartOf <" + cluster + "> .\n"
+                    + "            ?coauthor dct:isPartOf <" + subcluster + "> .\n"
+                    + "          	?person dct:isPartOf <" + cluster + "> .\n"
+                    + "            ?person dct:isPartOf <" + subcluster + "> .\n"
+                    + "        }\n"
+                    + "        graph <" + con.getCentralGraph() + "> {\n"
+                    + "            ?coauthor foaf:publications ?pub . \n"
+                    + "        	?person foaf:publications ?pub . \n"
+                    + "        	filter (?coauthor!=?person )\n"
+                    + "      	}\n"
+                    + "      }GROUP by ?person\n"
+                    + "    } \n"
+                    + "} ";
 
             List<Map<String, Value>> responseSubClAuthor = sparqlService.query(QueryLanguage.SPARQL, query);
             List<Collaborator> collaborators = new ArrayList();
@@ -631,13 +709,16 @@ public class CommonServiceImpl implements CommonService {
                     img = authors.get("img").stringValue();
                 }
                 /*  String[] subjects = getRelevantTopics(authors.get("subjects").stringValue().split(";"));
-                String join = "";
-                for (String str :subjects){
-                  join = join+", "+str;
-                }   */
+                 String join = "";
+                 for (String str :subjects){
+                 join = join+", "+str;
+                 }   */
                 String subject = getSubjectAuthor(uri);
                 String orgs = authors.get("orgnames").stringValue();
-                String[] coauthors = authors.get("coauthors").stringValue().split(";");
+                String[] coauthors = {};
+                if (authors.containsKey("coauthors")) {
+                    coauthors = authors.get("coauthors").stringValue().split(";");
+                }
                 Collaborator cl = new Collaborator(uri, uri, names, lastname, orgs, subject);
                 cl.setTargets(coauthors);
                 cl.setImgUri(img);
@@ -782,12 +863,12 @@ public class CommonServiceImpl implements CommonService {
     }
 
     public Boolean isClusterPartner(String uri, String candidate) throws MarmottaException {
-        String queryC = "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
-                + "ASK  FROM <" + con.getClusterGraph() + ">    {\n"
-                + "   ?p  <http://ucuenca.edu.ec/ontology#hasPerson> <" + uri + ">  .\n"
-                + "   ?c foaf:publications ?p . "
-                + "   ?c foaf:publications ?op . "
-                + "  ?op <http://ucuenca.edu.ec/ontology#hasPerson> <" + candidate + ">   \n"
+        String queryC = "PREFIX dct: <http://purl.org/dc/terms/> "
+                + "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
+                + "ASK  FROM <"+con.getClusterGraph()+">    {  "
+                + "<"+uri+">   dct:isPartOf ?scl   .\n"
+                + "?scl  a <http://ucuenca.edu.ec/ontology#SubCluster> .\n"
+                + "<"+candidate+">  dct:isPartOf  ?scl "
                 + "}";
 
         return sparqlService.ask(QueryLanguage.SPARQL, queryC);
@@ -1009,7 +1090,7 @@ public class CommonServiceImpl implements CommonService {
                      String[] arrayaux = new String[clusters.size()];
                      arrayaux = clusters.toArray(arrayaux);
                      a.setCluster(arrayaux);*/
- /* String lc = responseCluster.get(0).get("lc").stringValue();
+                    /* String lc = responseCluster.get(0).get("lc").stringValue();
                      a.setCluster(lc.split("\\|"));*/
                 }
 

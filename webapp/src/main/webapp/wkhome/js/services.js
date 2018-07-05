@@ -169,6 +169,21 @@ wkhomeServices.factory('Authors', ['$resource', '$http', 'globalData',
       }
     ]);
 
+wkhomeServices.factory('querySubcluster', ['$resource', '$http', 'globalData',
+          function($resource, $http, globalData) {
+            var serverInstance = globalData.serverInstance;
+            return $resource(serverInstance + 'mongo/cluster?uri=:id', {}, {
+              query: {
+                method: 'GET',
+                params: {id: 'id'},
+                isArray: false,
+                cache: true,
+                headers: {'Accept':'application/json'}
+              }
+            });
+          }
+        ]);
+
 wkhomeServices.service('searchTextResultsService', ['$rootScope',function($rootScope){
     this.bucket = {};
     this.saveData = function(data){

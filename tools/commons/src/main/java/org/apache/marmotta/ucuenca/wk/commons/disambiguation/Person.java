@@ -98,8 +98,8 @@ public class Person {
         if (Coauthors.isEmpty() || p.Coauthors.isEmpty()) {
             return null;
         }
-        List<List<String>> name1 = NameUtils.uniqueName(Coauthors);
-        List<List<String>> name2 = NameUtils.uniqueName(p.Coauthors);
+        List<List<String>> name1 = Coauthors;
+        List<List<String>> name2 = p.Coauthors;
         List<List<String>> uname1 = new ArrayList<>();
         List<List<String>> uname2 = new ArrayList<>();
         int co = 0;
@@ -122,8 +122,8 @@ public class Person {
         if (Publications.isEmpty() || p.Publications.isEmpty()) {
             return null;
         }
-        List<String> name1 = PublicationUtils.uniqueTitle(Publications);
-        List<String> name2 = PublicationUtils.uniqueTitle(p.Publications);
+        List<String> name1 = Publications;
+        List<String> name2 = p.Publications;
         List<String> uname1 = new ArrayList<>();
         List<String> uname2 = new ArrayList<>();
         int co = 0;
@@ -232,6 +232,8 @@ public class Person {
         RemoveDuplicateString(p.Affiliations);
         RemoveDuplicateString(p.Publications);
         RemoveDuplicateString(p.Topics);
+        p.Coauthors = NameUtils.uniqueName(p.Coauthors);
+        p.Publications = PublicationUtils.uniqueTitle(p.Publications);
     }
 
     private void RemoveDuplicateString(List<String> in) {
