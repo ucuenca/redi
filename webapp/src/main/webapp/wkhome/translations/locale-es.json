@@ -19,6 +19,8 @@
 "Search":"",
 "sources": "",
 "results":"resultados",
+"SJR_DESCRIPTION":"SCImago Journal Rank (SJR) es una medida de la influencia científica de las revistas académicas que explica tanto el número de citas recibidas por una revista como la importancia o el prestigio de las revistas de las que provienen dichas citas.",
+"SNIP_DESCRIPTION":"SNIP mide el impacto de citas contextuales al ponderar las citas basadas en el número total de citas en un campo temático.",
 
 "Descargar Manual": "Descargar el manual de usuario para REDI",
 
@@ -70,7 +72,6 @@
 "No match":"No existe la palabra clave",
 "Palabra Clave":"Seleccione una area de conocimiento",
 "Author":"Autor",
-"Source":"Institución",
 "palabras clave":"Palabras Clave",
 "abstract":"Resumen",
 

@@ -160,9 +160,21 @@
                   </li>
                 </ul>
                 <span ng-show="doc.publisher"><strong>Publisher:</strong> {{doc.publisher[0]}}<br></span>
-                <span ng-show="doc.conference"><strong>Conference:</strong> {{doc.conference[0]}}<br></span>
-                <span ng-show="doc.book"><strong>Book:</strong> {{doc.book[0]}}<br></span>
-                <span ng-show="doc.journal"><strong>Journal:</strong> {{doc.journal[0]}}<br></span>
+                <span ng-show="doc.conference">
+                  <strong>Conference:</strong>
+                  <span ng-hide="doc['proceedings-uri']">{{doc.conference[0]}}</span>
+                  <a ng-show="doc['proceedings-uri']" ng-click="showInfo(doc['proceedings-uri'], 'proceedings')">{{doc.conference[0]}}</a><br>
+                </span>
+                <span ng-show="doc.book">
+                  <strong>Book:</strong>
+                  <span ng-hide="doc['book-uri']">{{doc.book[0]}}</span>
+                  <a ng-show="doc['book-uri']" ng-click="showInfo(doc['book-uri'], 'book')">{{doc.book[0]}}</a><br>
+                </span>
+                <span ng-show="doc.journal">
+                  <strong>Journal:</strong>
+                  <span ng-hide="doc['journal-uri']">{{doc.journal[0]}}</span>
+                  <a ng-show="doc['journal-uri']" ng-click="showInfo(doc['journal-uri'], 'journal')">{{doc.journal[0]}}</a><br>
+                </span>
               </div>
             </div>
           </div>
