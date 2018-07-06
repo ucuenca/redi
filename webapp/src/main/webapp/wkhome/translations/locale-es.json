@@ -113,5 +113,6 @@
 "relevant.coauthor" : "Coautores Relevantes" ,
 "general.information":"Información General",
 "research.areas" : "Areas de Investigación" ,
-"knowledge.areas" : "Areas de conocimiento "
+"knowledge.areas" : "Areas de conocimiento ",
+"Group By Area" : "Agrupar por área de Investigación"
 }
