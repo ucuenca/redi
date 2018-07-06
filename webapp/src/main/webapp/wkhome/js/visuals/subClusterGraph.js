@@ -130,17 +130,31 @@ var zoom = d3.behavior.zoom()
   }))
   .append("g").attr("transform", "translate(" + marginleft + "," + margintop + ")")*/
 var svg = d3.select("svg")
+     .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+  .attr("width", width + margin.left + margin.right)
+  .attr("height", height + margin.top + margin.bottom)
   .attr("transform", "translate(" + margin.left + "," + margin.right + ")").call(zoom)
   ,
     width = +svg.attr("width"),
     height = +svg.attr("height");
+    
+     var rect = svg.append("rect")
+    .attr("width", width)
+    .attr("height", height)
+    .style("fill", "white")
+    .style("pointer-events", "all");
 
- var container = d3.select("svg");
+
+ var container = svg.append("g");
+
 
 
         function zoomed() {
          // container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-     container.attr("transform", "translate( "+(width / 2)*(1-d3.event.scale)+", "+(height / 4)*(1-d3.event.scale)+" )scale(" + d3.event.scale + ")");
+    // container.attr("transform", "translate( "+(width / 2)*(1-d3.event.scale)+", "+(height / 4)*(1-d3.event.scale)+" )scale(" + d3.event.scale + ")");
+     container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 }
 
 // svg.call (zoom);
@@ -236,7 +250,7 @@ for(var g in graph.links) {
       .links(graph.links)
       .start();
 
-  var link = svg.append("g")
+  var link = container
       .attr("class", "links_scl")
     .selectAll("line")
     .data(graph.links)
@@ -249,7 +263,7 @@ for(var g in graph.links) {
      link.append("title")
   .text(function(d) { return  d.coauthor ?  "coauthor": ""; }); 
 
-  var node = svg.append("g")
+  var node = container
       .attr("class", "nodes")
     .selectAll("g")
     .data(graph.nodes)
