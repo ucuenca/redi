@@ -49,7 +49,7 @@ wkhomeApp.service('globalData', ['$window', function ($window) {
     this.latindexGraph = baseURL + "context/latindex";
     this.translateData = null;
     this.publicationsCore = this.serverInstance + 'solr/publications';
-    // this.publicationsCore = 'http://localhost:8080/solr/publications';
+    // this.publicationsCore = 'https://rediclon.cedia.edu.ec/solr/publications';
     this.PREFIX = 'PREFIX bibo: <http://purl.org/ontology/bibo/>'
             + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>  '
             + ' PREFIX dct: <http://purl.org/dc/terms/> '
