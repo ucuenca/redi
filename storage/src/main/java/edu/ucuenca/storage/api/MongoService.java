@@ -40,6 +40,8 @@ public interface MongoService {
 
     public List<Document> getClusters();
 
+    public String getAuthorsByArea(String cluster, String subcluster);
+
     /**
      * Create a connection to {@link com.mongodb.MongoClient}.
      *
@@ -49,7 +51,7 @@ public interface MongoService {
 
     public enum Collection {
         AUTHORS("authors"), PUBLICATIONS("publications"), STATISTICS("statistics"),
-        RELATEDAUTHORS("relatedauthors"), CLUSTERS("clusters");
+        RELATEDAUTHORS("relatedauthors"), CLUSTERS("clusters"), AUTHORS_AREA("authors_area");
 
         private final String value;
 

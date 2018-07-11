@@ -380,4 +380,6 @@ public interface QueriesService {
     
     // Clusters
     String getClusterURIs();
+    
+    String getClusterAndSubclusterURIs();
 }

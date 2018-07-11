@@ -21,6 +21,7 @@ import com.github.jsonldjava.core.JsonLdError;
 import com.github.jsonldjava.core.JsonLdOptions;
 import com.github.jsonldjava.core.JsonLdProcessor;
 import com.github.jsonldjava.utils.JsonUtils;
+import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -275,6 +276,44 @@ public class PopulateMongoImpl implements PopulateMongo {
                 String clusterData = commonService.getCluster(cluster);
                 Document parse = Document.parse(clusterData);
                 parse.append("_id", cluster);
+                collection.insertOne(parse);
+            }
+        } catch (MarmottaException ex) {
+            log.error(ex.getMessage(), ex);
+        } finally {
+            taskManagerService.endTask(task);
+        }
+    }
+
+    @Override
+    public void authorsByArea() {
+        Task task = taskManagerService.createSubTask("Caching Authors by Area", "Mongo Service");
+        try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
+            MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
+
+            // Delete and create collection
+            MongoCollection<Document> collection = db.getCollection(MongoService.Collection.AUTHORS_AREA.getValue());
+            collection.drop();
+
+            List<Map<String, Value>> areas = sparqlService.query(QueryLanguage.SPARQL, queriesService.getClusterAndSubclusterURIs());
+
+            task.updateTotalSteps(areas.size());
+
+            for (int i = 0; i < areas.size(); i++) {
+                String cluster = areas.get(i).get("cluster").stringValue();
+                String subcluster = areas.get(i).get("subcluster").stringValue();
+                // Print progress
+                log.info("Relating {}/{}. Cluster: '{}' - Subcluster: '{}'", i + 1, areas.size(), cluster, subcluster);
+                task.updateDetailMessage("Cluster", cluster);
+                task.updateDetailMessage("Subluster", subcluster);
+                task.updateProgress(i + 1);
+                // Get authors of an area from the SPARQL endpoint and transform them to JSON .
+                String authorsByArea = commonService.getsubClusterGraph(cluster, subcluster);
+                Document parse = Document.parse(authorsByArea);
+                BasicDBObject key = new BasicDBObject();
+                key.put("cluster", cluster);
+                key.put("subcluster", subcluster);
+                parse.append("_id", key);
                 collection.insertOne(parse);
             }
         } catch (MarmottaException ex) {

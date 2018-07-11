@@ -91,4 +91,17 @@ public class LoadData {
         return Response.ok().entity("Statistics load successfully").build();
     }
 
+    @POST
+    @Path("/author-by-area")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response loadAuthorByArea() throws FailMongoConnectionException {
+        try {
+            loadService.authorsByArea();
+        } catch (Exception e) {
+            log.error("Cannot load authors by area into Mongo DB", e);
+            throw new FailMongoConnectionException(String.format("Cannot load authors by area into Mongo DB"), e);
+        }
+        return Response.ok().entity("Authors by area were successfully loaded into MongoDB").build();
+    }
+
 }

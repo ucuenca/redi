@@ -102,6 +102,19 @@ public class MongoDBWebService {
         return Response.ok().entity(response).build();
     }
 
+    @GET
+    @Path("/authorByArea")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getStatistics(@QueryParam("cluster") String cluster, @QueryParam("subcluster") String subcluster) throws FailMongoConnectionException {
+        String response;
+        try {
+            response = mongoService.getAuthorsByArea(cluster, subcluster);
+        } catch (Exception e) {
+            throw new FailMongoConnectionException(String.format("Cannot retrieve information for cluster %s and subcluster", cluster, subcluster), e);
+        }
+        return Response.ok().entity(response).build();
+    }
+
     @POST
     @Path("/reinit")
     public Response pingMongoDB() throws FailMongoConnectionException {

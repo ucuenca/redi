@@ -17,6 +17,7 @@
  */
 package edu.ucuenca.storage.services;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -56,6 +57,7 @@ public class MongoServiceImpl implements MongoService {
     private MongoCollection<Document> statistics;
     private MongoCollection<Document> relatedauthors;
     private MongoCollection<Document> clusters;
+    private MongoCollection<Document> authorsByArea;
 
     @PostConstruct
     public void initialize() throws FailMongoConnectionException {
@@ -73,6 +75,7 @@ public class MongoServiceImpl implements MongoService {
         relatedauthors = db.getCollection(Collection.RELATEDAUTHORS.getValue());
         statistics = db.getCollection(Collection.STATISTICS.getValue());
         clusters = db.getCollection(Collection.CLUSTERS.getValue());
+        authorsByArea = db.getCollection(Collection.AUTHORS_AREA.getValue());
     }
 
     @Override
@@ -115,6 +118,15 @@ public class MongoServiceImpl implements MongoService {
             c.add(it.next());
         }
         return c;
+    }
+
+    @Override
+    public String getAuthorsByArea(String cluster, String subcluster) {
+        BasicDBObject key = new BasicDBObject();
+        key.put("cluster", cluster);
+        key.put("subcluster", subcluster);
+        return authorsByArea.find(eq("_id", key))
+                .first().toJson();
     }
 
     @PreDestroy
