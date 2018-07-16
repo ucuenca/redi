@@ -40,10 +40,7 @@ public class SPARQLUtils {
     }
 
     public void addAll(String graphTarget, String graphSource) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
-        new LongUpdateQueryExecutor(sparqlService,
-                "graph <" + graphSource + "> { ?a ?b ?c }",
-                "graph <" + graphTarget + "> { ?a ?b ?c }",
-                null, "", "?a ?b ?c").execute();
+        new LongUpdateQueryExecutor(sparqlService).copyGraph(graphTarget, graphSource);
     }
 
     public void minus(String graphTarget, String graphUniverse, String graphNot) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {

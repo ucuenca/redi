@@ -186,17 +186,10 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             } else {
                 ProcessAuthors(Providers, null);
             }
-            int iasa = sparqlUtils.count(constantService.getAuthorsSameAsGraph());
-            do {
+            for (int w0 = 0; w0 < 2; w0++) {
                 ProcessCoauthors(Providers, true);
                 sparqlUtils.addAll(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "1");
-                int asa = sparqlUtils.count(constantService.getAuthorsSameAsGraph());
-                if (asa != iasa) {
-                    iasa = asa;
-                } else {
-                    break;
-                }
-            } while (true);
+            }
             mergeAuthors();
             //sparqlUtils.delete(constantService.getAuthorsSameAsGraph() + "1");
             //task.updateDetailMessage("Status", String.format("%s Disambiguation", "Coauthors"));
@@ -371,13 +364,8 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             return;
         }
         //copy
-        new LongUpdateQueryExecutor(sparqlService,
-                "	graph <" + constantService.getAuthorsGraph() + "> {\n"
-                + "		?a ?b ?c .\n"
-                + "	}\n",
-                "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
-                + "		?a ?b ?c .\n"
-                + "	}\n", null, "prefix foaf: <http://xmlns.com/foaf/0.1/>\n", "?a ?b ?c").execute();
+        SPARQLUtils sparqlUtils = new SPARQLUtils(sparqlService);
+        sparqlUtils.addAll(constantService.getAuthorsProviderGraph(), constantService.getAuthorsGraph());
 
         //delete provider triple
         String deleteProviderType = "delete where {\n"
@@ -635,7 +623,6 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         sparqlService.update(QueryLanguage.SPARQL, q10);
         sparqlService.update(QueryLanguage.SPARQL, q11);
         sparqlService.update(QueryLanguage.SPARQL, q12);
-        SPARQLUtils sparqlUtils = new SPARQLUtils(sparqlService);
         sparqlUtils.delete("https://redi.cedia.edu.ec/context/authorsJHHx");
         sparqlUtils.delete("https://redi.cedia.edu.ec/context/authorsJHHxD");
         sparqlUtils.delete("https://redi.cedia.edu.ec/context/authorsJHH");
