@@ -110,7 +110,7 @@ path.cell {
     pointer-events: all;
 }
 
-circle #circles {
+#circles > circle {
     fill: steelblue;
     fill-opacity: .8;
     stroke: #fff;
