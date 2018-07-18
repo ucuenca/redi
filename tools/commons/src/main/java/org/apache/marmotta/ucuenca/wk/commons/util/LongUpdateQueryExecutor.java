@@ -19,6 +19,7 @@ import org.openrdf.query.UpdateExecutionException;
  *
  * @author Jose Ortiz
  */
+@SuppressWarnings("PMD")
 public class LongUpdateQueryExecutor {
 
     private String where;
@@ -66,6 +67,31 @@ public class LongUpdateQueryExecutor {
                     + "  select ?a ?b ?c {\n"
                     + "      graph <" + graph + "> {\n"
                     + "          ?a ?b ?c\n"
+                    + "      }\n"
+                    + "  } limit " + BULK + "\n"
+                    + "} ";
+            sparql.update(QueryLanguage.SPARQL, del);
+            thereIsData = sparql.ask(QueryLanguage.SPARQL, data);
+        }
+    }
+
+    public void copyGraph(String graphTarget, String from) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
+        String data = "ask { graph <" + from + "> { ?a ?b ?c . filter not exists { graph <" + graphTarget + "> { ?a ?b ?c . }  } } }";
+        boolean thereIsData = true;
+        while (thereIsData) {
+            String del = "insert {\n"
+                    + "	graph <" + graphTarget + "> {\n"
+                    + "    	?a ?b ?c\n"
+                    + "    }\n"
+                    + "} where {\n"
+                    + "  select ?a ?b ?c {\n"
+                    + "      graph <" + from + "> {\n"
+                    + "          ?a ?b ?c .\n"
+                    + "         filter not exists{\n"
+                    + "             graph <" + graphTarget + "> {\n"
+                    + "                 ?a ?b ?c\n"
+                    + "             }\n"
+                    + "         }\n"
                     + "      }\n"
                     + "  } limit " + BULK + "\n"
                     + "} ";
