@@ -46,6 +46,8 @@ public interface ConstantService {
 
     String getAcademicsKnowledgeGraph();
 
+    String getCentralEndpointsGraph();
+
     String getCentralGraph();
 
     String getAuthorResource();
@@ -146,6 +148,6 @@ public interface ConstantService {
     String getCoauthorsSameAsGraph();
 
     String getAuthorsProviderGraph();
-    
+
     String getDisambiguationStatusResource();
 }

@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -21,6 +22,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import javax.inject.Inject;
+import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Provider;
@@ -42,7 +44,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Value;
+import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryLanguage;
+import org.openrdf.query.UpdateExecutionException;
 import org.slf4j.Logger;
 
 /**
@@ -236,6 +240,32 @@ public class CommonServiceImpl implements CommonService {
         }
 
         return null;
+    }
+
+    @Override
+    public String listREDIEndpoints() {
+        try {
+            List<Map<String, Value>> response = sparqlService.query(
+                    QueryLanguage.SPARQL,
+                    queriesService.getListREDIEndpoints()
+            );
+            return com.listmapTojson(response);
+        } catch (MarmottaException ex) {
+            log.error(ex.getMessage(), ex);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean deleteREDIEndpoint(String id) {
+        try {
+            sparqlService.update(QueryLanguage.SPARQL,
+                    queriesService.delteREDIEndpointQuery(id));
+            return true;
+        } catch (MarmottaException | InvalidArgumentException | MalformedQueryException | UpdateExecutionException ex) {
+            log.error(ex.getMessage(), ex);
+        }
+        return false;
     }
 
     @Override
@@ -865,10 +895,10 @@ public class CommonServiceImpl implements CommonService {
     public Boolean isClusterPartner(String uri, String candidate) throws MarmottaException {
         String queryC = "PREFIX dct: <http://purl.org/dc/terms/> "
                 + "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
-                + "ASK  FROM <"+con.getClusterGraph()+">    {  "
-                + "<"+uri+">   dct:isPartOf ?scl   .\n"
+                + "ASK  FROM <" + con.getClusterGraph() + ">    {  "
+                + "<" + uri + ">   dct:isPartOf ?scl   .\n"
                 + "?scl  a <http://ucuenca.edu.ec/ontology#SubCluster> .\n"
-                + "<"+candidate+">  dct:isPartOf  ?scl "
+                + "<" + candidate + ">  dct:isPartOf  ?scl "
                 + "}";
 
         return sparqlService.ask(QueryLanguage.SPARQL, queryC);
@@ -1090,7 +1120,7 @@ public class CommonServiceImpl implements CommonService {
                      String[] arrayaux = new String[clusters.size()];
                      arrayaux = clusters.toArray(arrayaux);
                      a.setCluster(arrayaux);*/
-                    /* String lc = responseCluster.get(0).get("lc").stringValue();
+ /* String lc = responseCluster.get(0).get("lc").stringValue();
                      a.setCluster(lc.split("\\|"));*/
                 }
 
@@ -1270,5 +1300,27 @@ public class CommonServiceImpl implements CommonService {
             auxlist.add(e.getKey());
         }
         return auxlist;
+    }
+
+    @Override
+    public void registerREDIEndpoint(String name, URL url) throws Exception {
+        String base = "https://redi.cedia.edu.ec";
+
+        String id = base + "/resource/endpoint/redi/" + name.hashCode();
+        String baseContext = base + url.getPath() + "context/";
+
+        log.debug("New endpoint information.\nName: {} \nID: {}\nBase context: {}\nURL: {}",
+                name, id, baseContext, url);
+
+        boolean exists = sparqlService.ask(QueryLanguage.SPARQL,
+                queriesService.isREDIEndpointStored(id));
+        if (!exists) {
+            sparqlService.update(QueryLanguage.SPARQL,
+                    queriesService.insertREDIEndpoints(id, name,
+                            url.toExternalForm(),
+                            baseContext));
+        } else {
+            throw new Exception("Endpoint already exists");
+        }
     }
 }

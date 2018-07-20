@@ -928,6 +928,53 @@ public class QueriesServiceImpl implements QueriesService {
     }
 
     @Override
+    public String isREDIEndpointStored(String id) {
+        return "ASK FROM <" + con.getCentralEndpointsGraph() + ">\n"
+                + "{<" + id + "> ?p []} ";
+    }
+
+    @Override
+    public String insertREDIEndpoints(String id, String name, String url, String context) {
+        return PREFIXES
+                + "INSERT DATA\n"
+                + "{ \n"
+                + "  GRAPH <" + con.getCentralEndpointsGraph() + "> {\n"
+                + "    <" + id + "> a uc:REDIEndpoint;\n"
+                + "                         foaf:name \"" + name + "\" ;\n"
+                + "                         uc:baseContext <" + context + ">;\n"
+                + "                         uc:sparql <" + url + "sparql/" + ">;\n"
+                + "                         foaf:homepage <" + url + ">.\n"
+                + "                                              \n"
+                + "  }\n"
+                + "}";
+    }
+
+    @Override
+    public String getListREDIEndpoints() {
+        return PREFIXES
+                + "SELECT ?id ?name ?url ?sparql ?context\n"
+                + "WHERE {\n"
+                + "  GRAPH <" + con.getCentralEndpointsGraph() + "> {\n"
+                + "    ?id a uc:REDIEndpoint;\n"
+                + "        foaf:name ?name;\n"
+                + "        foaf:homepage ?url;\n"
+                + "        uc:sparql ?sparql;\n"
+                + "        uc:baseContext ?context.\n"
+                + "  }\n"
+                + "}";
+    }
+
+    @Override
+    public String delteREDIEndpointQuery(String id) {
+        return PREFIXES
+                + "DELETE WHERE { \n"
+                + "  GRAPH <" + con.getCentralEndpointsGraph() + "> {\n"
+                + "  	<" + id + "> ?p ?o\n"
+                + "  }\n"
+                + "}";
+    }
+
+    @Override
     public String getPublicationsPropertiesQuery(String publicationResource) {
         return " SELECT DISTINCT ?property ?value WHERE { "
                 + " <" + publicationResource + ">  ?property ?value. "
