@@ -284,7 +284,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         Set<Set<String>> groupsAuthors = getGroupsAuthors(query);
 
         Map<String, Set<String>> ngroups = new HashMap<>();
-        Map<String, Set<String>> sgroups = new HashMap<>();
+        Set<String> sgroups = new HashSet<>();
         for (Set<String> ag : groupsAuthors) {
             List<String> ls = new ArrayList<>(ag);
             String u = null;
@@ -304,23 +304,18 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                     ngroups.put(u, new HashSet<String>());
                 }
                 ngroups.get(u).add(get1.URI);
-                Boolean checkName = getLong.checkName(get1);
+                Boolean checkName = getLong.checkName(get1, false);
                 if (checkName == null || !checkName) {
-                    if (!sgroups.containsKey(u)) {
-                        sgroups.put(u, new HashSet<String>());
-                    }
-                    sgroups.get(u).add(get1.URI);
+                    sgroups.add(u);
                 }
             }
         }
         for (Entry<String, Set<String>> next : ngroups.entrySet()) {
             for (String next1 : next.getValue()) {
                 registerSameAs(constantService.getAuthorsSameAsGraph() + "2", next.getKey(), next1);
-            }
-        }
-        for (Entry<String, Set<String>> next : sgroups.entrySet()) {
-            for (String next1 : next.getValue()) {
-                registerSameAs(constantService.getAuthorsSameAsGraph() + "Fix", next.getKey(), next1);
+                if (sgroups.contains(next.getKey())) {
+                    registerSameAs(constantService.getAuthorsSameAsGraph() + "Fix", next.getKey(), next1);
+                }
             }
         }
     }
@@ -730,7 +725,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         List<Person> CandidateListLevel = Candidates.get(level).getValue();
         boolean up = true;
         for (Person aCandidate : CandidateListLevel) {
-            if (superAuthor.check(aCandidate)) {
+            if (superAuthor.check(aCandidate, true)) {
                 up = false;
                 Person enrich = superAuthor.enrich(aCandidate, true);
                 registerSameAsModel(r, superAuthor.URI, aCandidate.URI);
@@ -850,7 +845,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             for (int j = i + 1; j < queryResponse.size(); j++) {
                 Person auxPersoni = queryResponse.get(i);
                 Person auxPersonj = queryResponse.get(j);
-                Boolean checkName = auxPersoni.checkName(auxPersonj);
+                Boolean checkName = auxPersoni.checkName(auxPersonj, false);
                 if (checkName != null && checkName) {
                     Set<String> aGroup = new HashSet<>();
                     aGroup.add(auxPersoni.URI);
@@ -910,7 +905,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 Person get = queryResponse_mp.get(groupIndex);
                 boolean pros = false;
                 for (Person p : queryResponse_mp_au.values()) {
-                    Boolean checkName = p.checkName(get);
+                    Boolean checkName = p.checkName(get, true);
                     if (checkName != null && checkName) {
                         pros = true;
                         if (onlySameAs) {

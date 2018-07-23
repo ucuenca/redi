@@ -22,7 +22,8 @@ public class AffiliationUtils {
     public static double compareTitle(String name1, String name2) {
         ModifiedJaccardMod metric = new ModifiedJaccardMod();
         metric.prioritizeWordOrder = false;
-        double sim = metric.distanceName(name1, name2);
+        metric.shortStrings = true;
+        double sim = metric.distanceName(name1, name2).getValue();
         return sim;
     }
 
@@ -61,7 +62,7 @@ public class AffiliationUtils {
                     break;
                 }
             }
-            if (alone){
+            if (alone) {
                 Set<Integer> hsalone = new HashSet<>();
                 hsalone.add(i);
                 ls_alone.add(hsalone);

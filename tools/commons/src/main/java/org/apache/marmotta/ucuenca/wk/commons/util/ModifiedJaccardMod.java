@@ -23,24 +23,25 @@ import org.simmetrics.simplifiers.Soundex;
  */
 public class ModifiedJaccardMod {
 
+    public boolean shortStrings = false;
     public boolean soundexBoost = false;
     public boolean prioritizeWordOrder = false;
     public boolean onlyCompleteMatchs = false;
     public double syntacticThreshold = 0.89;
     public double abvPenalty = 0.95;
-    public double abvMatchsPenalty = 0.90;
     public static int abvThreshold = 3;
 
-    public double distanceName(String name1, String name2) {
+    public Map.Entry<Integer, Double> distanceName(String name1, String name2) {
         List<String> tks1 = tokenizer(name1.toLowerCase());
         List<String> tks2 = tokenizer(name2.toLowerCase());
         onlyCompleteMatchs = true;
         Map.Entry<Integer, Double> c = countMatchs(tks1, tks2);
+        Integer completeMatchs = c.getKey();
         onlyCompleteMatchs = false;
         Map.Entry<Integer, Double> c1 = countMatchs(tks1, tks2);
         double mx = Math.min(tks1.size(), tks2.size());
-        double pn = c.getKey() >= c1.getKey() && c.getKey() > 0 ? 1.0 : abvMatchsPenalty;
-        return pn * (c.getValue() + c1.getValue()) / (c.getKey() + c1.getKey() + mx);
+        double val = (c.getValue() + c1.getValue()) / (c.getKey() + c1.getKey() + mx);
+        return new AbstractMap.SimpleEntry<>(completeMatchs, val);
     }
 
     private Map.Entry<Integer, Double> countMatchs(List<String> tokens1, List<String> tokens2) {
@@ -94,11 +95,24 @@ public class ModifiedJaccardMod {
             double minlen = Math.min(t1.length(), t2.length());
             double fx = 0.05 * (1.0 / (1.0 + Math.exp(-1.25 * minlen + 5.0)));
             Soundex sm = new Soundex();
-            boolean equals = sm.simplify(Simplifiers.removeDiacritics().simplify(t1)).equals(sm.simplify(Simplifiers.removeDiacritics().simplify(t2)));
+            boolean equals = sm.simplify(
+                    Simplifiers.removeDiacritics()
+                            .simplify(t1))
+                    .equals(sm.simplify(
+                            Simplifiers.removeDiacritics()
+                                    .simplify(t2)));
             boost = (soundexBoost ? (equals ? 1.0 + fx : 0.95) : 1);
         } catch (Exception e) {
         }
-        double val = boost * (with(new Levenshtein()).simplify(Simplifiers.removeDiacritics()).build().compare(t2, t1) + 2 * with(new JaroWinkler()).simplify(Simplifiers.removeDiacritics()).build().compare(t2, t1)) / 3;
+        double sim = 0;
+        if (shortStrings) {
+            sim = with(new JaroWinkler()).simplify(Simplifiers.removeDiacritics()).build().compare(t2, t1);
+        } else {
+            sim = (with(new Levenshtein()).simplify(Simplifiers.removeDiacritics()).build().compare(t2, t1)
+                    + 2 * with(new JaroWinkler()).simplify(Simplifiers.removeDiacritics()).build().compare(t2, t1)) / 3;
+        }
+
+        double val = boost * sim;
         return val > 1.0 ? 1.0 : val;
     }
 
