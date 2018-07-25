@@ -19,6 +19,12 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
             });
           });
         });
+      $scope.datamap = "ec";
+
+     $scope.changeCountry = function() {
+     $scope.datamap = $scope.mapOptions;
+
+    }
 
         //default selectedTagItem =  Semantic Web  - > see in app.js
         $scope.$watch('selectedTagItem', function () {
@@ -33,17 +39,17 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
                 + '} WHERE {'
                 + '  SELECT ?org ?b ?c  (count(DISTINCT ?author) as ?totAuth) (SAMPLE(?label) as ?label_)'
                 + '  WHERE {   '
-                + '    GRAPH  <' + globalData.clustersGraph + '>{   '
+                + '    GRAPH  <' + globalData.clustersGraph.replace("http", "https") + '>{   '
                 + '      <' + $scope.selectedTagItem + '> a uc:Cluster;'
                 + '           rdfs:label  ?label .'
                 + '      ?author dct:isPartOf <' + $scope.selectedTagItem + '>;'
                 + '               a foaf:Person.'
                 + '    }'
-                + '    GRAPH <' + globalData.centralGraph + '> {  '
+                + '    GRAPH <' + globalData.centralGraph.replace("http", "https") + '> {  '
                 + '        ?author schema:memberOf  ?org .'
                 + '    }'
-                + '    GRAPH   <' + globalData.organizationsGraph + '> { '
-                + '		      ?org ?b ?c '
+                + '    GRAPH   <' + globalData.organizationsGraph.replace("http", "https") + '> { '
+                + '           ?org ?b ?c '
                 + '    }'
                 + '  } GROUP BY ?org ?b ?c '
                 + '}';
@@ -69,8 +75,8 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
                             model["city"] = resource["uc:city"];
                             model["province"] = resource["uc:province"];
                             if (model["id"]){
-                                $scope.publicationsBySource.push({id: model["id"], name: model["name"], fullname: model["fullname"], total: model["total"], latitude: model["lat"]
-                                    , longitude: model["long"], city: model["city"], province: model["province"], keyword: model["keyword"]});
+                                $scope.publicationsBySource.push({id: model["id"], name: model["name"], fullname: model["fullname"], z : parseFloat(model["total"]), lat : parseFloat(model["lat"])
+                   , lon: parseFloat(model["long"]), city: model["city"], province: model["province"], keyword: model["keyword"]});
                             }
                         });
                         $scope.$apply(function () {
