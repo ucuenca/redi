@@ -56,7 +56,7 @@
     <!-- specifies the home directory; overridden by environment variable MARMOTTA_HOME or system property marmotta.home -->
     <context-param>
         <param-name>marmotta.home</param-name>
-        <param-value>/home/gtrsemantica/marmotta_home</param-value>
+        <param-value>/home/gtrsemantica/central_home</param-value>
     </context-param>
 
     <!-- handle OPTIONS requests -->
