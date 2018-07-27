@@ -98,6 +98,11 @@ public class ConstantServiceImpl implements ConstantService {
     }
 
     @Override
+    public String getGraphResource() {
+        return getBaseResource() + "graph/";
+    }
+
+    @Override
     public String getJournalResource() {
         return getBaseResource() + "journal/";
     }
@@ -193,6 +198,11 @@ public class ConstantServiceImpl implements ConstantService {
 //    public String getAuthorsGraph() {
 //        return getWkhuskaGraph() + getSelectedGraph("authors");
 //    }
+    @Override
+    public String getBaseContext() {
+        return confService.getBaseContext();
+    }
+
     @Override
     public String getClusterGraph() {
         return confService.getBaseContext() + "clusters";

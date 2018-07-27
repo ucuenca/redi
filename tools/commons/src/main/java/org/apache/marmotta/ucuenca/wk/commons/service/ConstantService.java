@@ -52,6 +52,8 @@ public interface ConstantService {
 
     String getAuthorResource();
 
+    String getGraphResource();
+
     String getJournalResource();
 
     String getConferenceResource();
@@ -106,6 +108,8 @@ public interface ConstantService {
     String owl(String pred);
 
     String dblp(String pred);
+
+    String getBaseContext();
 
     String getDBLPGraph();
 

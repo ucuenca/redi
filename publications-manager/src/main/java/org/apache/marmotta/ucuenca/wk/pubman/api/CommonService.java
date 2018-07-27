@@ -62,4 +62,6 @@ public interface CommonService {
 
     void registerREDIEndpoint(String name, URL url) throws Exception;
 
+    void centralize(String[] endpoints, boolean isUpdate);
+
 }
