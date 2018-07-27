@@ -22,7 +22,7 @@ public class AffiliationUtils {
     public static double compareTitle(String name1, String name2) {
         ModifiedJaccardMod metric = new ModifiedJaccardMod();
         metric.prioritizeWordOrder = false;
-        double sim = metric.distanceName(name1, name2);
+        double sim = metric.distanceName(name1, name2).getValue();
         return sim;
     }
 
@@ -61,14 +61,13 @@ public class AffiliationUtils {
                     break;
                 }
             }
-            if (alone){
+            if (alone) {
                 Set<Integer> hsalone = new HashSet<>();
                 hsalone.add(i);
                 ls_alone.add(hsalone);
             }
         }
         ls.addAll(ls_alone);
-
         List<String> optsal = new ArrayList<>();
         for (Set<Integer> grp : ls) {
             List<String> opt = new ArrayList<>();

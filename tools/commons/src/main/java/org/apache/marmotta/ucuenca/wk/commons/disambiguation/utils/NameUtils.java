@@ -9,6 +9,7 @@ import edu.emory.mathcs.backport.java.util.Collections;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Person;
 import org.apache.marmotta.ucuenca.wk.commons.util.ModifiedJaccardMod;
@@ -58,22 +59,31 @@ public class NameUtils {
         }
         ModifiedJaccardMod metric = new ModifiedJaccardMod();
         metric.soundexBoost = true;
+        boolean hasCompleteMatchs = false;
         switch (tipo) {
             case 1:
                 metric.prioritizeWordOrder = false;
-                sim = metric.distanceName(nc1, nc2);
+                Map.Entry<Integer, Double> simp = metric.distanceName(nc1, nc2);
+                sim = simp.getValue();
+                hasCompleteMatchs = simp.getKey() != 0;
                 break;
             case 2:
                 metric.prioritizeWordOrder = false;
-                sim = metric.distanceName(nf1 + " " + nl1, nc2);
+                Map.Entry<Integer, Double> simo = metric.distanceName(nf1 + " " + nl1, nc2);
+                sim = simo.getValue();
+                hasCompleteMatchs = simo.getKey() != 0;
                 break;
             case 3:
                 metric.prioritizeWordOrder = true;
-                double sim1 = metric.distanceName(nl1, nl2);
+                Map.Entry<Integer, Double> sim1 = metric.distanceName(nl1, nl2);
                 metric.prioritizeWordOrder = false;
-                double sim2 = metric.distanceName(nf1, nf2);
-                sim = (sim1 + sim2) / 2;
+                Map.Entry<Integer, Double> sim2 = metric.distanceName(nf1, nf2);
+                sim = (sim1.getValue() + sim2.getValue()) / 2;
+                hasCompleteMatchs = (sim1.getKey() + sim2.getKey()) != 0;
                 break;
+        }
+        if (!hasCompleteMatchs) {
+            sim = 0;
         }
         return sim;
     }
@@ -120,7 +130,6 @@ public class NameUtils {
             }
         }
         ls.addAll(ls_alone);
-
         List<List<String>> optsal = new ArrayList<>();
         for (Set<Integer> grp : ls) {
             List<List<String>> opt = new ArrayList<>();
@@ -134,20 +143,16 @@ public class NameUtils {
     }
 
     public static List<String> bestName(List<List<String>> options) {
-
         int selection = -1;
         int selectionScore = -1;
         for (int i = 0; i < options.size(); i++) {
             List<String> get = options.get(i);
-
             int v1 = get.size();
             int v2 = 0;
             for (String n : get) {
                 v2 += n.replaceAll("\\s+", " ").trim().length();
             }
-
             int score = v1 * v2;
-
             if (score > selectionScore) {
                 selectionScore = score;
                 selection = i;
@@ -161,15 +166,12 @@ public class NameUtils {
         int selectionScore = -1;
         for (int i = 0; i < options.size(); i++) {
             List<String> get = options.get(i);
-
             int v1 = get.size();
             int v2 = 0;
             for (String n : get) {
                 v2 += n.replaceAll("\\s+", " ").trim().length();
             }
-
             int score = v1 * v2;
-
             if (score > selectionScore) {
                 selectionScore = score;
             }
