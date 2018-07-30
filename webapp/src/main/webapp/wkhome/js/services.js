@@ -155,6 +155,20 @@ wkhomeServices.factory('Authors', ['$resource', '$http', 'globalData',
           }
         ]);
 
+wkhomeServices.factory('Countries', ['$resource', '$http', 'globalData',
+          function($resource, $http, globalData) {
+            var serverInstance = globalData.serverInstance;
+            return $resource(serverInstance + 'mongo/countries', {}, {
+              query: {
+                method: 'GET',
+                isArray: true,
+                cache: true,
+                headers: {'Accept':'application/json'}
+              }
+            });
+          }
+        ]);
+
   wkhomeServices.factory('Journal', ['$resource', '$http', 'globalData',
       function($resource, $http, globalData) {
         var factory = {};

@@ -88,6 +88,19 @@ public class MongoDBWebService {
         }
         return Response.ok().entity(response).build();
     }
+    
+    @GET
+    @Path("/countries")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCountries() throws FailMongoConnectionException {
+        List<Document> response;
+        try {
+            response = mongoService.getCountries();
+        } catch (Exception e) {
+            throw new FailMongoConnectionException("Cannot retrieve countries", e);
+        }
+        return Response.ok().entity(response).build();
+    }
 
     @GET
     @Path("/statistics")

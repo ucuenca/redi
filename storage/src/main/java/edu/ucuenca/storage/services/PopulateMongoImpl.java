@@ -17,6 +17,8 @@
  */
 package edu.ucuenca.storage.services;
 
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.jsonldjava.core.JsonLdError;
 import com.github.jsonldjava.core.JsonLdOptions;
 import com.github.jsonldjava.core.JsonLdProcessor;
@@ -29,9 +31,12 @@ import edu.ucuenca.storage.api.MongoService;
 import edu.ucuenca.storage.api.PopulateMongo;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
@@ -41,8 +46,11 @@ import org.apache.marmotta.platform.core.api.triplestore.SesameService;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
+import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
 import org.bson.Document;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.openrdf.model.Value;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
@@ -76,9 +84,13 @@ public class PopulateMongoImpl implements PopulateMongo {
     @Inject
     private CommonService commonService;
     @Inject
+    private CommonsServices commonServices;
+    @Inject
     private TaskManagerService taskManagerService;
 
     private static final Map context = new HashMap();
+    
+    private final JsonNodeFactory factory = JsonNodeFactory.instance;
 
     static {
         context.put("dct", "http://purl.org/dc/terms/");
@@ -322,7 +334,70 @@ public class PopulateMongoImpl implements PopulateMongo {
             taskManagerService.endTask(task);
         }
     }
+    
+    @Override
+    public void Countries () {
+         Task task = taskManagerService.createSubTask("Caching countries", "Mongo Service");
+          try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
+            MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
 
+            // Delete and create collection
+            MongoCollection<Document> collection = db.getCollection(MongoService.Collection.COUNTRIES.getValue());
+            collection.drop();
+        try { 
+            List<Map<String, Value>> countries = sparqlService.query(QueryLanguage.SPARQL, queriesService.getCountries());
+            task.updateTotalSteps(countries.size());
+              for (int i = 0; i < countries.size(); i++) {
+                String co = countries.get(i).get("co").stringValue(); 
+                String code = getCountryCode (co);
+                String countriesNodes =  countrynodes (co, code).toString(); 
+                Document parse = Document.parse(countriesNodes);
+                parse.append("_id", co);
+                collection.insertOne(parse);
+                
+                task.updateDetailMessage("Country", co);
+                task.updateProgress(i + 1);
+              }
+        } catch (MarmottaException ex) {
+            java.util.logging.Logger.getLogger(PopulateMongoImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            taskManagerService.endTask(task);
+        }
+    }
+    }
+    
+    private ObjectNode countrynodes (String name , String code) {
+    ObjectNode node = factory.objectNode(); // initializing
+    node.put("name", name);
+    node.put("code", code);
+    return node;
+    }
+    
+   
+    private String getCountryCode (String coName) {
+  
+        try {
+            String Country = URLEncoder.encode(coName,"UTF-8").replace("+","%20");
+            Object js = commonServices.getHttpJSON ("https://restcountries.eu/rest/v2/name/"+Country );
+            JSONArray json = null ;
+            if (js instanceof JSONArray){
+                json = (JSONArray) js;
+            }
+            System.out.print (js);
+            for (Object j: json ) {
+               // System.out.println ("ite");
+                // System.out.println ((JSONObject) j);
+                JSONObject jo = (JSONObject) j;
+                Object r  = jo.get("alpha2Code");
+               // System.out.println ("---"+r);
+                return r.toString();
+                
+            }   } catch (UnsupportedEncodingException ex) {
+            java.util.logging.Logger.getLogger(PopulateMongoImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
     @Override
     public void publications() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

@@ -1,6 +1,6 @@
 
-wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globalData', 'sparqlQuery', 'searchData', 'Statistics',
-    function ($routeParams, $scope, $window, globalData, sparqlQuery, searchData, Statistics) {
+wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globalData', 'sparqlQuery', 'searchData', 'Statistics', 'Countries' , 
+    function ($routeParams, $scope, $window, globalData, sparqlQuery, searchData, Statistics, Countries) {
         //if click in pie-chart
         $scope.ifClick = function (value) {
             searchData.genericData = value;
@@ -19,12 +19,29 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
             });
           });
         });
-      $scope.datamap = "ec";
+      //$scope.datamap = [];
+    // $scope.mapOptions =  [];
 
      $scope.changeCountry = function() {
      $scope.datamap = $scope.mapOptions;
+     //console.log ($scope.datamap);
 
     }
+
+            Countries.query({
+        }, function(data) {
+             console.log ("Co Request");
+            console.log (data);
+          $scope.countryoptions = [];
+          _.map(data, function(keyword) {
+            $scope.countryoptions.push({
+              id: keyword["code"].toLowerCase(),
+              value:   keyword["name"]
+            });
+          });
+          $scope.mapOptions =  $scope.countryoptions[0].id;
+           $scope.datamap =  $scope.countryoptions[0].id;
+        });
 
         //default selectedTagItem =  Semantic Web  - > see in app.js
         $scope.$watch('selectedTagItem', function () {

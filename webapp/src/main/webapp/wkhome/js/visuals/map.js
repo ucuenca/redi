@@ -9,8 +9,9 @@ cloudGroup.directive('mapView', ["d3", 'globalData', 'sparqlQuery',
          // drawResourcesOnMap(null , null , null);
 
         function drawResourcesOnMap(data, element, scope, map)
-        {
-           var maps = { "ec": "countries/ec/ec-all",  "cr": "countries/cr/cr-all"};
+        {  
+           var urlmap = "countries/"+map+"/"+map+"-all";
+          // var maps = { "ec": "countries/ec/ec-all",  "cr": "countries/cr/cr-all"};
 
  //console.log ("Entra MAPA");
  // console.log (map);
@@ -36,7 +37,7 @@ cloudGroup.directive('mapView', ["d3", 'globalData', 'sparqlQuery',
             lon: -79.2 ,
             z : 75
         }];*/
-
+ console.log (urlmap);
  var description = "";
 $( "select  option:selected" ).each( function( i, el ) {
     var elem = $( el );
@@ -50,7 +51,7 @@ $( "select  option:selected" ).each( function( i, el ) {
 Highcharts.mapChart('containermap', {
 
     chart: {
-        map: maps[map] ,
+        map: urlmap ,
         height: 500
     },
 
@@ -160,7 +161,7 @@ Highcharts.mapChart('containermap', {
                 return  function (scope, element, attrs) {
                     console.log ("Scope");
                      console.log (scope);
-                      var map = scope.datamap;
+                     var map = scope.datamap;
                       console.log (map);
                     scope.$watch( 'datamap', function (newVal, oldVal, scope) {
                       map = scope.datamap;
@@ -168,8 +169,9 @@ Highcharts.mapChart('containermap', {
                      drawResourcesOnMap(data, svg, scope , map);
                      },true);
                     scope.$watch('data', function (newVal, oldVal, scope) {
+                          map = scope.datamap;
                         if (scope.data && scope.data[0])
-                        {    map = scope.datamap;
+                        {  
                             drawResourcesOnMap(scope.data, svg, scope , map);
                         }
                     }, true);

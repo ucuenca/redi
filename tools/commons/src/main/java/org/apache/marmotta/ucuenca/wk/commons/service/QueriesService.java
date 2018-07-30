@@ -402,4 +402,7 @@ public interface QueriesService {
 
     String getClusterAndSubclusterURIs();
 
+    // Map
+    String getCountries();
+
 }

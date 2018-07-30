@@ -58,6 +58,7 @@ public class MongoServiceImpl implements MongoService {
     private MongoCollection<Document> relatedauthors;
     private MongoCollection<Document> clusters;
     private MongoCollection<Document> authorsByArea;
+    private MongoCollection<Document> countries;
 
     @PostConstruct
     public void initialize() throws FailMongoConnectionException {
@@ -76,6 +77,7 @@ public class MongoServiceImpl implements MongoService {
         statistics = db.getCollection(Collection.STATISTICS.getValue());
         clusters = db.getCollection(Collection.CLUSTERS.getValue());
         authorsByArea = db.getCollection(Collection.AUTHORS_AREA.getValue());
+        countries = db.getCollection(Collection.COUNTRIES.getValue());
     }
 
     @Override
@@ -113,6 +115,18 @@ public class MongoServiceImpl implements MongoService {
         FindIterable<Document> cls = clusters.find()
                 .projection(exclude("subclusters"))
                 .sort(ascending("label-en", "label-es"));
+        MongoCursor<Document> it = cls.iterator();
+        while (it.hasNext()) {
+            c.add(it.next());
+        }
+        return c;
+    }
+    
+    
+     @Override
+    public List<Document> getCountries() {
+        List<Document> c = new ArrayList<>();
+        FindIterable<Document> cls = countries.find();
         MongoCursor<Document> it = cls.iterator();
         while (it.hasNext()) {
             c.add(it.next());
