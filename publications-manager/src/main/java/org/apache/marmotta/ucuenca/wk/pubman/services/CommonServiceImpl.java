@@ -952,7 +952,7 @@ public class CommonServiceImpl implements CommonService {
             @Override
             public int compare(Map.Entry<String, Collaborator> o1, Map.Entry<String, Collaborator> o2) {
                 Double result = o2.getValue().calcScore() - o1.getValue().calcScore();
-                return result.intValue();
+                return (int) (result * 10000000);
             }
         });
 
