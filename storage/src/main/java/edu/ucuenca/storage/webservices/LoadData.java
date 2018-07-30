@@ -77,6 +77,19 @@ public class LoadData {
         }
         return Response.ok().entity("Clusters loaded successfully").build();
     }
+    
+    @POST
+    @Path("/countries")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCountries() throws FailMongoConnectionException {
+        try {
+            loadService.Countries();
+        } catch (Exception e) {
+            log.error("Cannot load countries into Mongo DB", e);
+            throw new FailMongoConnectionException(String.format("Cannot load countries into Mongo DB"), e);
+        }
+        return Response.ok().entity("countries loaded successfully").build();
+    }
 
     @POST
     @Path("/networks")

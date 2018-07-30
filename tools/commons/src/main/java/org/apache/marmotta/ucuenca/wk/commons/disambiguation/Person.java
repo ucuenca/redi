@@ -44,7 +44,7 @@ public class Person {
         URIS = new HashSet<>();
     }
 
-    public boolean check(Person p) {
+    public boolean check(Person p, boolean priorFName) {
         boolean common = !Collections.disjoint(URIS, p.URIS);
         if (common) {
             return false;
@@ -52,7 +52,7 @@ public class Person {
         if (URI == null) {
             return true;
         }
-        Boolean checkName = checkName(p);
+        Boolean checkName = checkName(p, priorFName);
         if (checkName != null && checkName == true) {
             Boolean checkAffiliations = checkAffiliations(p);
             Boolean checkCoauthors = checkCoauthors(p);
@@ -80,13 +80,20 @@ public class Person {
         return false;
     }
 
-    public Boolean checkName(Person p) {
+    public Boolean checkName(Person p, boolean priorFName) {
         if (Name.isEmpty() || p.Name.isEmpty()) {
             return null;
         }
         List<String> name1 = NameUtils.bestName(Name);
         List<String> name2 = NameUtils.bestName(p.Name);
         double sim = NameUtils.compareName(name1, name2);
+        if (priorFName) {
+            int lenOrigin = NameUtils.bestNameLen(Name);
+            int lenOther = NameUtils.bestNameLen(p.Name);
+            if (lenOther > lenOrigin) {
+                sim = 0;
+            }
+        }
         return sim >= thresholdName;
     }
 

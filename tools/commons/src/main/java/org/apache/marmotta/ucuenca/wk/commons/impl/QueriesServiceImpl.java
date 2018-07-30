@@ -2,9 +2,10 @@ package org.apache.marmotta.ucuenca.wk.commons.impl;
 
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.OWL;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
@@ -1007,8 +1008,8 @@ public class QueriesServiceImpl implements QueriesService {
 
     @Override
     public String getUpdateOffsetQuery(int id, int newOffset) {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
         return PREFIXES
                 + "WITH <" + con.getCentralEndpointsGraph() + ">\n"
                 + "DELETE {\n"
@@ -1016,7 +1017,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + "  	<" + con.getGraphResource() + id + "> uc:status ?s.\n"
                 + "} INSERT {\n"
                 + "  	<" + con.getGraphResource() + id + "> uc:value \"" + newOffset + "\"^^xsd:integer.\n"
-                + "  	<" + con.getGraphResource() + id + "> uc:status\"" + dtf.format(now) + "\".\n"
+                + "  	<" + con.getGraphResource() + id + "> uc:status\"" + dateFormat.format(date) + "\".\n"
                 + "} WHERE {\n"
                 + "  	<" + con.getGraphResource() + id + "> uc:value ?w.\n"
                 + "  	<" + con.getGraphResource() + id + "> uc:status ?s.\n"
@@ -1909,6 +1910,16 @@ public class QueriesServiceImpl implements QueriesService {
                 + "  GRAPH <" + con.getClusterGraph() + "> {\n"
                 + "    ?c a uc:Cluster\n"
                 + "  }\n"
+                + "}";
+    }
+
+    @Override
+    public String getCountries() {
+        return PREFIXES
+                + "SELECT distinct ?co WHERE {\n"
+                + "  graph <"+con.getOrganizationsGraph()+"> {\n"
+                + "  ?subject  uc:country  ?co \n"
+                + "           }\n"
                 + "}";
     }
 

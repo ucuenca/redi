@@ -41,4 +41,9 @@ public interface PopulateMongo {
      * Information of authors by area.
      */
     public void authorsByArea();
+    
+    /**
+     * Information countries for map
+     */
+    public void Countries ();
 }

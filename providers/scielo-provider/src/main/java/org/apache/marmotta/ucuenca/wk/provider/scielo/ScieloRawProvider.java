@@ -278,7 +278,7 @@ public class ScieloRawProvider extends AbstractHttpProvider {
                         Person p2 = new Person();
                         p2.Name = new ArrayList<>();
                         p2.Name.add(Lists.newArrayList(values.get(i)));
-                        if (p1.checkName(p2)) {
+                        if (p1.checkName(p2, false)) {
                             if (!stats.containsKey(resource)) {
                                 stats.put(resource, 0);
                             }

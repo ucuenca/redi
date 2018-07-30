@@ -1,238 +1,178 @@
 'use strict';
 var cloudGroup = angular.module('mapView', []);
-//	D3	Factory
+//  D3  Factory
 cloudGroup.factory('d3', function () {
-    return	d3;
+    return  d3;
 });
 cloudGroup.directive('mapView', ["d3", 'globalData', 'sparqlQuery',
     function (d3, globalData, sparqlQuery) {
+         // drawResourcesOnMap(null , null , null);
 
-        function drawResourcesOnMap(data, element, scope)
-        {
-            var pubInfo = element;
-            pubInfo.html('');
-            var cities = data;
+        function drawResourcesOnMap(data, element, scope, map)
+        {  
+           var urlmap = "countries/"+map+"/"+map+"-all";
+          // var maps = { "ec": "countries/ec/ec-all",  "cr": "countries/cr/cr-all"};
 
-            var w = 500;
-            var h = 600;
-            var proj = d3.geo.mercator().scale(28500).translate([6400, 110]);
-            var path = d3.geo.path().projection(proj);
-            var t = proj.translate(); // the projection's default translation
-            var s = proj.scale(); // the projection's default scale
-//                    .origin([-84, -1])//lat long origin
-//                    .scale(4500)
-//                    .translate([-250, 230]);
+ //console.log ("Entra MAPA");
+ // console.log (map);
+ //console.log (maps[map]);
+ //             console.log (data);
+             
+/*var datos = [{
+            name: "Quito",
+            fullName : "EPN" ,
+            lat: -0.21,
+            lon: -78 ,
+            z : 20
+        }, {
+            name: 'Cuenca',
+            fullName : "UPS" ,
+            lat: -2.9,
+            lon: -79 ,
+            z : 100
+        }, {
+            name: 'Cuenca',
+            fullName : "UCUENCA" ,
+            lat: -2.98,
+            lon: -79.2 ,
+            z : 75
+        }];*/
+ console.log (urlmap);
+ var description = "";
+$( "select  option:selected" ).each( function( i, el ) {
+    var elem = $( el );
+     if ((elem).val().length > 1) {
+    description =  elem.text()+ " - " + description ;
+    }
+});
 
-            var positions = [];
-            cities = cities.filter(function (city) {
-                //             if (countByAirport[city.id]) {
-                var location = [+city.longitude, +city.latitude];
-                //          locationByAirport[city.id] = location;
-                positions.push(proj(location));
-                return true;
-                //            }
-            });
+         var cities = data;
+// Initiate the chart
+Highcharts.mapChart('containermap', {
 
-            var tip = d3.tip()
-                    .attr('class', 'tree-d3-tip')
-                    .html(function (d) {
-                        return ' ';
-                    });
+    chart: {
+        map: urlmap ,
+        height: 500
+    },
 
-            var map = element.append("svg:svg")
-                    .attr("width", w)
-                    .attr("height", h)
-                    .call(d3.behavior.zoom().on("zoom", redraw));
+    title: {
+        text: description
+    },
 
-            var axes = map.append("svg:g").attr("id", "axes");
+    mapNavigation: {
+        enabled: true
+    },
 
-            var xAxis = axes.append("svg:line")
-                    .attr("x1", t[0])
-                    .attr("y1", 0)
-                    .attr("x2", t[0])
-                    .attr("y2", h);
-
-            var yAxis = axes.append("svg:line")
-                    .attr("x1", 0)
-                    .attr("y1", t[1])
-                    .attr("x2", w)
-                    .attr("y2", t[1]);
-
-            var states = map.append("svg:g").attr("id", "states");
-
-            var circles = map.append("svg:g")
-                    .attr("id", "circles");
-            circles.selectAll("circle")
-                    .data(cities)
-                    .enter().append("svg:circle")
-                    .call(cities ? tip : function () {
-                    })
-                    .attr("cx", function (d, i) {
-                        return positions[i][0];
-                    })
-                    .attr("cy", function (d, i) {
-                        return positions[i][1];
-                    })
-                    .attr("r", function (d, i) {
-                        return Math.sqrt(d.total * 10);
-                    })
-
-
-            var cells = map.append("svg:g")
-                    .attr("id", "cells");
-
-            d3.select("input[type=checkbox]").on("change", function () {
-                cells.classed("voronoi", this.checked);
-            });
-
-
-            d3.json("../resources/ec-states.geojson", function (json) {
-                states.selectAll("path")
-                        .data(json.features)
-                        .enter().append("svg:path")
-                        .attr("d", path);
-            });
-
-            function redraw() {
-                // d3.event.translate (an array) stores the current translation from the parent SVG element
-                // t (an array) stores the projection's default translation
-                // we add the x and y vales in each array to determine the projection's new translation
-                var tx = t[0] * d3.event.scale + d3.event.translate[0];
-                var ty = t[1] * d3.event.scale + d3.event.translate[1];
-
-                proj.translate([tx, ty]);
-
-                // now we determine the projection's new scale, but there's a problem:
-                // the map doesn't 'zoom onto the mouse point'
-                proj.scale(s * d3.event.scale);
-
-                // redraw the map
-                states.selectAll("path").attr("d", path);
-
-                // redraw the points
-                circles.selectAll("circle")
-                        .attr("cx", function (d, i) {
-                            return t[0] + d3.event.translate[0] + (positions[i][0] * d3.event.scale) - 6400;
-                        })
-                        .attr("cy", function (d, i) {
-                            return t[1] + d3.event.translate[1] + (positions[i][1] * d3.event.scale) - 110;
-                        });
-
-                // redraw the x axis
-                xAxis.attr("x1", tx).attr("x2", tx);
-
-                // redraw the y axis
-                yAxis.attr("y1", ty).attr("y2", ty);
-            }
-
-
-
-
-            draw(data);
-            function draw(cities) {
-
-                var g = cells.selectAll("g")
-                        .data(cities)
-                        .enter().append("svg:g");
-                circles.selectAll("circle")
-                        .on("mouseover", function (d, i) {
+    tooltip: {
+        headerFormat: '',
+        pointFormat: '<b>{point.name}</b><br>Lat: {point.lat}, Lon: {point.lon}'
+    }, plotOptions: {
+        series: {  cursor: 'pointer',
+            point: {
+                events: {
+                    mouseOver: function (e) {
+                        var d = this;
+                        console.log (d);
+                        console.log (this);
                             d3.select("h3.tag").text(d.keyword);
                             d3.select("h3.name").text(d.name);
                             d3.select("h3.fullname").text(d.fullname);
                             d3.select("h3.city").text(d.city);
                             d3.select("h3.province").text(d.province);
-                            d3.select("h3.total").text(d.total);
-                            d3.select("h3.latitude").text(d.latitude);
-                            d3.select("h3.longitude").text(d.longitude);
-                            d3.select(this).transition()
-                                    .duration(750)
-                                    .attr("r", Math.sqrt(d.total * 2) + 16);
+                            d3.select("h3.total").text(d.z);
+                            d3.select("h3.latitude").text(d.lat);
+                            d3.select("h3.longitude").text(d.lon);
 
-                            tip.html("<h2>" + d.keyword + "</h2> <br>  <h3>" + d.name + "</h3> <br>Click to See Authors Within This Research Area");
-                            tip.show(d);
-                        })
-                        .on("mouseout", function (d, i) {
-                            d3.select(this).transition()
-                                    .duration(750)
-                                    .attr("r", Math.sqrt(d.total * 10));
-                            tip.hide(d);
-                        })
-                        .on("click", function (d, i) {
-                            var sparqlquery = globalData.PREFIX
-                                    + 'CONSTRUCT { '
-                                    + '  <http://ucuenca.edu.ec/wkhuska/resultTitle> a uc:pagetitle. '
-                                    + '  <http://ucuenca.edu.ec/wkhuska/resultTitle> uc:viewtitle "Authors from '+d.name+' , taking place in '+d.keyword+' field" . '
-                                    + '  ?author rdfs:label ?name_;'
-                                    + '           uc:total ?totalPub '
-                                    + '}    WHERE {       '
-                                    + ' 	SELECT ?author (SAMPLE(?name) as ?name_) (COUNT( DISTINCT ?pub) AS ?totalPub)'
-                                    + '      WHERE {                  '
-                                    + '        GRAPH <' + globalData.centralGraph + '>  {   '
-                                    + '          ?author foaf:publications  ?pub;'
-                                    + '                   foaf:name       ?name;'
-                                    + '                   schema:memberOf ?org.  '
-                                    + '        }'
-                                    + '        GRAPH <' + globalData.organizationsGraph + '>  {'
-                                    + '                ?org uc:name "' + d.name + '"^^xsd:string.'
-                                    + '        }           '
-                                    + '        GRAPH <' + globalData.clustersGraph + '> {'
-                                    + '        	[] foaf:publications [uc:hasPerson ?author];'
-                                    + '            rdfs:label ?lbl.'
-                                    + '         FILTER REGEX(?lbl, "' + d.keyword + '")'
-                                    + '        }'
-                                    + '      } GROUP BY ?author'
-                                    + '}';
-
-
-                            waitingDialog.show("Loading Authors Related with " + d.keyword);
-                            sparqlQuery.querySrv({query: sparqlquery}, function (rdf) {
-                                jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
-                                    if (compacted["@graph"]){
-                                        var entity = compacted["@graph"];
-                                        //var final_entity = _.where(entity, {"@type": "bibo:Document"});
-                                        var values = entity.length ? entity : [entity];
-                                        //send data to getKeywordTag Controller
-                                        scope.ifClick({value: compacted});
-                                        waitingDialog.hide();
-                                    }
-                                    else
-                                    {
-                                        waitingDialog.hide();
-                                    }
-                                });
-                            });   // end  sparqlQuery.querySrv(...
-                        });
-                g.append("svg:path")
-                        .attr("class", "cell")
-                        .attr("d", function (d, i) {
-                            //                  return "M" + polygons[i].join("L") + "Z";
-                        })
-                        .on("mouseover", function (d, i) {
-                            d3.select("h3.name").text(d.name);
-                        });
+                    }
+                }
+            },
+            events: {
+                mouseOut: function (d, e) {
+                }
             }
+        }
+    } ,
+
+    series: [ {
+        // Use the gb-all map with no data as a basemap
+        name: 'Basemap',
+        borderColor: '#A0A0A0',
+        nullColor: 'rgba(200, 200, 200, 0.3)',
+        showInLegend: false
+    }, {
+        name: 'Separators',
+        type: 'mapline',
+        nullColor: '#707070',
+        showInLegend: false,
+        enableMouseTracking: false
+    }, {
+            name: 'Province',
+            color: '#E0E0E0',
+            enableMouseTracking: false
+        }, {
+        // Specify points using lat/lon
+        type: 'mapbubble',
+        name: 'IES',
+        color: Highcharts.getOptions().colors[0],
+        data: cities , minSize: 10,
+            maxSize: '8%',
+            tooltip: {
+                pointFormat: ' <strong>{point.name}</strong>: {point.z} authors' ,
+                fontSize: '25px'
+            }
+    }]
+});
+
+                
+            d3.selectAll(".highcharts-negative")
+            .on("mouseover", function (d, i) {
+            var dat = d3.select(this).attr("d").split(" ");
+               var newatr = "";
+               for (var  i=0 ; i < dat.length;i++){
+                if (i == 4 || i == 5){
+                dat[i] = parseInt(dat[i])+10; 
+                }
+                  newatr =newatr +" " + dat[i] ;
+               }
+               d3.select(this)
+                        .attr("a", d3.select(this).attr("d") );
+                        
+                d3.select(this).transition()
+                        .duration(250)
+                        .attr("d", newatr.trim() );
+            })
+            .on("mouseout", function (d, i) { console.log (this);
+               
+                d3.select(this).transition()
+                       // .duration(50)
+                        .attr("d", d3.select(this).attr("a") );
+            });
+
         }
         return {
             restrict: 'E',
-            scope: {
-                data: '=',
-                'ifClick': "&"
-            },
+             scope : true ,
             compile: function (element, attrs, transclude) {
-                //	Create	a	SVG	root	element
-                var svg = d3.select(element[0]);
-                //var width = 960, height = 500;
-                var elementWidth = parseInt(element.css('width'));
-                var elementHeight = parseInt(element.css('height'));
-                var width = attrs.ctWidth ? attrs.ctWidth : elementWidth;
-                var height = attrs.ctHeight ? attrs.ctHeight : elementHeight;
-                //	Return	the	link	function
-                return	function (scope, element, attrs) {
-                    //	Watch	the	data	attribute	of	the	scope
+                //  Create  a   SVG root    element
+                var svg = null;
+                var data = [];
+
+                //  Return  the link    function
+                return  function (scope, element, attrs) {
+                    console.log ("Scope");
+                     console.log (scope);
+                     var map = scope.datamap;
+                      console.log (map);
+                    scope.$watch( 'datamap', function (newVal, oldVal, scope) {
+                      map = scope.datamap;
+                      console.log (map);
+                     drawResourcesOnMap(data, svg, scope , map);
+                     },true);
                     scope.$watch('data', function (newVal, oldVal, scope) {
+                          map = scope.datamap;
                         if (scope.data && scope.data[0])
-                        {
-                            drawResourcesOnMap(scope.data, svg, scope);
+                        {  
+                            drawResourcesOnMap(scope.data, svg, scope , map);
                         }
                     }, true);
                 };
@@ -240,34 +180,3 @@ cloudGroup.directive('mapView', ["d3", 'globalData', 'sparqlQuery',
         };
     }]);
 
-
-                                    // + ' CONSTRUCT { <http://ucuenca.edu.ec/wkhuska/resultTitle> a uc:pagetitle. <http://ucuenca.edu.ec/wkhuska/resultTitle> uc:viewtitle "Authors from ' + d.name + ' , taking place in ' + d.keyword + ' field" . ?subject rdfs:label ?name. ?subject uc:total ?totalPub }   '
-                                    // + ' WHERE {  '
-                                    // + '     SELECT ?subject ?totalPub ?name '
-                                    // + '     WHERE { '
-                                    // + '         ?subject foaf:publications ?pubb. '
-                                    // + '         ?pubb dcterms:subject ?keySub. '
-                                    // + '         ?keySub rdfs:label ?key. '
-                                    // //+ '         ?subject dct:subject ?key . '
-                                    // + '         FILTER (mm:fulltext-search(?key,"' + d.keyword + '")). '
-                                    // + '         { '
-                                    // + '         SELECT ?subject ?name (COUNT( DISTINCT ?pub) AS ?totalPub)  '
-                                    // + '             WHERE { '
-                                    // + '                 GRAPH <' + globalData.centralGraph + '>  { '
-                                    // + '                     ?subject foaf:publications  ?pub . '
-                                    // + '                     ?subject foaf:name       ?name.        '
-                                    // + '                     ?subject dct:provenance ?provenance. '
-                                    // + '                     {  '
-                                    // + '                         SELECT * WHERE { '
-                                    // + '                             GRAPH <' + globalData.endpointsGraph + '>  { '
-                                    // + '                                 ?provenance uc:name ?sourcename. '
-                                    // + '                                 FILTER(mm:fulltext-search(?sourcename,"'+d.name+'"))'
-                                    // + '                             } '
-                                    // + '                         } '
-                                    // + '                     } '
-                                    // + '                 } '
-                                    // + '             }  '
-                                    // + '         GROUP BY ?subject ?name '
-                                    // + '         } '
-                                    // + '     }'
-                                    // + ' }  ';
