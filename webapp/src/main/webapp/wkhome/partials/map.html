@@ -47,10 +47,10 @@
                 </div>
                  <div class="col-md-5">
                 <h3 class="text-success"> Pais:</h3>
-                <select class="form-control"  name="co" ng-change="changeCountry()" ng-model="mapOptions" id="country" >
-                     <option value="">Select Country</option>
-                    <option value="ec" >Ecuador</option>
-                    <option value="cr">Costa Rica</option>
+                <select class="form-control"  name="co" ng-change="changeCountry()" ng-model="mapOptions" id="country"  ng-options="key.id as key.value for key  in countryoptions">
+                      <option value="">Select Country</option> 
+                 <!--   <option value="ec" >Ecuador</option>
+                    <option value="cr">Costa Rica</option> -->
                 </select>
             </div>
         

@@ -5,8 +5,10 @@
  */
 package org.apache.marmotta.ucuenca.wk.commons.impl;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.net.URL;
 import java.nio.file.Path;
@@ -21,6 +23,11 @@ import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
@@ -38,6 +45,7 @@ import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.openrdf.model.Value;
 
@@ -256,4 +264,41 @@ public class CommonsServicesImpl implements CommonsServices {
         }
         return "";
     }
+    
+         @Override
+         @SuppressWarnings({"PMD.AvoidBranchingStatementAsLastInLoop"})
+          public  Object getHttpJSON(String query ) {
+        try {
+            
+           
+            HttpClient client = HttpClientBuilder.create().build();
+            HttpGet request = new HttpGet(query);
+            HttpResponse response = client.execute(request);
+            int responseCode = response.getStatusLine().getStatusCode();
+ 
+          /*  System.out.println("**GET** request Url: " + request.getURI());
+            System.out.println("Response Code: " + responseCode);
+            System.out.println("Content:-\n");*/
+            BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+            int successcode = 200;  
+            if (successcode == responseCode){
+            String line = "";
+            while (line != null) {
+                line = rd.readLine();
+              JSONParser parser = new JSONParser();
+              return  parser.parse(line); 
+              
+              //return JsonPath.read(line, path);
+            }}else {return null;}
+           
+        } catch (ClientProtocolException e) {
+                       java.util.logging.Logger.getLogger(CommonsServicesImpl.class.getName()).log(Level.SEVERE, null, e);
+
+        } catch (UnsupportedOperationException | IOException | org.json.simple.parser.ParseException e) {
+                       java.util.logging.Logger.getLogger(CommonsServicesImpl.class.getName()).log(Level.SEVERE, null, e);
+
+        }
+        return null;
+    }
+
 }

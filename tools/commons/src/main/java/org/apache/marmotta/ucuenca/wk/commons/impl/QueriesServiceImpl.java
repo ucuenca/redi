@@ -1815,6 +1815,16 @@ public class QueriesServiceImpl implements QueriesService {
     }
 
     @Override
+    public String getCountries() {
+        return PREFIXES
+                + "SELECT distinct ?co WHERE {\n"
+                + "  graph <"+con.getOrganizationsGraph()+"> {\n"
+                + "  ?subject  uc:country  ?co \n"
+                + "           }\n"
+                + "}";
+    }
+
+    @Override
     public String getClusterAndSubclusterURIs() {
         return PREFIXES
                 + "SELECT DISTINCT * WHERE {\n"

@@ -387,4 +387,6 @@ public interface QueriesService {
     String getClusterURIs();
 
     String getClusterAndSubclusterURIs();
+    // Map
+    String getCountries();
 }
