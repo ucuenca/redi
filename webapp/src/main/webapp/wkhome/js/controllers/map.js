@@ -30,8 +30,8 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
 
             Countries.query({
         }, function(data) {
-             console.log ("Co Request");
-            console.log (data);
+           //  console.log ("Co Request");
+           // console.log (data);
           $scope.countryoptions = [];
           _.map(data, function(keyword) {
             $scope.countryoptions.push({
@@ -46,7 +46,7 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
         //default selectedTagItem =  Semantic Web  - > see in app.js
         $scope.$watch('selectedTagItem', function () {
             if ($scope.selectedTagItem) {
-
+             var textcountry  = $("#country option:selected").text();
             waitingDialog.show("Consultando Ubicacion de Autores Relacionados con:  \"" + $scope.selectedTagItem + "\"");
             var queryBySource = globalData.PREFIX
                 + 'CONSTRUCT {'
@@ -66,7 +66,7 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
                 + '        ?author schema:memberOf  ?org .'
                 + '    }'
                 + '    GRAPH   <' + globalData.organizationsGraph.replace("http", "https") + '> { '
-                + '           ?org ?b ?c '
+                + '           ?org ?b ?c . ?org uc:country  ?co . FILTER  ( STR(?co) = "'+textcountry+'")'
                 + '    }'
                 + '  } GROUP BY ?org ?b ?c '
                 + '}';
