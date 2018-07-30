@@ -71,6 +71,7 @@ public class LoadData {
     public Response getClusters() throws FailMongoConnectionException {
         try {
             loadService.clusters();
+            loadService.Countries();
         } catch (Exception e) {
             log.error("Cannot load clusters into Mongo DB", e);
             throw new FailMongoConnectionException(String.format("Cannot load clusters into Mongo DB"), e);
@@ -85,10 +86,10 @@ public class LoadData {
         try {
             loadService.Countries();
         } catch (Exception e) {
-            log.error("Cannot load countries into Mongo DB", e);
+            log.error("Cannot load countries and countries into Mongo DB", e);
             throw new FailMongoConnectionException(String.format("Cannot load countries into Mongo DB"), e);
         }
-        return Response.ok().entity("countries loaded successfully").build();
+        return Response.ok().entity("countries and countries loaded successfully").build();
     }
 
     @POST
