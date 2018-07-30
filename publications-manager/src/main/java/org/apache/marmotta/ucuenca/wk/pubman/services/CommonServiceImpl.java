@@ -29,6 +29,7 @@ import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Provider;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
+import org.apache.marmotta.ucuenca.wk.pubman.api.Centralize;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.ReportsService;
 import org.apache.marmotta.ucuenca.wk.pubman.model.AuthorProfile;
@@ -88,6 +89,9 @@ public class CommonServiceImpl implements CommonService {
 
     @Inject
     DisambiguationServiceImpl DisambiguationImpl;
+
+    @Inject
+    private Centralize centralize;
 
     @Inject
     private QueriesService queriesService;
@@ -948,7 +952,7 @@ public class CommonServiceImpl implements CommonService {
             @Override
             public int compare(Map.Entry<String, Collaborator> o1, Map.Entry<String, Collaborator> o2) {
                 Double result = o2.getValue().calcScore() - o1.getValue().calcScore();
-                return result.intValue();
+                return (int) (result * 10000000);
             }
         });
 
@@ -1321,6 +1325,21 @@ public class CommonServiceImpl implements CommonService {
                             baseContext));
         } else {
             throw new Exception("Endpoint already exists");
+        }
+    }
+
+    @Override
+    public void centralize(String[] endpoints, boolean isUpdate) {
+        // TODO: validate that the a process has not been initialized.
+        for (String endpoint : endpoints) {
+            try {
+                if (isUpdate) {
+                    centralize.resetCopy(endpoint);
+                }
+                centralize.copy(endpoint);
+            } catch (Exception ex) {
+                log.error(ex.getMessage(), ex);
+            }
         }
     }
 }

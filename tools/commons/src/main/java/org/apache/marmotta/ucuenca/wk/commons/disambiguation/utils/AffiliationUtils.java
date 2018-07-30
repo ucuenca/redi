@@ -22,7 +22,6 @@ public class AffiliationUtils {
     public static double compareTitle(String name1, String name2) {
         ModifiedJaccardMod metric = new ModifiedJaccardMod();
         metric.prioritizeWordOrder = false;
-        metric.shortStrings = true;
         double sim = metric.distanceName(name1, name2).getValue();
         return sim;
     }
@@ -69,7 +68,6 @@ public class AffiliationUtils {
             }
         }
         ls.addAll(ls_alone);
-
         List<String> optsal = new ArrayList<>();
         for (Set<Integer> grp : ls) {
             List<String> opt = new ArrayList<>();

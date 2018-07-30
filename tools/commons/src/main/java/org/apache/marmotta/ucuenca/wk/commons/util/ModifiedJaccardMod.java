@@ -55,10 +55,15 @@ public class ModifiedJaccardMod {
                     String token1 = tokens1.get(i);
                     String token2 = tokens2.get(j);
                     double sim = syntacticSim(token1, token2);
-                    boolean abv = (token1.length() <= abvThreshold && token2.length() > abvThreshold) || (token2.length() <= abvThreshold && token1.length() > abvThreshold);
+                    boolean fullTokens = (token1.length() > abvThreshold && token2.length() > abvThreshold);
                     boolean startsw = token1.startsWith(token2) || token2.startsWith(token1);
-                    boolean condFullMatch = sim >= syntacticThreshold;
-                    boolean condAbvMatch = abv && startsw;
+                    boolean condFullMatch = false;
+                    boolean condAbvMatch = false;
+                    if (fullTokens) {
+                        condFullMatch = sim >= syntacticThreshold;
+                    } else {
+                        condAbvMatch = startsw;
+                    }
                     if (condAbvMatch) {
                         sim = abvPenalty;
                     }

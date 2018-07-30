@@ -150,12 +150,12 @@ public class PubWebService {
     @POST
     @Path("/central/centralize")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response centralize(@Context HttpServletRequest request) {
-        String[] org = request.getParameterMap().get("data[]");
-        for (String string : org) {
-            log.info(string);
+    public Response centralize(@Context HttpServletRequest request, @QueryParam("update") boolean update) {
+        String[] endpoints = request.getParameterMap().get("data[]");
+        if (endpoints.length > 0) {
+            return Response.ok().entity("OK").build();
         }
-        log.info("TODO...");
+        commonService.centralize(endpoints, update);
         return Response.ok().entity("OK").build();
     }
 

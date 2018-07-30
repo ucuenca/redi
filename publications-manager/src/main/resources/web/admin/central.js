@@ -44,17 +44,33 @@ function loadTable() {
         targets: 1
     };
 
+    var penultimate = {
+        "render": function (data, type, row) {
+            return "WORKS";
+            var offset = parseInt(row['offset']);
+            var status = row['status'];
+            if (offset !== -1) {
+                return "Offset:" + offset +
+                        status === "Not started." ? "" : "<br> Last Update:<br>" + status;
+            } else {
+                return status === "Not started." ? status : "Completed!<br>" + status;
+            }
+        },
+        targets: 2 + columns.length
+    };
+
     var lastCol = {
         "render": function (data, type, row) {
             return '<input id="btn_delete_central" '
                     + 'type="button" value="delete"  '
                     + 'onclick="delete_endpoint(\'' + row["id"] + '\')"> ';
         },
-        targets: 2 + columns.length
+        targets: 2 + columns.length + 1
     };
 
     columnDefs.push(colum1);
     columnDefs.push(colum2);
+    columnDefs.push(penultimate);
     columnDefs.push(lastCol);
 
     // Render the rest of fields
@@ -83,6 +99,8 @@ function loadTable() {
 
 function centralize() {
     var redi = [];
+    var update = document.getElementById('checkCentralization').checked;
+
     $('tbody tr input:checked').each(function (index) {
         redi.push($(this).val());
     });
@@ -95,7 +113,7 @@ function centralize() {
             type: "POST",
             data: redi_data,
             dataType: "text",
-            url: host + "pubman/central/centralize",
+            url: host + "pubman/central/centralize?update=" + update,
             success: function (result) {
                 console.log(result);
             },

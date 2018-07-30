@@ -13,6 +13,8 @@ import java.util.Map;
  */
 public interface QueriesService {
 
+    int LIMIT_TRIPLES_REDI_END = 1000;
+
     String getAuthorsDataQuery(String... organizations);
 
     String getAuthorsDataQuery(String organization);
@@ -179,7 +181,19 @@ public interface QueriesService {
 
     String insertREDIEndpoints(String id, String name, String url, String context);
 
+    String getInsertOffsetQuery(String endpoint, int id, String name);
+
     String getListREDIEndpoints();
+
+    String getREDIEndpoint(String id);
+
+    String getGraphOffset(int id);
+
+    String getUpdateOffsetQuery(int id, int newOffset);
+
+    String getNumberofTriplesREDIEndpoint(String selectService, int offset, String targetGraph);
+
+    String getCopyDataQuery(String selectService, int offset, String targetGraph, String localGraphName);
 
     String delteREDIEndpointQuery(String id);
 
@@ -387,6 +401,8 @@ public interface QueriesService {
     String getClusterURIs();
 
     String getClusterAndSubclusterURIs();
+
     // Map
     String getCountries();
+
 }
