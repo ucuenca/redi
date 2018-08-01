@@ -46,14 +46,34 @@ function loadTable() {
 
     var penultimate = {
         "render": function (data, type, row) {
-            return "WORKS";
-            var offset = parseInt(row['offset']);
-            var status = row['status'];
-            if (offset !== -1) {
-                return "Offset:" + offset +
-                        status === "Not started." ? "" : "<br> Last Update:<br>" + status;
+            var status = row['offset'];
+            if (status.length > 0) {
+                var message = "";
+                for (var i in status) {
+                    var graph = status[i]["graphName"];
+                    var value = parseInt(status[i]["value"]);
+                    var date = status[i]["status"];
+
+                    var progress = "";
+                    if (value > 0) {
+                        progress = "offset:" + value;
+                    } else if (value === -2) {
+                        progress = "completed!";
+                    } else {
+                        progress = "not started";
+                    }
+
+                    message += "<b>Graph: </b>"
+                            + graph + " ("
+                            + progress + ")"
+                            + "<br>"
+                            + "<i>Updated at: </i>" 
+                            + date + "<hr>";
+
+                }
+                return message;
             } else {
-                return status === "Not started." ? status : "Completed!<br>" + status;
+                return "Not started";
             }
         },
         targets: 2 + columns.length

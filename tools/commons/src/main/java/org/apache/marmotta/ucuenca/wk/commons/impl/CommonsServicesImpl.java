@@ -41,13 +41,12 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
-//import org.json.simple.JSONArray;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.slf4j.Logger;
 import org.openrdf.model.Value;
+import org.slf4j.Logger;
 
 /**
  *
@@ -57,9 +56,7 @@ public class CommonsServicesImpl implements CommonsServices {
 
     @Inject
     private Logger log;
-    
-    
-       
+
     /**
      * Función que elimina acentos y caracteres especiales
      *
@@ -79,7 +76,7 @@ public class CommonsServicesImpl implements CommonsServices {
         }//end for i
         return output;
     }
-    
+
     @Override
     public String cleanNameArticles(String value) {
         value = value.replace(".", "").trim();
@@ -96,7 +93,7 @@ public class CommonsServicesImpl implements CommonsServices {
         value = value.replaceAll("^los ", " ");
         value = value.replaceAll("^las ", " ");
         value = value.replaceAll("^la ", " ");
-        
+
         return value;
     }
 
@@ -134,7 +131,7 @@ public class CommonsServicesImpl implements CommonsServices {
     }
 
     @Override
-    public String readPropertyFromFile(String file,String property) {
+    public String readPropertyFromFile(String file, String property) {
         Properties propiedades = new Properties();
         InputStream entrada = null;
         ConcurrentHashMap<String, String> mapping = new ConcurrentHashMap<String, String>();
@@ -163,58 +160,65 @@ public class CommonsServicesImpl implements CommonsServices {
     }
 
     @Override
-     public String listmapTojson(List<Map<String, Value>> list) 
-     {       
-         JSONObject jsonh1 =new JSONObject();
-         
-    JSONArray jsonArr = new JSONArray();
-    for (Map<String, Value> map : list) {
-        JSONObject jsonObj=new JSONObject();
+    public JSONObject getObjectfromResult(Map<String, Value> map) throws JSONException {
+        JSONObject object = new JSONObject();
         for (Map.Entry<String, Value> entry : map.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue().stringValue();
-            try {
-                jsonObj.put(key,value);
-            } catch (JSONException ex) {
-                java.util.logging.Logger.getLogger(CommonsServicesImpl.class.getName()).log(Level.SEVERE, null, ex);
-               return null;
-            }
-            
-                                
+            object.put(entry.getKey(), entry.getValue().stringValue());
         }
-        jsonArr.put(jsonObj);
+        return object;
     }
+
+    @Override
+    public String listmapTojson(List<Map<String, Value>> list) {
+        JSONObject jsonh1 = new JSONObject();
+
+        JSONArray jsonArr = new JSONArray();
+        for (Map<String, Value> map : list) {
+            JSONObject jsonObj = new JSONObject();
+            for (Map.Entry<String, Value> entry : map.entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue().stringValue();
+                try {
+                    jsonObj.put(key, value);
+                } catch (JSONException ex) {
+                    java.util.logging.Logger.getLogger(CommonsServicesImpl.class.getName()).log(Level.SEVERE, null, ex);
+                    return null;
+                }
+
+            }
+            jsonArr.put(jsonObj);
+        }
         try {
             //return jsonArr.toString();
             return jsonh1.put("data", jsonArr).toString();
         } catch (JSONException ex) {
             java.util.logging.Logger.getLogger(CommonsServicesImpl.class.getName()).log(Level.SEVERE, null, ex);
-             return null;
+            return null;
         }
-       
-}
-      @Override
-      public String mapTojson(Map<String, String> map) 
-     {       
-        JSONObject jsonObj =new JSONObject();
+
+    }
+
+    @Override
+    public String mapTojson(Map<String, String> map) {
+        JSONObject jsonObj = new JSONObject();
         for (Map.Entry<String, String> entry : map.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
-            
+
             try {
-                jsonObj.put(key,value);
-            
+                jsonObj.put(key, value);
+
             } catch (org.json.JSONException ex) {
                 java.util.logging.Logger.getLogger(CommonsServicesImpl.class.getName()).log(Level.SEVERE, null, ex);
                 return "";
-            }                           
+            }
         }
         return jsonObj.toString();
-     }
-    
+    }
+
     @Override
     public String getIndexedPublicationsFilter(String querystr) {
-        
+
         try {
 
             // Create path and index
@@ -245,15 +249,14 @@ public class CommonsServicesImpl implements CommonsServices {
                 if (i == 0) {
                     filter = "regex(str(?publicationUri), \"" + d.get("id") + "\" )";
                 } else {
-                    filter += "|| regex(str(?publicationUri), \"" + d.get("id") + "\" )";  
+                    filter += "|| regex(str(?publicationUri), \"" + d.get("id") + "\" )";
                 }
             }
 
             // reader can only be closed when there
             // is no need to access the documents any more.
             reader.close();
-            
-            
+
             return filter;
         } catch (InvalidArgumentException ex) {
             return "error:  " + ex;
@@ -264,38 +267,40 @@ public class CommonsServicesImpl implements CommonsServices {
         }
         return "";
     }
-    
-         @Override
-         @SuppressWarnings({"PMD.AvoidBranchingStatementAsLastInLoop"})
-          public  Object getHttpJSON(String query ) {
+
+    @Override
+    @SuppressWarnings({"PMD.AvoidBranchingStatementAsLastInLoop"})
+    public Object getHttpJSON(String query) {
         try {
-            
-           
+
             HttpClient client = HttpClientBuilder.create().build();
             HttpGet request = new HttpGet(query);
             HttpResponse response = client.execute(request);
             int responseCode = response.getStatusLine().getStatusCode();
- 
-          /*  System.out.println("**GET** request Url: " + request.getURI());
+
+            /*  System.out.println("**GET** request Url: " + request.getURI());
             System.out.println("Response Code: " + responseCode);
             System.out.println("Content:-\n");*/
             BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-            int successcode = 200;  
-            if (successcode == responseCode){
-            String line = "";
-            while (line != null) {
-                line = rd.readLine();
-              JSONParser parser = new JSONParser();
-              return  parser.parse(line); 
-              
-              //return JsonPath.read(line, path);
-            }}else {return null;}
-           
+            int successcode = 200;
+            if (successcode == responseCode) {
+                String line = "";
+                while (line != null) {
+                    line = rd.readLine();
+                    JSONParser parser = new JSONParser();
+                    return parser.parse(line);
+
+                    //return JsonPath.read(line, path);
+                }
+            } else {
+                return null;
+            }
+
         } catch (ClientProtocolException e) {
-                       java.util.logging.Logger.getLogger(CommonsServicesImpl.class.getName()).log(Level.SEVERE, null, e);
+            java.util.logging.Logger.getLogger(CommonsServicesImpl.class.getName()).log(Level.SEVERE, null, e);
 
         } catch (UnsupportedOperationException | IOException | org.json.simple.parser.ParseException e) {
-                       java.util.logging.Logger.getLogger(CommonsServicesImpl.class.getName()).log(Level.SEVERE, null, e);
+            java.util.logging.Logger.getLogger(CommonsServicesImpl.class.getName()).log(Level.SEVERE, null, e);
 
         }
         return null;
