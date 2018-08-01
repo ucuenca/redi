@@ -253,7 +253,30 @@ public class CommonServiceImpl implements CommonService {
                     QueryLanguage.SPARQL,
                     queriesService.getListREDIEndpoints()
             );
-            return com.listmapTojson(response);
+
+            // Generate JSON.
+            JSONArray result = new JSONArray();
+            for (Map<String, Value> map : response) {
+                String id = map.get("id").stringValue();
+
+                // Endpoint info
+                JSONObject endpointInfoJson = com.getObjectfromResult(map);
+
+                // Get statistics of graphs
+                JSONArray statsJson = new JSONArray();
+                List<Map<String, Value>> statistics = sparqlService.query(
+                        QueryLanguage.SPARQL,
+                        queriesService.getREDIEndpointStatistics(id)
+                );
+                for (Map<String, Value> statsMap : statistics) {
+                    JSONObject stat = com.getObjectfromResult(statsMap);
+                    statsJson.put(stat);
+                }
+
+                endpointInfoJson.put("offset", statsJson);
+                result.put(endpointInfoJson);
+            }
+            return new JSONObject().put("data", result).toString();
         } catch (MarmottaException ex) {
             log.error(ex.getMessage(), ex);
         }
