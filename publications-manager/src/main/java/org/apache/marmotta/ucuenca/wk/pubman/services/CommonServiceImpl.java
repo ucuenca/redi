@@ -737,7 +737,11 @@ public class CommonServiceImpl implements CommonService {
 
                 String uri = authors.get("person").stringValue();
                 String names = getUniqueName(authors.get("names").stringValue(), ";");
-                String lastname = authors.get("lastn").stringValue();
+                String lastname = "";
+                if (authors.containsKey("lastn")){
+                 lastname = authors.get("lastn").stringValue();
+                  }else {
+                lastname = names;       };
                 String img = "";
                 if (authors.containsKey("img")) {
                     img = authors.get("img").stringValue();
