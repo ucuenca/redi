@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.Lists;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -1054,7 +1055,7 @@ public class CommonServiceImpl implements CommonService {
                     + "  filter (lang(?clabel ) = \"en\") "
                     + "      } limit 5";
 
-            String metaAuthor = Prefix
+            String metaAuthor1 = Prefix
                     + "SELECT   ?names  ?orgnames ?members ?orcids ?imgs ?emails ?homepages ?citations ?hindexs ?i10indexs ?afs ?scs  where { "
                     + "GRAPH <" + con.getCentralGraph() + "> { "
                     + " { "
@@ -1084,6 +1085,33 @@ public class CommonServiceImpl implements CommonService {
                     + "       OPTIONAL { "
                     + "    <" + uri + "> vcard:hasEmail ?email "
                     + "  } "
+                    + "        } "
+                    + "  } "
+                    + "    GRAPH <" + con.getOrganizationsGraph() + "> { "
+                    + "    select (GROUP_CONCAT( DISTINCT ?orgname ;  SEPARATOR = \"|\")  as ?orgnames ) {  "
+                    + "    ?member uc:name ?orgname . "
+                    + "    GRAPH <" + con.getCentralGraph() + "> { "
+                    + "    <" + uri + "> schema:memberOf ?member "
+                    + "      }  "
+                    + "      } "
+                    + "      } "
+                    + "  }  "
+                    + "} ";
+            String metaAuthor2 = Prefix
+                    + "SELECT   ?names  ?orgnames ?members ?orcids ?imgs ?emails ?homepages ?citations ?hindexs ?i10indexs ?afs ?scs  where { "
+                    + "GRAPH <" + con.getCentralGraph() + "> { "
+                    + " { "
+                    + "    select (GROUP_CONCAT( DISTINCT ?name ;  SEPARATOR = \"|\") as ?names)  "
+                    + "   (GROUP_CONCAT( DISTINCT ?orcid ;  SEPARATOR = \"|\") as ?orcids  )  "
+                    + "   (GROUP_CONCAT( DISTINCT ?img ;  SEPARATOR = \"|\") as ?imgs  )  "
+                    + "   (GROUP_CONCAT( DISTINCT ?email ;  SEPARATOR = \"|\") as ?emails ) "
+                    + "   (GROUP_CONCAT( DISTINCT ?homepage ;  SEPARATOR = \"|\") as ?homepages  ) "
+                    + "   (GROUP_CONCAT( DISTINCT ?citation ;  SEPARATOR = \"|\") as ?citations  )           	"
+                    + "   (GROUP_CONCAT( DISTINCT ?hindex  ;  SEPARATOR = \"|\") as ?hindexs  ) "
+                    + "   (GROUP_CONCAT( DISTINCT ?i10index  ;  SEPARATOR = \"|\") as ?i10indexs  )  "
+                    + "   (GROUP_CONCAT( DISTINCT ?sc  ;  SEPARATOR = \"|\") as ?scs  ) "
+                    + "   (GROUP_CONCAT( DISTINCT ?af  ;  SEPARATOR = \"|\") as ?afs  ) "
+                    + "   { "
                     + "   OPTIONAL { "
                     + "     <" + uri + ">  foaf:homepage  ?homepage "
                     + "  } "
@@ -1101,18 +1129,14 @@ public class CommonServiceImpl implements CommonService {
                     + "       } "
                     + "        } "
                     + "  } "
-                    + "    GRAPH <" + con.getOrganizationsGraph() + "> { "
-                    + "    select (GROUP_CONCAT( DISTINCT ?orgname ;  SEPARATOR = \"|\")  as ?orgnames ) {  "
-                    + "    ?member uc:name ?orgname . "
-                    + "    GRAPH <" + con.getCentralGraph() + "> { "
-                    + "    <" + uri + "> schema:memberOf ?member "
-                    + "      }  "
-                    + "      } "
-                    + "      } "
                     + "  }  "
                     + "} ";
 
-            List<Map<String, Value>> responseAuthor = sparqlService.query(QueryLanguage.SPARQL, metaAuthor);
+            List<Map<String, Value>> responseAuthor1 = sparqlService.query(QueryLanguage.SPARQL, metaAuthor1);
+            List<Map<String, Value>> responseAuthor2 = sparqlService.query(QueryLanguage.SPARQL, metaAuthor2);
+            Map<String, Value> get = responseAuthor1.get(0);
+            get.putAll(responseAuthor2.get(0));
+            List<Map<String, Value>> responseAuthor = Lists.newArrayList(get);
             AuthorProfile a = new AuthorProfile();
             if (!responseAuthor.isEmpty()) {
                 a = proccessAuthor(responseAuthor);
