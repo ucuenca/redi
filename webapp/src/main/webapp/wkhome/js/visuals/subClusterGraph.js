@@ -6,13 +6,13 @@ wkhomeApp.directive('subCluster', ["d3", 'globalData', 'sparqlQuery', '$routePar
       var organization = {};
       var norg = 0;
 
-      var newhost = $window.location.protocol + '//' + $window.location.hostname + ($window.location.port ? ':8080' : '') + '';
+      //var newhost = $window.location.protocol + '//' + $window.location.hostname + ($window.location.port ? ':8080' : '') + '';
       var newsub = subcluster.replace("#", "%23");
 
       $.ajax({
         type: "GET",
         dataType: "JSON", //result data type
-        url: newhost + "/mongo/authorByArea?cluster=" + cluster + "&subcluster=" + newsub,
+        url: globalData.serverInstance + "mongo/authorByArea?cluster=" + cluster + "&subcluster=" + newsub,
         success: function(Result) {
 
           if ("Error" in Result) {
