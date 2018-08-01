@@ -23,6 +23,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import javax.inject.Inject;
+import org.apache.marmotta.platform.core.api.task.TaskInfo;
+import org.apache.marmotta.platform.core.api.task.TaskManagerService;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
@@ -102,6 +104,9 @@ public class CommonServiceImpl implements CommonService {
 
     @Inject
     private CommonsServices com;
+
+    @Inject
+    private TaskManagerService task;
 
     @Inject
     private org.apache.marmotta.ucuenca.wk.pubman.services.providers.DBLPProviderService providerServiceDblp1;
@@ -1382,9 +1387,21 @@ public class CommonServiceImpl implements CommonService {
 
     @Override
     public void centralize(String[] endpoints, boolean isUpdate) {
-        // TODO: validate that the a process has not been initialized.
+        Map<String, List<TaskInfo>> tasks = task.getTasksByGroup();
+
         for (String endpoint : endpoints) {
             try {
+                // Check if execution is being processed.
+                if (tasks.containsKey("Centralization")) {
+                    List<TaskInfo> info = tasks.get("Centralization");
+                    for (TaskInfo taskInfo : info) {
+                        if (taskInfo.getName().equals(endpoint)) {
+                            log.info("Endpoint '{}' is being executed.", endpoint);
+                            return;
+                        }
+                    }
+                }
+
                 if (isUpdate) {
                     centralize.resetCopy(endpoint);
                 }
