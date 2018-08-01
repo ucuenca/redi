@@ -18,11 +18,16 @@
 package org.apache.marmotta.ucuenca.wk.pubman.webservices;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -95,6 +100,67 @@ public class PubWebService {
 
         return Response.ok().entity(result).build();
         //return  Response.status(Status.BAD_REQUEST).entity("Incorrect file format.").build();
+    }
+
+    @POST
+    @Path("/central/store")
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response storeCentralNodes(String data) {
+        String[] pairs = data.split("&");
+        String name = pairs[0].substring(pairs[0].indexOf("=") + 1);
+        String url_ = pairs[1].substring(pairs[1].indexOf("=") + 1);
+        URL url;
+        try {
+            name = URLDecoder.decode(name, "utf8");
+
+            url_ = URLDecoder.decode(url_, "utf8");
+            url_ = url_.endsWith("/") ? url_ : url_ + "/";
+            url = new URL(url_);
+        } catch (MalformedURLException | UnsupportedEncodingException ex) {
+            log.error(ex.getMessage(), ex);
+            return Response.status(Response.Status.BAD_REQUEST).entity("Insert a correct URL.").build();
+        }
+        try {
+            commonService.registerREDIEndpoint(name, url);
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+        return Response.ok().entity("REDI Endpoint was successfully registered.").build();
+    }
+
+    @POST
+    @Path("/central/delete")
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response deleteCentralNode(String id) throws UnsupportedEncodingException {
+        String uri = URLDecoder.decode(id.substring(id.indexOf("=") + 1), "utf8");
+        log.debug("Deleting endpoint REDI {}", uri);
+        if (commonService.deleteREDIEndpoint(uri)) {
+            return Response.ok()
+                    .entity("REDI Endpoint was successfully deleted.")
+                    .build();
+        }
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity("REDI Endpoint couldn't be deleted.")
+                .build();
+    }
+
+    @POST
+    @Path("/central/centralize")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response centralize(@Context HttpServletRequest request, @QueryParam("update") boolean update) {
+        String[] endpoints = request.getParameterMap().get("data[]");
+        commonService.centralize(endpoints, update);
+        return Response.ok().entity("OK").build();
+    }
+
+    @GET
+    @Path("central/list")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response listREDIEndpoints() {
+        return Response.ok().entity(commonService.listREDIEndpoints()).build();
     }
 
     @POST

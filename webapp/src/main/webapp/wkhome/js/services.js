@@ -155,6 +155,49 @@ wkhomeServices.factory('Authors', ['$resource', '$http', 'globalData',
           }
         ]);
 
+wkhomeServices.factory('Countries', ['$resource', '$http', 'globalData',
+          function($resource, $http, globalData) {
+            var serverInstance = globalData.serverInstance;
+            return $resource(serverInstance + 'mongo/countries', {}, {
+              query: {
+                method: 'GET',
+                isArray: true,
+                cache: true,
+                headers: {'Accept':'application/json'}
+              }
+            });
+          }
+        ]);
+
+  wkhomeServices.factory('Journal', ['$resource', '$http', 'globalData',
+      function($resource, $http, globalData) {
+        var factory = {};
+        factory.getJournal = function() {
+          var serverInstance = "https://rediclon.cedia.edu.ec/"
+          // var serverInstance = globalData.serverInstance;
+          return $resource(serverInstance + "solr/collections/select?q=collec-uri%3A%22:uri%22&fl=*&wt=json", {
+            uri: '@id'
+          });
+        }
+        return factory;
+      }
+    ]);
+
+wkhomeServices.factory('querySubcluster', ['$resource', '$http', 'globalData',
+          function($resource, $http, globalData) {
+            var serverInstance = globalData.serverInstance;
+            return $resource(serverInstance + 'mongo/cluster?uri=:id', {}, {
+              query: {
+                method: 'GET',
+                params: {id: 'id'},
+                isArray: false,
+                cache: true,
+                headers: {'Accept':'application/json'}
+              }
+            });
+          }
+        ]);
+
 wkhomeServices.service('searchTextResultsService', ['$rootScope',function($rootScope){
     this.bucket = {};
     this.saveData = function(data){

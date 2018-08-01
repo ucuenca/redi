@@ -5,15 +5,15 @@
  */
 package org.apache.marmotta.ucuenca.wk.commons.service;
 
-
 import java.util.Map;
-
 
 /**
  *
  * @author Satellite
  */
 public interface QueriesService {
+
+    int LIMIT_TRIPLES_REDI_END = 1000;
 
     String getAuthorsDataQuery(String... organizations);
 
@@ -62,8 +62,8 @@ public interface QueriesService {
     String removeGenericType(String graph, String type, String resource);
 
     String removeGenericRelation(String graph, String relation, String resource);
-    
-    String removeGenericRelationwithDependecies (String graph, String relation, String resource, String relationdel);
+
+    String removeGenericRelationwithDependecies(String graph, String relation, String resource, String relationdel);
 
     String getListOrganizationQuery();
 
@@ -71,14 +71,13 @@ public interface QueriesService {
 
     String getListEndpointsByUri(String uri);
 
-    
     String getExtractedOrgList(Map<String, String> providers);
-    
-    String getOrgEnrichmentProvider( Map <String, String> mp);
-    
+
+    String getOrgEnrichmentProvider(Map<String, String> mp);
+
     String getOrgDisambiguationResult(Map<String, String> providers);
-    
-      String getEnrichmentQueryResult(Map<String, String> providers);
+
+    String getEnrichmentQueryResult(Map<String, String> providers);
 
     /**
      * return query to obtain all subject ( keywords ) of an author , using
@@ -95,7 +94,7 @@ public interface QueriesService {
      * @param num
      * @return
      */
-    String getAuthorsQuery(String wkhuskagraph, String num , Boolean mode);
+    String getAuthorsQuery(String wkhuskagraph, String num, Boolean mode);
 
     /**
      * return query to obtain all properties of a resource using LDC ( Linked
@@ -177,6 +176,26 @@ public interface QueriesService {
     String getPublicationsQuery(String providerGraph);
 
     String getPublicationsPropertiesQuery(String providerGraph, String publicationResource);
+
+    String isREDIEndpointStored(String id);
+
+    String insertREDIEndpoints(String id, String name, String url, String context);
+
+    String getInsertOffsetQuery(String endpoint, int id, String name);
+
+    String getListREDIEndpoints();
+
+    String getREDIEndpoint(String id);
+
+    String getGraphOffset(int id);
+
+    String getUpdateOffsetQuery(int id, int newOffset);
+
+    String getNumberofTriplesREDIEndpoint(String selectService, int offset, String targetGraph);
+
+    String getCopyDataQuery(String selectService, int offset, String targetGraph, String localGraphName);
+
+    String delteREDIEndpointQuery(String id);
 
     String getPublicationsPropertiesQuery(String publicationResource);
 
@@ -374,10 +393,16 @@ public interface QueriesService {
     String getAggregationAreas();
 
     String getKeywordsFrequencyPub();
-    
+
     // Related authors
     String getAuthorsCentralGraph();
-    
+
     // Clusters
     String getClusterURIs();
+
+    String getClusterAndSubclusterURIs();
+
+    // Map
+    String getCountries();
+
 }

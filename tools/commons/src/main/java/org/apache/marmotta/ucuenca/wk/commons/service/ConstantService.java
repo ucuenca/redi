@@ -46,9 +46,13 @@ public interface ConstantService {
 
     String getAcademicsKnowledgeGraph();
 
+    String getCentralEndpointsGraph();
+
     String getCentralGraph();
 
     String getAuthorResource();
+
+    String getGraphResource();
 
     String getJournalResource();
 
@@ -105,6 +109,8 @@ public interface ConstantService {
 
     String dblp(String pred);
 
+    String getBaseContext();
+
     String getDBLPGraph();
 
     String getScieloGraph();
@@ -146,6 +152,6 @@ public interface ConstantService {
     String getCoauthorsSameAsGraph();
 
     String getAuthorsProviderGraph();
-    
+
     String getDisambiguationStatusResource();
 }

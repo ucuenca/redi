@@ -5,6 +5,7 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.api;
 
+import java.net.URL;
 import java.util.List;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Provider;
@@ -43,6 +44,10 @@ public interface CommonService {
 
     String organizationListExtracted();
 
+    String listREDIEndpoints();
+
+    boolean deleteREDIEndpoint(String id);
+
     String organizationListEnrichment();
 
     List<Provider> getProviders() throws MarmottaException;
@@ -54,5 +59,9 @@ public interface CommonService {
     String getsubClusterGraph(String cl, String subcl);
 
     String getCluster(String cl);
+
+    void registerREDIEndpoint(String name, URL url) throws Exception;
+
+    void centralize(String[] endpoints, boolean isUpdate);
 
 }

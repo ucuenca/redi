@@ -29,3 +29,19 @@ background: white;
 
 }
 
+/*  subclusterGraph*/
+
+.links_scl line {
+  stroke: #c9c3c3;
+  stroke-opacity: 0.6;
+}
+
+.left-panel-subcl > .element-subcl {
+
+	margin-bottom: 10%;
+}
+
+.left-panel-subcl > #legendBox {
+
+	margin-top: 5vh;
+}

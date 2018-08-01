@@ -17,12 +17,20 @@
  */
 package edu.ucuenca.storage.services;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Projections.exclude;
+import static com.mongodb.client.model.Projections.include;
+import static com.mongodb.client.model.Sorts.ascending;
 import edu.ucuenca.storage.api.MongoService;
 import edu.ucuenca.storage.exceptions.FailMongoConnectionException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
@@ -49,6 +57,8 @@ public class MongoServiceImpl implements MongoService {
     private MongoCollection<Document> statistics;
     private MongoCollection<Document> relatedauthors;
     private MongoCollection<Document> clusters;
+    private MongoCollection<Document> authorsByArea;
+    private MongoCollection<Document> countries;
 
     @PostConstruct
     public void initialize() throws FailMongoConnectionException {
@@ -66,6 +76,8 @@ public class MongoServiceImpl implements MongoService {
         relatedauthors = db.getCollection(Collection.RELATEDAUTHORS.getValue());
         statistics = db.getCollection(Collection.STATISTICS.getValue());
         clusters = db.getCollection(Collection.CLUSTERS.getValue());
+        authorsByArea = db.getCollection(Collection.AUTHORS_AREA.getValue());
+        countries = db.getCollection(Collection.COUNTRIES.getValue());
     }
 
     @Override
@@ -91,8 +103,44 @@ public class MongoServiceImpl implements MongoService {
     @Override
     public String getCluster(String uri) {
         return clusters.find(eq("_id", uri))
+                .projection(include("subclusters"))
+                .sort(ascending("label-en"))
                 .first()
                 .toJson();
+    }
+
+    @Override
+    public List<Document> getClusters() {
+        List<Document> c = new ArrayList<>();
+        FindIterable<Document> cls = clusters.find()
+                .projection(exclude("subclusters"))
+                .sort(ascending("label-en", "label-es"));
+        MongoCursor<Document> it = cls.iterator();
+        while (it.hasNext()) {
+            c.add(it.next());
+        }
+        return c;
+    }
+    
+    
+     @Override
+    public List<Document> getCountries() {
+        List<Document> c = new ArrayList<>();
+        FindIterable<Document> cls = countries.find();
+        MongoCursor<Document> it = cls.iterator();
+        while (it.hasNext()) {
+            c.add(it.next());
+        }
+        return c;
+    }
+
+    @Override
+    public String getAuthorsByArea(String cluster, String subcluster) {
+        BasicDBObject key = new BasicDBObject();
+        key.put("cluster", cluster);
+        key.put("subcluster", subcluster);
+        return authorsByArea.find(eq("_id", key))
+                .first().toJson();
     }
 
     @PreDestroy

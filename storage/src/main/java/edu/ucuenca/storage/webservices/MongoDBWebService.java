@@ -19,6 +19,7 @@ package edu.ucuenca.storage.webservices;
 
 import edu.ucuenca.storage.api.MongoService;
 import edu.ucuenca.storage.exceptions.FailMongoConnectionException;
+import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -26,6 +27,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
 import org.apache.marmotta.platform.core.api.triplestore.SesameService;
+import org.bson.Document;
 import org.slf4j.Logger;
 
 /**
@@ -75,6 +77,32 @@ public class MongoDBWebService {
     }
 
     @GET
+    @Path("/clusters")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getClusters() throws FailMongoConnectionException {
+        List<Document> response;
+        try {
+            response = mongoService.getClusters();
+        } catch (Exception e) {
+            throw new FailMongoConnectionException("Cannot retrieve clusters", e);
+        }
+        return Response.ok().entity(response).build();
+    }
+    
+    @GET
+    @Path("/countries")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCountries() throws FailMongoConnectionException {
+        List<Document> response;
+        try {
+            response = mongoService.getCountries();
+        } catch (Exception e) {
+            throw new FailMongoConnectionException("Cannot retrieve countries", e);
+        }
+        return Response.ok().entity(response).build();
+    }
+
+    @GET
     @Path("/statistics")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getStatistics(@QueryParam("id") String id) throws FailMongoConnectionException {
@@ -83,6 +111,19 @@ public class MongoDBWebService {
             response = mongoService.getStatistics(id);
         } catch (Exception e) {
             throw new FailMongoConnectionException(String.format("Cannot retrieve information for id %s", id), e);
+        }
+        return Response.ok().entity(response).build();
+    }
+
+    @GET
+    @Path("/authorByArea")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getStatistics(@QueryParam("cluster") String cluster, @QueryParam("subcluster") String subcluster) throws FailMongoConnectionException {
+        String response;
+        try {
+            response = mongoService.getAuthorsByArea(cluster, subcluster);
+        } catch (Exception e) {
+            throw new FailMongoConnectionException(String.format("Cannot retrieve information for cluster %s and subcluster", cluster, subcluster), e);
         }
         return Response.ok().entity(response).build();
     }

@@ -2,7 +2,10 @@ package org.apache.marmotta.ucuenca.wk.commons.impl;
 
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.OWL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
@@ -928,6 +931,149 @@ public class QueriesServiceImpl implements QueriesService {
     }
 
     @Override
+    public String isREDIEndpointStored(String id) {
+        return "ASK FROM <" + con.getCentralEndpointsGraph() + ">\n"
+                + "{<" + id + "> ?p []} ";
+    }
+
+    @Override
+    public String insertREDIEndpoints(String id, String name, String url, String context) {
+        return PREFIXES
+                + "INSERT DATA\n"
+                + "{ \n"
+                + "  GRAPH <" + con.getCentralEndpointsGraph() + "> {\n"
+                + "    <" + id + "> a uc:REDIEndpoint;\n"
+                + "                         foaf:name \"" + name + "\" ;\n"
+                + "                         uc:baseContext <" + context + ">;\n"
+                + "                         uc:sparql <" + url + "sparql/" + ">;\n"
+                + "                         foaf:homepage <" + url + ">.\n"
+                + "                                              \n"
+                + "  }\n"
+                + "}";
+    }
+
+    @Override
+    public String getInsertOffsetQuery(String endpoint, int id, String name) {
+        String offsetURI = con.getGraphResource() + id;
+        return PREFIXES
+                + "INSERT DATA {\n"
+                + "  GRAPH <" + con.getCentralEndpointsGraph() + "> {\n"
+                + "  	<" + endpoint + "> uc:offset <" + offsetURI + ">.\n"
+                + "     <" + offsetURI + "> uc:value \"-1\"^^xsd:integer.\n"
+                + "     <" + offsetURI + "> uc:status \"Not started.\".\n"
+                + "     <" + offsetURI + ">   uc:graphName \"" + name + "\".\n"
+                + "  }\n"
+                + "}";
+    }
+
+    @Override
+    public String getListREDIEndpoints() {
+        return PREFIXES
+                + "SELECT ?id ?name ?url ?sparql ?context ?offset ?status\n"
+                + "WHERE {\n"
+                + "  GRAPH <" + con.getCentralEndpointsGraph() + "> {\n"
+                + "    ?id a uc:REDIEndpoint;\n"
+                + "        foaf:name ?name;\n"
+                + "        foaf:homepage ?url;\n"
+                + "        uc:sparql ?sparql;\n"
+                + "        uc:baseContext ?context.\n"
+                + "  }\n"
+                + "}";
+    }
+
+    @Override
+    public String getREDIEndpoint(String id) {
+        return PREFIXES
+                + "SELECT ?name ?url ?sparql ?context ?offset\n"
+                + "WHERE {\n"
+                + "  GRAPH <" + con.getCentralEndpointsGraph() + "> {\n"
+                + "    <" + id + "> a uc:REDIEndpoint;\n"
+                + "        foaf:name ?name;\n"
+                + "        foaf:homepage ?url;\n"
+                + "        uc:sparql ?sparql;\n"
+                + "        uc:baseContext ?context.\n"
+                + "  }\n"
+                + "}";
+    }
+
+    @Override
+    public String getGraphOffset(int id) {
+        return PREFIXES
+                + "SELECT ?val WHERE {"
+                + "  GRAPH <" + con.getCentralEndpointsGraph() + "> { "
+                + "   <" + con.getGraphResource() + id + "> uc:value ?val."
+                + "  }"
+                + "}";
+    }
+
+    @Override
+    public String getUpdateOffsetQuery(int id, int newOffset) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        return PREFIXES
+                + "WITH <" + con.getCentralEndpointsGraph() + ">\n"
+                + "DELETE {\n"
+                + "  	<" + con.getGraphResource() + id + "> uc:value ?w.\n"
+                + "  	<" + con.getGraphResource() + id + "> uc:status ?s.\n"
+                + "} INSERT {\n"
+                + "  	<" + con.getGraphResource() + id + "> uc:value \"" + newOffset + "\"^^xsd:integer.\n"
+                + "  	<" + con.getGraphResource() + id + "> uc:status\"" + dateFormat.format(date) + "\".\n"
+                + "} WHERE {\n"
+                + "  	<" + con.getGraphResource() + id + "> uc:value ?w.\n"
+                + "  	<" + con.getGraphResource() + id + "> uc:status ?s.\n"
+                + "}";
+    }
+
+    @Override
+    public String getNumberofTriplesREDIEndpoint(String selectService, int offset, String targetGraph) {
+        return "SELECT (COUNT(*) as ?total) WHERE { \n"
+                + "   SERVICE <" + selectService + "> { \n"
+                + "     SELECT * {\n"
+                + "       GRAPH <" + targetGraph + "> {\n"
+                + "     	?s ?p ?o .\n"
+                + "       }\n"
+                + "     } OFFSET " + offset + " LIMIT " + LIMIT_TRIPLES_REDI_END + "\n"
+                + "   }  \n"
+                + "} ";
+    }
+
+    @Override
+    public String getCopyDataQuery(String selectService, int offset, String targetGraph, String localGraphName) {
+        return "INSERT {\n"
+                + "    GRAPH <" + con.getBaseContext() + localGraphName + "> {\n"
+                + "    	?s ?p ?o.\n"
+                + "    }\n"
+                + "} WHERE { \n"
+                + "   SERVICE <" + selectService + "> { \n"
+                + "     SELECT * {\n"
+                + "       GRAPH <" + targetGraph + "> {\n"
+                + "     	?s ?p ?o .\n"
+                + "       }\n"
+                + "     } OFFSET " + offset + " LIMIT " + LIMIT_TRIPLES_REDI_END + "\n"
+                + "   }  \n"
+                + "} ";
+    }
+
+    @Override
+    public String delteREDIEndpointQuery(String id) {
+        return PREFIXES
+                + "DELETE WHERE { \n"
+                + "  GRAPH <" + con.getCentralEndpointsGraph() + "> {\n"
+                + "      <" + id + "> ?t ?b.\n"
+                + "      ?b ?w ?o.\n"
+                + "  }\n"
+                + "}\n"
+                + "\n"
+                + ";\n"
+                + "\n"
+                + "DELETE WHERE { \n"
+                + "  GRAPH <" + con.getCentralEndpointsGraph() + "> {\n"
+                + "      <" + id + "> ?t ?b.\n"
+                + "  }\n"
+                + "}";
+    }
+
+    @Override
     public String getPublicationsPropertiesQuery(String publicationResource) {
         return " SELECT DISTINCT ?property ?value WHERE { "
                 + " <" + publicationResource + ">  ?property ?value. "
@@ -1763,6 +1909,28 @@ public class QueriesServiceImpl implements QueriesService {
                 + "WHERE {\n"
                 + "  GRAPH <" + con.getClusterGraph() + "> {\n"
                 + "    ?c a uc:Cluster\n"
+                + "  }\n"
+                + "}";
+    }
+
+    @Override
+    public String getCountries() {
+        return PREFIXES
+                + "SELECT distinct ?co WHERE {\n"
+                + "  graph <"+con.getOrganizationsGraph()+"> {\n"
+                + "  ?subject  uc:country  ?co \n"
+                + "           }\n"
+                + "}";
+    }
+
+    @Override
+    public String getClusterAndSubclusterURIs() {
+        return PREFIXES
+                + "SELECT DISTINCT * WHERE {\n"
+                + "  GRAPH <" + con.getClusterGraph() + "> {\n"
+                + "    ?subcluster a uc:SubCluster;\n"
+                + "             dct:isPartOf ?cluster.\n"
+                + "    ?cluster a uc:Cluster.\n"
                 + "  }\n"
                 + "}";
     }

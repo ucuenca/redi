@@ -4,6 +4,7 @@
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix dblp: <http://dblp.org/rdf/schema-2017-04-18#> .
+@prefix dblps: <https://dblp.org/rdf/schema-2017-04-18#> .
 @prefix uc: <http://ucuenca.edu.ec/ontology#> .  
 @prefix scoro: <http://purl.org/spar/scoro/> .
 @prefix dct: <http://purl.org/dc/terms/> .
@@ -12,7 +13,7 @@
 
 
 uc:mapColl1 a r2r:MappingCollection;
-    r2r:prefixDefinitions "rdfs: <http://www.w3.org/2000/01/rdf-schema#> . bibo: <http://purl.org/ontology/bibo/> . dct: <http://purl.org/dc/terms/> . scoro: <http://purl.org/spar/scoro/> . schema: <http://schema.org/> . foaf: <http://xmlns.com/foaf/0.1/> . uc: <http://ucuenca.edu.ec/ontology#> . dblp: <http://dblp.org/rdf/schema-2017-04-18#> . owl: <http://www.w3.org/2002/07/owl#> ." .
+    r2r:prefixDefinitions "rdfs: <http://www.w3.org/2000/01/rdf-schema#> . bibo: <http://purl.org/ontology/bibo/> . dct: <http://purl.org/dc/terms/> . scoro: <http://purl.org/spar/scoro/> . schema: <http://schema.org/> . foaf: <http://xmlns.com/foaf/0.1/> . uc: <http://ucuenca.edu.ec/ontology#> . dblp: <http://dblp.org/rdf/schema-2017-04-18#> . dblps: <https://dblp.org/rdf/schema-2017-04-18#> . owl: <http://www.w3.org/2002/07/owl#> ." .
 
 uc:Person a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
@@ -297,4 +298,283 @@ uc:ispartofSeriesOVSpage a r2r:Mapping ;
 uc:ispartofSeriesOVSyear a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ dblp:publishedAsPartOf ?tt . ?tt dblp:yearOfPublication ?t . " ;
+    r2r:targetPattern "?SUBJ bibo:created ?t".
+
+uc:Person_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ a dblps:Person" ;
+    r2r:targetPattern "?SUBJ a foaf:Person" ;
+    r2r:targetPattern "?SUBJ dct:provenance uc:DBLP".
+
+uc:Name1_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:otherFullPersonName ?name" ;
+    r2r:targetPattern "?SUBJ foaf:name ?name" .
+
+
+uc:Name2_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:primaryFullPersonName ?name" ;
+    r2r:targetPattern "?SUBJ foaf:name ?name" .
+
+uc:Name3_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:firstName ?name" ;
+    r2r:targetPattern "?SUBJ foaf:givenName ?name" .
+
+uc:Name4_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:lastName ?name" ;
+    r2r:targetPattern "?SUBJ foaf:familyName ?name" .
+
+
+uc:aff1_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:primaryAffiliation ?b" ;
+    r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/dblp/affiliations/',xpath:encode-for-uri(?b))" ;
+    r2r:targetPattern "?SUBJ schema:memberOf ?<urip>" ;
+    r2r:targetPattern "?<urip> a foaf:Organization" ;
+    r2r:targetPattern "?<urip> foaf:name ?b" .
+
+
+uc:aff2_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:otherAffiliation ?b" ;
+    r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/dblp/affiliations/',xpath:encode-for-uri(?b))" ;
+    r2r:targetPattern "?SUBJ schema:memberOf ?<urip>" ;
+    r2r:targetPattern "?<urip> a foaf:Organization" ;
+    r2r:targetPattern "?<urip> foaf:name ?b" .
+
+uc:sameAsPerson_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ a dblps:Person . ?SUBJ owl:sameAs ?b " ;
+    r2r:targetPattern "?SUBJ owl:sameAs ?b" .
+
+uc:orcid_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ a dblps:Person . ?SUBJ owl:sameAs ?b . filter ( regex(str(?b),'orcid.org','i') ) ." ;
+    r2r:transformation "?nb = xpath:substring-after(?b, 'orcid.org/')" ;
+    r2r:targetPattern "?SUBJ scoro:hasORCID ?'nb'^^xsd:string" .
+
+uc:home1_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:primaryHomepage ?b" ;
+    r2r:targetPattern "?SUBJ foaf:homepage ?b" .
+
+uc:home2_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:otherHomepage ?b" ;
+    r2r:targetPattern "?SUBJ foaf:homepage ?b" .
+
+uc:publications_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:authorOf ?b" ;
+    r2r:targetPattern "?SUBJ foaf:publications ?b";
+    r2r:targetPattern "?b dct:contributor ?SUBJ " .
+
+uc:publications2_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:authoredBy ?b" ;
+    r2r:targetPattern "?b foaf:publications ?SUBJ";
+    r2r:targetPattern "?b a foaf:Person" ;
+    r2r:targetPattern "?SUBJ dct:contributor ?b" .
+
+uc:publicationscreator_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:creator ?b" ;
+    r2r:targetPattern "?SUBJ dct:creator ?b".
+
+uc:articles_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ a dblps:Publication . ?SUBJ dblps:authoredBy ?xx" ;
+    r2r:targetPattern "?SUBJ a bibo:AcademicArticle" ;
+    r2r:targetPattern "?SUBJ dct:provenance uc:DBLP".
+
+uc:articlesTitle_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:title ?t" ;
+    r2r:targetPattern "?SUBJ dct:title ?t" .
+
+uc:articlesPages_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:pageNumbers ?t" ;
+    r2r:targetPattern "?SUBJ bibo:pages ?t" .
+
+uc:articlesCreation_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:yearOfPublication ?t" ;
+    r2r:targetPattern "?SUBJ bibo:created ?t" .
+
+
+uc:uri_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:authorOf ?t . ?t owl:sameAs ?v" ;
+    r2r:targetPattern "?t bibo:uri ?v" .
+
+uc:uri1_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:primaryElectronicEdition ?t" ;
+    r2r:targetPattern "?SUBJ bibo:uri ?t" .
+
+uc:uri2_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:otherElectronicEdition ?t" ;
+    r2r:targetPattern "?SUBJ bibo:uri ?t" .
+
+uc:doi_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?t dblps:authorOf ?SUBJ . ?SUBJ owl:sameAs ?v. filter ( regex(str(?v),'doi.org','i') ) ." ;
+    r2r:transformation "?nv = xpath:substring-after(?v, 'doi.org/')" ;
+    r2r:targetPattern "?SUBJ bibo:doi ?'nv'^^xsd:string" .
+
+uc:doi1_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?t dblps:authorOf ?SUBJ . ?SUBJ dblps:primaryElectronicEdition ?v. filter ( regex(str(?v),'doi.org','i') ) ." ;
+    r2r:transformation "?nv = xpath:substring-after(?v, 'doi.org/')" ;
+    r2r:targetPattern "?SUBJ bibo:doi ?'nv'^^xsd:string" .
+
+uc:doi2_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?t dblps:authorOf ?SUBJ . ?SUBJ dblps:otherElectronicEdition ?v. filter ( regex(str(?v),'doi.org','i') ) ." ;
+    r2r:transformation "?nv = xpath:substring-after(?v, 'doi.org/')" ;
+    r2r:targetPattern "?SUBJ bibo:doi ?'nv'^^xsd:string" .
+
+
+uc:isbn1_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:isbn10 ?t" ;
+    r2r:targetPattern "?SUBJ bibo:isbn ?t" .
+
+uc:isbn2_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:isbn13 ?t" ;
+    r2r:targetPattern "?SUBJ bibo:isbn ?t" .
+
+uc:isbn0_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:isbn ?t" ;
+    r2r:targetPattern "?SUBJ bibo:isbn ?t" .
+
+
+uc:publi1_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:publishedBy ?b " ;
+    r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/dblp/publisher/',xpath:encode-for-uri(?b))" ;
+    r2r:targetPattern "?SUBJ dct:publisher ?<urip>" ;
+    r2r:targetPattern "?<urip> a foaf:Organization" ;
+    r2r:targetPattern "?<urip> foaf:name ?b" .
+
+uc:labelConJB_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:publishedAsPartOf ?t . ?t dblps:bibtexType ?ll . ?t dblps:title ?tt " ;
+    r2r:targetPattern "?t rdfs:label ?tt" .
+
+
+uc:ispartofProceedings1_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:publishedAsPartOf ?t . ?t dblps:bibtexType <http://data.bibbase.org/ontology/#Proceedings> " ;
+    r2r:targetPattern "?SUBJ dct:isPartOf ?t";
+    r2r:targetPattern "?t a bibo:Proceedings" .
+
+
+uc:ispartofJournal_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:publishedAsPartOf ?t . ?t dblps:bibtexType <http://data.bibbase.org/ontology/#Article> " ;
+    r2r:targetPattern "?SUBJ dct:isPartOf ?t";
+    r2r:targetPattern "?t a bibo:Journal" .
+
+
+uc:ispartofBook_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:publishedAsPartOf ?t . ?t dblps:bibtexType <http://data.bibbase.org/ontology/#Phdthesis> " ;
+    r2r:targetPattern "?SUBJ dct:isPartOf ?t";
+    r2r:targetPattern "?t a bibo:Thesis" .
+
+uc:ispartofCollection_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:publishedAsPartOf ?t . ?t dblps:bibtexType <http://data.bibbase.org/ontology/#Incollection> " ;
+    r2r:targetPattern "?SUBJ dct:isPartOf ?t";
+    r2r:targetPattern "?t a bibo:Collection" .
+
+
+
+uc:ispartofJournalO_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:publishedInJournal ?t . " ;
+    r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/dblp/journal/',xpath:encode-for-uri(?t))" ;
+    r2r:targetPattern "?SUBJ dct:isPartOf ?<urip>";
+    r2r:targetPattern "?<urip> a bibo:Journal";
+    r2r:targetPattern "?<urip> rdfs:label ?t".
+
+
+uc:ispartofBookO_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:publishedInBook ?t . " ;
+    r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/dblp/book/',xpath:encode-for-uri(?t))" ;
+    r2r:targetPattern "?SUBJ dct:isPartOf ?<urip>";
+    r2r:targetPattern "?<urip> a bibo:Book";
+    r2r:targetPattern "?<urip> rdfs:label ?t".
+
+uc:ispartofSeriesO_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:publishedInSeries ?t . " ;
+    r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/dblp/series/',xpath:encode-for-uri(?t))" ;
+    r2r:targetPattern "?SUBJ dct:isPartOf ?<urip>";
+    r2r:targetPattern "?<urip> a bibo:Series";
+    r2r:targetPattern "?<urip> rdfs:label ?t".
+
+
+uc:ispartofJournalOV_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:publishedInJournalVolume ?t ." ;
+    r2r:targetPattern "?SUBJ bibo:volume ?t".
+
+uc:ispartofJournalOVI_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:publishedInJournalVolumeIssue ?t . " ;
+    r2r:targetPattern "?SUBJ bibo:issue ?t".
+
+uc:ispartofSeriesOV_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:publishedInSeriesVolume ?t . " ;
+    r2r:targetPattern "?SUBJ bibo:volume ?t".
+
+uc:ispartofJournalOVS_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:publishedAsPartOf ?tt . ?tt dblps:publishedInJournalVolume ?t ." ;
+    r2r:targetPattern "?SUBJ bibo:volume ?t".
+
+uc:ispartofJournalOVIS_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:publishedAsPartOf ?tt . ?tt dblps:publishedInJournalVolumeIssue ?t . " ;
+    r2r:targetPattern "?SUBJ bibo:issue ?t".
+
+uc:ispartofSeriesOVS_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:publishedAsPartOf ?tt . ?tt dblps:publishedInSeriesVolume ?t . " ;
+    r2r:targetPattern "?SUBJ bibo:volume ?t".
+
+uc:ispartofJournalOVSisbn_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:publishedAsPartOf ?tt . ?tt dblps:isbn13 ?t ." ;
+    r2r:targetPattern "?SUBJ bibo:isbn ?t".
+
+uc:ispartofJournalOVISisbnn_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:publishedAsPartOf ?tt . ?tt dblps:isbn10 ?t . " ;
+    r2r:targetPattern "?SUBJ bibo:isbn ?t".
+
+uc:ispartofJournalOVISisbnnn_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:publishedAsPartOf ?tt . ?tt dblps:isbn ?t . " ;
+    r2r:targetPattern "?SUBJ bibo:isbn ?t".
+
+uc:ispartofSeriesOVSpage_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:publishedAsPartOf ?tt . ?tt dblps:pageNumbers ?t . " ;
+    r2r:targetPattern "?SUBJ bibo:pages ?t".
+
+uc:ispartofSeriesOVSyear_https a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ dblps:publishedAsPartOf ?tt . ?tt dblps:yearOfPublication ?t . " ;
     r2r:targetPattern "?SUBJ bibo:created ?t".

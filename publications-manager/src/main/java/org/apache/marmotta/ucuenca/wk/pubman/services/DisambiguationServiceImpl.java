@@ -186,17 +186,10 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             } else {
                 ProcessAuthors(Providers, null);
             }
-            int iasa = sparqlUtils.count(constantService.getAuthorsSameAsGraph());
-            do {
+            for (int w0 = 0; w0 < 2; w0++) {
                 ProcessCoauthors(Providers, true);
                 sparqlUtils.addAll(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "1");
-                int asa = sparqlUtils.count(constantService.getAuthorsSameAsGraph());
-                if (asa != iasa) {
-                    iasa = asa;
-                } else {
-                    break;
-                }
-            } while (true);
+            }
             mergeAuthors();
             //sparqlUtils.delete(constantService.getAuthorsSameAsGraph() + "1");
             //task.updateDetailMessage("Status", String.format("%s Disambiguation", "Coauthors"));
@@ -291,7 +284,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         Set<Set<String>> groupsAuthors = getGroupsAuthors(query);
 
         Map<String, Set<String>> ngroups = new HashMap<>();
-        Map<String, Set<String>> sgroups = new HashMap<>();
+        Set<String> sgroups = new HashSet<>();
         for (Set<String> ag : groupsAuthors) {
             List<String> ls = new ArrayList<>(ag);
             String u = null;
@@ -311,23 +304,18 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                     ngroups.put(u, new HashSet<String>());
                 }
                 ngroups.get(u).add(get1.URI);
-                Boolean checkName = getLong.checkName(get1);
+                Boolean checkName = getLong.checkName(get1, false);
                 if (checkName == null || !checkName) {
-                    if (!sgroups.containsKey(u)) {
-                        sgroups.put(u, new HashSet<String>());
-                    }
-                    sgroups.get(u).add(get1.URI);
+                    sgroups.add(u);
                 }
             }
         }
         for (Entry<String, Set<String>> next : ngroups.entrySet()) {
             for (String next1 : next.getValue()) {
                 registerSameAs(constantService.getAuthorsSameAsGraph() + "2", next.getKey(), next1);
-            }
-        }
-        for (Entry<String, Set<String>> next : sgroups.entrySet()) {
-            for (String next1 : next.getValue()) {
-                registerSameAs(constantService.getAuthorsSameAsGraph() + "Fix", next.getKey(), next1);
+                if (sgroups.contains(next.getKey())) {
+                    registerSameAs(constantService.getAuthorsSameAsGraph() + "Fix", next.getKey(), next1);
+                }
             }
         }
     }
@@ -371,13 +359,8 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             return;
         }
         //copy
-        new LongUpdateQueryExecutor(sparqlService,
-                "	graph <" + constantService.getAuthorsGraph() + "> {\n"
-                + "		?a ?b ?c .\n"
-                + "	}\n",
-                "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
-                + "		?a ?b ?c .\n"
-                + "	}\n", null, "prefix foaf: <http://xmlns.com/foaf/0.1/>\n", "?a ?b ?c").execute();
+        SPARQLUtils sparqlUtils = new SPARQLUtils(sparqlService);
+        sparqlUtils.addAll(constantService.getAuthorsProviderGraph(), constantService.getAuthorsGraph());
 
         //delete provider triple
         String deleteProviderType = "delete where {\n"
@@ -408,22 +391,26 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         new LongUpdateQueryExecutor(sparqlService,
                 "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
                 + "		?a <http://purl.org/dc/terms/provenance> ?p .\n"
-                + "		?a a foaf:Person .\n"
                 + "	}\n"
                 + "	graph <" + constantService.getEndpointsGraph() + "> {\n"
                 + "		?p <http://ucuenca.edu.ec/ontology#belongTo> ?o .\n"
-                + "	}\n"
-                + "	graph <" + constantService.getOrganizationsGraph() + "> {\n"
+                + "	}\n",
+                "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
+                + "		?a schema:memberOf ?o .\n"
+                + "	}\n", null, "prefix foaf: <http://xmlns.com/foaf/0.1/>\n"
+                + "prefix  schema: <http://schema.org/>\n", "?a ?o").execute();
+
+        new LongUpdateQueryExecutor(sparqlService,
+                "	graph <" + constantService.getOrganizationsGraph() + "> {\n"
                 + "		?o <http://ucuenca.edu.ec/ontology#fullName> ?n .\n"
                 + "		?o <http://ucuenca.edu.ec/ontology#name> ?nn .\n"
                 + "	}\n",
                 "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
-                + "		?a schema:memberOf ?o .\n"
                 + "		?o a foaf:Organization .\n"
                 + "		?o foaf:name ?n .\n"
                 + "		?o foaf:name ?nn .\n"
                 + "	}\n", null, "prefix foaf: <http://xmlns.com/foaf/0.1/>\n"
-                + "prefix  schema: <http://schema.org/>\n", "?a ?o ?n ?nn").execute();
+                + "prefix  schema: <http://schema.org/>\n", "?o ?n ?nn").execute();
 
         //alias
         String orgAlias = "prefix foaf: <http://xmlns.com/foaf/0.1/>\n"
@@ -448,6 +435,200 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             }
         }
 
+        String q = "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "insert {\n"
+                + "      graph <https://redi.cedia.edu.ec/context/authorsJHHx> {\n"
+                + "            ?pu dct:title ?tf .\n"
+                + "      }  \n"
+                + "} where { \n"
+                + "      graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
+                + "            ?pu dct:title ?tq .\n"
+                + "            bind(md5(lcase(str(?tq))) as ?tf).\n"
+                + "      }\n"
+                + "} ";
+        String q2 = "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "insert {\n"
+                + "    graph <https://redi.cedia.edu.ec/context/authorsJHHxD> {\n"
+                + "      dct:mock dct:mock ?p .\n"
+                + "    }\n"
+                + "} where {\n"
+                + "  select ?p {\n"
+                + "            graph <https://redi.cedia.edu.ec/context/authorsJHHx> {\n"
+                + "                ?p dct:title ?tf .\n"
+                + "            }\n"
+                + "  } group by ?p having (count (distinct ?tf) > 1)\n"
+                + "}";
+        String q3 = "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "insert {\n"
+                + "        graph <https://redi.cedia.edu.ec/context/authorsJHH> {\n"
+                + "          ?p dct:title ?t .\n"
+                + "        }\n"
+                + "} where {\n"
+                + "    graph <https://redi.cedia.edu.ec/context/authorsJHHx> {\n"
+                + "      ?p dct:title ?t .\n"
+                + "    }\n"
+                + "    graph <https://redi.cedia.edu.ec/context/authorsJHHxD> {\n"
+                + "      dct:mock dct:mock ?p .\n"
+                + "    }\n"
+                + "}";
+        String q4 = "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "insert {\n"
+                + "    graph <https://redi.cedia.edu.ec/context/authorsJHHR> {\n"
+                + "      ?p dct:title ?fp .\n"
+                + "    }\n"
+                + "} where  {\n"
+                + "  select ?p (group_concat(?t) as ?fp) {\n"
+                + "    select ?p ?t {\n"
+                + "        graph <https://redi.cedia.edu.ec/context/authorsJHH> {\n"
+                + "              ?p dct:title ?t .\n"
+                + "        }\n"
+                + "    } order by ?t \n"
+                + "  } group by ?p\n"
+                + "}";
+        String q5 = "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "insert {\n"
+                + "    graph <https://redi.cedia.edu.ec/context/authorsJHHRH> {\n"
+                + "      ?p dct:title ?fp .\n"
+                + "    }\n"
+                + "} where  {\n"
+                + "  graph <https://redi.cedia.edu.ec/context/authorsJHHR> {\n"
+                + "      ?p dct:title ?f .\n"
+                + "      bind(md5(?f) as ?fp) .\n"
+                + "  }\n"
+                + "}";
+        String q6 = "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "insert {\n"
+                + "  graph <https://redi.cedia.edu.ec/context/authorsJHHRHD> {\n"
+                + "        dct:mock dct:mock ?f .\n"
+                + "  }\n"
+                + "}where{\n"
+                + "  select ?f  {\n"
+                + "    graph <https://redi.cedia.edu.ec/context/authorsJHHRH> {\n"
+                + "        ?p dct:title ?f .\n"
+                + "    }\n"
+                + "  } group by ?f having (count(distinct ?p) > 1)\n"
+                + "}";
+        String q7 = "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "insert {\n"
+                + "  graph <https://redi.cedia.edu.ec/context/authorsJHHD> {\n"
+                + "      dct:mock dct:mock ?p .\n"
+                + "    }\n"
+                + "} where {\n"
+                + "  select distinct ?p {\n"
+                + "      graph <https://redi.cedia.edu.ec/context/authorsJHHRHD> {\n"
+                + "          dct:mock dct:mock ?f .\n"
+                + "      }\n"
+                + "      graph <https://redi.cedia.edu.ec/context/authorsJHHRH> {\n"
+                + "          ?p dct:title ?f .\n"
+                + "      }\n"
+                + "  }\n"
+                + "}";
+        String q8 = "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "insert {\n"
+                + "        graph <https://redi.cedia.edu.ec/context/authorsJHC> {\n"
+                + "          ?p dct:title ?t .\n"
+                + "        }\n"
+                + "} where {\n"
+                + "    graph <https://redi.cedia.edu.ec/context/authorsJHH> {\n"
+                + "          ?p dct:title ?t .\n"
+                + "          filter not exists {\n"
+                + "            graph <https://redi.cedia.edu.ec/context/authorsJHHD> {\n"
+                + "                dct:mock dct:mock ?p .\n"
+                + "            }\n"
+                + "          }\n"
+                + "    }\n"
+                + "}";
+        String q9 = "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "insert {\n"
+                + "    graph <https://redi.cedia.edu.ec/context/authorsJH1> {\n"
+                + "      dct:mock dct:mock ?t .\n"
+                + "    }\n"
+                + "} where{\n"
+                + " select ?t {\n"
+                + "      graph <https://redi.cedia.edu.ec/context/authorsJHC> {\n"
+                + "          ?p dct:title ?t .\n"
+                + "      }\n"
+                + " } group by ?t having (count (distinct ?p) > 1)\n"
+                + "}";
+        String q10 = "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "insert {\n"
+                + "    graph <https://redi.cedia.edu.ec/context/authorsJH2> {\n"
+                + "      dct:mock dct:mock ?p .\n"
+                + "    }\n"
+                + "} where {\n"
+                + "select ?p {\n"
+                + "          graph <https://redi.cedia.edu.ec/context/authorsJHC> {\n"
+                + "              ?p dct:title ?tf .\n"
+                + "          }\n"
+                + "} group by ?p having (count (distinct ?tf) > 1)\n"
+                + "\n"
+                + "}";
+        String q11 = "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "insert {\n"
+                + "    graph <https://redi.cedia.edu.ec/context/authorsJH3> {\n"
+                + "          ?p dct:title ?t .\n"
+                + "    }\n"
+                + "} where {\n"
+                + "\n"
+                + "    graph <https://redi.cedia.edu.ec/context/authorsJH2> {\n"
+                + "        dct:mock dct:mock ?p .\n"
+                + "    }\n"
+                + "    graph <https://redi.cedia.edu.ec/context/authorsJHC> {\n"
+                + "        ?p dct:title ?t .\n"
+                + "    }\n"
+                + "    graph <https://redi.cedia.edu.ec/context/authorsJH1> {\n"
+                + "      dct:mock dct:mock ?t .\n"
+                + "    }\n"
+                + "  \n"
+                + "}";
+        String q12 = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "PREFIX bibo: <http://purl.org/ontology/bibo/>\n"
+                + "delete {\n"
+                + "    graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
+                + "      ?p dct:title ?tq .\n"
+                + "    }\n"
+                + "}\n"
+                + "insert {\n"
+                + "  graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
+                + "    ?r a bibo:Journal .\n"
+                + "    ?r rdfs:label ?tq .\n"
+                + "    ?p dct:isPartOf ?r .\n"
+                + "  }\n"
+                + "} where {\n"
+                + "    graph <https://redi.cedia.edu.ec/context/authorsJH3> {\n"
+                + "          ?p dct:title ?t .\n"
+                + "    }\n"
+                + "    graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
+                + "          ?p dct:title ?tq .\n"
+                + "          bind(md5(lcase(str(?tq))) as ?t).\n"
+                + "          bind ( iri(concat('https://redi.cedia.edu.ec/resource/journal/',?t)) as ?r ) .\n"
+                + "    }\n"
+                + "}";
+
+        sparqlService.update(QueryLanguage.SPARQL, q);
+        sparqlService.update(QueryLanguage.SPARQL, q2);
+        sparqlService.update(QueryLanguage.SPARQL, q3);
+        sparqlService.update(QueryLanguage.SPARQL, q4);
+        sparqlService.update(QueryLanguage.SPARQL, q5);
+        sparqlService.update(QueryLanguage.SPARQL, q6);
+        sparqlService.update(QueryLanguage.SPARQL, q7);
+        sparqlService.update(QueryLanguage.SPARQL, q8);
+        sparqlService.update(QueryLanguage.SPARQL, q9);
+        sparqlService.update(QueryLanguage.SPARQL, q10);
+        sparqlService.update(QueryLanguage.SPARQL, q11);
+        sparqlService.update(QueryLanguage.SPARQL, q12);
+        sparqlUtils.delete("https://redi.cedia.edu.ec/context/authorsJHHx");
+        sparqlUtils.delete("https://redi.cedia.edu.ec/context/authorsJHHxD");
+        sparqlUtils.delete("https://redi.cedia.edu.ec/context/authorsJHH");
+        sparqlUtils.delete("https://redi.cedia.edu.ec/context/authorsJHHR");
+        sparqlUtils.delete("https://redi.cedia.edu.ec/context/authorsJHHRH");
+        sparqlUtils.delete("https://redi.cedia.edu.ec/context/authorsJHHRHD");
+        sparqlUtils.delete("https://redi.cedia.edu.ec/context/authorsJHHD");
+        sparqlUtils.delete("https://redi.cedia.edu.ec/context/authorsJHC");
+        sparqlUtils.delete("https://redi.cedia.edu.ec/context/authorsJH1");
+        sparqlUtils.delete("https://redi.cedia.edu.ec/context/authorsJH2");
+        sparqlUtils.delete("https://redi.cedia.edu.ec/context/authorsJH3");
     }
 
     public Map<Provider, Integer> ProcessAuthors(List<Provider> AuthorsProviderslist, String organization) throws MarmottaException, RepositoryException, MalformedQueryException, QueryEvaluationException, RDFHandlerException, InvalidArgumentException, UpdateExecutionException, InterruptedException {
@@ -544,7 +725,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         List<Person> CandidateListLevel = Candidates.get(level).getValue();
         boolean up = true;
         for (Person aCandidate : CandidateListLevel) {
-            if (superAuthor.check(aCandidate)) {
+            if (superAuthor.check(aCandidate, true)) {
                 up = false;
                 Person enrich = superAuthor.enrich(aCandidate, true);
                 registerSameAsModel(r, superAuthor.URI, aCandidate.URI);
@@ -664,7 +845,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             for (int j = i + 1; j < queryResponse.size(); j++) {
                 Person auxPersoni = queryResponse.get(i);
                 Person auxPersonj = queryResponse.get(j);
-                Boolean checkName = auxPersoni.checkName(auxPersonj);
+                Boolean checkName = auxPersoni.checkName(auxPersonj, false);
                 if (checkName != null && checkName) {
                     Set<String> aGroup = new HashSet<>();
                     aGroup.add(auxPersoni.URI);
@@ -724,7 +905,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 Person get = queryResponse_mp.get(groupIndex);
                 boolean pros = false;
                 for (Person p : queryResponse_mp_au.values()) {
-                    Boolean checkName = p.checkName(get);
+                    Boolean checkName = p.checkName(get, true);
                     if (checkName != null && checkName) {
                         pros = true;
                         if (onlySameAs) {

@@ -1,0 +1,33 @@
+<modal-component>
+  <div>
+    <h3><b>{{type | camelCase}}</b></h3>
+    <ul>
+      <li ng-repeat = "journal in journals">
+        <i class="fa fa-book"></i><a ng-href="{{journal.uri[0]}}" ng-show="journal.uri[0]" target="_blank"><b><i>{{journal.title}}</i></b></a>
+        <span ng-hide="journal.uri[0]"><b><i>{{journal.title}}</i></b></span><br>
+        <div class="row">
+          <div class="col-lg-2" ng-show="journal.img">
+            <br><img ng-src="{{journal.img}}" alt="" height="80px">
+          </div>
+          <div ng-class="journal.img ? 'col-lg-10' : 'col-lg-12'">
+            <span ng-repeat="area in journal.area">{{area | camelCase:true}}{{ $last ? '' : ', '}}</span><br>
+            <span ng-show="journal.index"><b>{{'INDEX' | translate}}: </b><span ng-repeat="index in journal.index">{{index}}{{ $last ? '' : ', '}}</span><br></span>
+            <span ng-show="journal.volumen"><b>{{'volume' | translate}}: </b>{{journal.volumen[0]}}<br></span>
+            <span ng-show="journal.publisher"><b>{{'publisher' | translate}}: </b>{{journal.publisher[0]}}<br></span>
+            <span ng-show="journal.issn"><b>ISSN: </b>{{journal.issn[0]}}<br></span>
+            <span ng-show="journal.isbn"><b>ISBN: </b>{{journal.isbn[0]}}<br></span>
+            <span ng-show="journal.sjr"><b><a href="#" data-tooltip="{{'SJR_DESCRIPTION' | translate}}">SJR: </a></b>{{journal.sjr[0]}}<br></span>
+            <span ng-show="journal.snip"><b><a href="#" data-tooltip="{{'SNIP_DESCRIPTION' | translate}}">SNIP: </a></b>{{journal.snip[0]}}<br></span>
+            <span ng-show="journal.country"><b>Country: </b>{{journal.country[0]}}<br></span>
+            <span ng-show="journal.scope"><b>Scope: </b>{{journal.scope[0]}}<br></span>
+            <span ng-show="journal.hindex"><b>H-Index: </b>{{journal.hindex[0]}}<br></span>
+            <span ng-show="journal.bestQuartile"><b>Best quartile: </b>{{journal.bestQuartile[0]}}<br></span>
+            <br>
+            <span ng-repeat="url in journal.uri"><a ng-href="{{url}}" target="_blank"><i class="fa fa-globe"></i>  {{'Source' | translate}}    </a></span>
+            <hr>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</modal-component>

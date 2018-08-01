@@ -72,6 +72,11 @@ public class ConstantServiceImpl implements ConstantService {
     }
 
     @Override
+    public String getCentralEndpointsGraph() {
+        return confService.getBaseContext() + "central";
+    }
+
+    @Override
     public String getCentralGraph() {
         return confService.getBaseContext() + "redi";
 //        return "http://ucuenca.edu.ec/wkhuska";
@@ -90,6 +95,11 @@ public class ConstantServiceImpl implements ConstantService {
     @Override
     public String getAuthorResource() {
         return getBaseResource() + "authors/";
+    }
+
+    @Override
+    public String getGraphResource() {
+        return getBaseResource() + "graph/";
     }
 
     @Override
@@ -189,6 +199,11 @@ public class ConstantServiceImpl implements ConstantService {
 //        return getWkhuskaGraph() + getSelectedGraph("authors");
 //    }
     @Override
+    public String getBaseContext() {
+        return confService.getBaseContext();
+    }
+
+    @Override
     public String getClusterGraph() {
         return confService.getBaseContext() + "clusters";
     }
@@ -223,11 +238,10 @@ public class ConstantServiceImpl implements ConstantService {
         return getWkhuskaGraph() + getSelectedGraph("googlescholar");
     }
 
-  /*  @Override
+    /*  @Override
     public String getDspaceGraph() {
         return getWkhuskaGraph() + getSelectedGraph("dspace");
     }*/
-
 //    @Override
 //    public String getEndpointsGraph() {
 //        return getWkhuskaGraph() + getSelectedGraph("endpoints");
@@ -320,8 +334,8 @@ public class ConstantServiceImpl implements ConstantService {
     public String getScieloGraph() {
         return confService.getBaseContext() + "provider/ScieloProvider";
     }
-    
-     @Override
+
+    @Override
     public String getDspaceGraph() {
         return confService.getBaseContext() + "provider/DspaceProvider";
     }

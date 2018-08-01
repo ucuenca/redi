@@ -20,7 +20,7 @@
 
                 <h3 class="text-primary">{{'Research Area'| translate }}</h3><h3 class="tag" style="color: #B18904"></h3>
                 <br>
-                <h3 class="text-primary">{{'Total Publicaciones'| translate }}</h3><h3 class="total" style="color: #B18904"></h3>
+                <h3 class="text-primary">{{'Total Autores'| translate }}</h3><h3 class="total" style="color: #B18904"></h3>
                 <hr>
                 <h3 class="text-primary">{{'Institute'| translate}}</h3><h3 class="name" style="color: #B18904"></h3>
                 <br>
@@ -38,31 +38,35 @@
 
 
 
-            <div class="col-md-2">
+               <div class="col-md-7">
+                 <div class="col-md-5">
                 <h3 class="text-success">{{'Select Research Area'| translate}}:</h3>
                 <select class="form-control" name="board" id="board" ng-model="selectedTagItem"  ng-options="key.id as key.value for key  in relatedtags">
                     <option value="">Select Theme</option>
                 </select>
+                </div>
+                 <div class="col-md-5">
+                <h3 class="text-success"> Pais:</h3>
+                <select class="form-control"  name="co" ng-change="changeCountry()" ng-model="mapOptions" id="country"  ng-options="key.id as key.value for key  in countryoptions">
+                      <option value="">Select Country</option> 
+                 <!--   <option value="ec" >Ecuador</option>
+                    <option value="cr">Costa Rica</option> -->
+                </select>
+            </div>
+        
             </div>
 
             <br/>
-            <div class="col-md-5" >
-                <map-view data="data" style="display: block; height: 90%" if-click="ifClick(value)" ng-model="value"></map-view>
+             <div class="col-md-7" >
+
+               <map-view data="data" style="display: block; height: 90%" if-click="ifClick(value)" ng-model="value">
+                   <div id="containermap"></div>
+
+               </map-view> 
             </div>
 
-            <!--    <div class="col-md-8" id="map">
-
-
-                    <h2></h2>
-
-                </div>
-            -->
+         
         </div>
-        <!--  <div style="position:absolute;bottom:0;font-size:18px;">
-          <input type="checkbox" id="voronoi"> <label for="voronoi">show Voronoi</label>
-         </div>
-        -->
-
 
     </div>
 </div>

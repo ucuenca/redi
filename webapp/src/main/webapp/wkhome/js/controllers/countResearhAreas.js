@@ -20,48 +20,8 @@ wkhomeControllers.controller('countResearchAreas', ['$routeParams', '$scope', 'g
       });
       $scope.data = {
         'entityName': 'Researchers',
-        'data': dataToSend
+        'data': _.last(_.sortBy(dataToSend, function(d) { return parseInt(d.value); }), 22)
       };
     });
-    // var queryTotalAreas = globalData.PREFIX
-    //         + ' CONSTRUCT { '
-    //         + '     ?uriArea a uc:ResearchArea. '
-    //         + '     ?uriArea uc:name ?keyword; '
-    //         + '                 uc:total ?total }'
-    //         + ' WHERE {  '
-    //         + '     SELECT  ?keyword (IRI(REPLACE(?keyword, " ", "_", "i")) as ?uriArea) ?total '
-    //         + '     WHERE { '
-    //         + '         { '
-    //         + '             SELECT DISTINCT ?keyword (COUNT(DISTINCT ?s) AS ?total) '
-    //         + '             WHERE { '
-    //         + '                 GRAPH <' + globalData.centralGraph + '> { '
-    //         + '                     ?s foaf:publications ?publications. '
-    //         + '                     ?publications dcterms:subject ?keywordSubject. '
-    //         + '                     ?keywordSubject rdfs:label ?keyword. '
-    //         //+ '                     ?s dct:subject ?keyword. '
-    //         + '                 } '
-    //         + '              } '
-    //         + '              GROUP BY ?keyword '
-    //         + '              ORDER BY DESC(?total) '
-    //         + '              LIMIT 10 '
-    //         + '         } '
-    //         + '         FILTER(!REGEX(?keyword,"TESIS")) '
-    //         + '     }'
-    //         + ' }';
-    // sparqlQuery.querySrv({query: queryTotalAreas}, function (rdf) {
-    //     jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
-    //         //$scope.data = compacted;
-    //         var endpoints = compacted['@graph'];
-    //         var data = []
-    //         endpoints.forEach(function (endpoint) {
-    //             var label = endpoint['uc:name'];
-    //             var value = endpoint['uc:total'].length > 1 ? endpoint['uc:total'][0]['@value'] : endpoint['uc:total']['@value'];
-    //             data.push({label: label, value: value});
-    //         });
-    //         $scope.$apply(function () {
-    //             $scope.data = {'entityName': 'Researchers', 'data': data};
-    //         });
-    //     });
-    // });
   }
 ]);

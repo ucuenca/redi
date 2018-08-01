@@ -36,5 +36,7 @@ public interface CommonsServices {
     String listmapTojson(List<Map<String, Value>> list);
     
     String mapTojson(Map<String, String> map);
+    
+    Object  getHttpJSON(String query );
 
 }

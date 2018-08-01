@@ -71,11 +71,25 @@ public class LoadData {
     public Response getClusters() throws FailMongoConnectionException {
         try {
             loadService.clusters();
+            loadService.Countries();
         } catch (Exception e) {
             log.error("Cannot load clusters into Mongo DB", e);
             throw new FailMongoConnectionException(String.format("Cannot load clusters into Mongo DB"), e);
         }
         return Response.ok().entity("Clusters loaded successfully").build();
+    }
+    
+    @POST
+    @Path("/countries")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCountries() throws FailMongoConnectionException {
+        try {
+            loadService.Countries();
+        } catch (Exception e) {
+            log.error("Cannot load countries and countries into Mongo DB", e);
+            throw new FailMongoConnectionException(String.format("Cannot load countries into Mongo DB"), e);
+        }
+        return Response.ok().entity("countries and countries loaded successfully").build();
     }
 
     @POST
@@ -89,6 +103,19 @@ public class LoadData {
             throw new FailMongoConnectionException(String.format("Cannot load pre-calculated networks into Mongo DB"), e);
         }
         return Response.ok().entity("Statistics load successfully").build();
+    }
+
+    @POST
+    @Path("/author-by-area")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response loadAuthorByArea() throws FailMongoConnectionException {
+        try {
+            loadService.authorsByArea();
+        } catch (Exception e) {
+            log.error("Cannot load authors by area into Mongo DB", e);
+            throw new FailMongoConnectionException(String.format("Cannot load authors by area into Mongo DB"), e);
+        }
+        return Response.ok().entity("Authors by area were successfully loaded into MongoDB").build();
     }
 
 }

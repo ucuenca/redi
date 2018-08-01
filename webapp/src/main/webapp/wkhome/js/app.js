@@ -45,10 +45,11 @@ wkhomeApp.service('globalData', ['$window', function ($window) {
                 this.authorsGraph = baseURL + "context/authors";
     this.endpointsGraph = baseURL + "context/endpoints";
     this.organizationsGraph = baseURL + "context/organization";
+    this.authorsGraph = baseURL + "context/authors";
     this.latindexGraph = baseURL + "context/latindex";
     this.translateData = null;
     this.publicationsCore = this.serverInstance + 'solr/publications';
-    // this.publicationsCore = 'http://localhost:8080/solr/publications';
+    // this.publicationsCore = 'https://rediclon.cedia.edu.ec/solr/publications';
     this.PREFIX = 'PREFIX bibo: <http://purl.org/ontology/bibo/>'
             + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>  '
             + ' PREFIX dct: <http://purl.org/dc/terms/> '
@@ -125,7 +126,7 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                   templateUrl: '/wkhome/partials/authorProfile.html',
                  // controller: 'AuthorProfile'
                 }).
-                when('/group/area/:area*/subarea/:subarea*', {
+                when('/group/area', {
                   templateUrl: '/wkhome/partials/genericSubClusterGraph.html',
                 }).
 

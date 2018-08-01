@@ -152,7 +152,15 @@ public class AuthorWebService {
     @Path("endpoints/removeEnd")
     @SuppressWarnings({"PMD.ExcessiveMethodLength", "PMD.AvoidDuplicateLiterals"})
     public Response removeEnd(@QueryParam("uri") String resourceid) {
-        String result = endpointsService.deleteEndpoint(resourceid);
+        String result = endpointsService.deleteEndpoint(resourceid); endpointsService.updateStatus(result, result);
+        return Response.ok().entity(result).build();
+    }
+    
+     @POST
+    @Path("endpoints/updateStatusEnd")
+    @SuppressWarnings({"PMD.ExcessiveMethodLength", "PMD.AvoidDuplicateLiterals"})
+    public Response removeEnd(@QueryParam("uri") String resourceid , @QueryParam("status") String status) {
+        String result = endpointsService.updateStatus(resourceid, status);
         return Response.ok().entity(result).build();
     }
 
