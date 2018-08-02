@@ -74,9 +74,10 @@ public class CentralizeImpl implements Centralize {
             }
 
             // Show progress
-            t = taskService.createTask(name, "Centralization");
+            t = taskService.createTask(endpoint, "Centralization");
             t.updateMessage(String.format("Centralizing %s node", name));
             t.updateDetailMessage("ID", endpoint);
+            t.updateDetailMessage("Name", name);
             t.updateDetailMessage("URL", url);
 
             // Copy data
