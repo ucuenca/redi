@@ -346,9 +346,9 @@ public class PubWebService {
         if (!type.equals("pdf") && !type.equals("xls")) {
             return Response.ok("Invalid format").build();
         }
-
+       
         ServletContext context = request.getServletContext();
-        String realContextPath = context.getRealPath(request.getContextPath());
+        String realContextPath = context.getRealPath("");
         log.debug("Report Task");
         String result = commonService.createReport(host, realContextPath, report, type, param1);
         return Response.ok().entity(result).build();
