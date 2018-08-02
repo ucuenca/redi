@@ -25,7 +25,7 @@ public interface Centralize {
      * Names of graphs to be copied in the centralization process (e.g.
      * provider/ScopusProvider, or authors).
      */
-    public static final String[] GRAPH_NAMES = {"clusters", "redi"};
+    public static final String[] GRAPH_NAMES = {"clusters", "organization", "redi"};
 
     void resetCopy(String endpoint) throws Exception;
 
