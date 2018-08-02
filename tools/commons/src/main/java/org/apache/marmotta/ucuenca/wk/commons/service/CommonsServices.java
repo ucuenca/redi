@@ -7,8 +7,9 @@ package org.apache.marmotta.ucuenca.wk.commons.service;
 
 import java.util.List;
 import java.util.Map;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.openrdf.model.Value;
-
 
 /**
  *
@@ -17,26 +18,29 @@ import org.openrdf.model.Value;
 public interface CommonsServices {
 
     String removeAccents(String input);
-    
+
     String cleanNameArticles(String name);
 
     /**
      * Return true or false if object is a URI
+     *
      * @param object
-     * @return 
+     * @return
      */
     Boolean isURI(String object);
-    
+
     String getMD5(String input);
-    
-    String readPropertyFromFile(String file,String property);
-    
+
+    String readPropertyFromFile(String file, String property);
+
     String getIndexedPublicationsFilter(String text);
-    
+
+    JSONObject getObjectfromResult(Map<String, Value> map) throws JSONException;
+
     String listmapTojson(List<Map<String, Value>> list);
-    
+
     String mapTojson(Map<String, String> map);
-    
-    Object  getHttpJSON(String query );
+
+    Object getHttpJSON(String query);
 
 }

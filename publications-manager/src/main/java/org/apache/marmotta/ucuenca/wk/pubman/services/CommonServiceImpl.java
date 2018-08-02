@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.Lists;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,6 +23,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import javax.inject.Inject;
+import org.apache.marmotta.platform.core.api.task.TaskInfo;
+import org.apache.marmotta.platform.core.api.task.TaskManagerService;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
@@ -101,6 +104,9 @@ public class CommonServiceImpl implements CommonService {
 
     @Inject
     private CommonsServices com;
+
+    @Inject
+    private TaskManagerService task;
 
     @Inject
     private org.apache.marmotta.ucuenca.wk.pubman.services.providers.DBLPProviderService providerServiceDblp1;
@@ -253,7 +259,30 @@ public class CommonServiceImpl implements CommonService {
                     QueryLanguage.SPARQL,
                     queriesService.getListREDIEndpoints()
             );
-            return com.listmapTojson(response);
+
+            // Generate JSON.
+            JSONArray result = new JSONArray();
+            for (Map<String, Value> map : response) {
+                String id = map.get("id").stringValue();
+
+                // Endpoint info
+                JSONObject endpointInfoJson = com.getObjectfromResult(map);
+
+                // Get statistics of graphs
+                JSONArray statsJson = new JSONArray();
+                List<Map<String, Value>> statistics = sparqlService.query(
+                        QueryLanguage.SPARQL,
+                        queriesService.getREDIEndpointStatistics(id)
+                );
+                for (Map<String, Value> statsMap : statistics) {
+                    JSONObject stat = com.getObjectfromResult(statsMap);
+                    statsJson.put(stat);
+                }
+
+                endpointInfoJson.put("offset", statsJson);
+                result.put(endpointInfoJson);
+            }
+            return new JSONObject().put("data", result).toString();
         } catch (MarmottaException ex) {
             log.error(ex.getMessage(), ex);
         }
@@ -738,10 +767,11 @@ public class CommonServiceImpl implements CommonService {
                 String uri = authors.get("person").stringValue();
                 String names = getUniqueName(authors.get("names").stringValue(), ";");
                 String lastname = "";
-                if (authors.containsKey("lastn")){
-                 lastname = authors.get("lastn").stringValue();
-                  }else {
-                lastname = names;       };
+                if (authors.containsKey("lastn")) {
+                    lastname = authors.get("lastn").stringValue();
+                } else {
+                    lastname = names;
+                };
                 String img = "";
                 if (authors.containsKey("img")) {
                     img = authors.get("img").stringValue();
@@ -1025,7 +1055,7 @@ public class CommonServiceImpl implements CommonService {
                     + "  filter (lang(?clabel ) = \"en\") "
                     + "      } limit 5";
 
-            String metaAuthor = Prefix
+            String metaAuthor1 = Prefix
                     + "SELECT   ?names  ?orgnames ?members ?orcids ?imgs ?emails ?homepages ?citations ?hindexs ?i10indexs ?afs ?scs  where { "
                     + "GRAPH <" + con.getCentralGraph() + "> { "
                     + " { "
@@ -1055,6 +1085,33 @@ public class CommonServiceImpl implements CommonService {
                     + "       OPTIONAL { "
                     + "    <" + uri + "> vcard:hasEmail ?email "
                     + "  } "
+                    + "        } "
+                    + "  } "
+                    + "    GRAPH <" + con.getOrganizationsGraph() + "> { "
+                    + "    select (GROUP_CONCAT( DISTINCT ?orgname ;  SEPARATOR = \"|\")  as ?orgnames ) {  "
+                    + "    ?member uc:name ?orgname . "
+                    + "    GRAPH <" + con.getCentralGraph() + "> { "
+                    + "    <" + uri + "> schema:memberOf ?member "
+                    + "      }  "
+                    + "      } "
+                    + "      } "
+                    + "  }  "
+                    + "} ";
+            String metaAuthor2 = Prefix
+                    + "SELECT   ?names  ?orgnames ?members ?orcids ?imgs ?emails ?homepages ?citations ?hindexs ?i10indexs ?afs ?scs  where { "
+                    + "GRAPH <" + con.getCentralGraph() + "> { "
+                    + " { "
+                    + "    select (GROUP_CONCAT( DISTINCT ?name ;  SEPARATOR = \"|\") as ?names)  "
+                    + "   (GROUP_CONCAT( DISTINCT ?orcid ;  SEPARATOR = \"|\") as ?orcids  )  "
+                    + "   (GROUP_CONCAT( DISTINCT ?img ;  SEPARATOR = \"|\") as ?imgs  )  "
+                    + "   (GROUP_CONCAT( DISTINCT ?email ;  SEPARATOR = \"|\") as ?emails ) "
+                    + "   (GROUP_CONCAT( DISTINCT ?homepage ;  SEPARATOR = \"|\") as ?homepages  ) "
+                    + "   (GROUP_CONCAT( DISTINCT ?citation ;  SEPARATOR = \"|\") as ?citations  )           	"
+                    + "   (GROUP_CONCAT( DISTINCT ?hindex  ;  SEPARATOR = \"|\") as ?hindexs  ) "
+                    + "   (GROUP_CONCAT( DISTINCT ?i10index  ;  SEPARATOR = \"|\") as ?i10indexs  )  "
+                    + "   (GROUP_CONCAT( DISTINCT ?sc  ;  SEPARATOR = \"|\") as ?scs  ) "
+                    + "   (GROUP_CONCAT( DISTINCT ?af  ;  SEPARATOR = \"|\") as ?afs  ) "
+                    + "   { "
                     + "   OPTIONAL { "
                     + "     <" + uri + ">  foaf:homepage  ?homepage "
                     + "  } "
@@ -1072,18 +1129,14 @@ public class CommonServiceImpl implements CommonService {
                     + "       } "
                     + "        } "
                     + "  } "
-                    + "    GRAPH <" + con.getOrganizationsGraph() + "> { "
-                    + "    select (GROUP_CONCAT( DISTINCT ?orgname ;  SEPARATOR = \"|\")  as ?orgnames ) {  "
-                    + "    ?member uc:name ?orgname . "
-                    + "    GRAPH <" + con.getCentralGraph() + "> { "
-                    + "    <" + uri + "> schema:memberOf ?member "
-                    + "      }  "
-                    + "      } "
-                    + "      } "
                     + "  }  "
                     + "} ";
 
-            List<Map<String, Value>> responseAuthor = sparqlService.query(QueryLanguage.SPARQL, metaAuthor);
+            List<Map<String, Value>> responseAuthor1 = sparqlService.query(QueryLanguage.SPARQL, metaAuthor1);
+            List<Map<String, Value>> responseAuthor2 = sparqlService.query(QueryLanguage.SPARQL, metaAuthor2);
+            Map<String, Value> get = responseAuthor1.get(0);
+            get.putAll(responseAuthor2.get(0));
+            List<Map<String, Value>> responseAuthor = Lists.newArrayList(get);
             AuthorProfile a = new AuthorProfile();
             if (!responseAuthor.isEmpty()) {
                 a = proccessAuthor(responseAuthor);
@@ -1334,9 +1387,21 @@ public class CommonServiceImpl implements CommonService {
 
     @Override
     public void centralize(String[] endpoints, boolean isUpdate) {
-        // TODO: validate that the a process has not been initialized.
+        Map<String, List<TaskInfo>> tasks = task.getTasksByGroup();
+
         for (String endpoint : endpoints) {
             try {
+                // Check if execution is being processed.
+                if (tasks.containsKey("Centralization")) {
+                    List<TaskInfo> info = tasks.get("Centralization");
+                    for (TaskInfo taskInfo : info) {
+                        if (taskInfo.getName().equals(endpoint)) {
+                            log.info("Endpoint '{}' is being executed.", endpoint);
+                            return;
+                        }
+                    }
+                }
+
                 if (isUpdate) {
                     centralize.resetCopy(endpoint);
                 }

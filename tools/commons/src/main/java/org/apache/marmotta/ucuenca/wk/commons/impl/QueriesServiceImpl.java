@@ -982,6 +982,19 @@ public class QueriesServiceImpl implements QueriesService {
     }
 
     @Override
+    public String getREDIEndpointStatistics(String id) {
+        return PREFIXES
+                + "SELECT ?value ?graphName ?status WHERE {\n"
+                + "  GRAPH <" + con.getCentralEndpointsGraph() + "> {\n"
+                + "    <" + id + "> uc:offset ?uri.\n"
+                + "    ?uri uc:value ?value;\n"
+                + "         uc:graphName ?graphName;\n"
+                + "         uc:status ?status.\n"
+                + "  }\n"
+                + "}";
+    }
+
+    @Override
     public String getREDIEndpoint(String id) {
         return PREFIXES
                 + "SELECT ?name ?url ?sparql ?context ?offset\n"
@@ -1917,7 +1930,7 @@ public class QueriesServiceImpl implements QueriesService {
     public String getCountries() {
         return PREFIXES
                 + "SELECT distinct ?co WHERE {\n"
-                + "  graph <"+con.getOrganizationsGraph()+"> {\n"
+                + "  graph <" + con.getOrganizationsGraph() + "> {\n"
                 + "  ?subject  uc:country  ?co \n"
                 + "           }\n"
                 + "}";

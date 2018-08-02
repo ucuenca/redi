@@ -185,6 +185,8 @@ public interface QueriesService {
 
     String getListREDIEndpoints();
 
+    String getREDIEndpointStatistics(String id);
+
     String getREDIEndpoint(String id);
 
     String getGraphOffset(int id);
