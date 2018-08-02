@@ -349,6 +349,9 @@ public class PubWebService {
        
         ServletContext context = request.getServletContext();
         String realContextPath = context.getRealPath("");
+        log.info  ("Reports Path");
+        log.info (request.getContextPath());
+        log.info (realContextPath);
         log.debug("Report Task");
         String result = commonService.createReport(host, realContextPath, report, type, param1);
         return Response.ok().entity(result).build();
