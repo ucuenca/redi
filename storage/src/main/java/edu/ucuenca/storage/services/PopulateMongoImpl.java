@@ -167,6 +167,7 @@ public class PopulateMongoImpl implements PopulateMongo {
                 RDFWriter jsonldWritter = Rio.createWriter(RDFFormat.JSONLD, writter);
                 for (String key : queries.keySet()) {
                     log.info("Getting {} query", key);
+                   
                     conn.prepareGraphQuery(QueryLanguage.SPARQL, queries.get(key))
                             .evaluate(jsonldWritter);
                     Object compact = JsonLdProcessor.compact(JsonUtils.fromString(writter.toString()), context, new JsonLdOptions());
@@ -226,14 +227,33 @@ public class PopulateMongoImpl implements PopulateMongo {
     @Override
     public void statistics() {
         HashMap<String, String> queries = new HashMap<>();
+        
         queries.put("barchar", queriesService.getBarcharDataQuery());
-        queries.put("count_authors", queriesService.getAggreggationAuthors());
-        queries.put("count_publications", queriesService.getAggregationPublications());
+        
+        if (countCountries () > 1){
+            queries.put("count_authors", queriesService.getAggregationPublicationsbyCountry());
+            queries.put("count_publications", queriesService.getAggreggationAuthorsbyCountry());
+        }else {
+            queries.put("count_authors", queriesService.getAggreggationAuthors());
+            queries.put("count_publications", queriesService.getAggregationPublications());
+        }
         queries.put("count_research_areas", queriesService.getAggregationAreas());
         queries.put("keywords_frequencypub_gt4", queriesService.getKeywordsFrequencyPub());
         loadStadistics(MongoService.Collection.STATISTICS.getValue(), queries);
     }
-
+    
+    
+    private int countCountries () {
+        try {
+            List<Map<String, Value>> countc = sparqlService.query(QueryLanguage.SPARQL,  queriesService.getCountCountry());
+            return  Integer.parseInt(countc.get(0).get("ncountry").stringValue());
+            
+        } catch (MarmottaException ex) {
+            java.util.logging.Logger.getLogger(PopulateMongoImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+    
     @Override
     public void networks() {
         Task task = taskManagerService.createSubTask("Caching related authors", "Mongo Service");

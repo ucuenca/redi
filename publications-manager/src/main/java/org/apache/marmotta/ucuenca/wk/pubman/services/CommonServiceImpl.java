@@ -426,7 +426,7 @@ public class CommonServiceImpl implements CommonService {
                 + "   }  "
                 + "   }  "
                 + "}GROUP BY ?author ?subject ?orgname ?img HAVING ( ?npub > 1  )  ORDER BY DESC (?npub)";
-        try {
+        try { 
             List<Map<String, Value>> response = sparqlService.query(QueryLanguage.SPARQL, describeAuthor);
             String imgbase = "";
             String authorLName = "";
