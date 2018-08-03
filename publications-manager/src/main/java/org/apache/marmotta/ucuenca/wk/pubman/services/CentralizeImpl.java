@@ -15,8 +15,10 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.services;
 
+import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import org.apache.marmotta.platform.core.api.config.ConfigurationService;
 import org.apache.marmotta.platform.core.api.task.Task;
 import org.apache.marmotta.platform.core.api.task.TaskManagerService;
 import org.apache.marmotta.platform.core.api.triplestore.SesameService;
@@ -51,9 +53,13 @@ public class CentralizeImpl implements Centralize {
     @Inject
     private QueriesService queriesService;
 
+    @Inject
+    private ConfigurationService configurationService;
+
     @Override
     public void copy(String endpoint) throws Exception {
         Task t = null;
+        List<String> graphNames = configurationService.getListConfiguration("publications.graph.copy");
         String name, url, sparql, context;
         int offset;
         RepositoryConnection con = null;
@@ -81,7 +87,7 @@ public class CentralizeImpl implements Centralize {
             t.updateDetailMessage("URL", url);
 
             // Copy data
-            for (String gname : GRAPH_NAMES) {
+            for (String gname : graphNames) {
                 int idOffset = (name + gname).hashCode();
                 offset = getOffset(con, endpoint, gname, idOffset);
 
@@ -128,6 +134,8 @@ public class CentralizeImpl implements Centralize {
 
     @Override
     public void resetCopy(String endpoint) throws Exception {
+        List<String> graphNames = configurationService.getListConfiguration("publications.graph.copy");
+
         RepositoryConnection con = null;
         String name;
         try {
@@ -144,7 +152,7 @@ public class CentralizeImpl implements Centralize {
                 throw new Exception("Cannot get information of REDI Endpoint");
             }
 
-            for (String gname : GRAPH_NAMES) {
+            for (String gname : graphNames) {
                 int idOffset = (name + gname).hashCode();
                 updateOffset(con, idOffset, -1);
             }
