@@ -387,8 +387,14 @@ public interface QueriesService {
 
     // Queries for used with MongoDB
     String getBarcharDataQuery();
+    
+    String getBarcharbyCountryDataQuery();
 
     String getAggreggationAuthors();
+    
+    String getAggreggationAuthorsbyCountry();
+    
+    String getAggregationPublicationsbyCountry();
 
     String getAggregationPublications();
 
@@ -406,5 +412,7 @@ public interface QueriesService {
 
     // Map
     String getCountries();
+    
+    String getCountCountry() ;
 
 }
