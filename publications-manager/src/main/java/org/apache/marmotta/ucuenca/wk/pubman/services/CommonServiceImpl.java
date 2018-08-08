@@ -1041,11 +1041,11 @@ public class CommonServiceImpl implements CommonService {
              + "           } "
              + "}";*/
             String queryCluster = Prefix
-                    + "SELECT  ?cl   ?clabel FROM <" + con.getClusterGraph() + "> WHERE  {\n"
-                    + "     <" + uri + ">  dct:isPartOf ?cl .\n"
-                    + " ?cl a <http://ucuenca.edu.ec/ontology#Cluster> .\n"
-                    + "  ?cl rdfs:label ?clabel\n"
-                    + "      }";
+                    + "SELECT  ?cl   (sample(?clabel_) as ?clabel) FROM <" + con.getClusterGraph() + "> WHERE  {\n"
+                    + "  <" + uri + ">  dct:isPartOf ?cl .\n"
+                    + "	?cl a <http://ucuenca.edu.ec/ontology#Cluster> .\n"
+                    + "	 ?cl rdfs:label ?clabel_.\n"
+                    + "	     }group by ?cl";
 
             String querySubCluster = Prefix
                     + "SELECT  ?cl   ?clabel FROM <" + con.getClusterGraph() + "> WHERE  {\n"
