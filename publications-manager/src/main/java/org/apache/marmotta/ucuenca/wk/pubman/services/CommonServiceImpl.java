@@ -426,7 +426,7 @@ public class CommonServiceImpl implements CommonService {
                 + "   }  "
                 + "   }  "
                 + "}GROUP BY ?author ?subject ?orgname ?img HAVING ( ?npub > 1  )  ORDER BY DESC (?npub)";
-        try { 
+        try {
             List<Map<String, Value>> response = sparqlService.query(QueryLanguage.SPARQL, describeAuthor);
             String imgbase = "";
             String authorLName = "";
@@ -1164,7 +1164,14 @@ public class CommonServiceImpl implements CommonService {
                     //   String[] arrayaux = new String[responseCluster.size()];
                     List<String> clusters = new ArrayList();
                     for (Map<String, Value> mp : responseCluster) {
-                        clusters.add(mp.get("clabel").stringValue());
+                        // When groping clusters, KiWi returns weirds results.
+                        // When there is not clusters for an author, it returns 
+                        // null instead of returning an empty List. The group by
+                        // is used to avoid showing repeated results as a result
+                        // an empty space.
+                        if (mp.get("clabel") != null) {
+                            clusters.add(mp.get("clabel").stringValue());
+                        }
                     }
                     String[] arrayaux = new String[clusters.size()];
                     arrayaux = clusters.toArray(arrayaux);
