@@ -125,7 +125,7 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                   templateUrl: '/wkhome/partials/authorProfile.html',
                  // controller: 'AuthorProfile'
                 }).
-                when('/group/area/:area*/subarea/:subarea*', {
+                when('/group/area', {
                   templateUrl: '/wkhome/partials/genericSubClusterGraph.html',
                 }).
 
