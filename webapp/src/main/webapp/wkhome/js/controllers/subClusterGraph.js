@@ -1,5 +1,9 @@
 wkhomeControllers.controller('subCluster', ['$scope', '$window', 'globalData', 'sparqlQuery', 'searchData', '$routeParams', 'Statistics', 'querySubcluster',
   function($scope, $window, globalData, sparqlQuery, searchData, $routeParams, Statistics, querySubcluster) {
+
+    var cluster = $routeParams.cluster;
+    var subcluster = $routeParams.subcluster;
+
     Statistics.query({
       id: 'keywords_frequencypub_gt4'
     }, function(data) {
@@ -32,6 +36,13 @@ wkhomeControllers.controller('subCluster', ['$scope', '$window', 'globalData', '
         cluster: $scope.areaCombo,
         subcluster: $scope.areaCombosub
       };
+    }
+
+    if (cluster && subcluster) {
+      $scope.areaCombo = cluster;
+      $scope.changeCombo();
+      $scope.areaCombosub = subcluster;
+      $scope.changeComboSub();
     }
 
   }

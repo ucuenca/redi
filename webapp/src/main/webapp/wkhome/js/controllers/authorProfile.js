@@ -104,11 +104,10 @@ wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$windo
       '  WHERE { GRAPH <' + globalData.centralGraph + '> {' +
       '    <' + author.uri + '> foaf:publications ?pub.' +
       '    ?subject foaf:publications ?pub;' +
-      '             foaf:name ?name_.' +
+      '             foaf:name ?name_ ; schema:memberOf ?org .' +
       '     OPTIONAL{?subject  foaf:img ?img_.}' +
       '    FILTER(<' + author.uri + '> != ?subject)' +
-      '  } GRAPH <'+globalData.authorsGraph+'> { ?subject ?prop ?val   } ' +
-      ' .  } GROUP BY ?subject  order by desc(?totalPub) limit 6' +
+      '  } GRAPH <'+globalData.organizationsGraph+'> { ?org ?prop ?val } } GROUP BY ?subject  order by desc(?totalPub) limit 6' +
       '}';
 
     function relatedAuthors(id) {

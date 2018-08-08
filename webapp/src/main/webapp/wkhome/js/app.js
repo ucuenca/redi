@@ -45,7 +45,6 @@ wkhomeApp.service('globalData', ['$window', function ($window) {
                 this.authorsGraph = baseURL + "context/authors";
     this.endpointsGraph = baseURL + "context/endpoints";
     this.organizationsGraph = baseURL + "context/organization";
-    this.authorsGraph = baseURL + "context/authors";
     this.latindexGraph = baseURL + "context/latindex";
     this.translateData = null;
     this.publicationsCore = this.serverInstance + 'solr/publications';

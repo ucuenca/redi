@@ -1749,6 +1749,50 @@ public class QueriesServiceImpl implements QueriesService {
     }
 
     @Override
+    public String getBarcharbyCountryDataQuery() {
+        return PREFIXES
+                + "CONSTRUCT {  "
+                + "                   ?co uc:name ?country; "
+                + "                   uc:totalPublications ?totalPub ;            "
+                + "                   uc:totalAuthors ?totalAuthors.              "
+                + "                 } WHERE {    "
+                + "                 	SELECT DISTINCT ?co ?country (count(DISTINCT ?pub) as ?totalPub) (count(DISTINCT ?author) as ?totalAuthors) \n"
+                + "                 WHERE { "
+                + "                   GRAPH <" + con.getCentralGraph() + "> { "
+                + "                   		?author  <http://schema.org/memberOf> ?org; "
+                + "                                 foaf:publications ?pub. \n"
+                + "                 	} "
+                + "                 	GRAPH <" + con.getOrganizationsGraph() + "> {"
+                + "                   		?org  a foaf:Organization ; "
+                + "                                uc:name ?label ;"
+                + "                                 uc:country  ?country . "
+                + "                       BIND( IRI(CONCAT(uc:country,?country)) as ?co)"
+                + "                 	} "
+                + "                 } GROUP BY ?co ?country ";
+//<editor-fold defaultstate="collapsed" desc="old query">
+//                + "CONSTRUCT {"
+//                + "  ?provenance uc:totalPublications ?totalPub;"
+//                + "              uc:totalAuthors ?totalAuthors;"
+//                + "              uc:name ?name."
+//                + "}   WHERE {"
+//                + "  {"
+//                + "    SELECT DISTINCT ?provenance (SAMPLE(?ies) as ?name) (count(DISTINCT ?author) as ?totalAuthors) (COUNT(DISTINCT ?publications) as ?totalPub)"
+//                + "    WHERE {"
+//                + "      GRAPH <" + con.getCentralGraph() + "> {"
+//                + "        ?author a foaf:Person."
+//                + "        ?author dct:provenance ?provenance."
+//                + "        ?author foaf:publications ?publications."
+//                + "        GRAPH <" + con.getEndpointsGraph() + "> {"
+//                + "          ?provenance uc:name ?ies."
+//                + "        }"
+//                + "      }"
+//                + "    } GROUP BY ?provenance ORDER BY DESC(?totalAuthors)"
+//                + "  }"
+//                + "}";
+//</editor-fold>
+    }
+
+    @Override
     public String getAggreggationAuthors() {
         return PREFIXES
                 + "CONSTRUCT { "
@@ -1786,6 +1830,28 @@ public class QueriesServiceImpl implements QueriesService {
 //                + "  } "
 //                + "} ";
 //</editor-fold>
+    }
+
+    @Override
+    public String getAggreggationAuthorsbyCountry() {
+        return PREFIXES
+                + " CONSTRUCT { "
+                + "                     ?co uc:name ?country;        "
+                + "                                 uc:total ?total. "
+                + "                 } where { "
+                + "                      SELECT DISTINCT ?co ?country (COUNT(DISTINCT(?author)) as ?total) "
+                + "                      WHERE { "
+                + "                   GRAPH <" + con.getCentralGraph() + "> { "
+                + "                              ?author  <http://schema.org/memberOf> ?org. "
+                + "                      } "
+                + "                      GRAPH <" + con.getOrganizationsGraph() + "> { "
+                + "                              ?org  a foaf:Organization ; "
+                + "                                uc:country  ?country . "
+                + "                       BIND( IRI(CONCAT(uc:country,?country)) as ?co) "
+                + "                      } "
+                + "                 } GROUP BY ?co  ?country "
+                + "                 }";
+
     }
 
     @Override
@@ -1827,6 +1893,41 @@ public class QueriesServiceImpl implements QueriesService {
 //                + "  }"
 //                + "}";
 //</editor-fold>
+    }
+
+    @Override
+    public String getAggregationPublicationsbyCountry() {
+        return PREFIXES
+                + " CONSTRUCT {   "
+                + "                    ?co uc:name ?country; "
+                + "                         uc:total ?totalp. "
+                + "                 }WHERE { "
+                + "  "
+                + "         SELECT DISTINCT ?co ?country (count(DISTINCT ?pub) as ?totalp) "
+                + "                 WHERE { "
+                + "                   GRAPH <" + con.getCentralGraph() + "> { "
+                + "                              ?author  <http://schema.org/memberOf> ?org; "
+                + "                  foaf:publications ?pub. "
+                + "                      } "
+                + "                      GRAPH <" + con.getOrganizationsGraph() + "> { "
+                + "                              ?org  a foaf:Organization ; "
+                + "                                uc:country  ?country . "
+                + "                      BIND( IRI(CONCAT(uc:country,?country)) as ?co) "
+                + "                      } "
+                + "                 } GROUP BY ?co ?country "
+                + "                 }";
+
+    }
+
+    @Override
+    public String getCountCountry() {
+        return PREFIXES
+                + " SELECT  (count(DISTINCT  lcase(?country)) as ?ncountry)  "
+                + "                 WHERE { "
+                + "                 	GRAPH <" + con.getOrganizationsGraph() + "> {"
+                + "                   		?org   uc:country  ?country "
+                + "                 	} "
+                + "                 }";
     }
 
     @Override

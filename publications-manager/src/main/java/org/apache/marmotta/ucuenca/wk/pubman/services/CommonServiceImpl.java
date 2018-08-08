@@ -1041,11 +1041,11 @@ public class CommonServiceImpl implements CommonService {
              + "           } "
              + "}";*/
             String queryCluster = Prefix
-                    + "SELECT  ?cl   ?clabel FROM <" + con.getClusterGraph() + "> WHERE  {\n"
-                    + "     <" + uri + ">  dct:isPartOf ?cl .\n"
-                    + " ?cl a <http://ucuenca.edu.ec/ontology#Cluster> .\n"
-                    + "  ?cl rdfs:label ?clabel\n"
-                    + "      }";
+                    + "SELECT  ?cl   (sample(?clabel_) as ?clabel) FROM <" + con.getClusterGraph() + "> WHERE  {\n"
+                    + "  <" + uri + ">  dct:isPartOf ?cl .\n"
+                    + "	?cl a <http://ucuenca.edu.ec/ontology#Cluster> .\n"
+                    + "	 ?cl rdfs:label ?clabel_.\n"
+                    + "	     }group by ?cl";
 
             String querySubCluster = Prefix
                     + "SELECT  ?cl   ?clabel FROM <" + con.getClusterGraph() + "> WHERE  {\n"
@@ -1164,7 +1164,14 @@ public class CommonServiceImpl implements CommonService {
                     //   String[] arrayaux = new String[responseCluster.size()];
                     List<String> clusters = new ArrayList();
                     for (Map<String, Value> mp : responseCluster) {
-                        clusters.add(mp.get("clabel").stringValue());
+                        // When groping clusters, KiWi returns weirds results.
+                        // When there is not clusters for an author, it returns 
+                        // null instead of returning an empty List. The group by
+                        // is used to avoid showing repeated results as a result
+                        // an empty space.
+                        if (mp.get("clabel") != null) {
+                            clusters.add(mp.get("clabel").stringValue());
+                        }
                     }
                     String[] arrayaux = new String[clusters.size()];
                     arrayaux = clusters.toArray(arrayaux);
