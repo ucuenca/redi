@@ -69,11 +69,14 @@
 <div class="container-fluid" style="padding-left: 5%; padding-right: 5%; padding-top: 5%">
   <div class="row" style="text-align: center" >
     <div  ng-controller="barChart" style="background-color: #CCCCCC; border-radius: 15px; padding: 0%">
-        <!-- <br> -->
-        <h2 class="text-success">Total de Investigadores y Publicaciones en el Repositorio</h2>
-        <h2 class="selected text-primary" style="text-align: right; padding-right: 10%; padding-top: 5%">Todas las Universidades</h2>
-
-        <bar-chart data="data"></bar-chart>
+        <!-- <br>  -->
+        <!--<h2 class="text-success">Total de Investigadores y Publicaciones en el Repositorio</h2>
+        <h2 class="selected text-primary" style="text-align: right; padding-right: 10%; padding-top: 5%">Todas las Universidades</h2> -->
+           
+        <bar-chart data="data">
+             <div id="containerbar" style="width: 80vw; height: 100%;  position:relative; margin: 0 auto" > </div>
+             <div id="tablaTotales" > </div>
+        </bar-chart>
 
         <div ng-controller="exportController" style="padding: 0px;" align="right" >
             <div class="col-md-4">
