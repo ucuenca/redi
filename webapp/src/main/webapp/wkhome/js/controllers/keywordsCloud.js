@@ -4,6 +4,8 @@ wkhomeControllers.controller('keywordsCloud', ['$translate', '$routeParams', '$s
       scrollTop: 0
     }, 'slow', 'swing');
 
+    $scope.selectedItem = undefined;
+
     Statistics.query({
       id: 'keywords_frequencypub_gt4'
     }, function(data) {
