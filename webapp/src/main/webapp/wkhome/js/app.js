@@ -35,9 +35,9 @@ wkhomeApp.service('searchData', function () {
 wkhomeApp.service('globalData', ['$window', function ($window) {
      var baseURL = $window.location.origin + $window.location.pathname;
     //  baseURL = baseURL.replace("http","https").replace(":" + $window.location.port, "");
-     baseURL = baseURL.replace("clon","");
-     baseURL = baseURL.replace("localhost","redi.cedia.edu.ec");
      this.serverInstance=baseURL;
+     baseURL = baseURL.replace("clon","");
+     baseURL = baseURL.replace("localhost:8080","redi.cedia.edu.ec");
     this.language = "es";
     this.centralGraph = baseURL + "context/redi";
     this.externalAuthorsGraph = "http://ucuenca.edu.ec/wkhuska/externalauthors";
@@ -45,7 +45,6 @@ wkhomeApp.service('globalData', ['$window', function ($window) {
                 this.authorsGraph = baseURL + "context/authors";
     this.endpointsGraph = baseURL + "context/endpoints";
     this.organizationsGraph = baseURL + "context/organization";
-    this.authorsGraph = baseURL + "context/authors";
     this.latindexGraph = baseURL + "context/latindex";
     this.translateData = null;
     this.publicationsCore = this.serverInstance + 'solr/publications';
@@ -126,7 +125,7 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                   templateUrl: '/wkhome/partials/authorProfile.html',
                  // controller: 'AuthorProfile'
                 }).
-                when('/group/area', {
+                when('/group/area/:area*/subarea/:subarea*', {
                   templateUrl: '/wkhome/partials/genericSubClusterGraph.html',
                 }).
 
