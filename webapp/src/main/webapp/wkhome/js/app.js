@@ -34,10 +34,10 @@ wkhomeApp.service('searchData', function () {
 
 wkhomeApp.service('globalData', ['$window', function ($window) {
      var baseURL = $window.location.origin + $window.location.pathname;
-    //  baseURL = baseURL.replace("http","https").replace(":" + $window.location.port, "");
-     this.serverInstance=baseURL;
+     baseURL = baseURL.replace("http","https").replace(":" + $window.location.port, "");
      baseURL = baseURL.replace("clon","");
-     baseURL = baseURL.replace("localhost:8080","redi.cedia.edu.ec");
+     baseURL = baseURL.replace("localhost","redi.cedia.edu.ec");
+     this.serverInstance=baseURL;
     this.language = "es";
     this.centralGraph = baseURL + "context/redi";
     this.externalAuthorsGraph = "http://ucuenca.edu.ec/wkhuska/externalauthors";

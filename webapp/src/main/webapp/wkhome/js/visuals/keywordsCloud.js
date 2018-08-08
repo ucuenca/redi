@@ -5,8 +5,8 @@ var pieChart = angular.module('cloudTag', []);
 pieChart.factory('d3', function () {
     return	d3;
 });
-pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery',
-    function ($routeParams, d3, globalData, sparqlQuery) {
+pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery', '$window',
+    function ($routeParams, d3, globalData, sparqlQuery, $window) {
 
         var getRelatedAuthorsByClustersQuery = globalData.PREFIX
                 + ' CONSTRUCT {  <http://ucuenca.edu.ec/wkhuska/resultTitle> a uc:pagetitle. <http://ucuenca.edu.ec/wkhuska/resultTitle> uc:viewtitle "Authors Related With {0}"  .         ?subject rdfs:label ?name.         ?subject uc:total ?totalPub   }   WHERE {   { '
@@ -273,84 +273,97 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
         }
         ;
         click = function (d) {
-            relatedAuthors(d);
+          var id = d.id; // http://skos.um.es/unesco6/*
+          var label = d.label;
+          // If id is of type Cluster, show Subclusters.
+          // Otherwise, show authors by cluster.
+          if (id.indexOf("http://skos.um.es/unesco6/") !== -1) {
+            scope.$apply(function() {
+              scope.$parent.selectedItem = id;
+            });
+          } else {
+            var cluster = scope.$parent.selectedItem;
+            var subcluster = id;
+            $window.location.hash = '/group/area?cluster=' + cluster + '&subcluster=' + subcluster;
+          }
+            // relatedAuthors(d);
             //adding information about publications of THIS keyword into "tree-node-info"   DIV
-            var infoBar = $('div.tree-node-info');
-            var model = {"dcterms:title": {label: "Title", containerType: "div"},
-                "bibo:uri": {label: "URL", containerType: "a"},
-                "dcterms:contributor": {label: "Contributor", containerType: "a"},
-                "dcterms:isPartOf": {label: "Is Part Of", containerType: "a"},
-                "dcterms:license": {label: "License", containerType: "a"},
-                "dcterms:provenance": {label: "Source", containerType: "div"},
-                "dcterms:publisher": {label: "Publisher", containerType: "div"},
-                "bibo:numPages": {label: "Pages", containerType: "div"}
-            };
-            if (infoBar) {
-                var keyword = d.label;
-                var headbar = $('div.head-info');
-                headbar.find('title').text("ddddddtitletitle");
-                headbar.html('');
-                //Function to show the buttons for the reports
-                scope.$parent.exportReport(keyword);
-                var div = $('<div>');
-                var label;
-                if ($routeParams.lang === "es") {
-                    label= $('<span class="label label-primary" style="font-size:35px; background-color: #003769; opacity: 0.8;">').text("PUBLICACIONES Y AUTORES RELACIONADOS CON: " + keyword);
-                } else {
-                    label= $('<span class="label label-primary" style="font-size:35px; background-color: #003769; opacity: 0.8;">').text("PUBLICATIONS AND AUTHORS RELATED WITH: " + keyword);
-                }
-                div.append(label);
-                div.append("</br>");
-                headbar.append(div);
-                //var sparqlDescribe = "DESCRIBE <" + id + ">";
-                var sparqlPublications = globalData.PREFIX
-                        + ' CONSTRUCT { ?keyword uc:publication ?publicationUri. '
-                        + ' ?publicationUri dct:contributors ?subject . '
-                        + ' ?subject foaf:name ?name . '
-                        + ' ?subject a foaf:Person . '
-                        + ' ?publicationUri a bibo:Document. '
-                        + ' ?publicationUri dct:title ?title. '
-                        + ' ?publicationUri bibo:abstract ?abstract. '
-                        + ' ?publicationUri bibo:uri ?uri. '
-                        + ' } '
-                        + ' WHERE {'
-                        + ' GRAPH <' + globalData.centralGraph + '>'
-                        + ' {'
-                        + ' ?subject foaf:publications ?publicationUri .'
-                        + ' ?subject foaf:name ?name .'
-                        + ' ?publicationUri dct:title ?title . '
-                        + ' OPTIONAL{ ?publicationUri bibo:abstract  ?abstract. } '
-                        + ' OPTIONAL{ ?publicationUri bibo:uri  ?uri. } '
-                        + ' ?publicationUri dcterms:subject ?keySub. '
-                        + ' ?keySub rdfs:label ?quote. '
-                        + ' FILTER (mm:fulltext-search(?quote, "' + keyword+ '" )) .'
-                        + '  BIND(REPLACE( "' + keyword + '", " ", "_", "i") AS ?key) .'
-                        + '  BIND(IRI(?key) as ?keyword)'
-                        + ' }'
-                        + '}';
-                waitingDialog.show("Searching publications with the keyword: " + keyword);
-
-                sparqlQuery.querySrv({query: sparqlPublications}, function (rdf) {
-
-                    jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
-                      waitingDialog.show("Searching publications with the keyword: " + keyword);
-
-                        if (compacted){
-                            var entity = compacted["@graph"];
-                            //var final_entity = _.where(entity, {"@type": "bibo:Document"});
-                            var final_entity = entity;
-                            var values = final_entity.length ? final_entity : [final_entity];
-                            //send data to getKeywordTag Controller
-                            scope.ctrlFn({value: entity});
-                            waitingDialog.hide();
-
-                        } else
-                        {
-                            waitingDialog.hide();
-                        }
-                    });
-                });
-            }
+            // var infoBar = $('div.tree-node-info');
+            // var model = {"dcterms:title": {label: "Title", containerType: "div"},
+            //     "bibo:uri": {label: "URL", containerType: "a"},
+            //     "dcterms:contributor": {label: "Contributor", containerType: "a"},
+            //     "dcterms:isPartOf": {label: "Is Part Of", containerType: "a"},
+            //     "dcterms:license": {label: "License", containerType: "a"},
+            //     "dcterms:provenance": {label: "Source", containerType: "div"},
+            //     "dcterms:publisher": {label: "Publisher", containerType: "div"},
+            //     "bibo:numPages": {label: "Pages", containerType: "div"}
+            // };
+            // if (infoBar) {
+            //     var keyword = d.label;
+            //     var headbar = $('div.head-info');
+            //     headbar.find('title').text("ddddddtitletitle");
+            //     headbar.html('');
+            //     //Function to show the buttons for the reports
+            //     scope.$parent.exportReport(keyword);
+            //     var div = $('<div>');
+            //     var label;
+            //     if ($routeParams.lang === "es") {
+            //         label= $('<span class="label label-primary" style="font-size:35px; background-color: #003769; opacity: 0.8;">').text("PUBLICACIONES Y AUTORES RELACIONADOS CON: " + keyword);
+            //     } else {
+            //         label= $('<span class="label label-primary" style="font-size:35px; background-color: #003769; opacity: 0.8;">').text("PUBLICATIONS AND AUTHORS RELATED WITH: " + keyword);
+            //     }
+            //     div.append(label);
+            //     div.append("</br>");
+            //     headbar.append(div);
+            //     //var sparqlDescribe = "DESCRIBE <" + id + ">";
+            //     var sparqlPublications = globalData.PREFIX
+            //             + ' CONSTRUCT { ?keyword uc:publication ?publicationUri. '
+            //             + ' ?publicationUri dct:contributors ?subject . '
+            //             + ' ?subject foaf:name ?name . '
+            //             + ' ?subject a foaf:Person . '
+            //             + ' ?publicationUri a bibo:Document. '
+            //             + ' ?publicationUri dct:title ?title. '
+            //             + ' ?publicationUri bibo:abstract ?abstract. '
+            //             + ' ?publicationUri bibo:uri ?uri. '
+            //             + ' } '
+            //             + ' WHERE {'
+            //             + ' GRAPH <' + globalData.centralGraph + '>'
+            //             + ' {'
+            //             + ' ?subject foaf:publications ?publicationUri .'
+            //             + ' ?subject foaf:name ?name .'
+            //             + ' ?publicationUri dct:title ?title . '
+            //             + ' OPTIONAL{ ?publicationUri bibo:abstract  ?abstract. } '
+            //             + ' OPTIONAL{ ?publicationUri bibo:uri  ?uri. } '
+            //             + ' ?publicationUri dcterms:subject ?keySub. '
+            //             + ' ?keySub rdfs:label ?quote. '
+            //             + ' FILTER (mm:fulltext-search(?quote, "' + keyword+ '" )) .'
+            //             + '  BIND(REPLACE( "' + keyword + '", " ", "_", "i") AS ?key) .'
+            //             + '  BIND(IRI(?key) as ?keyword)'
+            //             + ' }'
+            //             + '}';
+            //     waitingDialog.show("Searching publications with the keyword: " + keyword);
+            //
+            //     sparqlQuery.querySrv({query: sparqlPublications}, function (rdf) {
+            //
+            //         jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
+            //           waitingDialog.show("Searching publications with the keyword: " + keyword);
+            //
+            //             if (compacted){
+            //                 var entity = compacted["@graph"];
+            //                 //var final_entity = _.where(entity, {"@type": "bibo:Document"});
+            //                 var final_entity = entity;
+            //                 var values = final_entity.length ? final_entity : [final_entity];
+            //                 //send data to getKeywordTag Controller
+            //                 scope.ctrlFn({value: entity});
+            //                 waitingDialog.hide();
+            //
+            //             } else
+            //             {
+            //                 waitingDialog.hide();
+            //             }
+            //         });
+            //     });
+            // }
             return d3.event.preventDefault();
         };
         hashchange = function () {
