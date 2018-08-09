@@ -22,7 +22,7 @@ text{
 }
 .x.axis path {  display: none; }
 .legend{
-    margin-bottom:76px;
+    margin-bottom:2%;
     display:inline-block;
     border-collapse: collapse;
     border-spacing: 0px;
