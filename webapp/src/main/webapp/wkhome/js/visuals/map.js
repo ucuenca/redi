@@ -166,6 +166,9 @@ Highcharts.mapChart('containermap', {
                     scope.$watch( 'datamap', function (newVal, oldVal, scope) {
                       map = scope.datamap;
                       console.log (map);
+                       if (scope.data != undefined) {
+                        data = scope.data;  
+                      } 
                      drawResourcesOnMap(data, svg, scope , map);
                      },true);
                     scope.$watch('data', function (newVal, oldVal, scope) {
