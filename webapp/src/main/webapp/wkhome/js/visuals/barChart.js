@@ -22,7 +22,7 @@ barChart.directive('barChart', ["d3", "globalData", "sparqlQuery",
     var chartHeight = 500;
     var typegraph = "column";
     }
-   
+     console.log (fData);
 
      function segColor(c) {
                 return {Autores: "#807dba", Publicaciones: "#e08214", Salud: "#41ab5d"}[c];
@@ -115,6 +115,9 @@ Highcharts.theme = {
     },
     yAxis: {
      //   minorTickInterval: 'auto',
+       //  type: 'logarithmic',
+     //   minorTickInterval: 0.1 ,
+
         title: {
             style: {
                 textTransform: 'uppercase'
@@ -165,7 +168,12 @@ Highcharts.setOptions(Highcharts.theme);
         }
     },
     yAxis: {
-        min: 0,
+         min: 1,
+         type: 'logarithmic',
+         stackLabels: {
+            enabled: true,
+            align: 'center'
+        } ,
         title: {
            // text: '',
            // align: 'high'

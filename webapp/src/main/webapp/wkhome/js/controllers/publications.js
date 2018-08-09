@@ -1,7 +1,6 @@
 wkhomeControllers.controller('PublicationsController', ['$scope', '$window', 'globalData', 'sparqlQuery', 'searchData', '$routeParams', '$translate', '$uibModal',
   function($scope, $window, globalData, sparqlQuery, searchData, $routeParams, $translate, $uibModal) {
 
-    $scope.author = {};
     $scope.authorURI = $routeParams.authorId;
     $scope.core = globalData.publicationsCore;
 
@@ -72,20 +71,24 @@ wkhomeControllers.controller('PublicationsController', ['$scope', '$window', 'gl
           var entity = _.findWhere(compacted["@graph"], {
             "@type": "foaf:Person"
           });
-          $scope.author.name = typeof(entity["foaf:name"]) === 'string' ? entity["foaf:name"] : _.first(entity["foaf:name"]);
-          $scope.author.photo = entity["foaf:img"] ? entity["foaf:img"]["@id"] : undefined;
-          $scope.author.institutions = [];
+          author = {};
+          author.name = typeof(entity["foaf:name"]) === 'string' ? entity["foaf:name"] : _.first(entity["foaf:name"]);
+          author.photo = entity["foaf:img"] ? entity["foaf:img"]["@id"] : undefined;
+          author.institutions = [];
           _.each(entity["schema:memberOf"], function(v) {
             var provenance = typeof(v) === 'object' ?
               _.findWhere(compacted["@graph"], v) :
               _.findWhere(compacted["@graph"], {
                 "@id": v
               })
-            $scope.author.institutions.push({
+            author.institutions.push({
               name: provenance['uc:fullName']['@value'],
               province: provenance["uc:city"],
               city: provenance["uc:province"]
             })
+          });
+          $scope.$apply(function () {
+              $scope.author=author;
           });
         }
       });

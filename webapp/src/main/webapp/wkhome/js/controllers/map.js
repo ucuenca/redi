@@ -23,7 +23,9 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
     // $scope.mapOptions =  [];
 
      $scope.changeCountry = function() {
+
      $scope.datamap = $scope.mapOptions;
+     updategraph ();
      //console.log ($scope.datamap);
 
     }
@@ -45,7 +47,12 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
 
         //default selectedTagItem =  Semantic Web  - > see in app.js
         $scope.$watch('selectedTagItem', function () {
-            if ($scope.selectedTagItem) {
+        updategraph ();
+      });
+
+function updategraph () {
+
+    if ($scope.selectedTagItem) {
              var textcountry  = $("#country option:selected").text();
             waitingDialog.show("Consultando Ubicacion de Autores Relacionados con:  \"" + $scope.selectedTagItem + "\"");
             var queryBySource = globalData.PREFIX
@@ -109,5 +116,7 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
                 });
             });
         }
-      });
+
+}
+
     }]);
