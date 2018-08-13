@@ -113,7 +113,7 @@ Highcharts.mapChart('containermap', {
         // Specify points using lat/lon
         type: 'mapbubble',
         name: 'IES',
-        color: Highcharts.getOptions().colors[0],
+        color: Highcharts.getOptions().colors[2],
         data: cities , minSize: 10,
             maxSize: '8%',
             tooltip: {
