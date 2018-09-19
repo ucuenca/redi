@@ -173,8 +173,8 @@ wkhomeServices.factory('Countries', ['$resource', '$http', 'globalData',
       function($resource, $http, globalData) {
         var factory = {};
         factory.getJournal = function() {
-          var serverInstance = "https://rediclon.cedia.edu.ec/"
-          // var serverInstance = globalData.serverInstance;
+          //var serverInstance = "https://rediclon.cedia.edu.ec/"
+          var serverInstance = globalData.serverInstance;
           return $resource(serverInstance + "solr/collections/select?q=collec-uri%3A%22:uri%22&fl=*&wt=json", {
             uri: '@id'
           });
