@@ -110,6 +110,7 @@ public class LoadData {
     @Produces(MediaType.APPLICATION_JSON)
     public Response loadAuthorByArea() throws FailMongoConnectionException {
         try {
+            loadService.authorsByDiscipline();
             loadService.authorsByArea();
         } catch (Exception e) {
             log.error("Cannot load authors by area into Mongo DB", e);

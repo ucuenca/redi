@@ -738,9 +738,9 @@ public class CommonServiceImpl implements CommonService {
                     + "      }\n"
                     + "      GRAPH <" + con.getCentralGraph() + ">  { \n"
                     + "        ?person foaf:publications ?pub . \n"
-               //     + "        ?pub dct:subject [rdfs:label ?s] .\n"
-               //     + "   OPTIONAL {?pub dct:subject ?sub"
-               //     + "   OPTIONAL { ?sub rdfs:label ?s }}"
+                    //     + "        ?pub dct:subject [rdfs:label ?s] .\n"
+                    //     + "   OPTIONAL {?pub dct:subject ?sub"
+                    //     + "   OPTIONAL { ?sub rdfs:label ?s }}"
                     + "      } \n"
                     + "     } GROUP by ?person \n"
                     + "}\n"
@@ -749,7 +749,7 @@ public class CommonServiceImpl implements CommonService {
                     + "        GRAPH <" + con.getClusterGraph() + "> {\n"
                     + "            ?coauthor dct:isPartOf <" + cluster + "> .\n"
                     + "            ?coauthor dct:isPartOf <" + subcluster + "> .\n"
-                    + "          	?person dct:isPartOf <" + cluster + "> .\n"
+                    + "            ?person dct:isPartOf <" + cluster + "> .\n"
                     + "            ?person dct:isPartOf <" + subcluster + "> .\n"
                     + "        }\n"
                     + "        graph <" + con.getCentralGraph() + "> {\n"
@@ -829,6 +829,92 @@ public class CommonServiceImpl implements CommonService {
         }
 
         return mergeJSON(listmapTojson(lnodes, "nodes"), listmapTojson(llinks, "links"), "nodes", "links");
+
+    }
+
+    @Override
+    public String getClusterGraph(String cluster) {
+        try {
+          /*  String query = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                    + "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                    + "PREFIX schema: <http://schema.org/>  \n"
+                    + "PREFIX uc: <http://ucuenca.edu.ec/ontology#> \n"
+                    + "select * {\n"
+                    + "  {\n"
+                    + "select ?person (group_concat(DISTINCT ?orgname ; separator=\";\") as ?orgnames ) {\n"
+                    + "                          GRAPH <" + con.getClusterGraph() + "> {\n"
+                    + "                              ?person dct:isPartOf <" + cluster + "> .\n"
+                    + "                          } \n"
+                    + "                          GRAPH <" + con.getCentralGraph() + ">  {  \n"
+                    + "                          	?person  schema:memberOf ?member . \n"
+                    + "                          }  \n"
+                    + "                          GRAPH <" + con.getOrganizationsGraph() + ">  { \n"
+                    + "                           	?member uc:name ?orgname\n"
+                    + "                          }\n"
+                    + "                         } GROUP by ?person\n"
+                    + "}\n"
+                    + "\n"
+                    + " {select ?person (group_concat(Distinct ?name ; separator=\";\") as ?names ) \n"
+                    + "                                    {\n"
+                    + "                          GRAPH <" + con.getClusterGraph() + "> {\n"
+                    + "                              ?person dct:isPartOf <" + cluster + "> .\n"
+                    + "                          }\n"
+                    + "                          GRAPH <" + con.getCentralGraph() + ">   {\n"
+                    + "                            ?person foaf:name ?name .\n"
+                    + "                          }\n"
+                    + "                         } GROUP by ?person"
+                    + "    }\n"
+                    + "}";*/
+
+            String query = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                    + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                    + "                    PREFIX dct: <http://purl.org/dc/terms/>\n"
+                    + "                    PREFIX schema: <http://schema.org/>  \n"
+                    + "                    PREFIX uc: <http://ucuenca.edu.ec/ontology#> \n"
+                    + "                    select * {\n"
+                    + "                      {\n"
+                    + "    select ?sub ?orgnames ?person (group_concat(Distinct ?name ; separator=\";\") as ?names )  #(group_concat(DISTINCT ?orgname ; separator=\";\") as ?orgnames ) \n"
+                    + "                 {\n"
+                    + "                 GRAPH <" + con.getClusterGraph() + "> {\n"
+                    + "                 ?person dct:isPartOf <" + cluster + "> .\n"
+                    + "                 ?person dct:isPartOf ?sub .\n"
+                    + "                 ?sub   dct:isPartOf <" + cluster + "> ."
+   
+                    + "                 ?sub a  <http://ucuenca.edu.ec/ontology#SubCluster> .\n"
+                    + "                   ?sub rdfs:label ?orgnames .\n"
+                    + "                   filter ( lang(?orgnames) = \"en\" )\n"
+                    + "                                              } \n"
+                    + "                  GRAPH <" + con.getCentralGraph() + ">  {  \n"
+                    + "                       	?person  schema:memberOf ?member . \n"
+                    + "                     ?person foaf:name ?name .\n"
+                    + "                                              }  \n"
+                    + "            # GRAPH <https://redi.cedia.edu.ec/context/organization>  { \n"
+                    + "                       #  	?member uc:name ?orgname\n"
+                    + "                #                              }\n"
+                    + "                  } GROUP by ?sub ?orgnames ?person   Order by ?sub \n"
+                    + "        }\n"
+                    + "  }";
+
+            List<Map<String, Value>> responseClAuthor = sparqlService.query(QueryLanguage.SPARQL, query);
+            List<Collaborator> collaborators = new ArrayList();
+            String[] targ = {};
+            for (Map<String, Value> authors : responseClAuthor) {
+                String uri = authors.get("person").stringValue();
+                String names = getUniqueName(authors.get("names").stringValue(), ";");
+                String subject = getSubjectAuthor(uri);
+                String orgs = authors.get("orgnames").stringValue();
+                Collaborator cl = new Collaborator(uri, uri, names, "", orgs, subject);
+                cl.setTargets(targ);
+                collaborators.add(cl);
+
+            }
+            return coauthorsSubClToJson(collaborators);
+
+        } catch (MarmottaException ex) {
+
+            java.util.logging.Logger.getLogger(CommonServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return "ERROR" + ex;
+        }
 
     }
 
@@ -1190,7 +1276,7 @@ public class CommonServiceImpl implements CommonService {
                      String[] arrayaux = new String[clusters.size()];
                      arrayaux = clusters.toArray(arrayaux);
                      a.setCluster(arrayaux);*/
- /* String lc = responseCluster.get(0).get("lc").stringValue();
+                    /* String lc = responseCluster.get(0).get("lc").stringValue();
                      a.setCluster(lc.split("\\|"));*/
                 }
 

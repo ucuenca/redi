@@ -58,6 +58,7 @@ public class MongoServiceImpl implements MongoService {
     private MongoCollection<Document> relatedauthors;
     private MongoCollection<Document> clusters;
     private MongoCollection<Document> authorsByArea;
+    private MongoCollection<Document> authorsByDisc;
     private MongoCollection<Document> countries;
 
     @PostConstruct
@@ -77,6 +78,7 @@ public class MongoServiceImpl implements MongoService {
         statistics = db.getCollection(Collection.STATISTICS.getValue());
         clusters = db.getCollection(Collection.CLUSTERS.getValue());
         authorsByArea = db.getCollection(Collection.AUTHORS_AREA.getValue());
+        authorsByDisc = db.getCollection(Collection.AUTHORS_DISCPLINE.getValue());
         countries = db.getCollection(Collection.COUNTRIES.getValue());
     }
 
@@ -99,6 +101,8 @@ public class MongoServiceImpl implements MongoService {
                 .first()
                 .toJson();
     }
+    
+
 
     @Override
     public String getCluster(String uri) {
@@ -140,6 +144,14 @@ public class MongoServiceImpl implements MongoService {
         key.put("cluster", cluster);
         key.put("subcluster", subcluster);
         return authorsByArea.find(eq("_id", key))
+                .first().toJson();
+    }
+    
+    @Override
+    public String getAuthorsByDiscipline(String cluster) {
+        BasicDBObject key = new BasicDBObject();
+        key.put("cluster", cluster);
+        return authorsByDisc.find(eq("_id", key))
                 .first().toJson();
     }
 

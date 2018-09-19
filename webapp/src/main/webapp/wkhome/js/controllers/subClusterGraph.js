@@ -17,6 +17,11 @@ wkhomeControllers.controller('subCluster', ['$scope', '$window', 'globalData', '
     });
 
     $scope.changeCombo = function() {
+      $scope.datacl = {};
+      $scope.datacl = {
+        cluster: $scope.areaCombo,
+        subcluster: null
+      };
       querySubcluster.query({
         id: $scope.areaCombo
       }, function(data) {
