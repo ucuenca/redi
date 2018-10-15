@@ -57,6 +57,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.commons.io.LineIterator;
 import org.apache.marmotta.commons.vocabulary.FOAF;
+import org.apache.marmotta.commons.vocabulary.SCHEMA;
 //import org.apache.marmotta.ldclient.api.ldclient.LDClientService;
 //import org.apache.marmotta.ldclient.exception.DataRetrievalException;
 //import org.apache.marmotta.ldclient.model.ClientResponse;
@@ -135,6 +136,8 @@ public class AuthorServiceImpl implements AuthorService {
    private static final String STR = "string";
     
    private static final String OAIPROVNAME = "Dspace";
+   
+   private static final String OJSPROVNAME = "Ojs";
    /* @Inject 
     private EndpointObject endpointObject;*/
 
@@ -231,12 +234,25 @@ public class AuthorServiceImpl implements AuthorService {
                     extractResult =   extractAuthorGeneric (e , "1" , false );
                    // EndpointsObject.add(e);
                     }else {
-                    e = new EndpointOAI (status , org , url , type , endpoint, mode); 
+                   
+                    String [] urls = url.split(";"); 
+                    for (String u :urls){
+                     e = new EndpointOAI (status , org , u , type , endpoint, mode);
                     extractResult =  extractAuthorGeneric (e , "1" , mode  );
+                    String nametype = type;
                      if (extractResult.contains("Success")) {
-                        String providerUri = createProvider (OAIPROVNAME,constantService.getAuthorsGraph() , true); 
-                         registerDate( org,  providerUri, extractResult , OAIPROVNAME , constantService.getAuthorsGraph());
+                         if ("oai-pmh".equals(type)){
+                             nametype = OAIPROVNAME;
+                         }else if ("ojs".equals(type)) 
+                         {
+                             nametype = OJSPROVNAME;
+                         }
+                        String providerUri = createProvider (nametype,constantService.getAuthorsGraph() , true); 
+                         registerDate( org,  providerUri, extractResult , nametype , constantService.getAuthorsGraph());
+                     }else {
+                          break;
                      }
+                    }
                    // EndpointsObject.add(e);
                     }
                     
@@ -409,6 +425,10 @@ public class AuthorServiceImpl implements AuthorService {
                                            insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, FOAF.name.toString(), object);
                                            sparqlFunctionsService.updateAuthor(insert);
                                            break;
+                                       case "http://rdaregistry.info/Elements/u/P60095": // store foaf:name
+                                           insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, SCHEMA.affiliation.toString(), object);
+                                           sparqlFunctionsService.updateAuthor(insert);
+                                           break;    
                                         case "http://purl.org/dc/terms/isVersionOf":
                                        insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, DCTERMS.IS_VERSION_OF.toString() , buildLocalURI( object , endpoint.getType() , endpoint.getName() ) );
                                        sparqlFunctionsService.updateAuthor(insert);
@@ -518,6 +538,11 @@ public class AuthorServiceImpl implements AuthorService {
                  executeInsert(constantService.getAuthorsGraph(), object, BIBO.ISSN.toString() , value , "integer" );
             
                 break;
+                
+              case "http://purl.org/ontology/bibo/isbn":
+                 executeInsert(constantService.getAuthorsGraph(), object, BIBO.ISBN.toString() , value , "integer" );
+       
+                break;    
             case "http://purl.org/dc/terms/date":
                 if (object.matches("^[0-9]+-[0-9]+-[0-9]+")){
                  executeInsert(constantService.getAuthorsGraph(), object, BIBO.ISSUE.toString() , value , "date" );

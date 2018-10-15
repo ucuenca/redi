@@ -148,6 +148,11 @@ public abstract class EndpointObject implements Comparable<EndpointObject> {
 
         return configurationService.getStringConfiguration("extraction.transformation.oai");
     }
+    
+     public String getOJSTransfPath() {
+
+        return configurationService.getStringConfiguration("extraction.transformation.ojs");
+    }
 
     public String getOutputFilesPath() {
 

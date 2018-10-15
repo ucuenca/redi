@@ -58,16 +58,24 @@ function selectEndpoint (e) {
    {     $("tr.sparql_form").css("display","block");
          $("tr.file_form").css("display","none");
          $("tr.OAI_form").css("display","none");
+         $("tr.OJS_form").css("display","none");
    }else if ("file" == e){
          $("tr.sparql_form").css("display","none");
          $("tr.file_form").css("display","block");
          $("tr.OAI_form").css("display","none");
-   }else {
+         $("tr.OJS_form").css("display","none");  
+   }else if ("oai-pmh" == e){
          $("tr.sparql_form").css("display","none");
          $("tr.file_form").css("display","none");
          $("tr.OAI_form").css("display","block");
+         $("tr.OJS_form").css("display","none");
+   }else {
+         $("tr.OJS_form").css("display","block");
+         $("tr.sparql_form").css("display","none");
+         $("tr.file_form").css("display","none");
+         $("tr.OAI_form").css("display","none");
        
-   }    
+   }      
   
     
 }
@@ -78,6 +86,8 @@ function cleanEndpoint () {
           $("input#endpoint_graph").val(""); 
           $("input#endpoint_file").val(""); 
           $("input#endpoint_oai").val(""); 
+          $("input#endpoint_ojs").val(""); 
+          $("input#endpoint_ad_ojs").val("");
           $('input#check_oai').prop('checked', true);
 }
 
@@ -93,10 +103,17 @@ function newEndpoint () {
        var file  = $("input#endpoint_file"); 
        upload (type, org, file);
        
-   }else {
+   }else if (type == "oai-pmh") {
        var val1  = $("input#endpoint_oai").val();  
        var  check = $('input#check_oai').is(':checked');
        uploadOAI (type, org, val1 , check);
+   }else {
+         var val1  = $("input#endpoint_ojs").val();  
+         var val2  = $("input#endpoint_ad_ojs").val(); 
+         if (val2.trim().length > 1){
+         val1 = val1.trim()+";"+val2.trim();
+         }
+       uploadOAI (type, org, val1 , true);
    }
    
  //  console.log ("val1"+val1);

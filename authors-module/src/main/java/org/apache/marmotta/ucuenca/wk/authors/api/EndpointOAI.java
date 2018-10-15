@@ -63,7 +63,8 @@ public class EndpointOAI extends EndpointObject {
     private static final String TRANSFORMATION_PARAMETER_NAME_1 = "repoUrl";
     private static final String TRANSFORMATION_PARAMETER_NAME_2 = "repoName";
     private static final String TRANSFORMATION_PARAMETER_NAME_3 = "outputPath";
-    private static final String FOLDER = "OAI";
+    private String folder = "OAI";
+
      private static final String FILENAME = "R2RMLtoRDF.ttl";
     
    // private static final String OUTPUT_RDF_PATH = System.getProperty("user.home")+"/REDITRANSF/OAI/R2RMLtoRDF.ttl";
@@ -87,7 +88,7 @@ public class EndpointOAI extends EndpointObject {
     }
     
     public String  getFileOutputLocalPath () {
-        return this.getOutputFilesPath()+"/"+FOLDER+"/"+FILENAME;
+        return this.getOutputFilesPath()+"/"+folder+"/"+FILENAME;
     }
 
     public EndpointOAI(String status, String name, String access, String type ,  String resourceId , Boolean severemode) {
@@ -109,14 +110,22 @@ public class EndpointOAI extends EndpointObject {
             log.info(this.getName()+"- "+ this.getAccess());
             System.setProperty("KETTLE_PLUGIN_BASE_FOLDERS", this.getPluginsPath() );
             KettleEnvironment.init();
-            TransMeta transMeta = new TransMeta(this.getOAITransfPath());
+            String path = "";
+            if (super.getType().equals("ojs")) { 
+             folder = "OJS";
+             path = this.getOJSTransfPath();
+            }else {
+             folder = "OAI";
+               path = this.getOAITransfPath();
+            }
+            TransMeta transMeta = new TransMeta(path);
             Trans trans = new Trans(transMeta);
             trans.initializeVariablesFrom(null);
           //  trans.setParameterValue("repo", "http://www.dspace.uce.edu.ec/oai/request");
           //  trans.setParameterValue("repo", "http://dspace.uazuay.edu.ec/oai/request");
             trans.setParameterValue(TRANSFORMATION_PARAMETER_NAME_1 , this.getEndpoint());
             trans.setParameterValue(TRANSFORMATION_PARAMETER_NAME_2 , this.getName());
-            trans.setParameterValue(TRANSFORMATION_PARAMETER_NAME_3 , this.getOutputFilesPath()+"/"+FOLDER);
+            trans.setParameterValue(TRANSFORMATION_PARAMETER_NAME_3 , this.getOutputFilesPath()+"/"+folder);
             trans.getTransMeta().setInternalKettleVariables(trans);
             trans.prepareExecution(null);
             trans.startThreads();

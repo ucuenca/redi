@@ -32,6 +32,7 @@
                 $("tr.sparql_form").css("display","block");
                 $("tr.file_form").css("display","none");
                 $("tr.OAI_form").css("display","none");
+                $("tr.OJS_form").css("display","none");
                 
                 $("select#endpoint_type").val("sparql");
                 console.log(_SERVER_URL);
@@ -102,6 +103,7 @@
                             <option value="sparql">SPARQL</option>
                             <option value="file">FILE</option>
                             <option value="oai-pmh">OAI-PMH</option>
+                            <option value="ojs">OJS (OAI)</option>
                         </select> 
                     </td>
 
@@ -128,6 +130,14 @@
                  <tr class="OAI_form"> 
                     <td style="width: 150px;"> Severe extraction (Only articles authors)  </td>
                     <td>  <input type="checkbox" value="" style="width: 50px;" id="check_oai"> </td>
+                </tr>
+                <tr class="OJS_form"> 
+                    <td style="width: 150px;"> OJS OAI-PMH Main URL </td>
+                    <td>  <input type="text" style="width: 400px;" id="endpoint_ojs"> </td>
+                </tr>
+                 <tr class="OJS_form"> 
+                    <td style="width: 150px;"> Aditional URLs (separate with ";") </td>
+                    <td>  <input type="text" style="width: 400px;" id="endpoint_ad_ojs"> </td>
                 </tr>
                 
                  <tr>
