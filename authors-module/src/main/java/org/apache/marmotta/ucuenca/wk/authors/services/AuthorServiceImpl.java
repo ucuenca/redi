@@ -33,6 +33,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.Normalizer;
 //import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 //import java.net.URL;
@@ -508,6 +509,7 @@ public class AuthorServiceImpl implements AuthorService {
           String query = queriesService.getPublicationDetails(object);
           List<HashMap> describePub = e.querySource(query );
           executeInsert(constantService.getAuthorsGraph(), object , RDF.TYPE.toString() , BIBO.ACADEMIC_ARTICLE.toString() );
+          ConcurrentHashMap  journal = new ConcurrentHashMap ();
           for ( HashMap result: describePub ) {
             String property ="";
             String value = "";
@@ -548,12 +550,24 @@ public class AuthorServiceImpl implements AuthorService {
                  executeInsert(constantService.getAuthorsGraph(), object, BIBO.ISSUE.toString() , value , "date" );
                
                 }
+                break;    
+            default: 
+                if (!journal.containsKey(property))
+                { journal.put(property, value); }
+                else {
+                journal.put(property, journal.get(property)+";"+value);
+                }
                 break;
-            default:        
             }
             } 
 
           }
+             
+             if (journal.containsKey("http://purl.org/dc/terms/source") && ( journal.containsKey(BIBO.ISSN.toString()) || journal.containsKey(BIBO.ISBN))) {
+                   createJournal (journal, object);
+             }
+          
+          
            String rel;
            if ("http://rdaregistry.info/Elements/a/P50195".equals(relation)) {
             rel = DCTERMS.CREATOR.toString();
@@ -568,7 +582,37 @@ public class AuthorServiceImpl implements AuthorService {
       }
     }
      
+    public void createJournal (ConcurrentHashMap datajournal , String uriArticle ) throws UpdateException {
+           
+         String name =  datajournal.get("http://purl.org/dc/terms/source").toString();
+        
+         String [] issnList = {};
+         String [] isbnList = {};
+         
+         if (datajournal.containsKey(BIBO.ISSN.toString())){
+         issnList =   datajournal.get (BIBO.ISSN.toString()).toString().split(";");     
+         }
+         
+         if (datajournal.containsKey(BIBO.ISBN.toString())){
+         isbnList =   datajournal.get (BIBO.ISBN.toString()).toString().split(";");
+         }
+         
+        String base = "http://REDI/Temporal/OJS/Journal/"; 
+        String url = base+Normalizer.normalize(name.toUpperCase().replace(" ", "_").replaceAll("[,.]",""), Normalizer.Form.NFD);
+        executeInsert(constantService.getAuthorsGraph(), url , RDF.TYPE.toString() , BIBO.JOURNAL.toString() );
+        executeInsert(constantService.getAuthorsGraph(), url , RDFS.LABEL.toString() , name );
+        for (String issn :issnList) {
+        executeInsert(constantService.getAuthorsGraph(), url , BIBO.ISSN.toString() , issn );
+        }
+        
+        for (String isbn :isbnList) {
+        executeInsert(constantService.getAuthorsGraph(), url , BIBO.ISBN.toString() , isbn );
+        }
+        
+        executeInsert(constantService.getAuthorsGraph(), uriArticle , DCTERMS.IS_PART_OF.toString() , url );
+       
     
+    }
         /*
        private void refineSubjectTopic(String localSubject, Set<String> subjects, Set<String> topic) {
          List listTopic = new ArrayList(topic);
