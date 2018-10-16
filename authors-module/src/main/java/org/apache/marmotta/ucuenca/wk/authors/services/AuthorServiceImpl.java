@@ -537,11 +537,21 @@ public class AuthorServiceImpl implements AuthorService {
                 
                 break;
             case "http://purl.org/ontology/bibo/issn":
-                 executeInsert(constantService.getAuthorsGraph(), object, BIBO.ISSN.toString() , value , "integer" );
+                 if (!journal.containsKey(property))
+                { journal.put(property, value); }
+                else {
+                journal.put(property, journal.get(property)+";"+value);
+                }
+                executeInsert(constantService.getAuthorsGraph(), object, BIBO.ISSN.toString() , value , "integer" );
             
                 break;
                 
               case "http://purl.org/ontology/bibo/isbn":
+                  if (!journal.containsKey(property))
+                { journal.put(property, value); }
+                else {
+                journal.put(property, journal.get(property)+";"+value);
+                }
                  executeInsert(constantService.getAuthorsGraph(), object, BIBO.ISBN.toString() , value , "integer" );
        
                 break;    
@@ -550,20 +560,21 @@ public class AuthorServiceImpl implements AuthorService {
                  executeInsert(constantService.getAuthorsGraph(), object, BIBO.ISSUE.toString() , value , "date" );
                
                 }
-                break;    
+                break;
+                
+            case "http://purl.org/dc/terms/source":
+                  journal.put(property, value); 
+                break;
             default: 
-                if (!journal.containsKey(property))
-                { journal.put(property, value); }
-                else {
-                journal.put(property, journal.get(property)+";"+value);
-                }
+              
+            
                 break;
             }
             } 
 
           }
              
-             if (journal.containsKey("http://purl.org/dc/terms/source") && ( journal.containsKey(BIBO.ISSN.toString()) || journal.containsKey(BIBO.ISBN))) {
+             if (journal.containsKey(DCTERMS.SOURCE.toString()) && ( journal.containsKey(BIBO.ISSN.toString()) || journal.containsKey(BIBO.ISBN))) {
                    createJournal (journal, object);
              }
           
