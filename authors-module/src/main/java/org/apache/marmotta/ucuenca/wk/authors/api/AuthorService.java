@@ -38,4 +38,6 @@ public interface AuthorService {
     
     String extractAuthorsGeneric (String... endpoints);
 
+    void postProcessAffiliations(); 
+    
 }

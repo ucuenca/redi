@@ -253,7 +253,7 @@ public class AuthorWebService {
 
         String[] get = request.getParameterMap().get("data[]");
         String output = authorService.extractAuthorsGeneric(get);
-
+        authorService.postProcessAffiliations();
         return Response.ok().entity(output).build();
         //return  Response.status(Status.BAD_REQUEST).entity("Incorrect file format.").build();
     }
