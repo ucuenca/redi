@@ -36,6 +36,7 @@ import java.net.URLEncoder;
 import java.text.Normalizer;
 //import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.AbstractMap;
 //import java.net.URL;
 //import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
@@ -44,10 +45,12 @@ import java.util.Arrays;
 //import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 //import java.util.HashSet;
 //import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 //import java.util.Map.Entry;
 //import java.util.Set;
 //import java.util.TreeSet;
@@ -59,6 +62,7 @@ import javax.inject.Inject;
 import org.apache.commons.io.LineIterator;
 import org.apache.marmotta.commons.vocabulary.FOAF;
 import org.apache.marmotta.commons.vocabulary.SCHEMA;
+import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 //import org.apache.marmotta.ldclient.api.ldclient.LDClientService;
 //import org.apache.marmotta.ldclient.exception.DataRetrievalException;
 //import org.apache.marmotta.ldclient.model.ClientResponse;
@@ -76,6 +80,7 @@ import org.apache.marmotta.ucuenca.wk.authors.api.EndpointsService;
 import org.apache.marmotta.ucuenca.wk.authors.api.SparqlFunctionsService;
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.AskException;
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.UpdateException;
+import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Person;
 //import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 //import org.apache.marmotta.ucuenca.wk.commons.service.DistanceService;
@@ -91,10 +96,12 @@ import org.openrdf.model.vocabulary.DCTERMS;
 import org.openrdf.model.vocabulary.OWL;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
+import org.openrdf.query.MalformedQueryException;
 //import org.openrdf.query.BindingSet;
 //import org.openrdf.query.MalformedQueryException;
 //import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
+import org.openrdf.query.UpdateExecutionException;
 //import org.openrdf.query.TupleQuery;
 //import org.openrdf.query.TupleQueryResult;
 //import org.openrdf.repository.RepositoryConnection;
@@ -124,50 +131,42 @@ public class AuthorServiceImpl implements AuthorService {
     @Inject
     private QueriesService queriesService;
 
-   
-    @Inject 
+    @Inject
     private EndpointsService endpointService;
 
     @Inject
     private ConstantService constantService;
-    
+
     @Inject
     private SparqlService sparqlService;
-    
-   private static final String STR = "string";
-    
-   private static final String OAIPROVNAME = "Dspace";
-   
-   private static final String OJSPROVNAME = "Ojs";
-   /* @Inject 
+
+    private static final String STR = "string";
+
+    private static final String OAIPROVNAME = "Dspace";
+
+    private static final String OJSPROVNAME = "Ojs";
+    /* @Inject 
     private EndpointObject endpointObject;*/
 
     private static final int LIMIT = 5000;
- //   private static final int MAX_SUBJECTS = 15;
- //   private static List<SparqlEndpoint> endpoints;
+    //   private static final int MAX_SUBJECTS = 15;
+    //   private static List<SparqlEndpoint> endpoints;
     private final List<String> stopwords = new ArrayList<>();
     private int processpercent = 0;
-    
-    private final static String  COUNTWORD = "count" ;
 
-  //  private static int upperLimitKey = 5; //Check 6 keywords
-  //  private static int lowerLimitKey = upperLimitKey - 1; //Not less than 4 keywords
+    private final static String COUNTWORD = "count";
 
-  //  private PrintWriter out;
-
+    //  private static int upperLimitKey = 5; //Check 6 keywords
+    //  private static int lowerLimitKey = upperLimitKey - 1; //Not less than 4 keywords
+    //  private PrintWriter out;
 //    private static double tolerance = 0.9;
-
 //    private Set<String> setExplored = new HashSet<String>();
 //
 //    private static int one = 1;
-
-  //  private static final String FILENAME = "DesambiguacionAutoresLog.csv";
-
- //   private Set<Entry> pairsCompared = null;
-
+    //  private static final String FILENAME = "DesambiguacionAutoresLog.csv";
+    //   private Set<Entry> pairsCompared = null;
 //    private BufferedWriter bw = null;
     //private FileWriter fw = null;
-
     @PostConstruct
     public void init() {
         BufferedReader input = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("helpers/stoplist.txt")));
@@ -193,24 +192,23 @@ public class AuthorServiceImpl implements AuthorService {
      * authorDocumentProperty : http://rdaregistry.info/Elements/a/P50161 |
      * http://rdaregistry.info/Elements/a/P50195
      *
- //    * @throws org.apache.marmotta.ucuenca.wk.authors.exceptions.DaoException
- //    * @throws org.apache.marmotta.ucuenca.wk.authors.exceptions.UpdateException
+     * // * @throws
+     * org.apache.marmotta.ucuenca.wk.authors.exceptions.DaoException //
+     *
+     *
+     * @throws org.apache.marmotta.ucuenca.wk.authors.exceptions.UpdateException
      */
     //private String documentProperty = "http://rdaregistry.info";
-   
-    
-
     @Override
     @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
-    public String extractAuthorsGeneric (String... endpoints) {
-        
-      
-        ConcurrentHashMap msg = new ConcurrentHashMap() ;
+    public String extractAuthorsGeneric(String... endpoints) {
+
+        ConcurrentHashMap msg = new ConcurrentHashMap();
         for (String endpoint : endpoints) {
             try {
-                String queryEndpoint =  queriesService.getListEndpointsByUri (endpoint);
-                List<Map<String, Value>> result  = sparqlService.query(QueryLanguage.SPARQL, queryEndpoint);
-                  if (!result.isEmpty()) {
+                String queryEndpoint = queriesService.getListEndpointsByUri(endpoint);
+                List<Map<String, Value>> result = sparqlService.query(QueryLanguage.SPARQL, queryEndpoint);
+                if (!result.isEmpty()) {
                     Map<String, Value> map = result.get(0);
                     String type = map.get("type").stringValue();
                     String status = map.get("status").stringValue();
@@ -219,67 +217,66 @@ public class AuthorServiceImpl implements AuthorService {
                     String url = map.get("url").stringValue();
                     Boolean mode = false;
                     if (map.containsKey("mode")) {
-                    mode = Boolean.valueOf(map.get("mode").stringValue()); 
+                        mode = Boolean.valueOf(map.get("mode").stringValue());
                     }
-                   // String uri = map.get("URI").stringValue();
+                    // String uri = map.get("URI").stringValue();
                     EndpointObject e;
-                    
-                     String extractResult ="";
-                    if ("file".equals(type)){
-                     e = new EndpointFile (status , org , url , type , endpoint);
-                   //  EndpointsObject.add(e);
-                    extractResult  =  extractAuthorGeneric (e , "0" , false );
-            
-                    }else if ("sparql".equals(type)) {
-                    e = new EndpointSPARQL (status , org , url , type, graph , endpoint);
-                    extractResult =   extractAuthorGeneric (e , "1" , false );
-                   // EndpointsObject.add(e);
-                    }else {
-                   
-                    String [] urls = url.split(";"); 
-                    for (String u :urls){
-                     e = new EndpointOAI (status , org , u , type , endpoint, mode);
-                    extractResult =  extractAuthorGeneric (e , "1" , mode  );
-                    String nametype = type;
-                     if (extractResult.contains("Success")) {
-                         if ("oai-pmh".equals(type)){
-                             nametype = OAIPROVNAME;
-                         }else if ("ojs".equals(type)) 
-                         {
-                             nametype = OJSPROVNAME;
-                         }
-                        String providerUri = createProvider (nametype,constantService.getAuthorsGraph() , true); 
-                         registerDate( org,  providerUri, extractResult , nametype , constantService.getAuthorsGraph());
-                     }else {
-                          break;
-                     }
+
+                    String extractResult = "";
+                    if ("file".equals(type)) {
+                        e = new EndpointFile(status, org, url, type, endpoint);
+                        //  EndpointsObject.add(e);
+                        extractResult = extractAuthorGeneric(e, "0", false);
+
+                    } else if ("sparql".equals(type)) {
+                        e = new EndpointSPARQL(status, org, url, type, graph, endpoint);
+                        extractResult = extractAuthorGeneric(e, "1", false);
+                        // EndpointsObject.add(e);
+                    } else {
+
+                        String[] urls = url.split(";");
+                        for (String u : urls) {
+                            e = new EndpointOAI(status, org, u, type, endpoint, mode);
+                            extractResult = extractAuthorGeneric(e, "1", mode);
+                            String nametype = type;
+                            if (extractResult.contains("Success")) {
+                                if ("oai-pmh".equals(type)) {
+                                    nametype = OAIPROVNAME;
+                                } else if ("ojs".equals(type)) {
+                                    nametype = OJSPROVNAME;
+                                }
+                                String providerUri = createProvider(nametype, constantService.getAuthorsGraph(), true);
+                                registerDate(org, providerUri, extractResult, nametype, constantService.getAuthorsGraph());
+                            } else {
+                                break;
+                            }
+                        }
+                        // EndpointsObject.add(e);
                     }
-                   // EndpointsObject.add(e);
+
+                    if (extractResult.contains("Success")) {
+                        Date date = new Date();
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+                        endpointService.updateExtractionDate(endpoint, dateFormat.format(date));
+                        // "Success: " + processedAuthors + "/" + totalAuthors
+
                     }
-                    
-                      if (extractResult.contains("Success")){
-                           Date date = new Date();
-                           SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
-                       endpointService.updateExtractionDate(endpoint, dateFormat.format(date) );
-                          // "Success: " + processedAuthors + "/" + totalAuthors
-                       
-                    }
-                    
-                    msg.put (endpoint, extractResult);
-                    
-                  } else {
-                   msg.put(endpoint, "Not found");
-                  }
-                
-               // msg.put(endpoint, "Success");
+
+                    msg.put(endpoint, extractResult);
+
+                } else {
+                    msg.put(endpoint, "Not found");
+                }
+
+                // msg.put(endpoint, "Success");
             } catch (MarmottaException ex) {
                 java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
                 msg.put(endpoint, ex);
             } catch (UpdateException ex) {
                 java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-                 msg.put(endpoint, ex);
+                msg.put(endpoint, ex);
             }
-        
+
         }
         try {
             return mapTojson(msg);
@@ -288,25 +285,24 @@ public class AuthorServiceImpl implements AuthorService {
             return "fail";
         }
     }
-    
-    
-    private String createProvider(String providerName , String providerGraph , Boolean main) throws UpdateException {
+
+    private String createProvider(String providerName, String providerGraph, Boolean main) throws UpdateException {
         String providerUri = constantService.getProviderBaseUri() + "/" + providerName.toUpperCase().replace(" ", "_");
         String queryProvider = queriesService.getAskResourceQuery(providerGraph, providerUri);
         try {
             boolean result = sparqlService.ask(QueryLanguage.SPARQL, queryProvider);
-               
+
             if (!result) {
-                 executeInsert( providerGraph, providerUri, RDF.TYPE.toString(), REDI.PROVIDER.toString());
-                 executeInsert (providerGraph, providerUri, RDFS.LABEL.toString(), providerName, "string");
-                 
+                executeInsert(providerGraph, providerUri, RDF.TYPE.toString(), REDI.PROVIDER.toString());
+                executeInsert(providerGraph, providerUri, RDFS.LABEL.toString(), providerName, "string");
+
                 if (main) {
-                 //   sparqlFunctionsService.executeInsert(providerGraph, providerUri, REDI.MAIN.toString(), "True", "boolean");
-                 executeInsert(providerGraph, providerUri, REDI.MAIN.toString(), "true", "boolean");
-                
+                    //   sparqlFunctionsService.executeInsert(providerGraph, providerUri, REDI.MAIN.toString(), "True", "boolean");
+                    executeInsert(providerGraph, providerUri, REDI.MAIN.toString(), "true", "boolean");
+
                 } else {
-                executeInsert(providerGraph, providerUri, REDI.MAIN.toString(), "false", "boolean");
- 
+                    executeInsert(providerGraph, providerUri, REDI.MAIN.toString(), "false", "boolean");
+
                 }
             }
 
@@ -316,315 +312,310 @@ public class AuthorServiceImpl implements AuthorService {
             return "";
         }
     }
-    
-     private void registerDate(String org, String providerUri, String detail, String getProviderName , String getProviderGraph) throws UpdateException {
+
+    private void registerDate(String org, String providerUri, String detail, String getProviderName, String getProviderGraph) throws UpdateException {
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
         String uriEvent = createExtractEventUri(getProviderName, org);
-        executeInsert (getProviderGraph, uriEvent, RDF.TYPE.toString(), REDI.EXTRACTION_EVENT.toString());
+        executeInsert(getProviderGraph, uriEvent, RDF.TYPE.toString(), REDI.EXTRACTION_EVENT.toString());
         executeInsert(getProviderGraph, providerUri, REDI.BELONGTO.toString(), uriEvent);
-        executeInsert (constantService.getOrganizationsGraph(), org, REDI.BELONGTO.toString(), uriEvent);
+        executeInsert(constantService.getOrganizationsGraph(), org, REDI.BELONGTO.toString(), uriEvent);
         executeInsert(getProviderGraph, uriEvent, REDI.EXTRACTIONDATE.toString(), dateFormat.format(date), STR);
-        executeInsert( getProviderGraph, uriEvent, RDFS.LABEL.toString(), dateFormat.format(date) + " | " + detail, STR);
+        executeInsert(getProviderGraph, uriEvent, RDFS.LABEL.toString(), dateFormat.format(date) + " | " + detail, STR);
 
     }
-     public void executeInsert (String graph , String subject, String property , String object , String type) throws UpdateException {
-       String query = queriesService.buildInsertQuery(graph,subject, property ,object , type );
-       sparqlFunctionsService.updateAuthor(query);
-     }
-     
-     public void executeInsert (String graph , String subject, String property , String object) throws UpdateException {
-       String query = queriesService.buildInsertQuery(graph,subject, property ,object  );
-       sparqlFunctionsService.updateAuthor(query);
-     }
-     
-     private String createExtractEventUri(String providerName, String org) {
+
+    public void executeInsert(String graph, String subject, String property, String object, String type) throws UpdateException {
+        String query = queriesService.buildInsertQuery(graph, subject, property, object, type);
+        sparqlFunctionsService.updateAuthor(query);
+    }
+
+    public void executeInsert(String graph, String subject, String property, String object) throws UpdateException {
+        String query = queriesService.buildInsertQuery(graph, subject, property, object);
+        sparqlFunctionsService.updateAuthor(query);
+    }
+
+    private String createExtractEventUri(String providerName, String org) {
         char slash = '/';
-         String orgName = org.substring(org.lastIndexOf(slash) + 1);
+        String orgName = org.substring(org.lastIndexOf(slash) + 1);
 
         return constantService.getEndpointBaseEvent() + providerName.replace(' ', '_') + "_" + orgName.replace(' ', '_');
 
     }
-    
-    public String mapTojson(Map<String, String> map) throws JSONException
-     {       
-        JSONObject jsonObj =new JSONObject();
+
+    public String mapTojson(Map<String, String> map) throws JSONException {
+        JSONObject jsonObj = new JSONObject();
         for (Map.Entry<String, String> entry : map.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
-            
+
             try {
-                jsonObj.put(key,value);
-            
+                jsonObj.put(key, value);
+
             } catch (org.json.JSONException ex) {
                 java.util.logging.Logger.getLogger(OrganizationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            }                           
+            }
         }
         return jsonObj.toString();
-     }
-    
-    
-    @SuppressWarnings({"PMD.ExcessiveMethodLength","PMD.UnusedPrivateMethod","PMD.AvoidDuplicateLiterals"})
-    private String extractAuthorGeneric (EndpointObject endpoint , String min , Boolean mode) {
+    }
+
+    @SuppressWarnings({"PMD.ExcessiveMethodLength", "PMD.UnusedPrivateMethod", "PMD.AvoidDuplicateLiterals"})
+    private String extractAuthorGeneric(EndpointObject endpoint, String min, Boolean mode) {
         int tripletasCargadas = 0; //cantidad de tripletas actualizadaas
         int contAutoresNuevosNoCargados = 0; //cantidad de actores nuevos no cargados
         int contAutoresNuevosEncontrados = 0; //hace referencia a la cantidad de actores existentes en el archivo temporal antes de la actualizacion
 
-        if (endpoint.prepareQuery()){
-        log.info("Endpoint listo");
-        int authorsSize = 0;
-        String query = queriesService.getCountPersonQuery(endpoint.getGraph() , min, mode);
-        List<HashMap> result = endpoint.querySource(query);
-          if (!result.isEmpty() ) {
-             authorsSize =  Integer.parseInt((String)result.get(0).get(COUNTWORD));
-          }else {
-           return "Problema en las consultas";
-          }
-            String getAuthorsQuery = queriesService.getAuthorsQuery(endpoint.getGraph() , min , mode);
-            
-           for (int offset = 0; offset < authorsSize; offset += 5000) {
-               
-               // TupleQueryResult authorsResult = executelocalquery (getAuthorsQuery + getLimitOffset(LIMIT, offset) , repo );//conn.prepareTupleQuery(QueryLanguage.SPARQL, getAuthorsQuery + getLimitOffset(limit, offset)).evaluate();
-                   List<HashMap> listAuthors = endpoint.querySource(getAuthorsQuery+ getLimitOffset(LIMIT, offset));
-                    String resource = "";
-                 for (HashMap resultmap : listAuthors ) {
-                       try {
-                           // resource = authorsResult.next().getValue("s").stringValue();
-                           resource = resultmap.get("s").toString();
-                           
-                           if (!sparqlFunctionsService.askAuthor(queriesService.getAskObjectQuery(constantService.getAuthorsGraph(), resource))) {
-                               contAutoresNuevosEncontrados++;
-                               printPercentProcess(contAutoresNuevosEncontrados, authorsSize, endpoint.getName());
-                             //  String localResource = buildLocalURI(resource);
-                               String localResource = buildLocalURI (resource , endpoint.getType() , endpoint.getName() );
-                               //String   queryAuthor = "Select * where {<"+resource+"> ?y ?z}";
-                              // TupleQueryResult tripletasResult =  executelocalquery ( queryAuthor , repo);
-                               
-                                   List<HashMap> describeAuthor = endpoint.querySource(queriesService.getAuthorsPropertiesQuery(resource));
-                                   for (HashMap des: describeAuthor ) {
-                                   //BindingSet tripletsResource = tripletasResult.next();                   
-                                   String predicate = des.get("property").toString();
-                                          // tripletsResource.getValue("y").stringValue();
-                                   String object = des.get("object").toString();
-                                   log.info (des+"");
-                                          // tripletsResource.getValue("z").stringValue();
-                                   log.info(predicate +"-"+ object+"-"+des.get("type"));
-                                   
-                                   String insert = "";
-                                   switch (predicate) {
-                                       case "http://xmlns.com/foaf/0.1/givenName":// store foaf:firstName
-                                       case "http://xmlns.com/foaf/0.1/firstName":
-                                           insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, FOAF.firstName.toString(), object);
-                                           sparqlFunctionsService.updateAuthor(insert);
-                                           break;
-                                       case "http://xmlns.com/foaf/0.1/familyName": // store foaf:lastName
-                                       case "http://xmlns.com/foaf/0.1/lastName":
-                                           insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, FOAF.lastName.toString(), object);
-                                           sparqlFunctionsService.updateAuthor(insert);
-                                           break;
-                                       case "http://xmlns.com/foaf/0.1/name": // store foaf:name
-                                           insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, FOAF.name.toString(), object);
-                                           sparqlFunctionsService.updateAuthor(insert);
-                                           break;
-                                       case "http://rdaregistry.info/Elements/u/P60095": // store foaf:name
-                                           insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, SCHEMA.affiliation.toString(), object);
-                                           sparqlFunctionsService.updateAuthor(insert);
-                                           break;    
-                                        case "http://purl.org/dc/terms/isVersionOf":
-                                       insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, DCTERMS.IS_VERSION_OF.toString() , buildLocalURI( object , endpoint.getType() , endpoint.getName() ) );
-                                       sparqlFunctionsService.updateAuthor(insert);
-                                       break;
-                                       case "http://www.w3.org/2002/07/owl#sameAs": // If sameas found include the provenance
-                                           //SparqlEndpoint newEndpoint = matchWithProvenance(object);
-                                          /* if (newEndpoint != null) {
+        if (endpoint.prepareQuery()) {
+            log.info("Endpoint listo");
+            int authorsSize = 0;
+            String query = queriesService.getCountPersonQuery(endpoint.getGraph(), min, mode);
+            List<HashMap> result = endpoint.querySource(query);
+            if (!result.isEmpty()) {
+                authorsSize = Integer.parseInt((String) result.get(0).get(COUNTWORD));
+            } else {
+                return "Problema en las consultas";
+            }
+            String getAuthorsQuery = queriesService.getAuthorsQuery(endpoint.getGraph(), min, mode);
+
+            for (int offset = 0; offset < authorsSize; offset += 5000) {
+
+                // TupleQueryResult authorsResult = executelocalquery (getAuthorsQuery + getLimitOffset(LIMIT, offset) , repo );//conn.prepareTupleQuery(QueryLanguage.SPARQL, getAuthorsQuery + getLimitOffset(limit, offset)).evaluate();
+                List<HashMap> listAuthors = endpoint.querySource(getAuthorsQuery + getLimitOffset(LIMIT, offset));
+                String resource = "";
+                for (HashMap resultmap : listAuthors) {
+                    try {
+                        // resource = authorsResult.next().getValue("s").stringValue();
+                        resource = resultmap.get("s").toString();
+
+                        if (!sparqlFunctionsService.askAuthor(queriesService.getAskObjectQuery(constantService.getAuthorsGraph(), resource))) {
+                            contAutoresNuevosEncontrados++;
+                            printPercentProcess(contAutoresNuevosEncontrados, authorsSize, endpoint.getName());
+                            //  String localResource = buildLocalURI(resource);
+                            String localResource = buildLocalURI(resource, endpoint.getType(), endpoint.getName());
+                            //String   queryAuthor = "Select * where {<"+resource+"> ?y ?z}";
+                            // TupleQueryResult tripletasResult =  executelocalquery ( queryAuthor , repo);
+
+                            List<HashMap> describeAuthor = endpoint.querySource(queriesService.getAuthorsPropertiesQuery(resource));
+                            for (HashMap des : describeAuthor) {
+                                //BindingSet tripletsResource = tripletasResult.next();                   
+                                String predicate = des.get("property").toString();
+                                // tripletsResource.getValue("y").stringValue();
+                                String object = des.get("object").toString();
+                                log.info(des + "");
+                                // tripletsResource.getValue("z").stringValue();
+                                log.info(predicate + "-" + object + "-" + des.get("type"));
+
+                                String insert = "";
+                                switch (predicate) {
+                                    case "http://xmlns.com/foaf/0.1/givenName":// store foaf:firstName
+                                    case "http://xmlns.com/foaf/0.1/firstName":
+                                        insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, FOAF.firstName.toString(), object);
+                                        sparqlFunctionsService.updateAuthor(insert);
+                                        break;
+                                    case "http://xmlns.com/foaf/0.1/familyName": // store foaf:lastName
+                                    case "http://xmlns.com/foaf/0.1/lastName":
+                                        insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, FOAF.lastName.toString(), object);
+                                        sparqlFunctionsService.updateAuthor(insert);
+                                        break;
+                                    case "http://xmlns.com/foaf/0.1/name": // store foaf:name
+                                        insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, FOAF.name.toString(), object);
+                                        sparqlFunctionsService.updateAuthor(insert);
+                                        break;
+                                    case "http://rdaregistry.info/Elements/u/P60095": // store foaf:name
+                                        insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, SCHEMA.affiliation.toString(), object);
+                                        sparqlFunctionsService.updateAuthor(insert);
+                                        break;
+                                    case "http://purl.org/dc/terms/isVersionOf":
+                                        insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, DCTERMS.IS_VERSION_OF.toString(), buildLocalURI(object, endpoint.getType(), endpoint.getName()));
+                                        sparqlFunctionsService.updateAuthor(insert);
+                                        break;
+                                    case "http://www.w3.org/2002/07/owl#sameAs": // If sameas found include the provenance
+                                        //SparqlEndpoint newEndpoint = matchWithProvenance(object);
+                                        /* if (newEndpoint != null) {
                                                String provenanceQueryInsert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, DCTERMS.PROVENANCE.toString(), newEndpoint);
                                                sparqlFunctionsService.updateAuthor(provenanceQueryInsert);
                                            }*/
-                                           insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, OWL.SAMEAS.toString(), object);
-                                           sparqlFunctionsService.updateAuthor(insert);
-                                           break;
-                                       case "http://rdaregistry.info/Elements/a/P50195":
-                                           
-                                       case "http://rdaregistry.info/Elements/a/P50161":
-                                        
-                                           if (des.containsKey("type") ){
-                                           String type = des.get("type").toString();
-                                           createDoc (localResource , object , type , endpoint , predicate);
-                                           }
-                                           break;
-                                       default:
-                                   }
-                               }
-                               
-                               String sameAs = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, OWL.SAMEAS.toString(), resource);
-                               sparqlFunctionsService.updateAuthor(sameAs);
-                               
-                               String provenanceQueryInsert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, DCTERMS.PROVENANCE.toString(), endpoint.getResourceId());
-                               sparqlFunctionsService.updateAuthor(provenanceQueryInsert);
-                               
-                               String foafPerson = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, RDF.TYPE.toString(), FOAF.Person.toString());
-                               sparqlFunctionsService.updateAuthor(foafPerson);
-                               
-                              
-                               
-                               //conn.commit();
-                               //conn.close();
+                                        insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, OWL.SAMEAS.toString(), object);
+                                        sparqlFunctionsService.updateAuthor(insert);
+                                        break;
+                                    case "http://rdaregistry.info/Elements/a/P50195":
 
-                           }  } catch (    AskException | UnsupportedEncodingException | UpdateException ex) {
-                           java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-                           return "Fail"+ex;
-                           }
-                
+                                    case "http://rdaregistry.info/Elements/a/P50161":
+
+                                        if (des.containsKey("type")) {
+                                            String type = des.get("type").toString();
+                                            createDoc(localResource, object, type, endpoint, predicate);
+                                        }
+                                        break;
+                                    default:
+                                }
+                            }
+
+                            String sameAs = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, OWL.SAMEAS.toString(), resource);
+                            sparqlFunctionsService.updateAuthor(sameAs);
+
+                            String provenanceQueryInsert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, DCTERMS.PROVENANCE.toString(), endpoint.getResourceId());
+                            sparqlFunctionsService.updateAuthor(provenanceQueryInsert);
+
+                            String foafPerson = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, RDF.TYPE.toString(), FOAF.Person.toString());
+                            sparqlFunctionsService.updateAuthor(foafPerson);
+
+                            //conn.commit();
+                            //conn.close();
+                        }
+                    } catch (AskException | UnsupportedEncodingException | UpdateException ex) {
+                        java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                        return "Fail" + ex;
+                    }
+
                 }
-                
-              }     log.info( endpoint.getName() + " . Se detectaron " + contAutoresNuevosEncontrados + " autores nuevos ");
-                    log.info( endpoint.getName()+ " . Se cargaron " + (contAutoresNuevosEncontrados - contAutoresNuevosNoCargados) + " autores nuevos exitosamente");
-                    log.info( endpoint.getName() + "  . Se cargaron " + tripletasCargadas + " tripletas ");
-                    log.info( endpoint.getName() + " . No se pudieron cargar " + contAutoresNuevosNoCargados + " autores");
-                 //    List<HashMap> describeAuthor0 = endpoint.querySource("Select * where {?a ?b ?c }limit 100");
-                 //    List<HashMap> describeAuthor1 = endpoint.querySource("PREFIX bibo: <http://purl.org/ontology/bibo/> Select * where {?a  a bibo:Document}limit 10");
-                   // log.info ("Extrayendo Subjects");
-          /*  try {
+
+            }
+            log.info(endpoint.getName() + " . Se detectaron " + contAutoresNuevosEncontrados + " autores nuevos ");
+            log.info(endpoint.getName() + " . Se cargaron " + (contAutoresNuevosEncontrados - contAutoresNuevosNoCargados) + " autores nuevos exitosamente");
+            log.info(endpoint.getName() + "  . Se cargaron " + tripletasCargadas + " tripletas ");
+            log.info(endpoint.getName() + " . No se pudieron cargar " + contAutoresNuevosNoCargados + " autores");
+            //    List<HashMap> describeAuthor0 = endpoint.querySource("Select * where {?a ?b ?c }limit 100");
+            //    List<HashMap> describeAuthor1 = endpoint.querySource("PREFIX bibo: <http://purl.org/ontology/bibo/> Select * where {?a  a bibo:Document}limit 10");
+            // log.info ("Extrayendo Subjects");
+            /*  try {
              //   extractSubjects (endpoint);
             } catch (    RepositoryException | MalformedQueryException | QueryEvaluationException ex) {
                 java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
                 return "Problema Extrayendo Subjects";
             }*/
-                      endpoint.closeconnection();
-                 return "Success: "+ authorsSize+"/"+authorsSize;
-           } else {
-           return "Fail: Access";
-           }
+            endpoint.closeconnection();
+            return "Success: " + authorsSize + "/" + authorsSize;
+        } else {
+            return "Fail: Access";
+        }
     }
-    
-    
-     private String buildLocalURI(String resource, String type, String name ) {
-         return constantService.getAuthorResource() +name+"/"+type +"/"+resource.substring(resource.lastIndexOf('/') + 1);
-       // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-     
-      private void createDoc(String uri , String object , String type , EndpointObject e , String relation) throws UpdateException, UnsupportedEncodingException {
-      if ("http://purl.org/ontology/bibo/Article".equals(type)) {
-          
-          String query = queriesService.getPublicationDetails(object);
-          List<HashMap> describePub = e.querySource(query );
-          executeInsert(constantService.getAuthorsGraph(), object , RDF.TYPE.toString() , BIBO.ACADEMIC_ARTICLE.toString() );
-          ConcurrentHashMap  journal = new ConcurrentHashMap ();
-          for ( HashMap result: describePub ) {
-            String property ="";
-            String value = "";
-            if (result.containsKey("property")&& result.containsKey("hasValue")){
-             property =   result.get("property").toString();
-             value =   result.get("hasValue").toString();
-           
-            switch  (property ){
-           case "http://purl.org/ontology/bibo/uri": 
-                 executeInsert(constantService.getAuthorsGraph(), object , BIBO.URI.toString() , value );
-      
-                break;
-            case "http://purl.org/dc/terms/abstract": 
-                 executeInsert(constantService.getAuthorsGraph(), object , BIBO.ABSTRACT.toString() , value.replaceAll("[&@;^\"\\\\]","") );
-      
-                break;
-            case "http://purl.org/dc/terms/title":
-                executeInsert(constantService.getAuthorsGraph(), object, DCTERMS.TITLE.toString() , value.replaceAll("[&@;^\"\\\\]","")  );
-             
-                break;
-            case "http://purl.org/dc/terms/subject":
-                 String uriSubject = constantService.getSubjectResource()+URLEncoder.encode(value.toUpperCase().replace(" ", "_"), "UTF-8");
-                 executeInsert(constantService.getAuthorsGraph(), object, DCTERMS.SUBJECT.toString() , uriSubject  );
-                 executeInsert(constantService.getAuthorsGraph(), uriSubject, RDFS.LABEL.toString() , value.toUpperCase().replaceAll("[&@;^\"\\\\]","") , STR );
-                
-                break;
-            case "http://purl.org/ontology/bibo/issn":
-                 if (!journal.containsKey(property))
-                { journal.put(property, value); }
-                else {
-                journal.put(property, journal.get(property)+";"+value);
-                }
-                executeInsert(constantService.getAuthorsGraph(), object, BIBO.ISSN.toString() , value , "integer" );
-            
-                break;
-                
-              case "http://purl.org/ontology/bibo/isbn":
-                  if (!journal.containsKey(property))
-                { journal.put(property, value); }
-                else {
-                journal.put(property, journal.get(property)+";"+value);
-                }
-                 executeInsert(constantService.getAuthorsGraph(), object, BIBO.ISBN.toString() , value , "integer" );
-       
-                break;    
-            case "http://purl.org/dc/terms/date":
-                if (object.matches("^[0-9]+-[0-9]+-[0-9]+")){
-                 executeInsert(constantService.getAuthorsGraph(), object, BIBO.ISSUE.toString() , value , "date" );
-               
-                }
-                break;
-                
-            case "http://purl.org/dc/terms/source":
-                  journal.put(property, value); 
-                break;
-            default: 
-              
-            
-                break;
-            }
-            } 
 
-          }
-             
-             if (journal.containsKey(DCTERMS.SOURCE.toString()) && ( journal.containsKey(BIBO.ISSN.toString()) || journal.containsKey(BIBO.ISBN))) {
-                   createJournal (journal, object);
-             }
-          
-          
-           String rel;
-           if ("http://rdaregistry.info/Elements/a/P50195".equals(relation)) {
-            rel = DCTERMS.CREATOR.toString();
-            
-            } else {
-               rel = DCTERMS.CONTRIBUTOR.toString();
+    private String buildLocalURI(String resource, String type, String name) {
+        return constantService.getAuthorResource() + name + "/" + type + "/" + resource.substring(resource.lastIndexOf('/') + 1);
+        // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void createDoc(String uri, String object, String type, EndpointObject e, String relation) throws UpdateException, UnsupportedEncodingException {
+        if ("http://purl.org/ontology/bibo/Article".equals(type)) {
+
+            String query = queriesService.getPublicationDetails(object);
+            List<HashMap> describePub = e.querySource(query);
+            executeInsert(constantService.getAuthorsGraph(), object, RDF.TYPE.toString(), BIBO.ACADEMIC_ARTICLE.toString());
+            ConcurrentHashMap journal = new ConcurrentHashMap();
+            for (HashMap result : describePub) {
+                String property = "";
+                String value = "";
+                if (result.containsKey("property") && result.containsKey("hasValue")) {
+                    property = result.get("property").toString();
+                    value = result.get("hasValue").toString();
+
+                    switch (property) {
+                        case "http://purl.org/ontology/bibo/uri":
+                            executeInsert(constantService.getAuthorsGraph(), object, BIBO.URI.toString(), value);
+
+                            break;
+                        case "http://purl.org/dc/terms/abstract":
+                            executeInsert(constantService.getAuthorsGraph(), object, BIBO.ABSTRACT.toString(), value.replaceAll("[&@;^\"\\\\]", ""));
+
+                            break;
+                        case "http://purl.org/dc/terms/title":
+                            executeInsert(constantService.getAuthorsGraph(), object, DCTERMS.TITLE.toString(), value.replaceAll("[&@;^\"\\\\]", ""));
+
+                            break;
+                        case "http://purl.org/dc/terms/subject":
+                            String uriSubject = constantService.getSubjectResource() + URLEncoder.encode(value.toUpperCase().replace(" ", "_"), "UTF-8");
+                            executeInsert(constantService.getAuthorsGraph(), object, DCTERMS.SUBJECT.toString(), uriSubject);
+                            executeInsert(constantService.getAuthorsGraph(), uriSubject, RDFS.LABEL.toString(), value.toUpperCase().replaceAll("[&@;^\"\\\\]", ""), STR);
+
+                            break;
+                        case "http://purl.org/ontology/bibo/issn":
+                            if (!journal.containsKey(property)) {
+                                journal.put(property, value);
+                            } else {
+                                journal.put(property, journal.get(property) + ";" + value);
+                            }
+                            executeInsert(constantService.getAuthorsGraph(), object, BIBO.ISSN.toString(), value, "integer");
+
+                            break;
+
+                        case "http://purl.org/ontology/bibo/isbn":
+                            if (!journal.containsKey(property)) {
+                                journal.put(property, value);
+                            } else {
+                                journal.put(property, journal.get(property) + ";" + value);
+                            }
+                            executeInsert(constantService.getAuthorsGraph(), object, BIBO.ISBN.toString(), value, "integer");
+
+                            break;
+                        case "http://purl.org/dc/terms/date":
+                            if (object.matches("^[0-9]+-[0-9]+-[0-9]+")) {
+                                executeInsert(constantService.getAuthorsGraph(), object, BIBO.ISSUE.toString(), value, "date");
+
+                            }
+                            break;
+
+                        case "http://purl.org/dc/terms/source":
+                            journal.put(property, value);
+                            break;
+                        default:
+
+                            break;
+                    }
+                }
+
             }
-            
-            executeInsert(constantService.getAuthorsGraph(), uri, FOAF.publications.toString() , object );
-            executeInsert(constantService.getAuthorsGraph(), object, rel, uri );
-          
-      }
-    }
-     
-    public void createJournal (ConcurrentHashMap datajournal , String uriArticle ) throws UpdateException {
-           
-         String name =  datajournal.get("http://purl.org/dc/terms/source").toString();
-        
-         String [] issnList = {};
-         String [] isbnList = {};
-         
-         if (datajournal.containsKey(BIBO.ISSN.toString())){
-         issnList =   datajournal.get (BIBO.ISSN.toString()).toString().split(";");     
-         }
-         
-         if (datajournal.containsKey(BIBO.ISBN.toString())){
-         isbnList =   datajournal.get (BIBO.ISBN.toString()).toString().split(";");
-         }
-         
-        String base = "http://REDI/Temporal/OJS/Journal/"; 
-        String url = base+Normalizer.normalize(name.toUpperCase().replace(" ", "_").replaceAll("[,.]",""), Normalizer.Form.NFD);
-        executeInsert(constantService.getAuthorsGraph(), url , RDF.TYPE.toString() , BIBO.JOURNAL.toString() );
-        executeInsert(constantService.getAuthorsGraph(), url , RDFS.LABEL.toString() , name );
-        for (String issn :issnList) {
-        executeInsert(constantService.getAuthorsGraph(), url , BIBO.ISSN.toString() , issn );
+
+            if (journal.containsKey(DCTERMS.SOURCE.toString()) && (journal.containsKey(BIBO.ISSN.toString()) || journal.containsKey(BIBO.ISBN))) {
+                createJournal(journal, object);
+            }
+
+            String rel;
+            if ("http://rdaregistry.info/Elements/a/P50195".equals(relation)) {
+                rel = DCTERMS.CREATOR.toString();
+
+            } else {
+                rel = DCTERMS.CONTRIBUTOR.toString();
+            }
+
+            executeInsert(constantService.getAuthorsGraph(), uri, FOAF.publications.toString(), object);
+            executeInsert(constantService.getAuthorsGraph(), object, rel, uri);
+
         }
-        
-        for (String isbn :isbnList) {
-        executeInsert(constantService.getAuthorsGraph(), url , BIBO.ISBN.toString() , isbn );
-        }
-        
-        executeInsert(constantService.getAuthorsGraph(), uriArticle , DCTERMS.IS_PART_OF.toString() , url );
-       
-    
     }
-        /*
+
+    public void createJournal(ConcurrentHashMap datajournal, String uriArticle) throws UpdateException {
+
+        String name = datajournal.get("http://purl.org/dc/terms/source").toString();
+
+        String[] issnList = {};
+        String[] isbnList = {};
+
+        if (datajournal.containsKey(BIBO.ISSN.toString())) {
+            issnList = datajournal.get(BIBO.ISSN.toString()).toString().split(";");
+        }
+
+        if (datajournal.containsKey(BIBO.ISBN.toString())) {
+            isbnList = datajournal.get(BIBO.ISBN.toString()).toString().split(";");
+        }
+
+        String base = "http://REDI/Temporal/OJS/Journal/";
+        String url = base + Normalizer.normalize(name.toUpperCase().replace(" ", "_").replaceAll("[,.]", ""), Normalizer.Form.NFD);
+        executeInsert(constantService.getAuthorsGraph(), url, RDF.TYPE.toString(), BIBO.JOURNAL.toString());
+        executeInsert(constantService.getAuthorsGraph(), url, RDFS.LABEL.toString(), name);
+        for (String issn : issnList) {
+            executeInsert(constantService.getAuthorsGraph(), url, BIBO.ISSN.toString(), issn);
+        }
+
+        for (String isbn : isbnList) {
+            executeInsert(constantService.getAuthorsGraph(), url, BIBO.ISBN.toString(), isbn);
+        }
+
+        executeInsert(constantService.getAuthorsGraph(), uriArticle, DCTERMS.IS_PART_OF.toString(), url);
+
+    }
+
+    /*
        private void refineSubjectTopic(String localSubject, Set<String> subjects, Set<String> topic) {
          List listTopic = new ArrayList(topic);
          List<String>[] resultTopics = findTopics(new ArrayList(topic), 5, 15);
@@ -654,15 +645,6 @@ public class AuthorServiceImpl implements AuthorService {
         //log.info("Resource {} has {} documents and {} subjects ", localSubject, documents.size(), selectedSubjects.size());
        
        }*/
-  
-   
-    
-    
-    
-    
-
-    
-
     public boolean compareExactStrings(String string1, String string2) {
         return (string1.matches("^" + string2 + "$") || string2.matches("^" + string1 + "$"));
     }
@@ -713,7 +695,7 @@ public class AuthorServiceImpl implements AuthorService {
         conn.close();
         return result;
     }*/
-    /*
+ /*
       @Deprecated
      @SuppressWarnings("PMD.UnusedPrivateMethod")
     private Set<String>[] extractSubjectsAndDocuments(LDClientService ldClient, String documentURI)
@@ -753,7 +735,7 @@ public class AuthorServiceImpl implements AuthorService {
     private String buildLocalURI(String endpointURI) {
         return constantService.getAuthorResource() + endpointURI.substring(endpointURI.lastIndexOf('/') + 1);
     }*/
-/*
+ /*
     private List<String>[] findTopics(List<String> documents, int numTopics, int numWords) {
         Set<String> topics = new TreeSet<>();
 
@@ -795,8 +777,8 @@ public class AuthorServiceImpl implements AuthorService {
             new ArrayList<>(topics),
             new ArrayList<>(topicsToStore)};
     }
-*/
-    /*
+     */
+ /*
      * 
      * @param contAutoresNuevosEncontrados
      * @param allPersons
@@ -814,15 +796,76 @@ public class AuthorServiceImpl implements AuthorService {
         return " " + queriesService.getLimit(String.valueOf(limit)) + " " + queriesService.getOffset(String.valueOf(offset));
     }
 
-  
+    @Override
+    public void postProcessAffiliations() {
+        try {
+            postProcessAffiliationsWp();
+        } catch (Exception ex) {
+            log.warn("Unknown error Post Process Affiliations , please check the catalina log for further details.");
+            log.warn("Exception {}", ex);
+        }
+    }
 
-
-   
-
-   
-
-   
-
-   
+    public void postProcessAffiliationsWp() throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
+        String q = "PREFIX schema: <http://schema.org/>\n"
+                + "select ?a ?n ?aff {\n"
+                + "	 graph <" + constantService.getAuthorsGraph() + "> {\n"
+                + "    	?a <http://purl.org/dc/terms/provenance> ?p .\n"
+                + "        ?a schema:affiliation ?aff .\n"
+                + "    }\n"
+                + "  graph <" + constantService.getEndpointsGraph() + ">  {\n"
+                + "  	   ?p <http://ucuenca.edu.ec/ontology#belongTo> ?o .\n"
+                + "    }\n"
+                + " graph <" + constantService.getOrganizationsGraph() + ">   {\n"
+                + "    	?o <http://ucuenca.edu.ec/ontology#fullName> ?n .\n"
+                + "    }\n"
+                + "} ";
+        List<Map<String, Value>> query = sparqlService.query(QueryLanguage.SPARQL, q);
+        ConcurrentHashMap<String, Map.Entry<Set<String>, Set<String>>> comList = new ConcurrentHashMap<>();
+        for (Map<String, Value> a : query) {
+            String key = a.get("a").stringValue();
+            String stringValue = a.get("n").stringValue();
+            String stringValue1 = a.get("aff").stringValue();
+            if (!comList.containsKey(key)) {
+                comList.put(key, new AbstractMap.SimpleEntry<Set<String>, Set<String>>(new HashSet<String>(), new HashSet<String>()));
+            }
+            Map.Entry<Set<String>, Set<String>> lis = comList.get(key);
+            lis.getKey().add(stringValue);
+            lis.getValue().add(stringValue1);
+        }
+        int i = 0;
+        for (Map.Entry<String, Map.Entry<Set<String>, Set<String>>> next : comList.entrySet()) {
+            i++;
+            log.info("Postprocessing affiliations {}/{}", i, comList.size());
+            Set<String> orgs = next.getValue().getKey();
+            Set<String> affs = next.getValue().getValue();
+            Person ap = new Person();
+            ap.Affiliations = new ArrayList<>();
+            ap.Affiliations.addAll(orgs);
+            Person bp = new Person();
+            bp.Affiliations = new ArrayList<>();
+            bp.Affiliations.addAll(affs);
+            Boolean checkAffiliations = ap.checkAffiliations(bp);
+            if (checkAffiliations != null && !checkAffiliations) {
+                String q2 = "delete {\n"
+                        +"graph <" + constantService.getAuthorsGraph() + "> {\n"
+                        + "		?a <http://purl.org/dc/terms/provenance> ?p .\n"
+                        + "	}	\n"
+                        + "}\n"
+                        + "insert {\n"
+                        + "	   graph <" + constantService.getAuthorsGraph() + "OJSFix" + ">    {\n"
+                        + "		?a <http://purl.org/dc/terms/provenance> ?p .\n"
+                        + "	}\n"
+                        + "}\n"
+                        + "where {\n"
+                        + "	 graph  <" + constantService.getAuthorsGraph() + ">        {\n"
+                        + "		bind (<" + next.getKey() + "> as ?a) .\n"
+                        + "		?a <http://purl.org/dc/terms/provenance> ?p .\n"
+                        + "	}\n"
+                        + "}";
+                sparqlService.update(QueryLanguage.SPARQL, q2);
+            }
+        }
+    }
 
 }

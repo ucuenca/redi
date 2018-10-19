@@ -15,11 +15,11 @@ public interface DisambiguationService {
 
     public String startMerge();
 
-    public String startDisambiguation(String [] orgs);
+    public String startDisambiguation(String[] orgs);
 
-    public void Proccess();
+    public void Process();
 
-    public void Proccess(String [] orgs);
+    public void Process(String[] orgs);
 
     public void Merge();
 

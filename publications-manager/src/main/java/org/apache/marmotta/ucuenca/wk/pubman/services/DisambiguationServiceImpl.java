@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -167,7 +168,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
     }
 
     @Override
-    public void Proccess(String[] orgs) {
+    public void Process(String[] orgs) {
         try {
             SPARQLUtils sparqlUtils = new SPARQLUtils(sparqlService);
             task = taskManagerService.createSubTask(String.format("%s Disambiguation", "Author"), "Disambiguation Process");
@@ -629,6 +630,22 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         sparqlUtils.delete("https://redi.cedia.edu.ec/context/authorsJH1");
         sparqlUtils.delete("https://redi.cedia.edu.ec/context/authorsJH2");
         sparqlUtils.delete("https://redi.cedia.edu.ec/context/authorsJH3");
+
+        String qdw = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                + "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "insert {\n"
+                + "  graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
+                + "	?a <http://schema.org/memberOf> ?affu .\n"
+                + "    ?affu a foaf:Organization .\n"
+                + "  	?affu foaf:name ?ff .\n"
+                + "  }\n"
+                + "} where {\n"
+                + "    graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
+                + "    	?a <http://schema.org/affiliation> ?ff .\n"
+                + "      	bind (iri(concat('https://redi.cedia.edu.ec/resource/affiliation/', encode_for_uri(?ff))) as ?affu) .\n"
+                + "    }\n"
+                + "}";
+        sparqlService.update(QueryLanguage.SPARQL, qdw);
     }
 
     public Map<Provider, Integer> ProcessAuthors(List<Provider> AuthorsProviderslist, String organization) throws MarmottaException, RepositoryException, MalformedQueryException, QueryEvaluationException, RDFHandlerException, InvalidArgumentException, UpdateExecutionException, InterruptedException {
@@ -1130,7 +1147,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 public void run() {
                     try {
                         log.info("Starting Disambiguation process ...");
-                        Proccess();
+                        Process();
                     } catch (Exception ex) {
                         log.warn("Unknown error while disambiguating, please check the catalina log for further details.");
                         ex.printStackTrace();
@@ -1156,7 +1173,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 public void run() {
                     try {
                         log.info("Starting Disambiguation process ...");
-                        Proccess(orgss);
+                        Process(orgss);
                     } catch (Exception ex) {
                         log.warn("Unknown error while disambiguating, please check the catalina log for further details.");
                         ex.printStackTrace();
@@ -1194,7 +1211,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
     }
 
     @Override
-    public void Proccess() {
-        Proccess(null);
+    public void Process() {
+        Process(null);
     }
 }
