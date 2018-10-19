@@ -234,13 +234,13 @@ public class CommonServiceImpl implements CommonService {
     public String organizationListExtracted() {
         try {
             List<Provider> prov = getProviders();
-            Map<String, String> mprov = new HashMap();
+           /* Map<String, String> mprov = new HashMap();
             for (Provider p : prov) {
 
                 mprov.put(p.Graph, p.Name);
 
-            }
-            String queryOrg = queriesService.getExtractedOrgList(mprov);
+            }*/
+            String queryOrg = queriesService.getExtractedOrgListD(prov);
             List<Map<String, Value>> response;
 
             response = sparqlService.query(QueryLanguage.SPARQL, queryOrg);
@@ -311,10 +311,10 @@ public class CommonServiceImpl implements CommonService {
                 mprov.put(p.Graph, p.Name);
 
             }
-            String queryOrg = queriesService.getEnrichmentQueryResult(mprov);
+            String queryOrg = queriesService.getEnrichmentQueryResult(prov);
             List<Map<String, Value>> response1;
 
-            String queryd = queriesService.getOrgDisambiguationResult(mprov);
+            String queryd = queriesService.getOrgDisambiguationResult(prov);
             //   String queryd = queriesService.getOrgDisambiguationResult(mprov);
             log.info(queryd);
             List<Map<String, Value>> response2;

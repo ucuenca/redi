@@ -10,11 +10,11 @@
  [ "UCUENCA", "", "", "12/12/12", "2011/07/25", "50/81/90" ],
  [ "UTPL", "", "", "", "2009/01/12", "" ]
  ];*/
-// var host = "http://localhost:8080/"; 
+ //var host = "http://localhost:8080/"; 
   var host = _SERVER_URL;
 // var host = "https://rediclon.cedia.edu.ec/";
 function loadTables() {
-     var Providers = ["Dspace","SCOPUS","AcademicsKnowledge", "DBLP", "GoogleScholar","Springer","SCIELO"];  
+     var Providers = ["Dspace","Ojs","SCOPUS","AcademicsKnowledge", "DBLP", "GoogleScholar","Springer","SCIELO"];  
      
       var columns = [ {"data":"Selection"} , { "data":"name"}];
       
@@ -35,12 +35,14 @@ function loadTables() {
          columns.push(newField);
          
          var columdefn = { "render": function (data, type, row) {
+              
                         if (typeof (row["Adv"+val]) === "undefined") {
                         return "";
-                        } else {
+                        } else {                           
+                      
                         return row["Adv"+val].split(";").sort(function (a, b) {
                             return CompareDate(a, b);
-                        })[0];    
+                        })[0];   //.filter (function (value){return value != ""}) 
                     }
                 },
                 targets: i+2
@@ -169,7 +171,10 @@ function loadTables() {
 }
 
 function  CompareDate(a, b) {
-
+  // console.log  (a+"-"+b);
+   if (!a.includes("|")) return 1; 
+       
+   
     var datea = a.split(" | ")[0];
     var dateb = b.split(" | ")[0];
     var auxa = datea.split(" ")[0].split("/");
@@ -177,7 +182,7 @@ function  CompareDate(a, b) {
 
     return new Date(auxb[1] + "/" + auxb[0] + "/" + auxb[2] + " " + dateb.split(" ")[1]) - new Date(auxa[1] + "/" + auxa[0] + "/" + auxa[2] + " " + datea.split(" ")[1]);
     //  return new Date(aux1[0].split("/")[1]+"/"+aux1[0].split("/")[0]+"/"+aux1[0].split("/")[2]+" "+ aux1[1]) - new Date(aux2[0].split("/")[1]+"/"+aux2[0].split("/")[0]+"/"+aux2[0].split("/")[2]+" "+aux2[1]);
-
+   
 
 }
 

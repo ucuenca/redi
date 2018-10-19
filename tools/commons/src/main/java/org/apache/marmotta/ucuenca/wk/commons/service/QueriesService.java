@@ -5,7 +5,9 @@
  */
 package org.apache.marmotta.ucuenca.wk.commons.service;
 
-import java.util.Map;
+import java.util.List;
+//import java.util.Map;
+import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Provider;
 
 /**
  *
@@ -71,13 +73,14 @@ public interface QueriesService {
 
     String getListEndpointsByUri(String uri);
 
-    String getExtractedOrgList(Map<String, String> providers);
+    String getExtractedOrgList( List<Provider> providers);
+    String getExtractedOrgListD( List<Provider> providers);
 
-    String getOrgEnrichmentProvider(Map<String, String> mp);
+    //String getOrgEnrichmentProvider(List <Provider> providers);
 
-    String getOrgDisambiguationResult(Map<String, String> providers);
+    String getOrgDisambiguationResult(List <Provider> providers);
 
-    String getEnrichmentQueryResult(Map<String, String> providers);
+    String getEnrichmentQueryResult(List <Provider> providers);
 
     /**
      * return query to obtain all subject ( keywords ) of an author , using

@@ -1,14 +1,16 @@
 package org.apache.marmotta.ucuenca.wk.commons.impl;
 
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
-import com.hp.hpl.jena.vocabulary.OWL;
+//import com.hp.hpl.jena.vocabulary.OWL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Map;
+import java.util.List;
+//import java.util.Map;
 import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Provider;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
@@ -355,17 +357,73 @@ public class QueriesServiceImpl implements QueriesService {
                 + " FILTER (lang(?engName) = 'en') . "
                 + "}}";
     }
+    
+     @Override
+    public String getExtractedOrgListD(List<Provider> providers) {
+        String varprov = "";
+        String prov = "";
+        String varprovl = "";
 
+        for (Provider p : providers) {
+            varprov = " (group_concat(  ?label" + p.Name + "  ; separator=\";\")  as  ?Adv" + p.Name + " ) " + varprov;
+             varprovl = " ?label" + p.Name +" "+varprovl;
+             
+            if (p.Name.equals("Ojs")|| p.Name.equals("Dspace")){
+             
+             prov = "  GRAPH  <" + p.Graph + "> {"
+                    + "  OPTIONAL { "
+                    + "  ?event rdfs:label  ?labelA" + p.Name + " } "
+                    + "  OPTIONAL { "
+                    + "  ?event  <" + RDF.TYPE.toString() + "> <" + REDI.EXTRACTION_EVENT.toString() + "> } "
+                    + " BIND ( IF ( regex (?event , '"+p.Name+"' ,'i'), ?labelA"+p.Name+" , '' ) AS ?label"+p.Name+" )"
+                    + "  } " + prov;   
+                
+                
+            
+            }else {
+           
+            prov = "  GRAPH  <" + p.Graph + "> {"
+                    + "  OPTIONAL { "
+                    + "  ?event rdfs:label  ?label" + p.Name + " } "
+                    + "  OPTIONAL { "
+                    + "  ?event  <" + RDF.TYPE.toString() + "> <" + REDI.EXTRACTION_EVENT.toString() + "> } "
+                    + "  } " + prov;
+            }
+        }
+
+        String head = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
+                + "PREFIX ucmodel: <http://ucuenca.edu.ec/ontology#> "
+                + "SELECT  ?uri ?name " + varprov +" {"
+                + "SELECT DISTINCT ?uri ?name " + varprovl
+                + " WHERE { "
+                + "?subject  <" + REDI.BELONGTO.toString() + "> ?uri . "
+                + "?subject  <" + REDI.EXTRACTIONDATE.toString() + ">  ?date .  "
+                + "FILTER ( STR(?date)  != '') . "
+                + "?uri  <" + REDI.NAME.toString() + ">  ?name ."
+                + "OPTIONAL  {  GRAPH   <" + con.getOrganizationsGraph() + "> { "
+                + "   ?uri  <" + REDI.BELONGTO.toString() + "> ?event  }"
+                + prov
+                + "} }Group by ?uri ?name "+varprovl
+                + "} Group by ?uri ?name";
+
+        return head;
+      
+
+    }
+    
+    
+    
+    @Deprecated
     @Override
-    public String getExtractedOrgList(Map<String, String> providers) {
+    public String getExtractedOrgList(List<Provider> providers) {
         String varprov = "";
         String prov = "";
 
-        for (Map.Entry<String, String> provset : providers.entrySet()) {
-            varprov = " (group_concat(  ?label" + provset.getValue() + "  ; separator=\";\")  as  ?Adv" + provset.getValue() + " ) " + varprov;
-            prov = "  GRAPH  <" + provset.getKey() + "> {"
+        for (Provider p : providers) {
+            varprov = " (group_concat(  ?label" + p.Name + "  ; separator=\";\")  as  ?Adv" + p.Name + " ) " + varprov;
+            prov = "  GRAPH  <" + p.Graph + "> {"
                     + "  OPTIONAL { "
-                    + "  ?event rdfs:label  ?label" + provset.getValue() + " } "
+                    + "  ?event rdfs:label  ?label" + p.Name + " } "
                     + "  OPTIONAL { "
                     + "  ?event  <" + RDF.TYPE.toString() + "> <" + REDI.EXTRACTION_EVENT.toString() + "> } "
                     + "  } " + prov;
@@ -386,44 +444,10 @@ public class QueriesServiceImpl implements QueriesService {
                 + "} }Group by ?uri ?name";
 
         return head;
-        /* String ant = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
-
-         + "PREFIX ucmodel: <http://ucuenca.edu.ec/ontology#> "
-         + "SELECT DISTINCT ?uri ?name  (group_concat(  ?labelAK  ; separator=\";\")  as  ?AdvAK)  (group_concat(  ?labelDBLP ; separator=\";\")  as  ?AdvDBLP)  (group_concat(  ?labelScopus ; separator=\";\")  as  ?AdvScopus) (group_concat(  ?labelGs ; separator=\";\")  as  ?AdvGs) WHERE  {\n"
-         + "?subject  ucmodel:belongTo ?uri . \n"
-         + "?subject   ucmodel:extractionDate  ?date .  FILTER ( STR(?date)  != '') \n"
-         + "?uri  ucmodel:name  ?name    \n"
-         + "          OPTIONAL  {\n"
-         + " GRAPH   <" + con.getOrganizationsGraph() + "> {\n"
-         + "   ?uri  ucmodel:belongTo ?event  }\n"
-         + "  GRAPH  <" + con.getAcademicsKnowledgeGraph() + "> {\n"
-         + "  OPTIONAL {\n"
-         + "  ?event rdfs:label  ?labelAK }\n"
-         + "  OPTIONAL {\n"
-         + "  ?event  ucmodel:extractionDate ?eventdateAK } \n"
-         + "  }\n"
-         + "  GRAPH  <" + con.getDBLPGraph() + "> {\n"
-         + "  OPTIONAL {\n"
-         + "  ?event rdfs:label  ?labelDBLP }\n"
-         + "  OPTIONAL {\n"
-         + "  ?event  ucmodel:extractionDate ?eventdateDBLP } \n"
-         + "  }\n"
-         + "  GRAPH  <" + con.getScopusGraph() + "> {\n"
-         + "  OPTIONAL {\n"
-         + "  ?event rdfs:label  ?labelScopus }\n"
-         + "  OPTIONAL {\n"
-         + "  ?event  ucmodel:extractionDate ?eventdateScopus} \n"
-         + "  }\n"
-         + "  GRAPH  <" + con.getGoogleScholarGraph() + "> {\n"
-         + "  OPTIONAL {\n"
-         + "  ?event rdfs:label  ?labelGs }\n"
-         + "  OPTIONAL {\n"
-         + "  ?event  ucmodel:extractionDate ?eventdateGs } \n"
-         + "  }\n"
-         + " }  } Group by ?uri ?name  ";*/
+      
 
     }
-
+/*
     @Deprecated
     @Override
     public String getOrgEnrichmentProvider(Map<String, String> providers) {
@@ -432,10 +456,10 @@ public class QueriesServiceImpl implements QueriesService {
 
         for (Map.Entry<String, String> provset : providers.entrySet()) {
 
-            varprov = " ?" + provset.getValue() + " " + varprov;
+            varprov = " ?" + p.Name + " " + varprov;
             prov = " OPTIONAL {       "
                     + "   GRAPH <" + provset.getKey() + "> { "
-                    + "    SELECT  ?endp  (COUNT (distinct ?author) as ?" + provset.getValue() + " )  WHERE { "
+                    + "    SELECT  ?endp  (COUNT (distinct ?author) as ?" + p.Name + " )  WHERE { "
                     + "       GRAPH <" + con.getAuthorsGraph() + "> { "
                     + "      ?author dct:provenance ?endp . "
                     + "     }   "
@@ -463,19 +487,19 @@ public class QueriesServiceImpl implements QueriesService {
 
         return head;
     }
-
+*/
     @Override
-    public String getEnrichmentQueryResult(Map<String, String> providers) {
+    public String getEnrichmentQueryResult(List<Provider> providers) {
 
         String varprov = "";
         String prov = "";
 
-        for (Map.Entry<String, String> provset : providers.entrySet()) {
-            varprov = "(COUNT  (distinct ?r" + provset.getValue() + ") as ?" + provset.getValue() + ")  " + varprov;
+        for (Provider p : providers) {
+            varprov = "(COUNT  (distinct ?r" + p.Name + ") as ?" + p.Name + ")  " + varprov;
             prov = " OPTIONAL {       "
-                    + "   GRAPH <" + provset.getKey() + "> { "
-                    + "       ?s" + provset.getValue() + " owl:oneOf ?authort ."
-                    + " OPTIONAL { ?r" + provset.getValue() + " owl:oneOf ?s" + provset.getValue() + " }"
+                    + "   GRAPH <" + p.Graph + "> { "
+                    + "       ?s" + p.Name + " owl:oneOf ?authort ."
+                    + " OPTIONAL { ?r" + p.Name + " owl:oneOf ?s" + p.Name + " }"
                     + "    } } " + prov;
 
         }
@@ -498,18 +522,18 @@ public class QueriesServiceImpl implements QueriesService {
     }
 
     @Override
-    public String getOrgDisambiguationResult(Map<String, String> providers) {
+    public String getOrgDisambiguationResult(List <Provider> providers) {
 
         String varprov = "";
         String prov = "";
 
-        for (Map.Entry<String, String> provset : providers.entrySet()) {
+        for (Provider p : providers ) {
 
-            varprov = " (GROUP_CONCAT(?" + provset.getValue() + "s ;separator=\";\") as ?" + provset.getValue() + ") " + varprov;
+            varprov = " (GROUP_CONCAT(?" + p.Name + "s ;separator=\";\") as ?" + p.Name + ") " + varprov;
             prov = " OPTIONAL {       "
-                    + "   GRAPH <" + provset.getKey() + "> { "
-                    + "Select ?event ?" + provset.getValue() + "s  {"
-                    + "?event   rdfs:label ?" + provset.getValue() + "s"
+                    + "   GRAPH <" + p.Graph + "> { "
+                    + "Select ?event ?" + p.Name + "s  {"
+                    + "?event   rdfs:label ?" + p.Name + "s"
                     + " } } } " + prov;
 
         }
