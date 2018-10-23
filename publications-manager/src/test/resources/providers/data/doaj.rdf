@@ -1,0 +1,1290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+
+<rdf:Description rdf:about="https://doaj.org/article/042c1c5a79754db08dfd81a14dda1140">
+	<abstract xmlns="https://doaj.org/ontology/">Many indigenous communities living in the Amazon rely on hunting and fishing to meet the majority of their protein needs. Despite the importance of these practices, few studies from the region have analyzed the socioeconomic drivers of hunting and fishing at the household level. We propose a household production model to assess the effect of key economic parameters on hunting and fishing in small indigenous communities located in the Ecuadorian Amazon, whose principal source of protein is derived from hunting and fishing. The model was validated using empirical data from two communities that reflect different levels of market integration and forest conservation. Demand and supply functions were generated from household data gathered over 19 months. Elasticities were derived to determine the sensitivity of the decision to engage in hunting to exogenous parameters such as off-farm wages, hunting costs, bushmeat price, penalties for the illegal sale of bushmeat, and biological characteristics of the game species. After calibrating the model, we simulated changes in the key economic parameters. The parameter that most directly affected hunting activity in both communities was off-farm wages. Simulating a 10% wage increase resulted in a 16-20% reduction in harvested biomass, while a 50% increase diminished harvested biomass by &gt; 50%. Model simulations revealed that bushmeat price and penalties for illegal trade also had important effects on hunter behavior in terms of amount of bushmeat sold, but not in terms of total harvest. As a tool for understanding hunters' economic decision-making, the model provides a basis for developing strategies that promote sustainable hunting and wildlife conservation while protecting indigenous livelihoods.</abstract>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/042c1c5a79754db08dfd81a14dda1140_0"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/042c1c5a79754db08dfd81a14dda1140_1"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/042c1c5a79754db08dfd81a14dda1140_2"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/042c1c5a79754db08dfd81a14dda1140_3"/>
+	<country xmlns="https://doaj.org/ontology/">CA</country>
+	<creator xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/042c1c5a79754db08dfd81a14dda1140_0"/>
+	<doi xmlns="https://doaj.org/ontology/">10.5751/ES-08032-200430</doi>
+	<issn xmlns="https://doaj.org/ontology/">1708-3087</issn>
+	<journal xmlns="https://doaj.org/ontology/">Ecology and Society</journal>
+	<keyword xmlns="https://doaj.org/ontology/">Ecuador</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">bushmeat</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">economic model</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">fishing</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">food security</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">hunting</keyword>
+	<language xmlns="https://doaj.org/ontology/">EN</language>
+	<number xmlns="https://doaj.org/ontology/">4</number>
+	<publisher xmlns="https://doaj.org/ontology/">Resilience Alliance</publisher>
+	<start_page xmlns="https://doaj.org/ontology/">30</start_page>
+	<term xmlns="https://doaj.org/ontology/">Biology (General)</term>
+	<term xmlns="https://doaj.org/ontology/">Ecology</term>
+	<title xmlns="https://doaj.org/ontology/">Predicting hunter behavior of indigenous communities in the Ecuadorian Amazon: insights from a household production model</title>
+	<url xmlns="https://doaj.org/ontology/">http://www.ecologyandsociety.org/vol20/iss4/art30/</url>
+	<volume xmlns="https://doaj.org/ontology/">20</volume>
+	<year xmlns="https://doaj.org/ontology/">2015</year>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/042c1c5a79754db08dfd81a14dda1140_0">
+	<affiliation xmlns="https://doaj.org/ontology/">Departamento Central de Investigación, Universidad Laica "Eloy Alfaro" de Manabí</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Enrique de la Montaña</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/042c1c5a79754db08dfd81a14dda1140_1">
+	<affiliation xmlns="https://doaj.org/ontology/">Conservation Strategy Fund</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Rocío del Pilar. Moreno-Sánchez</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/042c1c5a79754db08dfd81a14dda1140_2">
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://doaj.org/search/jorge_maldonado"/>
+	<affiliation xmlns="https://doaj.org/ontology/">CEDE - Department of Economics, Universidad de los Andes</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Jorge H. Maldonado</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/042c1c5a79754db08dfd81a14dda1140_3">
+	<affiliation xmlns="https://doaj.org/ontology/">Departamento Central de Investigación, Universidad Laica "Eloy Alfaro" de Manabí</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Daniel M. Griffith</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/19abc228fa964fa49576d0d3b2a52918">
+	<abstract xmlns="https://doaj.org/ontology/">&lt;p&gt;Abstract&lt;/p&gt; &lt;p&gt;Background&lt;/p&gt; &lt;p&gt;A modified laboratory-scale upflow anaerobic sludge blanket (UASB) reactor was used to obtain methane by treating hydrous ethanol vinasse. Vinasses or stillage are waste materials with high organic loads, and a complex composition resulting from the process of alcohol distillation. They must initially be treated with anaerobic processes due to their high organic loads. Vinasses can be considered multipurpose waste for energy recovery and once treated they can be used in agriculture without the risk of polluting soil, underground water or crops. In this sense, treatment of vinasse combines the elimination of organic waste with the formation of methane. Biogas is considered as a promising renewable energy source. The aim of this study was to determine the optimum organic loading rate for operating a modified UASB reactor to treat vinasse generated in the production of hydrous ethanol from sugar cane molasses.&lt;/p&gt; &lt;p&gt;Results&lt;/p&gt; &lt;p&gt;The study showed that chemical oxygen demand (COD) removal efficiency was 69% at an optimum organic loading rate (OLR) of 17.05 kg COD/m&lt;sup&gt;3&lt;/sup&gt;-day, achieving a methane yield of 0.263 m&lt;sup&gt;3&lt;/sup&gt;/kg COD&lt;sub&gt;added&lt;/sub&gt; and a biogas methane content of 84%. During this stage, effluent characterization presented lower values than the vinasse, except for potassium, sulfide and ammonia nitrogen. On the other hand, primers used to amplify the 16S-rDNA genes for the domains Archaea and Bacteria showed the presence of microorganisms which favor methane production at the optimum organic loading rate.&lt;/p&gt; &lt;p&gt;Conclusions&lt;/p&gt; &lt;p&gt;The modified UASB reactor proposed in this study provided a successful treatment of the vinasse obtained from hydrous ethanol production.&lt;/p&gt; &lt;p&gt;Methanogen groups (Methanobacteriales and Methanosarcinales) detected by PCR during operational optimum OLR of the modified UASB reactor, favored methane production.&lt;/p&gt; </abstract>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/19abc228fa964fa49576d0d3b2a52918_0"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/19abc228fa964fa49576d0d3b2a52918_1"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/19abc228fa964fa49576d0d3b2a52918_2"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/19abc228fa964fa49576d0d3b2a52918_3"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/19abc228fa964fa49576d0d3b2a52918_4"/>
+	<country xmlns="https://doaj.org/ontology/">GB</country>
+	<creator xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/19abc228fa964fa49576d0d3b2a52918_0"/>
+	<doi xmlns="https://doaj.org/ontology/">10.1186/1754-6834-5-82</doi>
+	<issn xmlns="https://doaj.org/ontology/">1754-6834</issn>
+	<journal xmlns="https://doaj.org/ontology/">Biotechnology for Biofuels</journal>
+	<keyword xmlns="https://doaj.org/ontology/">16S-rDNA genes amplification</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">Methane yield</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">Modified UASB reactor</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">Vinasse from hydrous ethanol</keyword>
+	<language xmlns="https://doaj.org/ontology/">EN</language>
+	<number xmlns="https://doaj.org/ontology/">1</number>
+	<publisher xmlns="https://doaj.org/ontology/">BMC</publisher>
+	<start_page xmlns="https://doaj.org/ontology/">82</start_page>
+	<term xmlns="https://doaj.org/ontology/">Biotechnology</term>
+	<term xmlns="https://doaj.org/ontology/">Fuel</term>
+	<title xmlns="https://doaj.org/ontology/">Methane production by treating vinasses from hydrous ethanol using a modified UASB reactor</title>
+	<url xmlns="https://doaj.org/ontology/">http://www.biotechnologyforbiofuels.com/content/5/1/82</url>
+	<volume xmlns="https://doaj.org/ontology/">5</volume>
+	<year xmlns="https://doaj.org/ontology/">2012</year>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/19abc228fa964fa49576d0d3b2a52918_0">
+	<name xmlns="https://doaj.org/ontology/">España-Gamboa Elda I</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/19abc228fa964fa49576d0d3b2a52918_1">
+	<name xmlns="https://doaj.org/ontology/">Mijangos-Cortés Javier O</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/19abc228fa964fa49576d0d3b2a52918_2">
+	<name xmlns="https://doaj.org/ontology/">Hernández-Zárate Galdy</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/19abc228fa964fa49576d0d3b2a52918_3">
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://doaj.org/search/jorge_maldonado"/>
+	<name xmlns="https://doaj.org/ontology/">Maldonado Jorge A Domínguez</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/19abc228fa964fa49576d0d3b2a52918_4">
+	<name xmlns="https://doaj.org/ontology/">Alzate-Gaviria Liliana M</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/1abbf8d8b7684ecf834d039b1bbfb232">
+	<abstract xmlns="https://doaj.org/ontology/">Nejayote (corn step liquor) production in Mexico is approximately 1.4 × 1010 m3 per year and anaerobic digestion is an effective process to transform this waste into green energy. The biochemical methane potential (BMP) test is one of the most important tests for evaluating the biodegradability and methane production capacity of any organic waste. Previous research confirms that the addition of conductive materials significantly enhances the methane production yield. This study concludes that the addition of granular activated carbon (GAC) increases methane yield by 34% in the first instance. Furthermore, results show that methane production is increased by 54% when a GAC biofilm is developed 10 days before undertaking the BMP test. In addition, the electroactive population was 30% higher when attached to the GAC than in control reactors. Moreover, results show that electroactive communities attached to the GAC increased by 38% when a GAC biofilm is developed 10 days before undertaking the BMP test, additionally only in these reactors Geobacter was identified. GAC has two main effects in anaerobic digestion; it promotes direct interspecies electron transfer (DIET) by developing an electro-active biofilm and simultaneously it reduces redox potential from −223 mV to −470 mV. These results suggest that the addition of GAC to biodigesters, improves the anaerobic digestion performance in industrial processed food waste.</abstract>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/1abbf8d8b7684ecf834d039b1bbfb232_0"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/1abbf8d8b7684ecf834d039b1bbfb232_1"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/1abbf8d8b7684ecf834d039b1bbfb232_2"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/1abbf8d8b7684ecf834d039b1bbfb232_3"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/1abbf8d8b7684ecf834d039b1bbfb232_4"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/1abbf8d8b7684ecf834d039b1bbfb232_5"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/1abbf8d8b7684ecf834d039b1bbfb232_6"/>
+	<country xmlns="https://doaj.org/ontology/">CH</country>
+	<creator xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/1abbf8d8b7684ecf834d039b1bbfb232_0"/>
+	<doi xmlns="https://doaj.org/ontology/">10.3390/en11082101</doi>
+	<issn xmlns="https://doaj.org/ontology/">1996-1073</issn>
+	<journal xmlns="https://doaj.org/ontology/">Energies</journal>
+	<keyword xmlns="https://doaj.org/ontology/">Nejayote</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">biochemical methane potential</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">direct interspecies electron transfer</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">electroactive biofilm</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">granular activated carbon</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">redox potential reduction</keyword>
+	<language xmlns="https://doaj.org/ontology/">EN</language>
+	<number xmlns="https://doaj.org/ontology/">8</number>
+	<publisher xmlns="https://doaj.org/ontology/">MDPI AG</publisher>
+	<start_page xmlns="https://doaj.org/ontology/">2101</start_page>
+	<term xmlns="https://doaj.org/ontology/">Technology</term>
+	<title xmlns="https://doaj.org/ontology/">Enhancing Biochemical Methane Potential and Enrichment of Specific Electroactive Communities from Nixtamalization Wastewater using Granular Activated Carbon as a Conductive Material</title>
+	<url xmlns="https://doaj.org/ontology/">http://www.mdpi.com/1996-1073/11/8/2101</url>
+	<volume xmlns="https://doaj.org/ontology/">11</volume>
+	<year xmlns="https://doaj.org/ontology/">2018</year>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/1abbf8d8b7684ecf834d039b1bbfb232_0">
+	<affiliation xmlns="https://doaj.org/ontology/">Renewable Energy Unit, Yucatan Center for Scientist Research, Mérida CP 97302, Mexico</affiliation>
+	<name xmlns="https://doaj.org/ontology/">David Valero</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/1abbf8d8b7684ecf834d039b1bbfb232_1">
+	<affiliation xmlns="https://doaj.org/ontology/">Department of Water and Environmental Science and Technologies, University of Cantabria, 39005 Santander, Spain</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Carlos Rico</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/1abbf8d8b7684ecf834d039b1bbfb232_2">
+	<affiliation xmlns="https://doaj.org/ontology/">Biotechnology Unit, Yucatan Center for Scientist Research, Mérida CP 97205, Mexico</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Blondy Canto-Canché</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/1abbf8d8b7684ecf834d039b1bbfb232_3">
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://doaj.org/search/jorge_maldonado"/>
+	<affiliation xmlns="https://doaj.org/ontology/">Renewable Energy Unit, Yucatan Center for Scientist Research, Mérida CP 97302, Mexico</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Jorge Arturo Domínguez-Maldonado</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/1abbf8d8b7684ecf834d039b1bbfb232_4">
+	<affiliation xmlns="https://doaj.org/ontology/">Renewable Energy Unit, Yucatan Center for Scientist Research, Mérida CP 97302, Mexico</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Raul Tapia-Tussell</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/1abbf8d8b7684ecf834d039b1bbfb232_5">
+	<affiliation xmlns="https://doaj.org/ontology/">GeMBio Laboratory, Yucatan Center for Scientist Research, Mérida CP 97205, Mexico</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Alberto Cortes-Velazquez</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/1abbf8d8b7684ecf834d039b1bbfb232_6">
+	<affiliation xmlns="https://doaj.org/ontology/">Renewable Energy Unit, Yucatan Center for Scientist Research, Mérida CP 97302, Mexico</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Liliana Alzate-Gaviria</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/1c018e12361d4ec4b5e930ef878f025a">
+	<abstract xmlns="https://doaj.org/ontology/">Clostridium difficile NAP1/ribotype 027 is associated with severe disease and high mortality rates. Our aim was to determine the prevalence of NAP1/ribotype 027 among C. difficile isolates in a tertiary care hospital, and review the main clinical data.We included 106 stool samples from 106 patients. Samples were tested for A&amp;B toxins and were cultured on CCFA agar. The genes tcdA, tcdB, tcdC, cdtA, and cdtB were amplified using PCR in clinical isolates. The tcdA 3'-end deletion analysis, PCR-ribotyping, and pulsed-field gel electrophoresis (PFGE) were also performed. Stool samples that were positive for culture were tested by the GeneXpert C. difficile assay. Clinical data were collected.Thirty-six patients tested positive for A&amp;B toxins; and 22 patients had positive culture for C. difficile, 14 of which tested positive for the A&amp;B toxins and all 22 patients tested positive by the GeneXpert C. difficile assay. Risk factors included an average hospital stay of 16.1 days prior to toxin detection, average antibiotic use for 16.2 days, and a median of 3 antibiotics used. The 30-day crude mortality rate was 8.4%. Six of the 22 patients died, and 3 of those deaths were directly attributed to C. difficile infection. The majority of isolates, 90.9% (20/22), carried genes tcdB, tcdA, cdtA, and cdtB; and these strains carried the corresponding downregulator gene tcdC, with an 18-bp deletion. PFGE was performed on 17 isolates, and one main pattern was observed. Analysis of the ribotyping data showed similar results.The above findings represent the clonal spread of C. difficile in our institution, which mainly includes the NAP1/027 strain. This is the first report of C. difficile ribotype NAP1/027 in Mexico.</abstract>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/1c018e12361d4ec4b5e930ef878f025a_0"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/1c018e12361d4ec4b5e930ef878f025a_1"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/1c018e12361d4ec4b5e930ef878f025a_2"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/1c018e12361d4ec4b5e930ef878f025a_3"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/1c018e12361d4ec4b5e930ef878f025a_4"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/1c018e12361d4ec4b5e930ef878f025a_5"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/1c018e12361d4ec4b5e930ef878f025a_6"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/1c018e12361d4ec4b5e930ef878f025a_7"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/1c018e12361d4ec4b5e930ef878f025a_8"/>
+	<country xmlns="https://doaj.org/ontology/">US</country>
+	<creator xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/1c018e12361d4ec4b5e930ef878f025a_0"/>
+	<doi xmlns="https://doaj.org/ontology/">10.1371/journal.pone.0122627</doi>
+	<issn xmlns="https://doaj.org/ontology/">1932-6203</issn>
+	<journal xmlns="https://doaj.org/ontology/">PLoS ONE</journal>
+	<language xmlns="https://doaj.org/ontology/">EN</language>
+	<number xmlns="https://doaj.org/ontology/">4</number>
+	<publisher xmlns="https://doaj.org/ontology/">Public Library of Science (PLoS)</publisher>
+	<start_page xmlns="https://doaj.org/ontology/">e0122627</start_page>
+	<term xmlns="https://doaj.org/ontology/">Medicine</term>
+	<term xmlns="https://doaj.org/ontology/">Science</term>
+	<title xmlns="https://doaj.org/ontology/">First report of Clostridium difficile NAP1/027 in a Mexican hospital.</title>
+	<url xmlns="https://doaj.org/ontology/">http://europepmc.org/articles/PMC4411131?pdf=render</url>
+	<volume xmlns="https://doaj.org/ontology/">10</volume>
+	<year xmlns="https://doaj.org/ontology/">2015</year>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/1c018e12361d4ec4b5e930ef878f025a_0">
+	<name xmlns="https://doaj.org/ontology/">Adrián Camacho-Ortiz</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/1c018e12361d4ec4b5e930ef878f025a_1">
+	<name xmlns="https://doaj.org/ontology/">Daniel López-Barrera</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/1c018e12361d4ec4b5e930ef878f025a_2">
+	<name xmlns="https://doaj.org/ontology/">Raúl Hernández-García</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/1c018e12361d4ec4b5e930ef878f025a_3">
+	<name xmlns="https://doaj.org/ontology/">Alejandra M Galván-De Los Santos</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/1c018e12361d4ec4b5e930ef878f025a_4">
+	<name xmlns="https://doaj.org/ontology/">Samantha M Flores-Treviño</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/1c018e12361d4ec4b5e930ef878f025a_5">
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://doaj.org/search/jorge_maldonado"/>
+	<name xmlns="https://doaj.org/ontology/">Jorge M Llaca-Díaz</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/1c018e12361d4ec4b5e930ef878f025a_6">
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://doaj.org/search/jorge_maldonado"/>
+	<name xmlns="https://doaj.org/ontology/">Héctor J Maldonado-Garza</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/1c018e12361d4ec4b5e930ef878f025a_7">
+	<name xmlns="https://doaj.org/ontology/">Francisco J Bosques-Padilla</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/1c018e12361d4ec4b5e930ef878f025a_8">
+	<name xmlns="https://doaj.org/ontology/">Elvira Garza-González</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/212f22b73f34495c80ee1b1a58283065">
+	<abstract xmlns="https://doaj.org/ontology/">The integrated accounting system considers the natural resource depletion issues. We analyze the difference between this system and the traditional national accounting system, using data from the mining sector in Colombia (natural gas and coal). Results show that by including the impact of these two resources exhaustion, the traditional GDP would be overestimated; while it grew at an annual rate of 2.2% for the period 1995-2005, adjusted GDP would show a grow rate of 1.3%, reflecting costs on real country growth. These results open a debate given the current proposal of basing part of economic growth in Colombia on mining.</abstract>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/212f22b73f34495c80ee1b1a58283065_0"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/212f22b73f34495c80ee1b1a58283065_1"/>
+	<country xmlns="https://doaj.org/ontology/">CO</country>
+	<creator xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/212f22b73f34495c80ee1b1a58283065_0"/>
+	<issn xmlns="https://doaj.org/ontology/">0123-5362</issn>
+	<issn xmlns="https://doaj.org/ontology/">2145-454X</issn>
+	<journal xmlns="https://doaj.org/ontology/">Revista de Economía del Rosario</journal>
+	<keyword xmlns="https://doaj.org/ontology/">Cuentas ambientales, Crecimiento económico, PIB ajustado, PIB verde.</keyword>
+	<language xmlns="https://doaj.org/ontology/">EN</language>
+	<language xmlns="https://doaj.org/ontology/">ES</language>
+	<number xmlns="https://doaj.org/ontology/">1</number>
+	<publisher xmlns="https://doaj.org/ontology/">Universidad del Rosario</publisher>
+	<term xmlns="https://doaj.org/ontology/">Economics as a science</term>
+	<title xmlns="https://doaj.org/ontology/">Aproximacón al cálculo del crecimiento real de Colombia: aportes metodológicos para la inclusión en las cuentas nacionales de los impactos del agotamiento del carbón y del gas natural</title>
+	<url xmlns="https://doaj.org/ontology/">http://revistas.urosario.edu.co/index.php/economia/article/view/1910</url>
+	<volume xmlns="https://doaj.org/ontology/">14</volume>
+	<year xmlns="https://doaj.org/ontology/">2011</year>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/212f22b73f34495c80ee1b1a58283065_0">
+	<affiliation xmlns="https://doaj.org/ontology/">Commission Nationale de Lutte contre la Drogue (CONALD).</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Michée Arnold Lachaud</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/212f22b73f34495c80ee1b1a58283065_1">
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://doaj.org/search/jorge_maldonado"/>
+	<affiliation xmlns="https://doaj.org/ontology/">Facultad de Econom´ıa - CEDE.&#xD;
+Universidad de Los Andes.</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Jorge Higinio Maldonado</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/25c078f689a74e80b2d167d90d4ac296">
+	<abstract xmlns="https://doaj.org/ontology/">This paper describes a methodological proposal for the design, creation and evaluation of Learning Objects (LOs).&#xD;
+This study arises from the compilation and analysis of several LO design methodologies currently used in Ibero-America. This proposal, which has been named DICREVOA, defines five different phases: analysis, design (instructional and multimedia), implementation (LO and metadata), evaluation (from the perspective of both the producer and the consumer of the LO), and publishing. The methodology focuses not only on the teaching inexperienced, but also on those having a basic understanding of the technological and educational aspects related to LO design; therefore, the study emphasizes LO design activities centered around the Kolb cycle and the use of the ExeLearning tool in order to implement the LO core. Additionally, DICREVOA was used in a case study, which demonstrates how it provides a feasible mechanism for LO design and implementation withindifferent contexts. Finally, DICREVOA, the case study to which it was applied, and the results obtained are presented. &#xD;
+</abstract>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/25c078f689a74e80b2d167d90d4ac296_0"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/25c078f689a74e80b2d167d90d4ac296_1"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/25c078f689a74e80b2d167d90d4ac296_2"/>
+	<country xmlns="https://doaj.org/ontology/">CL</country>
+	<creator xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/25c078f689a74e80b2d167d90d4ac296_0"/>
+	<doi xmlns="https://doaj.org/ontology/">10.19153/cleiej.19.1.3</doi>
+	<end_page xmlns="https://doaj.org/ontology/">3:19</end_page>
+	<issn xmlns="https://doaj.org/ontology/">0717-5000</issn>
+	<journal xmlns="https://doaj.org/ontology/">CLEI Electronic Journal</journal>
+	<keyword xmlns="https://doaj.org/ontology/">Design Methodologies</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">Digital Educational Materials</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">Kolb Cycle</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">Learning Objects</keyword>
+	<language xmlns="https://doaj.org/ontology/">EN</language>
+	<number xmlns="https://doaj.org/ontology/">1</number>
+	<publisher xmlns="https://doaj.org/ontology/">Centro Latinoamericano de Estudios en Informática</publisher>
+	<start_page xmlns="https://doaj.org/ontology/">3:1</start_page>
+	<term xmlns="https://doaj.org/ontology/">Electronic computers. Computer science</term>
+	<title xmlns="https://doaj.org/ontology/">Assessing a Methodological Proposal for the Design, Creation and Evaluation of Learning Objects Oriented to Educators with Diverse Educational and Technological Competencies</title>
+	<url xmlns="https://doaj.org/ontology/">http://www.clei.org/cleiej/paper.php?id=348</url>
+	<volume xmlns="https://doaj.org/ontology/">19</volume>
+	<year xmlns="https://doaj.org/ontology/">2016</year>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/25c078f689a74e80b2d167d90d4ac296_0">
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://doaj.org/search/jorge_maldonado"/>
+	<affiliation xmlns="https://doaj.org/ontology/">University of Cuenca, Ecuador</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Jorge J. Maldonado</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/25c078f689a74e80b2d167d90d4ac296_1">
+	<affiliation xmlns="https://doaj.org/ontology/">University of Cuenca, Ecuador</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Jorge L. Bermeo</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/25c078f689a74e80b2d167d90d4ac296_2">
+	<affiliation xmlns="https://doaj.org/ontology/">University of Cuenca, Ecuador</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Vicente Guillermo Pacheco</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/26c6057dd7d34b27a36ade7b7969f4b4">
+	<abstract xmlns="https://doaj.org/ontology/">Benthic microbial fuel cells (BMFC) are devices that remove organic matter (OM) and generate energy from sediments rich in organic nutrients. They are composed of electrodes with adequate different distances and floating air cathodes in an aqueous medium with saturated oxygen. In this study we proposed to design, build, analyze and evaluate a set of BMFCs with floating air cathodes to test the optimal distance between the electrodes, using sediment from the Bay of Campeche as a substrate. For the analysis of OM removal, COD tests, volatile solids (VS), E4/E6 study and FTIR analysis were performed. Power generation was evaluated through polarization curves, cyclic voltammetry and electrochemical impedance spectroscopy (EIS). We achieved a current density and power density at 10 cm depth of 929.7 &amp;plusmn; 9.5 mA/m2 and 109.6 &amp;plusmn; 7.5 mW/m2 respectively, with 54% removal of OM from the sediment, obtaining formation of aliphatic structures. BMFCs are proposed as adequate systems for bioremediation and power generation. The system at 10 cm depth and 100 cm distance between sediment and the floating air cathode had a good performance and therefore the potential for possible scaling.</abstract>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/26c6057dd7d34b27a36ade7b7969f4b4_0"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/26c6057dd7d34b27a36ade7b7969f4b4_1"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/26c6057dd7d34b27a36ade7b7969f4b4_2"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/26c6057dd7d34b27a36ade7b7969f4b4_3"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/26c6057dd7d34b27a36ade7b7969f4b4_4"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/26c6057dd7d34b27a36ade7b7969f4b4_5"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/26c6057dd7d34b27a36ade7b7969f4b4_6"/>
+	<country xmlns="https://doaj.org/ontology/">CH</country>
+	<creator xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/26c6057dd7d34b27a36ade7b7969f4b4_0"/>
+	<doi xmlns="https://doaj.org/ontology/">10.3390/su10072446</doi>
+	<issn xmlns="https://doaj.org/ontology/">2071-1050</issn>
+	<journal xmlns="https://doaj.org/ontology/">Sustainability</journal>
+	<keyword xmlns="https://doaj.org/ontology/">benthic microbial fuel cell</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">floating air cathodes</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">organic matter</keyword>
+	<language xmlns="https://doaj.org/ontology/">EN</language>
+	<number xmlns="https://doaj.org/ontology/">7</number>
+	<publisher xmlns="https://doaj.org/ontology/">MDPI AG</publisher>
+	<start_page xmlns="https://doaj.org/ontology/">2446</start_page>
+	<term xmlns="https://doaj.org/ontology/">Environmental effects of industries and plants</term>
+	<term xmlns="https://doaj.org/ontology/">Environmental sciences</term>
+	<term xmlns="https://doaj.org/ontology/">Renewable energy sources</term>
+	<title xmlns="https://doaj.org/ontology/">Effect of Operating Parameters on the Performance Evaluation of Benthic Microbial Fuel Cells Using Sediments from the Bay of Campeche, Mexico</title>
+	<url xmlns="https://doaj.org/ontology/">http://www.mdpi.com/2071-1050/10/7/2446</url>
+	<volume xmlns="https://doaj.org/ontology/">10</volume>
+	<year xmlns="https://doaj.org/ontology/">2018</year>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/26c6057dd7d34b27a36ade7b7969f4b4_0">
+	<affiliation xmlns="https://doaj.org/ontology/">Renewable Energy Unit, Yucatan Center for Scientific Research (CICY), Carretera Sierra Papacal-Chuburná Puerto Km 5, Sierra Papacal 97302, Yucatán, Mexico</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Nancy González-Gamboa</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/26c6057dd7d34b27a36ade7b7969f4b4_1">
+	<affiliation xmlns="https://doaj.org/ontology/">Separation and Conversion Technologies, VITO-Flemish Institute for Technological Research, Boeretang 200, 2400 Mol, Belgium</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Xochitl Domínguez-Benetton</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/26c6057dd7d34b27a36ade7b7969f4b4_2">
+	<affiliation xmlns="https://doaj.org/ontology/">Renewable Energy Unit, Yucatan Center for Scientific Research (CICY), Carretera Sierra Papacal-Chuburná Puerto Km 5, Sierra Papacal 97302, Yucatán, Mexico</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Daniella Pacheco-Catalán</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/26c6057dd7d34b27a36ade7b7969f4b4_3">
+	<affiliation xmlns="https://doaj.org/ontology/">Laboratorio de Cultivo de Tejidos Vegetales, Instituto Tecnológico el Llano Aguascalientes (ITEL), Tecnológico Nacional de México (TecNM), Aguascalientes, Km 18 Carr. Aguascalientes-San Luis Potosí, El Llano, Ags. C.P. 20330, Mexico</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Sathish Kumar-Kamaraj</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/26c6057dd7d34b27a36ade7b7969f4b4_4">
+	<affiliation xmlns="https://doaj.org/ontology/">Marine Chemistry Laboratory, Center for Research and Advanced Studies, National Polytechnic Institute Mérida Unit, Carretera Antigua a Progreso Km 6, Mérida 97310, Yucatán, Mexico</affiliation>
+	<name xmlns="https://doaj.org/ontology/">David Valdés-Lozano</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/26c6057dd7d34b27a36ade7b7969f4b4_5">
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://doaj.org/search/jorge_maldonado"/>
+	<affiliation xmlns="https://doaj.org/ontology/">Renewable Energy Unit, Yucatan Center for Scientific Research (CICY), Carretera Sierra Papacal-Chuburná Puerto Km 5, Sierra Papacal 97302, Yucatán, Mexico</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Jorge Domínguez-Maldonado</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/26c6057dd7d34b27a36ade7b7969f4b4_6">
+	<affiliation xmlns="https://doaj.org/ontology/">Renewable Energy Unit, Yucatan Center for Scientific Research (CICY), Carretera Sierra Papacal-Chuburná Puerto Km 5, Sierra Papacal 97302, Yucatán, Mexico</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Liliana Alzate-Gaviria</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/2bfa9454d4e747169a129aedc3d0b683">
+	<abstract xmlns="https://doaj.org/ontology/">Marine protected areas are aimed to protect and conserve key ecosystems for the provision of a number of ecosystem services that are the basis for numerous economic activities. Among the several services that these areas provide, the capacity of sequestering (capturing and storing) organic carbon is a regulating service, provided mainly by mangroves and seagrasses, that gains importance as alternatives for mitigating global warming become a priority in the international agenda. The objective of this study is to value the services associated with the capture and storage of oceanic carbon, known as Blue Carbon, provided by a new network of marine protected areas in Colombia. We approach the monetary value associated to these services through the simulation of a hypothetical market for oceanic carbon. To do that, we construct a benefit function that considers the capacity of mangroves and seagrasses for capturing and storing blue carbon, and simulate scenarios for the variation of key variables such as the market carbon price, the discount rate, the natural rate of loss of the ecosystems, and the expectations about the post-Kyoto negotiations. The results indicate that the expected benefits associated to carbon capture and storage provided by these ecosystems are substantial but highly dependent on the expectations in terms of the negotiations surrounding the extension of the Kyoto Protocol and the dynamics of the carbon credit's demand and supply. We also find that the natural loss rate of these ecosystems does not seem to have a significant effect on the annual value of the benefits. This approach constitutes one of the first attempts to value blue carbon as one of the services provided by conservation.</abstract>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/2bfa9454d4e747169a129aedc3d0b683_0"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/2bfa9454d4e747169a129aedc3d0b683_1"/>
+	<country xmlns="https://doaj.org/ontology/">US</country>
+	<creator xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/2bfa9454d4e747169a129aedc3d0b683_0"/>
+	<doi xmlns="https://doaj.org/ontology/">10.1371/journal.pone.0126627</doi>
+	<issn xmlns="https://doaj.org/ontology/">1932-6203</issn>
+	<journal xmlns="https://doaj.org/ontology/">PLoS ONE</journal>
+	<language xmlns="https://doaj.org/ontology/">EN</language>
+	<number xmlns="https://doaj.org/ontology/">5</number>
+	<publisher xmlns="https://doaj.org/ontology/">Public Library of Science (PLoS)</publisher>
+	<start_page xmlns="https://doaj.org/ontology/">e0126627</start_page>
+	<term xmlns="https://doaj.org/ontology/">Medicine</term>
+	<term xmlns="https://doaj.org/ontology/">Science</term>
+	<title xmlns="https://doaj.org/ontology/">Valuing blue carbon: carbon sequestration benefits provided by the marine protected areas in Colombia.</title>
+	<url xmlns="https://doaj.org/ontology/">http://europepmc.org/articles/PMC4446267?pdf=render</url>
+	<volume xmlns="https://doaj.org/ontology/">10</volume>
+	<year xmlns="https://doaj.org/ontology/">2015</year>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/2bfa9454d4e747169a129aedc3d0b683_0">
+	<name xmlns="https://doaj.org/ontology/">Tatiana G Zarate-Barrera</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/2bfa9454d4e747169a129aedc3d0b683_1">
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://doaj.org/search/jorge_maldonado"/>
+	<name xmlns="https://doaj.org/ontology/">Jorge H Maldonado</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/2f92632ff8b24123bee002d4ab5d181e">
+	<abstract xmlns="https://doaj.org/ontology/">In this paper, a method of verification of the power performance of a wind farm is presented. This method is based on the Friedman’s test, which is a nonparametric statistical inference technique, and it uses the information that is collected by the SCADA system from the sensors embedded in the wind turbines in order to carry out the power performance verification of a wind farm. Here, the guaranteed power curve of the wind turbines is used as one more wind turbine of the wind farm under assessment, and a multiple comparison method is used to investigate differences between pairs of wind turbines with respect to their power performance. The proposed method says whether the power performance of the specific wind farm under assessment differs significantly from what would be expected, and it also allows wind farm owners to know whether their wind farm has either a perfect power performance or an acceptable power performance. Finally, the power performance verification of an actual wind farm is carried out. The results of the application of the proposed method showed that the power performance of the specific wind farm under assessment was acceptable.</abstract>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/2f92632ff8b24123bee002d4ab5d181e_0"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/2f92632ff8b24123bee002d4ab5d181e_1"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/2f92632ff8b24123bee002d4ab5d181e_2"/>
+	<country xmlns="https://doaj.org/ontology/">CH</country>
+	<creator xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/2f92632ff8b24123bee002d4ab5d181e_0"/>
+	<doi xmlns="https://doaj.org/ontology/">10.3390/s16060816</doi>
+	<issn xmlns="https://doaj.org/ontology/">1424-8220</issn>
+	<journal xmlns="https://doaj.org/ontology/">Sensors</journal>
+	<keyword xmlns="https://doaj.org/ontology/">SCADA system</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">nonparametric statistical tests</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">wind farm power performance</keyword>
+	<language xmlns="https://doaj.org/ontology/">EN</language>
+	<number xmlns="https://doaj.org/ontology/">6</number>
+	<publisher xmlns="https://doaj.org/ontology/">MDPI AG</publisher>
+	<start_page xmlns="https://doaj.org/ontology/">816</start_page>
+	<term xmlns="https://doaj.org/ontology/">Chemical technology</term>
+	<title xmlns="https://doaj.org/ontology/">Power Performance Verification of a Wind Farm Using the Friedman’s Test</title>
+	<url xmlns="https://doaj.org/ontology/">http://www.mdpi.com/1424-8220/16/6/816</url>
+	<volume xmlns="https://doaj.org/ontology/">16</volume>
+	<year xmlns="https://doaj.org/ontology/">2016</year>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/2f92632ff8b24123bee002d4ab5d181e_0">
+	<affiliation xmlns="https://doaj.org/ontology/">Departamento de Ciencias de la Computación y electrónica, Universidad Técnica Particular de Loja, Campus de la Universidad Técnica Particular de Loja, Calle San Cayetano Alto s/n, Loja 1101608, Ecuador</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Wilmar Hernandez</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/2f92632ff8b24123bee002d4ab5d181e_1">
+	<affiliation xmlns="https://doaj.org/ontology/">Departamento de Ingeniería Telemática y Electrónica, Universidad Politécnica de Madrid, Madrid 28031, Espana</affiliation>
+	<name xmlns="https://doaj.org/ontology/">José Luis López-Presa</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/2f92632ff8b24123bee002d4ab5d181e_2">
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://doaj.org/search/jorge_maldonado"/>
+	<affiliation xmlns="https://doaj.org/ontology/">Departamento de Ciencias de la Computación y electrónica, Universidad Técnica Particular de Loja, Campus de la Universidad Técnica Particular de Loja, Calle San Cayetano Alto s/n, Loja 1101608, Ecuador</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Jorge L. Maldonado-Correa</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/3c8f4a9c5bef40559aa9bdfdc31aeb03">
+	<abstract xmlns="https://doaj.org/ontology/">El presente trabajo de investigación, está orientado al estudio de la RSE en las medianas industrias marroquineras, tema un tanto desconocido para algunos empresarios, el conocimiento y aplicación de esta cultura en las industrias es el compromiso de la empresa para con la comunidad; es la retribución de las organizaciones con respecto a la contaminación, sobreexplotación de los recursos y aprovechamiento del medio ambiente. La investigación se realiza para identificar y obtener información de primera mano sobre conocimiento y manejo que éstas tienen sobre el tema, para así permitir perfeccionar la filosofía e incluirlos para su diario funcionamiento. Es importante esta investigación a la contribución al desarrollo económico y social de la ciudad, de esta forma, se está  dejando un precedente para las futuras investigaciones y el cumplimiento a la normatividad de la RSE para las PYMES  del sector marroquinero en la ciudad de Cúcuta.</abstract>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/3c8f4a9c5bef40559aa9bdfdc31aeb03_0"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/3c8f4a9c5bef40559aa9bdfdc31aeb03_1"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/3c8f4a9c5bef40559aa9bdfdc31aeb03_2"/>
+	<country xmlns="https://doaj.org/ontology/">CO</country>
+	<creator xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/3c8f4a9c5bef40559aa9bdfdc31aeb03_0"/>
+	<end_page xmlns="https://doaj.org/ontology/">51</end_page>
+	<issn xmlns="https://doaj.org/ontology/">2216-0353</issn>
+	<issn xmlns="https://doaj.org/ontology/">2216-0388</issn>
+	<journal xmlns="https://doaj.org/ontology/">Mundo Fesc</journal>
+	<keyword xmlns="https://doaj.org/ontology/">Cúcuta.</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">Incidencia</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">Medianas Empresas Marroquineras</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">Responsabilidad Social Empresarial</keyword>
+	<language xmlns="https://doaj.org/ontology/">ES</language>
+	<number xmlns="https://doaj.org/ontology/">12</number>
+	<publisher xmlns="https://doaj.org/ontology/">Fundación de Estudios Superiores Comfanorte</publisher>
+	<start_page xmlns="https://doaj.org/ontology/">42</start_page>
+	<term xmlns="https://doaj.org/ontology/">Science</term>
+	<term xmlns="https://doaj.org/ontology/">Science (General)</term>
+	<term xmlns="https://doaj.org/ontology/">Social Sciences</term>
+	<term xmlns="https://doaj.org/ontology/">Social sciences (General)</term>
+	<title xmlns="https://doaj.org/ontology/">Incidencia de la responsabilidad social empresarial en las medianas industrias marroquineras de la ciudad de Cúcuta</title>
+	<url xmlns="https://doaj.org/ontology/">http://www.fesc.edu.co/Revistas/OJS/index.php/mundofesc/article/view/93</url>
+	<volume xmlns="https://doaj.org/ontology/">0</volume>
+	<year xmlns="https://doaj.org/ontology/">2017</year>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/3c8f4a9c5bef40559aa9bdfdc31aeb03_0">
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://doaj.org/search/jorge_maldonado"/>
+	<affiliation xmlns="https://doaj.org/ontology/">Corporación Unificada Nacional de Educación Superior CUN</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Jorge Enrique Maldonado Pinto</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/3c8f4a9c5bef40559aa9bdfdc31aeb03_1">
+	<affiliation xmlns="https://doaj.org/ontology/">Corporación Unificada Nacional de Educación Superior CUN</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Yesika Lorena Antólinez Castellanos</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/3c8f4a9c5bef40559aa9bdfdc31aeb03_2">
+	<affiliation xmlns="https://doaj.org/ontology/">Corporación Unificada Nacional de Educación Superior CUN</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Mónica Villamizar Ortega</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/43fb74bdec994317b081f18b1799bd84">
+	<abstract xmlns="https://doaj.org/ontology/">Los planteamientos teóricos acerca de los sistemas complejos adaptativos se concentran principalmente en fenómenos como robustez ante ciertas perturbaciones, autoorganización, emergencia, multiescalaridad, transformación y disolución de entes organizacionales e identificación de patrones en la naturaleza. No obstante, es escaso y poco evidente el trabajo de utilizar este tipo de comprensión científica para explicar de manera más profunda a la administración pública en el nuevo contexto de la globalización, entendiendo que ésta presenta características que permitirían comprenderla como un sistema complejo. Pero puede llegar a ser muy difícil identificar el nivel de analogías que es pertinente realizar y las generalizaciones que estaría permitido hacer buscando aplicar estas herramientas conceptuales en la administración. Nuestro trabajo pretende establecer ese puente entre la explicación que nos brindan las ciencias de la complejidad y de qué forma estas serían útiles para entender la emergencia de nuevas características en un proceso auto organizativo como la administración pública.</abstract>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/43fb74bdec994317b081f18b1799bd84_0"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/43fb74bdec994317b081f18b1799bd84_1"/>
+	<country xmlns="https://doaj.org/ontology/">CO</country>
+	<creator xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/43fb74bdec994317b081f18b1799bd84_0"/>
+	<end_page xmlns="https://doaj.org/ontology/">147</end_page>
+	<issn xmlns="https://doaj.org/ontology/">1657-8651</issn>
+	<issn xmlns="https://doaj.org/ontology/">2346-2159</issn>
+	<journal xmlns="https://doaj.org/ontology/">Opera</journal>
+	<keyword xmlns="https://doaj.org/ontology/">Autoorganización, Sistemas complejos adaptativos, Administración pública, Globalización, Emergencia, Caos, Robustez.</keyword>
+	<language xmlns="https://doaj.org/ontology/">ES</language>
+	<number xmlns="https://doaj.org/ontology/">8</number>
+	<publisher xmlns="https://doaj.org/ontology/">Universidad Externado de Colombia</publisher>
+	<start_page xmlns="https://doaj.org/ontology/">125</start_page>
+	<term xmlns="https://doaj.org/ontology/">Political institutions and public administration (General)</term>
+	<term xmlns="https://doaj.org/ontology/">Political science</term>
+	<title xmlns="https://doaj.org/ontology/">La administración pública como un sistema análogo a la vida</title>
+	<url xmlns="https://doaj.org/ontology/">http://revistas.uexternado.edu.co/index.php/opera/article/view/765</url>
+	<volume xmlns="https://doaj.org/ontology/">8</volume>
+	<year xmlns="https://doaj.org/ontology/">2008</year>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/43fb74bdec994317b081f18b1799bd84_0">
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://doaj.org/search/jorge_maldonado"/>
+	<name xmlns="https://doaj.org/ontology/">Jorge Luis Salcedo Maldonado</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/43fb74bdec994317b081f18b1799bd84_1">
+	<name xmlns="https://doaj.org/ontology/">Jorge Andrés Mejía Rubio</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/4dd83f63f9ad4a64a6cee91690638f5a">
+	<abstract xmlns="https://doaj.org/ontology/">Este trabajo describe el proceso para la creación de un modelo de calidad que evalúe Objetos de Aprendizaje en aspectos tecnológicos y didácticos utilizando la notación i*. Para cumplir con este objetivo se revisaron modelos de calidad en ambos aspectos y conjuntamente con los conceptos de OA y calidad se han determinado las características que debe cumplir un OA, de esta manera considerar las características de evaluación. Se ha utilizado el método IQMC para la construcción del diagrama de dependencias estratégicas (SD) de i* para el modelo de calidad final. Con el modelo SD creado se establece la trazabilidad entre los criterios del modelo generado y los atributos de la matriz de la ISO/IEC 25010 para mantener una correlación entre las características de la notación i* con el estándar de la matriz mencionada de la ISO. La matriz obtenida es enriquecida con características conceptuales y los atributos que debe cumplir un OA. Se establecen las diferentes métricas en la matriz de la ISO para las evaluaciones de OA.  Como resultado se obtiene un modelo generado mediante la evaluación de un OA con cada una de las métricas seleccionadas.</abstract>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/4dd83f63f9ad4a64a6cee91690638f5a_0"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/4dd83f63f9ad4a64a6cee91690638f5a_1"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/4dd83f63f9ad4a64a6cee91690638f5a_2"/>
+	<country xmlns="https://doaj.org/ontology/">EC</country>
+	<creator xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/4dd83f63f9ad4a64a6cee91690638f5a_0"/>
+	<doi xmlns="https://doaj.org/ontology/">10.29019/enfoqueute.v9n2.234</doi>
+	<end_page xmlns="https://doaj.org/ontology/">187</end_page>
+	<issn xmlns="https://doaj.org/ontology/">1390-6542</issn>
+	<issn xmlns="https://doaj.org/ontology/">1390-9363</issn>
+	<journal xmlns="https://doaj.org/ontology/">Enfoqute</journal>
+	<keyword xmlns="https://doaj.org/ontology/">IQMC</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">ISO/IEC 25010.</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">Modelo calidad</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">notación i*</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">objeto de aprendizaje</keyword>
+	<language xmlns="https://doaj.org/ontology/">EN</language>
+	<language xmlns="https://doaj.org/ontology/">ES</language>
+	<number xmlns="https://doaj.org/ontology/">2</number>
+	<publisher xmlns="https://doaj.org/ontology/">Universidad Tecnológica Equinoccial</publisher>
+	<start_page xmlns="https://doaj.org/ontology/">175</start_page>
+	<term xmlns="https://doaj.org/ontology/">Engineering (General). Civil engineering (General)</term>
+	<term xmlns="https://doaj.org/ontology/">Technology</term>
+	<title xmlns="https://doaj.org/ontology/">Generación de un modelo de calidad para la evaluación de Objetos de Aprendizaje utilizando notación i* e ISO/IEC 25010</title>
+	<url xmlns="https://doaj.org/ontology/">http://ingenieria.ute.edu.ec/enfoqueute/index.php/revista/article/view/234</url>
+	<volume xmlns="https://doaj.org/ontology/">9</volume>
+	<year xmlns="https://doaj.org/ontology/">2018</year>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/4dd83f63f9ad4a64a6cee91690638f5a_0">
+	<affiliation xmlns="https://doaj.org/ontology/">Universidad de Cuenca</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Vanessa Alexandra Solis Cabrera</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/4dd83f63f9ad4a64a6cee91690638f5a_1">
+	<affiliation xmlns="https://doaj.org/ontology/">Universidad del Azuay</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Juan Pablo Carvallo</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/4dd83f63f9ad4a64a6cee91690638f5a_2">
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://doaj.org/search/jorge_maldonado"/>
+	<affiliation xmlns="https://doaj.org/ontology/">Universidad de Cuenca</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Jorge Javier Maldonado Mahuad</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/4e4ee65b45fb4d90bd5e88457d92234b">
+	<abstract xmlns="https://doaj.org/ontology/">Esta tesis está vinculada con las Tecnologías de la Información y Comunicación (TIC), y la Educación. Dentro de las mismas, el diseño y creación de materiales educativos digitales a través del paradigma de Objetos de Aprendizaje (OA) sigue siendo un reto a nivel superior, tanto para los educadores como para los equipos de producción de estos materiales educativos, puesto que su creación implica una lógica de diseño que excede lo netamente tecnológico. A lo anterior se suma, la falta de una definición práctica y consensuada sobre lo que es un OA, lo que ha originado una serie de propuestas y metodologías para el diseño y creación de OA desde distintas perspectivas tanto tecnológicas como educativas. Entonces, surgen algunas preguntas motivadoras que se plantean en el marco de esta tesis y son las siguientes: ¿Cuál es la relación que existe entre tecnología y educación en el paradigma de OA? ¿Qué tipos de propuestas y metodologías se han utilizado hasta la fecha para llevar a la práctica el diseño y creación de OA? ¿Es posible conocer cuál es la orientación (ya sea tecnológica o educativa) de una propuesta o metodología sin abordar su implementación? ¿Cómo puede un docente seleccionar una metodología que sea adecuada para el diseño y creación de OA para un contexto determinado? ¿Es posible desarrollar un marco de análisis que permita recomendar metodologías para diseñar OA para un contexto específico?</abstract>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/4e4ee65b45fb4d90bd5e88457d92234b_0"/>
+	<country xmlns="https://doaj.org/ontology/">AR</country>
+	<creator xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/4e4ee65b45fb4d90bd5e88457d92234b_0"/>
+	<issn xmlns="https://doaj.org/ontology/">1850-9959</issn>
+	<issn xmlns="https://doaj.org/ontology/">1851-0086</issn>
+	<journal xmlns="https://doaj.org/ontology/">Revista Iberoamericana de Tecnología en Educación y Educación en Tecnología</journal>
+	<keyword xmlns="https://doaj.org/ontology/">Ciencias Informáticas</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">Educación</keyword>
+	<language xmlns="https://doaj.org/ontology/">ES</language>
+	<language xmlns="https://doaj.org/ontology/">PT</language>
+	<publisher xmlns="https://doaj.org/ontology/">Red de Universidades Nacionales con Carreras de Informática</publisher>
+	<term xmlns="https://doaj.org/ontology/">Education</term>
+	<term xmlns="https://doaj.org/ontology/">Special aspects of education</term>
+	<title xmlns="https://doaj.org/ontology/">Desarrollo de un marco de análisis para la selección de metodologías de diseño de objetos de aprendizaje (OA) basado en criterios de calidad para contextos educativos específicos</title>
+	<url xmlns="https://doaj.org/ontology/">http://sedici.unlp.edu.ar/handle/10915/46986</url>
+	<volume xmlns="https://doaj.org/ontology/">no. 15</volume>
+	<year xmlns="https://doaj.org/ontology/">2015</year>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/4e4ee65b45fb4d90bd5e88457d92234b_0">
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://doaj.org/search/jorge_maldonado"/>
+	<name xmlns="https://doaj.org/ontology/">Maldonado Mahauad, Jorge</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/4ea1c6ed46354306b4aee3cd8cff6618">
+	<abstract xmlns="https://doaj.org/ontology/">This text makes a reading of the document “compromiso Caribe” exploring the context in it was raised. Makes a review of how this discourse has hidden the emergence of other approaches and claims of Caribbean -Colombian subjects about their multiple realities and experience at different sites of existence. It is argued that although the “compromiso caribe” is in a sense a general cry of the Caribbean -Colombian and offers some regional unity against a centralized state, its orientation is still in the hands of hegemonic sectors (economic, political and academic) that that reproduce patterns of cultural racism that starts on a lack of the perspectives of caribbean colombian subjects perspectives, who have been made invisible by that speech, while they are to give a political power to Compromiso Caribe as a device of coloniality. Thus, compromiso Caribe is a prisoner of culturalist and that the power, action repertoires and the path of the struggles of other subjects elsewhere in the Colombian Caribbean in order to its existence, undermining their own chances of enriching and the nature of their demands.&lt;br /&gt;&lt;br /&gt;</abstract>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/4ea1c6ed46354306b4aee3cd8cff6618_0"/>
+	<country xmlns="https://doaj.org/ontology/">CO</country>
+	<creator xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/4ea1c6ed46354306b4aee3cd8cff6618_0"/>
+	<end_page xmlns="https://doaj.org/ontology/">72</end_page>
+	<issn xmlns="https://doaj.org/ontology/">1657-4923</issn>
+	<issn xmlns="https://doaj.org/ontology/">2389-7872</issn>
+	<journal xmlns="https://doaj.org/ontology/">Jangwa Pana</journal>
+	<keyword xmlns="https://doaj.org/ontology/">colonialidad</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">compromiso caribe</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">múltiples realidades</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">regionalismo culturalista</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">regionalismo economicista.</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">sujetos caribe-colombianos</keyword>
+	<language xmlns="https://doaj.org/ontology/">EN</language>
+	<language xmlns="https://doaj.org/ontology/">ES</language>
+	<number xmlns="https://doaj.org/ontology/">1</number>
+	<publisher xmlns="https://doaj.org/ontology/">Universidad del Magdalena</publisher>
+	<start_page xmlns="https://doaj.org/ontology/">64</start_page>
+	<term xmlns="https://doaj.org/ontology/">General Works</term>
+	<title xmlns="https://doaj.org/ontology/">DECOLONIZING “COMPROMISO CARIBE”: TOWARD THE DESIGN AND IDENTIFICATION FOR OTHER PERSPECTIVES ON COLOMBIAN CARIBBEAN</title>
+	<url xmlns="https://doaj.org/ontology/">http://revistas.unimagdalena.edu.co/index.php/jangwapana/article/view/790</url>
+	<volume xmlns="https://doaj.org/ontology/">11</volume>
+	<year xmlns="https://doaj.org/ontology/">2014</year>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/4ea1c6ed46354306b4aee3cd8cff6618_0">
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://doaj.org/search/jorge_maldonado"/>
+	<affiliation xmlns="https://doaj.org/ontology/">Universidad del Magdalena</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Jorge Sánchez Maldonado</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/5c85ed9549444740814d16568881faf2">
+	<abstract xmlns="https://doaj.org/ontology/">RESUMEN El presente trabajo de investigación, está encaminado al análisis de la gestión ambiental de las pymes del sector industrial de la arcilla, tema que en la actualidad está inserto en discusión de diferentes sectores que conforman las sociedades en torno a la temática sobre el rol que le compete a las organizaciones para su buena gestión en las prácticas sociales. Es a partir de esto, donde surge la necesidad de realizar la siguiente investigación buscando el fomento de una cultura de RSC con base al cumplimiento de alternativas de gestión ambiental. La investigación presenta ante todo un amplio marco teórico al respecto, donde se perfila el concepto de RSC, con sus definiciones, enfoques y términos relacionados, su historia y evolución, normatividad existente e instrumentos de medición, su evaluación y argumentos de tipo social que justifican desde los ángulos ético y económico; el modelo de los stakeholders y las alternativas ecológicas propuestas para articular las pequeñas y medianas empresas (PYMES) con el contexto ambiental. La metodología utilizada es un trabajo de campo donde se recoge información descriptiva y documental de los empresarios y expertos sobre el tema de gestión ambiental y su aplicación en las empresas pymes del sector industrial de la transformación de la arcilla del departamento Norte de Santander, Colombia. Sus resultados pueden servir de modelo para mejorar la gestión ambiental y contribuir a fomentar una cultura de RSC en las pymes, objeto de estudio.</abstract>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/5c85ed9549444740814d16568881faf2_0"/>
+	<country xmlns="https://doaj.org/ontology/">CO</country>
+	<creator xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/5c85ed9549444740814d16568881faf2_0"/>
+	<end_page xmlns="https://doaj.org/ontology/">13</end_page>
+	<issn xmlns="https://doaj.org/ontology/">2216-0353</issn>
+	<issn xmlns="https://doaj.org/ontology/">2216-0388</issn>
+	<journal xmlns="https://doaj.org/ontology/">Mundo Fesc</journal>
+	<keyword xmlns="https://doaj.org/ontology/">Corporate Social environmental</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">Cultura organizacional</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">PYMES</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">Responsabilidad social corporativa</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">Responsibility</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">SME</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">gestión ambiental</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">management</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">organizational culture</keyword>
+	<language xmlns="https://doaj.org/ontology/">ES</language>
+	<number xmlns="https://doaj.org/ontology/">10</number>
+	<publisher xmlns="https://doaj.org/ontology/">Fundación de Estudios Superiores Comfanorte</publisher>
+	<start_page xmlns="https://doaj.org/ontology/">5</start_page>
+	<term xmlns="https://doaj.org/ontology/">Science</term>
+	<term xmlns="https://doaj.org/ontology/">Science (General)</term>
+	<term xmlns="https://doaj.org/ontology/">Social Sciences</term>
+	<term xmlns="https://doaj.org/ontology/">Social sciences (General)</term>
+	<title xmlns="https://doaj.org/ontology/">LA GESTIÓN AMBIENTAL COMO CULTURA DE RSC DE LAS PYMES DEL SECTOR ARCILLA DEL MUNICIPIO DE SAN JOSÉ DE CÚCUTA Y SU ÁREA METROPOLITANA, COLOMBIA</title>
+	<url xmlns="https://doaj.org/ontology/">http://www.fesc.edu.co/Revistas/OJS/index.php/mundofesc/article/view/66</url>
+	<volume xmlns="https://doaj.org/ontology/">2</volume>
+	<year xmlns="https://doaj.org/ontology/">2016</year>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/5c85ed9549444740814d16568881faf2_0">
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://doaj.org/search/jorge_maldonado"/>
+	<affiliation xmlns="https://doaj.org/ontology/">Corporación Unificada Nacional</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Jorge Enrique Maldonado Pinto</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/61af659137ee48d7aaba21e01f8ad5ee">
+	<abstract xmlns="https://doaj.org/ontology/">Economic Experimental Games have shown that individuals make decisions that deviate down from the suboptimal Nash equilibrium. However, few studies have analyzed the case when deviation is above the Nash equilibrium. Extracting from above the Nash equilibrium is inefficient not only socially but also privately and it would exacerbate the tragedy of the commons. That would be the case of a race to the fish when stocks are becoming depleted or driver behavior on a highly congested road. The objective of this study is to analyze private inefficient extraction behavior in experimental games and to associate the type of player and the type of player group with such inefficient outcomes. To do this, we carried out economic experimental games with local coastal fishermen in Colombia, using a setting where the scarcity of the resource allows for an interior Nash equilibrium and inefficient over-extraction is possible. The state of the resource, the type of player and the composition of the group explain, in part, this inefficient behavior.</abstract>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/61af659137ee48d7aaba21e01f8ad5ee_0"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/61af659137ee48d7aaba21e01f8ad5ee_1"/>
+	<country xmlns="https://doaj.org/ontology/">US</country>
+	<creator xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/61af659137ee48d7aaba21e01f8ad5ee_0"/>
+	<doi xmlns="https://doaj.org/ontology/">10.1371/journal.pone.0148403</doi>
+	<issn xmlns="https://doaj.org/ontology/">1932-6203</issn>
+	<journal xmlns="https://doaj.org/ontology/">PLoS ONE</journal>
+	<language xmlns="https://doaj.org/ontology/">EN</language>
+	<number xmlns="https://doaj.org/ontology/">2</number>
+	<publisher xmlns="https://doaj.org/ontology/">Public Library of Science (PLoS)</publisher>
+	<start_page xmlns="https://doaj.org/ontology/">e0148403</start_page>
+	<term xmlns="https://doaj.org/ontology/">Medicine</term>
+	<term xmlns="https://doaj.org/ontology/">Science</term>
+	<title xmlns="https://doaj.org/ontology/">Exacerbating the Tragedy of the Commons: Private Inefficient Outcomes and Peer Effect in Experimental Games with Fishing Communities.</title>
+	<url xmlns="https://doaj.org/ontology/">http://europepmc.org/articles/PMC4749167?pdf=render</url>
+	<volume xmlns="https://doaj.org/ontology/">11</volume>
+	<year xmlns="https://doaj.org/ontology/">2016</year>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/61af659137ee48d7aaba21e01f8ad5ee_0">
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://doaj.org/search/jorge_maldonado"/>
+	<name xmlns="https://doaj.org/ontology/">Jorge Higinio Maldonado</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/61af659137ee48d7aaba21e01f8ad5ee_1">
+	<name xmlns="https://doaj.org/ontology/">Rocío Del Pilar Moreno-Sanchez</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/74a80bd80ecc470285a2dc2055d2f969">
+	<abstract xmlns="https://doaj.org/ontology/">
+Existen diferentes modelos teóricos para la obtención de un conocimiento inicial acerca de los valores de radiación solar sobre una superficie horizontal en un lugar determinado. En el presente trabajo, nos enfocamos en la obtención de los valores de radiación sobre una superficie horizontal y se utiliza el conocido “modelo de Hottel”. Para la realización del presente trabajo se partió de la confección de un libro de Microsoft Excel© utilizando para ello la metodología propuesta por Passamai, adicionando un grupo de hojas de cálculo adicionales de forma que se pudiera obtener de forma automática el resumen mensual y anual de los valores diarios para los puntos geográficos utilizados, para poder interpolar posteriormente estos resúmenes en la confección de los diferentes mapas para la zona de trabajo. Un total de 370 puntos fueron procesados de acuerdo a la altura, latitud y longitud correspondientes al MDE, espaciados 0,1◦ (aproximadamente cada 10 km) obteniéndose los valores horarios, diarios, y a partir de los valores diarios se obtuvieron los mensuales y anuales de radiación directa, difusa y global, sobre una superficie horizontal. Se muestran los valores de la radiación global para cielo claro por meses.
+</abstract>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/74a80bd80ecc470285a2dc2055d2f969_0"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/74a80bd80ecc470285a2dc2055d2f969_1"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/74a80bd80ecc470285a2dc2055d2f969_2"/>
+	<country xmlns="https://doaj.org/ontology/">EC</country>
+	<creator xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/74a80bd80ecc470285a2dc2055d2f969_0"/>
+	<doi xmlns="https://doaj.org/ontology/">10.17163/ings.n11.2014.03</doi>
+	<issn xmlns="https://doaj.org/ontology/">1390-650X</issn>
+	<issn xmlns="https://doaj.org/ontology/">1390-860X</issn>
+	<journal xmlns="https://doaj.org/ontology/">Ingenius: Revista de Ciencia y Tecnología</journal>
+	<keyword xmlns="https://doaj.org/ontology/">Radiación solar</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">modelo Hottel</keyword>
+	<language xmlns="https://doaj.org/ontology/">EN</language>
+	<language xmlns="https://doaj.org/ontology/">ES</language>
+	<number xmlns="https://doaj.org/ontology/">11</number>
+	<publisher xmlns="https://doaj.org/ontology/">Universidad Politécnica Salesiana</publisher>
+	<term xmlns="https://doaj.org/ontology/">Science (General)</term>
+	<term xmlns="https://doaj.org/ontology/">Technology</term>
+	<title xmlns="https://doaj.org/ontology/">La radiación solar global en la provincia de Loja, evaluación preliminar utilizando el método de Hottel</title>
+	<url xmlns="https://doaj.org/ontology/">https://revistas.ups.edu.ec/index.php/ingenius/article/view/39</url>
+	<year xmlns="https://doaj.org/ontology/">2014</year>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/74a80bd80ecc470285a2dc2055d2f969_0">
+	<affiliation xmlns="https://doaj.org/ontology/">Universidad Nacional de Loja</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Orlando Álvarez Hernández</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/74a80bd80ecc470285a2dc2055d2f969_1">
+	<affiliation xmlns="https://doaj.org/ontology/">Universidad Nacional de Loja</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Thuesman Montaño Peralta</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/74a80bd80ecc470285a2dc2055d2f969_2">
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://doaj.org/search/jorge_maldonado"/>
+	<affiliation xmlns="https://doaj.org/ontology/">Universidad Nacional de Loja</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Jorge Maldonado Correa</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/7857373c49be4c839d54ca78f313d6d2">
+	<abstract xmlns="https://doaj.org/ontology/">Generalmente , el pastoreo por sí solo no puede satisfacer las necesidades nutricionales de la cabra  lechera,  sobre  todo  en  lactancia  temprana.  En  este  sentido,  se  han  desarrollado  estrategias  de  suplementación  alimenticia  cuya  final idad  ha  sido  incrementar  la  produ c ción  de  leche.  A  este  respecto, la investigación se ha enfocado  en cubrir las necesidades nutr i cionales en el peri odo de  sequí a.  Sin  embargo,  es  necesario  evaluar  si en  época  de  lluvias  la  mayor  disponibilidad  de  forrajes  en el  agostadero puede cubrir  los requerimientos nutricion a les de  las cabras, o al  menos  el  dé ficit  sea  menor  respecto  a  la  época  seca , y  con  lo  cua l se  eviten  gastos  innecesarios  en  alimentación.  Por  ello,  el  objetivo  del  presente  estudio  fue  evaluar  el  e fecto  de  suplementación  alimenticia  preparto  y  postparto  en  el  peso  vivo,  condición  corporal,  producción  y  calidad  de  leche en lactancia temprana , durante la estación lluviosa en la Comarca Lagunera , en el norte de  México. Método :  Se  utilizaron  33  cabras  l ocales  adultas.  Grupo  control  (testigo)  (n=11),  se  alimentó  exclusivamente  lo  cosechado  por  la  cabra  en  la  ruta  de  pastoreo.    Grupo  preparto (n=11)  se  le  ofreció  500  g  de  concentrado  comercial  durante  30  días  antes  del  parto;  y  Grupo  postparto  (n=11), se  l e ofreció 500 g de concentrado comercial  por  30 días , a partir de la  fecha de parto y  hasta el  final del experi mento.  Se midieron  las  variables: Peso Vivo (PV) y  Condición Corp o ral  (CC)  durante  14  semanas.  La  producción  y  calidad  de  leche  (Grasa,  Proteína  y  Lactosa)  se  midieron a partir de la fecha de parto durante 8 semanas. El análisis estadístico  para las vari a bles  producción y calidad de leche se realizó con el procedimiento MIXED. Los datos de PV y CC se  analizaron  utilizando  el  procedimiento  GLM , y  se utilizó  la  prueba  de  Tukey  ajustada  para  la  comparación de medias. Los datos de consumo de concentrado se analizaron con una prueba de t  para determinar difere n cias entre grupos suplementados.  Resultados :  No  se  observaron  diferencias  (p&gt;0.05)  en  consumo  de  concentrado  en  los  grupos  preparto y postparto. Se encontraron diferencias (p&lt;0.05) en PV y CC hasta el momento pr e vio al  parto, y a partir del parto. PV y CC en todos los grupos fue similar con pérdidas hasta el final del  experimento. No se encontraron diferencias (p&gt;0.05) en producción de leche, co n tenido de grasa,  proteína o lactosa, ni efectos de interacción tratamiento*tiempo.  Discusión : Se  concluye  que  suplementar  un  mes  antes  o  después  del  parto,  no  mejora  la  producción,  composición  química  de  la leche  o  peso  vivo  del  ganado  caprino  en  lactancia temprana  y  en  la  época  de  lluvias  bajo  las  condiciones  de  pastoreo  extensivo  en  la  Comarca  L a gunera en el norte de México.</abstract>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/7857373c49be4c839d54ca78f313d6d2_0"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/7857373c49be4c839d54ca78f313d6d2_1"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/7857373c49be4c839d54ca78f313d6d2_2"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/7857373c49be4c839d54ca78f313d6d2_3"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/7857373c49be4c839d54ca78f313d6d2_4"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/7857373c49be4c839d54ca78f313d6d2_5"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/7857373c49be4c839d54ca78f313d6d2_6"/>
+	<country xmlns="https://doaj.org/ontology/">MX</country>
+	<creator xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/7857373c49be4c839d54ca78f313d6d2_0"/>
+	<end_page xmlns="https://doaj.org/ontology/">153</end_page>
+	<issn xmlns="https://doaj.org/ontology/">2007-0705</issn>
+	<journal xmlns="https://doaj.org/ontology/">Nova Scientia</journal>
+	<language xmlns="https://doaj.org/ontology/">EN</language>
+	<language xmlns="https://doaj.org/ontology/">ES</language>
+	<number xmlns="https://doaj.org/ontology/">19</number>
+	<publisher xmlns="https://doaj.org/ontology/">Universidad De La Salle Bajío</publisher>
+	<start_page xmlns="https://doaj.org/ontology/">134</start_page>
+	<term xmlns="https://doaj.org/ontology/">Science</term>
+	<term xmlns="https://doaj.org/ontology/">Science (General)</term>
+	<term xmlns="https://doaj.org/ontology/">Social Sciences</term>
+	<term xmlns="https://doaj.org/ontology/">Social sciences (General)</term>
+	<title xmlns="https://doaj.org/ontology/">Suplementación pre y postparto durante la  estación lluviosa  en cabras locales del norte de  México</title>
+	<url xmlns="https://doaj.org/ontology/">http://www.redalyc.org/articulo.oa?id=203353519009</url>
+	<volume xmlns="https://doaj.org/ontology/">9</volume>
+	<year xmlns="https://doaj.org/ontology/">2017</year>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/7857373c49be4c839d54ca78f313d6d2_0">
+	<name xmlns="https://doaj.org/ontology/">Luis Maconetzín Isidro-Requejo</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/7857373c49be4c839d54ca78f313d6d2_1">
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://doaj.org/search/jorge_maldonado"/>
+	<name xmlns="https://doaj.org/ontology/">Jorge Alonso Maldonado-Jáquez</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/7857373c49be4c839d54ca78f313d6d2_2">
+	<name xmlns="https://doaj.org/ontology/">Lorenzo Danilo Granados-Rivera</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/7857373c49be4c839d54ca78f313d6d2_3">
+	<name xmlns="https://doaj.org/ontology/">Homero Salinas-González</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/7857373c49be4c839d54ca78f313d6d2_4">
+	<name xmlns="https://doaj.org/ontology/">Leonardo Iván Vélez-Monroy</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/7857373c49be4c839d54ca78f313d6d2_5">
+	<name xmlns="https://doaj.org/ontology/">Adán Ulises Chávez Solís</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/7857373c49be4c839d54ca78f313d6d2_6">
+	<name xmlns="https://doaj.org/ontology/">Francisco Javier Pastor López</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/a78906a3f3ae4392aa3ef92938bc39cb">
+	<abstract xmlns="https://doaj.org/ontology/">Objective. To assess the association between plasma ceramides and hepatic steatosis (HS) in adolescents, independently of obesity. Materials and Methods. Ninety-four adolescents from two previous studies conducted and published by our crew were included. Study subjects were stratified in three groups: normal weight (n=18), obesity (n=34), and obesity + HS (n=42). The presence of HS was defined when ALT/AST ratio was &lt;1. Ceramides subspecies (C14:0, C16:0, C18:0, C24:0, and C24:1) were determined by LC/MS. Results. All ceramides correlated directly with ALT levels and inversely with ALT/AST ratio; the strongest correlation was observed among C14:0 ceramide (r=0.41 and r=-0.54, resp.; P&lt;0.001). Furthermore, significant correlations were observed between cholesterol and all ceramides except for C24:1 ceramide. Interestingly ceramides C14:0, C18:0, and C24:1 correlated directly with both fasting insulin and HOMA-IR index. For assessing HS, a cut-off point of 10.3 nmol/L for C14:0 ceramide reported a sensitivity of 92.7% and a specificity of 73.5% when normal weight and obesity groups (n=52) were compared against obesity + HS group (n=42). Positive and negative predictive values were 77.5% and 90.2%, respectively. Conclusions. Plasma ceramides are closely associated with hepatic steatosis in adolescents. C14:0 ceramide could be a novel biomarker of HS independently of obesity.</abstract>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/a78906a3f3ae4392aa3ef92938bc39cb_0"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/a78906a3f3ae4392aa3ef92938bc39cb_1"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/a78906a3f3ae4392aa3ef92938bc39cb_2"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/a78906a3f3ae4392aa3ef92938bc39cb_3"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/a78906a3f3ae4392aa3ef92938bc39cb_4"/>
+	<country xmlns="https://doaj.org/ontology/">GB</country>
+	<creator xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/a78906a3f3ae4392aa3ef92938bc39cb_0"/>
+	<doi xmlns="https://doaj.org/ontology/">10.1155/2017/3689375</doi>
+	<issn xmlns="https://doaj.org/ontology/">2291-2789</issn>
+	<issn xmlns="https://doaj.org/ontology/">2291-2797</issn>
+	<journal xmlns="https://doaj.org/ontology/">Canadian Journal of Gastroenterology and Hepatology</journal>
+	<language xmlns="https://doaj.org/ontology/">EN</language>
+	<publisher xmlns="https://doaj.org/ontology/">Hindawi Limited</publisher>
+	<term xmlns="https://doaj.org/ontology/">Diseases of the digestive system. Gastroenterology</term>
+	<title xmlns="https://doaj.org/ontology/">Association between Plasmatic Ceramides Profile and AST/ALT Ratio: C14:0 Ceramide as Predictor of Hepatic Steatosis in Adolescents Independently of Obesity</title>
+	<url xmlns="https://doaj.org/ontology/">http://dx.doi.org/10.1155/2017/3689375</url>
+	<volume xmlns="https://doaj.org/ontology/">2017</volume>
+	<year xmlns="https://doaj.org/ontology/">2017</year>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/a78906a3f3ae4392aa3ef92938bc39cb_0">
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://doaj.org/search/jorge_maldonado"/>
+	<affiliation xmlns="https://doaj.org/ontology/">Laboratorio de Espectrometría de Masas, Unidad de Investigación Médica en Nutrición, Hospital de Pediatría, Centro Médico Nacional Siglo XXI, IMSS, Ciudad de México, Mexico</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Jorge Maldonado-Hernández</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/a78906a3f3ae4392aa3ef92938bc39cb_1">
+	<affiliation xmlns="https://doaj.org/ontology/">Laboratorio de Espectrometría de Masas, Unidad de Investigación Médica en Nutrición, Hospital de Pediatría, Centro Médico Nacional Siglo XXI, IMSS, Ciudad de México, Mexico</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Gabriela E. Saldaña-Dávila</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/a78906a3f3ae4392aa3ef92938bc39cb_2">
+	<affiliation xmlns="https://doaj.org/ontology/">Laboratorio de Espectrometría de Masas, Unidad de Investigación Médica en Nutrición, Hospital de Pediatría, Centro Médico Nacional Siglo XXI, IMSS, Ciudad de México, Mexico</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Mónica I. Piña-Aguero</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/a78906a3f3ae4392aa3ef92938bc39cb_3">
+	<affiliation xmlns="https://doaj.org/ontology/">Laboratorio de Espectrometría de Masas, Unidad de Investigación Médica en Nutrición, Hospital de Pediatría, Centro Médico Nacional Siglo XXI, IMSS, Ciudad de México, Mexico</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Benjamín A. Núñez-García</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/a78906a3f3ae4392aa3ef92938bc39cb_4">
+	<affiliation xmlns="https://doaj.org/ontology/">Laboratorio de Espectrometría de Masas, Unidad de Investigación Médica en Nutrición, Hospital de Pediatría, Centro Médico Nacional Siglo XXI, IMSS, Ciudad de México, Mexico</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Mardia G. López-Alarcón</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/b85f2deb69bc4e1e8f70ca4d63b00110">
+	<abstract xmlns="https://doaj.org/ontology/">Los planteamientos teóricos acerca de
+los sistemas complejos adaptativos se
+concentran principalmente en fenómenos
+como robustez ante ciertas perturbaciones,
+autoorganización, emergencia, multiescalaridad, transformación y disolución de entes organizacionales e identificación de patrones en la naturaleza. No obstante, es escaso y poco evidente el trabajo de utilizar este tipo de comprensión científica para explicar de manera más profunda a la administración pública en el nuevo contexto de la globalización, entendiendo que ésta presenta características que permitirían comprenderla como un sistema complejo. Pero puede llegar a ser muy difícil identificar el nivel de analogías que es pertinente realizar y las generalizaciones que estaría permitido hacer buscando aplicar estas herramientas conceptuales en la administración. Nuestro btrabajo pretende establecer ese puente entre
+la explicación que nos brindan las ciencias
+de la complejidad y de qué forma estas
+serían útiles para entender la emergencia
+de nuevas características en un proceso
+auto organizativo como la administración
+pública.</abstract>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/b85f2deb69bc4e1e8f70ca4d63b00110_0"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/b85f2deb69bc4e1e8f70ca4d63b00110_1"/>
+	<country xmlns="https://doaj.org/ontology/">CO</country>
+	<creator xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/b85f2deb69bc4e1e8f70ca4d63b00110_0"/>
+	<end_page xmlns="https://doaj.org/ontology/">147</end_page>
+	<issn xmlns="https://doaj.org/ontology/">1657-8651</issn>
+	<issn xmlns="https://doaj.org/ontology/">2346-2159</issn>
+	<journal xmlns="https://doaj.org/ontology/">Opera</journal>
+	<language xmlns="https://doaj.org/ontology/">ES</language>
+	<number xmlns="https://doaj.org/ontology/">8</number>
+	<publisher xmlns="https://doaj.org/ontology/">Universidad Externado de Colombia</publisher>
+	<start_page xmlns="https://doaj.org/ontology/">125</start_page>
+	<term xmlns="https://doaj.org/ontology/">Political science</term>
+	<title xmlns="https://doaj.org/ontology/">La administración pública como un sistema análogo a la vida</title>
+	<url xmlns="https://doaj.org/ontology/">http://www.redalyc.org/articulo.oa?id=67500807</url>
+	<year xmlns="https://doaj.org/ontology/">2008</year>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/b85f2deb69bc4e1e8f70ca4d63b00110_0">
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://doaj.org/search/jorge_maldonado"/>
+	<name xmlns="https://doaj.org/ontology/">Jorge Luis Salcedo Maldonado</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/b85f2deb69bc4e1e8f70ca4d63b00110_1">
+	<name xmlns="https://doaj.org/ontology/">Jorge Andr\u00E9s Mej\u00EDa Rubio</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/bddb95e1b2754450ae90d3d931d3b6ed">
+	<abstract xmlns="https://doaj.org/ontology/">No resulta fácil determinar si la humanidad se beneficia o perjudica con la tecnología digital. Para aportar a este debate, es preciso revisar el funcionamiento del universo digital. ¿Qué estatuto puede dársele?, ¿se trata de una realidad reducible a explicaciones físicas?, ¿puede considerarse una realidad metafísica? Este primer componente del problema debe ser recorrido con la mayor minucia posible; sin embargo, comprender el funcionamiento no conlleva directamente comprender los usos de lo digital y las maneras en que la cotidianidad de lo humano puede verse transformada. Este segundo componente del problema abrirá paso al juicio ético. El tercer componente del problema es, en este orden de ideas, la relación entre el universo digital en sí y su usuario. Si es posible comprender mejor esta relación entre lo digital y la “humanidad digitalizada”, ¿podríamos a partir de allí evaluar la utilidad y los perjuicios de lo digital para la vida? Solo un cuarto componente del problema nos permitirá diferenciar en qué sentido el perjuicio de la tecnología digital depende del uso que se le dé y en qué sentido el beneficio es intrínseco a ella misma. El objetivo de este artículo es recorrer estos cuatro componentes para proponer una lectura crítica del universo digital y su actualización en la sociedad.</abstract>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/bddb95e1b2754450ae90d3d931d3b6ed_0"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/bddb95e1b2754450ae90d3d931d3b6ed_1"/>
+	<country xmlns="https://doaj.org/ontology/">CO</country>
+	<creator xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/bddb95e1b2754450ae90d3d931d3b6ed_0"/>
+	<end_page xmlns="https://doaj.org/ontology/">40</end_page>
+	<issn xmlns="https://doaj.org/ontology/">0120-8454</issn>
+	<issn xmlns="https://doaj.org/ontology/">2145-9169</issn>
+	<journal xmlns="https://doaj.org/ontology/">Análisis</journal>
+	<language xmlns="https://doaj.org/ontology/">DE</language>
+	<language xmlns="https://doaj.org/ontology/">EN</language>
+	<language xmlns="https://doaj.org/ontology/">ES</language>
+	<language xmlns="https://doaj.org/ontology/">PT</language>
+	<number xmlns="https://doaj.org/ontology/">84</number>
+	<publisher xmlns="https://doaj.org/ontology/">Universidad Santo Tomás</publisher>
+	<start_page xmlns="https://doaj.org/ontology/">27</start_page>
+	<term xmlns="https://doaj.org/ontology/">Education</term>
+	<term xmlns="https://doaj.org/ontology/">Social sciences (General)</term>
+	<title xmlns="https://doaj.org/ontology/">Humanidad y universo digital: prolegómenos al problema ético de la utilidad y el perjuicio de lo digital para la vida</title>
+	<url xmlns="https://doaj.org/ontology/">http://www.redalyc.org/articulo.oa?id=515551535002</url>
+	<volume xmlns="https://doaj.org/ontology/">46</volume>
+	<year xmlns="https://doaj.org/ontology/">2014</year>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/bddb95e1b2754450ae90d3d931d3b6ed_0">
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://doaj.org/search/jorge_maldonado"/>
+	<name xmlns="https://doaj.org/ontology/">Jorge Francisco Maldonado Serrano</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/bddb95e1b2754450ae90d3d931d3b6ed_1">
+	<name xmlns="https://doaj.org/ontology/">Dairon Rodríguez</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/be630594f7f6430c82c2dab8589e260c">
+	<abstract xmlns="https://doaj.org/ontology/">Abstract Background Chlamydia trachomatis is the causative agent of the most common bacterial sexually transmitted infection worldwide. The aim of this study was to investigate the frequency and genotypes of C. trachomatis in patients attending an obstetrics and gynecology clinic in Jalisco, Mexico and correlates them with sociodemographic, behavioral, and biological factors. Methods C. trachomatis detection was performed in endocervical samples from 662 patients by direct fluorescence assay (DFA) and two PCR assays that amplified the phospholipase D endonuclease superfamily protein (PLDESP) and OmpA genes. Positive samples were genotyped using PCR–restriction fragment length polymorphism assays. Sociodemographic, behavioral, and biological data were collected. Results The mean age of the study population was 31 (range, 14–78) years. C. trachomatis positivity was detected by DFA in 16.7% (n = 111), PLDESP gene amplification in 14.2% (n = 94), and OmpA gene amplification in 14.5% (n = 96) of the population. Eight C. trachomatis genotypes were detected: E (39.6%), F (29.2%), D (15.6%), K (6.3%), L2 (3.1%), G, J, and I (2.1% each). C. trachomatis infection was associated with age, marital status, pregnancy, and hormonal contraceptive use (all p = 0.01); intrauterine device use and previous premature birth (both p = 0.03); and infection during pregnancy, previous ectopic pregnancy, pelvic inflammatory disease (PID), and green vaginal discharge (all p = 0.04). C. trachomatis genotype K was more likely to be detected in women histories of ≥2 sexual partners, genotype F was more likely in pregnant women, genotype L2 was more likely in women with PID, genotype D was more likely in women who had had infection during previous pregnancies, and genotype E was more likely in those with previous ectopic pregnancies and green vaginal discharge (all p = 0.01). Conclusions The frequency of C. trachomatis in our population was higher than previously reported worldwide, but within the range reported for Mexico. Genotype E was detected most frequently in the study population. Infection by C. trachomatis and C. trachomatis genotypes K, F, D, and E was strongly associated with multiple sociodemographic, behavioral, and biological factors. C. trachomatis genotype L2 was detected in women with PID.</abstract>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/be630594f7f6430c82c2dab8589e260c_0"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/be630594f7f6430c82c2dab8589e260c_1"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/be630594f7f6430c82c2dab8589e260c_10"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/be630594f7f6430c82c2dab8589e260c_11"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/be630594f7f6430c82c2dab8589e260c_2"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/be630594f7f6430c82c2dab8589e260c_3"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/be630594f7f6430c82c2dab8589e260c_4"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/be630594f7f6430c82c2dab8589e260c_5"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/be630594f7f6430c82c2dab8589e260c_6"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/be630594f7f6430c82c2dab8589e260c_7"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/be630594f7f6430c82c2dab8589e260c_8"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/be630594f7f6430c82c2dab8589e260c_9"/>
+	<country xmlns="https://doaj.org/ontology/">GB</country>
+	<creator xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/be630594f7f6430c82c2dab8589e260c_0"/>
+	<doi xmlns="https://doaj.org/ontology/">10.1186/s12905-017-0428-5</doi>
+	<end_page xmlns="https://doaj.org/ontology/">9</end_page>
+	<issn xmlns="https://doaj.org/ontology/">1472-6874</issn>
+	<journal xmlns="https://doaj.org/ontology/">BMC Women's Health</journal>
+	<keyword xmlns="https://doaj.org/ontology/">Chlamydia trachomatis</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">Genotype</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">Lymphogranuloma venereum</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">Mexico</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">Pregnancy</keyword>
+	<language xmlns="https://doaj.org/ontology/">EN</language>
+	<number xmlns="https://doaj.org/ontology/">1</number>
+	<publisher xmlns="https://doaj.org/ontology/">BioMed Central</publisher>
+	<start_page xmlns="https://doaj.org/ontology/">1</start_page>
+	<term xmlns="https://doaj.org/ontology/">Gynecology and obstetrics</term>
+	<term xmlns="https://doaj.org/ontology/">Public aspects of medicine</term>
+	<title xmlns="https://doaj.org/ontology/">Frequency and genotypes of Chlamydia trachomatis in patients attending the obstetrics and gynecology clinics in Jalisco, Mexico and correlation with sociodemographic, behavioral, and biological factors</title>
+	<url xmlns="https://doaj.org/ontology/">http://link.springer.com/article/10.1186/s12905-017-0428-5</url>
+	<volume xmlns="https://doaj.org/ontology/">17</volume>
+	<year xmlns="https://doaj.org/ontology/">2017</year>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/be630594f7f6430c82c2dab8589e260c_0">
+	<affiliation xmlns="https://doaj.org/ontology/">Departamento de Patología Clínica, Hospital Universitario Dr. Jose Eleuterio Gonzalez, Universidad Autónoma de Nuevo León</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Néstor Casillas-Vega</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/be630594f7f6430c82c2dab8589e260c_1">
+	<affiliation xmlns="https://doaj.org/ontology/">Hospital Civil de Guadalajara, Fray Antonio Alcalde, y el Instituto de Patología Infecciosa y Experimental, Centro Universitario de Ciencias de la Salud, Universidad de Guadalajara</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Rayo Morfín-Otero</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/be630594f7f6430c82c2dab8589e260c_10">
+	<affiliation xmlns="https://doaj.org/ontology/">Departamento de Patología, Facultad de Medicina, Universidad Autónoma de Nuevo León</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Alberto Niderhauser-García</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/be630594f7f6430c82c2dab8589e260c_11">
+	<affiliation xmlns="https://doaj.org/ontology/">Servicio de Gastroenterología, Hospital Universitario Dr. Jose Eleuterio Gonzalez, Universidad Autónoma de Nuevo León</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Elvira Garza-González</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/be630594f7f6430c82c2dab8589e260c_2">
+	<affiliation xmlns="https://doaj.org/ontology/">Departamento de Microbiología e Inmunología, Facultad de Ciencias Biológicas Universidad Autónoma de Nuevo León</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Santos García</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/be630594f7f6430c82c2dab8589e260c_3">
+	<affiliation xmlns="https://doaj.org/ontology/">Departamento de Patología Clínica, Hospital Universitario Dr. Jose Eleuterio Gonzalez, Universidad Autónoma de Nuevo León</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Jorge Llaca-Díaz</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/be630594f7f6430c82c2dab8589e260c_4">
+	<affiliation xmlns="https://doaj.org/ontology/">Hospital Civil de Guadalajara, Fray Antonio Alcalde, y el Instituto de Patología Infecciosa y Experimental, Centro Universitario de Ciencias de la Salud, Universidad de Guadalajara</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Eduardo Rodríguez-Noriega</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/be630594f7f6430c82c2dab8589e260c_5">
+	<affiliation xmlns="https://doaj.org/ontology/">Coordinación de Epidemiología Hospitalaria, Hospital Universitario Dr. Jose Eleuterio Gonzalez, Universidad Autónoma de Nuevo León</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Adrián Camacho-Ortiz</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/be630594f7f6430c82c2dab8589e260c_6">
+	<affiliation xmlns="https://doaj.org/ontology/">Hospital Civil de Guadalajara, Fray Antonio Alcalde, y el Instituto de Patología Infecciosa y Experimental, Centro Universitario de Ciencias de la Salud, Universidad de Guadalajara</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Ma de la Merced Ayala-Castellanos</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/be630594f7f6430c82c2dab8589e260c_7">
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://doaj.org/search/jorge_maldonado"/>
+	<affiliation xmlns="https://doaj.org/ontology/">Servicio de Gastroenterología, Hospital Universitario Dr. Jose Eleuterio Gonzalez, Universidad Autónoma de Nuevo León</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Héctor J. Maldonado-Garza</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/be630594f7f6430c82c2dab8589e260c_8">
+	<affiliation xmlns="https://doaj.org/ontology/">Departamento de Patología, Facultad de Medicina, Universidad Autónoma de Nuevo León</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Jesús Ancer-Rodríguez</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/be630594f7f6430c82c2dab8589e260c_9">
+	<affiliation xmlns="https://doaj.org/ontology/">Departamento de Patología, Facultad de Medicina, Universidad Autónoma de Nuevo León</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Guadalupe Gallegos-Ávila</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/cc3d18c9e6834586aedf37c297ae5f2c">
+	<abstract xmlns="https://doaj.org/ontology/">The macroalgae consortium biomass in the Mexican Caribbean represents an emerging and promising biofuel feedstock. Its biological pretreatment and potential for energetic conversion to biomethane were investigated, since some macroalgae have hard cell walls that present an obstacle to efficient methane production when those substrates are used. It has been revealed by anaerobic digestion assays that pretreatment with a Bm-2 strain (Trametes hirsuta) isolated from decaying wood in Yucatan, Mexico was 104 L CH4 kg·VS−1; In fact, the fungal pretreatment produced a 20% increase in methane yield, with important amounts of alkali metals Ca, K, Mg, Na of 78 g/L, ash 35.5% and lignin 15.6%. It is unlikely that high concentrations of ash and alkali metals will produce an ideal feedstock for combustion or pyrolysis, but they can be recommended for a biological process.</abstract>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/cc3d18c9e6834586aedf37c297ae5f2c_0"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/cc3d18c9e6834586aedf37c297ae5f2c_1"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/cc3d18c9e6834586aedf37c297ae5f2c_2"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/cc3d18c9e6834586aedf37c297ae5f2c_3"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/cc3d18c9e6834586aedf37c297ae5f2c_4"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/cc3d18c9e6834586aedf37c297ae5f2c_5"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/cc3d18c9e6834586aedf37c297ae5f2c_6"/>
+	<country xmlns="https://doaj.org/ontology/">CH</country>
+	<creator xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/cc3d18c9e6834586aedf37c297ae5f2c_0"/>
+	<doi xmlns="https://doaj.org/ontology/">10.3390/en11030494</doi>
+	<issn xmlns="https://doaj.org/ontology/">1996-1073</issn>
+	<journal xmlns="https://doaj.org/ontology/">Energies</journal>
+	<keyword xmlns="https://doaj.org/ontology/">Trametes hirsuta</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">biological pretreatment</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">biomethane potential</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">macroalgae consortium</keyword>
+	<language xmlns="https://doaj.org/ontology/">EN</language>
+	<number xmlns="https://doaj.org/ontology/">3</number>
+	<publisher xmlns="https://doaj.org/ontology/">MDPI AG</publisher>
+	<start_page xmlns="https://doaj.org/ontology/">494</start_page>
+	<term xmlns="https://doaj.org/ontology/">Technology</term>
+	<title xmlns="https://doaj.org/ontology/">Biological Pretreatment of Mexican Caribbean Macroalgae Consortiums Using Bm-2 Strain (Trametes hirsuta) and Its Enzymatic Broth to Improve Biomethane Potential</title>
+	<url xmlns="https://doaj.org/ontology/">http://www.mdpi.com/1996-1073/11/3/494</url>
+	<volume xmlns="https://doaj.org/ontology/">11</volume>
+	<year xmlns="https://doaj.org/ontology/">2018</year>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/cc3d18c9e6834586aedf37c297ae5f2c_0">
+	<affiliation xmlns="https://doaj.org/ontology/">Unidad de Energía Renovable, Centro de Investigación Científica de Yucatán AC, Carretera Sierra Papacal-Chuburná Puerto, Km 5, Sierra Papacal, Mérida, Yucatán CP 97302, Mexico</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Raúl Tapia-Tussell</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/cc3d18c9e6834586aedf37c297ae5f2c_1">
+	<affiliation xmlns="https://doaj.org/ontology/">Unidad de Energía Renovable, Centro de Investigación Científica de Yucatán AC, Carretera Sierra Papacal-Chuburná Puerto, Km 5, Sierra Papacal, Mérida, Yucatán CP 97302, Mexico</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Julio Avila-Arias</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/cc3d18c9e6834586aedf37c297ae5f2c_2">
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://doaj.org/search/jorge_maldonado"/>
+	<affiliation xmlns="https://doaj.org/ontology/">Unidad de Energía Renovable, Centro de Investigación Científica de Yucatán AC, Carretera Sierra Papacal-Chuburná Puerto, Km 5, Sierra Papacal, Mérida, Yucatán CP 97302, Mexico</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Jorge Domínguez Maldonado</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/cc3d18c9e6834586aedf37c297ae5f2c_3">
+	<affiliation xmlns="https://doaj.org/ontology/">Unidad de Energía Renovable, Centro de Investigación Científica de Yucatán AC, Carretera Sierra Papacal-Chuburná Puerto, Km 5, Sierra Papacal, Mérida, Yucatán CP 97302, Mexico</affiliation>
+	<name xmlns="https://doaj.org/ontology/">David Valero</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/cc3d18c9e6834586aedf37c297ae5f2c_4">
+	<affiliation xmlns="https://doaj.org/ontology/">Unidad de Energía Renovable, Centro de Investigación Científica de Yucatán AC, Carretera Sierra Papacal-Chuburná Puerto, Km 5, Sierra Papacal, Mérida, Yucatán CP 97302, Mexico</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Edgar Olguin-Maciel</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/cc3d18c9e6834586aedf37c297ae5f2c_5">
+	<affiliation xmlns="https://doaj.org/ontology/">Laboratorio GeMBio, Centro de Investigación Científica de Yucatán AC, Calle No. 130 43 x 32 y 34 Col. Chuburná de Hidalgo, Mérida, Yucatán CP 97205, Mexico</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Daisy Pérez-Brito</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/cc3d18c9e6834586aedf37c297ae5f2c_6">
+	<affiliation xmlns="https://doaj.org/ontology/">Unidad de Energía Renovable, Centro de Investigación Científica de Yucatán AC, Carretera Sierra Papacal-Chuburná Puerto, Km 5, Sierra Papacal, Mérida, Yucatán CP 97302, Mexico</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Liliana Alzate-Gaviria</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/cdc0ac606d0242d5b0686104e90a350e">
+	<abstract xmlns="https://doaj.org/ontology/">Halotolerant bioanodes are considered an attractive alternative in microbial electrochemical systems, as they can operate under higher conductive electrolytes, in comparison with traditional wastewater and freshwater bioanodes. The dependency between energetic performance and polarization potential has been addressed in several works; however the vast majority discusses its effect when wastewater or freshwater inocula are employed, and fewer reports focus on inocula from highly-saline environments. Moreover, the effect of the polarization potential on current production is not fully understood. To determine if the polarization potential has a significant effect on current production, eight bioanodes were grown by chronoamperometry at positive and negative potentials relative to the reference electrode (+0.34 V/SHE and −0.16 V/SHE), in a three-electrode set-up employing sediments from a hyperhaline coastal lagoon. The maximum current density obtained was the same, despite the differences in the applied potential. Our findings indicate that even if differences in organic matter removal and coulombic efficiency are obtained, the polarization potential had no statistically significant effect on overall current density production.</abstract>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/cdc0ac606d0242d5b0686104e90a350e_0"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/cdc0ac606d0242d5b0686104e90a350e_1"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/cdc0ac606d0242d5b0686104e90a350e_2"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/cdc0ac606d0242d5b0686104e90a350e_3"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/cdc0ac606d0242d5b0686104e90a350e_4"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/cdc0ac606d0242d5b0686104e90a350e_5"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/cdc0ac606d0242d5b0686104e90a350e_6"/>
+	<country xmlns="https://doaj.org/ontology/">CH</country>
+	<creator xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/cdc0ac606d0242d5b0686104e90a350e_0"/>
+	<doi xmlns="https://doaj.org/ontology/">10.3390/en11030529</doi>
+	<issn xmlns="https://doaj.org/ontology/">1996-1073</issn>
+	<journal xmlns="https://doaj.org/ontology/">Energies</journal>
+	<keyword xmlns="https://doaj.org/ontology/">halotolerant bioanodes</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">microbial electrochemical systems</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">polarization potential</keyword>
+	<language xmlns="https://doaj.org/ontology/">EN</language>
+	<number xmlns="https://doaj.org/ontology/">3</number>
+	<publisher xmlns="https://doaj.org/ontology/">MDPI AG</publisher>
+	<start_page xmlns="https://doaj.org/ontology/">529</start_page>
+	<term xmlns="https://doaj.org/ontology/">Technology</term>
+	<title xmlns="https://doaj.org/ontology/">Polarization Potential Has No Effect on Maximum Current Density Produced by Halotolerant Bioanodes</title>
+	<url xmlns="https://doaj.org/ontology/">http://www.mdpi.com/1996-1073/11/3/529</url>
+	<volume xmlns="https://doaj.org/ontology/">11</volume>
+	<year xmlns="https://doaj.org/ontology/">2018</year>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/cdc0ac606d0242d5b0686104e90a350e_0">
+	<affiliation xmlns="https://doaj.org/ontology/">Energía Renovable, Centro de Investigación Científica de Yucatán (CICY), Km 5 Carretera Sierra Papacal-Chuburná Puerto, Yucatán 97302, Mexico</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Muriel González-Muñoz</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/cdc0ac606d0242d5b0686104e90a350e_1">
+	<affiliation xmlns="https://doaj.org/ontology/">Separation and Conversion Technology, Flemish Institute for Technological Research (VITO), Boeretang 200, 2400 Mol, Belgium</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Xochitl Dominguez-Benetton</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/cdc0ac606d0242d5b0686104e90a350e_2">
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://doaj.org/search/jorge_maldonado"/>
+	<affiliation xmlns="https://doaj.org/ontology/">Energía Renovable, Centro de Investigación Científica de Yucatán (CICY), Km 5 Carretera Sierra Papacal-Chuburná Puerto, Yucatán 97302, Mexico</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Jorge Domínguez-Maldonado</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/cdc0ac606d0242d5b0686104e90a350e_3">
+	<affiliation xmlns="https://doaj.org/ontology/">Departamento de Recursos del Mar, Centro de Investigación y Estudios Avanzados del Instituto Politécnico Nacional (CINVESTAV-Mérida), Km 6 Antigua Carretera a Progreso, Yucatán 97310, Mexico</affiliation>
+	<name xmlns="https://doaj.org/ontology/">David Valdés-Lozano</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/cdc0ac606d0242d5b0686104e90a350e_4">
+	<affiliation xmlns="https://doaj.org/ontology/">Energía Renovable, Centro de Investigación Científica de Yucatán (CICY), Km 5 Carretera Sierra Papacal-Chuburná Puerto, Yucatán 97302, Mexico</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Daniella Pacheco-Catalán</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/cdc0ac606d0242d5b0686104e90a350e_5">
+	<affiliation xmlns="https://doaj.org/ontology/">Departamento de Microbiología Ambiental y Biotecnología, Universidad Autónoma de Campeche (UACAM), Av. Agustín Melgar S/N, Col. Buenavista, Campeche 24039, Mexico</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Otto Ortega-Morales</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/cdc0ac606d0242d5b0686104e90a350e_6">
+	<affiliation xmlns="https://doaj.org/ontology/">Energía Renovable, Centro de Investigación Científica de Yucatán (CICY), Km 5 Carretera Sierra Papacal-Chuburná Puerto, Yucatán 97302, Mexico</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Liliana Alzate-Gaviria</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/d28b82518099400fb684e88e47e51aff">
+	<abstract xmlns="https://doaj.org/ontology/">En  México,  la  población  caprina  se  concentra  en  sistemas  de  producción  extensivos,  con  hatos  formados en  mayoría  por  cabras  que  los  productores  llaman  criollas,  denominación  ahora  aceptada como locales. La alimentación de la cabra  lechera en el sistema extensivo es a través del  pastoreo, pero éste, por sí solo no puede satisfacer las necesidades nutricion ales de la cabra. Por  tanto, si se quiere aumentar la producción de leche, es necesario complementar la alimentación de  las cabras en pastoreo. Al respecto, en rumiantes en pastoreo que han sido complementados con  un  alimento  integral  se  han  reportado  aume ntos  en  la  producción  de  leche.  Por  lo  tanto,  el  objetivo  de  estudio  fue  evaluar  el  efecto  en  la  producción  y  composición  de  la  leche  de  cabras  locales  en  pastoreo  complementadas  con  un  alimento  integral.  Para  ello,  se  realizaron  dos  experimentos.  En  el  pr imero,  se  evaluó  el  efecto  de  cambiar  de  un  sistema  de  pastoreo  a  uno  estabulado,  con  el  fin  de  desafiar  a  las  cabras  a  que  expresaran  su  potencial  productivo  al  ofrecerles  un  alimento  integral.  En  el  segundo,  se  evaluó  el  efecto  en  producción  de  leche  y  c omponentes  de  la  leche  de  cabras  en  pastoreo  al  complementarlas  con  diferentes  niveles  del  alimento  integral  usado  en  el  experimento  1.  Los  datos  de  producción  de  leche  y  composición  química  en  leche  de  ambos  experimentos  fueron  analizados  utilizando  un  mo delo  de  medidas  repetidas. Los datos de peso vivo y condición corporal final de las cabras, se analizaron como un  diseño completamente al azar. Se realizó un análisis de costos parciales en ambos experimentos,  con  el  fin  de  conocer  la  viabilidad  económica  de  los  tratamientos.  En  el  experimento  1,  la  concentración  de  grasa  en  leche  no  se  modificó  (p  &gt;  0.05)  por  efecto  de  tratamientos,  pero  si  aumentó (p ≤ 0.01) la producción de leche y la concentración (p ≤ 0.05) de proteína y lactosa en  leche  de  cabras  esta buladas  comparadas  con  cabras  en  pastoreo.  En  el  experimento  2,  la  complementación a cabras en pastoreo con el alimento integral a niveles de 500 g d - 1 y 1000 g d - 1 no cambió (p &gt; 0.05) la concentración de grasa en leche, pero se mejoró (p ≤ 0.01) la condi ción  corporal de las cabras y aumentó (p ≤ 0.01) la producción de leche y concentración (p ≤ 0.05) de  proteína  y  lactosa  en  leche  respecto  a  cabras  en  solo  pastoreo.  El  análisis  de  costos  parciales  indicó que la complementación de cabras en pastoreo no es  viable económicamente. Por lo tanto,  se  recomienda  realizar  mayor  investigación  bajo  un  esquema  de  alimentos  de  bajo  costo  y  negociación para mejorar precios por calidad de leche.</abstract>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/d28b82518099400fb684e88e47e51aff_0"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/d28b82518099400fb684e88e47e51aff_1"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/d28b82518099400fb684e88e47e51aff_2"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/d28b82518099400fb684e88e47e51aff_3"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/d28b82518099400fb684e88e47e51aff_4"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/d28b82518099400fb684e88e47e51aff_5"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/d28b82518099400fb684e88e47e51aff_6"/>
+	<country xmlns="https://doaj.org/ontology/">MX</country>
+	<creator xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/d28b82518099400fb684e88e47e51aff_0"/>
+	<end_page xmlns="https://doaj.org/ontology/">75</end_page>
+	<issn xmlns="https://doaj.org/ontology/">2007-0705</issn>
+	<journal xmlns="https://doaj.org/ontology/">Nova Scientia</journal>
+	<language xmlns="https://doaj.org/ontology/">EN</language>
+	<language xmlns="https://doaj.org/ontology/">ES</language>
+	<number xmlns="https://doaj.org/ontology/">18</number>
+	<publisher xmlns="https://doaj.org/ontology/">Universidad De La Salle Bajío</publisher>
+	<start_page xmlns="https://doaj.org/ontology/">55</start_page>
+	<term xmlns="https://doaj.org/ontology/">Science</term>
+	<term xmlns="https://doaj.org/ontology/">Science (General)</term>
+	<term xmlns="https://doaj.org/ontology/">Social Sciences</term>
+	<term xmlns="https://doaj.org/ontology/">Social sciences (General)</term>
+	<title xmlns="https://doaj.org/ontology/">Uso de un alimento integral como complemento a  cabras locales en pastoreo: respuesta en producción  y composición química de la leche</title>
+	<url xmlns="https://doaj.org/ontology/">http://www.redalyc.org/articulo.oa?id=203350918004</url>
+	<volume xmlns="https://doaj.org/ontology/">9</volume>
+	<year xmlns="https://doaj.org/ontology/">2017</year>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/d28b82518099400fb684e88e47e51aff_0">
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://doaj.org/search/jorge_maldonado"/>
+	<name xmlns="https://doaj.org/ontology/">Jorge Alonso Maldonado-Jaquez</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/d28b82518099400fb684e88e47e51aff_1">
+	<name xmlns="https://doaj.org/ontology/">Lorenzo Danilo Granados-Rivera</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/d28b82518099400fb684e88e47e51aff_2">
+	<name xmlns="https://doaj.org/ontology/">Omar Hernández-Mendo</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/d28b82518099400fb684e88e47e51aff_3">
+	<name xmlns="https://doaj.org/ontology/">Francisco Javier Pastor-Lopez</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/d28b82518099400fb684e88e47e51aff_4">
+	<name xmlns="https://doaj.org/ontology/">Luis Maconetzin Isidro - Requejo</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/d28b82518099400fb684e88e47e51aff_5">
+	<name xmlns="https://doaj.org/ontology/">Homero Salinas-González</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/d28b82518099400fb684e88e47e51aff_6">
+	<name xmlns="https://doaj.org/ontology/">Glafiro Torres-Hernández</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/e14b517650024bc7b5b62bf5bd0107d9">
+	<abstract xmlns="https://doaj.org/ontology/">The establishment of marine protected areas (MPA) has become the prevailing management strategy to stop the degradation of coastal and marine ecosystems; however, the effectiveness of MPAs  is affected not only by ecological factors but also by social ones. Identifying and understanding socioeconomic conditions and the institutional context of fishing communities is essential to achieve  success with MPAs. We propose a practical methodology for estimating the adaptive capacity (AC) of local communities to the establishment of MPAs. Adaptive capacity is defined as the ability of households to anticipate and respond to disturbances, natural or human induced, and to minimize, cope with, and recover from the consequences. We propose an index of adaptive capacity (IAC) of fishing communities that can be estimated at a local scale. This composite index comprises three dimensions, i.e., socioeconomic, social-ecological, and socio-political/institutional, which attempt to capture comprehensively the determinants of AC. Each dimension is constructed from three indicators, whose estimation is based on information collected from a household structured survey for which we suggested specific questions. We proposed the use of a Min function to highlight the weakest dimension of the IAC and guide decision makers with respect to elements that should be addressed to improve AC. A discussion about normalization and aggregation issues is also included.</abstract>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/e14b517650024bc7b5b62bf5bd0107d9_0"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/e14b517650024bc7b5b62bf5bd0107d9_1"/>
+	<country xmlns="https://doaj.org/ontology/">CA</country>
+	<creator xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/e14b517650024bc7b5b62bf5bd0107d9_0"/>
+	<doi xmlns="https://doaj.org/ontology/">10.5751/ES-05962-190116</doi>
+	<issn xmlns="https://doaj.org/ontology/">1708-3087</issn>
+	<journal xmlns="https://doaj.org/ontology/">Ecology and Society</journal>
+	<keyword xmlns="https://doaj.org/ontology/">adaptive capacity determinants</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">fishery resources</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">governance</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">marine ecosystems management</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">sustainable livelihoods</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">vulnerability</keyword>
+	<language xmlns="https://doaj.org/ontology/">EN</language>
+	<number xmlns="https://doaj.org/ontology/">1</number>
+	<publisher xmlns="https://doaj.org/ontology/">Resilience Alliance</publisher>
+	<start_page xmlns="https://doaj.org/ontology/">16</start_page>
+	<term xmlns="https://doaj.org/ontology/">Biology (General)</term>
+	<term xmlns="https://doaj.org/ontology/">Ecology</term>
+	<title xmlns="https://doaj.org/ontology/">Estimating the Adaptive Capacity of Local Communities at Marine Protected Areas in Latin America: a Practical Approach</title>
+	<url xmlns="https://doaj.org/ontology/">http://www.ecologyandsociety.org/vol19/iss1/art16/</url>
+	<volume xmlns="https://doaj.org/ontology/">19</volume>
+	<year xmlns="https://doaj.org/ontology/">2014</year>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/e14b517650024bc7b5b62bf5bd0107d9_0">
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://doaj.org/search/jorge_maldonado"/>
+	<affiliation xmlns="https://doaj.org/ontology/">University of Los Andes - CEDE</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Jorge H. Maldonado</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/e14b517650024bc7b5b62bf5bd0107d9_1">
+	<affiliation xmlns="https://doaj.org/ontology/">Conservation Strategy Fund</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Rocio del Pilar. Moreno-Sánchez</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/e82dd1a2221448e7a43ce06d75b7cbe8">
+	<abstract xmlns="https://doaj.org/ontology/">Having an accurate model of the power curve of a wind turbine allows us to better monitor its operation and planning of storage capacity. Since wind speed and direction is of a highly stochastic nature, the forecasting of the power generated by the wind turbine is of the same nature as well. In this paper, a method for obtaining a robust confidence band containing the power curve of a wind turbine under test conditions is presented. Here, the confidence band is bound by two curves which are estimated using parametric statistical inference techniques. However, the observations that are used for carrying out the statistical analysis are obtained by using the binning method, and in each bin, the outliers are eliminated by using a censorship process based on robust statistical techniques. Then, the observations that are not outliers are divided into observation sets. Finally, both the power curve of the wind turbine and the two curves that define the robust confidence band are estimated using each of the previously mentioned observation sets.</abstract>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/e82dd1a2221448e7a43ce06d75b7cbe8_0"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/e82dd1a2221448e7a43ce06d75b7cbe8_1"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/e82dd1a2221448e7a43ce06d75b7cbe8_2"/>
+	<contributor xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/e82dd1a2221448e7a43ce06d75b7cbe8_3"/>
+	<country xmlns="https://doaj.org/ontology/">CH</country>
+	<creator xmlns="https://doaj.org/ontology/" rdf:resource="https://doaj.org/article/e82dd1a2221448e7a43ce06d75b7cbe8_0"/>
+	<doi xmlns="https://doaj.org/ontology/">10.3390/s16122080</doi>
+	<issn xmlns="https://doaj.org/ontology/">1424-8220</issn>
+	<journal xmlns="https://doaj.org/ontology/">Sensors</journal>
+	<keyword xmlns="https://doaj.org/ontology/">SCADA system</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">power curve</keyword>
+	<keyword xmlns="https://doaj.org/ontology/">power-curve confidence band</keyword>
+	<language xmlns="https://doaj.org/ontology/">EN</language>
+	<number xmlns="https://doaj.org/ontology/">12</number>
+	<publisher xmlns="https://doaj.org/ontology/">MDPI AG</publisher>
+	<start_page xmlns="https://doaj.org/ontology/">2080</start_page>
+	<term xmlns="https://doaj.org/ontology/">Chemical technology</term>
+	<title xmlns="https://doaj.org/ontology/">Modeling of a Robust Confidence Band for the Power Curve of a Wind Turbine</title>
+	<url xmlns="https://doaj.org/ontology/">http://www.mdpi.com/1424-8220/16/12/2080</url>
+	<volume xmlns="https://doaj.org/ontology/">16</volume>
+	<year xmlns="https://doaj.org/ontology/">2016</year>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/e82dd1a2221448e7a43ce06d75b7cbe8_0">
+	<affiliation xmlns="https://doaj.org/ontology/">Departamento de Ciencias de la Computación y Electrónica, Universidad Técnica Particular de Loja, Campus de la Universidad Técnica Particular de Loja, Calle San Cayetano Alto s/n, Loja 1101608, Ecuador</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Wilmar Hernandez</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/e82dd1a2221448e7a43ce06d75b7cbe8_1">
+	<affiliation xmlns="https://doaj.org/ontology/">Departamento de Matemática a las Tecnologías de la Información y Comunicaciones, Universidad Politécnica de Madrid, Av. Complutense Nº 30, 28040 Madrid, Spain</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Alfredo Méndez</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/e82dd1a2221448e7a43ce06d75b7cbe8_2">
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://doaj.org/search/jorge_maldonado"/>
+	<affiliation xmlns="https://doaj.org/ontology/">Departamento de Ciencias de la Computación y Electrónica, Universidad Técnica Particular de Loja, Campus de la Universidad Técnica Particular de Loja, Calle San Cayetano Alto s/n, Loja 1101608, Ecuador</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Jorge L. Maldonado-Correa</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://doaj.org/article/e82dd1a2221448e7a43ce06d75b7cbe8_3">
+	<affiliation xmlns="https://doaj.org/ontology/">Departamento de Matemática a las Tecnologías de la Información y Comunicaciones, Universidad Politécnica de Madrid, Av. Complutense Nº 30, 28040 Madrid, Spain</affiliation>
+	<name xmlns="https://doaj.org/ontology/">Francisco Balleteros</name>
+</rdf:Description>
+
+</rdf:RDF>

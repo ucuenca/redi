@@ -159,6 +159,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         List<Provider> Providers = new ArrayList<>();
         Providers.add(new Provider("Authors", constantService.getAuthorsProviderGraph(), sparqlService));
         Providers.add(new Provider("Scopus", constantService.getScopusGraph(), sparqlService));
+        Providers.add(new Provider("DOAJ", constantService.getDOAJGraph(), sparqlService));
         Providers.add(new Provider("Scholar", constantService.getGoogleScholarGraph(), sparqlService));
         Providers.add(new Provider("Academics", constantService.getAcademicsKnowledgeGraph(), sparqlService));
         Providers.add(new Provider("Scielo", constantService.getScieloGraph(), sparqlService));

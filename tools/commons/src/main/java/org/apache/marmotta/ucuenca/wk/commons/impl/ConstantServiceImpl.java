@@ -334,6 +334,11 @@ public class ConstantServiceImpl implements ConstantService {
     public String getScieloGraph() {
         return confService.getBaseContext() + "provider/ScieloProvider";
     }
+    
+    @Override
+    public String getDOAJGraph() {
+        return confService.getBaseContext() + "provider/DOAJProvider";
+    }
 
     @Override
     public String getDspaceGraph() {
