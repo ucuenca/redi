@@ -163,6 +163,10 @@ public class DOAJRawProvider extends AbstractHttpProvider {
                     addProperty(readJsonObj1.get(j), "email", DOAJPREFIX + "email", tmpAu, auUR);
                     addProperty(readJsonObj1.get(j), "affiliation", DOAJPREFIX + "affiliation", tmpAu, auUR);
                 }
+                if (check && readJsonObj1.size() > MAX_AUTHORS_PER_PAPER) {
+                    log.info("Ignoring {} it has more than 20 authors", aDocURL);
+                    check = false;
+                }
                 if (check) {
                     triples.addAll(tmpAu);
                     List<LinkedHashMap<String, String>> bibj = readJsonObj(doc, MAIN_NODE + i + "].bibjson");
@@ -200,6 +204,7 @@ public class DOAJRawProvider extends AbstractHttpProvider {
         }
         return Collections.emptyList();
     }
+    private static final int MAX_AUTHORS_PER_PAPER = 20;
     private static final String MAIN_NODE = "$.results[";
 
     private void addProperties(List<LinkedHashMap<String, String>> data, String prop, String ontProp, Model triples, String doc) {
@@ -241,7 +246,7 @@ public class DOAJRawProvider extends AbstractHttpProvider {
             List<String> ls = Lists.newArrayList(split[i].split("-"));
             String queryP = "";
             //if (ls.size() > 1) {
-                // queryP += "(";
+            // queryP += "(";
             //}
             for (int j = 0; j < ls.size(); j++) {
                 String n = ls.get(j);
@@ -249,7 +254,7 @@ public class DOAJRawProvider extends AbstractHttpProvider {
                 queryP += tk.toLowerCase() + (j == ls.size() - 1 ? " " : " ");
             }
             //if (ls.size() > 1) {
-                // queryP += ")";
+            // queryP += ")";
             //}
             query += queryP + (i == split.length - 1 ? " " : " ");
         }
