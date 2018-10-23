@@ -797,20 +797,24 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public void postProcessAffiliations() {
+    public void postProcessAffiliations(String... data) {
         try {
-            postProcessAffiliationsWp();
+            for (String p : data) {
+                postProcessAffiliationsWp(p);
+            }
+
         } catch (Exception ex) {
             log.warn("Unknown error Post Process Affiliations , please check the catalina log for further details.");
             log.warn("Exception {}", ex);
         }
     }
 
-    public void postProcessAffiliationsWp() throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
+    public void postProcessAffiliationsWp(String p) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
         String q = "PREFIX schema: <http://schema.org/>\n"
                 + "select ?a ?n ?aff {\n"
                 + "	 graph <" + constantService.getAuthorsGraph() + "> {\n"
                 + "    	?a <http://purl.org/dc/terms/provenance> ?p .\n"
+                + "    	?a <http://purl.org/dc/terms/provenance> <" + p + "> .\n"
                 + "        ?a schema:affiliation ?aff .\n"
                 + "    }\n"
                 + "  graph <" + constantService.getEndpointsGraph() + ">  {\n"
@@ -848,7 +852,7 @@ public class AuthorServiceImpl implements AuthorService {
             Boolean checkAffiliations = ap.checkAffiliations(bp);
             if (checkAffiliations != null && !checkAffiliations) {
                 String q2 = "delete {\n"
-                        +"graph <" + constantService.getAuthorsGraph() + "> {\n"
+                        + "graph <" + constantService.getAuthorsGraph() + "> {\n"
                         + "		?a <http://purl.org/dc/terms/provenance> ?p .\n"
                         + "	}	\n"
                         + "}\n"
