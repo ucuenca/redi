@@ -23,8 +23,8 @@ public class TestDOAJProvider extends ProviderTestBase {
 
     @Test
     public void testDOAJ() throws RepositoryException, DataRetrievalException, RDFHandlerException, FileNotFoundException {
-        ClientResponse retrieveResource = ldclient.retrieveResource("https://doaj.org/search/pedro-martin_merino");
+        ClientResponse retrieveResource = ldclient.retrieveResource("https://doaj.org/search/luis-miguel_torres");
         Model data = retrieveResource.getData();
-        Assert.assertEquals(data.size(), 110);
+        Assert.assertEquals(data.size(), 416);
     }
 }

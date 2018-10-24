@@ -67,6 +67,10 @@ public class DOAJRawProvider extends AbstractHttpProvider {
     public static final String DESCRIBEAPI = "https://doaj.org/article/%s";
     public static final String DOAJPREFIX = "https://doaj.org/ontology/";
 
+    private static final String NAMEFIELD = "name";
+    private static final int MAX_AUTHORS_PER_PAPER = 20;
+    private static final String MAIN_NODE = "$.results[";
+
     /**
      * Return the name of this data provider. To be used e.g. in the
      * configuration and in log messages.
@@ -146,12 +150,16 @@ public class DOAJRawProvider extends AbstractHttpProvider {
                 boolean check = false;
                 Model tmpAu = new LinkedHashModel();
                 for (int j = 0; j < readJsonObj1.size(); j++) {
+                    LinkedHashMap<String, String> get1 = readJsonObj1.get(j);
                     String auUR = aDocURL + "_" + j;
                     URI createURI = factory.createURI(auUR);
                     Person p2 = new Person();
                     p2.Name = new ArrayList<>();
-                    p2.Name.add(Lists.newArrayList(readJsonObj1.get(j).get("name")));
-                    if (p1.checkName(p2, false)) {
+                    if (get1.containsKey(NAMEFIELD)) {
+                        p2.Name.add(Lists.newArrayList(get1.get(NAMEFIELD)));
+                    }
+                    Boolean checkName = p1.checkName(p2, false);
+                    if (checkName != null && checkName) {
                         check = true;
                         tmpAu.add(createURI, OWL.ONEOF, factory.createURI(resource));
                     }
@@ -159,7 +167,7 @@ public class DOAJRawProvider extends AbstractHttpProvider {
                     if (j == 0) {
                         tmpAu.add(factory.createURI(aDocURL), factory.createURI(DOAJPREFIX + "creator"), createURI);
                     }
-                    addProperty(readJsonObj1.get(j), "name", DOAJPREFIX + "name", tmpAu, auUR);
+                    addProperty(readJsonObj1.get(j), NAMEFIELD, DOAJPREFIX + NAMEFIELD, tmpAu, auUR);
                     addProperty(readJsonObj1.get(j), "email", DOAJPREFIX + "email", tmpAu, auUR);
                     addProperty(readJsonObj1.get(j), "affiliation", DOAJPREFIX + "affiliation", tmpAu, auUR);
                 }
@@ -204,8 +212,6 @@ public class DOAJRawProvider extends AbstractHttpProvider {
         }
         return Collections.emptyList();
     }
-    private static final int MAX_AUTHORS_PER_PAPER = 20;
-    private static final String MAIN_NODE = "$.results[";
 
     private void addProperties(List<LinkedHashMap<String, String>> data, String prop, String ontProp, Model triples, String doc) {
         for (LinkedHashMap<String, String> a : data) {
