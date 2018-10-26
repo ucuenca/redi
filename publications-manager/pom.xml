@@ -170,6 +170,11 @@
         </dependency>
         <dependency>
             <groupId>ec.edu.cedia.redi</groupId>
+            <artifactId>doaj-provider</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ec.edu.cedia.redi</groupId>
             <artifactId>scholar-provider</artifactId>
             <version>${project.version}</version>
         </dependency>

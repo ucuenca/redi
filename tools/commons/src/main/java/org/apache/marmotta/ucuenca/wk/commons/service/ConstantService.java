@@ -114,6 +114,8 @@ public interface ConstantService {
     String getDBLPGraph();
 
     String getScieloGraph();
+    
+    String getDOAJGraph();
 
     String getExternalAuthorsGraph();
 

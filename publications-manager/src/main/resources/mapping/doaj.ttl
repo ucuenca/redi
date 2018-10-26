@@ -1,0 +1,175 @@
+@prefix r2r: <http://www4.wiwiss.fu-berlin.de/bizer/r2r/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix doaj: <https://doaj.org/ontology/> .
+@prefix uc: <http://ucuenca.edu.ec/ontology#> .  
+@prefix scoro: <http://purl.org/spar/scoro/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix bibo: <http://purl.org/ontology/bibo/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix nature: <http://ns.nature.com/terms/> .
+
+
+
+uc:mapColl1 a r2r:MappingCollection;
+    r2r:prefixDefinitions "vcard: <http://www.w3.org/2006/vcard/ns#> . rdfs: <http://www.w3.org/2000/01/rdf-schema#> . bibo: <http://purl.org/ontology/bibo/> . dct: <http://purl.org/dc/terms/> . scoro: <http://purl.org/spar/scoro/> . schema: <http://schema.org/> . foaf: <http://xmlns.com/foaf/0.1/> . uc: <http://ucuenca.edu.ec/ontology#> . doaj: <https://doaj.org/ontology/> . owl: <http://www.w3.org/2002/07/owl#> . nature: <http://ns.nature.com/terms/> ." .
+
+
+
+uc:TypePersonName a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ doaj:name ?name" ;
+    r2r:targetPattern "?SUBJ foaf:name ?name" ;
+    r2r:targetPattern "?SUBJ a foaf:Person" ;
+    r2r:targetPattern "?SUBJ dct:provenance uc:DOAJ" .
+
+uc:TypePersonEmail a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ doaj:email ?email" ;
+    r2r:targetPattern "?SUBJ vcard:hasEmail ?email" ;
+    r2r:targetPattern "?SUBJ a foaf:Person" ;
+    r2r:targetPattern "?SUBJ dct:provenance uc:DOAJ" .
+
+
+
+uc:TypeArticleTitle a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ doaj:abstract ?a" ;
+    r2r:targetPattern "?SUBJ dct:title ?a" ;
+    r2r:targetPattern "?SUBJ a bibo:AcademicArticle" ;
+    r2r:targetPattern "?SUBJ dct:provenance uc:DOAJ" .
+
+uc:TypeContributor a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ doaj:contributor ?a" ;
+    r2r:targetPattern "?SUBJ dct:contributor ?a" .
+
+uc:TypeCreator a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ doaj:creator ?a" ;
+    r2r:targetPattern "?SUBJ dct:creator ?a" .
+
+
+uc:PropDOI a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ doaj:doi ?a" ;
+    r2r:targetPattern "?SUBJ bibo:doi ?a" .
+
+uc:PropISSN a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ doaj:issn ?a" ;
+    r2r:targetPattern "?SUBJ bibo:issn ?a" .
+
+uc:PropURI a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ doaj:url ?a" ;
+    r2r:targetPattern "?SUBJ bibo:uri ?a" .
+
+uc:PropVol a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ doaj:volume ?a" ;
+    r2r:targetPattern "?SUBJ bibo:volume ?a" .
+
+uc:PropIss a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ doaj:number ?a" ;
+    r2r:targetPattern "?SUBJ bibo:issue ?a" .
+
+
+uc:PropSP a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ doaj:start_page ?a" ;
+    r2r:targetPattern "?SUBJ bibo:pageStart ?a" .
+
+uc:PropEP a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ doaj:end_page ?a" ;
+    r2r:targetPattern "?SUBJ bibo:pageEnd ?a" .
+
+
+uc:PropLA a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ doaj:language ?a" ;
+    r2r:targetPattern "?SUBJ dct:language ?a" .
+
+
+
+uc:PropYE a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ doaj:year ?a" ;
+    r2r:targetPattern "?SUBJ schema:copyrightYear ?a" ;
+    r2r:targetPattern "?SUBJ bibo:created ?a" ;
+    r2r:targetPattern "?SUBJ nature:coverDate ?a"  .
+
+
+uc:PropPubli a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ doaj:publisher ?a" ;
+    r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/doaj/publisher/',xpath:encode-for-uri(?a))" ;
+    r2r:targetPattern "?SUBJ dct:publisher ?<urip>" ;
+    r2r:targetPattern "?<urip> a foaf:Organization" ;
+    r2r:targetPattern "?<urip> rdfs:label ?a"  .
+
+
+
+uc:PropAff a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ doaj:affiliation ?a" ;
+    r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/doaj/affiliation/',xpath:encode-for-uri(?a))" ;
+    r2r:targetPattern "?SUBJ schema:memberOf ?<urip>" ;
+    r2r:targetPattern "?<urip> a foaf:Organization" ;
+    r2r:targetPattern "?<urip> foaf:name ?a"  .
+
+
+
+uc:topicin a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ doaj:term ?b . ?SUBJ doaj:contributor ?a ." ;
+    r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/doaj/topic/',xpath:encode-for-uri(?b))" ;
+    r2r:targetPattern "?a foaf:topic_interest ?<urip>" ;
+    r2r:targetPattern "?<urip> rdfs:label ?b" .
+
+
+uc:pubkw a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ doaj:keyword ?b " ;
+    r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/doaj/keyword/',xpath:encode-for-uri(?b))" ;
+    r2r:targetPattern "?SUBJ dct:subject ?<urip>" ;
+    r2r:targetPattern "?<urip> rdfs:label ?b" .
+
+
+
+uc:pubjr a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ doaj:journal ?b " ;
+    r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/doaj/journal/',xpath:encode-for-uri(?b))" ;
+    r2r:targetPattern "?SUBJ dct:isPartOf ?<urip>" ;
+    r2r:targetPattern "?<urip> a bibo:Journal" ;
+    r2r:targetPattern "?<urip> rdfs:label ?b" .
+
+
+uc:pubjrISSN a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ doaj:journal ?b . ?SUBJ doaj:issn ?c ." ;
+    r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/doaj/journal/',xpath:encode-for-uri(?b))" ;
+    r2r:targetPattern "?<urip> bibo:issn ?c" .
+
+uc:pubjrCou a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ doaj:journal ?b . ?SUBJ doaj:country ?c ." ;
+    r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/doaj/journal/',xpath:encode-for-uri(?b))" ;
+    r2r:targetPattern "?<urip> uc:country ?c" .
+
+uc:pubjrPub a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ doaj:journal ?b . ?SUBJ doaj:publisher ?c ." ;
+    r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/doaj/journal/',xpath:encode-for-uri(?b))" ;
+    r2r:transformation "?urip2 = concat('https://redi.cedia.edu.ec/doaj/publisher/',xpath:encode-for-uri(?c))" ;
+    r2r:targetPattern "?<urip> dct:publisher ?<urip2>" .
+
+uc:oneOf a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ owl:oneOf ?b" ;
+    r2r:targetPattern "?SUBJ owl:oneOf ?b" .

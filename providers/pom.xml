@@ -18,6 +18,7 @@
         <module>scopus-provider</module>
         <module>academics-provider</module>
         <module>scielo-provider</module>
+        <module>doaj-provider</module>
         <module>springer-provider</module>
     </modules>
 </project>

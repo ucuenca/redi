@@ -115,6 +115,9 @@ public class CommonServiceImpl implements CommonService {
     private org.apache.marmotta.ucuenca.wk.pubman.services.providers.ScieloProviderService providerServiceScielo;
 
     @Inject
+    private org.apache.marmotta.ucuenca.wk.pubman.services.providers.DOAJProviderService providerServiceDOAJ;
+    
+    @Inject
     private ScopusProviderService providerServiceScopus1;
     private Thread scopusThread;
     private Thread academicsThread;
@@ -122,6 +125,7 @@ public class CommonServiceImpl implements CommonService {
     private Thread scieloThread;
     private Thread scholarThread;
     private Thread springerThread;
+    private Thread doajThread;
 
     private final JsonNodeFactory factory = JsonNodeFactory.instance;
 
@@ -234,7 +238,7 @@ public class CommonServiceImpl implements CommonService {
     public String organizationListExtracted() {
         try {
             List<Provider> prov = getProviders();
-           /* Map<String, String> mprov = new HashMap();
+            /* Map<String, String> mprov = new HashMap();
             for (Provider p : prov) {
 
                 mprov.put(p.Graph, p.Name);
@@ -397,7 +401,7 @@ public class CommonServiceImpl implements CommonService {
             }
         });
         scieloThread.start();
-        return "Data Provider DBLP are extracted in background.   Please review main.log file for details";
+        return "Data Provider Scielo are extracted in background.   Please review main.log file for details";
     }
 
     @Override
@@ -835,7 +839,7 @@ public class CommonServiceImpl implements CommonService {
     @Override
     public String getClusterGraph(String cluster) {
         try {
-          /*  String query = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+            /*  String query = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
                     + "PREFIX dct: <http://purl.org/dc/terms/>\n"
                     + "PREFIX schema: <http://schema.org/>  \n"
                     + "PREFIX uc: <http://ucuenca.edu.ec/ontology#> \n"
@@ -879,7 +883,6 @@ public class CommonServiceImpl implements CommonService {
                     + "                 ?person dct:isPartOf <" + cluster + "> .\n"
                     + "                 ?person dct:isPartOf ?sub .\n"
                     + "                 ?sub   dct:isPartOf <" + cluster + "> ."
-   
                     + "                 ?sub a  <http://ucuenca.edu.ec/ontology#SubCluster> .\n"
                     + "                   ?sub rdfs:label ?orgnames .\n"
                     + "                   filter ( lang(?orgnames) = \"en\" )\n"
@@ -1276,7 +1279,7 @@ public class CommonServiceImpl implements CommonService {
                      String[] arrayaux = new String[clusters.size()];
                      arrayaux = clusters.toArray(arrayaux);
                      a.setCluster(arrayaux);*/
-                    /* String lc = responseCluster.get(0).get("lc").stringValue();
+ /* String lc = responseCluster.get(0).get("lc").stringValue();
                      a.setCluster(lc.split("\\|"));*/
                 }
 
@@ -1505,5 +1508,20 @@ public class CommonServiceImpl implements CommonService {
                 log.error(ex.getMessage(), ex);
             }
         }
+    }
+
+    @Override
+    public String getDataFromDOAJProvidersService(final String[] organizations) {
+        if (doajThread != null && doajThread.isAlive()) {
+            return "Process is executing.";
+        }
+        doajThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                providerServiceDOAJ.extractAuthors(organizations);
+            }
+        });
+        doajThread.start();
+        return "Data Provider DOAJ are extracted in background.   Please review main.log file for details";
     }
 }

@@ -184,6 +184,17 @@ public class PubWebService {
 
         return Response.ok().entity(result).build();
     }
+    
+    @POST
+    @Path("/publicationsDOAJByOrg")
+    public Response readPublicationsPostDOAJ(@Context HttpServletRequest request) {
+
+        String[] org = request.getParameterMap().get("data[]");
+        String result = commonService.getDataFromDOAJProvidersService(org);
+
+        return Response.ok().entity(result).build();
+    }
+
 
     @POST
     @Path("/publicationsGSchoolarByOrg")

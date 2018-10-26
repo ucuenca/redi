@@ -23,6 +23,8 @@ public interface CommonService {
     String getDataFromAcademicsKnowledgeProvidersService(final String[] organizations);
 
     String getDataFromScieloProvidersService(final String[] organizations);
+    
+    String getDataFromDOAJProvidersService(final String[] organizations);
 
     String getDataFromGoogleScholarProvidersService(final String[] organizations);
 
