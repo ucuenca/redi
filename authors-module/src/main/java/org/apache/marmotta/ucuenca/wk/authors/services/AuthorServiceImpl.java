@@ -60,6 +60,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.commons.io.LineIterator;
+import org.apache.commons.lang.StringUtils;
 import org.apache.marmotta.commons.vocabulary.FOAF;
 import org.apache.marmotta.commons.vocabulary.SCHEMA;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
@@ -513,20 +514,21 @@ public class AuthorServiceImpl implements AuthorService {
                     switch (property) {
                         case "http://purl.org/ontology/bibo/uri":
                             executeInsert(constantService.getAuthorsGraph(), object, BIBO.URI.toString(), value);
-
+                                     
                             break;
                         case "http://purl.org/dc/terms/abstract":
                             executeInsert(constantService.getAuthorsGraph(), object, BIBO.ABSTRACT.toString(), value.replaceAll("[&@;^\"\\\\]", ""));
-
+                             String abst = value.toLowerCase();                        
+                            extractAbstractSub ( "keywords:" ,  abst ,  object);
+                            extractAbstractSub ( "palabras clave:" ,  abst ,  object);
+                           
                             break;
                         case "http://purl.org/dc/terms/title":
                             executeInsert(constantService.getAuthorsGraph(), object, DCTERMS.TITLE.toString(), value.replaceAll("[&@;^\"\\\\]", ""));
 
                             break;
                         case "http://purl.org/dc/terms/subject":
-                            String uriSubject = constantService.getSubjectResource() + URLEncoder.encode(value.toUpperCase().replace(" ", "_"), "UTF-8");
-                            executeInsert(constantService.getAuthorsGraph(), object, DCTERMS.SUBJECT.toString(), uriSubject);
-                            executeInsert(constantService.getAuthorsGraph(), uriSubject, RDFS.LABEL.toString(), value.toUpperCase().replaceAll("[&@;^\"\\\\]", ""), STR);
+                             generateSubjects ( object ,  value);
 
                             break;
                         case "http://purl.org/ontology/bibo/issn":
@@ -584,6 +586,23 @@ public class AuthorServiceImpl implements AuthorService {
         }
     }
 
+    public void generateSubjects (String object , String value) throws UnsupportedEncodingException, UpdateException {
+     String uriSubject = constantService.getSubjectResource() + URLEncoder.encode(value.toUpperCase().replace(" ", "_"), "UTF-8");
+                            executeInsert(constantService.getAuthorsGraph(), object, DCTERMS.SUBJECT.toString(), uriSubject);
+                            executeInsert(constantService.getAuthorsGraph(), uriSubject, RDFS.LABEL.toString(), value.toUpperCase().replaceAll("[&@;^\"\\\\]", ""), STR);
+    }
+    
+    public void extractAbstractSub (String k , String abst , String object) throws UnsupportedEncodingException, UpdateException {
+        if (abst.contains(k)) {
+                               String subjects = StringUtils.substringBetween(abst ,k, ".");
+                               if (subjects != null) {
+                                for (String s : subjects.split(",")){
+                                     generateSubjects ( object ,  s.trim());
+                                }}
+                            }
+    
+    }
+    
     public void createJournal(ConcurrentHashMap datajournal, String uriArticle) throws UpdateException {
 
         String name = datajournal.get("http://purl.org/dc/terms/source").toString();
