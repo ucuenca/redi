@@ -42,8 +42,9 @@ public class DBLPProviderService extends AbstractProviderService {
 
     @Override
     protected List<String> buildURLs(String firstName, String lastName, List<String> organizations) {
-        Preconditions.checkArgument(firstName != null && !"".equals(firstName.trim()));
-        Preconditions.checkArgument(lastName != null && !"".equals(lastName.trim()));
+        if (!(firstName != null && !"".equals(firstName.trim()) && lastName != null && !"".equals(lastName.trim()))) {
+            return Collections.emptyList();
+        }
         firstName = StrNamesUtils.or(firstName);
         lastName = StrNamesUtils.or(lastName, 1);
         String NS_DBLP = "http://rdf.dblp.com/ns/search/";

@@ -43,8 +43,9 @@ public class ScopusProviderService extends AbstractProviderService {
 
     @Override
     protected List<String> buildURLs(String firstname, String lastname, List<String> organizations) {
-        Preconditions.checkArgument(firstname != null && !"".equals(firstname.trim()));
-        Preconditions.checkArgument(lastname != null && !"".equals(lastname.trim()));
+        if (!(firstname != null && !"".equals(firstname.trim()) && lastname != null && !"".equals(lastname.trim()))) {
+            return Collections.emptyList();
+        }
 
         String apikey = configurationService.getStringConfiguration("publications.scopus.apikey");
 

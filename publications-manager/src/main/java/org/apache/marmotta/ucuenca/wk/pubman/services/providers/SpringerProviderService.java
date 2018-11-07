@@ -39,8 +39,9 @@ public class SpringerProviderService extends AbstractProviderService {
 
     @Override
     protected List<String> buildURLs(String firstname, String lastname, List<String> organization) {
-        Preconditions.checkArgument(firstname != null && !"".equals(firstname.trim()));
-        Preconditions.checkArgument(lastname != null && !"".equals(lastname.trim()));
+        if (!(firstname != null && !"".equals(firstname.trim()) && lastname != null && !"".equals(lastname.trim()))) {
+            return Collections.emptyList();
+        }
 
         String apiKey = configurationService.getStringConfiguration("publications.springer.apikey");
 
