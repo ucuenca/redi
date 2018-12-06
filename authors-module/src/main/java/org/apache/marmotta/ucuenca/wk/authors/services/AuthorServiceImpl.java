@@ -147,7 +147,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     private static final String OJSPROVNAME = "Ojs";
     /* @Inject 
-    private EndpointObject endpointObject;*/
+     private EndpointObject endpointObject;*/
 
     private static final int LIMIT = 5000;
     //   private static final int MAX_SUBJECTS = 15;
@@ -387,16 +387,28 @@ public class AuthorServiceImpl implements AuthorService {
                     try {
                         // resource = authorsResult.next().getValue("s").stringValue();
                         resource = resultmap.get("s").toString();
-
-                        if (!sparqlFunctionsService.askAuthor(queriesService.getAskObjectQuery(constantService.getAuthorsGraph(), resource))) {
+                           String localResource = buildLocalURI(resource, endpoint.getType(), endpoint.getName());
+                           int npub  = 0;
+                           int localnpub = 0;
+                           boolean askauthor =  sparqlFunctionsService.askAuthor(queriesService.getAskObjectQuery(constantService.getAuthorsGraph(), resource));
+                        if (askauthor) {
+                           // int npub = (int) endpoint.querySource(countPublications(resource)).get(0);
+                            List<HashMap> pub = endpoint.querySource(countPublications(resource));
+                             npub =  Integer.parseInt(pub.get(0).get("npub").toString());
+                             localnpub = Integer.parseInt( sparqlFunctionsService.querylocal(countPublicationslocal(localResource)).get(0).get("npub").stringValue());
+                        }
+                        
+                        
+                        if (!askauthor || npub > localnpub) {
                             contAutoresNuevosEncontrados++;
                             printPercentProcess(contAutoresNuevosEncontrados, authorsSize, endpoint.getName());
-                            //  String localResource = buildLocalURI(resource);
-                            String localResource = buildLocalURI(resource, endpoint.getType(), endpoint.getName());
+                            log.info("Update : " + localResource + " NPub:"+ localnpub +" ->"+npub);
+//  String localResource = buildLocalURI(resource);
+                           // String localResource = buildLocalURI(resource, endpoint.getType(), endpoint.getName());
                             //String   queryAuthor = "Select * where {<"+resource+"> ?y ?z}";
                             // TupleQueryResult tripletasResult =  executelocalquery ( queryAuthor , repo);
-
-                            List<HashMap> describeAuthor = endpoint.querySource(queriesService.getAuthorsPropertiesQuery(resource));
+                          
+                            List<HashMap> describeAuthor = endpoint.querySource(queriesService.getAuthorsPropertiesQuery(resource)); 
                             for (HashMap des : describeAuthor) {
                                 //BindingSet tripletsResource = tripletasResult.next();                   
                                 String predicate = des.get("property").toString();
@@ -433,9 +445,9 @@ public class AuthorServiceImpl implements AuthorService {
                                     case "http://www.w3.org/2002/07/owl#sameAs": // If sameas found include the provenance
                                         //SparqlEndpoint newEndpoint = matchWithProvenance(object);
                                         /* if (newEndpoint != null) {
-                                               String provenanceQueryInsert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, DCTERMS.PROVENANCE.toString(), newEndpoint);
-                                               sparqlFunctionsService.updateAuthor(provenanceQueryInsert);
-                                           }*/
+                                         String provenanceQueryInsert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, DCTERMS.PROVENANCE.toString(), newEndpoint);
+                                         sparqlFunctionsService.updateAuthor(provenanceQueryInsert);
+                                         }*/
                                         insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, OWL.SAMEAS.toString(), object);
                                         sparqlFunctionsService.updateAuthor(insert);
                                         break;
@@ -463,6 +475,8 @@ public class AuthorServiceImpl implements AuthorService {
 
                             //conn.commit();
                             //conn.close();
+                        }else {
+                        log.info("Autor ya procesado : " + localResource + " NPub:"+ localnpub +" ->"+npub);
                         }
                     } catch (AskException | UnsupportedEncodingException | UpdateException ex) {
                         java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -481,10 +495,10 @@ public class AuthorServiceImpl implements AuthorService {
             // log.info ("Extrayendo Subjects");
             /*  try {
              //   extractSubjects (endpoint);
-            } catch (    RepositoryException | MalformedQueryException | QueryEvaluationException ex) {
-                java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-                return "Problema Extrayendo Subjects";
-            }*/
+             } catch (    RepositoryException | MalformedQueryException | QueryEvaluationException ex) {
+             java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+             return "Problema Extrayendo Subjects";
+             }*/
             endpoint.closeconnection();
             return "Success: " + authorsSize + "/" + authorsSize;
         } else {
@@ -495,6 +509,30 @@ public class AuthorServiceImpl implements AuthorService {
     private String buildLocalURI(String resource, String type, String name) {
         return constantService.getAuthorResource() + name + "/" + type + "/" + resource.substring(resource.lastIndexOf('/') + 1);
         // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private String countPublications(String resource) {
+        String autor = "<" + resource + ">";
+        return "SELECT   (COUNT (DISTINCT  ?pub) as ?npub)\n"
+                + " WHERE { \n"
+                + autor + " a <http://xmlns.com/foaf/0.1/Person> . \n"
+                + "   {\n"
+                + autor + " <http://rdaregistry.info/Elements/a/P50195> ?pub .\n"
+                + " } UNION {\n"
+                + autor + "  <http://rdaregistry.info/Elements/a/P50161>  ?pub .   \n"
+                + "   }"
+                + " ?pub a  <http://purl.org/ontology/bibo/Article>"
+                + "} ";
+    }
+
+    private String countPublicationslocal(String resource) {
+        return "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                + "SELECT ( COUNT (Distinct  ?pub) as ?npub ) WHERE {\n"
+                + "  Graph <"+constantService.getAuthorsGraph()+"> {\n"
+                + " <"+resource+"> foaf:publications ?pub\n"
+                + "  }\n"
+                + "} ";
+
     }
 
     private void createDoc(String uri, String object, String type, EndpointObject e, String relation) throws UpdateException, UnsupportedEncodingException {
@@ -514,21 +552,21 @@ public class AuthorServiceImpl implements AuthorService {
                     switch (property) {
                         case "http://purl.org/ontology/bibo/uri":
                             executeInsert(constantService.getAuthorsGraph(), object, BIBO.URI.toString(), value);
-                                     
+
                             break;
                         case "http://purl.org/dc/terms/abstract":
                             executeInsert(constantService.getAuthorsGraph(), object, BIBO.ABSTRACT.toString(), value.replaceAll("[&@;^\"\\\\]", ""));
-                             String abst = value.toLowerCase();                        
-                            extractAbstractSub ( "keywords:" ,  abst ,  object);
-                            extractAbstractSub ( "palabras clave:" ,  abst ,  object);
-                           
+                            String abst = value.toLowerCase();
+                            extractAbstractSub("keywords:", abst, object);
+                            extractAbstractSub("palabras clave:", abst, object);
+
                             break;
                         case "http://purl.org/dc/terms/title":
                             executeInsert(constantService.getAuthorsGraph(), object, DCTERMS.TITLE.toString(), value.replaceAll("[&@;^\"\\\\]", ""));
 
                             break;
                         case "http://purl.org/dc/terms/subject":
-                             generateSubjects ( object ,  value);
+                            generateSubjects(object, value);
 
                             break;
                         case "http://purl.org/ontology/bibo/issn":
@@ -586,23 +624,24 @@ public class AuthorServiceImpl implements AuthorService {
         }
     }
 
-    public void generateSubjects (String object , String value) throws UnsupportedEncodingException, UpdateException {
-     String uriSubject = constantService.getSubjectResource() + URLEncoder.encode(value.toUpperCase().replace(" ", "_"), "UTF-8");
-                            executeInsert(constantService.getAuthorsGraph(), object, DCTERMS.SUBJECT.toString(), uriSubject);
-                            executeInsert(constantService.getAuthorsGraph(), uriSubject, RDFS.LABEL.toString(), value.toUpperCase().replaceAll("[&@;^\"\\\\]", ""), STR);
+    public void generateSubjects(String object, String value) throws UnsupportedEncodingException, UpdateException {
+        String uriSubject = constantService.getSubjectResource() + URLEncoder.encode(value.toUpperCase().replace(" ", "_"), "UTF-8");
+        executeInsert(constantService.getAuthorsGraph(), object, DCTERMS.SUBJECT.toString(), uriSubject);
+        executeInsert(constantService.getAuthorsGraph(), uriSubject, RDFS.LABEL.toString(), value.toUpperCase().replaceAll("[&@;^\"\\\\]", ""), STR);
     }
-    
-    public void extractAbstractSub (String k , String abst , String object) throws UnsupportedEncodingException, UpdateException {
+
+    public void extractAbstractSub(String k, String abst, String object) throws UnsupportedEncodingException, UpdateException {
         if (abst.contains(k)) {
-                               String subjects = StringUtils.substringBetween(abst ,k, ".");
-                               if (subjects != null) {
-                                for (String s : subjects.split(",")){
-                                     generateSubjects ( object ,  s.trim());
-                                }}
-                            }
-    
+            String subjects = StringUtils.substringBetween(abst, k, ".");
+            if (subjects != null) {
+                for (String s : subjects.split(",")) {
+                    generateSubjects(object, s.trim());
+                }
+            }
+        }
+
     }
-    
+
     public void createJournal(ConcurrentHashMap datajournal, String uriArticle) throws UpdateException {
 
         String name = datajournal.get("http://purl.org/dc/terms/source").toString();
@@ -635,35 +674,35 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     /*
-       private void refineSubjectTopic(String localSubject, Set<String> subjects, Set<String> topic) {
-         List listTopic = new ArrayList(topic);
-         List<String>[] resultTopics = findTopics(new ArrayList(topic), 5, 15);
-        Set<String> selectedSubjects = new HashSet<>(getWeightedSubjects(subjects, listTopic));
+     private void refineSubjectTopic(String localSubject, Set<String> subjects, Set<String> topic) {
+     List listTopic = new ArrayList(topic);
+     List<String>[] resultTopics = findTopics(new ArrayList(topic), 5, 15);
+     Set<String> selectedSubjects = new HashSet<>(getWeightedSubjects(subjects, listTopic));
 
-        // Insert subjects
-        for (String keyword : selectedSubjects) {
-            if ((!commonsService.isURI(keyword))) {
-                try {
-                    String insertKeywords = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localSubject, DCTERMS.SUBJECT.toString(), kservice.cleaningText(keyword).toUpperCase());
-                    sparqlFunctionsService.updateAuthor(insertKeywords);
-                } catch (UpdateException ex) {
-                    log.error("Cannot insert new subjects. Error: {}", ex.getMessage());
-                }
-            }
-        }
+     // Insert subjects
+     for (String keyword : selectedSubjects) {
+     if ((!commonsService.isURI(keyword))) {
+     try {
+     String insertKeywords = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localSubject, DCTERMS.SUBJECT.toString(), kservice.cleaningText(keyword).toUpperCase());
+     sparqlFunctionsService.updateAuthor(insertKeywords);
+     } catch (UpdateException ex) {
+     log.error("Cannot insert new subjects. Error: {}", ex.getMessage());
+     }
+     }
+     }
 
-        // Insert some topics
-        for (Object top  : listTopic ) {
-            try {
-                String insertTopic = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localSubject, FOAF.topic.toString(), top.toString().trim().toUpperCase());
-                sparqlFunctionsService.updateAuthor(insertTopic);
-            } catch (UpdateException ex) {
-                log.error("Cannot insert topics. Error: {}", ex.getMessage());
-            }
-        }
-        //log.info("Resource {} has {} documents and {} subjects ", localSubject, documents.size(), selectedSubjects.size());
+     // Insert some topics
+     for (Object top  : listTopic ) {
+     try {
+     String insertTopic = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localSubject, FOAF.topic.toString(), top.toString().trim().toUpperCase());
+     sparqlFunctionsService.updateAuthor(insertTopic);
+     } catch (UpdateException ex) {
+     log.error("Cannot insert topics. Error: {}", ex.getMessage());
+     }
+     }
+     //log.info("Resource {} has {} documents and {} subjects ", localSubject, documents.size(), selectedSubjects.size());
        
-       }*/
+     }*/
     public boolean compareExactStrings(String string1, String string2) {
         return (string1.matches("^" + string2 + "$") || string2.matches("^" + string1 + "$"));
     }
@@ -704,105 +743,106 @@ public class AuthorServiceImpl implements AuthorService {
         return output;
     }//removeAccents
 /*
-    private TupleQueryResult executeQuery(Repository repository, String query) throws RepositoryException, MalformedQueryException, QueryEvaluationException {
-        if (!repository.isInitialized()) {
-            repository.initialize();
-        }
-        RepositoryConnection conn = repository.getConnection();
-        conn.begin();
-        TupleQueryResult result = conn.prepareTupleQuery(QueryLanguage.SPARQL, query).evaluate();
-        conn.close();
-        return result;
-    }*/
- /*
-      @Deprecated
+     private TupleQueryResult executeQuery(Repository repository, String query) throws RepositoryException, MalformedQueryException, QueryEvaluationException {
+     if (!repository.isInitialized()) {
+     repository.initialize();
+     }
+     RepositoryConnection conn = repository.getConnection();
+     conn.begin();
+     TupleQueryResult result = conn.prepareTupleQuery(QueryLanguage.SPARQL, query).evaluate();
+     conn.close();
+     return result;
+     }*/
+    /*
+     @Deprecated
      @SuppressWarnings("PMD.UnusedPrivateMethod")
-    private Set<String>[] extractSubjectsAndDocuments(LDClientService ldClient, String documentURI)
-            throws DataRetrievalException, RepositoryException, MalformedQueryException, QueryEvaluationException {
-        Set<String> subjects = new HashSet<>();
-        Set<String> documents = new HashSet<>();
-        Set<String> mentions = new HashSet<>();
+     private Set<String>[] extractSubjectsAndDocuments(LDClientService ldClient, String documentURI)
+     throws DataRetrievalException, RepositoryException, MalformedQueryException, QueryEvaluationException {
+     Set<String> subjects = new HashSet<>();
+     Set<String> documents = new HashSet<>();
+     Set<String> mentions = new HashSet<>();
 
-        List<Set<String>> result = new ArrayList<>();
-        result.add(subjects);
-        result.add(documents);
-        result.add(mentions);
-        ClientResponse respPub = ldClient.retrieveResource(documentURI);
-        String document = "";
-        for (Statement statement : respPub.getData()) {
-            String value = statement.getObject().stringValue().trim();
-            switch (statement.getPredicate().getLocalName()) {
-                case "subject":
-                    subjects.add(value);
-                    break;
-                case "mentions":
-                    mentions.add(value.substring(value.lastIndexOf('/') + 1).replace("_", " ").toUpperCase().trim());
-                    break;
-                case "title":
-                case "abstract":
-                    document += value + " ";
-                    break;
-                default:
-            }
-        }
-        if (!document.trim().equals("")) {
-            documents.add(document);
-        }
-        return result.toArray(new Set[3]);
-    }
-/*
-    private String buildLocalURI(String endpointURI) {
-        return constantService.getAuthorResource() + endpointURI.substring(endpointURI.lastIndexOf('/') + 1);
-    }*/
- /*
-    private List<String>[] findTopics(List<String> documents, int numTopics, int numWords) {
-        Set<String> topics = new TreeSet<>();
+     List<Set<String>> result = new ArrayList<>();
+     result.add(subjects);
+     result.add(documents);
+     result.add(mentions);
+     ClientResponse respPub = ldClient.retrieveResource(documentURI);
+     String document = "";
+     for (Statement statement : respPub.getData()) {
+     String value = statement.getObject().stringValue().trim();
+     switch (statement.getPredicate().getLocalName()) {
+     case "subject":
+     subjects.add(value);
+     break;
+     case "mentions":
+     mentions.add(value.substring(value.lastIndexOf('/') + 1).replace("_", " ").toUpperCase().trim());
+     break;
+     case "title":
+     case "abstract":
+     document += value + " ";
+     break;
+     default:
+     }
+     }
+     if (!document.trim().equals("")) {
+     documents.add(document);
+     }
+     return result.toArray(new Set[3]);
+     }
+     /*
+     private String buildLocalURI(String endpointURI) {
+     return constantService.getAuthorResource() + endpointURI.substring(endpointURI.lastIndexOf('/') + 1);
+     }*/
+    /*
+     private List<String>[] findTopics(List<String> documents, int numTopics, int numWords) {
+     Set<String> topics = new TreeSet<>();
 
-        //File stoplist = new File(getClass().getClassLoader().getResource("/helpers/stoplist.txt"));
-        ArrayIterator iterator = new ArrayIterator(documents);
+     //File stoplist = new File(getClass().getClassLoader().getResource("/helpers/stoplist.txt"));
+     ArrayIterator iterator = new ArrayIterator(documents);
 
-        ArrayList<Pipe> workflow = new ArrayList<>();
-        workflow.add(new CharSequence2TokenSequence("\\p{L}+"));
-        workflow.add(new TokenSequenceLowercase());
-        workflow.add(new TokenSequenceRemoveStopwords(false, false).addStopWords(stopwords.toArray(new String[]{})));
-        workflow.add(new TokenSequence2FeatureSequenceWithBigrams());
+     ArrayList<Pipe> workflow = new ArrayList<>();
+     workflow.add(new CharSequence2TokenSequence("\\p{L}+"));
+     workflow.add(new TokenSequenceLowercase());
+     workflow.add(new TokenSequenceRemoveStopwords(false, false).addStopWords(stopwords.toArray(new String[]{})));
+     workflow.add(new TokenSequence2FeatureSequenceWithBigrams());
 
-        InstanceList data = new InstanceList(new SerialPipes(workflow));
-        data.addThruPipe(iterator);
+     InstanceList data = new InstanceList(new SerialPipes(workflow));
+     data.addThruPipe(iterator);
 
-        ParallelTopicModel lda = new ParallelTopicModel(numTopics);
-        lda.addInstances(data);
-        try {
-            lda.estimate();
-        } catch (IOException ex) {
-            log.error("Cannot find topics. Error: {}", ex.getMessage());
-        } catch (ArrayIndexOutOfBoundsException ex) {
-            log.error("Cannot find {} topics and {} words. Error: {}", numTopics, numWords, ex.getMessage());
-        }
+     ParallelTopicModel lda = new ParallelTopicModel(numTopics);
+     lda.addInstances(data);
+     try {
+     lda.estimate();
+     } catch (IOException ex) {
+     log.error("Cannot find topics. Error: {}", ex.getMessage());
+     } catch (ArrayIndexOutOfBoundsException ex) {
+     log.error("Cannot find {} topics and {} words. Error: {}", numTopics, numWords, ex.getMessage());
+     }
 
-        for (Object[] words : lda.getTopWords(numWords)) {
-            for (Object word : words) {
-                topics.add(String.valueOf(word));
-            }
-        }
-        Set<String> topicsToStore = new HashSet<>();
-        // store 2 for each topic because sometimes words are repeated among topics
-        for (Object[] words : lda.getTopWords(2)) {
-            for (Object word : words) {
-                topicsToStore.add(String.valueOf(word));
-            }
-        }
-        return new List[]{
-            new ArrayList<>(topics),
-            new ArrayList<>(topicsToStore)};
-    }
+     for (Object[] words : lda.getTopWords(numWords)) {
+     for (Object word : words) {
+     topics.add(String.valueOf(word));
+     }
+     }
+     Set<String> topicsToStore = new HashSet<>();
+     // store 2 for each topic because sometimes words are repeated among topics
+     for (Object[] words : lda.getTopWords(2)) {
+     for (Object word : words) {
+     topicsToStore.add(String.valueOf(word));
+     }
+     }
+     return new List[]{
+     new ArrayList<>(topics),
+     new ArrayList<>(topicsToStore)};
+     }
      */
- /*
+    /*
      * 
      * @param contAutoresNuevosEncontrados
      * @param allPersons
      * @param endpointName 
      */
+
     private void printPercentProcess(int contAutoresNuevosEncontrados, int allPersons, String endpointName) {
 
         if ((contAutoresNuevosEncontrados * 100 / allPersons) != processpercent) {

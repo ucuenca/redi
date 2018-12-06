@@ -1139,12 +1139,11 @@ public class CommonServiceImpl implements CommonService {
                     + "	     }group by ?cl";
 
             String querySubCluster = Prefix
-                    + "SELECT  ?cl   ?clabel FROM <" + con.getClusterGraph() + "> WHERE  {\n"
-                    + "     <" + uri + ">  dct:isPartOf ?cl .\n"
-                    + " ?cl a <http://ucuenca.edu.ec/ontology#SubCluster> .\n"
-                    + "  ?cl rdfs:label ?clabel .\n"
-                    + "  filter (lang(?clabel ) = \"en\") "
-                    + "      } limit 5";
+                     + "SELECT  ?cl   (sample(?clabel_) as ?clabel) FROM <" + con.getClusterGraph() + "> WHERE  {\n"
+                    + "  <" + uri + ">  dct:isPartOf ?cl .\n"
+                    + "	?cl a <http://ucuenca.edu.ec/ontology#SubCluster> .\n"
+                    + "	 ?cl rdfs:label ?clabel_.\n"
+                    + "	     }group by ?cl limit 5";
 
             String metaAuthor1 = Prefix
                     + "SELECT   ?names  ?orgnames ?members ?orcids ?imgs ?emails ?homepages ?citations ?hindexs ?i10indexs ?afs ?scs  where { "
@@ -1243,7 +1242,9 @@ public class CommonServiceImpl implements CommonService {
                     //   String[] arrayaux = new String[responseCluster.size()];
                     List<String> subclusters = new ArrayList();
                     for (Map<String, Value> mp : responseSubclusters) {
-                        subclusters.add(mp.get("clabel").stringValue());
+                        if (mp.get("clabel") != null) {
+                           subclusters.add(mp.get("clabel").stringValue());
+                        }
                     }
                     String[] arrayaux = new String[subclusters.size()];
                     arrayaux = subclusters.toArray(arrayaux);
