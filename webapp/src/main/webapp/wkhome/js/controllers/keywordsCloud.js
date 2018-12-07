@@ -154,9 +154,18 @@ wkhomeControllers.controller('keywordsCloud', ['$translate', '$routeParams', '$s
 
        $scope.changeComboSelected  = function() {
                 if ($scope.selectedItem != undefined && $scope.selectedItem.length > 0) {
-                waitingDialog.show();
-                subclustersTotals.query({id: $scope.selectedItem}, function (res) {
-                            
+               
+               renderSub ();
+
+            } else {
+                renderAll ();
+            }
+
+       }
+
+       function renderSub () {
+             subclustersTotals.query({id: $scope.selectedItem}, function (res) {
+                 waitingDialog.show();
                             $scope.data = [];
                             _.map(res, function (area) {
                                 $scope.data.push({
@@ -167,10 +176,6 @@ wkhomeControllers.controller('keywordsCloud', ['$translate', '$routeParams', '$s
                             });
                             waitingDialog.hide();
                         });
-
-            } else {
-                renderAll ();
-            }
 
        }
 
