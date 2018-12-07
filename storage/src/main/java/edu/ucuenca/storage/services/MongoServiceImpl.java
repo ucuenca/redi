@@ -57,6 +57,7 @@ public class MongoServiceImpl implements MongoService {
     private MongoCollection<Document> statistics;
     private MongoCollection<Document> relatedauthors;
     private MongoCollection<Document> clusters;
+    private MongoCollection<Document> clustersTotals;
     private MongoCollection<Document> authorsByArea;
     private MongoCollection<Document> authorsByDisc;
     private MongoCollection<Document> countries;
@@ -77,6 +78,7 @@ public class MongoServiceImpl implements MongoService {
         relatedauthors = db.getCollection(Collection.RELATEDAUTHORS.getValue());
         statistics = db.getCollection(Collection.STATISTICS.getValue());
         clusters = db.getCollection(Collection.CLUSTERS.getValue());
+        clustersTotals = db.getCollection(Collection.CLUSTERSTOTALS.getValue());
         authorsByArea = db.getCollection(Collection.AUTHORS_AREA.getValue());
         authorsByDisc = db.getCollection(Collection.AUTHORS_DISCPLINE.getValue());
         countries = db.getCollection(Collection.COUNTRIES.getValue());
@@ -101,8 +103,6 @@ public class MongoServiceImpl implements MongoService {
                 .first()
                 .toJson();
     }
-    
-
 
     @Override
     public String getCluster(String uri) {
@@ -125,9 +125,8 @@ public class MongoServiceImpl implements MongoService {
         }
         return c;
     }
-    
-    
-     @Override
+
+    @Override
     public List<Document> getCountries() {
         List<Document> c = new ArrayList<>();
         FindIterable<Document> cls = countries.find();
@@ -146,7 +145,7 @@ public class MongoServiceImpl implements MongoService {
         return authorsByArea.find(eq("_id", key))
                 .first().toJson();
     }
-    
+
     @Override
     public String getAuthorsByDiscipline(String cluster) {
         BasicDBObject key = new BasicDBObject();
@@ -159,6 +158,22 @@ public class MongoServiceImpl implements MongoService {
     public void shutdown() {
         log.info("Killing connection to MongoDB.");
         mongoClient.close();
+    }
+
+    @Override
+    public List<Document> getClustersTotals() {
+        List<Document> c = new ArrayList<>();
+        MongoCursor<Document> it = clustersTotals.find().iterator();
+        while (it.hasNext()) {
+            c.add(it.next());
+        }
+        return c;
+    }
+
+    @Override
+    public List<Document> getSubClustersTotals(String uri) {
+        Document first = clustersTotals.find(eq("_id", uri)).first();
+        return (List<Document>) first.get("subclusters");
     }
 
 }

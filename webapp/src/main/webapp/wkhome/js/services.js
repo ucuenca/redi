@@ -46,8 +46,8 @@ wkhomeServices.factory('sparqlQuery', ['$resource', '$http', 'globalData',
         }
         var serverInstance = globalData.serverInstance;
         return $resource(serverInstance + 'sparql/select', {}, {
-           querySrv: {method: 'POST', isArray: true, transformRequest: transform, headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}}
-         });
+            querySrv: {method: 'POST', isArray: true, transformRequest: transform, headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}}
+        });
     }]);
 
 wkhomeServices.factory('d3JSON', ['$resource',
@@ -60,20 +60,22 @@ wkhomeServices.factory('d3JSON', ['$resource',
 wkhomeServices.factory('clustersQuery', ['$resource', '$http', '$window',
     function ($resource, $http, $window) {
 
-        function successCallback(response){
+        function successCallback(response) {
             return response.data;
-        };
+        }
+        ;
         function errorCallback(error) {
             return error.data;
-        };
+        }
+        ;
 
         return $http.get('resources/datos_clustering.json')
-         .then(successCallback, errorCallback);
+                .then(successCallback, errorCallback);
 
     }]);
 
 wkhomeServices.factory('translateService', ['$resource', '$http', '$window', 'globalData',
-      function ($resource, $http, $window, globalData) {
+    function ($resource, $http, $window, globalData) {
         return $resource('resources/:data.json', {}, {
             query: {method: 'GET', params: {data: globalData.language}, isArray: false}
         });
@@ -98,17 +100,17 @@ wkhomeServices.factory('reportService', ['$resource', '$http', 'globalData',
 wkhomeServices.factory('AuthorsService', ['$resource', '$http', 'globalData',
     function ($resource, $http, globalData) {
         var serverInstance = globalData.serverInstance;
-        return $resource(serverInstance + 'solr/authors/select?q=name%3A(:search)&fq=org%3A*&wt=json&fl=lmf.uri,name,topics', {search:'@id'});
+        return $resource(serverInstance + 'solr/authors/select?q=name%3A(:search)&fq=org%3A*&wt=json&fl=lmf.uri,name,topics', {search: '@id'});
     }]);
 wkhomeServices.factory('PublicationsService', ['$resource', '$http', 'globalData',
     function ($resource, $http, globalData) {
         var serverInstance = globalData.serverInstance;
-        return $resource(serverInstance + 'solr/publications/select?q=":search"&wt=json&fl=lmf.uri', {search:'@id'});
+        return $resource(serverInstance + 'solr/publications/select?q=":search"&wt=json&fl=lmf.uri', {search: '@id'});
     }]);
 wkhomeServices.factory('KeywordsService', ['$resource', '$http', 'globalData',
     function ($resource, $http, globalData) {
         var serverInstance = globalData.serverInstance;
-        return $resource(serverInstance + 'solr/keywords/select?q=":search"&fl=lmf.uri,keyword&wt=json&', {search:'@id'});
+        return $resource(serverInstance + 'solr/keywords/select?q=":search"&fl=lmf.uri,keyword&wt=json&', {search: '@id'});
     }]);
 wkhomeServices.factory('searchQueryService', ['$resource', '$http', 'globalData',
     function ($resource, $http, globalData) {
@@ -126,86 +128,115 @@ wkhomeServices.factory('searchQueryService', ['$resource', '$http', 'globalData'
     }]);
 
 wkhomeServices.factory('Statistics', ['$resource', '$http', 'globalData',
-          function($resource, $http, globalData) {
-            var serverInstance = globalData.serverInstance;
-            return $resource(serverInstance + 'mongo/statistics?id=:id', {}, {
-              query: {
+    function ($resource, $http, globalData) {
+        var serverInstance = globalData.serverInstance;
+        return $resource(serverInstance + 'mongo/statistics?id=:id', {}, {
+            query: {
                 method: 'GET',
                 params: {id: 'id'},
                 isArray: false,
                 cache: true,
-                headers: {'Accept':'application/json'}
-              }
-            });
-          }
-        ]);
+                headers: {'Accept': 'application/json'}
+            }
+        });
+    }
+]);
 
 wkhomeServices.factory('Authors', ['$resource', '$http', 'globalData',
-          function($resource, $http, globalData) {
-            var serverInstance = globalData.serverInstance;
-            return $resource(serverInstance + 'mongo/author?uri=:id', {}, {
-              query: {
+    function ($resource, $http, globalData) {
+        var serverInstance = globalData.serverInstance;
+        return $resource(serverInstance + 'mongo/author?uri=:id', {}, {
+            query: {
                 method: 'GET',
                 params: {id: 'id'},
                 isArray: false,
                 cache: true,
-                headers: {'Accept':'application/json'}
-              }
-            });
-          }
-        ]);
+                headers: {'Accept': 'application/json'}
+            }
+        });
+    }
+]);
 
 wkhomeServices.factory('Countries', ['$resource', '$http', 'globalData',
-          function($resource, $http, globalData) {
-            var serverInstance = globalData.serverInstance;
-            return $resource(serverInstance + 'mongo/countries', {}, {
-              query: {
+    function ($resource, $http, globalData) {
+        var serverInstance = globalData.serverInstance;
+        return $resource(serverInstance + 'mongo/countries', {}, {
+            query: {
                 method: 'GET',
                 isArray: true,
                 cache: true,
-                headers: {'Accept':'application/json'}
-              }
-            });
-          }
-        ]);
+                headers: {'Accept': 'application/json'}
+            }
+        });
+    }
+]);
 
-  wkhomeServices.factory('Journal', ['$resource', '$http', 'globalData',
-      function($resource, $http, globalData) {
+wkhomeServices.factory('clustersTotals', ['$resource', '$http', 'globalData',
+    function ($resource, $http, globalData) {
+        var serverInstance = globalData.serverInstance;
+        return $resource(serverInstance + 'mongo/clustersTotals', {}, {
+            query: {
+                method: 'GET',
+                isArray: true,
+                cache: true,
+                headers: {'Accept': 'application/json'}
+            }
+        });
+    }
+]);
+
+wkhomeServices.factory('subclustersTotals', ['$resource', '$http', 'globalData',
+    function ($resource, $http, globalData) {
+        var serverInstance = globalData.serverInstance;
+        return $resource(serverInstance + 'mongo/subclustersTotals?uri=:id', {}, {
+            query: {
+                method: 'GET',
+                params: {id: 'id'},
+                isArray: true,
+                cache: true,
+                headers: {'Accept': 'application/json'}
+            }
+        });
+    }
+]);
+
+wkhomeServices.factory('Journal', ['$resource', '$http', 'globalData',
+    function ($resource, $http, globalData) {
         var factory = {};
-        factory.getJournal = function() {
-          //var serverInstance = "https://rediclon.cedia.edu.ec/"
-          var serverInstance = globalData.serverInstance;
-          return $resource(serverInstance + "solr/collections/select?q=collec-uri%3A%22:uri%22&fl=*&wt=json", {
-            uri: '@id'
-          });
+        factory.getJournal = function () {
+            //var serverInstance = "https://rediclon.cedia.edu.ec/"
+            var serverInstance = globalData.serverInstance;
+            return $resource(serverInstance + "solr/collections/select?q=collec-uri%3A%22:uri%22&fl=*&wt=json", {
+                uri: '@id'
+            });
         }
         return factory;
-      }
-    ]);
+    }
+]);
 
 wkhomeServices.factory('querySubcluster', ['$resource', '$http', 'globalData',
-          function($resource, $http, globalData) {
-            var serverInstance = globalData.serverInstance;
-            return $resource(serverInstance + 'mongo/cluster?uri=:id', {}, {
-              query: {
+    function ($resource, $http, globalData) {
+        var serverInstance = globalData.serverInstance;
+        return $resource(serverInstance + 'mongo/cluster?uri=:id', {}, {
+            query: {
                 method: 'GET',
                 params: {id: 'id'},
                 isArray: false,
                 cache: true,
-                headers: {'Accept':'application/json'}
-              }
-            });
-          }
-        ]);
+                headers: {'Accept': 'application/json'}
+            }
+        });
+    }
+]);
 
-wkhomeServices.service('searchTextResultsService', ['$rootScope',function($rootScope){
-    this.bucket = {};
-    this.saveData = function(data){
-        this.bucket['data']=data;
-        $rootScope.$broadcast('saveData');
-    }
-    this.getData = function(){
-        return this.bucket['data'];
-    }
-    return this;
-}]);
+wkhomeServices.service('searchTextResultsService', ['$rootScope', function ($rootScope) {
+        this.bucket = {};
+        this.saveData = function (data) {
+            this.bucket['data'] = data;
+            $rootScope.$broadcast('saveData');
+        }
+        this.getData = function () {
+            return this.bucket['data'];
+        }
+        return this;
+    }]);

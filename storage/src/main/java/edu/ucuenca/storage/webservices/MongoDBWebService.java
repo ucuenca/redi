@@ -88,7 +88,34 @@ public class MongoDBWebService {
         }
         return Response.ok().entity(response).build();
     }
+
+    @GET
+    @Path("/clustersTotals")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getClustersTotals() throws FailMongoConnectionException {
+        List<Document> response;
+        try {
+            response = mongoService.getClustersTotals();
+        } catch (Exception e) {
+            throw new FailMongoConnectionException("Cannot retrieve clusters", e);
+        }
+        return Response.ok().entity(response).build();
+    }
     
+    @GET
+    @Path("/subclustersTotals")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSubClustersTotals(@QueryParam("uri") String uri) throws FailMongoConnectionException {
+        List<Document> response;
+        try {
+            response = mongoService.getSubClustersTotals(uri);
+        } catch (Exception e) {
+            throw new FailMongoConnectionException("Cannot retrieve subclusters", e);
+        }
+        return Response.ok().entity(response).build();
+    }
+    
+
     @GET
     @Path("/countries")
     @Produces(MediaType.APPLICATION_JSON)
@@ -147,7 +174,7 @@ public class MongoDBWebService {
         }
         return Response.ok().entity(response).build();
     }
-    
+
     @GET
     @Path("/clusterDiscipline")
     @Produces(MediaType.APPLICATION_JSON)
@@ -160,6 +187,5 @@ public class MongoDBWebService {
         }
         return Response.ok().entity(response).build();
     }
-
 
 }

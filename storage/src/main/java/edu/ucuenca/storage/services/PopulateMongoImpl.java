@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,7 +90,7 @@ public class PopulateMongoImpl implements PopulateMongo {
     private TaskManagerService taskManagerService;
 
     private static final Map context = new HashMap();
-    
+
     private final JsonNodeFactory factory = JsonNodeFactory.instance;
 
     static {
@@ -105,9 +106,9 @@ public class PopulateMongoImpl implements PopulateMongo {
     /**
      *
      * @param queryResources query to load resources to describe.
-     * @param queryDescribe  query to describe each candidate; it has to be a
-     *                       describe/construct.
-     * @param collection     collection name in Mongo db.
+     * @param queryDescribe query to describe each candidate; it has to be a
+     * describe/construct.
+     * @param collection collection name in Mongo db.
      */
     private void loadResources(String queryResources, String queryDescribe, String c) {
         try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));
@@ -167,7 +168,7 @@ public class PopulateMongoImpl implements PopulateMongo {
                 RDFWriter jsonldWritter = Rio.createWriter(RDFFormat.JSONLD, writter);
                 for (String key : queries.keySet()) {
                     log.info("Getting {} query", key);
-                   
+
                     conn.prepareGraphQuery(QueryLanguage.SPARQL, queries.get(key))
                             .evaluate(jsonldWritter);
                     Object compact = JsonLdProcessor.compact(JsonUtils.fromString(writter.toString()), context, new JsonLdOptions());
@@ -227,13 +228,13 @@ public class PopulateMongoImpl implements PopulateMongo {
     @Override
     public void statistics() {
         HashMap<String, String> queries = new HashMap<>();
-        
+
         queries.put("barchar", queriesService.getBarcharDataQuery());
-        
-        if (countCountries () > 1){
+
+        if (countCountries() > 1) {
             queries.put("count_authors", queriesService.getAggregationPublicationsbyCountry());
             queries.put("count_publications", queriesService.getAggreggationAuthorsbyCountry());
-        }else {
+        } else {
             queries.put("count_authors", queriesService.getAggreggationAuthors());
             queries.put("count_publications", queriesService.getAggregationPublications());
         }
@@ -241,19 +242,18 @@ public class PopulateMongoImpl implements PopulateMongo {
         queries.put("keywords_frequencypub_gt4", queriesService.getKeywordsFrequencyPub());
         loadStadistics(MongoService.Collection.STATISTICS.getValue(), queries);
     }
-    
-    
-    private int countCountries () {
+
+    private int countCountries() {
         try {
-            List<Map<String, Value>> countc = sparqlService.query(QueryLanguage.SPARQL,  queriesService.getCountCountry());
-            return  Integer.parseInt(countc.get(0).get("ncountry").stringValue());
-            
+            List<Map<String, Value>> countc = sparqlService.query(QueryLanguage.SPARQL, queriesService.getCountCountry());
+            return Integer.parseInt(countc.get(0).get("ncountry").stringValue());
+
         } catch (MarmottaException ex) {
             java.util.logging.Logger.getLogger(PopulateMongoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return 0;
     }
-    
+
     @Override
     public void networks() {
         Task task = taskManagerService.createSubTask("Caching related authors", "Mongo Service");
@@ -284,12 +284,10 @@ public class PopulateMongoImpl implements PopulateMongo {
         taskManagerService.endTask(task);
     }
 
-  
-
-    
-       @Override
+    @Override
     public void clusters() {
         Task task = taskManagerService.createSubTask("Caching clusters", "Mongo Service");
+        clustersTotals();
         try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
             MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
 
@@ -319,7 +317,51 @@ public class PopulateMongoImpl implements PopulateMongo {
             taskManagerService.endTask(task);
         }
     }
-    
+
+    public void clustersTotals() {
+        try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
+            MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
+
+            // Delete and create collection
+            MongoCollection<Document> collection = db.getCollection(MongoService.Collection.CLUSTERSTOTALS.getValue());
+            collection.drop();
+            log.info("Counting clusters");
+            List<Map<String, Value>> query = sparqlService.query(QueryLanguage.SPARQL, queriesService.getClusterTotals());
+            log.info("Writing totals");
+            for (Map<String, Value> a : query) {
+                String label = a.get("k").stringValue();
+                log.info("Cluster {}", label);
+                String uri = a.get("area").stringValue();
+                String tot = a.get("totalAuthors").stringValue();
+                Document parse = new Document();
+                parse.append("_id", uri);
+                parse.append("area", uri);
+                parse.append("k", label);
+                parse.append("totalAuthors", tot);
+                List<BasicDBObject> lsdoc = new ArrayList<>();
+                List<Map<String, Value>> query1 = sparqlService.query(QueryLanguage.SPARQL, queriesService.getSubClusterTotals(uri));
+                for (Map<String, Value> b : query1) {
+                    if (b.get("sc") == null) {
+                        continue;
+                    }
+                    String sc = b.get("sc").stringValue();
+                    String k = b.get("k").stringValue();
+                    String totalAuthors = b.get("totalAuthors").stringValue();
+                    BasicDBObject parseSub = new BasicDBObject();
+                    parseSub.put("sc", sc);
+                    parseSub.put("k", k);
+                    parseSub.put("totalAuthors", totalAuthors);
+                    lsdoc.add(parseSub);
+                }
+                parse.append("subclusters", lsdoc);
+                collection.insertOne(parse);
+            }
+
+        } catch (MarmottaException ex) {
+            log.error(ex.getMessage(), ex);
+        }
+    }
+
     @Override
     public void authorsByArea() {
         Task task = taskManagerService.createSubTask("Caching Authors by Area", "Mongo Service");
@@ -357,10 +399,8 @@ public class PopulateMongoImpl implements PopulateMongo {
             taskManagerService.endTask(task);
         }
     }
-    
-    
-    
-     @Override
+
+    @Override
     public void authorsByDiscipline() {
         Task task = taskManagerService.createSubTask("Caching Authors by Discipline", "Mongo Service");
         try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
@@ -370,17 +410,17 @@ public class PopulateMongoImpl implements PopulateMongo {
             MongoCollection<Document> collection = db.getCollection(MongoService.Collection.AUTHORS_DISCPLINE.getValue());
             collection.drop();
 
-          List<Map<String, Value>> clusters = sparqlService.query(QueryLanguage.SPARQL, queriesService.getClusterURIs());
+            List<Map<String, Value>> clusters = sparqlService.query(QueryLanguage.SPARQL, queriesService.getClusterURIs());
 
             task.updateTotalSteps(clusters.size());
 
             for (int i = 0; i < clusters.size(); i++) {
                 String cluster = clusters.get(i).get("c").stringValue();
-               // String subcluster = areas.get(i).get("subcluster").stringValue();
+                // String subcluster = areas.get(i).get("subcluster").stringValue();
                 // Print progress
                 log.info("Relating {}/{}. Cluster: '{}'", i + 1, clusters.size(), cluster);
                 task.updateDetailMessage("Cluster", cluster);
-               // task.updateDetailMessage("Subluster", subcluster);
+                // task.updateDetailMessage("Subluster", subcluster);
                 task.updateProgress(i + 1);
                 // Get authors of an area from the SPARQL endpoint and transform them to JSON .
                 String authorsByDisc = commonService.getClusterGraph(cluster);
@@ -397,70 +437,70 @@ public class PopulateMongoImpl implements PopulateMongo {
             taskManagerService.endTask(task);
         }
     }
-    
+
     @Override
-    public void Countries () {
-         Task task = taskManagerService.createSubTask("Caching countries", "Mongo Service");
-          try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
+    public void Countries() {
+        Task task = taskManagerService.createSubTask("Caching countries", "Mongo Service");
+        try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
             MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
 
             // Delete and create collection
             MongoCollection<Document> collection = db.getCollection(MongoService.Collection.COUNTRIES.getValue());
             collection.drop();
-        try { 
-            List<Map<String, Value>> countries = sparqlService.query(QueryLanguage.SPARQL, queriesService.getCountries());
-            task.updateTotalSteps(countries.size());
-              for (int i = 0; i < countries.size(); i++) {
-                String co = countries.get(i).get("co").stringValue(); 
-                String code = getCountryCode (co);
-                String countriesNodes =  countrynodes (co, code).toString(); 
-                Document parse = Document.parse(countriesNodes);
-                parse.append("_id", co);
-                collection.insertOne(parse);
-                
-                task.updateDetailMessage("Country", co);
-                task.updateProgress(i + 1);
-              }
-        } catch (MarmottaException ex) {
-            java.util.logging.Logger.getLogger(PopulateMongoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            taskManagerService.endTask(task);
+            try {
+                List<Map<String, Value>> countries = sparqlService.query(QueryLanguage.SPARQL, queriesService.getCountries());
+                task.updateTotalSteps(countries.size());
+                for (int i = 0; i < countries.size(); i++) {
+                    String co = countries.get(i).get("co").stringValue();
+                    String code = getCountryCode(co);
+                    String countriesNodes = countrynodes(co, code).toString();
+                    Document parse = Document.parse(countriesNodes);
+                    parse.append("_id", co);
+                    collection.insertOne(parse);
+
+                    task.updateDetailMessage("Country", co);
+                    task.updateProgress(i + 1);
+                }
+            } catch (MarmottaException ex) {
+                java.util.logging.Logger.getLogger(PopulateMongoImpl.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                taskManagerService.endTask(task);
+            }
         }
     }
+
+    private ObjectNode countrynodes(String name, String code) {
+        ObjectNode node = factory.objectNode(); // initializing
+        node.put("name", name);
+        node.put("code", code);
+        return node;
     }
-    
-    private ObjectNode countrynodes (String name , String code) {
-    ObjectNode node = factory.objectNode(); // initializing
-    node.put("name", name);
-    node.put("code", code);
-    return node;
-    }
-    
-   
-    private String getCountryCode (String coName) {
-  
+
+    private String getCountryCode(String coName) {
+
         try {
-            String Country = URLEncoder.encode(coName,"UTF-8").replace("+","%20");
-            Object js = commonServices.getHttpJSON ("https://restcountries.eu/rest/v2/name/"+Country );
-            JSONArray json = null ;
-            if (js instanceof JSONArray){
+            String Country = URLEncoder.encode(coName, "UTF-8").replace("+", "%20");
+            Object js = commonServices.getHttpJSON("https://restcountries.eu/rest/v2/name/" + Country);
+            JSONArray json = null;
+            if (js instanceof JSONArray) {
                 json = (JSONArray) js;
             }
-            System.out.print (js);
-            for (Object j: json ) {
-               // System.out.println ("ite");
+            System.out.print(js);
+            for (Object j : json) {
+                // System.out.println ("ite");
                 // System.out.println ((JSONObject) j);
                 JSONObject jo = (JSONObject) j;
-                Object r  = jo.get("alpha2Code");
-               // System.out.println ("---"+r);
+                Object r = jo.get("alpha2Code");
+                // System.out.println ("---"+r);
                 return r.toString();
-                
-            }   } catch (UnsupportedEncodingException ex) {
+
+            }
+        } catch (UnsupportedEncodingException ex) {
             java.util.logging.Logger.getLogger(PopulateMongoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
-    
+
     @Override
     public void publications() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

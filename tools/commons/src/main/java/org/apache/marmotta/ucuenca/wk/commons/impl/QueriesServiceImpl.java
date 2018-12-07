@@ -357,8 +357,8 @@ public class QueriesServiceImpl implements QueriesService {
                 + " FILTER (lang(?engName) = 'en') . "
                 + "}}";
     }
-    
-     @Override
+
+    @Override
     public String getExtractedOrgListD(List<Provider> providers) {
         String varprov = "";
         String prov = "";
@@ -366,34 +366,32 @@ public class QueriesServiceImpl implements QueriesService {
 
         for (Provider p : providers) {
             varprov = " (group_concat(  ?label" + p.Name + "  ; separator=\";\")  as  ?Adv" + p.Name + " ) " + varprov;
-             varprovl = " ?label" + p.Name +" "+varprovl;
-             
-            if (p.Name.equals("Ojs")|| p.Name.equals("Dspace")){
-             
-             prov = "  GRAPH  <" + p.Graph + "> {"
-                    + "  OPTIONAL { "
-                    + "  ?event rdfs:label  ?labelA" + p.Name + " } "
-                    + "  OPTIONAL { "
-                    + "  ?event  <" + RDF.TYPE.toString() + "> <" + REDI.EXTRACTION_EVENT.toString() + "> } "
-                    + " BIND ( IF ( regex (?event , '"+p.Name+"' ,'i'), ?labelA"+p.Name+" , '' ) AS ?label"+p.Name+" )"
-                    + "  } " + prov;   
-                
-                
-            
-            }else {
-           
-            prov = "  GRAPH  <" + p.Graph + "> {"
-                    + "  OPTIONAL { "
-                    + "  ?event rdfs:label  ?label" + p.Name + " } "
-                    + "  OPTIONAL { "
-                    + "  ?event  <" + RDF.TYPE.toString() + "> <" + REDI.EXTRACTION_EVENT.toString() + "> } "
-                    + "  } " + prov;
+            varprovl = " ?label" + p.Name + " " + varprovl;
+
+            if (p.Name.equals("Ojs") || p.Name.equals("Dspace")) {
+
+                prov = "  GRAPH  <" + p.Graph + "> {"
+                        + "  OPTIONAL { "
+                        + "  ?event rdfs:label  ?labelA" + p.Name + " } "
+                        + "  OPTIONAL { "
+                        + "  ?event  <" + RDF.TYPE.toString() + "> <" + REDI.EXTRACTION_EVENT.toString() + "> } "
+                        + " BIND ( IF ( regex (?event , '" + p.Name + "' ,'i'), ?labelA" + p.Name + " , '' ) AS ?label" + p.Name + " )"
+                        + "  } " + prov;
+
+            } else {
+
+                prov = "  GRAPH  <" + p.Graph + "> {"
+                        + "  OPTIONAL { "
+                        + "  ?event rdfs:label  ?label" + p.Name + " } "
+                        + "  OPTIONAL { "
+                        + "  ?event  <" + RDF.TYPE.toString() + "> <" + REDI.EXTRACTION_EVENT.toString() + "> } "
+                        + "  } " + prov;
             }
         }
 
         String head = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
                 + "PREFIX ucmodel: <http://ucuenca.edu.ec/ontology#> "
-                + "SELECT  ?uri ?name " + varprov +" {"
+                + "SELECT  ?uri ?name " + varprov + " {"
                 + "SELECT DISTINCT ?uri ?name " + varprovl
                 + " WHERE { "
                 + "?subject  <" + REDI.BELONGTO.toString() + "> ?uri . "
@@ -403,16 +401,13 @@ public class QueriesServiceImpl implements QueriesService {
                 + "OPTIONAL  {  GRAPH   <" + con.getOrganizationsGraph() + "> { "
                 + "   ?uri  <" + REDI.BELONGTO.toString() + "> ?event  }"
                 + prov
-                + "} }Group by ?uri ?name "+varprovl
+                + "} }Group by ?uri ?name " + varprovl
                 + "} Group by ?uri ?name";
 
         return head;
-      
 
     }
-    
-    
-    
+
     @Deprecated
     @Override
     public String getExtractedOrgList(List<Provider> providers) {
@@ -444,10 +439,10 @@ public class QueriesServiceImpl implements QueriesService {
                 + "} }Group by ?uri ?name";
 
         return head;
-      
 
     }
-/*
+
+    /*
     @Deprecated
     @Override
     public String getOrgEnrichmentProvider(Map<String, String> providers) {
@@ -487,7 +482,7 @@ public class QueriesServiceImpl implements QueriesService {
 
         return head;
     }
-*/
+     */
     @Override
     public String getEnrichmentQueryResult(List<Provider> providers) {
 
@@ -522,12 +517,12 @@ public class QueriesServiceImpl implements QueriesService {
     }
 
     @Override
-    public String getOrgDisambiguationResult(List <Provider> providers) {
+    public String getOrgDisambiguationResult(List<Provider> providers) {
 
         String varprov = "";
         String prov = "";
 
-        for (Provider p : providers ) {
+        for (Provider p : providers) {
 
             varprov = " (GROUP_CONCAT(?" + p.Name + "s ;separator=\";\") as ?" + p.Name + ") " + varprov;
             prov = " OPTIONAL {       "
@@ -2071,6 +2066,38 @@ public class QueriesServiceImpl implements QueriesService {
                 + "    ?cluster a uc:Cluster.\n"
                 + "  }\n"
                 + "}";
+    }
+
+    @Override
+    public String getClusterTotals() {
+        return "PREFIX uc: <http://ucuenca.edu.ec/ontology#>\n"
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                + "      SELECT ?area (SAMPLE(?label) as ?k) (COUNT(DISTINCT ?authors) AS ?totalAuthors)\n"
+                + "              WHERE {\n"
+                + "                GRAPH <" + con.getClusterGraph() + "> { \n"
+                + "                  ?area a uc:Cluster ;\n"
+                + "                        rdfs:label ?label .\n"
+                + "                  ?authors dct:isPartOf ?area ;\n"
+                + "                           a foaf:Person . \n"
+                + "                } \n"
+                + "      } GROUP BY ?area\n";
+    }
+
+    @Override
+    public String getSubClusterTotals(String uri) {
+        return PREFIXES + "SELECT ?sc (SAMPLE(?label) as ?k) (COUNT(DISTINCT ?authors) AS ?totalAuthors) \n"
+                + "                          WHERE {\n"
+                + "                            GRAPH <" + con.getClusterGraph() + "> { \n"
+                + "                              <" + uri + "> a uc:Cluster .\n"
+                + "                              ?sc dct:isPartOf <" + uri + "> ;\n"
+                + "                                  a uc:SubCluster ;\n"
+                + "                                  rdfs:label ?label .\n"
+                + "                              ?authors a foaf:Person ;\n"
+                + "                                         dct:isPartOf ?sc . \n"
+                + "                            }\n"
+                + "                          } GROUP BY ?sc ";
     }
 
 }

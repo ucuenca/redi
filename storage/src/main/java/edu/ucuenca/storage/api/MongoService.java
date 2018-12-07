@@ -42,6 +42,9 @@ public interface MongoService {
     public String getCluster(String uri);
 
     public List<Document> getClusters();
+    
+    public List<Document> getClustersTotals();
+    public List<Document> getSubClustersTotals(String uri);
 
     public String getAuthorsByArea(String cluster, String subcluster);
     
@@ -57,7 +60,7 @@ public interface MongoService {
     public enum Collection {
         AUTHORS("authors"), PUBLICATIONS("publications"), STATISTICS("statistics"),
         RELATEDAUTHORS("relatedauthors"), AUTHORS_DISCPLINE("authors_discipline"), AUTHORS_AREA("authors_area") , 
-        COUNTRIES ("countries"), CLUSTERS("clusters");
+        COUNTRIES ("countries"), CLUSTERS("clusters"), CLUSTERSTOTALS("clusterstotals");
 
         private final String value;
 
