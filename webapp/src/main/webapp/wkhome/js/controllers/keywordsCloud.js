@@ -115,8 +115,9 @@ wkhomeControllers.controller('keywordsCloud', ['$translate', '$routeParams', '$s
 
 
            function renderAll () {
+                   waitingDialog.show();
             clustersTotals.query({}, function (res) {
-                 waitingDialog.show();
+         
                         _.map(res, function (area) {
                             $scope.data.push({
                                 id: area["area"],
@@ -157,15 +158,17 @@ wkhomeControllers.controller('keywordsCloud', ['$translate', '$routeParams', '$s
                
                renderSub ();
 
-            } else {
+            } 
+            else {
                 renderAll ();
             }
 
        }
 
        function renderSub () {
+       /* waitingDialog.show();*/
              subclustersTotals.query({id: $scope.selectedItem}, function (res) {
-                 waitingDialog.show();
+               
                             $scope.data = [];
                             _.map(res, function (area) {
                                 $scope.data.push({
@@ -174,10 +177,14 @@ wkhomeControllers.controller('keywordsCloud', ['$translate', '$routeParams', '$s
                                     value: area["totalAuthors"]
                                 });
                             });
-                            waitingDialog.hide();
+                         /*   waitingDialog.hide();*/
                         });
 
        }
+
+         $scope.$watch('selectedItem', function () { 
+           renderSub ();
+         });
 
      
 
