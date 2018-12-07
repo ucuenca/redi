@@ -8,7 +8,7 @@
       <div class="row subject-cloud">
         <div class="col-md-12">
           <div class="col-md-4" ng-cloak="">
-            <select name="board" id="board" ng-model="selectedItem" ng-options="area.id as area.label for area  in areas">
+            <select name="board" id="board"  ng-change="changeComboSelected()" ng-model="selectedItem" ng-options="area.id as area.label for area  in areas">
               <option value="">{{'Palabra Clave' | translate}}</option>
             </select>
           </div>

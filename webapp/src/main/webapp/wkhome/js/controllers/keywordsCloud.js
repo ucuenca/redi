@@ -1,11 +1,11 @@
 wkhomeControllers.controller('keywordsCloud', ['$translate', '$routeParams', '$scope', 'globalData', 'sparqlQuery', 'searchData', '$window', 'Statistics', 'clustersTotals', 'subclustersTotals',
     function ($translate, $routeParams, $scope, globalData, sparqlQuery, searchData, $window, Statistics, clustersTotals, subclustersTotals) {
-        $("html, body").animate({
+       /* $("html, body").animate({
             scrollTop: 0
-        }, 'slow', 'swing');
+        }, 'slow', 'swing');*/
 
         $scope.selectedItem = undefined;
-
+         $scope.data = [];
         Statistics.query({
             id: 'keywords_frequencypub_gt4'
         }, function (data) {
@@ -18,24 +18,26 @@ wkhomeControllers.controller('keywordsCloud', ['$translate', '$routeParams', '$s
             });
         });
 
+        renderAll ();
+
         /**
          * Search for areas...
          */
-        $scope.querySearch = function (query) {
+       /* $scope.querySearch = function (query) {
             return query ? searchData.allkeywordsList.filter(createFilterFor(query)) : searchData.allkeywordsList;
-        };
+        };*/
 
         /**
          * Create filter function for a query string
          */
-        function createFilterFor(query) {
+       /* function createFilterFor(query) {
             var lowercaseQuery = angular.lowercase(query);
             return function filterFn(area) {
                 return (angular.lowercase(area.tag).indexOf(lowercaseQuery) !== -1);
             };
-        }
+        }*/
 
-        $scope.clickonAuthor = function (id_author) {
+      /*  $scope.clickonAuthor = function (id_author) {
             clickonRelatedauthor(id_author);
         }; //end clickonAuthor
 
@@ -98,8 +100,9 @@ wkhomeControllers.controller('keywordsCloud', ['$translate', '$routeParams', '$s
                 scrollTop: $("#scrollToHere").offset().top
             }, "slow");
             $scope.loadData();
-        };
-        $scope.loadData = function () {
+        };*/
+      
+      /*  $scope.loadData = function () {
             $scope.$apply(function () {
                 $scope.filteredTodos = [], $scope.currentPage = 1, $scope.numPerPage = 10, $scope.maxSize = 5;
                 $scope.$watch('currentPage + numPerPage', function () {
@@ -108,9 +111,25 @@ wkhomeControllers.controller('keywordsCloud', ['$translate', '$routeParams', '$s
                     $scope.filteredTodos = $scope.todos.slice(begin, end);
                 });
             });
-        };
+        };*/
 
-        if (!searchData.allkeywordsCloud) {
+
+           function renderAll () {
+            clustersTotals.query({}, function (res) {
+                 waitingDialog.show();
+                        _.map(res, function (area) {
+                            $scope.data.push({
+                                id: area["area"],
+                                label: area["k"],
+                                value: area["totalAuthors"]
+                            });
+                        });
+                        waitingDialog.hide();
+            });
+              }
+         
+          
+      /*  if (!searchData.allkeywordsCloud) {
             waitingDialog.show();
             clustersTotals.query({}, function (res) {
                 setTimeout(function () {
@@ -130,15 +149,14 @@ wkhomeControllers.controller('keywordsCloud', ['$translate', '$routeParams', '$s
 
         } else {
             $scope.data = searchData.allkeywordsCloud;
-        }
+        } */
+    
 
-
-        $scope.$watch('selectedItem', function () { //Funcion para cuando se selecciona la Research Area
-            if ($scope.selectedItem != undefined && $scope.selectedItem.length > 0) {
+       $scope.changeComboSelected  = function() {
+                if ($scope.selectedItem != undefined && $scope.selectedItem.length > 0) {
                 waitingDialog.show();
                 subclustersTotals.query({id: $scope.selectedItem}, function (res) {
-                    setTimeout(function () {
-                        $scope.$apply(function () {
+                            
                             $scope.data = [];
                             _.map(res, function (area) {
                                 $scope.data.push({
@@ -149,18 +167,20 @@ wkhomeControllers.controller('keywordsCloud', ['$translate', '$routeParams', '$s
                             });
                             waitingDialog.hide();
                         });
-                    }, 3000);
-                });
+
             } else {
-                $scope.data = searchData.allkeywordsCloud;
+                renderAll ();
             }
-        });
+
+       }
+
+     
 
         //Function that displays the buttons to export the report
-        $scope.exportReport = function (id) {
+      /*  $scope.exportReport = function (id) {
             $scope.keyw = id;
             $scope.showRepButtons = true;
-        };
+        };*/
 
     }
 ]);
