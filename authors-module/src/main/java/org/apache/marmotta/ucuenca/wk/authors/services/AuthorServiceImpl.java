@@ -373,6 +373,7 @@ public class AuthorServiceImpl implements AuthorService {
             List<HashMap> result = endpoint.querySource(query);
             if (!result.isEmpty()) {
                 authorsSize = Integer.parseInt((String) result.get(0).get(COUNTWORD));
+                 log.info("N. Autores: "+authorsSize);
             } else {
                 return "Problema en las consultas";
             }

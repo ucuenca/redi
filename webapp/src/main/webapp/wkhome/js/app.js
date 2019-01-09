@@ -85,6 +85,9 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                 when('/info/about', {
                   templateUrl: '/wkhome/partials/about.html'
                 }).
+                 when('/info/work', {
+                  templateUrl: '/wkhome/partials/work.html'
+                }).
                 when('/info/sources', {
                   templateUrl: '/wkhome/partials/sources.html'
                 }).
