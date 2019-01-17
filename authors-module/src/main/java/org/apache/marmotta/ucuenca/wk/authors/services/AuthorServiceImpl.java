@@ -399,7 +399,6 @@ public class AuthorServiceImpl implements AuthorService {
                              localnpub = Integer.parseInt( sparqlFunctionsService.querylocal(countPublicationslocal(localResource)).get(0).get("npub").stringValue());
                         }
                         
-                        
                         if (!askauthor || npub > localnpub) {
                             contAutoresNuevosEncontrados++;
                             printPercentProcess(contAutoresNuevosEncontrados, authorsSize, endpoint.getName());
@@ -424,24 +423,32 @@ public class AuthorServiceImpl implements AuthorService {
                                     case "http://xmlns.com/foaf/0.1/givenName":// store foaf:firstName
                                     case "http://xmlns.com/foaf/0.1/firstName":
                                         insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, FOAF.firstName.toString(), object);
-                                        sparqlFunctionsService.updateAuthor(insert);
+                                      //  sparqlFunctionsService.updateAuthor(insert);
                                         break;
                                     case "http://xmlns.com/foaf/0.1/familyName": // store foaf:lastName
                                     case "http://xmlns.com/foaf/0.1/lastName":
                                         insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, FOAF.lastName.toString(), object);
-                                        sparqlFunctionsService.updateAuthor(insert);
+                                     //   sparqlFunctionsService.updateAuthor(insert);
                                         break;
                                     case "http://xmlns.com/foaf/0.1/name": // store foaf:name
                                         insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, FOAF.name.toString(), object);
-                                        sparqlFunctionsService.updateAuthor(insert);
+                                      //  sparqlFunctionsService.updateAuthor(insert);
                                         break;
+                                     case "http://purl.org/spar/scoro/hasORCID": // store foaf:name
+                                        insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, "http://purl.org/spar/scoro/hasORCID", object);
+                                      //  sparqlFunctionsService.updateAuthor(insert);
+                                        break;
+                                     case "http://www.w3.org/2006/vcard/ns#hasEmail":
+                                        insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, "http://www.w3.org/2006/vcard/ns#hasEmail", object);
+                                      //  sparqlFunctionsService.updateAuthor(insert);
+                                         break;
                                     case "http://rdaregistry.info/Elements/u/P60095": // store foaf:name
                                         insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, SCHEMA.affiliation.toString(), object);
-                                        sparqlFunctionsService.updateAuthor(insert);
+                                       // sparqlFunctionsService.updateAuthor(insert);
                                         break;
                                     case "http://purl.org/dc/terms/isVersionOf":
                                         insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, DCTERMS.IS_VERSION_OF.toString(), buildLocalURI(object, endpoint.getType(), endpoint.getName()));
-                                        sparqlFunctionsService.updateAuthor(insert);
+                                       // sparqlFunctionsService.updateAuthor(insert);
                                         break;
                                     case "http://www.w3.org/2002/07/owl#sameAs": // If sameas found include the provenance
                                         //SparqlEndpoint newEndpoint = matchWithProvenance(object);
@@ -450,7 +457,7 @@ public class AuthorServiceImpl implements AuthorService {
                                          sparqlFunctionsService.updateAuthor(provenanceQueryInsert);
                                          }*/
                                         insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, OWL.SAMEAS.toString(), object);
-                                        sparqlFunctionsService.updateAuthor(insert);
+                                        
                                         break;
                                     case "http://rdaregistry.info/Elements/a/P50195":
 
@@ -462,7 +469,10 @@ public class AuthorServiceImpl implements AuthorService {
                                         }
                                         break;
                                     default:
+                                        
                                 }
+                                if (!("http://rdaregistry.info/Elements/a/P50161".equals(predicate) || "http://rdaregistry.info/Elements/a/P50161".equals(predicate)))
+                                {  sparqlFunctionsService.updateAuthor(insert);}
                             }
 
                             String sameAs = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, OWL.SAMEAS.toString(), resource);

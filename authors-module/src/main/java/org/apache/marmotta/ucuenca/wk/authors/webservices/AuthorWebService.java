@@ -82,11 +82,23 @@ public class AuthorWebService {
 
     public static final String ADD_ENDPOINT = "/addendpoint";
     public static final String AUTHOR_SPLIT = "/split";
-    private static final int MAX_NUMBER_CSV_FIELDS = 3;
+    private static final int MAX_NUMBER_CSV_FIELDS = 5;
+    private static final int MIN_NUMBER_CSV_FIELDS = 2;
     public static final String APPLICATIONJSON = "application/json";
 
   
-
+   public boolean isOrcid (String t) {
+      return  t.length() > 0 ?  t.matches("^\\s*(https?:\\/\\/)(orcid.org)\\/([0-9X]{4}-[0-9X]{4}-[0-9X]{4}-[0-9X]{4})\\s*$") : true;
+   
+   }
+   
+   public boolean isMail (String t) {
+      return  t.length() > 0 ? t.matches("^[^@]+@[^@]+\\.[a-zA-Z]{2,}\\s*$"): true;
+   }
+   
+   public boolean isOther (String t) {
+      return  t.matches("^((?![0-9\\@]).)*$") ;
+   }
 
     @POST
     @Path("/upload")
@@ -104,11 +116,37 @@ public class AuthorWebService {
         try (InputStream in = request.getInputStream()) {
             lines = IOUtils.readLines(in, StandardCharsets.UTF_8);
             // Validate file structure.
+            int count = 0;
             for (String line : lines) {
-                int fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1).length;
-                if (fields > MAX_NUMBER_CSV_FIELDS || fields < MAX_NUMBER_CSV_FIELDS - 1) {
+                String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+                if (fields.length > MAX_NUMBER_CSV_FIELDS || fields.length < MIN_NUMBER_CSV_FIELDS ) {
                     return Response.status(Status.BAD_REQUEST).entity("File should have two to three fields.").build();
                 }
+               if (count>0){
+                boolean validation = false;
+                for (int i = 0 ;i < fields.length;i++){
+                    switch (i){
+                           case 2:
+                             validation = true;
+                                break;
+                            case 3:
+                              validation  = isOrcid(fields[i]);
+                                break;
+                            case 4:
+                                validation = isMail(fields[i]);
+                                break;
+                                
+                            default:
+                                validation = isOther(fields[i]);
+                                 break;
+                      }
+                    if (!validation){
+                    return Response.status(Status.BAD_REQUEST).entity("Validation problems in field:"+(i+1)+ " Value:"+fields[i]+" \n Remember file schema for csv [first Name, last Name, keywords , orcid , mail ] ").build();
+                    }
+                }
+               }
+               count++;
+                
             }
         }
         // Store authors
