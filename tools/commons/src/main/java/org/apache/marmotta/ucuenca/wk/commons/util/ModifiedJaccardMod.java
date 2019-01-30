@@ -68,11 +68,12 @@ public class ModifiedJaccardMod {
                         sim = abvPenalty;
                     }
                     if (onlyCompleteMatchs && condFullMatch || !onlyCompleteMatchs && condAbvMatch) {
-                        double ix = tokens1.size() - i;
-                        double jx = tokens2.size() - j;
-                        ix = ix / (tokens1.size() + 0.0);
-                        jx = jx / (tokens2.size() + 0.0);
-                        double ij = Math.min(ix, jx) / Math.max(ix, jx);
+                        int maxTkSz = Math.min(tokens1.size(), tokens2.size());
+                        double ix = maxTkSz - i;
+                        double jx = maxTkSz - j;
+                        ix = ix / (maxTkSz + 0.0);
+                        jx = jx / (maxTkSz + 0.0);
+                        double ij = Math.abs(Math.min(ix, jx) / Math.max(ix, jx));
                         sumSimilarity += prioritizeWordOrder ? ij * sim : sim;
                         countMatchs++;
                         usedTokens1.add(i);
