@@ -339,6 +339,11 @@ public class ConstantServiceImpl implements ConstantService {
     public String getDOAJGraph() {
         return confService.getBaseContext() + "provider/DOAJProvider";
     }
+    
+    @Override
+    public String getORCIDGraph() {
+        return confService.getBaseContext() + "provider/ORCIDProvider";
+    }
 
     @Override
     public String getDspaceGraph() {

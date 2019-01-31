@@ -116,6 +116,8 @@ public interface ConstantService {
     String getScieloGraph();
     
     String getDOAJGraph();
+    
+    String getORCIDGraph();
 
     String getExternalAuthorsGraph();
 

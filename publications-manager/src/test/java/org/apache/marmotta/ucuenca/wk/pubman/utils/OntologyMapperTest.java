@@ -48,6 +48,7 @@ public class OntologyMapperTest {
     private static Model scieloModel;
     private static Model springerModel;
     private static Model doajModel;
+    private static Model orcidModel;
     private static InputStream academicsKnowledgeMapper;
     private static InputStream scopusMapper;
     private static InputStream scopusMapperORCID;
@@ -56,6 +57,7 @@ public class OntologyMapperTest {
     private static InputStream scieloMapper;
     private static InputStream springerMapper;
     private static InputStream doajMapper;
+    private static InputStream orcidMapper;
     private static InputStream emptyMapper;
     private static final Logger log = LoggerFactory.getLogger(OntologyMapperTest.class);
 
@@ -69,6 +71,7 @@ public class OntologyMapperTest {
             scholarModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/scholar.rdf"), "", RDFFormat.RDFXML);
             scieloModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/scielo.rdf"), "", RDFFormat.RDFXML);
             doajModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/doaj.rdf"), "", RDFFormat.RDFXML);
+            orcidModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/orcid.rdf"), "", RDFFormat.RDFXML);
             springerModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/springer.ttl"), "", RDFFormat.TURTLE);
         } catch (IOException | RDFParseException | UnsupportedRDFormatException ex) {
             log.error("cannot read file.", ex);
@@ -81,6 +84,7 @@ public class OntologyMapperTest {
         springerMapper = OntologyMapper.class.getResourceAsStream("/mapping/springer.ttl");
         scieloMapper = OntologyMapper.class.getResourceAsStream("/mapping/scielo.ttl");
         doajMapper = OntologyMapper.class.getResourceAsStream("/mapping/doaj.ttl");
+        orcidMapper = OntologyMapper.class.getResourceAsStream("/mapping/orcid.ttl");
         emptyMapper = new ByteArrayInputStream(new byte[]{});
 
         InputStream resourceAsStream = OntologyMapper.class.getResourceAsStream("/mapping/redi.r2r");
@@ -185,6 +189,19 @@ public class OntologyMapperTest {
         Model resultWithMapperFile = OntologyMapper.map(doajModel, doajMapper, vocabulary);
         Model resultEmptyMapperFile = OntologyMapper.map(doajModel, emptyMapper, vocabulary);
         assertEquals(resultWithMapperFile.size(), 1613);
+        assertEquals(resultEmptyMapperFile.size(), 0);
+    }
+    
+    /**
+     * Test ontology mapping of DOAJ vocabulary.
+     */
+    @Test
+    public void testORCIDOntologyMapping() throws RDFHandlerException {
+        assertEquals(orcidModel.size(), 860);
+        Model resultWithMapperFile = OntologyMapper.map(orcidModel, orcidMapper, vocabulary);
+        Rio.write(resultWithMapperFile, System.out, RDFFormat.RDFXML);
+        Model resultEmptyMapperFile = OntologyMapper.map(orcidModel, emptyMapper, vocabulary);
+        assertEquals(resultWithMapperFile.size(), 1803);
         assertEquals(resultEmptyMapperFile.size(), 0);
     }
 

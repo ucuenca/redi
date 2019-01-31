@@ -1,0 +1,1708 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.0/0000-0003-1067-8707/record">
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://orcid.org/search/nelson_piedra"/>
+	<account xmlns="https://orcid.org/ontology/">http://loop.frontiersin.org/people/376995/overview?referrer=orcid_profile</account>
+	<account xmlns="https://orcid.org/ontology/">http://www.researcherid.com/rid/F-2899-2010</account>
+	<account xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/authorDetails.url?authorID=35146805300&amp;partnerID=MN8TOARS</account>
+	<account xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/authorDetails.url?authorID=57197836159&amp;partnerID=MN8TOARS</account>
+	<account xmlns="https://orcid.org/ontology/">http://www.twitter.com/nopiedra</account>
+	<aff xmlns="https://orcid.org/ontology/">Universidad Politécnica de Madrid</aff>
+	<aff xmlns="https://orcid.org/ontology/">Universidad Técnica Particular de Loja</aff>
+	<familyName xmlns="https://orcid.org/ontology/">Piedra</familyName>
+	<givenName xmlns="https://orcid.org/ontology/">Nelson</givenName>
+	<name xmlns="https://orcid.org/ontology/">Piedra N</name>
+	<orcid xmlns="https://orcid.org/ontology/">0000-0003-1067-8707</orcid>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829707"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829708"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829709"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829710"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829711"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829712"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829713"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829714"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829715"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829716"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829717"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829718"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829719"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829720"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829721"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829722"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512202"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512203"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512204"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512205"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512207"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358089"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358090"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358091"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358092"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358093"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358094"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358095"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320887"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320888"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320889"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320890"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718010"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718011"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718012"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718013"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718014"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/35655539"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/35655540"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609073"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609074"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609075"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609076"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434381"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434382"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434383"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434384"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434385"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434386"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434387"/>
+	<topics xmlns="https://orcid.org/ontology/">Open Data, OER, OCW, LinkedData, Semantic Web, RDF, SPARQL</topics>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829707">
+	<collection xmlns="https://orcid.org/ontology/">Program</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829707_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829707_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829707_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829707_3"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829707_4"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829707_0"/>
+	<date xmlns="https://orcid.org/ontology/">2014</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1108/PROG-07-2012-0045</doi>
+	<title xmlns="https://orcid.org/ontology/">Consuming and producing linked open data: The case of OpenCourseWare</title>
+	<type xmlns="https://orcid.org/ontology/">journal-article</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-84893445335&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829707_0">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829707_1">
+	<name xmlns="https://orcid.org/ontology/">Tovar, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829707_2">
+	<name xmlns="https://orcid.org/ontology/">Colomo-Palacios, R.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829707_3">
+	<name xmlns="https://orcid.org/ontology/">Lopez-Vargas, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829707_4">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.A.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829708">
+	<collection xmlns="https://orcid.org/ontology/">Proceedings - Frontiers in Education Conference, FIE</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829708_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829708_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829708_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829708_3"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829708_0"/>
+	<date xmlns="https://orcid.org/ontology/">2013</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/FIE.2013.6684885</doi>
+	<title xmlns="https://orcid.org/ontology/">Using linked open data to improve the search of open educational resources for engineering students</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-84893292089&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829708_0">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829708_1">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829708_2">
+	<name xmlns="https://orcid.org/ontology/">López, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829708_3">
+	<name xmlns="https://orcid.org/ontology/">Tovar, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829709">
+	<collection xmlns="https://orcid.org/ontology/">ASEE Annual Conference and Exposition, Conference Proceedings</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829709_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829709_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829709_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829709_3"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829709_0"/>
+	<date xmlns="https://orcid.org/ontology/">2013</date>
+	<title xmlns="https://orcid.org/ontology/">Impact of open educational resources in higher education institutions in spain and latin americas through social network analysis</title>
+	<type xmlns="https://orcid.org/ontology/">journal-article</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-84884302480&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829709_0">
+	<name xmlns="https://orcid.org/ontology/">Tovar, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829709_1">
+	<name xmlns="https://orcid.org/ontology/">Lopez-Vargas, J.A.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829709_2">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.O.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829709_3">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.A.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829710">
+	<collection xmlns="https://orcid.org/ontology/">IEEE Global Engineering Education Conference, EDUCON</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829710_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829710_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829710_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829710_3"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829710_0"/>
+	<date xmlns="https://orcid.org/ontology/">2013</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/EduCon.2013.6530269</doi>
+	<title xmlns="https://orcid.org/ontology/">OCW-S: Enablers for building sustainable open education evolving OCW and MOOC</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-84881017678&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829710_0">
+	<name xmlns="https://orcid.org/ontology/">Tovar, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829710_1">
+	<name xmlns="https://orcid.org/ontology/">Dimovska, A.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829710_2">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829710_3">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829711">
+	<collection xmlns="https://orcid.org/ontology/">IEEE Global Engineering Education Conference, EDUCON</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829711_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829711_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829711_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829711_3"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829711_4"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829711_0"/>
+	<date xmlns="https://orcid.org/ontology/">2012</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/EDUCON.2012.6201202</doi>
+	<title xmlns="https://orcid.org/ontology/">Combining Linked Data and mobiles devices to improve access to OCW</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-84864116918&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829711_0">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829711_1">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829711_2">
+	<name xmlns="https://orcid.org/ontology/">López, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829711_3">
+	<name xmlns="https://orcid.org/ontology/">Tovar, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829711_4">
+	<name xmlns="https://orcid.org/ontology/">Martinez-Bonastre, O.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829712">
+	<collection xmlns="https://orcid.org/ontology/">Journal of Universal Computer Science</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829712_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829712_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829712_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829712_3"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829712_4"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829712_0"/>
+	<date xmlns="https://orcid.org/ontology/">2012</date>
+	<title xmlns="https://orcid.org/ontology/">OER development and promotion. Outcomes of an international research project on the OpenCourseWare model</title>
+	<type xmlns="https://orcid.org/ontology/">journal-article</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-84857876808&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829712_0">
+	<name xmlns="https://orcid.org/ontology/">Tovar, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829712_1">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829712_2">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829712_3">
+	<name xmlns="https://orcid.org/ontology/">López, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829712_4">
+	<name xmlns="https://orcid.org/ontology/">Martinez-Bonastre, O.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829713">
+	<collection xmlns="https://orcid.org/ontology/">2011 IEEE Global Engineering Education Conference, EDUCON 2011</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829713_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829713_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829713_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829713_3"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829713_4"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829713_0"/>
+	<date xmlns="https://orcid.org/ontology/">2011</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/EDUCON.2011.5773299</doi>
+	<title xmlns="https://orcid.org/ontology/">Finding OERs with social-semantic search</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-79960251402&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829713_0">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829713_1">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829713_2">
+	<name xmlns="https://orcid.org/ontology/">López, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829713_3">
+	<name xmlns="https://orcid.org/ontology/">Tovar, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829713_4">
+	<name xmlns="https://orcid.org/ontology/">Martinez, O.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829714">
+	<collection xmlns="https://orcid.org/ontology/">2011 IEEE Global Engineering Education Conference, EDUCON 2011</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829714_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829714_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829714_2"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829714_0"/>
+	<date xmlns="https://orcid.org/ontology/">2011</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/EDUCON.2011.5773281</doi>
+	<title xmlns="https://orcid.org/ontology/">Quality model proposal for educational material production in OCW sites</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-79960204979&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829714_0">
+	<name xmlns="https://orcid.org/ontology/">Romero Peláez, A.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829714_1">
+	<name xmlns="https://orcid.org/ontology/">Piedra Pullaguari, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829714_2">
+	<name xmlns="https://orcid.org/ontology/">Tovar Caro, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829715">
+	<collection xmlns="https://orcid.org/ontology/">IET Software</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829715_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829715_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829715_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829715_3"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829715_4"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829715_0"/>
+	<date xmlns="https://orcid.org/ontology/">2010</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1049/iet-sen.2010.0046</doi>
+	<title xmlns="https://orcid.org/ontology/">Usage of social and semantic web technologies to design a searching architecture for software requirement artefacts</title>
+	<type xmlns="https://orcid.org/ontology/">journal-article</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-78751514000&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829715_0">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829715_1">
+	<name xmlns="https://orcid.org/ontology/">López, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829715_2">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829715_3">
+	<name xmlns="https://orcid.org/ontology/">Martínez, O.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829715_4">
+	<name xmlns="https://orcid.org/ontology/">Tovar, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829716">
+	<collection xmlns="https://orcid.org/ontology/">Proceedings - 10th IEEE International Conference on Advanced Learning Technologies, ICALT 2010</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829716_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829716_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829716_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829716_3"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829716_4"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829716_0"/>
+	<date xmlns="https://orcid.org/ontology/">2010</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/ICALT.2010.64</doi>
+	<title xmlns="https://orcid.org/ontology/">Design study of OER-CC ontology: A semantic web approach to describe open educational resources</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-78049297052&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829716_0">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829716_1">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829716_2">
+	<name xmlns="https://orcid.org/ontology/">López, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829716_3">
+	<name xmlns="https://orcid.org/ontology/">Tovar, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829716_4">
+	<name xmlns="https://orcid.org/ontology/">Martínez, O.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829717">
+	<collection xmlns="https://orcid.org/ontology/">ASEE Annual Conference and Exposition, Conference Proceedings</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829717_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829717_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829717_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829717_3"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829717_0"/>
+	<date xmlns="https://orcid.org/ontology/">2010</date>
+	<title xmlns="https://orcid.org/ontology/">A quality model of OpenCourseWare applied to Engineering courses</title>
+	<type xmlns="https://orcid.org/ontology/">journal-article</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-77955936056&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829717_0">
+	<name xmlns="https://orcid.org/ontology/">Tovar, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829717_1">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829717_2">
+	<name xmlns="https://orcid.org/ontology/">Castro, M.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829717_3">
+	<name xmlns="https://orcid.org/ontology/">Llamas, M.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829718">
+	<collection xmlns="https://orcid.org/ontology/">2010 IEEE Education Engineering Conference, EDUCON 2010</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829718_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829718_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829718_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829718_3"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829718_4"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829718_0"/>
+	<date xmlns="https://orcid.org/ontology/">2010</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/EDUCON.2010.5492349</doi>
+	<title xmlns="https://orcid.org/ontology/">Measuring collaboration and creativity skills through rubrics: Experience from UTPL collaborative social networks course</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-77954932806&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829718_0">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829718_1">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829718_2">
+	<name xmlns="https://orcid.org/ontology/">López, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829718_3">
+	<name xmlns="https://orcid.org/ontology/">Romero, A.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829718_4">
+	<name xmlns="https://orcid.org/ontology/">Tovar, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829719">
+	<collection xmlns="https://orcid.org/ontology/">2010 IEEE Education Engineering Conference, EDUCON 2010</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829719_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829719_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829719_10"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829719_11"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829719_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829719_3"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829719_4"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829719_5"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829719_6"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829719_7"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829719_8"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829719_9"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829719_0"/>
+	<date xmlns="https://orcid.org/ontology/">2010</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/EDUCON.2010.5493061</doi>
+	<title xmlns="https://orcid.org/ontology/">Meta-analysis of the TAEE project applying social network analysis</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-77954942434&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829719_0">
+	<name xmlns="https://orcid.org/ontology/">López Vargas, J.A.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829719_1">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829719_10">
+	<name xmlns="https://orcid.org/ontology/">Benito, M.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829719_11">
+	<name xmlns="https://orcid.org/ontology/">Landaluce, A.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829719_2">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829719_3">
+	<name xmlns="https://orcid.org/ontology/">Tovar, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829719_4">
+	<name xmlns="https://orcid.org/ontology/">Blázques, M.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829719_5">
+	<name xmlns="https://orcid.org/ontology/">Castro, M.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829719_6">
+	<name xmlns="https://orcid.org/ontology/">Arriaga, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829719_7">
+	<name xmlns="https://orcid.org/ontology/">Pescador, F.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829719_8">
+	<name xmlns="https://orcid.org/ontology/">Romo, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829719_9">
+	<name xmlns="https://orcid.org/ontology/">Casquero, O.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829720">
+	<collection xmlns="https://orcid.org/ontology/">2010 IEEE Education Engineering Conference, EDUCON 2010</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829720_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829720_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829720_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829720_3"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829720_4"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829720_0"/>
+	<date xmlns="https://orcid.org/ontology/">2010</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/EDUCON.2010.5492453</doi>
+	<title xmlns="https://orcid.org/ontology/">An approach for description of open educational resources based on semantic technologies</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-77954950423&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829720_0">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829720_1">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829720_2">
+	<name xmlns="https://orcid.org/ontology/">López, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829720_3">
+	<name xmlns="https://orcid.org/ontology/">Martínez, O.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829720_4">
+	<name xmlns="https://orcid.org/ontology/">Caro, E.T.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829721">
+	<collection xmlns="https://orcid.org/ontology/">Proceedings of the 2009 Euro American Conference on Telematics and Information Systems: New Opportunities to Increase Digital Citizenship, EATIS '09</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829721_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829721_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829721_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829721_3"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829721_4"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829721_0"/>
+	<date xmlns="https://orcid.org/ontology/">2009</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1145/1551722.1551756</doi>
+	<title xmlns="https://orcid.org/ontology/">Open educational practices and resources based on social software, UTPL experience</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-70449669124&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829721_0">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829721_1">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829721_2">
+	<name xmlns="https://orcid.org/ontology/">López, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829721_3">
+	<name xmlns="https://orcid.org/ontology/">Tovar, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829721_4">
+	<name xmlns="https://orcid.org/ontology/">Martínez, O.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829722">
+	<collection xmlns="https://orcid.org/ontology/">Proceedings - 2009 9th IEEE International Conference on Advanced Learning Technologies, ICALT 2009</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829722_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829722_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829722_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829722_3"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829722_0"/>
+	<date xmlns="https://orcid.org/ontology/">2009</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/ICALT.2009.224</doi>
+	<title xmlns="https://orcid.org/ontology/">Open educational practices and resources based on social software: UTPL experience</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-70449397635&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829722_0">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829722_1">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829722_2">
+	<name xmlns="https://orcid.org/ontology/">Tovar, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/11829722_3">
+	<name xmlns="https://orcid.org/ontology/">Martínez, O.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512202">
+	<collection xmlns="https://orcid.org/ontology/">IEEE Transactions on Education</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512202_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512202_1"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512202_0"/>
+	<date xmlns="https://orcid.org/ontology/">2014</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/TE.2014.2359257</doi>
+	<title xmlns="https://orcid.org/ontology/">Guest editorial: Open educational resources in engineering education: Various perspectives opening the education of engineers</title>
+	<type xmlns="https://orcid.org/ontology/">journal-article</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-84908562753&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512202_0">
+	<name xmlns="https://orcid.org/ontology/">Tovar, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512202_1">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512203">
+	<collection xmlns="https://orcid.org/ontology/">Communications in Computer and Information Science</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512203_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512203_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512203_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512203_3"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512203_0"/>
+	<date xmlns="https://orcid.org/ontology/">2014</date>
+	<title xmlns="https://orcid.org/ontology/">Domain categorization of open educational resources based on linked data</title>
+	<type xmlns="https://orcid.org/ontology/">book</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-84922041562&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512203_0">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512203_1">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512203_2">
+	<name xmlns="https://orcid.org/ontology/">Lopez-Vargas, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512203_3">
+	<name xmlns="https://orcid.org/ontology/">Tovar-Caro, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512204">
+	<collection xmlns="https://orcid.org/ontology/">IEEE Global Engineering Education Conference, EDUCON</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512204_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512204_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512204_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512204_3"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512204_0"/>
+	<date xmlns="https://orcid.org/ontology/">2014</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/EDUCON.2014.6826249</doi>
+	<title xmlns="https://orcid.org/ontology/">Supporting openness of MOOCs contents through of an OER and OCW framework based on Linked Data technologies</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-84903479238&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512204_0">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512204_1">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512204_2">
+	<name xmlns="https://orcid.org/ontology/">López, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512204_3">
+	<name xmlns="https://orcid.org/ontology/">Tovar Caro, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512205">
+	<collection xmlns="https://orcid.org/ontology/">ASEE Annual Conference and Exposition, Conference Proceedings</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512205_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512205_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512205_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512205_3"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512205_0"/>
+	<date xmlns="https://orcid.org/ontology/">2013</date>
+	<title xmlns="https://orcid.org/ontology/">Impact of open educational resources in higher education institutions in spain and latin americas through social network analysis</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-84884302480&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512205_0">
+	<name xmlns="https://orcid.org/ontology/">Tovar, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512205_1">
+	<name xmlns="https://orcid.org/ontology/">Lopez-Vargas, J.A.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512205_2">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.O.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512205_3">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.A.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512207">
+	<collection xmlns="https://orcid.org/ontology/">ASEE Annual Conference and Exposition, Conference Proceedings</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512207_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512207_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512207_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512207_3"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512207_0"/>
+	<date xmlns="https://orcid.org/ontology/">2010</date>
+	<title xmlns="https://orcid.org/ontology/">A quality model of OpenCourseWare applied to Engineering courses</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-77955936056&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512207_0">
+	<name xmlns="https://orcid.org/ontology/">Tovar, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512207_1">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512207_2">
+	<name xmlns="https://orcid.org/ontology/">Castro, M.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/15512207_3">
+	<name xmlns="https://orcid.org/ontology/">Llamas, M.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358089">
+	<collection xmlns="https://orcid.org/ontology/">Journal of Universal Computer Science</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358089_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358089_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358089_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358089_3"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358089_4"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358089_0"/>
+	<date xmlns="https://orcid.org/ontology/">2012</date>
+	<title xmlns="https://orcid.org/ontology/">OER development and promotion. Outcomes of an international research project on the OpenCourseWare model</title>
+	<type xmlns="https://orcid.org/ontology/">journal-article</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-84857876808&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358089_0">
+	<name xmlns="https://orcid.org/ontology/">Tovar, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358089_1">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358089_2">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358089_3">
+	<name xmlns="https://orcid.org/ontology/">López, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358089_4">
+	<name xmlns="https://orcid.org/ontology/">Martinez-Bonastre, O.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358090">
+	<collection xmlns="https://orcid.org/ontology/">Journal of Universal Computer Science</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358090_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358090_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358090_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358090_3"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358090_0"/>
+	<date xmlns="https://orcid.org/ontology/">2015</date>
+	<title xmlns="https://orcid.org/ontology/">Seeking open educational resources to compose massive open online courses in engineering education an approach based on linked open data</title>
+	<type xmlns="https://orcid.org/ontology/">journal-article</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-84935127260&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358090_0">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358090_1">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358090_2">
+	<name xmlns="https://orcid.org/ontology/">López, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358090_3">
+	<name xmlns="https://orcid.org/ontology/">Tovar, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358091">
+	<collection xmlns="https://orcid.org/ontology/">Proceedings - Frontiers in Education Conference, FIE</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358091_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358091_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358091_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358091_3"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358091_0"/>
+	<date xmlns="https://orcid.org/ontology/">2015</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/FIE.2014.7044050</doi>
+	<title xmlns="https://orcid.org/ontology/">Roadmap towards the openness of educational resources: Outcomes of the participation in the eMadrid network</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-84938150398&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358091_0">
+	<name xmlns="https://orcid.org/ontology/">Caro, E.T.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358091_1">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358091_2">
+	<name xmlns="https://orcid.org/ontology/">Lopez-Vargas, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358091_3">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358092">
+	<collection xmlns="https://orcid.org/ontology/">Proceedings - Frontiers in Education Conference, FIE</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358092_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358092_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358092_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358092_3"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358092_0"/>
+	<date xmlns="https://orcid.org/ontology/">2015</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/FIE.2014.7044454</doi>
+	<title xmlns="https://orcid.org/ontology/">Recommendation of OERs shared in social media based-on social networks analysis approach</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-84938099557&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358092_0">
+	<name xmlns="https://orcid.org/ontology/">Lopez-Vargas, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358092_1">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358092_2">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358092_3">
+	<name xmlns="https://orcid.org/ontology/">Tovar, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358093">
+	<collection xmlns="https://orcid.org/ontology/">IEEE Global Engineering Education Conference, EDUCON</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358093_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358093_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358093_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358093_3"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358093_0"/>
+	<date xmlns="https://orcid.org/ontology/">2015</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/EDUCON.2015.7096092</doi>
+	<title xmlns="https://orcid.org/ontology/">Towards a learning analytics approach for supporting discovery and reuse of OER an approach based on Social Networks Analysis and Linked Open Data</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-84946015888&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358093_0">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358093_1">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358093_2">
+	<name xmlns="https://orcid.org/ontology/">López, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358093_3">
+	<name xmlns="https://orcid.org/ontology/">Tovar Caro, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358094">
+	<collection xmlns="https://orcid.org/ontology/">Revista Iberoamericana de Tecnologias del Aprendizaje</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358094_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358094_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358094_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358094_3"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358094_0"/>
+	<date xmlns="https://orcid.org/ontology/">2015</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/RITA.2015.2486387</doi>
+	<title xmlns="https://orcid.org/ontology/">OER Recommendation for Entrepreneurship Using a Framework Based on Social Network Analysis</title>
+	<type xmlns="https://orcid.org/ontology/">journal-article</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-84947914688&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358094_0">
+	<name xmlns="https://orcid.org/ontology/">Lopez-Vargas, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358094_1">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358094_2">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358094_3">
+	<name xmlns="https://orcid.org/ontology/">Tovar, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358095">
+	<collection xmlns="https://orcid.org/ontology/">RISTI - Revista Iberica de Sistemas e Tecnologias de Informacao</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358095_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358095_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358095_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358095_3"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358095_4"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358095_5"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358095_6"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358095_7"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358095_0"/>
+	<date xmlns="https://orcid.org/ontology/">2015</date>
+	<doi xmlns="https://orcid.org/ontology/">10.17013/risti.e3.55-70</doi>
+	<title xmlns="https://orcid.org/ontology/">Framework for the integration of digital resources based-on a Semantic Web approach,Marco de Trabajo para la Integración de Recursos Digitales Basado en un Enfoque de Web Semántica</title>
+	<type xmlns="https://orcid.org/ontology/">journal-article</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-85034759661&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358095_0">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358095_1">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358095_2">
+	<name xmlns="https://orcid.org/ontology/">Quichimbo, P.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358095_3">
+	<name xmlns="https://orcid.org/ontology/">Saquicela, V.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358095_4">
+	<name xmlns="https://orcid.org/ontology/">Cadme, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358095_5">
+	<name xmlns="https://orcid.org/ontology/">López, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358095_6">
+	<name xmlns="https://orcid.org/ontology/">Espinoza, M.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/22358095_7">
+	<name xmlns="https://orcid.org/ontology/">Tovar, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320887">
+	<collection xmlns="https://orcid.org/ontology/">Journal of Universal Computer Science</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320887_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320887_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320887_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320887_3"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320887_4"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320887_0"/>
+	<date xmlns="https://orcid.org/ontology/">2016</date>
+	<title xmlns="https://orcid.org/ontology/">Towards a semantic definition of a framework to implement accessible e-learning projects</title>
+	<type xmlns="https://orcid.org/ontology/">journal-article</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-84986538341&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320887_0">
+	<name xmlns="https://orcid.org/ontology/">Amado-Salvatierra, H.R.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320887_1">
+	<name xmlns="https://orcid.org/ontology/">Hilera, J.R.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320887_2">
+	<name xmlns="https://orcid.org/ontology/">Tortosa, S.O.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320887_3">
+	<name xmlns="https://orcid.org/ontology/">Rizzardini, R.H.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320887_4">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320888">
+	<collection xmlns="https://orcid.org/ontology/">2015 International Conference on Information Technology Based Higher Education and Training, ITHET 2015</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320888_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320888_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320888_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320888_3"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320888_0"/>
+	<date xmlns="https://orcid.org/ontology/">2015</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/ITHET.2015.7218024</doi>
+	<title xmlns="https://orcid.org/ontology/">Promotion of self-learning by means of Open Educational Resources and semantic technologies</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-84959468634&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320888_0">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320888_1">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320888_2">
+	<name xmlns="https://orcid.org/ontology/">Lopez, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320888_3">
+	<name xmlns="https://orcid.org/ontology/">Caro, E.T.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320889">
+	<collection xmlns="https://orcid.org/ontology/">Communications in Computer and Information Science</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320889_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320889_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320889_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320889_3"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320889_0"/>
+	<date xmlns="https://orcid.org/ontology/">2016</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1007/978-3-319-29585-5_1</doi>
+	<title xmlns="https://orcid.org/ontology/">Open education practices as answer to new demands of training in entrepreneurship competences: The role of recommender systems</title>
+	<type xmlns="https://orcid.org/ontology/">book</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-84959186640&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320889_0">
+	<name xmlns="https://orcid.org/ontology/">Tovar, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320889_1">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320889_2">
+	<name xmlns="https://orcid.org/ontology/">López, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320889_3">
+	<name xmlns="https://orcid.org/ontology/">Chizaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320890">
+	<collection xmlns="https://orcid.org/ontology/">Proceedings - Frontiers in Education Conference, FIE</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320890_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320890_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320890_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320890_3"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320890_0"/>
+	<date xmlns="https://orcid.org/ontology/">2015</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/FIE.2015.7344314</doi>
+	<title xmlns="https://orcid.org/ontology/">A user profile definition in context of recommendation of open educational resources. An approach based on linked open vocabularies</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-84960459414&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320890_0">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320890_1">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320890_2">
+	<name xmlns="https://orcid.org/ontology/">Lopez-Vargas, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/27320890_3">
+	<name xmlns="https://orcid.org/ontology/">Tovar-Caro, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718010">
+	<collection xmlns="https://orcid.org/ontology/">IEEE Global Engineering Education Conference, EDUCON</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718010_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718010_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718010_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718010_3"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718010_0"/>
+	<date xmlns="https://orcid.org/ontology/">2016</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/EDUCON.2016.7474706</doi>
+	<title xmlns="https://orcid.org/ontology/">Integrating OER in the design of educational material: Blended learning and linked-open-educational-resources-data approach</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-84994558838&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718010_0">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718010_1">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718010_2">
+	<name xmlns="https://orcid.org/ontology/">Lopez, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718010_3">
+	<name xmlns="https://orcid.org/ontology/">Caro, E.T.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718011">
+	<collection xmlns="https://orcid.org/ontology/">2016 International Symposium on Computers in Education, SIIE 2016: Learning Analytics Technologies</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718011_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718011_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718011_10"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718011_11"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718011_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718011_3"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718011_4"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718011_5"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718011_6"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718011_7"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718011_8"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718011_9"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718011_0"/>
+	<date xmlns="https://orcid.org/ontology/">2016</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/SIIE.2016.7751870</doi>
+	<title xmlns="https://orcid.org/ontology/">EMadrid project: MOOCs and learning analytics</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-85006790066&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718011_0">
+	<name xmlns="https://orcid.org/ontology/">Kloos, C.D.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718011_1">
+	<name xmlns="https://orcid.org/ontology/">Alario-Hoyos, C.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718011_10">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718011_11">
+	<name xmlns="https://orcid.org/ontology/">López, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718011_2">
+	<name xmlns="https://orcid.org/ontology/">Fernández-Panadero, C.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718011_3">
+	<name xmlns="https://orcid.org/ontology/">Estévez-Ayres, I.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718011_4">
+	<name xmlns="https://orcid.org/ontology/">Muñoz-Merino, P.J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718011_5">
+	<name xmlns="https://orcid.org/ontology/">Cobos, R.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718011_6">
+	<name xmlns="https://orcid.org/ontology/">Moreno, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718011_7">
+	<name xmlns="https://orcid.org/ontology/">Tovar, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718011_8">
+	<name xmlns="https://orcid.org/ontology/">Cabedo, R.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718011_9">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718012">
+	<collection xmlns="https://orcid.org/ontology/">Proceedings - Frontiers in Education Conference, FIE</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718012_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718012_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718012_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718012_3"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718012_0"/>
+	<date xmlns="https://orcid.org/ontology/">2016</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/FIE.2016.7757660</doi>
+	<title xmlns="https://orcid.org/ontology/">Guidelines to producing structured interoperable data from Open Access Repositories</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-85006700552&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718012_0">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718012_1">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718012_2">
+	<name xmlns="https://orcid.org/ontology/">Lopez-Vargas, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718012_3">
+	<name xmlns="https://orcid.org/ontology/">Caro, E.T.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718013">
+	<collection xmlns="https://orcid.org/ontology/">IEEE Global Engineering Education Conference, EDUCON</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718013_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718013_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718013_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718013_3"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718013_4"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718013_5"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718013_6"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718013_0"/>
+	<date xmlns="https://orcid.org/ontology/">2016</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/EDUCON.2016.7474652</doi>
+	<title xmlns="https://orcid.org/ontology/">A contribution to encourage the dissemination of academic publishing: Finding diffusion media by means of a search engine based on semantic technologies</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-84994577132&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718013_0">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718013_1">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718013_2">
+	<name xmlns="https://orcid.org/ontology/">Lopez, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718013_3">
+	<name xmlns="https://orcid.org/ontology/">Quituisaca, L.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718013_4">
+	<name xmlns="https://orcid.org/ontology/">Montano-Sosoranga, F.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718013_5">
+	<name xmlns="https://orcid.org/ontology/">Medina, P.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718013_6">
+	<name xmlns="https://orcid.org/ontology/">Tovar-Caro, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718014">
+	<collection xmlns="https://orcid.org/ontology/">2016 International Symposium on Computers in Education, SIIE 2016: Learning Analytics Technologies</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718014_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718014_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718014_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718014_3"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718014_4"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718014_5"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718014_6"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718014_7"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718014_8"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718014_9"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718014_0"/>
+	<date xmlns="https://orcid.org/ontology/">2016</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/SIIE.2016.7751873</doi>
+	<title xmlns="https://orcid.org/ontology/">Open educational resources and standards in the eMadrid network</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-85006760161&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718014_0">
+	<name xmlns="https://orcid.org/ontology/">Caro, E.T.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718014_1">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718014_2">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718014_3">
+	<name xmlns="https://orcid.org/ontology/">Lopez, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718014_4">
+	<name xmlns="https://orcid.org/ontology/">Artacho, M.R.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718014_5">
+	<name xmlns="https://orcid.org/ontology/">Castro, M.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718014_6">
+	<name xmlns="https://orcid.org/ontology/">Martin, S.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718014_7">
+	<name xmlns="https://orcid.org/ontology/">Ruiz, E.S.C.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718014_8">
+	<name xmlns="https://orcid.org/ontology/">Diaz, G.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/29718014_9">
+	<name xmlns="https://orcid.org/ontology/">Loro, F.G.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/35655539">
+	<collection xmlns="https://orcid.org/ontology/">IEEE Global Engineering Education Conference, EDUCON</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/35655539_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/35655539_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/35655539_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/35655539_3"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/35655539_0"/>
+	<date xmlns="https://orcid.org/ontology/">2017</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/EDUCON.2017.7943018</doi>
+	<title xmlns="https://orcid.org/ontology/">Recommendation of open educational resources. An approach based on linked open data</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-85023610317&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/35655539_0">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/35655539_1">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/35655539_2">
+	<name xmlns="https://orcid.org/ontology/">Lopez-Vargas, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/35655539_3">
+	<name xmlns="https://orcid.org/ontology/">Tovar-Caro, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/35655540">
+	<collection xmlns="https://orcid.org/ontology/">IEEE Global Engineering Education Conference, EDUCON</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/35655540_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/35655540_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/35655540_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/35655540_3"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/35655540_0"/>
+	<date xmlns="https://orcid.org/ontology/">2017</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/EDUCON.2017.7943089</doi>
+	<title xmlns="https://orcid.org/ontology/">A rating system that open-data repositories must satisfy to be considered OER: Reusing open data resources in teaching</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-85023640187&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/35655540_0">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/35655540_1">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/35655540_2">
+	<name xmlns="https://orcid.org/ontology/">Lopez, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/35655540_3">
+	<name xmlns="https://orcid.org/ontology/">Caro, E.T.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609073">
+	<collection xmlns="https://orcid.org/ontology/">ASEE Annual Conference and Exposition, Conference Proceedings</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609073_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609073_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609073_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609073_3"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609073_0"/>
+	<date xmlns="https://orcid.org/ontology/">2010</date>
+	<title xmlns="https://orcid.org/ontology/">A quality model of OpenCourseWare applied to Engineering courses</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-85029065242&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609073_0">
+	<name xmlns="https://orcid.org/ontology/">Tovar, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609073_1">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609073_2">
+	<name xmlns="https://orcid.org/ontology/">Castro, M.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609073_3">
+	<name xmlns="https://orcid.org/ontology/">Llamas, M.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609074">
+	<collection xmlns="https://orcid.org/ontology/">Iberian Conference on Information Systems and Technologies, CISTI</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609074_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609074_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609074_2"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609074_0"/>
+	<date xmlns="https://orcid.org/ontology/">2017</date>
+	<doi xmlns="https://orcid.org/ontology/">10.23919/CISTI.2017.7975939</doi>
+	<title xmlns="https://orcid.org/ontology/">Characterization of natural events and epidemics from Twitter: El Niño, Zika and Chikungunya,Caracterización de eventos naturales y epidemias registradas en Twitter: Fenómeno del Niño, Zika y Chikungunya</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-85027060601&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609074_0">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609074_1">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609074_2">
+	<name xmlns="https://orcid.org/ontology/">Torres-Guarnizo, D.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609075">
+	<collection xmlns="https://orcid.org/ontology/">Advances in Intelligent Systems and Computing</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609075_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609075_1"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609075_0"/>
+	<date xmlns="https://orcid.org/ontology/">2018</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1007/978-3-319-69341-5_19</doi>
+	<title xmlns="https://orcid.org/ontology/">SmartLand-LD: A Linked data approach for integration of heterogeneous datasets to intelligent management of high biodiversity territories</title>
+	<type xmlns="https://orcid.org/ontology/">book</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-85032673637&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609075_0">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609075_1">
+	<name xmlns="https://orcid.org/ontology/">Suárez, J.P.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609076">
+	<collection xmlns="https://orcid.org/ontology/">Lecture Notes in Educational Technology</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609076_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609076_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609076_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609076_3"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609076_4"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609076_0"/>
+	<date xmlns="https://orcid.org/ontology/">2016</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1007/978-3-662-52925-6_15</doi>
+	<title xmlns="https://orcid.org/ontology/">Using linked data to blended educational materials with OER—A general context of synergy: Linked data for describe, discovery and retrieve OER and human beings knowledge to provide context</title>
+	<type xmlns="https://orcid.org/ontology/">book</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-85031714078&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609076_0">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609076_1">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609076_2">
+	<name xmlns="https://orcid.org/ontology/">Atenas, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609076_3">
+	<name xmlns="https://orcid.org/ontology/">Lopez-Vargas, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/38609076_4">
+	<name xmlns="https://orcid.org/ontology/">Tovar, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434381">
+	<collection xmlns="https://orcid.org/ontology/">CEUR Workshop Proceedings</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434381_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434381_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434381_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434381_3"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434381_4"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434381_5"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434381_0"/>
+	<date xmlns="https://orcid.org/ontology/">2018</date>
+	<title xmlns="https://orcid.org/ontology/">Similarity detection among academic contents through semantic technologies and text mining</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-85047896817&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434381_0">
+	<name xmlns="https://orcid.org/ontology/">Saquicela, V.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434381_1">
+	<name xmlns="https://orcid.org/ontology/">Baculima, F.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434381_2">
+	<name xmlns="https://orcid.org/ontology/">Orellana, G.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434381_3">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434381_4">
+	<name xmlns="https://orcid.org/ontology/">Orellana, M.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434381_5">
+	<name xmlns="https://orcid.org/ontology/">Espinoza, M.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434382">
+	<collection xmlns="https://orcid.org/ontology/">CEUR Workshop Proceedings</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434382_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434382_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434382_2"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434382_0"/>
+	<date xmlns="https://orcid.org/ontology/">2018</date>
+	<title xmlns="https://orcid.org/ontology/">Using linked data to ensure that digital information about historical figures of Loja remains accessible and usable</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-85047955705&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434382_0">
+	<name xmlns="https://orcid.org/ontology/">Sánchez, A.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434382_1">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434382_2">
+	<name xmlns="https://orcid.org/ontology/">Morocho, J.C.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434383">
+	<collection xmlns="https://orcid.org/ontology/">CEUR Workshop Proceedings</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434383_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434383_1"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434383_0"/>
+	<date xmlns="https://orcid.org/ontology/">2018</date>
+	<title xmlns="https://orcid.org/ontology/">A Linked Data approach to guarantee the semantic interoperability and integrity of university academic data,Un enfoque de Linked Data para garantizar la interoperabilidad semántica e integridad de datos académicos universitarios</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-85047941654&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434383_0">
+	<name xmlns="https://orcid.org/ontology/">Narvaez, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434383_1">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434384">
+	<collection xmlns="https://orcid.org/ontology/">RISTI - Revista Iberica de Sistemas e Tecnologias de Informacao</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434384_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434384_1"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434384_0"/>
+	<date xmlns="https://orcid.org/ontology/">2018</date>
+	<doi xmlns="https://orcid.org/ontology/">10.17013/risti.26.104-121</doi>
+	<title xmlns="https://orcid.org/ontology/">Towards semantic interoperability for smart and sustainable management of high biodiversity territories using SmartLand-LD,Hacia la interoperabilidad semántica para el manejo inteligente y sostenible de territorios de alta biodiversidad usando SmartLand-LD</title>
+	<type xmlns="https://orcid.org/ontology/">journal-article</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-85049196239&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434384_0">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434384_1">
+	<name xmlns="https://orcid.org/ontology/">Suárez, J.P.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434385">
+	<collection xmlns="https://orcid.org/ontology/">IEEE Global Engineering Education Conference, EDUCON</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434385_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434385_1"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434385_0"/>
+	<date xmlns="https://orcid.org/ontology/">2018</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/EDUCON.2018.8363473</doi>
+	<title xmlns="https://orcid.org/ontology/">LOD-CS2013: Multileaming through a semantic representation of IEEE computer science curricula</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-85048123476&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434385_0">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434385_1">
+	<name xmlns="https://orcid.org/ontology/">Caro, E.T.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434386">
+	<collection xmlns="https://orcid.org/ontology/">IEEE Global Engineering Education Conference, EDUCON</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434386_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434386_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434386_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434386_3"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434386_0"/>
+	<date xmlns="https://orcid.org/ontology/">2018</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/EDUCON.2018.8363382</doi>
+	<title xmlns="https://orcid.org/ontology/">Discovery of potential collaboration networks from open knowledge sources</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-85048130291&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434386_0">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434386_1">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434386_2">
+	<name xmlns="https://orcid.org/ontology/">Lopez-Vargas, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434386_3">
+	<name xmlns="https://orcid.org/ontology/">Tovar-Caro, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434387">
+	<collection xmlns="https://orcid.org/ontology/">Advances in Engineering Software</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434387_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434387_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434387_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434387_3"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434387_0"/>
+	<date xmlns="https://orcid.org/ontology/">2018</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1016/j.advengsoft.2018.05.005</doi>
+	<title xmlns="https://orcid.org/ontology/">Optimizing presetting attributes by softcomputing techniques to improve tapered roller bearings working conditions</title>
+	<type xmlns="https://orcid.org/ontology/">journal-article</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-85047824126&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434387_0">
+	<name xmlns="https://orcid.org/ontology/">Fernandez Martinez, R.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434387_1">
+	<name xmlns="https://orcid.org/ontology/">Lostado Lorza, R.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434387_2">
+	<name xmlns="https://orcid.org/ontology/">Santos Delgado, A.A.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434387_3">
+	<name xmlns="https://orcid.org/ontology/">Piedra Pullaguari, N.O.</name>
+</rdf:Description>
+
+</rdf:RDF>
