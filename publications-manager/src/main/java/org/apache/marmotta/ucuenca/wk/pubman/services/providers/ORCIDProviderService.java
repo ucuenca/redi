@@ -37,7 +37,7 @@ public class ORCIDProviderService extends AbstractProviderService {
 
     @Override
     protected String getProviderGraph() {
-        return constantService.getDOAJGraph();
+        return constantService.getORCIDGraph();
     }
 
     @Override
