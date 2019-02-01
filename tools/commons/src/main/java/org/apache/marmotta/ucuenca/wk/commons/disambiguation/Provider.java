@@ -175,7 +175,14 @@ public class Provider {
                 + "       		?po rdfs:label ?p\n"
                 + "    }\n"
                 + "}";
-
+        String qryORCID = "prefix foaf: <http://xmlns.com/foaf/0.1/>\n"
+                + "prefix  scoro: <http://purl.org/spar/scoro/>\n"
+                + "select distinct ?o {\n"
+                + "     graph <" + Graph + ">{\n"
+                + "             values ?per { <URI> } . \n"
+                + "            ?per scoro:hasORCID ?o .\n"
+                + "    }\n"
+                + "}";
         for (Person n : lsa) {
             String qryName_ = qryName.replaceAll("URI", n.URI);
             String qryName2_ = qryName2.replaceAll("URI", n.URI);
@@ -183,6 +190,7 @@ public class Provider {
             String qryP_ = qryP.replaceAll("URI", n.URI);
             String qryA_ = qryA.replaceAll("URI", n.URI);
             String qryT_ = qryT.replaceAll("URI", n.URI);
+            String qryORCID_ = qryORCID.replaceAll("URI", n.URI);
 
             //get Names
             List<Map<String, Value>> rsName = sparql.query(QueryLanguage.SPARQL, qryName_);
@@ -250,6 +258,14 @@ public class Provider {
             for (Map<String, Value> ar : rsT) {
                 if (ar.get("p") != null) {
                     n.Topics.add(ar.get("p").stringValue());
+                }
+            }
+            //get ORCIDS
+            List<Map<String, Value>> rsOR = sparql.query(QueryLanguage.SPARQL, qryORCID_);
+            n.ORCIDs = new ArrayList<>();
+            for (Map<String, Value> ar : rsOR) {
+                if (ar.get("o") != null) {
+                    n.ORCIDs.add(ar.get("o").stringValue());
                 }
             }
             //

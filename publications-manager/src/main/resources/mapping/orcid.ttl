@@ -18,6 +18,13 @@ uc:mapColl1 a r2r:MappingCollection;
 
 
 
+uc:TypePersonORCID a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ orcid:orcid ?or" ;
+    r2r:targetPattern "?SUBJ scoro:hasORCID ?or" ;
+    r2r:targetPattern "?SUBJ a foaf:Person" ;
+    r2r:targetPattern "?SUBJ dct:provenance uc:ORCID" .
+
 uc:TypePersonName a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ orcid:name ?name" ;

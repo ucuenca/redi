@@ -39,6 +39,7 @@ public class Person {
     public List<String> Publications;
     public List<String> Affiliations;
     public List<String> Topics;
+    public List<String> ORCIDs;
 
     public Person() {
         URIS = new HashSet<>();
@@ -58,6 +59,7 @@ public class Person {
             Boolean checkCoauthors = checkCoauthors(p);
             Boolean checkPublications = checkPublications(p);
             Boolean checkTopics = checkTopics(p);
+            Boolean checkORCIDs = checkORCIDs(p);
             if (checkCoauthors == null && checkPublications == null && checkTopics == null && checkAffiliations != null && checkAffiliations == true) {
                 return true;
             }
@@ -72,6 +74,9 @@ public class Person {
                 count++;
             }
             if (checkTopics != null && checkTopics == true) {
+                count++;
+            }
+            if (checkORCIDs != null && checkORCIDs == true) {
                 count++;
             }
             return count >= 2;
@@ -180,6 +185,25 @@ public class Person {
         return null;
     }
 
+    public Boolean checkORCIDs(Person p) {
+        if (ORCIDs.isEmpty() || p.ORCIDs.isEmpty()) {
+            return null;
+        }
+        boolean c = false;
+        for (String o1 : ORCIDs) {
+            for (String o2 : p.ORCIDs) {
+                if (o1.contains(o2) || o2.contains(o1)) {
+                    c = true;
+                    break;
+                }
+            }
+            if (c) {
+                break;
+            }
+        }
+        return c;
+    }
+
     public Person enrich(Person p, boolean ignoreName) {
         Person newPersonClon = new Person();
         newPersonClon.URIS.addAll(URIS);
@@ -229,6 +253,12 @@ public class Person {
             newPersonClon.Topics = new ArrayList<>();
         }
         newPersonClon.Topics.addAll(new ArrayList<>(p.Topics));
+        if (ORCIDs != null) {
+            newPersonClon.ORCIDs = new ArrayList<>(ORCIDs);
+        } else {
+            newPersonClon.ORCIDs = new ArrayList<>();
+        }
+        newPersonClon.ORCIDs.addAll(new ArrayList<>(p.ORCIDs));
         RemoveDuplicatePerson(newPersonClon);
         return newPersonClon;
     }
@@ -239,6 +269,7 @@ public class Person {
         RemoveDuplicateString(p.Affiliations);
         RemoveDuplicateString(p.Publications);
         RemoveDuplicateString(p.Topics);
+        RemoveDuplicateString(p.ORCIDs);
         p.Coauthors = NameUtils.uniqueName(p.Coauthors);
         p.Publications = PublicationUtils.uniqueTitle(p.Publications);
     }

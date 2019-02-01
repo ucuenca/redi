@@ -199,9 +199,8 @@ public class OntologyMapperTest {
     public void testORCIDOntologyMapping() throws RDFHandlerException {
         assertEquals(orcidModel.size(), 860);
         Model resultWithMapperFile = OntologyMapper.map(orcidModel, orcidMapper, vocabulary);
-        Rio.write(resultWithMapperFile, System.out, RDFFormat.RDFXML);
         Model resultEmptyMapperFile = OntologyMapper.map(orcidModel, emptyMapper, vocabulary);
-        assertEquals(resultWithMapperFile.size(), 1803);
+        assertEquals(resultWithMapperFile.size(), 1804);
         assertEquals(resultEmptyMapperFile.size(), 0);
     }
 
