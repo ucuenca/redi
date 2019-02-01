@@ -22,6 +22,7 @@ public class PublicationUtils {
     public static double compareTitle(String name1, String name2) {
         ModifiedJaccardMod metric = new ModifiedJaccardMod();
         metric.prioritizeWordOrder = false;
+        metric.applyMinOverlapConstrain = true;
         double sim = metric.distanceName(name1, name2).getValue();
         return sim;
     }

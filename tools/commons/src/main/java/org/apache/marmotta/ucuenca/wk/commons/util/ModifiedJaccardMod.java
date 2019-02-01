@@ -30,10 +30,14 @@ public class ModifiedJaccardMod {
     public double syntacticThreshold = 0.89;
     public double abvPenalty = 0.95;
     public static int abvThreshold = 3;
+    public boolean applyMinOverlapConstrain = false;
+    public double minOverlap = 0.7;
+    public int minMatchs = 3;
 
     public Map.Entry<Integer, Double> distanceName(String name1, String name2) {
         List<String> tks1 = tokenizer(name1.toLowerCase());
         List<String> tks2 = tokenizer(name2.toLowerCase());
+        int maxlen = Math.max(tks1.size(), tks2.size());
         onlyCompleteMatchs = true;
         Map.Entry<Integer, Double> c = countMatchs(tks1, tks2);
         Integer completeMatchs = c.getKey();
@@ -41,6 +45,13 @@ public class ModifiedJaccardMod {
         Map.Entry<Integer, Double> c1 = countMatchs(tks1, tks2);
         double mx = Math.min(tks1.size(), tks2.size());
         double val = (c.getValue() + c1.getValue()) / (c.getKey() + c1.getKey() + mx);
+        if (applyMinOverlapConstrain) {
+            double rat = (c.getKey() + c1.getKey() + 0.0) / (maxlen + 0.0);
+            if (completeMatchs >= minMatchs && rat >= minOverlap) {
+            } else {
+                val = 0.5 * val;
+            }
+        }
         return new AbstractMap.SimpleEntry<>(completeMatchs, val);
     }
 
