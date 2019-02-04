@@ -32,22 +32,24 @@ public interface MongoService {
      */
     public String getAuthor(String uri);
 
+    public String getSPARQL(String qry);
+
     public String getStatistics(String id);
 
     public String getRelatedAuthors(String uri);
-    
-    
-    public String getAuthorsByDiscipline (String uri);
+
+    public String getAuthorsByDiscipline(String uri);
 
     public String getCluster(String uri);
 
     public List<Document> getClusters();
-    
+
     public List<Document> getClustersTotals();
+
     public List<Document> getSubClustersTotals(String uri);
 
     public String getAuthorsByArea(String cluster, String subcluster);
-    
+
     public List<Document> getCountries();
 
     /**
@@ -58,9 +60,9 @@ public interface MongoService {
     public void connect() throws FailMongoConnectionException;
 
     public enum Collection {
-        AUTHORS("authors"), PUBLICATIONS("publications"), STATISTICS("statistics"),
-        RELATEDAUTHORS("relatedauthors"), AUTHORS_DISCPLINE("authors_discipline"), AUTHORS_AREA("authors_area") , 
-        COUNTRIES ("countries"), CLUSTERS("clusters"), CLUSTERSTOTALS("clusterstotals");
+        SPARQLS("sparqls"), AUTHORS("authors"), PUBLICATIONS("publications"), STATISTICS("statistics"),
+        RELATEDAUTHORS("relatedauthors"), AUTHORS_DISCPLINE("authors_discipline"), AUTHORS_AREA("authors_area"),
+        COUNTRIES("countries"), CLUSTERS("clusters"), CLUSTERSTOTALS("clusterstotals");
 
         private final String value;
 
