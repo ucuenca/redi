@@ -221,7 +221,7 @@ public class ORCIDRawProvider extends AbstractHttpProvider {
                 queryLN = query;
             }
         }
-        return "family-name:" + queryLN + " AND given-names:" + queryFN;
+        return "family-name:" + queryLN + " AND given-names:" + queryFN + " AND (text:ec OR text:ecuador OR text:ecuadorian OR text:ecuatoriano OR text:ecuatoriana)";
     }
 
     protected static List<Element> queryElements(Document n, String query) {

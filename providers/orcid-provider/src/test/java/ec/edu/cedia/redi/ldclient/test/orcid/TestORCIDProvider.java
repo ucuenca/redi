@@ -13,9 +13,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openrdf.model.Model;
 import org.openrdf.repository.RepositoryException;
-import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.Rio;
 
 /**
  *
