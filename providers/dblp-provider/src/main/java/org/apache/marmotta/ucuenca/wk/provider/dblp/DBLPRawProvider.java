@@ -77,6 +77,7 @@ public class DBLPRawProvider extends AbstractHttpProvider {
     public static ConcurrentMap<String, String> dblpNamespaces = new ConcurrentHashMap<String, String>();
     private static final String DBLP = "dblp";
     private static final String DBLPS = "dblps";
+    private static final int FULLNAME = 1;
 
     static {
         dblpNamespaces.put("dblps", "https://dblp.org/rdf/schema-2017-04-18#");
@@ -236,11 +237,16 @@ public class DBLPRawProvider extends AbstractHttpProvider {
                 String coauthorURIS = ((Resource) coauthorURI).stringValue();
                 String codedName = coauthorURIS.substring(coauthorURIS.lastIndexOf('/') + 1);
                 String[] decodedName = extractNameDBLP(codedName);
-                String lastName = decodedName[0];
-                String firstName = decodedName[1];
-                lfn.put(coauthorURI.stringValue(), firstName);
-                lln.put(coauthorURI.stringValue(), lastName);
-                lffn.put(coauthorURI.stringValue(), lastName + " , " + firstName);
+                if (decodedName.length > FULLNAME) {
+                    String lastName = decodedName[0];
+                    String firstName = decodedName[1];
+                    lfn.put(coauthorURI.stringValue(), firstName);
+                    lln.put(coauthorURI.stringValue(), lastName);
+                    lffn.put(coauthorURI.stringValue(), lastName + " , " + firstName);
+                } else {
+                    lffn.put(coauthorURI.stringValue(), decodedName[0]);
+                }
+
             }
             addCreator(triples);
             for (Map.Entry<String, String> en : lfn.entrySet()) {
@@ -302,8 +308,9 @@ public class DBLPRawProvider extends AbstractHttpProvider {
 
     private String[] extractNameDBLP(String name) {
         String[] result = name.split(":");
-        result[0] = URLUtils.unEscapeHTML4(result[0]);
-        result[1] = URLUtils.unEscapeHTML4(result[1]);
+        for (int i = 0; i < result.length; i++) {
+            result[i] = URLUtils.unEscapeHTML4(result[i]);
+        }
         return result;
     }
 
