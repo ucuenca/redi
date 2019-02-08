@@ -421,5 +421,17 @@ public interface QueriesService {
     String getCountries();
     
     String getCountCountry() ;
+    
+    // Stats by Inst
+    
+    String getClustersbyInst(String uri);
+    
+    String getDatesPubbyInst(String uri);
+    
+    String getAuthorsbyInst(String uri);
+      
+    String getInstAsobyInst(String uri);
+    
+    String getProvbyInst(String uri);
 
 }

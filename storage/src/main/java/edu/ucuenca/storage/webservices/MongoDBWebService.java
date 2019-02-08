@@ -187,5 +187,19 @@ public class MongoDBWebService {
         }
         return Response.ok().entity(response).build();
     }
-
+    
+    
+  /*  @GET
+    @Path("/statsInst")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getsDiscipline(@QueryParam("uri") String uri) throws FailMongoConnectionException {
+        String response;
+        try {
+            response = mongoService.getAuthorsByDiscipline(uri);
+        } catch (Exception e) {
+            throw new FailMongoConnectionException(String.format("Cannot retrieve Cluster %s", uri), e);
+        }
+        return Response.ok().entity(response).build();
+    }
+*/
 }

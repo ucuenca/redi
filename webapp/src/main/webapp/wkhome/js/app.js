@@ -112,6 +112,9 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                 when('/info/statistics', {
                   templateUrl: '/wkhome/partials/statistics.html',
                 }).
+                when('/info/statisticsbyInst', {
+                  templateUrl: '/wkhome/partials/statisticsbyInst.html',
+                }).
                 when('/view/datacube', {
                   templateUrl: '/wkhome/partials/dataCube.html',
                 }).

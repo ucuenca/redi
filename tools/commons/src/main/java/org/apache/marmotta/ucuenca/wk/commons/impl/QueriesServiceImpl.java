@@ -38,7 +38,10 @@ public class QueriesServiceImpl implements QueriesService {
             + " PREFIX dcat: <http://www.w3.org/ns/dcat#> "
             + " PREFIX bibo: <http://purl.org/ontology/bibo/> "
             + " PREFIX dc: <http://purl.org/dc/elements/1.1/> "
-            + " PREFIX uc: <http://ucuenca.edu.ec/ontology#> ";
+            + " PREFIX uc: <http://ucuenca.edu.ec/ontology#> "
+            + " PREFIX schema: <http://schema.org/> "
+            + " PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> "
+            + " PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>";
 
     private final static String OWLSAMEAS = "<http://www.w3.org/2002/07/owl#sameAs>";
 
@@ -443,45 +446,45 @@ public class QueriesServiceImpl implements QueriesService {
     }
 
     /*
-    @Deprecated
-    @Override
-    public String getOrgEnrichmentProvider(Map<String, String> providers) {
-        String varprov = "";
-        String prov = "";
+     @Deprecated
+     @Override
+     public String getOrgEnrichmentProvider(Map<String, String> providers) {
+     String varprov = "";
+     String prov = "";
 
-        for (Map.Entry<String, String> provset : providers.entrySet()) {
+     for (Map.Entry<String, String> provset : providers.entrySet()) {
 
-            varprov = " ?" + p.Name + " " + varprov;
-            prov = " OPTIONAL {       "
-                    + "   GRAPH <" + provset.getKey() + "> { "
-                    + "    SELECT  ?endp  (COUNT (distinct ?author) as ?" + p.Name + " )  WHERE { "
-                    + "       GRAPH <" + con.getAuthorsGraph() + "> { "
-                    + "      ?author dct:provenance ?endp . "
-                    + "     }   "
-                    + "      ?object <" + OWL.oneOf.toString() + "> ?author . "
-                    + "     } GROUP BY  ?endp "
-                    + "    } } " + prov;
+     varprov = " ?" + p.Name + " " + varprov;
+     prov = " OPTIONAL {       "
+     + "   GRAPH <" + provset.getKey() + "> { "
+     + "    SELECT  ?endp  (COUNT (distinct ?author) as ?" + p.Name + " )  WHERE { "
+     + "       GRAPH <" + con.getAuthorsGraph() + "> { "
+     + "      ?author dct:provenance ?endp . "
+     + "     }   "
+     + "      ?object <" + OWL.oneOf.toString() + "> ?author . "
+     + "     } GROUP BY  ?endp "
+     + "    } } " + prov;
 
-        }
+     }
 
-        String head = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "
-                + "PREFIX dct: <http://purl.org/dc/terms/> "
-                + "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
-                + "SELECT     ?org ?label (COUNT (?authort) as ?total)" + varprov
-                + " WHERE {       "
-                + "      GRAPH <" + con.getOrganizationsGraph() + "> { "
-                + "    ?org  	<" + REDI.NAME.toString() + "> ?label  "
-                + "          }           "
-                + "    GRAPH <" + con.getEndpointsGraph() + "> { "
-                + "    ?endp  <" + REDI.BELONGTO.toString() + ">  ?org  } "
-                + " GRAPH <" + con.getAuthorsGraph() + "> { "
-                + "      ?authort dct:provenance ?endp . "
-                + "      ?authort a foaf:Person . "
-                + "     }  "
-                + "     " + prov + " }GROUP BY ?org  ?label" + varprov;
+     String head = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "
+     + "PREFIX dct: <http://purl.org/dc/terms/> "
+     + "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
+     + "SELECT     ?org ?label (COUNT (?authort) as ?total)" + varprov
+     + " WHERE {       "
+     + "      GRAPH <" + con.getOrganizationsGraph() + "> { "
+     + "    ?org  	<" + REDI.NAME.toString() + "> ?label  "
+     + "          }           "
+     + "    GRAPH <" + con.getEndpointsGraph() + "> { "
+     + "    ?endp  <" + REDI.BELONGTO.toString() + ">  ?org  } "
+     + " GRAPH <" + con.getAuthorsGraph() + "> { "
+     + "      ?authort dct:provenance ?endp . "
+     + "      ?authort a foaf:Person . "
+     + "     }  "
+     + "     " + prov + " }GROUP BY ?org  ?label" + varprov;
 
-        return head;
-    }
+     return head;
+     }
      */
     @Override
     public String getEnrichmentQueryResult(List<Provider> providers) {
@@ -2100,4 +2103,85 @@ public class QueriesServiceImpl implements QueriesService {
                 + "                          } GROUP BY ?sc ";
     }
 
+    @Override
+    public String getClustersbyInst(String uri) {
+        return PREFIXES + "SELECT ?area ?nameng (COUNT(DISTINCT ?author) as ?total)      WHERE {  \n"
+                + "  GRAPH <" + con.getCentralGraph() + "> {\n"
+                + "  ?author schema:memberOf  <" + uri + "> \n"
+                + "          }\n"
+                + "                GRAPH <" + con.getClusterGraph() + "> {\n"
+                + "                  ?area a uc:Cluster;\n"
+                + "                   rdfs:label ?nameng .\n"
+                + "                  FILTER( lang(?nameng) = 'en') .\n"
+                + "                   ?author dct:isPartOf ?area.\n"
+                + "                  }\n"
+                + "                } GROUP BY ?area ?nameng   Order by DESC(?total)";
+
+    }
+
+    @Override
+    public String getDatesPubbyInst(String uri) {
+        return PREFIXES + "SELECT  ?y  (COUNT( ?publication ) as ?total)   \n"
+                + "WHERE {\n"
+                + "  graph <" + con.getCentralGraph() + "> {\n"
+                + "  ?author schema:memberOf  <" + uri + "> .\n"
+                + "  ?author foaf:publications ?publication.  \n"
+                + "  ?publication bibo:created ?y2 .\n"
+                + "   bind( strbefore( ?y2, '-' ) as ?y3 ).  \n"
+                + "   bind( strafter( ?y2, ' ' ) as ?y4 ). \n"
+                + "   bind( if (str(?y3)='' && str(?y4)='',?y2, if(str(?y3)='',strafter( ?y2, ' ' ),strbefore( ?y2, '-' ))) as ?y ) \n"
+                + "     \n"
+                + "  }\n"
+                + "}  GROUP BY ?y Order by ASC(?y)";
+
+    }
+
+    @Override
+    public String getAuthorsbyInst(String uri) {
+        return PREFIXES + "SELECT  ?author (group_concat( distinct ?names  ; separator=';') as ?name)  (COUNT( distinct ?publication ) as ?total)   \n"
+                + "WHERE {\n"
+                + "  graph <" + con.getCentralGraph() + "> {\n"
+                + "  ?author schema:memberOf  <" + uri + "> .\n"
+                + "  ?author foaf:publications ?publication.  \n"
+                + "   ?author foaf:name ?names\n"
+                + "     \n"
+                + "  }\n"
+                + "} GROUP BY ?author Order by DESC(?total) limit 10";
+
+    }
+
+    @Override
+    public String getInstAsobyInst(String uri) {
+        return PREFIXES + "SELECT     ?norg  ( COUNT (distinct ?author) as ?total )\n"
+                + "WHERE {\n"
+                + "  graph <" + con.getCentralGraph() + "> {\n"
+                + "  ?author schema:memberOf  <" + uri + "> .\n"
+                + "  ?author foaf:publications ?pub .\n"
+                + "  ?coauthor   foaf:publications   ?pub .\n"
+                + "   filter ( ?author != ?coauthor) .\n"
+                + "    ?coauthor schema:memberOf ?org .\n"
+                + "    filter (<" + uri + "> != ?org)\n"
+                + "  }\n"
+                + "     graph <" + con.getOrganizationsGraph() + "> {\n"
+                + "     ?org   <http://ucuenca.edu.ec/ontology#fullName>  ?norg .\n"
+                + "               FILTER( lang(?norg) = 'es') .\n"
+                + "        }\n"
+                + "} group by ?norg order  by DESC (?total)";
+
+    }
+
+    @Override
+    public String getProvbyInst(String uri) {
+        return PREFIXES + "SELECT      ?prov (COUNT (distinct ?pub) as ?total)\n"
+                + "WHERE {\n"
+                + "  graph <https://redi.cedia.edu.ec/context/redi> {\n"
+                + "  ?author schema:memberOf  <https://redi.cedia.edu.ec/resource/organization/UCUENCA> .\n"
+                + "  ?author foaf:publications ?pub .\n"
+                + "  ?pub  dct:provenance ?prov\n"
+                + "} \n"
+                + "} GROUP BY ?prov order by DESC (?npub)\n"
+                + "";
+
+    }
+       
 }
