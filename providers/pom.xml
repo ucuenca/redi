@@ -19,6 +19,7 @@
         <module>academics-provider</module>
         <module>scielo-provider</module>
         <module>doaj-provider</module>
+        <module>orcid-provider</module>
         <module>springer-provider</module>
     </modules>
 </project>

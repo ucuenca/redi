@@ -118,6 +118,9 @@ public class CommonServiceImpl implements CommonService {
     private org.apache.marmotta.ucuenca.wk.pubman.services.providers.DOAJProviderService providerServiceDOAJ;
     
     @Inject
+    private org.apache.marmotta.ucuenca.wk.pubman.services.providers.ORCIDProviderService providerServiceORCID;
+    
+    @Inject
     private ScopusProviderService providerServiceScopus1;
     private Thread scopusThread;
     private Thread academicsThread;
@@ -126,6 +129,7 @@ public class CommonServiceImpl implements CommonService {
     private Thread scholarThread;
     private Thread springerThread;
     private Thread doajThread;
+    private Thread orcidThread;
 
     private final JsonNodeFactory factory = JsonNodeFactory.instance;
 
@@ -1531,4 +1535,20 @@ public class CommonServiceImpl implements CommonService {
         doajThread.start();
         return "Data Provider DOAJ are extracted in background.   Please review main.log file for details";
     }
+    
+    @Override
+    public String getDataFromORCIDProvidersService(final String[] organizations) {
+        if (orcidThread != null && orcidThread.isAlive()) {
+            return "Process is executing.";
+        }
+        orcidThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                providerServiceORCID.extractAuthors(organizations);
+            }
+        });
+        orcidThread.start();
+        return "Data Provider DOAJ are extracted in background.   Please review main.log file for details";
+    }
+    
 }

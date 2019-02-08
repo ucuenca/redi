@@ -506,4 +506,13 @@ public class PopulateMongoImpl implements PopulateMongo {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public void cleanSPARQLS() {
+        try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
+            MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
+            MongoCollection<Document> collection = db.getCollection(MongoService.Collection.SPARQLS.getValue());
+            collection.drop();
+        }
+    }
+
 }

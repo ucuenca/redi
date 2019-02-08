@@ -14,7 +14,7 @@
   var host = _SERVER_URL;
 // var host = "https://rediclon.cedia.edu.ec/";
 function loadTables() {
-     var Providers = ["Dspace","Ojs","SCOPUS","AcademicsKnowledge", "DBLP", "GoogleScholar","Springer","SCIELO", "DOAJ"];  
+     var Providers = ["Dspace","Ojs","SCOPUS","AcademicsKnowledge", "DBLP", "GoogleScholar","Springer","SCIELO", "DOAJ", "ORCID"];  
      
       var columns = [ {"data":"Selection"} , { "data":"name"}];
       
@@ -314,6 +314,38 @@ function ExtractDOAJ() {
             dataType: "text", //result data type
             //contentType : "application/x-www-form-urlencoded; charset=UTF-8" ,
             url: host + "pubman/publicationsDOAJByOrg",
+            success: function (Result) {
+                console.log(Result);
+
+            },
+            error: function (data) {
+                //document.getElementById("imgloading").style.visibility = "hidden";
+                alert("Error" + data.responseText);
+            }});
+
+    }
+}
+
+
+function ExtractORCID() {
+    var publications = [];
+    $('tbody tr input:checked').each(function (index) {
+        console.log($(this).val())
+        publications.push($(this).val());
+    })
+
+    console.log(publications);
+
+    if (publications.length < 1) {
+        alert("No providers selected");
+    } else {
+        var listPublications = {"data": publications};
+        $.ajax({
+            type: "POST",
+            data: listPublications,
+            dataType: "text", //result data type
+            //contentType : "application/x-www-form-urlencoded; charset=UTF-8" ,
+            url: host + "pubman/publicationsORCIDByOrg",
             success: function (Result) {
                 console.log(Result);
 

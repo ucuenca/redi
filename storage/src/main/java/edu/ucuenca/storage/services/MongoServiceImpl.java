@@ -17,6 +17,9 @@
  */
 package edu.ucuenca.storage.services;
 
+import com.github.jsonldjava.core.JsonLdOptions;
+import com.github.jsonldjava.core.JsonLdProcessor;
+import com.github.jsonldjava.utils.JsonUtils;
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
@@ -29,14 +32,26 @@ import static com.mongodb.client.model.Projections.include;
 import static com.mongodb.client.model.Sorts.ascending;
 import edu.ucuenca.storage.api.MongoService;
 import edu.ucuenca.storage.exceptions.FailMongoConnectionException;
+import java.io.StringWriter;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
+import org.apache.marmotta.platform.core.api.triplestore.SesameService;
 import org.bson.Document;
+import org.openrdf.query.QueryLanguage;
+import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFWriter;
+import org.openrdf.rio.Rio;
 import org.slf4j.Logger;
 
 ;
@@ -51,6 +66,8 @@ public class MongoServiceImpl implements MongoService {
     private Logger log;
     @Inject
     private ConfigurationService configurationService;
+    @Inject
+    private SesameService sesameService;
     private MongoClient mongoClient;
     private MongoDatabase db;
     private MongoCollection<Document> authors;
@@ -61,6 +78,7 @@ public class MongoServiceImpl implements MongoService {
     private MongoCollection<Document> authorsByArea;
     private MongoCollection<Document> authorsByDisc;
     private MongoCollection<Document> countries;
+    private MongoCollection<Document> sparqls;
 
     @PostConstruct
     public void initialize() throws FailMongoConnectionException {
@@ -82,6 +100,7 @@ public class MongoServiceImpl implements MongoService {
         authorsByArea = db.getCollection(Collection.AUTHORS_AREA.getValue());
         authorsByDisc = db.getCollection(Collection.AUTHORS_DISCPLINE.getValue());
         countries = db.getCollection(Collection.COUNTRIES.getValue());
+        sparqls = db.getCollection(Collection.SPARQLS.getValue());
     }
 
     @Override
@@ -176,4 +195,56 @@ public class MongoServiceImpl implements MongoService {
         return (List<Document>) first.get("subclusters");
     }
 
+    @Override
+    public String getSPARQL(String qry) {
+        String k = getMd5(qry);
+        String R = "";
+        MongoCursor<Document> find = sparqls.find(eq("_id", k)).iterator();
+        if (!find.hasNext()) {
+            try {
+                RepositoryConnection conn = sesameService.getConnection();
+                StringWriter writter = new StringWriter();
+                RDFWriter jsonldWritter = Rio.createWriter(RDFFormat.JSONLD, writter);
+                conn.prepareGraphQuery(QueryLanguage.SPARQL, qry).evaluate(jsonldWritter);
+                //Object compact = JsonLdProcessor.compact(JsonUtils.fromString(writter.toString()), new HashMap(), new JsonLdOptions());
+                Map<String, Object> json = new HashMap<String, Object>();
+                json.put("_id", k);
+                json.put("data", writter.toString());
+                sparqls.insertOne(new Document(json));
+                conn.close();
+                writter.getBuffer().setLength(0);
+                find = sparqls.find(eq("_id", k)).iterator();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                log.debug("Unexpected error cached-query {}", ex);
+            }
+        }
+        Document next = find.next();
+        R = next.getString("data");
+        return R;
+    }
+
+    private String getMd5(String input) {
+        try {
+            // Static getInstance method is called with hashing MD5 
+            MessageDigest md = MessageDigest.getInstance("MD5");
+
+            // digest() method is called to calculate message digest 
+            //  of an input digest() return array of byte 
+            byte[] messageDigest = md.digest(input.getBytes());
+
+            // Convert byte array into signum representation 
+            BigInteger no = new BigInteger(1, messageDigest);
+
+            // Convert message digest into hex value 
+            String hashtext = no.toString(16);
+            while (hashtext.length() < 32) {
+                hashtext = "0" + hashtext;
+            }
+            return hashtext;
+        } // For specifying wrong message digest algorithms 
+        catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

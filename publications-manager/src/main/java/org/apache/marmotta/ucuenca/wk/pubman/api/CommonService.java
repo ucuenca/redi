@@ -25,6 +25,8 @@ public interface CommonService {
     String getDataFromScieloProvidersService(final String[] organizations);
     
     String getDataFromDOAJProvidersService(final String[] organizations);
+    
+    String getDataFromORCIDProvidersService(final String[] organizations);
 
     String getDataFromGoogleScholarProvidersService(final String[] organizations);
 

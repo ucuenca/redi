@@ -58,6 +58,7 @@ public class LoadData {
     public Response getStatistics() throws FailMongoConnectionException {
         try {
             loadService.statistics();
+            loadService.cleanSPARQLS();
         } catch (Exception e) {
             log.error("Cannot load statistics into Mongo DB", e);
             throw new FailMongoConnectionException(String.format("Cannot load statistics into Mongo DB"), e);

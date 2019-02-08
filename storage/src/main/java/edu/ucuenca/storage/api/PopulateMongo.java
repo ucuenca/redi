@@ -51,4 +51,6 @@ public interface PopulateMongo {
      * Information countries for map
      */
     public void Countries ();
+    
+    public void cleanSPARQLS();
 }

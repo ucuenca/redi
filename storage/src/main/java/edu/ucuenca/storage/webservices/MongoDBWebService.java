@@ -101,7 +101,7 @@ public class MongoDBWebService {
         }
         return Response.ok().entity(response).build();
     }
-    
+
     @GET
     @Path("/subclustersTotals")
     @Produces(MediaType.APPLICATION_JSON)
@@ -114,7 +114,6 @@ public class MongoDBWebService {
         }
         return Response.ok().entity(response).build();
     }
-    
 
     @GET
     @Path("/countries")
@@ -187,19 +186,23 @@ public class MongoDBWebService {
         }
         return Response.ok().entity(response).build();
     }
+
     
-    
-  /*  @GET
-    @Path("/statsInst")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getsDiscipline(@QueryParam("uri") String uri) throws FailMongoConnectionException {
+
+
+
+    @POST
+    @Path("/sparql")
+    @Produces("application/ld+json")
+    public Response getSPARQL(@FormParam("query") String qry) throws FailMongoConnectionException {
         String response;
         try {
-            response = mongoService.getAuthorsByDiscipline(uri);
+            response = mongoService.getSPARQL(qry);
         } catch (Exception e) {
-            throw new FailMongoConnectionException(String.format("Cannot retrieve Cluster %s", uri), e);
+            e.printStackTrace();
+            throw new FailMongoConnectionException(String.format("Cannot retrieve cached-query %s", qry), e);
         }
         return Response.ok().entity(response).build();
     }
-*/
+
 }

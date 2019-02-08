@@ -78,7 +78,7 @@ public class PubWebService {
     public static final String COLABORATORDATA = "reports/collaboratorsData";
 
     public static final String SUBCL = "/reports/subclusterData";
-    
+
     public static final String CL = "/reports/clusterData";
 
     /*
@@ -184,7 +184,7 @@ public class PubWebService {
 
         return Response.ok().entity(result).build();
     }
-    
+
     @POST
     @Path("/publicationsDOAJByOrg")
     public Response readPublicationsPostDOAJ(@Context HttpServletRequest request) {
@@ -195,6 +195,15 @@ public class PubWebService {
         return Response.ok().entity(result).build();
     }
 
+    @POST
+    @Path("/publicationsORCIDByOrg")
+    public Response readPublicationsPostORCID(@Context HttpServletRequest request) {
+
+        String[] org = request.getParameterMap().get("data[]");
+        String result = commonService.getDataFromORCIDProvidersService(org);
+
+        return Response.ok().entity(result).build();
+    }
 
     @POST
     @Path("/publicationsGSchoolarByOrg")
@@ -308,9 +317,8 @@ public class PubWebService {
         return Response.ok().entity(result).build();
 
     }
-    
-    
-     @GET
+
+    @GET
     @Path(SUBCL)
     @Produces(APPLICATIONJSON)
     public Response getSubClusterGraph(@QueryParam("cluster") String cl, @QueryParam("subcluster") String subcl) {
@@ -359,9 +367,9 @@ public class PubWebService {
 //    }
     /**
      * @Author Jose Luis Cullcay. Service used to create reports
-     * @param report  Name of the report
-     * @param param   Type of the report
-     * @param param1  Parameter
+     * @param report Name of the report
+     * @param param Type of the report
+     * @param param1 Parameter
      * @param request
      * @return Address to the new report created
      */
@@ -371,12 +379,12 @@ public class PubWebService {
         if (!type.equals("pdf") && !type.equals("xls")) {
             return Response.ok("Invalid format").build();
         }
-       
+
         ServletContext context = request.getServletContext();
         String realContextPath = context.getRealPath("");
-        log.info  ("Reports Path");
-        log.info (request.getContextPath());
-        log.info (realContextPath);
+        log.info("Reports Path");
+        log.info(request.getContextPath());
+        log.info(realContextPath);
         log.debug("Report Task");
         String result = commonService.createReport(host, realContextPath, report, type, param1);
         return Response.ok().entity(result).build();
