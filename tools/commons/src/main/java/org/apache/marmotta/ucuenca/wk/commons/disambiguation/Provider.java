@@ -54,6 +54,25 @@ public class Provider {
         return lsp;
     }
 
+    public List<Person> getAuthors(String uri) throws MarmottaException {
+        String qry = "select ?a \n"
+                + "{\n"
+                + "	graph <" + Graph + "> {\n"
+                + "  		values ?a {<" + uri + ">} . \n"
+                + "	}\n"
+                + "}";
+        List<Map<String, Value>> persons = sparql.query(QueryLanguage.SPARQL, qry);
+        List<Person> lsp = new ArrayList<>();
+        for (Map<String, Value> row : persons) {
+            Person p = new Person();
+            p.Origin = this;
+            p.URI = row.get("a").stringValue();
+            p.URIS.add(p.URI);
+            lsp.add(p);
+        }
+        return lsp;
+    }
+
     public List<Person> getAuthorsByOrganization(String organization) throws MarmottaException {
         String qry = "select ?a \n"
                 + "{\n"
