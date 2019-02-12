@@ -59,6 +59,7 @@ public class NameUtils {
         }
         ModifiedJaccardMod metric = new ModifiedJaccardMod();
         metric.soundexBoost = true;
+        metric.applyMinTokensAbv = true;
         boolean hasCompleteMatchs = false;
         switch (tipo) {
             case 1:
