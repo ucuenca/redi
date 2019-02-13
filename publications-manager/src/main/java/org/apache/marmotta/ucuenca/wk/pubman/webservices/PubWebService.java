@@ -273,17 +273,6 @@ public class PubWebService {
         return Response.ok().entity(result).build();
     }
 
-    /*
-     * Get Publications Data from Source and Load into Provider Graph
-     */
-    @POST
-    @Path(GET_PUBLICATIONS_DSPACE)
-    public Response readPublicationsPostDspace(@QueryParam("Endpoint") String resultType) {
-        String params = resultType;
-        log.debug("Publications Task", params);
-        String result = commonService.GetDataFromProvidersServiceDspace();
-        return Response.ok().entity(result).build();
-    }
 
     @GET
     @Path("publication/organization/list")

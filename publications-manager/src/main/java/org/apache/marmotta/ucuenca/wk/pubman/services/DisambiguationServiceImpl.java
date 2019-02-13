@@ -133,11 +133,11 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
         String uriEvent = createEventUri(prov.Name, org.substring(org.lastIndexOf("/") + 1));
-        sparqlFunctionsService.executeInsert(prov.Graph, uriEvent, RDF.TYPE, REDI.DISAMBIGUATION_EVENT.toString());
-        sparqlFunctionsService.executeInsert(prov.Graph, prov.Graph, REDI.BELONGTO.toString(), uriEvent);
-        sparqlFunctionsService.executeInsert(constantService.getOrganizationsGraph(), org, REDI.BELONGTO.toString(), uriEvent);
+        sparqlFunctionsService.executeInsert(false, prov.Graph, uriEvent, RDF.TYPE, REDI.DISAMBIGUATION_EVENT.toString());
+        sparqlFunctionsService.executeInsert(false, prov.Graph, prov.Graph, REDI.BELONGTO.toString(), uriEvent);
+        sparqlFunctionsService.executeInsert(true, constantService.getOrganizationsGraph(), org, REDI.BELONGTO.toString(), uriEvent);
 //         sparqlFunctionsService.executeInsert(prov.Graph, uriEvent, REDI.EXTRACTIONDATE.toString(), dateFormat.format(date), STR);
-        sparqlFunctionsService.executeInsert(prov.Graph, uriEvent, RDFS.LABEL, dateFormat.format(date) + " | " + status + " " + n + "  matchs find", "string");
+        sparqlFunctionsService.executeInsert(false, prov.Graph, uriEvent, RDFS.LABEL, dateFormat.format(date) + " | " + status + " " + n + "  matchs find", "string");
         log.info("Finish  register");
     }
 
@@ -196,6 +196,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             }
             for (int w0 = 0; w0 < 4; w0++) {
                 ProcessCoauthors(Providers, true);
+                getGraphDB2().dumpBuffer();
                 sparqlUtils.addAll(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "1");
             }
 //            mergeAuthors();
@@ -225,7 +226,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         taskManagerService.endTask(task);
     }
 
-    public void subjectsMerger(List<Provider> AuthorsProviderslist) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, RepositoryException {
+    public void subjectsMerger(List<Provider> AuthorsProviderslist) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, RepositoryException, RDFHandlerException {
         String providersGraphs = "  ";
         for (Provider aProvider : AuthorsProviderslist) {
             providersGraphs += " <" + aProvider.Graph + "> ";
@@ -257,7 +258,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         }
     }
 
-    public void mergeAuthors() throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, RepositoryException {
+    public void mergeAuthors() throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, RepositoryException, RDFHandlerException {
         String qryDisambiguatedCoauthors = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
                 + "select distinct ?a  { \n"
                 + "  graph <" + constantService.getAuthorsSameAsGraph() + "> { \n"
@@ -829,6 +830,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         n.Coauthors = new ArrayList<>();
         n.Publications = new ArrayList<>();
         n.Topics = new ArrayList<>();
+        n.ORCIDs = new ArrayList<>();
         return n;
     }
 
@@ -845,7 +847,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         return mp;
     }
 
-    public void groupCoauthors(List<Provider> ProvidersList, String authorURI, boolean onlySameAs) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, RepositoryException {
+    public void groupCoauthors(List<Provider> ProvidersList, String authorURI, boolean onlySameAs) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, RepositoryException, RDFHandlerException {
         String providersGraphs = "  ";
         for (Provider aProvider : ProvidersList) {
             providersGraphs += " <" + aProvider.Graph + "> ";
@@ -998,7 +1000,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         bexecutorService.end();
     }
 
-    public void groupPublications(List<Provider> ProvidersList, String personURI) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, RepositoryException {
+    public void groupPublications(List<Provider> ProvidersList, String personURI) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, RepositoryException, RDFHandlerException {
         String providersGraphs = "  ";
         for (Provider aProvider : ProvidersList) {
             providersGraphs += " <" + aProvider.Graph + "> ";
@@ -1081,10 +1083,11 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         }
     }
 
-    public void registerSameAs(String graph, String URIO, String URIP) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException, RepositoryException {
+    public void registerSameAs(String graph, String URIO, String URIP) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException, RepositoryException, RDFHandlerException {
         if (URIO != null && URIP != null && URIO.compareTo(URIP) != 0) {
-            String buildInsertQuery = buildInsertQuery(graph, URIO, "http://www.w3.org/2002/07/owl#sameAs", URIP);
-            getGraphDB().update(QueryLanguage.SPARQL, buildInsertQuery);
+            //String buildInsertQuery = buildInsertQuery(graph, URIO, "http://www.w3.org/2002/07/owl#sameAs", URIP);
+            //getGraphDB().update(QueryLanguage.SPARQL, buildInsertQuery);
+            getGraphDB2().addBuffer(graph, URIO, "http://www.w3.org/2002/07/owl#sameAs", URIP);
         }
     }
 

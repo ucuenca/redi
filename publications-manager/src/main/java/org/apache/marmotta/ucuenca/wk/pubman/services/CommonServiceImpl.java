@@ -39,7 +39,6 @@ import org.apache.marmotta.ucuenca.wk.pubman.model.AuthorProfile;
 import org.apache.marmotta.ucuenca.wk.pubman.model.Collaborator;
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.AcademicsKnowledgeProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.DBLPProviderService;
-import org.apache.marmotta.ucuenca.wk.pubman.services.providers.DspaceProviderServiceImpl;
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.GoogleScholarProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.ScopusProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.SpringerProviderService;
@@ -78,8 +77,6 @@ public class CommonServiceImpl implements CommonService {
     @Inject
     DBLPProviderService dblpProviderServiceInt;
 
-    @Inject
-    DspaceProviderServiceImpl dspaceProviderService;
 
     @Inject
     ReportsService reportService;
@@ -214,12 +211,6 @@ public class CommonServiceImpl implements CommonService {
         return "Data Provider Google Scholar are extracted in background.   Please review main.log file for details";
     }
 
-    @Override
-    public String GetDataFromProvidersServiceDspace() {
-        Thread DspaceProvider = new Thread(dspaceProviderService);
-        DspaceProvider.start();
-        return "Data Provider Dspace are extracted in background.   Please review main.log file for details";
-    }
 
     @Override
     public String createReport(String hostname, String realPath, String name, String type, List<String> params) {

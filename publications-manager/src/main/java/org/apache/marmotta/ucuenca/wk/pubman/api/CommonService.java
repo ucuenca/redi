@@ -32,7 +32,6 @@ public interface CommonService {
 
     String getDataFromSpringerProvidersService(final String[] organizations);
 
-    String GetDataFromProvidersServiceDspace();
 
     String createReport(String hostname, String realPath, String name, String type, List<String> params);
 

@@ -13,10 +13,10 @@ import org.apache.marmotta.ucuenca.wk.pubman.exceptions.PubException;
  */
 public interface SparqlFunctionsService {
 
-    boolean updatePub(String querytoUpdate) throws PubException;
+    boolean updatePub(boolean loca, String querytoUpdate) throws PubException;
 
-    boolean executeInsert(String graph, String sujeto, String predicado, String objeto);
+    boolean executeInsert(boolean loca, String graph, String sujeto, String predicado, String objeto);
 
-    boolean executeInsert(String graph, String sujeto, String predicado, String objeto, String datatype);
+    boolean executeInsert(boolean loca, String graph, String sujeto, String predicado, String objeto, String datatype);
 
 }
