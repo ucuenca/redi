@@ -10,7 +10,7 @@ import java.util.List;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Person;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Provider;
-import org.apache.marmotta.ucuenca.wk.pubman.api.GraphDB;
+import org.apache.marmotta.ucuenca.wk.commons.util.GraphDB;
 import org.junit.Test;
 import org.openrdf.repository.RepositoryException;
 

@@ -3,21 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.apache.marmotta.ucuenca.wk.pubman.services;
+package org.apache.marmotta.ucuenca.wk.commons.impl;
 
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
-import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
+import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
-import org.apache.marmotta.ucuenca.wk.pubman.api.GraphDB;
-import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
-import org.apache.marmotta.ucuenca.wk.pubman.exceptions.PubException;
+import org.apache.marmotta.ucuenca.wk.commons.service.SparqlFunctionsService;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.UpdateExecutionException;
-import org.openrdf.repository.RepositoryException;
 
 /**
  *
@@ -30,12 +27,12 @@ public class SparqlFunctionsServiceImpl implements SparqlFunctionsService {
     @Inject
     private CommonsServices commonsServices;
     @Inject
-    private SparqlService sparqlService;
+    private ExternalSPARQLService sparqlService;
     @Inject
     private QueriesService queriesService;
 
     @Override
-    public boolean updatePub(boolean loca, String querytoUpdate) throws PubException {
+    public boolean updatePub(String querytoUpdate) {
         try {
 
             /**
@@ -47,25 +44,21 @@ public class SparqlFunctionsServiceImpl implements SparqlFunctionsService {
              * this.connection.prepareUpdate(QueryLanguage.SPARQL,querytoUpdate);
              * update.execute(); this.connection.commit();
              */
-            if (loca) {
-                sparqlService.update(QueryLanguage.SPARQL, querytoUpdate);
-            } else {
-                GraphDB.get().getSps().update(QueryLanguage.SPARQL, querytoUpdate);
-            }
+            sparqlService.getSparqlService().update(QueryLanguage.SPARQL, querytoUpdate);
             return true;
-        } catch (InvalidArgumentException | MarmottaException | UpdateExecutionException | MalformedQueryException | RepositoryException ex) {
+        } catch (InvalidArgumentException | MarmottaException | UpdateExecutionException | MalformedQueryException ex) {
             log.error("Fail to Insert Triplet: " + querytoUpdate);
             return false;
         }
     }
 
     @Override
-    public boolean executeInsert(boolean loca, String graph, String sujeto, String predicado, String objeto) {
-        return executeInsert(loca, graph, sujeto, predicado, objeto, null);
+    public boolean executeInsert(String graph, String sujeto, String predicado, String objeto) {
+        return executeInsert(graph, sujeto, predicado, objeto, null);
     }
 
     @Override
-    public boolean executeInsert(boolean loca, String graph, String sujeto, String predicado, String objeto, String datatype) {
+    public boolean executeInsert(String graph, String sujeto, String predicado, String objeto, String datatype) {
         String query;
         if (commonsServices.isURI(objeto)) {
             query = queriesService.getInsertDataUriQuery(graph, sujeto, predicado, objeto);
@@ -74,13 +67,9 @@ public class SparqlFunctionsServiceImpl implements SparqlFunctionsService {
         }
 
         try {
-            if (loca) {
-                sparqlService.update(QueryLanguage.SPARQL, query);
-            } else {
-                GraphDB.get().getSps().update(QueryLanguage.SPARQL, query);
-            }
+            sparqlService.getSparqlService().update(QueryLanguage.SPARQL, query);
             return true;
-        } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException | RepositoryException ex) {
+        } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
             log.error("Cannot execute query \n" + query, ex);
             return false;
         }

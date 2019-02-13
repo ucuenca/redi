@@ -13,9 +13,9 @@ import java.util.logging.Logger;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
-import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.authors.api.OrganizationService;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
+import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.FOAF;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
@@ -35,7 +35,7 @@ import org.semarglproject.vocab.RDF;
 public class OrganizationServiceImpl implements OrganizationService {
     
      @Inject
-    private SparqlService sparqlService;
+    private ExternalSPARQLService sparqlService;
      
      @Inject
     private QueriesService queriesService;
@@ -77,7 +77,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         try {
            // String queryInsertEndpoint = queriesService.getInsertEndpointQuery(parameters[0], parameters[1], parameters[2], parameters[3]);
           String queryInsertOrg = queriesService.getInsertGeneric (con.getOrganizationsGraph() ,  parameters[0], parameters[1], parameters[2], parameters[3] );
-            sparqlService.update(QueryLanguage.SPARQL, queryInsertOrg);
+            sparqlService.getSparqlService().update(QueryLanguage.SPARQL, queryInsertOrg);
             return "Successfully Registration";
         } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
             Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -88,7 +88,7 @@ public class OrganizationServiceImpl implements OrganizationService {
          public boolean  askOrganization (String uri )  {
             String askOrg =  queriesService.getAskResourceQuery (con.getOrganizationsGraph(), uri);
          try {
-             return  sparqlService.ask( QueryLanguage.SPARQL , askOrg );
+             return  sparqlService.getSparqlService().ask( QueryLanguage.SPARQL , askOrg );
          } catch (MarmottaException ex) {
              Logger.getLogger(OrganizationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
              //return ;
@@ -104,7 +104,7 @@ public class OrganizationServiceImpl implements OrganizationService {
          try {
              //  ObjectMapper mapper = new ObjectMapper();
              String queryOrg =  queriesService.getListOrganizationQuery ();
-             List<Map<String, Value>> response = sparqlService.query(QueryLanguage.SPARQL, queryOrg);
+             List<Map<String, Value>> response = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queryOrg);
              return listmapTojson (response);
          } catch ( MarmottaException | JSONException ex) {
              Logger.getLogger(OrganizationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -143,7 +143,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     public String loadOrgbyURI( String uri) {
          String queryOrgURI  =  queriesService.getOrgByUri(uri);
          try {
-               List<Map<String, Value>> result = sparqlService.query(QueryLanguage.SPARQL, queryOrgURI);
+               List<Map<String, Value>> result = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queryOrgURI);
              return listmapTojson (result);
          } catch ( MarmottaException | JSONException ex) {
              Logger.getLogger(OrganizationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -182,7 +182,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         
            // String queryInsertEndpoint = queriesService.getInsertEndpointQuery(parameters[0], parameters[1], parameters[2], parameters[3]);
           String queryInsertOrg = queriesService.updateGeneric(con.getOrganizationsGraph() ,  parameters[0], parameters[1], parameters[2], parameters[3] );
-          sparqlService.update(QueryLanguage.SPARQL, queryInsertOrg);
+          sparqlService.getSparqlService().update(QueryLanguage.SPARQL, queryInsertOrg);
             return "Successfully Registration";
       
     }
@@ -194,9 +194,9 @@ public class OrganizationServiceImpl implements OrganizationService {
             String queryEnd =   queriesService.getAskObjectQuery(con.getEndpointsGraph(), resourceid);
           
             try {
-                 if ( !sparqlService.ask(QueryLanguage.SPARQL, queryEnd)){
+                 if ( !sparqlService.getSparqlService().ask(QueryLanguage.SPARQL, queryEnd)){
                 String queryRemove = queriesService.removeGenericType( con.getOrganizationsGraph() ,  FOAF.ORGANIZATION.toString() , resourceid );
-                sparqlService.update(QueryLanguage.SPARQL, queryRemove);
+                sparqlService.getSparqlService().update(QueryLanguage.SPARQL, queryRemove);
                 return "Success";
                  } else {
                   return "Fail: Endpoints Attachment";

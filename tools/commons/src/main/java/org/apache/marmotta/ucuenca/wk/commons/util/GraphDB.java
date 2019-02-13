@@ -3,11 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.apache.marmotta.ucuenca.wk.pubman.api;
+package org.apache.marmotta.ucuenca.wk.commons.util;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -51,14 +50,14 @@ import org.openrdf.rio.Rio;
  *
  * @author cedia
  */
-public class GraphDB {
+public final class GraphDB {
 
     private static GraphDB eta;
     private static final int MAX_TRIPLES_ADD = 1000;
     private static final int MAX_TRIPLES_ADD_2 = 2000;
     private SPARQLRepository data;
     private SparqlService sps;
-    private Map<URI, Model> hmmdl = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<URI, Model> hmmdl = new ConcurrentHashMap<>();
 
     public SparqlService getSps() {
         return sps;
@@ -66,24 +65,24 @@ public class GraphDB {
 
     private GraphDB() throws RepositoryException {
         data = new SPARQLRepository("http://201.159.222.25:8180/repositories/data", "http://201.159.222.25:8180/repositories/data/statements");
-        Map<String, String> additionalHttpHeaders = new HashMap<>();
+        ConcurrentHashMap<String, String> additionalHttpHeaders = new ConcurrentHashMap<>();
         additionalHttpHeaders.put("Accept", "application/ld+json");
         data.setAdditionalHttpHeaders(additionalHttpHeaders);
         data.initialize();
         SparqlService sparqlService = new SparqlService() {
             @Override
             public Query parseQuery(QueryLanguage ql, String string) throws RepositoryException, MalformedQueryException {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                throw new UnsupportedOperationException(NOT_SUPPORTED_YET); //To change body of generated methods, choose Tools | Templates.
             }
 
             @Override
             public QueryType getQueryType(QueryLanguage ql, String string) throws MalformedQueryException {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                throw new UnsupportedOperationException(NOT_SUPPORTED_YET); //To change body of generated methods, choose Tools | Templates.
             }
 
             @Override
-            public void query(QueryLanguage ql, String string, OutputStream out, String string1, int i) throws MarmottaException, TimeoutException, MalformedQueryException {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            public void query(QueryLanguage ql, String string, OutputStream pout, String string1, int i) throws MarmottaException, TimeoutException, MalformedQueryException {
+                throw new UnsupportedOperationException(NOT_SUPPORTED_YET); //To change body of generated methods, choose Tools | Templates.
             }
 
             @Override
@@ -111,7 +110,7 @@ public class GraphDB {
                     TupleQueryResult evaluate = connection.prepareTupleQuery(ql, string).evaluate();
                     while (evaluate.hasNext()) {
                         Iterator<Binding> iterator = evaluate.next().iterator();
-                        Map<String, Value> mp = new HashMap<>();
+                        ConcurrentHashMap<String, Value> mp = new ConcurrentHashMap<>();
                         while (iterator.hasNext()) {
                             Binding next = iterator.next();
                             mp.put(next.getName(), next.getValue());
@@ -140,22 +139,24 @@ public class GraphDB {
 
             @Override
             public void query(QueryLanguage ql, String string, TupleQueryResultWriter writer, BooleanQueryResultWriter writer1, SPARQLGraphResultWriter writer2, int i) throws MarmottaException, MalformedQueryException, QueryEvaluationException, TimeoutException {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                throw new UnsupportedOperationException(NOT_SUPPORTED_YET); //To change body of generated methods, choose Tools | Templates.
             }
 
             @Override
             public void query(QueryLanguage ql, String string, QueryResultWriter writer, int i) throws MarmottaException, MalformedQueryException, QueryEvaluationException, TimeoutException {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                throw new UnsupportedOperationException(NOT_SUPPORTED_YET); //To change body of generated methods, choose Tools | Templates.
             }
 
             @Override
             public void createServiceDescription(RDFWriter writer, String string, boolean bln) throws RDFHandlerException {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                throw new UnsupportedOperationException(NOT_SUPPORTED_YET); //To change body of generated methods, choose Tools | Templates.
             }
+            private static final String NOT_SUPPORTED_YET = "Not supported yet.";
         };
         sps = sparqlService;
     }
 
+    @SuppressWarnings("PMD")
     public static GraphDB get() throws RepositoryException {
         if (eta == null) {
             eta = new GraphDB();

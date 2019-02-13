@@ -15,9 +15,9 @@ import javax.inject.Inject;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.ucuenca.wk.commons.service.KeywordsService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
-import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.DistanceService;
+import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 import org.openrdf.model.Value;
 import org.openrdf.query.QueryLanguage;
 
@@ -34,7 +34,7 @@ public class KeywordsServiceImpl implements KeywordsService {
     private CommonsServices commonService;
     
     @Inject
-    private SparqlService sparqlService;
+    private ExternalSPARQLService sparqlService;
     
     private final static int MAXKEYWORDS = 10; //maximo retorna 10 keywords desde el texto ( primeras )
 
@@ -90,7 +90,7 @@ public class KeywordsServiceImpl implements KeywordsService {
         List<String> keywords = new ArrayList<>();
         try {
             String getAllKeywordsQuery = queriesService.getAuthorsKeywordsQuery(authorUri);
-            List<Map<String, Value>> resultKeywords = sparqlService.query(QueryLanguage.SPARQL, getAllKeywordsQuery);
+            List<Map<String, Value>> resultKeywords = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, getAllKeywordsQuery);
             int i = 0;
             for (Map<String, Value> key : resultKeywords) {
                 String keyword = key.get("keyword").stringValue();

@@ -34,11 +34,11 @@ import org.apache.marmotta.ldclient.model.ClientResponse;
 import org.apache.marmotta.ldclient.services.ldclient.LDClient;
 import org.apache.marmotta.platform.core.api.task.Task;
 import org.apache.marmotta.platform.core.api.task.TaskManagerService;
-import org.apache.marmotta.platform.core.api.triplestore.SesameService;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
-import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
+import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
+import org.apache.marmotta.ucuenca.wk.commons.service.SparqlFunctionsService;
 import org.apache.marmotta.ucuenca.wk.pubman.exceptions.QuotaLimitException;
 import org.apache.marmotta.ucuenca.wk.pubman.utils.OntologyMapper;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
@@ -76,7 +76,7 @@ public abstract class AbstractProviderService implements ProviderService {
     private TaskManagerService taskManagerService;
 
     @Inject
-    private SparqlService sparqlService;
+    private ExternalSPARQLService sparqlService;
 
     //@Inject
     //private SesameService sesameService;
@@ -146,9 +146,9 @@ public abstract class AbstractProviderService implements ProviderService {
         LDClient ldClient = buildDefaultLDClient();
         try {
             for (String organization : organizations) {
-                List<Map<String, Value>> resultAllAuthors = sparqlService.query(
+                List<Map<String, Value>> resultAllAuthors = sparqlService.getSparqlService().query(
                         QueryLanguage.SPARQL, queriesService.getAuthorsDataQuery(organization));
-                List<String> organizationNames = getOrganizationNames(sparqlService.query(
+                List<String> organizationNames = getOrganizationNames(sparqlService.getSparqlService().query(
                         QueryLanguage.SPARQL, queriesService.getOrganizationNameQuery(organization)));
                 int totalAuthors = resultAllAuthors.size();
                 if (totalAuthors == 0) {
@@ -175,10 +175,10 @@ public abstract class AbstractProviderService implements ProviderService {
                         } else {
                             querySearchAuthor = queriesService.getAskObjectQuery(getProviderGraph(), authorResource, filterExpressionSearch());
                         }
-                        boolean isResquestDone = GraphDB.get().getSps().ask(QueryLanguage.SPARQL, querySearchAuthor);
+                        boolean isResquestDone = sparqlService.getSparqlService().ask(QueryLanguage.SPARQL, querySearchAuthor);
                         if (isResquestDone) {
                             // Register only the search query, given that the resource might be from other author.
-                            sparqlFunctionsService.executeInsert(false, getProviderGraph(), reqResource.replace(" ", ""), OWL.ONE_OF, authorResource);
+                            sparqlFunctionsService.executeInsert(getProviderGraph(), reqResource.replace(" ", ""), OWL.ONE_OF, authorResource);
                             continue;
                         }
 
@@ -195,7 +195,7 @@ public abstract class AbstractProviderService implements ProviderService {
                                     retryPlan();
                                     continue;
                             }
-                            RepositoryConnection connection = GraphDB.get().getConnection();
+                            RepositoryConnection connection = sparqlService.getRepositoryConnetion();
                             try {
                                 // store triples with new vocabulary
                                 Model data = response.getData();
@@ -204,16 +204,16 @@ public abstract class AbstractProviderService implements ProviderService {
                                 log.info("After ontology mapper: writing {} triples in context {} for request '{}'.", data.size(), getProviderGraph(), reqResource);
                                 Resource providerContext = connection.getValueFactory().createURI(getProviderGraph());
                                 //connection.add(data, providerContext);
-                                GraphDB.get().runSplitAddOp(connection, data, providerContext);
+                                sparqlService.getGraphDBInstance().runSplitAddOp(connection, data, providerContext);
                                 // Register search query.
-                                sparqlFunctionsService.executeInsert(false, getProviderGraph(), reqResource.replace(" ", ""), OWL.ONE_OF, authorResource);
+                                sparqlFunctionsService.executeInsert(getProviderGraph(), reqResource.replace(" ", ""), OWL.ONE_OF, authorResource);
                             } catch (IOException | RDFHandlerException ex) {
                                 log.error("cannot store data", ex);
                             } finally {
                                 connection.close();
                             }
                             // Register search query.
-                            sparqlFunctionsService.executeInsert(false, getProviderGraph(), reqResource.replace(" ", ""), OWL.ONE_OF, authorResource);
+                            sparqlFunctionsService.executeInsert(getProviderGraph(), reqResource.replace(" ", ""), OWL.ONE_OF, authorResource);
                         } catch (DataRetrievalException dre) {
                             msgOrg.put(organization, "Fail: " + processedAuthors + "/" + totalAuthors);
                             log.error("Cannot retieve RDF for the given resource: '{}'", reqResource, dre);
@@ -308,21 +308,21 @@ public abstract class AbstractProviderService implements ProviderService {
         String providerUri = constantService.getProviderBaseUri() + "/" + providerName.toUpperCase().replace(" ", "_");
         String queryProvider = queriesService.getAskResourceQuery(getProviderGraph(), providerUri);
         try {
-            boolean result = GraphDB.get().getSps().ask(QueryLanguage.SPARQL, queryProvider);
+            boolean result = sparqlService.getSparqlService().ask(QueryLanguage.SPARQL, queryProvider);
 
             if (!result) {
-                sparqlFunctionsService.executeInsert(false, getProviderGraph(), providerUri, RDF.TYPE, REDI.PROVIDER.toString());
-                sparqlFunctionsService.executeInsert(false, getProviderGraph(), providerUri, RDFS.LABEL, providerName, "string");
+                sparqlFunctionsService.executeInsert(getProviderGraph(), providerUri, RDF.TYPE, REDI.PROVIDER.toString());
+                sparqlFunctionsService.executeInsert(getProviderGraph(), providerUri, RDFS.LABEL, providerName, "string");
                 // insertStatement(providerUri, RDF.TYPE.toString(),  , STR);
                 if (main) {
-                    sparqlFunctionsService.executeInsert(false, getProviderGraph(), providerUri, REDI.MAIN.toString(), "True", "boolean");
+                    sparqlFunctionsService.executeInsert(getProviderGraph(), providerUri, REDI.MAIN.toString(), "True", "boolean");
                 } else {
-                    sparqlFunctionsService.executeInsert(false, getProviderGraph(), providerUri, REDI.MAIN.toString(), "False", "boolean");
+                    sparqlFunctionsService.executeInsert(getProviderGraph(), providerUri, REDI.MAIN.toString(), "False", "boolean");
                 }
             }
 
             return providerUri;
-        } catch (RepositoryException | MarmottaException ex) {
+        } catch (MarmottaException ex) {
             java.util.logging.Logger.getLogger(AbstractProviderService.class.getName()).log(Level.SEVERE, null, ex);
             return "";
         }
@@ -339,11 +339,11 @@ public abstract class AbstractProviderService implements ProviderService {
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
         String uriEvent = createExtractEventUri(getProviderName(), org);
-        sparqlFunctionsService.executeInsert(false, getProviderGraph(), uriEvent, RDF.TYPE, REDI.EXTRACTION_EVENT.toString());
-        sparqlFunctionsService.executeInsert(false, getProviderGraph(), providerUri, REDI.BELONGTO.toString(), uriEvent);
-        sparqlFunctionsService.executeInsert(true, constantService.getOrganizationsGraph(), org, REDI.BELONGTO.toString(), uriEvent);
-        sparqlFunctionsService.executeInsert(false, getProviderGraph(), uriEvent, REDI.EXTRACTIONDATE.toString(), dateFormat.format(date), STR);
-        sparqlFunctionsService.executeInsert(false, getProviderGraph(), uriEvent, RDFS.LABEL, dateFormat.format(date) + " | " + detail, STR);
+        sparqlFunctionsService.executeInsert(getProviderGraph(), uriEvent, RDF.TYPE, REDI.EXTRACTION_EVENT.toString());
+        sparqlFunctionsService.executeInsert(getProviderGraph(), providerUri, REDI.BELONGTO.toString(), uriEvent);
+        sparqlFunctionsService.executeInsert(constantService.getOrganizationsGraph(), org, REDI.BELONGTO.toString(), uriEvent);
+        sparqlFunctionsService.executeInsert(getProviderGraph(), uriEvent, REDI.EXTRACTIONDATE.toString(), dateFormat.format(date), STR);
+        sparqlFunctionsService.executeInsert(getProviderGraph(), uriEvent, RDFS.LABEL, dateFormat.format(date) + " | " + detail, STR);
 
     }
 

@@ -27,12 +27,11 @@ import org.openrdf.query.TupleQueryResultHandlerException;
 import org.openrdf.query.UpdateExecutionException;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
-import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.authors.api.SparqlFunctionsService;
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.AskException;
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.UpdateException;
 import org.apache.marmotta.platform.versioning.services.VersioningSailProvider;
-import org.apache.marmotta.platform.core.api.triplestore.SesameService;
+import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -49,13 +48,13 @@ public class SparqlFunctionsServiceImpl implements SparqlFunctionsService {
     private org.slf4j.Logger log;
         
     @Inject
-    private SparqlService sparqlService;
+    private ExternalSPARQLService sparqlService;
 
     @Inject
     private VersioningSailProvider versioningService;
     
-    @Inject
-    private SesameService sesameService;
+    //@Inject
+    //private SesameService sesameService;
             
     @Override
     public boolean updateAuthor(String querytoUpdate) throws UpdateException {
@@ -70,7 +69,7 @@ public class SparqlFunctionsServiceImpl implements SparqlFunctionsService {
              * Update update = this.connection.prepareUpdate(QueryLanguage.SPARQL,querytoUpdate); 
              * update.execute(); this.connection.commit();   
              */
-            sparqlService.update(QueryLanguage.SPARQL, querytoUpdate);
+            sparqlService.getSparqlService().update(QueryLanguage.SPARQL, querytoUpdate);
             return true;
         } catch (InvalidArgumentException | MarmottaException | UpdateExecutionException | MalformedQueryException ex) {
              log.error("Fail to Insert Triplet: " + querytoUpdate);
@@ -82,7 +81,7 @@ public class SparqlFunctionsServiceImpl implements SparqlFunctionsService {
     public List<Map<String, Value>> querylocal (String query){
        
         try {         
-            return sparqlService.query(QueryLanguage.SPARQL, query);
+            return sparqlService.getSparqlService().query(QueryLanguage.SPARQL, query);
         } catch (MarmottaException ex) {
             log.error("Excepcion: Fallo al ejecutar consulta ASK sobre: " + query);
             Logger.getLogger(SparqlFunctionsServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -94,7 +93,7 @@ public class SparqlFunctionsServiceImpl implements SparqlFunctionsService {
     public boolean askAuthor(String querytoAsk) throws  AskException{
        
         try {
-            return sparqlService.ask(QueryLanguage.SPARQL, querytoAsk);
+            return sparqlService.getSparqlService().ask(QueryLanguage.SPARQL, querytoAsk);
         } catch (MarmottaException ex) {
             log.error("Excepcion: Fallo al ejecutar consulta ASK sobre: " + querytoAsk);
             Logger.getLogger(SparqlFunctionsServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -107,7 +106,7 @@ public class SparqlFunctionsServiceImpl implements SparqlFunctionsService {
     public boolean askAuthorVersioning(String resourceURI)
     {
          try {
-            RepositoryConnection conn = sesameService.getConnection();
+            RepositoryConnection conn = sparqlService.getRepositoryConnetion();
             try {
                 if(resourceURI != null) {
                     URI resource =  conn.getValueFactory().createURI(resourceURI);

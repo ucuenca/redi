@@ -68,7 +68,6 @@ import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 //import org.apache.marmotta.ldclient.exception.DataRetrievalException;
 //import org.apache.marmotta.ldclient.model.ClientResponse;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
-import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.authors.api.AuthorService;
 import org.apache.marmotta.ucuenca.wk.authors.api.EndpointFile;
 import org.apache.marmotta.ucuenca.wk.authors.api.EndpointOAI;
@@ -84,6 +83,7 @@ import org.apache.marmotta.ucuenca.wk.authors.exceptions.UpdateException;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Person;
 //import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
+import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 //import org.apache.marmotta.ucuenca.wk.commons.service.DistanceService;
 //import org.apache.marmotta.ucuenca.wk.commons.service.KeywordsService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
@@ -139,7 +139,7 @@ public class AuthorServiceImpl implements AuthorService {
     private ConstantService constantService;
 
     @Inject
-    private SparqlService sparqlService;
+    private ExternalSPARQLService sparqlService;
 
     private static final String STR = "string";
 
@@ -208,7 +208,7 @@ public class AuthorServiceImpl implements AuthorService {
         for (String endpoint : endpoints) {
             try {
                 String queryEndpoint = queriesService.getListEndpointsByUri(endpoint);
-                List<Map<String, Value>> result = sparqlService.query(QueryLanguage.SPARQL, queryEndpoint);
+                List<Map<String, Value>> result = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queryEndpoint);
                 if (!result.isEmpty()) {
                     Map<String, Value> map = result.get(0);
                     String type = map.get("type").stringValue();
@@ -291,7 +291,7 @@ public class AuthorServiceImpl implements AuthorService {
         String providerUri = constantService.getProviderBaseUri() + "/" + providerName.toUpperCase().replace(" ", "_");
         String queryProvider = queriesService.getAskResourceQuery(providerGraph, providerUri);
         try {
-            boolean result = sparqlService.ask(QueryLanguage.SPARQL, queryProvider);
+            boolean result = sparqlService.getSparqlService().ask(QueryLanguage.SPARQL, queryProvider);
 
             if (!result) {
                 executeInsert(providerGraph, providerUri, RDF.TYPE.toString(), REDI.PROVIDER.toString());
@@ -894,7 +894,7 @@ public class AuthorServiceImpl implements AuthorService {
                 + "    	?o <http://ucuenca.edu.ec/ontology#fullName> ?n .\n"
                 + "    }\n"
                 + "} ";
-        List<Map<String, Value>> query = sparqlService.query(QueryLanguage.SPARQL, q);
+        List<Map<String, Value>> query = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, q);
         ConcurrentHashMap<String, Map.Entry<Set<String>, Set<String>>> comList = new ConcurrentHashMap<>();
         for (Map<String, Value> a : query) {
             String key = a.get("a").stringValue();
@@ -937,7 +937,7 @@ public class AuthorServiceImpl implements AuthorService {
                         + "		?a <http://purl.org/dc/terms/provenance> ?p .\n"
                         + "	}\n"
                         + "}";
-                sparqlService.update(QueryLanguage.SPARQL, q2);
+                sparqlService.getSparqlService().update(QueryLanguage.SPARQL, q2);
             }
         }
     }

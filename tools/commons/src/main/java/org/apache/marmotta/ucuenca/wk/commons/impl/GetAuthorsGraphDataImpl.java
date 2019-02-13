@@ -15,10 +15,10 @@ import java.util.Map;
 import java.util.logging.Level;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
-import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.DistanceService;
+import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 import org.apache.marmotta.ucuenca.wk.commons.service.GetAuthorsGraphData;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.openrdf.model.Value;
@@ -45,7 +45,7 @@ public class GetAuthorsGraphDataImpl implements GetAuthorsGraphData {
     private DistanceService distanceService = new DistanceServiceImpl();
 
     @Inject
-    private SparqlService sparqlService;
+    private ExternalSPARQLService sparqlService;
 
     @Inject
     private Logger log;
@@ -70,7 +70,7 @@ public class GetAuthorsGraphDataImpl implements GetAuthorsGraphData {
         String fileName = "";
         try {
             String getAllAuthorsDataQuery = queriesService.getAuthorsDataQuery(organizations);
-            resultAllAuthors = sparqlService.query(QueryLanguage.SPARQL, getAllAuthorsDataQuery);
+            resultAllAuthors = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, getAllAuthorsDataQuery);
 
             /**
              * Filter by Specific List of Authors
@@ -215,12 +215,12 @@ public class GetAuthorsGraphDataImpl implements GetAuthorsGraphData {
         try {
             if (!found) {
                 String getNewAuthorsDataQuery = queryInsertNewAutor(fileName);
-                resultNewAllAuthors = sparqlService.query(QueryLanguage.SPARQL, getNewAuthorsDataQuery);
+                resultNewAllAuthors = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, getNewAuthorsDataQuery);
             } else {
 
                 insertSearchName(authorResource, fileName);
                 String getNewAuthorsDataQuery = queriesService.getAuthorsDataQueryByUri(constantService.getAuthorsGraph(), constantService.getEndpointsGraph(), authorResource);
-                resultNewAllAuthors = sparqlService.query(QueryLanguage.SPARQL, getNewAuthorsDataQuery);
+                resultNewAllAuthors = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, getNewAuthorsDataQuery);
             }
             list.addAll(resultNewAllAuthors);
 
@@ -239,7 +239,7 @@ public class GetAuthorsGraphDataImpl implements GetAuthorsGraphData {
     public String getValueFromTripleStore(String query, String property) {
         try {
             String valueReturn = "";
-            List<Map<String, Value>> endPoint = sparqlService.query(QueryLanguage.SPARQL, query);
+            List<Map<String, Value>> endPoint = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, query);
             Iterator<Map<String, Value>> iter = endPoint.iterator();
 
             while (iter.hasNext()) {
@@ -293,7 +293,7 @@ public class GetAuthorsGraphDataImpl implements GetAuthorsGraphData {
         String triple = buildInsertQuery(args[0], args[1], args[2], args[3]);
 
         try {
-            sparqlService.update(QueryLanguage.SPARQL, triple);
+            sparqlService.getSparqlService().update(QueryLanguage.SPARQL, triple);
 
         } catch (MalformedQueryException ex) {
             log.error("Malformed Query:  " + triple);

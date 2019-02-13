@@ -362,46 +362,47 @@ public class QueriesServiceImpl implements QueriesService {
     public String getExtractedOrgListD(List<Provider> providers) {
         String varprov = "";
         String prov = "";
+        String lspro = "";
         String varprovl = "";
 
         for (Provider p : providers) {
             varprov = " (group_concat(  ?label" + p.Name + "  ; separator=\";\")  as  ?Adv" + p.Name + " ) " + varprov;
-            varprovl = " ?label" + p.Name + " " + varprovl;
-
-            if (p.Name.equals("Ojs") || p.Name.equals("Dspace")) {
-
-                prov = "  GRAPH  <" + p.Graph + "> {"
-                        + "  OPTIONAL { "
-                        + "  ?event rdfs:label  ?labelA" + p.Name + " } "
-                        + "  OPTIONAL { "
-                        + "  ?event  <" + RDF.TYPE.toString() + "> <" + REDI.EXTRACTION_EVENT.toString() + "> } "
-                        + " BIND ( IF ( regex (?event , '" + p.Name + "' ,'i'), ?labelA" + p.Name + " , '' ) AS ?label" + p.Name + " )"
-                        + "  } " + prov;
-
+            lspro += " <" + p.Graph + "> ";
+            if (p.Name.equals("Ojs")) {
+                prov += "bind (if(regex(str(?event), 'Ojs','i'),?labelp,'') as ?label" + p.Name + ") .\n";
+            } else if (p.Name.equals("Dspace")) {
+                prov += "bind (if(regex(str(?event), 'Dspace','i'),?labelp,'') as ?label" + p.Name + ") .\n";
+            } else if (p.Name.equals("AcademicsKnowledge")) {
+                prov += "bind (if(regex(str(?event), 'Academics','i'),?labelp,'') as ?label" + p.Name + ") .\n";
+            } else if (p.Name.equals("GoogleScholar")) {
+                prov += "bind (if(regex(str(?event), 'Google','i'),?labelp,'') as ?label" + p.Name + ") .\n";
             } else {
-
-                prov = "  GRAPH  <" + p.Graph + "> {"
-                        + "  OPTIONAL { "
-                        + "  ?event rdfs:label  ?label" + p.Name + " } "
-                        + "  OPTIONAL { "
-                        + "  ?event  <" + RDF.TYPE.toString() + "> <" + REDI.EXTRACTION_EVENT.toString() + "> } "
-                        + "  } " + prov;
+                prov += "bind (if(regex(str(?event), '" + p.Name + "','i'),?labelp,'') as ?label" + p.Name + ") .\n";
             }
         }
 
         String head = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
                 + "PREFIX ucmodel: <http://ucuenca.edu.ec/ontology#> "
                 + "SELECT  ?uri ?name " + varprov + " {"
-                + "SELECT DISTINCT ?uri ?name " + varprovl
-                + " WHERE { "
-                + "?subject  <" + REDI.BELONGTO.toString() + "> ?uri . "
-                + "?subject  <" + REDI.EXTRACTIONDATE.toString() + ">  ?date .  "
-                + "FILTER ( STR(?date)  != '') . "
-                + "?uri  <" + REDI.NAME.toString() + ">  ?name ."
-                + "OPTIONAL  {  GRAPH   <" + con.getOrganizationsGraph() + "> { "
-                + "   ?uri  <" + REDI.BELONGTO.toString() + "> ?event  }"
+                + "GRAPH <" + con.getOrganizationsGraph() + "> { \n"
+                + "		?uri <http://ucuenca.edu.ec/ontology#name> ?name .\n"
+                + "		?uri <http://ucuenca.edu.ec/ontology#belongTo> ?event \n"
+                + "    }\n"
+                + "    GRAPH <" + con.getEndpointsGraph() + "> { \n"
+                + "    	?subject <http://ucuenca.edu.ec/ontology#belongTo> ?uri . \n"
+                + "		?subject <http://ucuenca.edu.ec/ontology#extractionDate> ?date .\n"
+                + "        FILTER ( STR(?date) != '') . \n"
+                + "    }\n"
+                + "    values ?g { " + lspro + "\n"
+                + "    } .\n"
+                + "    graph ?g {\n"
+                + "        optional{\n"
+                + "            ?event a <http://ucuenca.edu.ec/ontology#ExtractionEvent> .\n"
+                + "        	?event rdfs:label ?labelp .\n"
+                + "        }        \n"
+                + "    }"
+                + "    \n"
                 + prov
-                + "} }Group by ?uri ?name " + varprovl
                 + "} Group by ?uri ?name";
 
         return head;
