@@ -1299,7 +1299,15 @@ public class CommonServiceImpl implements CommonService {
     private AuthorProfile proccessAuthor(List<Map<String, Value>> responseAuthor) {
         AuthorProfile a = new AuthorProfile();
         Map<String, Value> author = responseAuthor.get(0);
-
+        List<String> rm = new ArrayList<>();
+        for (Entry<String, Value> an : author.entrySet()) {
+            if (an.getValue().stringValue().isEmpty()) {
+                rm.add(an.getKey());
+            }
+        }
+        for (String st : rm) {
+            author.remove(st);
+        }
         if (author.containsKey("names")) {
             a.setName(getUniqueName(author.get("names").stringValue(), "\\|"));
         }

@@ -8,7 +8,6 @@ package org.apache.marmotta.ucuenca.wk.pubman.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.api.triplestore.SesameService;
@@ -18,6 +17,7 @@ import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 import org.apache.marmotta.ucuenca.wk.commons.util.SPARQLUtils;
 import org.apache.marmotta.ucuenca.wk.pubman.api.SyncGraphDBMarmotta;
 import org.openrdf.model.Model;
+import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.LinkedHashModel;
@@ -49,6 +49,9 @@ public class SyncGraphDBMarmottaImpl implements SyncGraphDBMarmotta {
 
         List<String> graphs = new ArrayList();
         graphs.add(cs.getCentralGraph());
+        graphs.add(cs.getAuthorsGraph());
+        graphs.add(cs.getEndpointsGraph());
+        graphs.add(cs.getOrganizationsGraph());
         for (String g : graphs) {
             SynWorker sin = new SynWorker(g);
             sin.start();
@@ -75,17 +78,17 @@ public class SyncGraphDBMarmottaImpl implements SyncGraphDBMarmotta {
                 List<Map<String, Value>> query = ess.getSparqlService().query(QueryLanguage.SPARQL, "select (count (*) as ?t) {graph <" + graph + "> {?a ?b ?c}}");
                 int total = Integer.parseInt(query.get(0).get("t").stringValue());
                 int actual = 0;
-                Random rn = new Random();
+                int offset = 0;
                 do {
-                    int offset = rn.nextInt(total - 0 + 1) + 0;
+                    log.info("Copying graph {} = {} / {}", graph, actual, total);
                     List<Map<String, Value>> query1 = ess.getSparqlService().query(QueryLanguage.SPARQL, "select ?a ?b ?c {\n"
                             + "    graph <" + graph + "> {\n"
                             + "        ?a ?b ?c .\n"
                             + "    }\n"
-                            + "} offset " + offset + " limit 100");
+                            + "} offset " + offset + " limit 1000");
                     Model m = new LinkedHashModel();
                     for (Map<String, Value> a : query1) {
-                        m.add((URI) a.get("a"), (URI) a.get("b"), a.get("c"));
+                        m.add((Resource) a.get("a"), (URI) a.get("b"), a.get("c"));
                     }
                     RepositoryConnection connection = ses.getConnection();
                     connection.add(m, createURI);
@@ -93,7 +96,10 @@ public class SyncGraphDBMarmottaImpl implements SyncGraphDBMarmotta {
                     connection.close();
                     List<Map<String, Value>> query2 = ss.query(QueryLanguage.SPARQL, "select (count (*) as ?t) {graph <" + graph + "> {?a ?b ?c}}");
                     actual = Integer.parseInt(query2.get(0).get("t").stringValue());
-                    log.info("Copying graph {} / {}", actual, total);
+                    offset += 1000;
+                    if (offset > total) {
+                        offset = 0;
+                    }
                 } while (actual < total);
             } catch (Exception ex) {
                 ex.printStackTrace();
