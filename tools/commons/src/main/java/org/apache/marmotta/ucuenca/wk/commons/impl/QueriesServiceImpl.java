@@ -489,30 +489,42 @@ public class QueriesServiceImpl implements QueriesService {
 
         String varprov = "";
         String prov = "";
+        String gps = "";
 
         for (Provider p : providers) {
             varprov = "(COUNT  (distinct ?r" + p.Name + ") as ?" + p.Name + ")  " + varprov;
-            prov = " OPTIONAL {       "
-                    + "   GRAPH <" + p.Graph + "> { "
-                    + "       ?s" + p.Name + " owl:oneOf ?authort ."
-                    + " OPTIONAL { ?r" + p.Name + " owl:oneOf ?s" + p.Name + " }"
-                    + "    } } " + prov;
+            gps += " <" + p.Graph + "> ";
+            prov += "bind (if (?g = <" + p.Graph + ">,?ar,'') as ?r" + p.Name + ") .\n";
 
         }
-        String prefix = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n"
-                + "PREFIX dct: <http://purl.org/dc/terms/> \n"
-                + "PREFIX foaf: <http://xmlns.com/foaf/0.1/> \n"
-                + "PREFIX owl: <http://www.w3.org/2002/07/owl#> ";
+        String prefix = "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "PREFIX owl: <http://www.w3.org/2002/07/owl#>";
 
         String head = prefix + "SELECT ?org  ?label (COUNT  (DISTINCT ?authort) as ?total) " + varprov + " "
                 + "WHERE { "
-                + "  GRAPH <" + con.getOrganizationsGraph() + "> {  "
-                + "  ?org  <" + REDI.NAME.toString() + "> ?label . "
-                + "  GRAPH <" + con.getEndpointsGraph() + "> {     "
-                + "  ?endp  <" + REDI.BELONGTO.toString() + ">  ?org "
-                + "  GRAPH <" + con.getAuthorsGraph() + "> {  \n"
-                + "  ?authort dct:provenance ?endp .  "
-                + "  ?authort a foaf:Person . }  } } " + prov + "} Group by ?org ?label  ";
+                + "GRAPH <" + con.getAuthorsGraph() + "> { \n"
+                + "        ?authort a foaf:Person . \n"
+                + "		?authort dct:provenance ?endp . \n"
+                + "	} \n"
+                + "    GRAPH <" + con.getEndpointsGraph() + "> { \n"
+                + "		?endp <http://ucuenca.edu.ec/ontology#belongTo> ?org \n"
+                + "	} \n"
+                + "	GRAPH <" + con.getOrganizationsGraph() + "> { \n"
+                + "		?org <http://ucuenca.edu.ec/ontology#name> ?label . \n"
+                + "	} \n"
+                + "    values ?g { \n"
+                + gps
+                + "    } .\n"
+                + "    graph ?g {\n"
+                + "        optional{\n"
+                + "			?as owl:oneOf ?authort . \n"
+                + "			?ar owl:oneOf ?as .\n"
+                + "        }\n"
+                + "    }\n"
+                + prov
+                + "} Group by ?org ?label  ";
 
         return head;
     }
