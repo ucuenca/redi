@@ -255,11 +255,11 @@
             <version>${marmotta.version}</version>
             <type>jar</type>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>org.apache.marmotta</groupId>
             <artifactId>marmotta-versioning-kiwi</artifactId>
             <version>${marmotta.version}</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>cc.mallet</groupId>
             <artifactId>mallet</artifactId>

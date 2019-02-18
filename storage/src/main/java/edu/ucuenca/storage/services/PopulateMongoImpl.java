@@ -47,6 +47,7 @@ import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
+import org.apache.marmotta.ucuenca.wk.commons.util.BoundedExecutor;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
 import org.bson.Document;
 import org.json.simple.JSONArray;
@@ -195,28 +196,36 @@ public class PopulateMongoImpl implements PopulateMongo {
 
     @Override
     public void authors() {
-        Task task = taskManagerService.createSubTask("Caching authors profiles", "Mongo Service");
+        final Task task = taskManagerService.createSubTask("Caching authors profiles", "Mongo Service");
         try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
             MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
             // Delete and create collection
-            MongoCollection<Document> collection = db.getCollection(MongoService.Collection.AUTHORS.getValue());
+            final MongoCollection<Document> collection = db.getCollection(MongoService.Collection.AUTHORS.getValue());
             collection.drop();
-            List<Map<String, Value>> authorsRedi = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getAuthorsCentralGraph());
+            final List<Map<String, Value>> authorsRedi = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getAuthorsCentralGraph());
             task.updateTotalSteps(authorsRedi.size());
+            BoundedExecutor threadPool = BoundedExecutor.getThreadPool(5);
             for (int i = 0; i < authorsRedi.size(); i++) {
-                String author = authorsRedi.get(i).get("a").stringValue();
-                // Print progress
-                log.info("Relating {} ", author);
-                log.info("Relating {}/{}. Author: '{}' ", i + 1, authorsRedi.size(), author);
-                task.updateDetailMessage("URI", author);
-                task.updateProgress(i + 1);
-                // Get and store author data (json) from SPARQL repository.
-                String profiledata = commonService.getAuthorDataProfile(author);
-                Document parse = Document.parse(profiledata);
-                parse.append("_id", author);
-                collection.insertOne(parse);
+                final String author = authorsRedi.get(i).get("a").stringValue();
+                final int j = i;
+                threadPool.submitTask(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Print progress
+                        log.info("Relating {} ", author);
+                        log.info("Relating {}/{}. Author: '{}' ", j + 1, authorsRedi.size(), author);
+                        task.updateDetailMessage("URI", author);
+                        task.updateProgress(j + 1);
+                        // Get and store author data (json) from SPARQL repository.
+                        String profiledata = commonService.getAuthorDataProfile(author);
+                        Document parse = Document.parse(profiledata);
+                        parse.append("_id", author);
+                        collection.insertOne(parse);
+                    }
+                });
             }
-        } catch (MarmottaException ex) {
+            threadPool.end();
+        } catch (MarmottaException | InterruptedException ex) {
             log.error(ex.getMessage(), ex);
         }
         taskManagerService.endTask(task);
@@ -253,28 +262,35 @@ public class PopulateMongoImpl implements PopulateMongo {
 
     @Override
     public void networks() {
-        Task task = taskManagerService.createSubTask("Caching related authors", "Mongo Service");
+        final Task task = taskManagerService.createSubTask("Caching related authors", "Mongo Service");
         try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
-
             MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
             // Delete and create collection
-            MongoCollection<Document> collection = db.getCollection(MongoService.Collection.RELATEDAUTHORS.getValue());
+            final MongoCollection<Document> collection = db.getCollection(MongoService.Collection.RELATEDAUTHORS.getValue());
             collection.drop();
+            BoundedExecutor threadPool = BoundedExecutor.getThreadPool(5);
             task.updateMessage("Calculating related authors");
-            List<Map<String, Value>> query = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getAuthorsCentralGraph());
+            final List<Map<String, Value>> query = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getAuthorsCentralGraph());
             int i = 0;
-            for (Map<String, Value> mp : query) {
-                i++;
-                String stringValue = mp.get("a").stringValue();
-                log.info("Relating {} ", stringValue);
-                log.info("Relating {}/{} ", i, query.size());
-                task.updateDetailMessage("URI", stringValue);
-                task.updateDetailMessage("Status", i + "/" + query.size());
-                String collaboratorsData = commonService.getCollaboratorsData(stringValue);
-                Document parse = Document.parse(collaboratorsData);
-                parse.append("_id", stringValue);
-                collection.insertOne(parse);
+            for (final Map<String, Value> mp : query) {
+                final int j = i++;
+                threadPool.submitTask(new Runnable() {
+                    @Override
+                    public void run() {
+                        String stringValue = mp.get("a").stringValue();
+                        log.info("Relating {} ", stringValue);
+                        log.info("Relating {}/{} ", j, query.size());
+                        task.updateDetailMessage("URI", stringValue);
+                        task.updateDetailMessage("Status", j + "/" + query.size());
+                        String collaboratorsData = commonService.getCollaboratorsData(stringValue);
+                        Document parse = Document.parse(collaboratorsData);
+                        parse.append("_id", stringValue);
+                        collection.insertOne(parse);
+                    }
+                });
+
             }
+            threadPool.end();
         } catch (Exception w) {
             log.debug(w.getMessage(), w);
         }

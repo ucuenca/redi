@@ -47,13 +47,6 @@ public interface SparqlFunctionsService {
       */
      boolean askAuthor(String querytoAsk) throws  AskException;
      
-     /**
-      * @deprecated 
-      * Find versions data of an author resource, return true if the author was found
-      * @param resource
-      * @return 
-      */
-     boolean askAuthorVersioning(String resource);
   
      List<Map<String, Value>>  querylocal (String query);
 }

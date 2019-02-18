@@ -278,11 +278,11 @@
             <version>${servlet.api.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>org.apache.marmotta</groupId>
             <artifactId>kiwi-versioning</artifactId>
             <version>${marmotta.version}</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.apache.marmotta</groupId>
             <artifactId>marmotta-sparql</artifactId>

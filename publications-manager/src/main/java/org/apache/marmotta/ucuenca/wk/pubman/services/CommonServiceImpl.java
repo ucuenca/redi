@@ -16,11 +16,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.logging.Level;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.api.task.TaskInfo;
@@ -1224,7 +1226,9 @@ public class CommonServiceImpl implements CommonService {
             List<Map<String, Value>> responseAuthor1 = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, metaAuthor1);
             List<Map<String, Value>> responseAuthor2 = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, metaAuthor2);
             Map<String, Value> get = responseAuthor1.get(0);
-            get.putAll(responseAuthor2.get(0));
+            get = CleanEmptyFields(get);
+            get.putAll(CleanEmptyFields(responseAuthor2.get(0)));
+            get = CleanEmptyFields(get);
             List<Map<String, Value>> responseAuthor = Lists.newArrayList(get);
             AuthorProfile a = new AuthorProfile();
             if (!responseAuthor.isEmpty()) {
@@ -1296,18 +1300,28 @@ public class CommonServiceImpl implements CommonService {
         return "{Status:Error}";
     }
 
-    private AuthorProfile proccessAuthor(List<Map<String, Value>> responseAuthor) {
-        AuthorProfile a = new AuthorProfile();
-        Map<String, Value> author = responseAuthor.get(0);
-        List<String> rm = new ArrayList<>();
-        for (Entry<String, Value> an : author.entrySet()) {
-            if (an.getValue().stringValue().isEmpty()) {
+    private Map<String, Value> CleanEmptyFields(Map<String, Value> mp) {
+        Set<String> kp = new HashSet<>();
+        Set<String> rm = new HashSet<>();
+        for (Entry<String, Value> an : mp.entrySet()) {
+            if (!an.getValue().stringValue().isEmpty()) {
+                kp.add(an.getKey());
+            }
+        }
+        for (Entry<String, Value> an : mp.entrySet()) {
+            if (!kp.contains(an.getKey())) {
                 rm.add(an.getKey());
             }
         }
         for (String st : rm) {
-            author.remove(st);
+            mp.remove(st);
         }
+        return mp;
+    }
+
+    private AuthorProfile proccessAuthor(List<Map<String, Value>> responseAuthor) {
+        AuthorProfile a = new AuthorProfile();
+        Map<String, Value> author = responseAuthor.get(0);
         if (author.containsKey("names")) {
             a.setName(getUniqueName(author.get("names").stringValue(), "\\|"));
         }

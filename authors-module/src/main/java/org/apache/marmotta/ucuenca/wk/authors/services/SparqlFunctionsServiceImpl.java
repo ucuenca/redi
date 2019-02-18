@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
-import org.apache.marmotta.kiwi.model.rdf.KiWiUriResource;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 
@@ -30,12 +29,9 @@ import org.openrdf.repository.RepositoryException;
 import org.apache.marmotta.ucuenca.wk.authors.api.SparqlFunctionsService;
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.AskException;
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.UpdateException;
-import org.apache.marmotta.platform.versioning.services.VersioningSailProvider;
 import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
-import org.openrdf.sail.SailException;
 import org.openrdf.query.resultio.text.csv.SPARQLResultsCSVWriter;
 /**
  *
@@ -50,9 +46,6 @@ public class SparqlFunctionsServiceImpl implements SparqlFunctionsService {
     @Inject
     private ExternalSPARQLService sparqlService;
 
-    @Inject
-    private VersioningSailProvider versioningService;
-    
     //@Inject
     //private SesameService sesameService;
             
@@ -101,30 +94,6 @@ public class SparqlFunctionsServiceImpl implements SparqlFunctionsService {
         return false;
     }
 
-    @Override
-    @Deprecated
-    public boolean askAuthorVersioning(String resourceURI)
-    {
-         try {
-            RepositoryConnection conn = sparqlService.getRepositoryConnetion();
-            try {
-                if(resourceURI != null) {
-                    URI resource =  conn.getValueFactory().createURI(resourceURI);
-                    if(resource != null && resource instanceof KiWiUriResource && versioningService.listVersions(resource)!=null) {
-                                        return true;
-                    } 
-                } 
-            } finally {
-                conn.commit();
-                conn.close();
-            }
-        } catch(SailException ex) {
-             Logger.getLogger(ex.getMessage());
-        } catch (RepositoryException ex) {
-            Logger.getLogger(SparqlFunctionsServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-         return false;
-    }
     
     @Override
     @Deprecated
