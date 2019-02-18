@@ -25,8 +25,8 @@ public class DisambiguationTest {
         Person a = new Person();
         a.Name = new ArrayList<>();
         ArrayList<String> st = new ArrayList<>();
-        st.add("Carlos");
-        st.add("Degiovanini");
+        st.add("Juan Carlos");
+        st.add("De Los Reyes Bueno");
         a.Name.add(st);
         Person b = new Person();
         b.Name = new ArrayList<>();

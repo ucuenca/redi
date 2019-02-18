@@ -144,15 +144,18 @@ public class NameUtils {
     }
 
     public static List<String> bestName(List<List<String>> options) {
+        ModifiedJaccardMod utl = new ModifiedJaccardMod();
         int selection = -1;
         int selectionScore = -1;
         for (int i = 0; i < options.size(); i++) {
             List<String> get = options.get(i);
             int v1 = get.size();
             int v2 = 0;
+            String cn = "";
             for (String n : get) {
-                v2 += n.replaceAll("\\s+", " ").trim().length();
+                cn += n + " ";
             }
+            v2 = utl.countUniqueTokens(cn);
             int score = v1 * v2;
             if (score > selectionScore) {
                 selectionScore = score;
@@ -163,15 +166,17 @@ public class NameUtils {
     }
 
     public static int bestNameLen(List<List<String>> options) {
-
+        ModifiedJaccardMod utl = new ModifiedJaccardMod();
         int selectionScore = -1;
         for (int i = 0; i < options.size(); i++) {
             List<String> get = options.get(i);
             int v1 = get.size();
             int v2 = 0;
+            String cn = "";
             for (String n : get) {
-                v2 += n.replaceAll("\\s+", " ").trim().length();
+                cn += n + " ";
             }
+            v2 = utl.countUniqueTokens(cn);
             int score = v1 * v2;
             if (score > selectionScore) {
                 selectionScore = score;
