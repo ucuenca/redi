@@ -42,6 +42,7 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
+import org.apache.marmotta.platform.core.api.triplestore.SesameService;
 import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 import org.bson.Document;
 import org.openrdf.query.QueryLanguage;
@@ -64,7 +65,7 @@ public class MongoServiceImpl implements MongoService {
     @Inject
     private ConfigurationService configurationService;
     @Inject
-    private ExternalSPARQLService sesameService;
+    private SesameService sesameService2;
     private MongoClient mongoClient;
     private MongoDatabase db;
     private MongoCollection<Document> authors;
@@ -199,7 +200,7 @@ public class MongoServiceImpl implements MongoService {
         MongoCursor<Document> find = sparqls.find(eq("_id", k)).iterator();
         if (!find.hasNext()) {
             try {
-                RepositoryConnection conn = sesameService.getRepositoryConnetion();
+                RepositoryConnection conn = sesameService2.getConnection();
                 StringWriter writter = new StringWriter();
                 RDFWriter jsonldWritter = Rio.createWriter(RDFFormat.JSONLD, writter);
                 conn.prepareGraphQuery(QueryLanguage.SPARQL, qry).evaluate(jsonldWritter);
