@@ -903,14 +903,16 @@ public class CommonServiceImpl implements CommonService {
             List<Collaborator> collaborators = new ArrayList();
             String[] targ = {};
             for (Map<String, Value> authors : responseClAuthor) {
-                String uri = authors.get("person").stringValue();
-                String names = getUniqueName(authors.get("names").stringValue(), ";");
-                String subject = getSubjectAuthor(uri);
-                String orgs = authors.get("orgnames").stringValue();
-                Collaborator cl = new Collaborator(uri, uri, names, "", orgs, subject);
-                cl.setTargets(targ);
-                collaborators.add(cl);
-
+                authors = CleanEmptyFields(authors);
+                if (!authors.isEmpty()) {
+                    String uri = authors.get("person").stringValue();
+                    String names = getUniqueName(authors.get("names").stringValue(), ";");
+                    String subject = getSubjectAuthor(uri);
+                    String orgs = authors.get("orgnames").stringValue();
+                    Collaborator cl = new Collaborator(uri, uri, names, "", orgs, subject);
+                    cl.setTargets(targ);
+                    collaborators.add(cl);
+                }
             }
             return coauthorsSubClToJson(collaborators);
 
