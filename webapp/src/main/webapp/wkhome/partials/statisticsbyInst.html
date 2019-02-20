@@ -1,9 +1,9 @@
 
 
-<div class="container">
+<div class="container" ng-controller="statsInst">
 
     <div class="title" style="text-align: center">
-        <h2 class="text-primary">Estadisticas por Institución</h2>
+        <h2 class="text-primary">Estadisticas por Institución - {{name}}</h2>
     </div>
     <p>
 
@@ -12,12 +12,47 @@
 
     <br/>
 
-
-    <div class="col-md-12 container-fluid" ng-controller="statsInst" style='background-color: #FFFFFF;'>
-         <date-line-chart data="data">
-     <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-         </date-line-chart>
+      <div class="row"  style="margin-bottom: 10px">
+    <div class="col-md-8 container-fluid"  style='background-color: #FFFFFF;'>
+         <date-linechart data="data">
+     <div id="containerLine" style="min-width: 310px; height: 350px; margin: 0 auto"></div>
+         </date-linechart>
     </div>
+      <div class="col-md-4 container-fluid" >
+            <area-piechart datapc="datapc">
+              <div id="containerpc" style="min-width: 200px; height: 350px; margin: 0 auto"></div>
+            </area-piechart>
+
+      </div>
+     </div>
+
+
+         <div class="row"  >
+     <div class="col-sm-4">
+    <ul>
+      <li class="head-list">
+        <font color=#243082> <strong> TOP AUTORES </strong> </font>
+      </li>
+      <span ng-repeat="author in topAuthors"><li> {{author}} </li> </span>
+    </ul>
+  </div>
+       <div class="col-sm-4">
+    <ul>
+      <li class="head-list">
+        <font color=#243082> <strong> TOP INSTITUCIONES COLABORADORAS </strong> </font>
+      </li>
+      <span ng-repeat="inst in topInst"><li> {{inst}} </li> </span>
+    </ul>
+  </div>
+       <div class="col-sm-4">
+    <ul>
+      <li class="head-list">
+        <font color=#243082> <strong> TOP FUENTES DE DATOS </strong> </font>
+      </li>
+        <span ng-repeat="prov in topProv"><li> {{prov}} </li> </span>
+    </ul>
+  </div>
+     </div>
 
 </div>
 

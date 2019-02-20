@@ -40,6 +40,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
 import org.apache.marmotta.platform.core.api.task.Task;
 import org.apache.marmotta.platform.core.api.task.TaskManagerService;
@@ -242,6 +243,76 @@ public class PopulateMongoImpl implements PopulateMongo {
         queries.put("keywords_frequencypub_gt4", queriesService.getKeywordsFrequencyPub());
         loadStadistics(MongoService.Collection.STATISTICS.getValue(), queries);
     }
+    
+        @Override
+        public void LoadStatisticsbyInst() {
+            Task task = taskManagerService.createSubTask("Caching statistics by Institution", "Mongo Service");
+        try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
+             MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
+             MongoCollection<Document> collection = db.getCollection(MongoService.Collection.STATISTICS_INST.getValue());
+             collection.drop();
+             
+             List <String> queries = new ArrayList ();
+             queries.add("inst_by_area");
+             queries.add("pub_by_date");
+             queries.add("author_by_inst");
+             queries.add("inst_by_inst");
+             queries.add("prov_by_inst");
+            
+            String uri = "";
+            String name = "";
+            String fullname = "";
+            List<Map<String, Value>> org = sparqlService.query(QueryLanguage.SPARQL, queriesService.getListOrganizationQuery());
+            Document parse = new Document ();
+            task.updateTotalSteps((org.size()+1)*(queries.size()+1));
+            int ints = 0; 
+            for ( Map<String,Value> o : org){
+                
+              uri = o.get("URI").stringValue();
+              name = o.get("name").stringValue();
+               fullname = o.get("fullNameEs").stringValue();
+                  task.updateDetailMessage("Institution ", uri);
+                   for (String q :queries){
+                       ints++;
+                   String response = statisticsbyInstQuery ( uri ,  q) ;
+                   
+                
+                   parse.append(q, Document.parse(response));
+                  
+                    log.info("Stats Inst {} ", uri);
+                    log.info("Query {}", q);
+                 
+                    task.updateProgress(ints);
+                   
+                   }  
+                   
+                   parse.append("_id", uri);
+                   parse.append("name", name);
+                   parse.append ("fullname", fullname);
+                   collection.insertOne(parse);
+            }
+            taskManagerService.endTask(task);
+            // loadStadistics(MongoService.Collection.STATISTICS.getValue(), queries);
+        } catch (MarmottaException ex) {
+            log.error("erro"+ex);
+            java.util.logging.Logger.getLogger(PopulateMongoImpl.class.getName()).log(Level.INFO, null, ex);
+        }
+       }
+        
+        private String statisticsbyInstQuery (String uri , String query) throws MarmottaException{
+         // List <Map<String,String>>   
+            switch (query){
+                case "inst_by_area": return this.getStatsInstbyArea(uri);  
+                case "pub_by_date": return this.getStatsInstbyPubDate(uri);  
+                case "author_by_inst": return this.getTopAuthorbyInst(uri);  
+                case "inst_by_inst":  return this.getTopInstbyInst(uri); 
+                case "prov_by_inst": return  this.getTopProvbyInst(uri);
+                default : return null;
+            
+            }
+            
+        
+        }
 
     private int countCountries() {
         try {
@@ -514,5 +585,90 @@ public class PopulateMongoImpl implements PopulateMongo {
             collection.drop();
         }
     }
-
+    
+    
+    public String getStatsInstbyPubDate (String uri) throws MarmottaException {
+         List<Map<String, Value>> years = sparqlService.query(QueryLanguage.SPARQL, queriesService.getDatesPubbyInst(uri));
+           JSONObject main = new JSONObject();
+         JSONArray array = new JSONArray();
+         for (Map<String, Value> y :years){
+         JSONObject obj = new JSONObject();
+         obj.put("y", y.get("y").stringValue());
+         obj.put("total",y.get("total").stringValue() );
+         array.add(obj);
+         }
+          main.put("data", array);
+         return main.toJSONString();
+    
+    } 
+    
+   
+    public String getStatsInstbyArea (String uri) throws MarmottaException {
+       List<Map<String, Value>> area = sparqlService.query(QueryLanguage.SPARQL, queriesService.getClustersbyInst(uri));
+           JSONObject main = new JSONObject();
+         JSONArray array = new JSONArray();
+         for (Map<String, Value> a :area){
+         JSONObject obj = new JSONObject();
+         obj.put("uri", a.get("area").stringValue());
+         obj.put("name",a.get("nameng").stringValue() );
+         obj.put("total",a.get("total").stringValue() );
+         array.add(obj);
+         }
+          main.put("data", array);
+         return main.toJSONString();
+    } 
+    
+  
+    public String getTopAuthorbyInst (String uri) throws MarmottaException {
+         List<Map<String, Value>> author = sparqlService.query(QueryLanguage.SPARQL, queriesService.getAuthorsbyInst( uri));
+          JSONObject main = new JSONObject();
+         JSONArray array = new JSONArray();
+         for (Map<String, Value> a :author){
+         JSONObject obj = new JSONObject();
+         obj.put("uri", a.get("author").stringValue());
+         obj.put("name",commonService.getUniqueName(a.get("name").stringValue(), ";")  ); 
+         obj.put("total",a.get("total").stringValue() );
+         array.add(obj);
+         }
+            main.put("data", array);
+     return main.toJSONString();
+    }
+     
+  
+     public String getTopInstbyInst (String uri) throws MarmottaException {
+         List<Map<String, Value>> inst = sparqlService.query(QueryLanguage.SPARQL, queriesService.getInstAsobyInst(uri));
+         JSONObject main = new JSONObject();
+         JSONArray array = new JSONArray();
+         for (Map<String, Value> ins :inst){
+         JSONObject obj = new JSONObject();
+         obj.put("uri", ins.get("org").stringValue());
+         obj.put("name",ins.get("norg").stringValue() ) ; 
+         obj.put("total",ins.get("total").stringValue() );
+         array.add(obj);
+         }
+            main.put("data", array);
+     return main.toJSONString();
+    }
+       
+         public String getTopProvbyInst (String uri) throws MarmottaException {
+         
+         List<Map<String, Value>> prov = sparqlService.query(QueryLanguage.SPARQL, queriesService.getProvbyInst( uri));
+          JSONObject main = new JSONObject();
+         JSONArray array = new JSONArray();
+         for (Map<String, Value> p :prov){
+         JSONObject obj = new JSONObject();
+         String uriprov = p.get("prov").stringValue();
+         obj.put("uri", uriprov);
+         obj.put ("name",providerName (uriprov.substring(uriprov.lastIndexOf("#") + 1)));
+         obj.put("total",p.get("total").stringValue() );
+         array.add(obj);
+         }
+          main.put("data", array);
+    
+     return main.toJSONString();
+    }
+   
+         public String providerName (String text) {
+         return StringUtils.join( StringUtils.splitByCharacterTypeCamelCase(text),' ').replace("Provider", "");
+         }
 }

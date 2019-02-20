@@ -69,6 +69,7 @@ barChart.directive('barChart', ["d3", "globalData", "sparqlQuery",
         var lD = [{type: "Autores", freq:fData.total.totalAuthors } , { type: "Publicaciones", freq:fData.total.totalPub }];
 /* global document */
 // Load the fonts
+
 Highcharts.createElement('link', {
     href: 'https://fonts.googleapis.com/css?family=Dosis:400,600',
     rel: 'stylesheet',
@@ -106,10 +107,14 @@ Highcharts.theme = {
     xAxis: {
         gridLineWidth: 0,
         labels: {
+            
+            formatter: function() { return  '<a href="'+window.location.href+"byInst/https://redi.cedia.edu.ec/resource/organization/"+this.value+'">'+this.value+'</a>'  } ,
             style: {
                 fontSize: '12px',
-             //   fontWeight: 'bold',
-                color : '#1a1a1a'
+               
+                fontWeight: 'bold',
+              //   color : '#000000'
+                  color : '#1a1a1a'
             }
         }
     },
@@ -126,6 +131,7 @@ Highcharts.theme = {
         labels: {
             style: {
                 fontSize: '12px'
+                
             }
         }
     },
@@ -146,14 +152,18 @@ background2: '#F0F0EA'
 };
 
 // Apply the theme
-Highcharts.setOptions(Highcharts.theme);
+//Highcharts.setOptions(Highcharts.theme);
 
             Highcharts.chart('containerbar', {
+              colors: ['#e08214', '#807dba', '#7cb5ec', '#7798BF', '#aaeeee', '#ff0066',
+        '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],     
     chart: {
+         backgroundColor: null,
         type: typegraph ,
         height: chartHeight
+       
        // type: 'column'
-    },
+    },  
     title: {
         text: 'Total de Investigadores y Publicaciones en el Repositorio'
     },
@@ -161,6 +171,18 @@ Highcharts.setOptions(Highcharts.theme);
         text: 'Todas las universidades'
     },
     xAxis: {
+         gridLineWidth: 0,
+         labels: {
+            
+            formatter: function() { console.log (window.location.href+"byInst/https://redi.cedia.edu.ec/resource/organization/"+this.value) ;return  '<a href="'+window.location.href+"byInst/https://redi.cedia.edu.ec/resource/organization/"+this.value+'">'+this.value+'</a>'  } ,
+            style: {
+                fontSize: '12px',
+               
+                fontWeight: 'bold',
+              //   color : '#000000'
+                  color : '#1a1a1a'
+            }
+        } ,
         categories: fData.categories ,
      //   categories : cat ,
         title: {
@@ -185,10 +207,19 @@ Highcharts.setOptions(Highcharts.theme);
     tooltip: {
         valueSuffix: ' '
     },
-    plotOptions: {
+    plotOptions: {   
+     candlestick: {
+            lineColor: '#FFFFFF'
+        },
+        series: {
+        borderWidth: 0
+        },
+
         bar: {
+
             dataLabels: {
-                enabled: true
+                enabled: true 
+                
             }
         }
     },
@@ -208,6 +239,7 @@ Highcharts.setOptions(Highcharts.theme);
         enabled: false
     },
     series: fData.Data 
+
 });
       if ($("table").length < 2){
       legend(lD);

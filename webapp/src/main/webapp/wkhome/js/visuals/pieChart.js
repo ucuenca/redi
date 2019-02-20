@@ -1,14 +1,14 @@
 'use strict';
 
 var pieChart = angular.module('pieChart', []);
-//	D3	Factory
+//  D3  Factory
 pieChart.factory('d3', function () {
-    return	d3;
+    return  d3;
 });
 pieChart.directive('pieChart', ["d3", "globalData", "sparqlQuery",
     function (d3, globalData, sparqlQuery) {
 
-        //	we	will	soon	implement	this	function
+        //  we  will    soon    implement   this    function
         var draw = function draw(svg, width, height, entityName, data, scope) {
             var outerRadius = height / 1.7,
                     innerRadius = outerRadius / 10,
@@ -105,13 +105,26 @@ pieChart.directive('pieChart', ["d3", "globalData", "sparqlQuery",
                     })
 
                     .on("click", function (d) {
-                        var key = d.data.label;
+                        var key = d.data.uri;
+                         console.log ("key");
+                        console.log (key);
+                         console.log (d);
+                          if (entityName === 'Articles' || entityName === 'Researchers')
+                       {
+                             window.location.href = "/#/info/statisticsbyInst/"+key;
+                       }else {
+                            window.location.href = "/#/info/statisticsbyInst/"+key;
+
+                       }
+
+                        
+
 //                        if (entityName === 'Articles')
 //                        {
 //
 //                        }
 //                        else
-                        if (entityName === 'Researchers')
+                       /* if (entityName === 'Researchers')
                         {
                             scope.ifClick({value: key});
                         }
@@ -128,10 +141,10 @@ pieChart.directive('pieChart', ["d3", "globalData", "sparqlQuery",
                                     + ' SELECT ?subject ?name (COUNT(DISTINCT ?pub) AS ?totalPub)  '
                                     + ' WHERE { '
                                     + ' GRAPH <' + globalData.centralGraph + '> {'
-                                    + ' 	?subject foaf:publications  ?pub . '
-                                    + ' 	?pub dct:title ?title . '
-                                    + ' 	?subject foaf:name       ?name.        '
-                                    + ' 	?subject schema:memberOf ?provenance. '
+                                    + '     ?subject foaf:publications  ?pub . '
+                                    + '     ?pub dct:title ?title . '
+                                    + '     ?subject foaf:name       ?name.        '
+                                    + '     ?subject schema:memberOf ?provenance. '
                                     + '     { '
                                     + '         SELECT * '
                                     + '         WHERE { '
@@ -164,7 +177,7 @@ pieChart.directive('pieChart', ["d3", "globalData", "sparqlQuery",
                                     }
                                 });
                             });
-                        }//end if entityName === Articles
+                        }*///end if entityName === Articles
                         return d3.event.preventDefault();
                     });
             slice.enter().append("text")
@@ -259,17 +272,17 @@ pieChart.directive('pieChart', ["d3", "globalData", "sparqlQuery",
                 'ifClick': "&"
             },
             compile: function (element, attrs, transclude) {
-                //	Create	a	SVG	root	element
+                //  Create  a   SVG root    element
                 var svg = d3.select(element[0]).append("svg");
                 //var width = 960, height = 500;
                 var elementWidth = parseInt(element.css('width'));
                 var width = attrs.pcWidth ? attrs.pcWidth : elementWidth,
                         height = attrs.pcHeight;
-                //	Return	the	link	function
-                return	function (scope, element, attrs) {
-                    //	Watch	the	data	attribute	of	the	scope
+                //  Return  the link    function
+                return  function (scope, element, attrs) {
+                    //  Watch   the data    attribute   of  the scope
                     scope.$watch('data', function (newVal, oldVal, scope) {
-                        //	Update	the	chart
+                        //  Update  the chart
                         var data = scope.data;
                         if (data) {
                             var entityName = data.entityName;

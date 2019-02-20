@@ -72,6 +72,7 @@ public class MongoServiceImpl implements MongoService {
     private MongoDatabase db;
     private MongoCollection<Document> authors;
     private MongoCollection<Document> statistics;
+    private MongoCollection<Document> statisticsByInst;
     private MongoCollection<Document> relatedauthors;
     private MongoCollection<Document> clusters;
     private MongoCollection<Document> clustersTotals;
@@ -95,6 +96,7 @@ public class MongoServiceImpl implements MongoService {
         authors = db.getCollection(Collection.AUTHORS.getValue());
         relatedauthors = db.getCollection(Collection.RELATEDAUTHORS.getValue());
         statistics = db.getCollection(Collection.STATISTICS.getValue());
+        statisticsByInst = db.getCollection(Collection.STATISTICS_INST.getValue());
         clusters = db.getCollection(Collection.CLUSTERS.getValue());
         clustersTotals = db.getCollection(Collection.CLUSTERSTOTALS.getValue());
         authorsByArea = db.getCollection(Collection.AUTHORS_AREA.getValue());
@@ -114,6 +116,17 @@ public class MongoServiceImpl implements MongoService {
     public String getStatistics(String id) {
         return statistics.find(eq("_id", id))
                 .first().toJson();
+    }
+    
+    @Override
+    public String getStatisticsByInst(String id) {
+        
+       /* MongoCursor<Document> it = cls.iterator();
+        while (it.hasNext()) {
+            c.add(it.next());
+        }*/
+        return statisticsByInst.find(eq("_id", id)).first().toJson();
+       
     }
 
     @Override

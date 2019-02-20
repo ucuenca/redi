@@ -65,6 +65,8 @@ public interface CommonService {
     String getClusterGraph (String cl);
 
     String getCluster(String cl);
+    
+    String getUniqueName(String names, String separator);
 
     void registerREDIEndpoint(String name, URL url) throws Exception;
 

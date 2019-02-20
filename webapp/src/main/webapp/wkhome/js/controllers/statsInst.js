@@ -1,74 +1,83 @@
-wkhomeControllers.controller('statsInst', ['$scope', 'globalData', 'sparqlQuery', 'Statistics', 'searchData', '$route', '$window',
-  function($scope, globalData, sparqlQuery, Statistics, searchData, $window) {
+wkhomeControllers.controller('statsInst', ['$scope','$routeParams', 'globalData', 'sparqlQuery', 'StatisticsbyInst', 'searchData', '$route', '$window',
+  function($scope, $routeParams, globalData, sparqlQuery, StatisticsbyInst, searchData, $window) {
     var self = this;
-    //$scope.data = [];
+  //  $scope.data = [];
+  var uriInst = $routeParams.inst;
 
-      var querytoExecute =  "PREFIX dct: <http://purl.org/dc/terms/> " +
-    "PREFIX foaf: <http://xmlns.com/foaf/0.1/> " +
-    "PREFIX schema: <http://schema.org/> " +
-    "PREFIX bibo: <http://purl.org/ontology/bibo/> " +
-    "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> " +
-    "SELECT  ?y  (COUNT( ?publication ) as ?num)    " +
-    "WHERE { " +
-    "  graph <https://redi.cedia.edu.ec/context/redi> { " +
-    "  ?author schema:memberOf  <https://redi.cedia.edu.ec/resource/organization/UDA> . " +
-    "  ?author foaf:publications ?publication.   " +
-    "  ?publication bibo:created ?y2 . " +
-    "   bind( strbefore( ?y2, '-' ) as ?y3 ).   " +
-    "   bind( strafter( ?y2, ' ' ) as ?y4 ).  " +
-    "   bind( if (str(?y3)='' && str(?y4)='',?y2, if(str(?y3)='',strafter( ?y2, ' ' ),strbefore( ?y2, '-' ))) as ?y )  " +
-    "      " +
-    "  } " +
-    "}  GROUP BY ?y Order by ASC(?y)";
 
-       sparqlQuery.querySrv({
-        query: querytoExecute
-      }, function(rdf) {
 
-        jsonld.compact(rdf, globalData.CONTEXT, function(err, compacted) {
-          console.log (compacted);
-          $scope.data = compacted;
-        });
-      });
-   
-     /*    var IES = [];
-         var Authors = [];
-         var Publications = [];
-         var countAuthors = 0;
-         var countPub = 0;
-        self.data = Statistics.query({
-      id: 'barchar'
-    }, function(data) {
-      var totalPubAut = data["@graph"];
-      if (totalPubAut) {
-        _.map(totalPubAut, function(total) {
-          var sourceid = total["@id"];
-          var sourcename = total["uc:name"];
-          var totalAuthors = total["uc:totalAuthors"]["@value"];
-          var totalPublications = total["uc:totalPublications"]["@value"];
-           IES.push ( sourcename);
-           Authors.push ( parseInt(totalAuthors));
-           Publications.push ( parseInt(totalPublications)); 
-           countAuthors = countAuthors + parseInt(totalAuthors);
-           countPub = countPub +  parseInt(totalPublications);
+  StatisticsbyInst.query({id: uriInst }, function (data) {
+           
+       var name = data["fullname"];
+
+           $scope.name =  name.toProperCase();
+
+     var date = data["pub_by_date"]["data"];
+      var value = {"ay":[],"ax":[]}; 
+               
+              date.forEach(function (v) {
+                  value.ay.push( parseInt(v['total']));
+                  value.ax.push( v['y']);
+              });
+
+ 
+
+             $scope.data = value;
+       var total = 0;
+     var areas =  data["inst_by_area"]["data"];
+      areas.forEach(function (v) { total = total+ parseInt(v.total) });
+      areas = _.map(areas, function(value,i){ return{ name: value.name , label:minlabel (value.name) , y: Number((100*value.total)/total)}; })
+     var principales =  _.first(areas,7);
+     var secundarios =  _.rest(areas, 7);
+     var valorsec = 0;
+       secundarios.forEach(function (v) { valorsec = valorsec+ Number(v.y) });
+      principales.push ({ name: "Others", y:valorsec});
+
+
+          $scope.datapc = {array: principales};
+
+            var author = data["author_by_inst"]["data"];
+             var prov = data["prov_by_inst"]["data"];
+              var inst = data["inst_by_inst"]["data"];
+                author = _.map(author, function(value,i){ return {"uri": value["uri"], "name": value["name"].toProperCase() } });
+                inst = _.map(inst, function(value,i){ return { "name": value["name"].toProperCase() } });
+
+
+
+              $scope.topAuthors = _.pluck( initialN (author), 'name');
+              $scope.topInst = _.pluck( initialN (inst) , 'name');
+              $scope.topProv = _.pluck( initialN (prov), 'name');
+
+
 
         });
-        dataToSend = {
-          categories : IES ,
-          Data : [ { name : "Authors" , data : Authors } ,
-                  { name : "Publications", data : Publications }
-          ] 
-          ,
-          total : {
-                "totalAuthors" : countAuthors ,
-                "totalPub" : countPub
-          }
-        };
-
-        $scope.data = dataToSend;
-      }
-    });*/
-
-
   }
 ]);
+
+function initialN (array) {
+  if (array.length > 5) {
+  return _.first(array,5);
+} else {
+  return array;
+}
+}
+
+String.prototype.toProperCase = function () {
+    return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+};
+
+function minlabel (lbl) {
+   var label =  lbl.split(" ");
+
+   if (label.length > 1 ) {
+     if (lbl.length > 18){
+        label[1] = label[1].substring(0,1).toUpperCase()+".";
+    } 
+    return label[0]+" "+label[1];
+   }else {
+    return lbl;
+   }
+
+
+
+}

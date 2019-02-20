@@ -65,6 +65,21 @@ public class LoadData {
         }
         return Response.ok().entity("Statistics load successfully").build();
     }
+    
+      @POST
+    @Path("/statisticsbyInst")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getStatisticsbyInst() throws FailMongoConnectionException {
+        try {
+            loadService.LoadStatisticsbyInst();
+           
+        } catch (Exception e) {
+            log.error("Cannot load statistics by Inst into Mongo DB", e);
+            throw new FailMongoConnectionException(String.format("Cannot load statistics into Mongo DB"), e);
+        }
+        return Response.ok().entity("Statistics load successfully").build();
+    }
+
 
     @POST
     @Path("/clusters")

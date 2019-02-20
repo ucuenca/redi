@@ -51,6 +51,8 @@ public interface MongoService {
     public String getAuthorsByArea(String cluster, String subcluster);
 
     public List<Document> getCountries();
+    
+    public String getStatisticsByInst(String id);
 
     /**
      * Create a connection to {@link com.mongodb.MongoClient}.
@@ -60,7 +62,7 @@ public interface MongoService {
     public void connect() throws FailMongoConnectionException;
 
     public enum Collection {
-        SPARQLS("sparqls"), AUTHORS("authors"), PUBLICATIONS("publications"), STATISTICS("statistics"),
+        SPARQLS("sparqls"), AUTHORS("authors"), PUBLICATIONS("publications"), STATISTICS("statistics"),STATISTICS_INST("statistics_inst"),
         RELATEDAUTHORS("relatedauthors"), AUTHORS_DISCPLINE("authors_discipline"), AUTHORS_AREA("authors_area"),
         COUNTRIES("countries"), CLUSTERS("clusters"), CLUSTERSTOTALS("clusterstotals");
 

@@ -2152,7 +2152,7 @@ public class QueriesServiceImpl implements QueriesService {
 
     @Override
     public String getInstAsobyInst(String uri) {
-        return PREFIXES + "SELECT     ?norg  ( COUNT (distinct ?author) as ?total )\n"
+        return PREFIXES + "SELECT ?org    ?norg  ( COUNT (distinct ?author) as ?total )\n"
                 + "WHERE {\n"
                 + "  graph <" + con.getCentralGraph() + "> {\n"
                 + "  ?author schema:memberOf  <" + uri + "> .\n"
@@ -2166,7 +2166,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + "     ?org   <http://ucuenca.edu.ec/ontology#fullName>  ?norg .\n"
                 + "               FILTER( lang(?norg) = 'es') .\n"
                 + "        }\n"
-                + "} group by ?norg order  by DESC (?total)";
+                + "} group by ?org ?norg order  by DESC (?total)";
 
     }
 
@@ -2174,12 +2174,12 @@ public class QueriesServiceImpl implements QueriesService {
     public String getProvbyInst(String uri) {
         return PREFIXES + "SELECT      ?prov (COUNT (distinct ?pub) as ?total)\n"
                 + "WHERE {\n"
-                + "  graph <https://redi.cedia.edu.ec/context/redi> {\n"
-                + "  ?author schema:memberOf  <https://redi.cedia.edu.ec/resource/organization/UCUENCA> .\n"
+                + "  graph <"+con.getCentralGraph()+"> {\n"
+                + "  ?author schema:memberOf  <"+uri+"> .\n"
                 + "  ?author foaf:publications ?pub .\n"
                 + "  ?pub  dct:provenance ?prov\n"
                 + "} \n"
-                + "} GROUP BY ?prov order by DESC (?npub)\n"
+                + "} GROUP BY ?prov order by DESC (?total)\n"
                 + "";
 
     }

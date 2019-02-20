@@ -2,15 +2,18 @@
  * Controller to load/list Authors Sources
  */
 
-wkhomeControllers.controller('listSources', ['sparqlQuery', '$scope', 'globalData', 'Statistics',
-    function (sparqlQuery, $scope, globalData, Statistics) {
+wkhomeControllers.controller('listSources', ['sparqlQuery', '$scope', 'globalData', 'Statistics',  '$window' ,
+    function (sparqlQuery, $scope, globalData, Statistics , window) {
 
 
         /*************************************************************/
         /*query to get the sources in memory */
         /*************************************************************/
         // loadAllKeyword();
+
+           var u = window;
         $scope.datasources = [];
+        console.log (window);
 
         //only keywords that appear in more than 2 articles
         var queryKeywords = globalData.PREFIX
@@ -22,6 +25,7 @@ wkhomeControllers.controller('listSources', ['sparqlQuery', '$scope', 'globalDat
                 + '} '
                 + 'WHERE { '
                 + 'graph <' + globalData.organizationsGraph + '> '
+            //    + 'graph <https://redi.cedia.edu.ec/context/organization>'
                 + '{ '
                 + '?subject uc:name ?name. '
                 + '?subject uc:fullName ?fullName. '
@@ -32,6 +36,7 @@ wkhomeControllers.controller('listSources', ['sparqlQuery', '$scope', 'globalDat
                 + '} ';
         waitingDialog.show();
 
+
         Statistics.query({id: 'barchar'}, function (data) {
             var endpoints = data['@graph'];
             if (endpoints) {
@@ -40,10 +45,13 @@ wkhomeControllers.controller('listSources', ['sparqlQuery', '$scope', 'globalDat
                         _.map(compacted["@graph"], function (pub) {
                             var model = {};
                             model["id"] = pub["@id"];
+                            model["urlstat"] = "/#/info/statisticsbyInst/"+model["id"];
                             model["name"] = pub["uc:name"];
                             model["fullName"] = pub["uc:fullName"]["@value"];
                             model["city"] = pub["uc:city"];
                             model["url"] = "http://www." + pub["uc:name"].toLowerCase() + ".edu.ec/";
+                            console.log ("ACA");
+                            console.log ( model["urlstat"]);
                             var end=endpoints.filter(function (r){
                                 return r["@id"]==pub["@id"];
                             });

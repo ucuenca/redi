@@ -1359,23 +1359,28 @@ public class CommonServiceImpl implements CommonService {
         return a;
     }
 
-    private String getUniqueName(String names, String separator) {
+    public String getUniqueName(String names, String separator) {
         int tokenmax = 0;
         int lengthmax = 0;
         String candidate = "";
         String[] listNames = names.split(separator);
-
+        String candidateF = "";
         for (String name : listNames) {
             int tokens = name.split(" ").length;
             int length = name.length();
             if (tokens >= tokenmax && length > lengthmax) {
                 tokenmax = tokens;
                 lengthmax = length;
+                if (name.contains(",")){
+                candidateF = name;
+                }else {
                 candidate = name;
+                }
             }
 
         }
-        return candidate;
+        
+        return candidateF.length() > 1 ? candidateF : candidate;
     }
 
     private String getUniqueOrcid(String orcids) {

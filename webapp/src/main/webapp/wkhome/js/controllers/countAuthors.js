@@ -18,7 +18,7 @@ wkhomeControllers.controller('countAuthors', ['$translate', '$routeParams', '$sc
           var dataToSend = []
           if (endpoints) {
               endpoints.forEach(function (endpoint) {
-                  dataToSend.push({label: endpoint['uc:name'], value: endpoint['uc:total']['@value']});
+                  dataToSend.push({uri: endpoint['@id'], label: endpoint['uc:name'], value: endpoint['uc:total']['@value']});
               });
                   $scope.data = {'entityName': 'Authors', 'data': dataToSend};
           }

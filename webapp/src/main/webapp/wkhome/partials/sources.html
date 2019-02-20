@@ -3,13 +3,8 @@
         <h3 class="source text-success">{{'SOURCES'| translate}}</h3>
         <br/>
         <p class="source">
-            Los datos de los autores provienen de la plataforma DSPACE de cada una de las Universidades
-            miembros de CEDIA. En un proceso previo, el grupo de repositorios con el proyecto "Aplicación
-            de Linked Open Data a Repositorios CEDIA", realizó el trabajo de transformar la información
-            de DSPACE a formato RDF siguiendo las normas y principios de Linked Data. Uno de
-            los resultados de este proyecto fue la generacion de repositorios RDF de cada una de las
-            fuentes analizadas. En este proyecto, para extraer la información de autores, se accede a
-            los repositorios RDF antes mencionados a través del servicio SPARQL ENDPOINT de cada una de las fuentes.
+            Los datos de los autores provienen de repositorios de información asociados  a   distintas  instituciones educativas de educación superior (IES) tales como  DSPACE y repositorios de revistas (OJS). Estos datos son enriquecidos con información de distintas bases de científicas tales como Scopus, Academic Schoolar, Scielo, entre otros con lo que se busca disponer de un repositorio centralizado con la producción científica generada a nivel nacional. La información obtenida es procesada y presentada gráficamente para facilitar su visualización y exploración.
+            
         </p>
 
         <br/>
@@ -24,8 +19,8 @@
                     <td>REPORTE DE INVESTIGADORES</td>
                 </tr>
                 <tr ng-repeat="source in sources">
-                    <td><a href="{{ source.url}}" target="blank">{{ source.name}}</a></td>
-                    <td>{{ source.fullName}}</td>
+                    <td><a href="{{ source.urlstat}}" target="_blank">{{ source.name}}</a></td>
+                    <td><a href="{{ source.url}}" target="_blank">{{ source.fullName}}</a> </td>
                     <td>{{ source.city}}</td>
                     <td align="right">{{ source.totAuthors}}<a ng-if="source.empty" href="#" data-tooltip="{{'ND_SOURCES'| translate}}">N/D*</a></td>
                     <td align="right">{{ source.totPublications}}<a ng-if="source.empty" href="#" data-tooltip="{{'ND_SOURCES'| translate}}">N/D*</a></td>

@@ -5,6 +5,8 @@
  */
 package edu.ucuenca.storage.api;
 
+import org.apache.marmotta.platform.core.exception.MarmottaException;
+
 /**
  *
  * @author Xavier Sumba <xavier.sumba93@ucuenca.ec>
@@ -53,4 +55,6 @@ public interface PopulateMongo {
     public void Countries ();
     
     public void cleanSPARQLS();
+    
+    public void LoadStatisticsbyInst();
 }
