@@ -183,14 +183,15 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                     providersResult.add(mp);
                 }
             } else {
-                //ProcessAuthors(Providers, null);
+                ProcessAuthors(Providers, null);
             }
+            mergeAuthors();
 //            for (int w0 = 0; w0 < 4; w0++) {
 //                ProcessCoauthors(Providers, true);
 //                sparqlService.getGraphDBInstance().dumpBuffer();
 //                sparqlUtils.addAll(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "1");
 //            }
-//            mergeAuthors();
+
 //            sparqlUtils.delete(constantService.getAuthorsSameAsGraph() + "1");
 //            task.updateDetailMessage("Status", String.format("%s Disambiguation", "Coauthors"));
 //            sparqlUtils.delete(constantService.getCoauthorsSameAsGraph());
@@ -198,7 +199,6 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             //task.updateDetailMessage("Status", String.format("%s Disambiguation", "Publications"));
             //sparqlUtils.delete(constantService.getPublicationsSameAsGraph());
             //ProcessPublications(Providers);
-
             //sparqlUtils.replaceSameAs(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "2",
             //        constantService.getAuthorsSameAsGraph() + "2d", constantService.getAuthorsSameAsGraph() + "2i", true);
             //sparqlUtils.minus(constantService.getAuthorsSameAsGraph() + "3", constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "2d");

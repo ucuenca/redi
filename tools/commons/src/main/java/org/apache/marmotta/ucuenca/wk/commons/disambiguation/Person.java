@@ -60,7 +60,12 @@ public class Person {
             Boolean checkPublications = checkPublications(p);
             Boolean checkTopics = checkTopics(p);
             Boolean checkORCIDs = checkORCIDs(p);
-            if (checkCoauthors == null && checkPublications == null && checkTopics == null && checkAffiliations != null && checkAffiliations == true) {
+            if (checkORCIDs == null
+                    && checkCoauthors == null
+                    && checkPublications == null
+                    && checkTopics == null
+                    && checkAffiliations != null
+                    && checkAffiliations == true) {
                 return true;
             }
             int count = 0;

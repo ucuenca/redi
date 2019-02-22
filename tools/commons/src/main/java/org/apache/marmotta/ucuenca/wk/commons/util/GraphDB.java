@@ -63,8 +63,8 @@ public final class GraphDB {
         return sps;
     }
 
-    private GraphDB() throws RepositoryException {
-        data = new SPARQLRepository("http://201.159.222.25:8180/repositories/data", "http://201.159.222.25:8180/repositories/data/statements");
+    private GraphDB(String database) throws RepositoryException {
+        data = new SPARQLRepository("http://201.159.222.25:8180/repositories/" + database, "http://201.159.222.25:8180/repositories/" + database + "/statements");
         ConcurrentHashMap<String, String> additionalHttpHeaders = new ConcurrentHashMap<>();
         additionalHttpHeaders.put("Accept", "application/ld+json");
         data.setAdditionalHttpHeaders(additionalHttpHeaders);
@@ -157,9 +157,9 @@ public final class GraphDB {
     }
 
     @SuppressWarnings("PMD")
-    public static GraphDB get() throws RepositoryException {
+    public static GraphDB get(String database) throws RepositoryException {
         if (eta == null) {
-            eta = new GraphDB();
+            eta = new GraphDB(database);
         }
         return eta;
     }
