@@ -112,6 +112,16 @@ wkhomeServices.factory('KeywordsService', ['$resource', '$http', 'globalData',
         var serverInstance = globalData.serverInstance;
         return $resource(serverInstance + 'solr/keywords/select?q=":search"&fl=lmf.uri,keyword&wt=json&', {search: '@id'});
     }]);
+
+wkhomeServices.factory('RecomendService', ['$resource', '$http', 'globalData',
+    function ($resource, $http, globalData) {
+       // q=Geospatial+and+statistical+information+INSPIRE+Linked+data+RDF+&fq=NOT+uri%3A"https%3A%2F%2Fredi.cedia.edu.ec%2Fresource%2Fpublication%2Fa97efe3177208d8408c2e8ef882dbf56"&rows=3&fl=lmf.uri%2Ctitle%2Ccontributor-name%2Cauthor-name&wt=xml&indent=true
+        var serverInstance = globalData.serverInstance;
+       //  var serverInstance =  "https://rediclon.cedia.edu.ec/";
+        return $resource(serverInstance + 'solr/publications/select?q=:search&rows=3&fl=lmf.uri,title,contributor-name,author-name&wt=json&indent=true', {search: '@id'});
+
+    }]);
+
 wkhomeServices.factory('searchQueryService', ['$resource', '$http', 'globalData',
     function ($resource, $http, globalData) {
         $http.defaults.headers.common['content-type'] = 'application/x-www-form-urlencoded';

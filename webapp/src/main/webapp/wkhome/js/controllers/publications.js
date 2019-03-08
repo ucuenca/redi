@@ -3,7 +3,7 @@ wkhomeControllers.controller('PublicationsController', ['$scope', '$window', 'gl
 
     $scope.authorURI = $routeParams.authorId;
     $scope.core = globalData.publicationsCore;
-
+    $scope.puburi = "" ;
     $scope.showInfo = function(uri, type) {
       $uibModal.open({
         templateUrl: 'wkhome/partials/collectionTemplate.html',
@@ -18,6 +18,31 @@ wkhomeControllers.controller('PublicationsController', ['$scope', '$window', 'gl
         }
       });
     };
+
+        
+   
+    $scope.showmodal = function () {
+       $("#myModal").modal();
+    }
+
+    $scope.openmodal = function ( puburi) {
+    //  $scope.puburi = "https://redi.cedia.edu.ec/resource/publication/080790388cd3adbc37099a6e41b3e163" ;
+     $scope.puburi = puburi;
+     console.log ("Documento");
+     console.log (puburi);
+      $scope.$broadcast ('hijo');  
+
+
+    }
+
+     $scope.openmodal2 = function () {
+      $scope.puburi = "https://redi.cedia.edu.ec/resource/publication/a211ec9c3c5da269fbadb4a8bf48b55c" ;
+      $("#myModal").modal();
+      $scope.$broadcast ('hijo');  
+
+    }
+
+   
 
     var JournalController = function($scope, $uibModalInstance, collections, Journal) {
       $scope.journals = [];
@@ -43,7 +68,7 @@ wkhomeControllers.controller('PublicationsController', ['$scope', '$window', 'gl
       "} " +
       "WHERE{" +
       "  {" +
-      "  	SELECT DISTINCT *" +
+      "   SELECT DISTINCT *" +
       "    WHERE { " +
       "      VALUES ?author { <" + $scope.authorURI + "> }" +
       "      GRAPH <" + globalData.centralGraph + "> {" +
@@ -89,6 +114,7 @@ wkhomeControllers.controller('PublicationsController', ['$scope', '$window', 'gl
           });
           $scope.$apply(function () {
               $scope.author=author;
+              $scope.puburi = "https://redi.cedia.edu.ec/resource/publication/080790388cd3adbc37099a6e41b3e163" ;
           });
         }
       });

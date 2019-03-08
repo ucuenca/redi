@@ -9,3 +9,8 @@
 .pagination a {
   cursor: pointer !important;
 }
+
+
+.publicationModal {
+	width: 900px;
+}

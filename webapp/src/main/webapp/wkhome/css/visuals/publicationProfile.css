@@ -1,0 +1,228 @@
+.mr-auto, .mx-auto {
+    margin-right: auto !important;
+}
+
+.ml-auto, .mx-auto {
+    margin-left: auto !important;
+}
+
+.shadow-lg {
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+}
+.bg-white {
+    background-color: #fff !important;
+}
+
+.list-inline {
+    padding-left: 0;
+    list-style: none;
+}
+.list-inline-item {
+    display: inline-block;
+}
+
+.authorlink {
+    color: #333; /*Or whatever you want*/
+}
+
+.badge-primary {
+    color: #fff;
+    background-color: #3781E1;
+}
+.badge-pill {
+    padding-right: 0.6em;
+    padding-left: 0.6em;
+    border-radius: 10rem;
+}
+.badge {
+    display: inline-block;
+    padding: 0.25em 0.4em;
+        padding-right: 0.4em;
+        padding-left: 0.4em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+}
+
+ .mr-5  {
+  margin: 1.5rem;
+}
+.d-flex {
+    display:flex;
+}
+.d-flex>div {
+    float: none;
+}
+
+.col-auto {
+    flex: 0 0 auto;
+    width: auto;
+    max-width: none;
+}
+
+  .author {
+    margin: 10px;
+    width: 150px;
+  }
+
+  .abstract {
+   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+   font-size: 14px;
+  }
+
+  .document {
+  max-width: 1000px;
+  background-color: #fff;
+  }
+
+  .img-authors  {
+  border-radius: 9999px;
+  /*max-width: 70px;*/
+  margin: 8px;
+   object-fit: cover;
+   width: 50px;
+   height: 50px;
+  }
+
+  .revista {
+    height: 80px;
+    border-right-width: 1px;
+    border-color: black;
+    border-right-style: groove;
+
+  }
+
+
+
+
+
+  .title{
+  /*color: #0095db;*/
+  color: rgb(51, 122, 183);
+  }
+
+  .img-revista {
+  max-width: 50px;
+  }
+
+.img-fuente {
+  width: 50px;
+    border-radius: 9999px;
+  /*max-width: 70px;*/
+  margin: 8px;
+   object-fit: cover;
+
+}
+  .resume-wrapper {
+      padding-top: 30px;
+      padding-bottom: 60px;
+  }
+
+
+
+  /*.resume-section-title {
+      font-size: 1.25rem;
+      position: relative;
+    /*  color: #434E5E; 
+  }*/
+
+   .resume-section-title.main {
+      font-size: 2rem;
+      position: relative;
+      width: 98%;
+    /*  color: #434E5E; */
+  }
+
+    .resume-section-title  {
+      font-size: 1.7rem;
+      position: relative;
+      font-weight: bold;
+    /*  color: #434E5E; */
+  }
+
+  .resume-section-title:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background: #8d9aad;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  .mb-2,
+  .my-2 {
+    margin-bottom: 1rem !important;
+  }
+
+  .pb-2,
+  .py-2 {
+    padding-bottom: 1.5rem !important;
+  }
+
+
+  .pb-3,
+  .py-3 {
+    padding-bottom: 2rem !important;
+  }
+
+  .mb-3,
+  .my-3 {
+    margin-bottom: 2rem !important;
+  }
+
+  text {
+    font-family: sans-serif;
+    font-size: 10px;
+  }
+   
+  .bodyPub {
+  background: #F7F8FA;
+  }
+
+    publication-template > .bodyPub {
+
+     background: none;
+  }
+
+  .p-5 {
+    padding: 4rem !important;
+}
+
+ 
+
+ .file{
+    color:gray ;
+  margin-right: 10px;
+  /* margin-bottom: -20px; */
+ }
+   
+ .docrelacionados {
+    padding: 10px;
+    border-width: 1px;
+    border-style: outset;
+
+ }
+
+   .box {
+        display: flex;
+        flex-flow: row wrap;
+      }
+
+
+ 
+ /*  Publications  */ 
+
+ #myModal {
+  overflow-y: scroll
+ }

@@ -8,7 +8,7 @@
   <!-- Check why ngHide is not evaluating correctly. When selected (false/true) && exclusive(false), it evaluates to true. Using false as default.-->
   <div id="content" class="row">
     <div class="col-lg-2">
-
+     
       <div class="panel panel-default"
       ng-init="source = core"
       ng-controller="FacetSelectionController"
@@ -134,7 +134,9 @@
           <div class="alert alert-info" ng-show="message">{{message}}</div>
         </div>
         <article ng-repeat="doc in documents" class="document" ng-cloak>
-          <img src="/wkhome/images/journal.png" alt="type" width="12" style="margin-right: 5px"><a ng-href="{{doc['lmf.uri']}}" class="title" target="_blank"><b>{{doc.title}}</b></a>
+          <img src="/wkhome/images/journal.png" alt="type" width="12" style="margin-right: 5px">
+          <!--<a ng-href="{{doc['lmf.uri']}}" class="title" target="_blank"><b>{{doc.title}}</b></a> -->
+          <a ng-click=" openmodal(doc['lmf.uri'])" class="title" ><b>{{doc.title}}</b></a>
            <div class="row">
             <div class="col-lg-1" ng-show="doc['journal-img']">
               <img ng-src="{{doc['journal-img'][0]}}" alt="" width="95px">
@@ -204,6 +206,17 @@
         </ul>
       </div>
     </div>
+
+
+
+     <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog  bodyPub publicationModal ">
+    <div class="modalp" ng-controller="publicationProfile">
+        <publication-template ng-model='publication' > 
+        </publication-template>
+      </div>
+        </div> 
+
+
   </div>
 
-</div>

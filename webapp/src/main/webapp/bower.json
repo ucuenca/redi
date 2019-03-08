@@ -50,7 +50,8 @@
     "flag-icon-css": "^3.0.0",
     "ngSolr": "rediSolr#*",
     "fontawesome": "~4.2.0",
-    "d3-scale": "^2.0.0"
+    "d3-scale": "^2.0.0",
+    "html2canvas": "^1.0.0-alpha.12"
   },
   "resolutions": {
     "angular-animate": "1.6.4",

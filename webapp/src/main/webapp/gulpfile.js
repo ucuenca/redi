@@ -32,7 +32,9 @@ gulp.task('scripts', function() {
     //.pipe(concat('main.js'))
     //.pipe(gulp.dest('dist/scripts'))
     .pipe(rename({ suffix: '.min' }))
-    .pipe(uglify())
+    .pipe(uglify().on('error', function(e){
+	console.log(e);
+	}))
     .pipe(gulp.dest('wkhome/jsmin/'));
     //.pipe(notify({ message: 'Scripts task complete' }));
 });
