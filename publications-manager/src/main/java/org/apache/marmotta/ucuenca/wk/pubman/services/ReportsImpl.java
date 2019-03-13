@@ -37,14 +37,11 @@ import net.sf.jasperreports.engine.data.JsonDataSource;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
-import org.apache.marmotta.platform.core.api.triplestore.SesameService;
-import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.function.Cache;
 import org.apache.marmotta.ucuenca.wk.commons.impl.ConstantServiceImpl;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
-import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
+import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.ReportsService;
-import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.openrdf.query.BindingSet;
@@ -52,7 +49,6 @@ import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
@@ -68,17 +64,9 @@ public class ReportsImpl implements ReportsService {
     @Inject
     private Logger log;
     @Inject
-    private QueriesService queriesService;
-    @Inject
-    private ConstantService pubVocabService;
-    @Inject
-    private SparqlFunctionsService sparqlFunctionsService;
-    @Inject
-    private SparqlService sparqlService;
-    @Inject
     protected ConstantService constant;
     @Inject
-    private SesameService sesameService;
+    private ExternalSPARQLService sesameService;
 
     protected String TEMP_PATH = "./../research_webapps/ROOT/tmp";
     protected String REPORTS_FOLDER = "./../research_webapps/ROOT/reports/";
@@ -252,9 +240,7 @@ public class ReportsImpl implements ReportsService {
                     + "} } group by ?publications ?authors ";
 
             log.info("Buscando Informacion de: " + author);
-            Repository repo = sesameService.getRepository();
-            repo.initialize();
-            RepositoryConnection con = repo.getConnection();
+            RepositoryConnection con = sesameService.getRepositoryConnetion();
             try {
                 // perform operations on the connection
                 TupleQueryResult resulta = con.prepareTupleQuery(QueryLanguage.SPARQL, getQuery).evaluate();
@@ -346,9 +332,7 @@ public class ReportsImpl implements ReportsService {
                     + "  }"
                     + "}";
 
-            Repository repo = sesameService.getRepository();
-            repo.initialize();
-            RepositoryConnection con = repo.getConnection();
+            RepositoryConnection con = sesameService.getRepositoryConnetion();
             try {
                 // perform operations on the connection
                 TupleQueryResult resulta = con.prepareTupleQuery(QueryLanguage.SPARQL, getQuery).evaluate();
@@ -402,22 +386,21 @@ public class ReportsImpl implements ReportsService {
 
         RepositoryConnection con;
         try {
-            Repository repo = sesameService.getRepository();
-            repo.initialize();
-            con = repo.getConnection();
 
-            String getQuery = ConstantServiceImpl.PREFIX 
+            con = sesameService.getRepositoryConnetion();
+
+            String getQuery = ConstantServiceImpl.PREFIX
                     + "select (?clusterlabel as ?cluster) (group_concat(?name ; separator=' ; ') as ?authors) \n"
                     + "  { "
                     + "	select ?clusterlabel ?subject (sample(str(?namex)) as ?name) { "
-                    + "		graph <"+constant.getClusterGraph()+"> "
+                    + "		graph <" + constant.getClusterGraph() + "> "
                     + "		                       	{ "
                     + "		                         ?subject  dct:isPartOf ?cluster .  "
                     + "                                  ?cluster rdfs:label ?clusterlabel ."
                     + "		                         ?cluster   a  uc:SubCluster .  "
                     + "		                        filter ( lang(?clusterlabel) = 'en')   "
                     + "		                        }"
-                    + "		graph <"+ constant.getCentralGraph()+"> "
+                    + "		graph <" + constant.getCentralGraph() + "> "
                     + "	                                 { "
                     + "	                                      ?subject foaf:name ?namex . "
                     + "	                                  } "
@@ -442,7 +425,7 @@ public class ReportsImpl implements ReportsService {
             }
             con.close();
 
-            return new String[]{clusters.toString() , clusters.size()+""};
+            return new String[]{clusters.toString(), clusters.size() + ""};
 
             //return null;
         } catch (RepositoryException | MalformedQueryException | QueryEvaluationException ex) {
@@ -487,9 +470,7 @@ public class ReportsImpl implements ReportsService {
                     + "    	} "
                     + "  	} GROUP BY ?provenance ?name ";
 
-            Repository repo = sesameService.getRepository();
-            repo.initialize();
-            RepositoryConnection con = repo.getConnection();
+            RepositoryConnection con = sesameService.getRepositoryConnetion();
             try {
                 // perform operations on the connection
                 TupleQueryResult resulta = con.prepareTupleQuery(QueryLanguage.SPARQL, getQuery).evaluate();
@@ -541,9 +522,7 @@ public class ReportsImpl implements ReportsService {
                     + "  }"
                     + "} ORDER BY ?uni";
 
-            Repository repo = sesameService.getRepository();
-            repo.initialize();
-            RepositoryConnection con = repo.getConnection();
+            RepositoryConnection con = sesameService.getRepositoryConnetion();
 
             try {
                 // perform operations on the connection
@@ -656,9 +635,7 @@ public class ReportsImpl implements ReportsService {
                     + "  } "
                     + "} group by ?publicationUri ?title ?abstract ?uri ?provname";
 
-            Repository repo = sesameService.getRepository();
-            repo.initialize();
-            RepositoryConnection con = repo.getConnection();
+            RepositoryConnection con = sesameService.getRepositoryConnetion();
             try {
                 // perform operations on the connection
                 TupleQueryResult resulta = con.prepareTupleQuery(QueryLanguage.SPARQL, getQuery, constant.getSubjectResource()).evaluate();
@@ -762,9 +739,8 @@ public class ReportsImpl implements ReportsService {
                     + "      OPTIONAL{?publicationUri dct:subject [rdfs:label ?quote].} "
                     + "  }"
                     + "} group by ?publicationUri ?title ?abstract ?uri ?name";
-            Repository repo = sesameService.getRepository();
-            repo.initialize();
-            RepositoryConnection con = repo.getConnection();
+
+            RepositoryConnection con = sesameService.getRepositoryConnetion();
             try {
                 // perform operations on the connection
                 TupleQueryResult resulta = con.prepareTupleQuery(QueryLanguage.SPARQL, getQuery).evaluate();
@@ -850,9 +826,7 @@ public class ReportsImpl implements ReportsService {
                     + "  }"
                     + "}";
 
-            Repository repository = sesameService.getRepository();
-            repository.initialize();
-            RepositoryConnection connection = repository.getConnection();
+            RepositoryConnection connection = sesameService.getRepositoryConnetion();
 
             try {
                 // perform operations on the connection
@@ -947,9 +921,7 @@ public class ReportsImpl implements ReportsService {
                     + " GROUP BY ?title ?name ?year "//+ "ORDER BY ASC (?year)";
                     + " } ORDER BY ASC (?year) ";
 
-            Repository repository = sesameService.getRepository();
-            repository.initialize();
-            RepositoryConnection connection = repository.getConnection();
+            RepositoryConnection connection = sesameService.getRepositoryConnetion();
 
             try {
                 // perform operations on the connection
@@ -1036,9 +1008,7 @@ public class ReportsImpl implements ReportsService {
                     + "    } "
                     + "} ";
 
-            Repository repo = sesameService.getRepository();
-            repo.initialize();
-            RepositoryConnection con = repo.getConnection();
+            RepositoryConnection con = sesameService.getRepositoryConnetion();
             try {
                 // perform operations on the connection
 

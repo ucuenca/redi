@@ -16,9 +16,9 @@ import javax.inject.Inject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
-import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
+import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.LatindexDetectionService;
 import org.apache.marmotta.ucuenca.wk.pubman.model.Journal;
@@ -53,7 +53,7 @@ public class LantindexDetectionServiceImpl implements LatindexDetectionService {
     private ConstantService constantService;
 
     @Inject
-    private SparqlService sparqlService;
+    private ExternalSPARQLService sparqlService;
     @Inject
     private CommonsServices commonsServices;
 
@@ -85,10 +85,9 @@ public class LantindexDetectionServiceImpl implements LatindexDetectionService {
         return State;
     }
 
-
     public Map<String, JournalLatindex> getLatindexJournals() throws MarmottaException {
         //Extracting Latindex journals
-        List<Map<String, Value>> allLatindexJournals = sparqlService.query(QueryLanguage.SPARQL, queriesService.getJournalsLantindexGraphQuery());
+        List<Map<String, Value>> allLatindexJournals = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getJournalsLantindexGraphQuery());
         Map<String, JournalLatindex> allLatindexJournalsObjects = new HashMap<>();
         for (Map<String, Value> aLatindexJournal : allLatindexJournals) {
             String JournalURI = aLatindexJournal.get("JOURNAL").stringValue();
@@ -114,7 +113,7 @@ public class LantindexDetectionServiceImpl implements LatindexDetectionService {
         }
         return allLatindexJournalsObjects;
     }
-    
+
     //Alpha - brute force implementation
     //Optimization needed !!! ... probably a blocking method.
     //
@@ -125,7 +124,7 @@ public class LantindexDetectionServiceImpl implements LatindexDetectionService {
         Map<String, Publication> allPublicationsObjects = new HashMap<>();
 
         String publicationsOfJournalCentralGraphQuery = queriesService.getPublicationsCentralGraphQuery();
-        List<Map<String, Value>> Publications = sparqlService.query(QueryLanguage.SPARQL, publicationsOfJournalCentralGraphQuery);
+        List<Map<String, Value>> Publications = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, publicationsOfJournalCentralGraphQuery);
         Map<String, Publication> ListPublications = new HashMap<>();
         for (Map<String, Value> aPublicationData : Publications) {
             String URI = aPublicationData.get("PUBLICATION").stringValue();
@@ -166,7 +165,7 @@ public class LantindexDetectionServiceImpl implements LatindexDetectionService {
         log.info("Processing publications with journal information ...");
         Map<String, JournalLatindex> allLatindexJournalsObjects = getLatindexJournals();
         //Extracting CG journals
-        List<Map<String, Value>> allJournalsCentralGraph = sparqlService.query(QueryLanguage.SPARQL, queriesService.getJournalsCentralGraphQuery());
+        List<Map<String, Value>> allJournalsCentralGraph = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getJournalsCentralGraphQuery());
 
         log.info("Found {} journals within the central graph and {} within the latindex's.", allJournalsCentralGraph.size(), allLatindexJournalsObjects.size());
         int i = 0;
@@ -225,17 +224,17 @@ public class LantindexDetectionServiceImpl implements LatindexDetectionService {
             if (sameAs) {
                 log.info("Link validated Journal {} with {} Journal (Latindex)", aJournal.getURI(), mostProbable.getURI());
                 String ins = buildInsertQuery(constantService.getCentralGraph(), aJournal.getURI(), OWL.SAME_AS, mostProbable.getURI());
-                sparqlService.update(QueryLanguage.SPARQL, ins);
+                sparqlService.getSparqlService().update(QueryLanguage.SPARQL, ins);
             } else {
                 log.info("Link validated Publication {} with {} Journal (Latindex)", aJournal.getPublications().get(0).getURI(), mostProbable.getURI());
                 String ins1 = buildInsertQuery(constantService.getCentralGraph(), aJournal.getPublications().get(0).getURI(), "http://purl.org/dc/terms/isPartOf", mostProbable.getURI());
                 String ins2 = buildInsertQuery(constantService.getCentralGraph(), mostProbable.getURI(), OWL.SAME_AS, mostProbable.getURI());
                 String ins3 = buildInsertQuery(constantService.getCentralGraph(), mostProbable.getURI(), RDF.TYPE, BIBO.JOURNAL.stringValue());
                 String ins4 = buildInsertQuery(constantService.getCentralGraph(), mostProbable.getURI(), RDFS.LABEL, mostProbable.getName());
-                sparqlService.update(QueryLanguage.SPARQL, ins1);
-                sparqlService.update(QueryLanguage.SPARQL, ins2);
-                sparqlService.update(QueryLanguage.SPARQL, ins3);
-                sparqlService.update(QueryLanguage.SPARQL, ins4);
+                sparqlService.getSparqlService().update(QueryLanguage.SPARQL, ins1);
+                sparqlService.getSparqlService().update(QueryLanguage.SPARQL, ins2);
+                sparqlService.getSparqlService().update(QueryLanguage.SPARQL, ins3);
+                sparqlService.getSparqlService().update(QueryLanguage.SPARQL, ins4);
             }
         }
     }
@@ -251,7 +250,7 @@ public class LantindexDetectionServiceImpl implements LatindexDetectionService {
     //Add publications to the journals
     public void PopulatePublications(Journal journal) throws MarmottaException {
         String publicationsOfJournalCentralGraphQuery = queriesService.getPublicationsOfJournalCentralGraphQuery(journal.getURI());
-        List<Map<String, Value>> Publications = sparqlService.query(QueryLanguage.SPARQL, publicationsOfJournalCentralGraphQuery);
+        List<Map<String, Value>> Publications = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, publicationsOfJournalCentralGraphQuery);
         Map<String, Publication> ListPublications = new HashMap<>();
         for (Map<String, Value> aPublicationData : Publications) {
             String URI = aPublicationData.get("PUBLICATION").stringValue();

@@ -3,9 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.apache.marmotta.ucuenca.wk.pubman.api;
-
-import org.apache.marmotta.ucuenca.wk.pubman.exceptions.PubException;
+package org.apache.marmotta.ucuenca.wk.commons.service;
 
 /**
  *
@@ -13,7 +11,7 @@ import org.apache.marmotta.ucuenca.wk.pubman.exceptions.PubException;
  */
 public interface SparqlFunctionsService {
 
-    boolean updatePub(String querytoUpdate) throws PubException;
+    boolean updatePub(String querytoUpdate);
 
     boolean executeInsert(String graph, String sujeto, String predicado, String objeto);
 

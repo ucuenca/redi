@@ -17,10 +17,10 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
-import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.authors.api.EndpointService;
 import org.apache.marmotta.ucuenca.wk.authors.api.SparqlEndpoint;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
+import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
 import org.openrdf.model.Value;
@@ -37,7 +37,7 @@ import org.openrdf.query.UpdateExecutionException;
 public class EndpointServiceImpl implements EndpointService {
 
     @Inject
-    private SparqlService sparqlService;
+    private ExternalSPARQLService sparqlService;
 
     @Inject
     private QueriesService queriesService;
@@ -116,7 +116,7 @@ public class EndpointServiceImpl implements EndpointService {
     private void insertEndPoint(String... parameters) {
         try {
             String queryInsertEndpoint = queriesService.getInsertEndpointQuery(parameters[0], parameters[1], parameters[2], parameters[3]);
-            sparqlService.update(QueryLanguage.SPARQL, queryInsertEndpoint);
+            sparqlService.getSparqlService().update(QueryLanguage.SPARQL, queryInsertEndpoint);
         } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
             Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -125,7 +125,7 @@ public class EndpointServiceImpl implements EndpointService {
     public void addEndpointData(String... parameters) {
         try {
             String queryEndpoint = queriesService.getEndpointDataQuery(parameters);
-            sparqlService.update(QueryLanguage.SPARQL, queryEndpoint);
+            sparqlService.getSparqlService().update(QueryLanguage.SPARQL, queryEndpoint);
         } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
             Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -156,7 +156,7 @@ public class EndpointServiceImpl implements EndpointService {
     public List<SparqlEndpoint> listEndpoints() {
         try {
             List<SparqlEndpoint> result = new ArrayList<SparqlEndpoint>();
-            List<Map<String, Value>> endpointsresult = sparqlService.query(QueryLanguage.SPARQL, queriesService.getLisEndpointsQuery());
+            List<Map<String, Value>> endpointsresult = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getLisEndpointsQuery());
             for (Map<String, Value> singleendpoint : endpointsresult) {
                 SparqlEndpoint endpoint = new SparqlEndpoint();
                 endpoint.setResourceId(singleendpoint.get("id").stringValue());
@@ -181,7 +181,7 @@ public class EndpointServiceImpl implements EndpointService {
     @Override
     public SparqlEndpoint getEndpoint(String resourceId) {
         try {
-            List<Map<String, Value>> endpointresult = sparqlService.query(QueryLanguage.SPARQL, queriesService.getEndpointByIdQuery(endpointsGraph, resourceId));
+            List<Map<String, Value>> endpointresult = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getEndpointByIdQuery(endpointsGraph, resourceId));
             SparqlEndpoint endpoint = new SparqlEndpoint();
             endpoint.setResourceId(endpointresult.get(0).get("id").stringValue());
             endpoint.setStatus(endpointresult.get(0).get("status").stringValue());
@@ -205,7 +205,7 @@ public class EndpointServiceImpl implements EndpointService {
     @Override
     public String removeEndpoint(String resourceid) {
         try {
-            sparqlService.update(QueryLanguage.SPARQL, queriesService.getEndpointDeleteQuery(endpointsGraph, resourceid));
+            sparqlService.getSparqlService().update(QueryLanguage.SPARQL, queriesService.getEndpointDeleteQuery(endpointsGraph, resourceid));
             return "Endpoint was DELETE";
         } catch (MarmottaException | InvalidArgumentException | MalformedQueryException | UpdateExecutionException ex) {
             Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -216,7 +216,7 @@ public class EndpointServiceImpl implements EndpointService {
     @Override
     public String updateEndpoint(String resourceid, String oldstatus, String newstatus) {
          try {
-            sparqlService.update(QueryLanguage.SPARQL, queriesService.getEndpointUpdateStatusQuery(endpointsGraph, resourceid, oldstatus, newstatus));
+            sparqlService.getSparqlService().update(QueryLanguage.SPARQL, queriesService.getEndpointUpdateStatusQuery(endpointsGraph, resourceid, oldstatus, newstatus));
             return "Endpoint was UPDATE";
         } catch (MarmottaException | InvalidArgumentException | MalformedQueryException | UpdateExecutionException ex) {
             Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -228,7 +228,7 @@ public class EndpointServiceImpl implements EndpointService {
     public String addDomain(String resourceId, String domain) {
         try {
             String query = queriesService.getInsertDomainQuery(resourceId, domain);
-            sparqlService.update(QueryLanguage.SPARQL, query);
+            sparqlService.getSparqlService().update(QueryLanguage.SPARQL, query);
         } catch (MarmottaException | InvalidArgumentException | MalformedQueryException | UpdateExecutionException ex) {
             Logger.getLogger(EndpointServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return String.format("ERROR: %s", ex.getMessage());

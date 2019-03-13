@@ -44,11 +44,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
 import org.apache.marmotta.platform.core.api.task.Task;
 import org.apache.marmotta.platform.core.api.task.TaskManagerService;
-import org.apache.marmotta.platform.core.api.triplestore.SesameService;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
-import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
+import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
+import org.apache.marmotta.ucuenca.wk.commons.util.BoundedExecutor;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
 import org.bson.Document;
 import org.json.simple.JSONArray;
@@ -76,11 +76,9 @@ public class PopulateMongoImpl implements PopulateMongo {
     @Inject
     private ConfigurationService conf;
     @Inject
-    private SesameService sesameService;
-    @Inject
     private QueriesService queriesService;
     @Inject
-    private SparqlService sparqlService;
+    private ExternalSPARQLService sparqlService;
     @Inject
     private Logger log;
     @Inject
@@ -114,7 +112,7 @@ public class PopulateMongoImpl implements PopulateMongo {
     private void loadResources(String queryResources, String queryDescribe, String c) {
         try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));
                 StringWriter writter = new StringWriter();) {
-            RepositoryConnection conn = sesameService.getConnection();
+            RepositoryConnection conn = sparqlService.getRepositoryConnetion();
 
             int num_candidates = 0;
             try {
@@ -158,7 +156,7 @@ public class PopulateMongoImpl implements PopulateMongo {
     private void loadStadistics(String c, HashMap<String, String> queries) {
         try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));
                 StringWriter writter = new StringWriter();) {
-            RepositoryConnection conn = sesameService.getConnection();
+            RepositoryConnection conn = sparqlService.getRepositoryConnetion();
 
             try {
                 MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
@@ -199,28 +197,36 @@ public class PopulateMongoImpl implements PopulateMongo {
 
     @Override
     public void authors() {
-        Task task = taskManagerService.createSubTask("Caching authors profiles", "Mongo Service");
+        final Task task = taskManagerService.createSubTask("Caching authors profiles", "Mongo Service");
         try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
             MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
             // Delete and create collection
-            MongoCollection<Document> collection = db.getCollection(MongoService.Collection.AUTHORS.getValue());
+            final MongoCollection<Document> collection = db.getCollection(MongoService.Collection.AUTHORS.getValue());
             collection.drop();
-            List<Map<String, Value>> authorsRedi = sparqlService.query(QueryLanguage.SPARQL, queriesService.getAuthorsCentralGraph());
+            final List<Map<String, Value>> authorsRedi = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getAuthorsCentralGraph());
             task.updateTotalSteps(authorsRedi.size());
+            BoundedExecutor threadPool = BoundedExecutor.getThreadPool(5);
             for (int i = 0; i < authorsRedi.size(); i++) {
-                String author = authorsRedi.get(i).get("a").stringValue();
-                // Print progress
-                log.info("Relating {} ", author);
-                log.info("Relating {}/{}. Author: '{}' ", i + 1, authorsRedi.size(), author);
-                task.updateDetailMessage("URI", author);
-                task.updateProgress(i + 1);
-                // Get and store author data (json) from SPARQL repository.
-                String profiledata = commonService.getAuthorDataProfile(author);
-                Document parse = Document.parse(profiledata);
-                parse.append("_id", author);
-                collection.insertOne(parse);
+                final String author = authorsRedi.get(i).get("a").stringValue();
+                final int j = i;
+                threadPool.submitTask(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Print progress
+                        log.info("Relating {} ", author);
+                        log.info("Relating {}/{}. Author: '{}' ", j + 1, authorsRedi.size(), author);
+                        task.updateDetailMessage("URI", author);
+                        task.updateProgress(j + 1);
+                        // Get and store author data (json) from SPARQL repository.
+                        String profiledata = commonService.getAuthorDataProfile(author);
+                        Document parse = Document.parse(profiledata);
+                        parse.append("_id", author);
+                        collection.insertOne(parse);
+                    }
+                });
             }
-        } catch (MarmottaException ex) {
+            threadPool.end();
+        } catch (MarmottaException | InterruptedException ex) {
             log.error(ex.getMessage(), ex);
         }
         taskManagerService.endTask(task);
@@ -316,7 +322,7 @@ public class PopulateMongoImpl implements PopulateMongo {
 
     private int countCountries() {
         try {
-            List<Map<String, Value>> countc = sparqlService.query(QueryLanguage.SPARQL, queriesService.getCountCountry());
+            List<Map<String, Value>> countc = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getCountCountry());
             return Integer.parseInt(countc.get(0).get("ncountry").stringValue());
 
         } catch (MarmottaException ex) {
@@ -327,28 +333,35 @@ public class PopulateMongoImpl implements PopulateMongo {
 
     @Override
     public void networks() {
-        Task task = taskManagerService.createSubTask("Caching related authors", "Mongo Service");
+        final Task task = taskManagerService.createSubTask("Caching related authors", "Mongo Service");
         try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
-
             MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
             // Delete and create collection
-            MongoCollection<Document> collection = db.getCollection(MongoService.Collection.RELATEDAUTHORS.getValue());
+            final MongoCollection<Document> collection = db.getCollection(MongoService.Collection.RELATEDAUTHORS.getValue());
             collection.drop();
+            BoundedExecutor threadPool = BoundedExecutor.getThreadPool(5);
             task.updateMessage("Calculating related authors");
-            List<Map<String, Value>> query = sparqlService.query(QueryLanguage.SPARQL, queriesService.getAuthorsCentralGraph());
+            final List<Map<String, Value>> query = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getAuthorsCentralGraph());
             int i = 0;
-            for (Map<String, Value> mp : query) {
-                i++;
-                String stringValue = mp.get("a").stringValue();
-                log.info("Relating {} ", stringValue);
-                log.info("Relating {}/{} ", i, query.size());
-                task.updateDetailMessage("URI", stringValue);
-                task.updateDetailMessage("Status", i + "/" + query.size());
-                String collaboratorsData = commonService.getCollaboratorsData(stringValue);
-                Document parse = Document.parse(collaboratorsData);
-                parse.append("_id", stringValue);
-                collection.insertOne(parse);
+            for (final Map<String, Value> mp : query) {
+                final int j = i++;
+                threadPool.submitTask(new Runnable() {
+                    @Override
+                    public void run() {
+                        String stringValue = mp.get("a").stringValue();
+                        log.info("Relating {} ", stringValue);
+                        log.info("Relating {}/{} ", j, query.size());
+                        task.updateDetailMessage("URI", stringValue);
+                        task.updateDetailMessage("Status", j + "/" + query.size());
+                        String collaboratorsData = commonService.getCollaboratorsData(stringValue);
+                        Document parse = Document.parse(collaboratorsData);
+                        parse.append("_id", stringValue);
+                        collection.insertOne(parse);
+                    }
+                });
+
             }
+            threadPool.end();
         } catch (Exception w) {
             log.debug(w.getMessage(), w);
         }
@@ -366,7 +379,7 @@ public class PopulateMongoImpl implements PopulateMongo {
             MongoCollection<Document> collection = db.getCollection(MongoService.Collection.CLUSTERS.getValue());
             collection.drop();
 
-            List<Map<String, Value>> clusters = sparqlService.query(QueryLanguage.SPARQL, queriesService.getClusterURIs());
+            List<Map<String, Value>> clusters = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getClusterURIs());
 
             task.updateTotalSteps(clusters.size());
 
@@ -397,7 +410,7 @@ public class PopulateMongoImpl implements PopulateMongo {
             MongoCollection<Document> collection = db.getCollection(MongoService.Collection.CLUSTERSTOTALS.getValue());
             collection.drop();
             log.info("Counting clusters");
-            List<Map<String, Value>> query = sparqlService.query(QueryLanguage.SPARQL, queriesService.getClusterTotals());
+            List<Map<String, Value>> query = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getClusterTotals());
             log.info("Writing totals");
             for (Map<String, Value> a : query) {
                 String label = a.get("k").stringValue();
@@ -410,7 +423,7 @@ public class PopulateMongoImpl implements PopulateMongo {
                 parse.append("k", label);
                 parse.append("totalAuthors", tot);
                 List<BasicDBObject> lsdoc = new ArrayList<>();
-                List<Map<String, Value>> query1 = sparqlService.query(QueryLanguage.SPARQL, queriesService.getSubClusterTotals(uri));
+                List<Map<String, Value>> query1 = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getSubClusterTotals(uri));
                 for (Map<String, Value> b : query1) {
                     if (b.get("sc") == null) {
                         continue;
@@ -435,36 +448,45 @@ public class PopulateMongoImpl implements PopulateMongo {
 
     @Override
     public void authorsByArea() {
-        Task task = taskManagerService.createSubTask("Caching Authors by Area", "Mongo Service");
+        final Task task = taskManagerService.createSubTask("Caching Authors by Area", "Mongo Service");
         try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
             MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
 
             // Delete and create collection
-            MongoCollection<Document> collection = db.getCollection(MongoService.Collection.AUTHORS_AREA.getValue());
+            final MongoCollection<Document> collection = db.getCollection(MongoService.Collection.AUTHORS_AREA.getValue());
             collection.drop();
 
-            List<Map<String, Value>> areas = sparqlService.query(QueryLanguage.SPARQL, queriesService.getClusterAndSubclusterURIs());
+            final List<Map<String, Value>> areas = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getClusterAndSubclusterURIs());
 
             task.updateTotalSteps(areas.size());
-
+            BoundedExecutor threadPool = BoundedExecutor.getThreadPool(5);
             for (int i = 0; i < areas.size(); i++) {
-                String cluster = areas.get(i).get("cluster").stringValue();
-                String subcluster = areas.get(i).get("subcluster").stringValue();
-                // Print progress
-                log.info("Relating {}/{}. Cluster: '{}' - Subcluster: '{}'", i + 1, areas.size(), cluster, subcluster);
-                task.updateDetailMessage("Cluster", cluster);
-                task.updateDetailMessage("Subluster", subcluster);
-                task.updateProgress(i + 1);
-                // Get authors of an area from the SPARQL endpoint and transform them to JSON .
-                String authorsByArea = commonService.getsubClusterGraph(cluster, subcluster);
-                Document parse = Document.parse(authorsByArea);
-                BasicDBObject key = new BasicDBObject();
-                key.put("cluster", cluster);
-                key.put("subcluster", subcluster);
-                parse.append("_id", key);
-                collection.insertOne(parse);
+                final int j = i;
+                final String cluster = areas.get(i).get("cluster").stringValue();
+                final String subcluster = areas.get(i).get("subcluster").stringValue();
+
+                threadPool.submitTask(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Print progress
+                        log.info("Relating {}/{}. Cluster: '{}' - Subcluster: '{}'", j + 1, areas.size(), cluster, subcluster);
+                        task.updateDetailMessage("Cluster", cluster);
+                        task.updateDetailMessage("Subluster", subcluster);
+                        task.updateProgress(j + 1);
+                        // Get authors of an area from the SPARQL endpoint and transform them to JSON .
+                        String authorsByArea = commonService.getsubClusterGraph(cluster, subcluster);
+                        Document parse = Document.parse(authorsByArea);
+                        BasicDBObject key = new BasicDBObject();
+                        key.put("cluster", cluster);
+                        key.put("subcluster", subcluster);
+                        parse.append("_id", key);
+                        collection.insertOne(parse);
+                    }
+                });
+
             }
-        } catch (MarmottaException ex) {
+            threadPool.end();
+        } catch (MarmottaException | InterruptedException ex) {
             log.error(ex.getMessage(), ex);
         } finally {
             taskManagerService.endTask(task);
@@ -473,36 +495,44 @@ public class PopulateMongoImpl implements PopulateMongo {
 
     @Override
     public void authorsByDiscipline() {
-        Task task = taskManagerService.createSubTask("Caching Authors by Discipline", "Mongo Service");
+        final Task task = taskManagerService.createSubTask("Caching Authors by Discipline", "Mongo Service");
         try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
             MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
 
             // Delete and create collection
-            MongoCollection<Document> collection = db.getCollection(MongoService.Collection.AUTHORS_DISCPLINE.getValue());
+            final MongoCollection<Document> collection = db.getCollection(MongoService.Collection.AUTHORS_DISCPLINE.getValue());
             collection.drop();
 
-            List<Map<String, Value>> clusters = sparqlService.query(QueryLanguage.SPARQL, queriesService.getClusterURIs());
+            final List<Map<String, Value>> clusters = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getClusterURIs());
 
             task.updateTotalSteps(clusters.size());
-
+            BoundedExecutor threadPool = BoundedExecutor.getThreadPool(5);
             for (int i = 0; i < clusters.size(); i++) {
-                String cluster = clusters.get(i).get("c").stringValue();
-                // String subcluster = areas.get(i).get("subcluster").stringValue();
-                // Print progress
-                log.info("Relating {}/{}. Cluster: '{}'", i + 1, clusters.size(), cluster);
-                task.updateDetailMessage("Cluster", cluster);
-                // task.updateDetailMessage("Subluster", subcluster);
-                task.updateProgress(i + 1);
-                // Get authors of an area from the SPARQL endpoint and transform them to JSON .
-                String authorsByDisc = commonService.getClusterGraph(cluster);
-                Document parse = Document.parse(authorsByDisc);
-                BasicDBObject key = new BasicDBObject();
-                key.put("cluster", cluster);
-                //key.put("subcluster", subcluster);
-                parse.append("_id", key);
-                collection.insertOne(parse);
+                final int j = i;
+                final String cluster = clusters.get(i).get("c").stringValue();
+                threadPool.submitTask(new Runnable() {
+                    @Override
+                    public void run() {
+                        // String subcluster = areas.get(i).get("subcluster").stringValue();
+                        // Print progress
+                        log.info("Relating {}/{}. Cluster: '{}'", j + 1, clusters.size(), cluster);
+                        task.updateDetailMessage("Cluster", cluster);
+                        // task.updateDetailMessage("Subluster", subcluster);
+                        task.updateProgress(j + 1);
+                        // Get authors of an area from the SPARQL endpoint and transform them to JSON .
+                        String authorsByDisc = commonService.getClusterGraph(cluster);
+                        Document parse = Document.parse(authorsByDisc);
+                        BasicDBObject key = new BasicDBObject();
+                        key.put("cluster", cluster);
+                        //key.put("subcluster", subcluster);
+                        parse.append("_id", key);
+                        collection.insertOne(parse);
+                    }
+                });
+
             }
-        } catch (MarmottaException ex) {
+            threadPool.end();
+        } catch (MarmottaException | InterruptedException ex) {
             log.error(ex.getMessage(), ex);
         } finally {
             taskManagerService.endTask(task);
@@ -519,7 +549,7 @@ public class PopulateMongoImpl implements PopulateMongo {
             MongoCollection<Document> collection = db.getCollection(MongoService.Collection.COUNTRIES.getValue());
             collection.drop();
             try {
-                List<Map<String, Value>> countries = sparqlService.query(QueryLanguage.SPARQL, queriesService.getCountries());
+                List<Map<String, Value>> countries = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getCountries());
                 task.updateTotalSteps(countries.size());
                 for (int i = 0; i < countries.size(); i++) {
                     String co = countries.get(i).get("co").stringValue();

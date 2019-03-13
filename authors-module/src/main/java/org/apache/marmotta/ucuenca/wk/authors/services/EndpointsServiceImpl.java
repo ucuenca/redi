@@ -15,7 +15,6 @@ import javax.inject.Inject;
 import org.apache.marmotta.commons.vocabulary.FOAF;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
-import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.authors.api.EndpointFile;
 import org.apache.marmotta.ucuenca.wk.authors.api.EndpointOAI;
 import org.apache.marmotta.ucuenca.wk.authors.api.EndpointObject;
@@ -23,6 +22,7 @@ import org.apache.marmotta.ucuenca.wk.authors.api.EndpointSPARQL;
 import org.apache.marmotta.ucuenca.wk.authors.api.EndpointsService;
 import org.apache.marmotta.ucuenca.wk.authors.api.OrganizationService;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
+import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
 import org.json.JSONArray;
@@ -42,7 +42,7 @@ import org.semarglproject.vocab.RDF;
 public class EndpointsServiceImpl implements EndpointsService {
     
     @Inject
-    private SparqlService sparqlService;
+    private ExternalSPARQLService sparqlService;
      
     @Inject
     private QueriesService queriesService;
@@ -105,7 +105,7 @@ public class EndpointsServiceImpl implements EndpointsService {
     public String updateExtractionDate (String uri , String date) {
         try {
             String queryUpdate= queriesService.updateGeneric(con.getEndpointsGraph() , uri , REDI.EXTRACTIONDATE.toString() ,date , STR );
-            sparqlService.update(QueryLanguage.SPARQL, queryUpdate);
+            sparqlService.getSparqlService().update(QueryLanguage.SPARQL, queryUpdate);
             
             return "Success";
         } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
@@ -151,7 +151,7 @@ public class EndpointsServiceImpl implements EndpointsService {
      
            // String queryInsertEndpoint = queriesService.getInsertEndpointQuery(parameters[0], parameters[1], parameters[2], parameters[3]);
           String queryInsertOrg = queriesService.getInsertGeneric (con.getEndpointsGraph() ,  parameters[0], parameters[1], parameters[2], parameters[3] );
-            sparqlService.update(QueryLanguage.SPARQL, queryInsertOrg);
+            sparqlService.getSparqlService().update(QueryLanguage.SPARQL, queryInsertOrg);
             return "Successfully Registration";
        
            
@@ -160,7 +160,7 @@ public class EndpointsServiceImpl implements EndpointsService {
         
          private boolean  askEndpoint (String uri ) throws MarmottaException {
             String askOrg =  queriesService.getAskResourceQuery (con.getEndpointsGraph(), uri);
-            return  sparqlService.ask( QueryLanguage.SPARQL , askOrg );
+            return  sparqlService.getSparqlService().ask( QueryLanguage.SPARQL , askOrg );
               
           }
 
@@ -169,7 +169,7 @@ public class EndpointsServiceImpl implements EndpointsService {
           try {
              //  ObjectMapper mapper = new ObjectMapper();
              String queryEnd =  queriesService.getListEndpoints();
-             List<Map<String, Value>> response = sparqlService.query(QueryLanguage.SPARQL, queryEnd);
+             List<Map<String, Value>> response = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queryEnd);
              return listmapTojson (response);
          } catch ( MarmottaException | JSONException ex) {
              Logger.getLogger(EndpointsServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -213,11 +213,11 @@ public class EndpointsServiceImpl implements EndpointsService {
           //   String queryRemove = queriesService.removeGeneric ( con.getOrganizationsGraph() , resourceid , RDF.TYPE.toString() , FOAF.ORGANIZATION.toString() , STR );
               //String queryRemove = queriesService.removeGeneric ( con.getEndpointsGraph() , resourceid , RDF.TYPE.toString() , REDI.ENDPOINT.toString() , STR );
             String queryDependecies  = queriesService.removeGenericRelationwithDependecies(con.getAuthorsGraph(), DCTERMS.PROVENANCE.toString(), resourceid , FOAF.publications.toString() );
-            sparqlService.update(QueryLanguage.SPARQL, queryDependecies);
+            sparqlService.getSparqlService().update(QueryLanguage.SPARQL, queryDependecies);
             String queryAsociation   = queriesService.removeGenericRelation(con.getAuthorsGraph() , DCTERMS.PROVENANCE.toString(), resourceid);
-            sparqlService.update(QueryLanguage.SPARQL, queryAsociation);
+            sparqlService.getSparqlService().update(QueryLanguage.SPARQL, queryAsociation);
             String queryRemove   = queriesService.removeGenericType(con.getEndpointsGraph(), REDI.ENDPOINT.toString(), resourceid);
-            sparqlService.update(QueryLanguage.SPARQL, queryRemove);
+            sparqlService.getSparqlService().update(QueryLanguage.SPARQL, queryRemove);
               return "Success delete";
              //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
          } catch ( InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
@@ -240,7 +240,7 @@ public class EndpointsServiceImpl implements EndpointsService {
             }
             
             String queryUpdate= queriesService.updateGeneric(con.getEndpointsGraph() , uri , REDI.STATUS.toString() , newStatus, STR );
-            sparqlService.update(QueryLanguage.SPARQL, queryUpdate);
+            sparqlService.getSparqlService().update(QueryLanguage.SPARQL, queryUpdate);
             
             return "Success";
         } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {

@@ -268,7 +268,7 @@
                     <artifactId>marmotta-backend-kiwi</artifactId>
                     <version>${marmotta.version}</version>
                 </dependency>
-                <dependency>
+<!--                <dependency>
                     <groupId>org.apache.marmotta</groupId>
                     <artifactId>marmotta-ldcache-file-mod</artifactId>
                     <version>${project.version}</version>
@@ -282,7 +282,7 @@
                     <groupId>org.apache.marmotta</groupId>
                     <artifactId>marmotta-versioning-kiwi</artifactId>
                     <version>${marmotta.version}</version>
-                </dependency>
+                </dependency>-->
             </dependencies>
         </profile>
 		
@@ -524,7 +524,7 @@
             <artifactId>marmotta-ldpath</artifactId>
             <version>${marmotta.version}</version>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>org.apache.marmotta</groupId>
             <artifactId>marmotta-ldcache-common</artifactId>
             <version>${marmotta.version}</version>
@@ -533,7 +533,7 @@
             <groupId>org.apache.marmotta</groupId>
             <artifactId>marmotta-versioning-common</artifactId>
             <version>${marmotta.version}</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.apache.marmotta</groupId>
             <artifactId>marmotta-user</artifactId>

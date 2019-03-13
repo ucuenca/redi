@@ -34,11 +34,11 @@ import org.apache.marmotta.ldclient.model.ClientResponse;
 import org.apache.marmotta.ldclient.services.ldclient.LDClient;
 import org.apache.marmotta.platform.core.api.task.Task;
 import org.apache.marmotta.platform.core.api.task.TaskManagerService;
-import org.apache.marmotta.platform.core.api.triplestore.SesameService;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
-import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
+import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
+import org.apache.marmotta.ucuenca.wk.commons.service.SparqlFunctionsService;
 import org.apache.marmotta.ucuenca.wk.pubman.exceptions.QuotaLimitException;
 import org.apache.marmotta.ucuenca.wk.pubman.utils.OntologyMapper;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
@@ -48,6 +48,7 @@ import org.openrdf.model.Value;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
+import org.openrdf.rio.RDFHandlerException;
 import org.semarglproject.vocab.OWL;
 import org.semarglproject.vocab.RDF;
 import org.semarglproject.vocab.RDFS;
@@ -75,15 +76,14 @@ public abstract class AbstractProviderService implements ProviderService {
     private TaskManagerService taskManagerService;
 
     @Inject
-    private SparqlService sparqlService;
+    private ExternalSPARQLService sparqlService;
 
-    @Inject
-    private SesameService sesameService;
-
+    //@Inject
+    //private SesameService sesameService;
     @Inject
     protected ConstantService constantService;
 
-    private final  String STR = "string";
+    private final String STR = "string";
 
     /**
      * Build a list of URLs to request authors with {@link LDClient}.
@@ -139,16 +139,16 @@ public abstract class AbstractProviderService implements ProviderService {
     @Override
     public void extractAuthors(String[] organizations) {
         Map<String, String> msgOrg = new HashMap();
-        String providerUri = createProvider(getProviderName() , false);
+        String providerUri = createProvider(getProviderName(), false);
         Task task = taskManagerService.createSubTask(String.format("%s Extraction", getProviderName()), "Publication Extractor");
         task.updateMessage(String.format("Extracting publications from %s Provider", getProviderName()));
         task.updateDetailMessage("Graph", getProviderGraph());
         LDClient ldClient = buildDefaultLDClient();
         try {
             for (String organization : organizations) {
-                List<Map<String, Value>> resultAllAuthors = sparqlService.query(
+                List<Map<String, Value>> resultAllAuthors = sparqlService.getSparqlService().query(
                         QueryLanguage.SPARQL, queriesService.getAuthorsDataQuery(organization));
-                List<String> organizationNames = getOrganizationNames(sparqlService.query(
+                List<String> organizationNames = getOrganizationNames(sparqlService.getSparqlService().query(
                         QueryLanguage.SPARQL, queriesService.getOrganizationNameQuery(organization)));
                 int totalAuthors = resultAllAuthors.size();
                 if (totalAuthors == 0) {
@@ -175,7 +175,7 @@ public abstract class AbstractProviderService implements ProviderService {
                         } else {
                             querySearchAuthor = queriesService.getAskObjectQuery(getProviderGraph(), authorResource, filterExpressionSearch());
                         }
-                        boolean isResquestDone = sparqlService.ask(QueryLanguage.SPARQL, querySearchAuthor);
+                        boolean isResquestDone = sparqlService.getSparqlService().ask(QueryLanguage.SPARQL, querySearchAuthor);
                         if (isResquestDone) {
                             // Register only the search query, given that the resource might be from other author.
                             sparqlFunctionsService.executeInsert(getProviderGraph(), reqResource.replace(" ", ""), OWL.ONE_OF, authorResource);
@@ -195,7 +195,7 @@ public abstract class AbstractProviderService implements ProviderService {
                                     retryPlan();
                                     continue;
                             }
-                            RepositoryConnection connection = sesameService.getConnection();
+                            RepositoryConnection connection = sparqlService.getRepositoryConnetion();
                             try {
                                 // store triples with new vocabulary
                                 Model data = response.getData();
@@ -203,8 +203,11 @@ public abstract class AbstractProviderService implements ProviderService {
                                 data = OntologyMapper.map(data, getMappingPathFile(), getVocabularyMapper());
                                 log.info("After ontology mapper: writing {} triples in context {} for request '{}'.", data.size(), getProviderGraph(), reqResource);
                                 Resource providerContext = connection.getValueFactory().createURI(getProviderGraph());
-                                connection.add(data, providerContext);
-                            } catch (IOException ex) {
+                                //connection.add(data, providerContext);
+                                sparqlService.getGraphDBInstance().runSplitAddOp(connection, data, providerContext);
+                                // Register search query.
+                                sparqlFunctionsService.executeInsert(getProviderGraph(), reqResource.replace(" ", ""), OWL.ONE_OF, authorResource);
+                            } catch (IOException | RDFHandlerException ex) {
                                 log.error("cannot store data", ex);
                             } finally {
                                 connection.close();
@@ -294,18 +297,18 @@ public abstract class AbstractProviderService implements ProviderService {
      *
      * @param actual
      * @param total
-     * @param name   of the provider.
+     * @param name of the provider.
      */
     private void printprogress(int actual, int total, String name, String org) {
         int processpercent = actual * 100 / total;
         log.info("{}: processed authors ({}%) {} of {} for organization {}.", name, processpercent, actual, total, org);
     }
 
-    private String createProvider(String providerName , Boolean main) {
+    private String createProvider(String providerName, Boolean main) {
         String providerUri = constantService.getProviderBaseUri() + "/" + providerName.toUpperCase().replace(" ", "_");
         String queryProvider = queriesService.getAskResourceQuery(getProviderGraph(), providerUri);
         try {
-            boolean result = sparqlService.ask(QueryLanguage.SPARQL, queryProvider);
+            boolean result = sparqlService.getSparqlService().ask(QueryLanguage.SPARQL, queryProvider);
 
             if (!result) {
                 sparqlFunctionsService.executeInsert(getProviderGraph(), providerUri, RDF.TYPE, REDI.PROVIDER.toString());

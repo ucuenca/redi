@@ -62,6 +62,10 @@
             {
                 runUpdateCreateCentralGraph(host);
             }
+            function runSync()
+            {
+                runSyncMGDB(host);
+            }
         </script>
         <!--###END_HEAD###-->
     </head>
@@ -129,6 +133,9 @@
             <p>
             <p>
                 <button type="button"  onclick="runCreateCentralGraph()"  value="Activar Función">CREATE CENTRAL GRAPH</button>
+            <p>
+            <p>
+                <button type="button"  onclick="runSync()"  value="Activar Función">Syn Marmotta-GraphDB</button>
             <p>
 
             <div id="imgloading" style="visibility: hidden">

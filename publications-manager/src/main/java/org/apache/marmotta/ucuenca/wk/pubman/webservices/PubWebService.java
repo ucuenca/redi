@@ -40,6 +40,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import org.apache.marmotta.ucuenca.wk.commons.service.TranslationService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
+import org.apache.marmotta.ucuenca.wk.pubman.api.SyncGraphDBMarmotta;
 import org.slf4j.Logger;
 
 @Path("/pubman")
@@ -48,6 +49,9 @@ public class PubWebService {
 
     @Inject
     private Logger log;
+
+    @Inject
+    private SyncGraphDBMarmotta synprocess;
 
     @Inject
     private CommonService commonService;
@@ -65,6 +69,7 @@ public class PubWebService {
     public static final String GET_PUBLICATIONS_DSPACE = "/publications_dspace";
     public static final String DETECT_LATINDEX_PUBLICATIONS = "/publications_latindex";
     public static final String DISAMBIGUATION_PUBLICATIONS = "/publications_disambiguation";
+    public static final String SYNC_PUBLICATIONS = "/publications_sync";
     public static final String CENTRAL_GRAPH_PUBLICATIONS = "/publications_centralgraph";
     public static final String LOAD_PUBLICATIONS = "/publications_provider_graph";
     public static final String LOAD_AUTHOR_ATTR = "/author_attr";
@@ -273,18 +278,6 @@ public class PubWebService {
         return Response.ok().entity(result).build();
     }
 
-    /*
-     * Get Publications Data from Source and Load into Provider Graph
-     */
-    @POST
-    @Path(GET_PUBLICATIONS_DSPACE)
-    public Response readPublicationsPostDspace(@QueryParam("Endpoint") String resultType) {
-        String params = resultType;
-        log.debug("Publications Task", params);
-        String result = commonService.GetDataFromProvidersServiceDspace();
-        return Response.ok().entity(result).build();
-    }
-
     @GET
     @Path("publication/organization/list")
     @Produces(APPLICATIONJSON)
@@ -438,6 +431,15 @@ public class PubWebService {
         log.debug("Publications Task", params);
         String result = commonService.runDisambiguationProcess();
         return Response.ok().entity(result).build();
+    }
+
+    @POST
+    @Path(SYNC_PUBLICATIONS)
+    public Response sync(@QueryParam("Endpoint") String resultType) {
+        //String params = resultType;
+        log.debug("SYNC Task");
+        synprocess.init();
+        return Response.ok().entity("Synchronizing").build();
     }
 
     @POST

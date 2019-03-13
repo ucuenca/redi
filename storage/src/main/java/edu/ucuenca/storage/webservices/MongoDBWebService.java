@@ -26,7 +26,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
-import org.apache.marmotta.platform.core.api.triplestore.SesameService;
 import org.bson.Document;
 import org.slf4j.Logger;
 
@@ -43,9 +42,6 @@ public class MongoDBWebService {
 
     @Inject
     private ConfigurationService confService;
-
-    @Inject
-    private SesameService sesameService;
 
     @Inject
     private MongoService mongoService;

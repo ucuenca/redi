@@ -21,7 +21,7 @@ import javax.inject.Inject;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
 import org.apache.marmotta.platform.core.api.task.Task;
 import org.apache.marmotta.platform.core.api.task.TaskManagerService;
-import org.apache.marmotta.platform.core.api.triplestore.SesameService;
+import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.Centralize;
 import org.openrdf.query.BindingSet;
@@ -48,7 +48,7 @@ public class CentralizeImpl implements Centralize {
     private TaskManagerService taskService;
 
     @Inject
-    private SesameService sesameService;
+    private ExternalSPARQLService sesameService;
 
     @Inject
     private QueriesService queriesService;
@@ -64,7 +64,7 @@ public class CentralizeImpl implements Centralize {
         int offset;
         RepositoryConnection con = null;
         try {
-            con = sesameService.getConnection();
+            con = sesameService.getRepositoryConnetion();
             // Get information of REDI Endpoint
             TupleQueryResult result = con.prepareTupleQuery(QueryLanguage.SPARQL,
                     queriesService.getREDIEndpoint(endpoint))
@@ -139,7 +139,7 @@ public class CentralizeImpl implements Centralize {
         RepositoryConnection con = null;
         String name;
         try {
-            con = sesameService.getConnection();
+            con = sesameService.getRepositoryConnetion();
 
             // Get information of REDI Endpoint
             TupleQueryResult result = con.prepareTupleQuery(QueryLanguage.SPARQL,

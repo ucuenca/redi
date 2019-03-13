@@ -16,21 +16,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.logging.Level;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.api.task.TaskInfo;
 import org.apache.marmotta.platform.core.api.task.TaskManagerService;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
-import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Provider;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
+import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.Centralize;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
@@ -39,7 +41,6 @@ import org.apache.marmotta.ucuenca.wk.pubman.model.AuthorProfile;
 import org.apache.marmotta.ucuenca.wk.pubman.model.Collaborator;
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.AcademicsKnowledgeProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.DBLPProviderService;
-import org.apache.marmotta.ucuenca.wk.pubman.services.providers.DspaceProviderServiceImpl;
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.GoogleScholarProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.ScopusProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.SpringerProviderService;
@@ -79,9 +80,6 @@ public class CommonServiceImpl implements CommonService {
     DBLPProviderService dblpProviderServiceInt;
 
     @Inject
-    DspaceProviderServiceImpl dspaceProviderService;
-
-    @Inject
     ReportsService reportService;
 
     @Inject
@@ -100,7 +98,7 @@ public class CommonServiceImpl implements CommonService {
     private QueriesService queriesService;
 
     @Inject
-    private SparqlService sparqlService;
+    private ExternalSPARQLService sparqlService;
 
     @Inject
     private CommonsServices com;
@@ -116,10 +114,10 @@ public class CommonServiceImpl implements CommonService {
 
     @Inject
     private org.apache.marmotta.ucuenca.wk.pubman.services.providers.DOAJProviderService providerServiceDOAJ;
-    
+
     @Inject
     private org.apache.marmotta.ucuenca.wk.pubman.services.providers.ORCIDProviderService providerServiceORCID;
-    
+
     @Inject
     private ScopusProviderService providerServiceScopus1;
     private Thread scopusThread;
@@ -215,13 +213,6 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public String GetDataFromProvidersServiceDspace() {
-        Thread DspaceProvider = new Thread(dspaceProviderService);
-        DspaceProvider.start();
-        return "Data Provider Dspace are extracted in background.   Please review main.log file for details";
-    }
-
-    @Override
     public String createReport(String hostname, String realPath, String name, String type, List<String> params) {
         return reportService.createReport(hostname, realPath, name, type, params);
     }
@@ -251,7 +242,7 @@ public class CommonServiceImpl implements CommonService {
             String queryOrg = queriesService.getExtractedOrgListD(prov);
             List<Map<String, Value>> response;
 
-            response = sparqlService.query(QueryLanguage.SPARQL, queryOrg);
+            response = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queryOrg);
             return com.listmapTojson(response);
         } catch (MarmottaException ex) {
             java.util.logging.Logger.getLogger(CommonServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -263,7 +254,7 @@ public class CommonServiceImpl implements CommonService {
     @Override
     public String listREDIEndpoints() {
         try {
-            List<Map<String, Value>> response = sparqlService.query(
+            List<Map<String, Value>> response = sparqlService.getSparqlService().query(
                     QueryLanguage.SPARQL,
                     queriesService.getListREDIEndpoints()
             );
@@ -278,7 +269,7 @@ public class CommonServiceImpl implements CommonService {
 
                 // Get statistics of graphs
                 JSONArray statsJson = new JSONArray();
-                List<Map<String, Value>> statistics = sparqlService.query(
+                List<Map<String, Value>> statistics = sparqlService.getSparqlService().query(
                         QueryLanguage.SPARQL,
                         queriesService.getREDIEndpointStatistics(id)
                 );
@@ -300,7 +291,7 @@ public class CommonServiceImpl implements CommonService {
     @Override
     public boolean deleteREDIEndpoint(String id) {
         try {
-            sparqlService.update(QueryLanguage.SPARQL,
+            sparqlService.getSparqlService().update(QueryLanguage.SPARQL,
                     queriesService.delteREDIEndpointQuery(id));
             return true;
         } catch (MarmottaException | InvalidArgumentException | MalformedQueryException | UpdateExecutionException ex) {
@@ -327,8 +318,8 @@ public class CommonServiceImpl implements CommonService {
             log.info(queryd);
             List<Map<String, Value>> response2;
 
-            response1 = sparqlService.query(QueryLanguage.SPARQL, queryOrg);
-            response2 = sparqlService.query(QueryLanguage.SPARQL, queryd);
+            response1 = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queryOrg);
+            response2 = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queryd);
             log.info("RESP");
             log.info(response2.toString());
             for (Map<String, Value> m1 : response1) {
@@ -373,9 +364,9 @@ public class CommonServiceImpl implements CommonService {
                 + " ?uri <http://ucuenca.edu.ec/ontology#main> ?smain "
                 + " }} GROUP BY ?uri  Order  by  desc (?main)";
 
-        List<Map<String, Value>> response = sparqlService.query(QueryLanguage.SPARQL, queryProviders);
+        List<Map<String, Value>> response = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queryProviders);
         for (Map<String, Value> prov : response) {
-            Provider p = new Provider(prov.get("name").stringValue().replace(" ", ""), prov.get("graph").stringValue(), sparqlService);
+            Provider p = new Provider(prov.get("name").stringValue().replace(" ", ""), prov.get("graph").stringValue(), sparqlService.getSparqlService());
             Providers.add(p);
         }
         return Providers;
@@ -435,7 +426,7 @@ public class CommonServiceImpl implements CommonService {
                 + "   }  "
                 + "}GROUP BY ?author ?subject ?orgname ?img HAVING ( ?npub > 1  )  ORDER BY DESC (?npub)";
         try {
-            List<Map<String, Value>> response = sparqlService.query(QueryLanguage.SPARQL, describeAuthor);
+            List<Map<String, Value>> response = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, describeAuthor);
             String imgbase = "";
             String authorLName = "";
             if (!response.isEmpty()) {
@@ -487,7 +478,7 @@ public class CommonServiceImpl implements CommonService {
                             + "   }  "
                             + "}GROUP BY ?author   ?orgname  ?img  HAVING ( ?npub > 1  )  ORDER BY DESC (?npub)";
 
-                    List<Map<String, Value>> responseSubAuthor = sparqlService.query(QueryLanguage.SPARQL, querySubjectCo);
+                    List<Map<String, Value>> responseSubAuthor = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, querySubjectCo);
 
                     for (Map<String, Value> coauthor : responseSubAuthor) {
                         String couri = coauthor.get("author").stringValue();
@@ -542,7 +533,7 @@ public class CommonServiceImpl implements CommonService {
                 + "?subject rdfs:label ?slabel } GROUP BY ?subject ORDER BY DESC (?npub) limit 10 "
                 + " } GROUP BY ?author";
 
-        List<Map<String, Value>> response = sparqlService.query(QueryLanguage.SPARQL, querySubject);
+        List<Map<String, Value>> response = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, querySubject);
         if (!response.isEmpty()) {
             String resp = "";
             String subject = response.get(0).get("lsubjects").stringValue();
@@ -603,7 +594,7 @@ public class CommonServiceImpl implements CommonService {
                 + "  }\n"
                 + "}";
         try {
-            List<Map<String, Value>> subclustersRslt = sparqlService.query(QueryLanguage.SPARQL, querySC);
+            List<Map<String, Value>> subclustersRslt = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, querySC);
             ArrayNode subclusters = factory.arrayNode();
             for (Map<String, Value> sc : subclustersRslt) {
                 String subclusterUri = sc.get("sc").stringValue();
@@ -637,8 +628,8 @@ public class CommonServiceImpl implements CommonService {
                 + "  }\n"
                 + "}";
 
-        List<Map<String, Value>> names = sparqlService.query(QueryLanguage.SPARQL, String.format(queryName, subcluster, type));
-        List<Map<String, Value>> total = sparqlService.query(QueryLanguage.SPARQL, String.format(queryTotal, subcluster));
+        List<Map<String, Value>> names = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, String.format(queryName, subcluster, type));
+        List<Map<String, Value>> total = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, String.format(queryTotal, subcluster));
 
         ObjectNode node = factory.objectNode(); // initializing
         node.put("uri", subcluster);
@@ -775,7 +766,7 @@ public class CommonServiceImpl implements CommonService {
                     + "    } \n"
                     + "} ";
 
-            List<Map<String, Value>> responseSubClAuthor = sparqlService.query(QueryLanguage.SPARQL, query);
+            List<Map<String, Value>> responseSubClAuthor = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, query);
             List<Collaborator> collaborators = new ArrayList();
             for (Map<String, Value> authors : responseSubClAuthor) {
                 //Author a = new Author ();
@@ -908,18 +899,20 @@ public class CommonServiceImpl implements CommonService {
                     + "        }\n"
                     + "  }";
 
-            List<Map<String, Value>> responseClAuthor = sparqlService.query(QueryLanguage.SPARQL, query);
+            List<Map<String, Value>> responseClAuthor = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, query);
             List<Collaborator> collaborators = new ArrayList();
             String[] targ = {};
             for (Map<String, Value> authors : responseClAuthor) {
-                String uri = authors.get("person").stringValue();
-                String names = getUniqueName(authors.get("names").stringValue(), ";");
-                String subject = getSubjectAuthor(uri);
-                String orgs = authors.get("orgnames").stringValue();
-                Collaborator cl = new Collaborator(uri, uri, names, "", orgs, subject);
-                cl.setTargets(targ);
-                collaborators.add(cl);
-
+                authors = CleanEmptyFields(authors);
+                if (!authors.isEmpty()) {
+                    String uri = authors.get("person").stringValue();
+                    String names = getUniqueName(authors.get("names").stringValue(), ";");
+                    String subject = getSubjectAuthor(uri);
+                    String orgs = authors.get("orgnames").stringValue();
+                    Collaborator cl = new Collaborator(uri, uri, names, "", orgs, subject);
+                    cl.setTargets(targ);
+                    collaborators.add(cl);
+                }
             }
             return coauthorsSubClToJson(collaborators);
 
@@ -955,7 +948,7 @@ public class CommonServiceImpl implements CommonService {
                     + "   } "
                     + "} } GROUP BY ?s ?co ?clo ?orgname HAVING ( ?nc > 1  && ?sc > 1 ) ORDER BY DESC (?sc) DESC(?nc)";
 
-            List<Map<String, Value>> response = sparqlService.query(QueryLanguage.SPARQL, querySubrel);
+            List<Map<String, Value>> response = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, querySubrel);
             int maxvalue = 0;
             Double maxScore = 0.0;
             if (response.size() > 0) {
@@ -1028,7 +1021,7 @@ public class CommonServiceImpl implements CommonService {
                 + "  <" + uri + ">  foaf:publications ?pub  . "
                 + "  <" + candidate + ">   foaf:publications ?pub   "
                 + "}";
-        return sparqlService.ask(QueryLanguage.SPARQL, queryisCoauthor);
+        return sparqlService.getSparqlService().ask(QueryLanguage.SPARQL, queryisCoauthor);
     }
 
     public Boolean isClusterPartner(String uri, String candidate) throws MarmottaException {
@@ -1040,7 +1033,7 @@ public class CommonServiceImpl implements CommonService {
                 + "<" + candidate + ">  dct:isPartOf  ?scl "
                 + "}";
 
-        return sparqlService.ask(QueryLanguage.SPARQL, queryC);
+        return sparqlService.getSparqlService().ask(QueryLanguage.SPARQL, queryC);
     }
 
     public JSONArray listmapTojson(List<Map<String, String>> list, String nameobject) throws org.json.JSONException {
@@ -1149,7 +1142,7 @@ public class CommonServiceImpl implements CommonService {
                     + "	     }group by ?cl";
 
             String querySubCluster = Prefix
-                     + "SELECT  ?cl   (sample(?clabel_) as ?clabel) FROM <" + con.getClusterGraph() + "> WHERE  {\n"
+                    + "SELECT  ?cl   (sample(?clabel_) as ?clabel) FROM <" + con.getClusterGraph() + "> WHERE  {\n"
                     + "  <" + uri + ">  dct:isPartOf ?cl .\n"
                     + "	?cl a <http://ucuenca.edu.ec/ontology#SubCluster> .\n"
                     + "	 ?cl rdfs:label ?clabel_.\n"
@@ -1232,10 +1225,12 @@ public class CommonServiceImpl implements CommonService {
                     + "  }  "
                     + "} ";
 
-            List<Map<String, Value>> responseAuthor1 = sparqlService.query(QueryLanguage.SPARQL, metaAuthor1);
-            List<Map<String, Value>> responseAuthor2 = sparqlService.query(QueryLanguage.SPARQL, metaAuthor2);
+            List<Map<String, Value>> responseAuthor1 = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, metaAuthor1);
+            List<Map<String, Value>> responseAuthor2 = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, metaAuthor2);
             Map<String, Value> get = responseAuthor1.get(0);
-            get.putAll(responseAuthor2.get(0));
+            get = CleanEmptyFields(get);
+            get.putAll(CleanEmptyFields(responseAuthor2.get(0)));
+            get = CleanEmptyFields(get);
             List<Map<String, Value>> responseAuthor = Lists.newArrayList(get);
             AuthorProfile a = new AuthorProfile();
             if (!responseAuthor.isEmpty()) {
@@ -1247,13 +1242,13 @@ public class CommonServiceImpl implements CommonService {
                  a.setTopics(getRelevantTopics(topics.split("\\|")));
                  }*/
 
-                List<Map<String, Value>> responseSubclusters = sparqlService.query(QueryLanguage.SPARQL, querySubCluster);
+                List<Map<String, Value>> responseSubclusters = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, querySubCluster);
                 if (!responseSubclusters.isEmpty()) {
                     //   String[] arrayaux = new String[responseCluster.size()];
                     List<String> subclusters = new ArrayList();
                     for (Map<String, Value> mp : responseSubclusters) {
                         if (mp.get("clabel") != null) {
-                           subclusters.add(mp.get("clabel").stringValue());
+                            subclusters.add(mp.get("clabel").stringValue());
                         }
                     }
                     String[] arrayaux = new String[subclusters.size()];
@@ -1261,7 +1256,7 @@ public class CommonServiceImpl implements CommonService {
                     a.setTopics(arrayaux);
                 }
 
-                List<Map<String, Value>> responseCluster = sparqlService.query(QueryLanguage.SPARQL, queryCluster);
+                List<Map<String, Value>> responseCluster = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queryCluster);
                 if (!responseCluster.isEmpty()) {
                     //   String[] arrayaux = new String[responseCluster.size()];
                     List<String> clusters = new ArrayList();
@@ -1294,7 +1289,7 @@ public class CommonServiceImpl implements CommonService {
                      a.setCluster(lc.split("\\|"));*/
                 }
 
-                List<Map<String, Value>> responseNpub = sparqlService.query(QueryLanguage.SPARQL, numpubquery);
+                List<Map<String, Value>> responseNpub = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, numpubquery);
                 if (responseNpub.size() > 0 && !responseNpub.get(0).isEmpty()) {
                     String num = responseNpub.get(0).get("tot").stringValue();
                     a.setNpub(num);
@@ -1307,10 +1302,28 @@ public class CommonServiceImpl implements CommonService {
         return "{Status:Error}";
     }
 
+    private Map<String, Value> CleanEmptyFields(Map<String, Value> mp) {
+        Set<String> kp = new HashSet<>();
+        Set<String> rm = new HashSet<>();
+        for (Entry<String, Value> an : mp.entrySet()) {
+            if (!an.getValue().stringValue().isEmpty()) {
+                kp.add(an.getKey());
+            }
+        }
+        for (Entry<String, Value> an : mp.entrySet()) {
+            if (!kp.contains(an.getKey())) {
+                rm.add(an.getKey());
+            }
+        }
+        for (String st : rm) {
+            mp.remove(st);
+        }
+        return mp;
+    }
+
     private AuthorProfile proccessAuthor(List<Map<String, Value>> responseAuthor) {
         AuthorProfile a = new AuthorProfile();
         Map<String, Value> author = responseAuthor.get(0);
-
         if (author.containsKey("names")) {
             a.setName(getUniqueName(author.get("names").stringValue(), "\\|"));
         }
@@ -1487,10 +1500,10 @@ public class CommonServiceImpl implements CommonService {
         log.debug("New endpoint information.\nName: {} \nID: {}\nBase context: {}\nURL: {}",
                 name, id, baseContext, url);
 
-        boolean exists = sparqlService.ask(QueryLanguage.SPARQL,
+        boolean exists = sparqlService.getSparqlService().ask(QueryLanguage.SPARQL,
                 queriesService.isREDIEndpointStored(id));
         if (!exists) {
-            sparqlService.update(QueryLanguage.SPARQL,
+            sparqlService.getSparqlService().update(QueryLanguage.SPARQL,
                     queriesService.insertREDIEndpoints(id, name,
                             url.toExternalForm(),
                             baseContext));
@@ -1540,7 +1553,7 @@ public class CommonServiceImpl implements CommonService {
         doajThread.start();
         return "Data Provider DOAJ are extracted in background.   Please review main.log file for details";
     }
-    
+
     @Override
     public String getDataFromORCIDProvidersService(final String[] organizations) {
         if (orcidThread != null && orcidThread.isAlive()) {
@@ -1555,5 +1568,5 @@ public class CommonServiceImpl implements CommonService {
         orcidThread.start();
         return "Data Provider DOAJ are extracted in background.   Please review main.log file for details";
     }
-    
+
 }

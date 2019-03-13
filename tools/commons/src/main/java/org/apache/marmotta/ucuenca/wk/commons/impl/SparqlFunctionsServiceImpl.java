@@ -3,16 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.apache.marmotta.ucuenca.wk.pubman.services;
+package org.apache.marmotta.ucuenca.wk.commons.impl;
 
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
-import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
+import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
-import org.apache.marmotta.ucuenca.wk.pubman.api.SparqlFunctionsService;
-import org.apache.marmotta.ucuenca.wk.pubman.exceptions.PubException;
+import org.apache.marmotta.ucuenca.wk.commons.service.SparqlFunctionsService;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.UpdateExecutionException;
@@ -28,12 +27,12 @@ public class SparqlFunctionsServiceImpl implements SparqlFunctionsService {
     @Inject
     private CommonsServices commonsServices;
     @Inject
-    private SparqlService sparqlService;
+    private ExternalSPARQLService sparqlService;
     @Inject
     private QueriesService queriesService;
 
     @Override
-    public boolean updatePub(String querytoUpdate) throws PubException {
+    public boolean updatePub(String querytoUpdate) {
         try {
 
             /**
@@ -45,7 +44,7 @@ public class SparqlFunctionsServiceImpl implements SparqlFunctionsService {
              * this.connection.prepareUpdate(QueryLanguage.SPARQL,querytoUpdate);
              * update.execute(); this.connection.commit();
              */
-            sparqlService.update(QueryLanguage.SPARQL, querytoUpdate);
+            sparqlService.getSparqlService().update(QueryLanguage.SPARQL, querytoUpdate);
             return true;
         } catch (InvalidArgumentException | MarmottaException | UpdateExecutionException | MalformedQueryException ex) {
             log.error("Fail to Insert Triplet: " + querytoUpdate);
@@ -68,7 +67,7 @@ public class SparqlFunctionsServiceImpl implements SparqlFunctionsService {
         }
 
         try {
-            sparqlService.update(QueryLanguage.SPARQL, query);
+            sparqlService.getSparqlService().update(QueryLanguage.SPARQL, query);
             return true;
         } catch (InvalidArgumentException | MarmottaException | MalformedQueryException | UpdateExecutionException ex) {
             log.error("Cannot execute query \n" + query, ex);
