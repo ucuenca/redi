@@ -670,6 +670,10 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         } else {
             allAuthors = MainAuthorsProvider.getAuthors();
         }
+        String harvestedProvidersList = "";
+        for (int j = 1; j < AuthorsProviderslist.size(); j++) {
+            harvestedProvidersList += " <" + AuthorsProviderslist.get(j).Graph + "> ";
+        }
         for (int i = 0; i < allAuthors.size(); i++) {
             final int ix = i;
             final int allx = allAuthors.size();
@@ -678,16 +682,28 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             Candidates.add(new AbstractMap.SimpleEntry<Provider, List<Person>>(MainAuthorsProvider, Lists.newArrayList(aSeedAuthor)));
             List<Provider> providersHarvested = new ArrayList<>();
             //Check Harvested Data
-            String harvestedProvidersList = "";
+            List<Map<String, Value>> queryResponse = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, "select ?g (if (sum(?xc)>0,1,0) as ?p)  {\n"
+                    + "    values ?g { " + harvestedProvidersList + " } .\n"
+                    + "    graph ?g {\n"
+                    + "        optional {\n"
+                    + "   			?x <http://www.w3.org/2002/07/owl#oneOf> <" + aSeedAuthor.URI + "> .\n"
+                    + "   			bind (1 as ?xc) .\n"
+                    + "        }\n"
+                    + "    }\n"
+                    + "} group by ?g");
+            String harvestedProvidersListRes = "";
+
             for (int j = 1; j < AuthorsProviderslist.size(); j++) {
-                Provider aSecondaryProvider = AuthorsProviderslist.get(j);
-                boolean harvested = aSecondaryProvider.isHarvested(aSeedAuthor.URI);
-                if (harvested) {
-                    providersHarvested.add(aSecondaryProvider);
+                for (Map<String, Value> aresh : queryResponse) {
+                    if (AuthorsProviderslist.get(j).Graph.compareTo(aresh.get("g").stringValue()) == 0) {
+                        harvestedProvidersListRes += aresh.get("p").stringValue();
+                        if (aresh.get("p").stringValue().compareTo("1") == 0) {
+                            providersHarvested.add(AuthorsProviderslist.get(j));
+                        }
+                    }
                 }
-                harvestedProvidersList += (harvested ? "1" : "0");
             }
-            final String harvestedProvidersListURI = constantService.getDisambiguationStatusResource() + harvestedProvidersList;
+            final String harvestedProvidersListURI = constantService.getDisambiguationStatusResource() + harvestedProvidersListRes;
             boolean alreadyProcessed = sparqlService.getSparqlService().ask(QueryLanguage.SPARQL, "ask from <" + constantService.getAuthorsSameAsGraph() + "> { <" + aSeedAuthor.URI + "> <http://dbpedia.org/ontology/status> <" + harvestedProvidersListURI + "> }");
             if (alreadyProcessed) {
                 //No need to disambiguate again
@@ -705,19 +721,22 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                     }
                 }
                 task.updateDetailMessage("Threads", bexecutorService.workingThreads() + "");
+                final ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
                 bexecutorService.submitTask(new Runnable() {
                     @Override
                     public void run() {
                         try {
                             task.updateDetailMessage("Status", String.format("Start disambiguating %s  out of %s  authors", ix, allx));
                             log.info("Start disambiguating {} out of {} authors", ix, allx);
+                            log.info("{}-{}-Load data", ix, allx);
                             for (Map.Entry<Provider, List<Person>> aCandidateList : Candidates) {
                                 aCandidateList.getKey().FillData(aCandidateList.getValue());
                             }
                             List<Entry<Provider, List<Person>>> subList = Candidates.subList(1, Candidates.size());
                             Candidates.addAll(Lists.reverse(subList));
-                            ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
+                            log.info("{}-{}-Recursive exploring", ix, allx);
                             Model Disambiguate = Disambiguate(Candidates, 0, new Person());
+                            log.info("{}-{}-Store links", ix, allx);
                             boolean alreadyHasPublications = sparqlService.getSparqlService().ask(QueryLanguage.SPARQL, "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
                                     + "ask from <" + constantService.getAuthorsProviderGraph() + "> {\n"
                                     + "	<" + aSeedAuthor.URI + "> foaf:publications [] .\n"

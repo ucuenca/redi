@@ -97,7 +97,7 @@ public class Person {
         List<String> name1 = NameUtils.bestName(Name);
         List<String> name2 = NameUtils.bestName(p.Name);
         double sim = NameUtils.compareName(name1, name2);
-        if (priorFName) {
+        if (priorFName && sim >= thresholdName) {
             int lenOrigin = NameUtils.bestNameLen(Name);
             int lenOther = NameUtils.bestNameLen(p.Name);
             if (lenOther > lenOrigin) {
@@ -124,7 +124,7 @@ public class Person {
             for (List<String> n2 : name2) {
                 if (!uname1.contains(n1) && !uname2.contains(n2)) {
                     double sim = NameUtils.compareName(n1, n2);
-                    if (sim >= thresholdCAName) {
+                    if (co < thresholdCoauthors && sim >= thresholdCAName) {
                         co++;
                         uname1.add(n1);
                         uname2.add(n2);
@@ -148,7 +148,7 @@ public class Person {
             for (String n2 : name2) {
                 if (!uname1.contains(n1) && !uname2.contains(n2)) {
                     double sim = PublicationUtils.compareTitle(n1, n2);
-                    if (sim >= thresholdTitle) {
+                    if (co < thresholdPublications && sim >= thresholdTitle) {
                         co++;
                         uname1.add(n1);
                         uname2.add(n2);
@@ -172,7 +172,7 @@ public class Person {
             for (String n2 : name2) {
                 if (!uname1.contains(n1) && !uname2.contains(n2)) {
                     double sim = AffiliationUtils.compareTitle(n1, n2);
-                    if (sim >= thresholdAff) {
+                    if (co < thresholdAffiliation && sim >= thresholdAff) {
                         co++;
                         uname1.add(n1);
                         uname2.add(n2);
@@ -275,8 +275,8 @@ public class Person {
         RemoveDuplicateString(p.Publications);
         RemoveDuplicateString(p.Topics);
         RemoveDuplicateString(p.ORCIDs);
-        p.Coauthors = NameUtils.uniqueName(p.Coauthors);
-        p.Publications = PublicationUtils.uniqueTitle(p.Publications);
+        //p.Coauthors = NameUtils.uniqueName(p.Coauthors);
+        //p.Publications = PublicationUtils.uniqueTitle(p.Publications);
     }
 
     private void RemoveDuplicateString(List<String> in) {

@@ -268,7 +268,7 @@ public class PopulateMongoImpl implements PopulateMongo {
             String uri = "";
             String name = "";
             String fullname = "";
-            List<Map<String, Value>> org = sparqlService.query(QueryLanguage.SPARQL, queriesService.getListOrganizationQuery());
+            List<Map<String, Value>> org = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getListOrganizationQuery());
             Document parse = new Document ();
             task.updateTotalSteps((org.size()+1)*(queries.size()+1));
             int ints = 0; 
@@ -618,7 +618,7 @@ public class PopulateMongoImpl implements PopulateMongo {
     
     
     public String getStatsInstbyPubDate (String uri) throws MarmottaException {
-         List<Map<String, Value>> years = sparqlService.query(QueryLanguage.SPARQL, queriesService.getDatesPubbyInst(uri));
+         List<Map<String, Value>> years = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getDatesPubbyInst(uri));
            JSONObject main = new JSONObject();
          JSONArray array = new JSONArray();
          for (Map<String, Value> y :years){
@@ -634,7 +634,7 @@ public class PopulateMongoImpl implements PopulateMongo {
     
    
     public String getStatsInstbyArea (String uri) throws MarmottaException {
-       List<Map<String, Value>> area = sparqlService.query(QueryLanguage.SPARQL, queriesService.getClustersbyInst(uri));
+       List<Map<String, Value>> area = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getClustersbyInst(uri));
            JSONObject main = new JSONObject();
          JSONArray array = new JSONArray();
          for (Map<String, Value> a :area){
@@ -650,7 +650,7 @@ public class PopulateMongoImpl implements PopulateMongo {
     
   
     public String getTopAuthorbyInst (String uri) throws MarmottaException {
-         List<Map<String, Value>> author = sparqlService.query(QueryLanguage.SPARQL, queriesService.getAuthorsbyInst( uri));
+         List<Map<String, Value>> author = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getAuthorsbyInst( uri));
           JSONObject main = new JSONObject();
          JSONArray array = new JSONArray();
          for (Map<String, Value> a :author){
@@ -666,7 +666,7 @@ public class PopulateMongoImpl implements PopulateMongo {
      
   
      public String getTopInstbyInst (String uri) throws MarmottaException {
-         List<Map<String, Value>> inst = sparqlService.query(QueryLanguage.SPARQL, queriesService.getInstAsobyInst(uri));
+         List<Map<String, Value>> inst = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getInstAsobyInst(uri));
          JSONObject main = new JSONObject();
          JSONArray array = new JSONArray();
          for (Map<String, Value> ins :inst){
@@ -682,7 +682,7 @@ public class PopulateMongoImpl implements PopulateMongo {
        
          public String getTopProvbyInst (String uri) throws MarmottaException {
          
-         List<Map<String, Value>> prov = sparqlService.query(QueryLanguage.SPARQL, queriesService.getProvbyInst( uri));
+         List<Map<String, Value>> prov = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getProvbyInst( uri));
           JSONObject main = new JSONObject();
          JSONArray array = new JSONArray();
          for (Map<String, Value> p :prov){
