@@ -13,6 +13,13 @@ wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$windo
       id: author.uri
     }, function(data) {
       $scope.author = data;
+
+      for (var ki = 0; ki<data.orgs.length; ki++){
+          var las = data.orgs[ki].split('/');
+          data.orgs[ki] = {orgName:las[las.length-1], org:data.orgs[ki]};
+      }
+      
+      
       var img = data.img == null ? "/wkhome/images/no_photo.png" : data.img;
       $scope.author.img = img;
     });

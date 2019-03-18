@@ -1181,7 +1181,7 @@ public class CommonServiceImpl implements CommonService {
                     + "        } "
                     + "  } "
                     + "    GRAPH <" + con.getOrganizationsGraph() + "> { "
-                    + "    select (GROUP_CONCAT( DISTINCT ?orgname ;  SEPARATOR = \"|\")  as ?orgnames ) {  "
+                    + "    select (GROUP_CONCAT( DISTINCT ?member ;  SEPARATOR = \"|\")  as ?orgnames ) {  "
                     + "    ?member uc:name ?orgname . "
                     + "    GRAPH <" + con.getCentralGraph() + "> { "
                     + "    <" + uri + "> schema:memberOf ?member "
