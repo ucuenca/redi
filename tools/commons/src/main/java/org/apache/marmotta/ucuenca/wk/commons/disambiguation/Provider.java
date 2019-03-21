@@ -197,6 +197,7 @@ public class Provider {
                 + "				            ?per      foaf:publications  ?px .\n"
                 + "				             ?p      foaf:publications  ?px .\n"
                 + "				            filter (?p != ?per) .\n"
+                + "				            ?p <http://xmlns.com/foaf/0.1/name> ?fn .\n"
                 + "} ";
 
         String qryP = "prefix dct: <http://purl.org/dc/terms/>\n"

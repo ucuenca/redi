@@ -195,6 +195,7 @@ uc:ispartofProceedings1 a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ dblp:publishedAsPartOf ?t . ?t dblp:bibtexType <http://data.bibbase.org/ontology/#Proceedings> " ;
     r2r:targetPattern "?SUBJ dct:isPartOf ?t";
+    r2r:targetPattern "?t uc:index uc:DBLP" ;
     r2r:targetPattern "?t a bibo:Proceedings" .
 
 
@@ -202,6 +203,7 @@ uc:ispartofJournal a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ dblp:publishedAsPartOf ?t . ?t dblp:bibtexType <http://data.bibbase.org/ontology/#Article> " ;
     r2r:targetPattern "?SUBJ dct:isPartOf ?t";
+    r2r:targetPattern "?t uc:index uc:DBLP" ;
     r2r:targetPattern "?t a bibo:Journal" .
 
 
@@ -209,12 +211,14 @@ uc:ispartofBook a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ dblp:publishedAsPartOf ?t . ?t dblp:bibtexType <http://data.bibbase.org/ontology/#Phdthesis> " ;
     r2r:targetPattern "?SUBJ dct:isPartOf ?t";
+    r2r:targetPattern "?t uc:index uc:DBLP" ;
     r2r:targetPattern "?t a bibo:Thesis" .
 
 uc:ispartofCollection a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ dblp:publishedAsPartOf ?t . ?t dblp:bibtexType <http://data.bibbase.org/ontology/#Incollection> " ;
     r2r:targetPattern "?SUBJ dct:isPartOf ?t";
+    r2r:targetPattern "?t uc:index uc:DBLP" ;
     r2r:targetPattern "?t a bibo:Collection" .
 
 
@@ -225,6 +229,7 @@ uc:ispartofJournalO a r2r:Mapping ;
     r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/dblp/journal/',xpath:encode-for-uri(?t))" ;
     r2r:targetPattern "?SUBJ dct:isPartOf ?<urip>";
     r2r:targetPattern "?<urip> a bibo:Journal";
+    r2r:targetPattern "?<urip> uc:index uc:DBLP" ;
     r2r:targetPattern "?<urip> rdfs:label ?t".
 
 
@@ -234,6 +239,7 @@ uc:ispartofBookO a r2r:Mapping ;
     r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/dblp/book/',xpath:encode-for-uri(?t))" ;
     r2r:targetPattern "?SUBJ dct:isPartOf ?<urip>";
     r2r:targetPattern "?<urip> a bibo:Book";
+    r2r:targetPattern "?<urip> uc:index uc:DBLP" ;
     r2r:targetPattern "?<urip> rdfs:label ?t".
 
 uc:ispartofSeriesO a r2r:Mapping ;
@@ -242,6 +248,7 @@ uc:ispartofSeriesO a r2r:Mapping ;
     r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/dblp/series/',xpath:encode-for-uri(?t))" ;
     r2r:targetPattern "?SUBJ dct:isPartOf ?<urip>";
     r2r:targetPattern "?<urip> a bibo:Series";
+    r2r:targetPattern "?<urip> uc:index uc:DBLP" ;
     r2r:targetPattern "?<urip> rdfs:label ?t".
 
 
@@ -474,6 +481,7 @@ uc:ispartofProceedings1_https a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ dblps:publishedAsPartOf ?t . ?t dblps:bibtexType <http://data.bibbase.org/ontology/#Proceedings> " ;
     r2r:targetPattern "?SUBJ dct:isPartOf ?t";
+    r2r:targetPattern "?t uc:index uc:DBLP" ;
     r2r:targetPattern "?t a bibo:Proceedings" .
 
 
@@ -481,6 +489,7 @@ uc:ispartofJournal_https a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ dblps:publishedAsPartOf ?t . ?t dblps:bibtexType <http://data.bibbase.org/ontology/#Article> " ;
     r2r:targetPattern "?SUBJ dct:isPartOf ?t";
+    r2r:targetPattern "?t uc:index uc:DBLP" ;
     r2r:targetPattern "?t a bibo:Journal" .
 
 
@@ -488,12 +497,14 @@ uc:ispartofBook_https a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ dblps:publishedAsPartOf ?t . ?t dblps:bibtexType <http://data.bibbase.org/ontology/#Phdthesis> " ;
     r2r:targetPattern "?SUBJ dct:isPartOf ?t";
+    r2r:targetPattern "?t uc:index uc:DBLP" ;
     r2r:targetPattern "?t a bibo:Thesis" .
 
 uc:ispartofCollection_https a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ dblps:publishedAsPartOf ?t . ?t dblps:bibtexType <http://data.bibbase.org/ontology/#Incollection> " ;
     r2r:targetPattern "?SUBJ dct:isPartOf ?t";
+    r2r:targetPattern "?t uc:index uc:DBLP" ;
     r2r:targetPattern "?t a bibo:Collection" .
 
 
@@ -504,6 +515,7 @@ uc:ispartofJournalO_https a r2r:Mapping ;
     r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/dblp/journal/',xpath:encode-for-uri(?t))" ;
     r2r:targetPattern "?SUBJ dct:isPartOf ?<urip>";
     r2r:targetPattern "?<urip> a bibo:Journal";
+    r2r:targetPattern "?<urip> uc:index uc:DBLP" ;
     r2r:targetPattern "?<urip> rdfs:label ?t".
 
 
@@ -513,6 +525,7 @@ uc:ispartofBookO_https a r2r:Mapping ;
     r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/dblp/book/',xpath:encode-for-uri(?t))" ;
     r2r:targetPattern "?SUBJ dct:isPartOf ?<urip>";
     r2r:targetPattern "?<urip> a bibo:Book";
+    r2r:targetPattern "?<urip> uc:index uc:DBLP" ;
     r2r:targetPattern "?<urip> rdfs:label ?t".
 
 uc:ispartofSeriesO_https a r2r:Mapping ;
@@ -521,6 +534,7 @@ uc:ispartofSeriesO_https a r2r:Mapping ;
     r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/dblp/series/',xpath:encode-for-uri(?t))" ;
     r2r:targetPattern "?SUBJ dct:isPartOf ?<urip>";
     r2r:targetPattern "?<urip> a bibo:Series";
+    r2r:targetPattern "?<urip> uc:index uc:DBLP" ;
     r2r:targetPattern "?<urip> rdfs:label ?t".
 
 
