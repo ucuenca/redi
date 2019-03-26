@@ -771,21 +771,16 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         if (level >= Candidates.size()) {
             return r;
         }
+        Person enrich = superAuthor;
         List<Person> CandidateListLevel = Candidates.get(level).getValue();
-        boolean up = true;
         for (Person aCandidate : CandidateListLevel) {
             if (superAuthor.check(aCandidate, true)) {
-                up = false;
-                Person enrich = superAuthor.enrich(aCandidate, true);
                 registerSameAsModel(r, superAuthor.URI, aCandidate.URI);
-                Model Disambiguate = Disambiguate(Candidates, level + 1, enrich);
-                r.addAll(Disambiguate);
+                enrich = enrich.enrich(aCandidate, true);
             }
         }
-        if (up) {
-            Model Disambiguate = Disambiguate(Candidates, level + 1, superAuthor);
-            r.addAll(Disambiguate);
-        }
+        Model Disambiguate = Disambiguate(Candidates, level + 1, enrich);
+        r.addAll(Disambiguate);
         return r;
     }
 

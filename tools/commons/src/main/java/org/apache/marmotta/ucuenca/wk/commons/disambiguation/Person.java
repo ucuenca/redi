@@ -123,11 +123,13 @@ public class Person {
         for (List<String> n1 : name1) {
             for (List<String> n2 : name2) {
                 if (!uname1.contains(n1) && !uname2.contains(n2)) {
-                    double sim = NameUtils.compareName(n1, n2);
-                    if (co < thresholdCoauthors && sim >= thresholdCAName) {
-                        co++;
-                        uname1.add(n1);
-                        uname2.add(n2);
+                    if (co < thresholdCoauthors) {
+                        double sim = NameUtils.compareName(n1, n2);
+                        if (sim >= thresholdCAName) {
+                            co++;
+                            uname1.add(n1);
+                            uname2.add(n2);
+                        }
                     }
                 }
             }
@@ -147,11 +149,13 @@ public class Person {
         for (String n1 : name1) {
             for (String n2 : name2) {
                 if (!uname1.contains(n1) && !uname2.contains(n2)) {
-                    double sim = PublicationUtils.compareTitle(n1, n2);
-                    if (co < thresholdPublications && sim >= thresholdTitle) {
-                        co++;
-                        uname1.add(n1);
-                        uname2.add(n2);
+                    if (co < thresholdPublications) {
+                        double sim = PublicationUtils.compareTitle(n1, n2);
+                        if (sim >= thresholdTitle) {
+                            co++;
+                            uname1.add(n1);
+                            uname2.add(n2);
+                        }
                     }
                 }
             }
@@ -171,11 +175,13 @@ public class Person {
         for (String n1 : name1) {
             for (String n2 : name2) {
                 if (!uname1.contains(n1) && !uname2.contains(n2)) {
-                    double sim = AffiliationUtils.compareTitle(n1, n2);
-                    if (co < thresholdAffiliation && sim >= thresholdAff) {
-                        co++;
-                        uname1.add(n1);
-                        uname2.add(n2);
+                    if (co < thresholdAffiliation) {
+                        double sim = AffiliationUtils.compareTitle(n1, n2);
+                        if (sim >= thresholdAff) {
+                            co++;
+                            uname1.add(n1);
+                            uname2.add(n2);
+                        }
                     }
                 }
             }

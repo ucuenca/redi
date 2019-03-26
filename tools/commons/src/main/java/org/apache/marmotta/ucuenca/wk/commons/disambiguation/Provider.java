@@ -38,6 +38,7 @@ public class Provider {
                 + "{\n"
                 + "	graph <" + Graph + "> {\n"
                 + "  		?a a <http://xmlns.com/foaf/0.1/Person> . \n"
+                //+ " values ?a {<https://redi.cedia.edu.ec/resource/authors/ESPE/oai-pmh/FUERTES__WALTER>}"
                 + "	}\n"
                 + "}";
         List<Map<String, Value>> persons = sparql.query(QueryLanguage.SPARQL, qry);
