@@ -98,8 +98,8 @@ public class Person {
         List<String> name2 = NameUtils.bestName(p.Name);
         double sim = NameUtils.compareName(name1, name2);
         if (priorFName && sim >= thresholdName) {
-            int lenOrigin = NameUtils.bestNameLen(Name);
-            int lenOther = NameUtils.bestNameLen(p.Name);
+            double lenOrigin = NameUtils.bestNameLen(Name);
+            double lenOther = NameUtils.bestNameLen(p.Name);
             if (lenOther > lenOrigin) {
                 sim = 0;
             }
@@ -107,7 +107,7 @@ public class Person {
         return sim >= thresholdName;
     }
 
-    public int bestNameLen() {
+    public double bestNameLen() {
         return NameUtils.bestNameLen(Name);
     }
 

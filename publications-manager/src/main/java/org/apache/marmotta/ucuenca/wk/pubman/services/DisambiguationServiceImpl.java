@@ -185,12 +185,19 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             } else {
                 ProcessAuthors(Providers, null);
             }
+
+            for (int w0 = 0; w0 < 4; w0++) {
+                ProcessCoauthors(Providers, true);
+                sparqlService.getGraphDBInstance().dumpBuffer();
+                sparqlUtils.addAll(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "1");
+            }
+            ProcessCoauthors(Providers, false);
+            sparqlService.getGraphDBInstance().dumpBuffer();
+            ProcessPublications(Providers);
+            sparqlService.getGraphDBInstance().dumpBuffer();
             mergeAuthors();
-//            for (int w0 = 0; w0 < 4; w0++) {
-//                ProcessCoauthors(Providers, true);
-//                sparqlService.getGraphDBInstance().dumpBuffer();
-//                sparqlUtils.addAll(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "1");
-//            }
+            sparqlService.getGraphDBInstance().dumpBuffer();
+
 
 //            sparqlUtils.delete(constantService.getAuthorsSameAsGraph() + "1");
 //            task.updateDetailMessage("Status", String.format("%s Disambiguation", "Coauthors"));
@@ -288,10 +295,10 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         for (Set<String> ag : groupsAuthors) {
             List<String> ls = new ArrayList<>(ag);
             String u = null;
-            int score = -1;
+            double score = -1;
             for (int i = 0; i < ls.size(); i++) {
                 Person get1 = persons.get(ls.get(i));
-                int bestNameLen = get1.bestNameLen();
+                double bestNameLen = get1.bestNameLen();
                 if (bestNameLen > score) {
                     u = get1.URI;
                     score = bestNameLen;
@@ -786,7 +793,12 @@ public class DisambiguationServiceImpl implements DisambiguationService {
 
     public void ProcessCoauthors(final List<Provider> ProvidersList, final boolean onlySameAs) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, InterruptedException, RepositoryException {
         BoundedExecutor bexecutorService = BoundedExecutor.getThreadPool(MAXTHREADS);
-        String qryDisambiguatedCoauthors = " select distinct ?p { graph <" + constantService.getAuthorsSameAsGraph() + "> { ?p <http://www.w3.org/2002/07/owl#sameAs> ?o } }";
+        String qryDisambiguatedCoauthors = " select distinct ?p { "
+                + " graph <" + constantService.getAuthorsSameAsGraph() + "> { "
+                + "     ?p <http://www.w3.org/2002/07/owl#sameAs> ?o "
+                //+ "     values ?p { <https://redi.cedia.edu.ec/resource/authors/UCUENCA/ojs/LUPERCIO__LUCIA> <https://redi.cedia.edu.ec/resource/authors/UCUENCA/ojs/SAQUICELA__VICTOR> } . "
+                + " } "
+                + "}";
         final List<Map<String, Value>> queryResponse = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, qryDisambiguatedCoauthors);
         int i = 0;
         for (Map<String, Value> anAuthor : queryResponse) {
@@ -820,6 +832,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
     public Map<String, Person> getPersons(List<Map<String, Value>> list) {
         Map<String, Person> mp = new HashMap<>();
         for (Map<String, Value> a : list) {
+            boolean b = a.get("aup") != null && !a.get("aup").stringValue().trim().isEmpty() && a.get("aup").stringValue().trim().compareTo("1") == 0;
             Person auxPerson = getAuxPerson(a);
             if (mp.containsKey(auxPerson.URI)) {
                 Person get = mp.get(auxPerson.URI);
@@ -827,6 +840,9 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 mp.put(auxPerson.URI, enrich);
             } else {
                 mp.put(auxPerson.URI, auxPerson);
+            }
+            if (b) {
+                mp.get(auxPerson.URI).Origin = new Provider("mock", "mock", null);
             }
         }
         return mp;
@@ -870,10 +886,14 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         for (Provider aProvider : ProvidersList) {
             providersGraphs += " <" + aProvider.Graph + "> ";
         }
-        String qryAllAuthors = "select distinct ?a ?n ?fn ?ln {\n"
+        String qryAllAuthors = "select distinct ?a ?n ?fn ?ln ?aup {\n"
                 + "		graph <" + constantService.getAuthorsSameAsGraph() + "> {\n"
                 + "			values ?pu { <" + authorURI + "> } .\n"
                 + "			?pu <http://www.w3.org/2002/07/owl#sameAs> ?ax .\n"
+                + "			optional {\n"
+                + "                         ?a <http://www.w3.org/2002/07/owl#sameAs> [] .\n"
+                + "                         bind('1' as ?aup) .\n"
+                + "			}\n"
                 + "		}\n"
                 + "		values ?g { " + providersGraphs + " } graph ?g {\n"
                 + "			?ax <http://xmlns.com/foaf/0.1/publications> ?p .\n"
@@ -890,7 +910,16 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             for (int j = i + 1; j < queryResponse.size(); j++) {
                 Person auxPersoni = queryResponse.get(i);
                 Person auxPersonj = queryResponse.get(j);
-                Boolean checkName = auxPersoni.checkName(auxPersonj, false);
+                Boolean checkName = null;
+                if (auxPersoni.Origin == null && auxPersonj.Origin == null) {
+                    checkName = auxPersoni.checkName(auxPersonj, false);
+                } else if (auxPersoni.Origin != null && auxPersonj.Origin == null) {
+                    checkName = auxPersoni.checkName(auxPersonj, true);
+                } else if (auxPersoni.Origin == null && auxPersonj.Origin != null) {
+                    checkName = auxPersonj.checkName(auxPersoni, true);
+                } else if (auxPersoni.Origin != null && auxPersonj.Origin != null) {
+                    checkName = auxPersoni.checkName(auxPersonj, true) || auxPersonj.checkName(auxPersoni, true);
+                }
                 if (checkName != null && checkName) {
                     Set<String> aGroup = new HashSet<>();
                     aGroup.add(auxPersoni.URI);
