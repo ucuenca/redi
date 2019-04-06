@@ -93,7 +93,7 @@ public class PubWebService {
     @Path(GET_PUBLICATIONS)
     public Response readPublicationsPost(@QueryParam("update") Boolean update) {
         String[] organizations = {"http://redi.cedia.edu.ec/resource/organization/UCUENCA"};
-        String result = commonService.getDataFromScopusProvidersService(organizations);
+        String result = commonService.getDataFromScopusProvidersService(organizations,false);
         return Response.ok().entity(result).build();
     }
 
@@ -102,7 +102,8 @@ public class PubWebService {
     public Response readPublicationsPostScopus(@Context HttpServletRequest request) {
 
         String[] org = request.getParameterMap().get("data[]");
-        String result = commonService.getDataFromScopusProvidersService(org);
+        boolean force = request.getParameterMap().get("force")[0].compareTo("true")==0;
+        String result = commonService.getDataFromScopusProvidersService(org,force);
         //  String output = authorService.extractAuthorsGeneric(get);
 
         return Response.ok().entity(result).build();
@@ -175,7 +176,8 @@ public class PubWebService {
     public Response readPublicationsPostDBLP(@Context HttpServletRequest request) {
 
         String[] org = request.getParameterMap().get("data[]");
-        String result = commonService.getDataFromDBLPProvidersService(org);
+        boolean force = request.getParameterMap().get("force")[0].compareTo("true")==0;
+        String result = commonService.getDataFromDBLPProvidersService(org, force);
 
         return Response.ok().entity(result).build();
     }
@@ -185,7 +187,8 @@ public class PubWebService {
     public Response readPublicationsPostScielo(@Context HttpServletRequest request) {
 
         String[] org = request.getParameterMap().get("data[]");
-        String result = commonService.getDataFromScieloProvidersService(org);
+        boolean force = request.getParameterMap().get("force")[0].compareTo("true")==0;
+        String result = commonService.getDataFromScieloProvidersService(org, force);
 
         return Response.ok().entity(result).build();
     }
@@ -195,7 +198,8 @@ public class PubWebService {
     public Response readPublicationsPostDOAJ(@Context HttpServletRequest request) {
 
         String[] org = request.getParameterMap().get("data[]");
-        String result = commonService.getDataFromDOAJProvidersService(org);
+        boolean force = request.getParameterMap().get("force")[0].compareTo("true")==0;
+        String result = commonService.getDataFromDOAJProvidersService(org, force);
 
         return Response.ok().entity(result).build();
     }
@@ -205,7 +209,8 @@ public class PubWebService {
     public Response readPublicationsPostORCID(@Context HttpServletRequest request) {
 
         String[] org = request.getParameterMap().get("data[]");
-        String result = commonService.getDataFromORCIDProvidersService(org);
+        boolean force = request.getParameterMap().get("force")[0].compareTo("true")==0;
+        String result = commonService.getDataFromORCIDProvidersService(org, force);
 
         return Response.ok().entity(result).build();
     }
@@ -214,7 +219,8 @@ public class PubWebService {
     @Path("/publicationsGSchoolarByOrg")
     public Response readPublicationsPostGSchoolar(@Context HttpServletRequest request) {
         String[] org = request.getParameterMap().get("data[]");
-        String result = commonService.getDataFromGoogleScholarProvidersService(org);
+        boolean force = request.getParameterMap().get("force")[0].compareTo("true")==0;
+        String result = commonService.getDataFromGoogleScholarProvidersService(org, force);
 
         return Response.ok().entity(result).build();
     }
@@ -223,7 +229,8 @@ public class PubWebService {
     @Path("/publicationsSpringerByOrg")
     public Response readPublicationsPostSpringer(@Context HttpServletRequest request) {
         String[] org = request.getParameterMap().get("data[]");
-        String result = commonService.getDataFromSpringerProvidersService(org);
+        boolean force = request.getParameterMap().get("force")[0].compareTo("true")==0;
+        String result = commonService.getDataFromSpringerProvidersService(org, force);
 
         return Response.ok().entity(result).build();
     }
@@ -234,7 +241,8 @@ public class PubWebService {
     public Response readPublicationsPostAK(@Context HttpServletRequest request) {
 
         String[] org = request.getParameterMap().get("data[]");
-        String result = commonService.getDataFromAcademicsKnowledgeProvidersService(org);
+        boolean force = request.getParameterMap().get("force")[0].compareTo("true")==0;
+        String result = commonService.getDataFromAcademicsKnowledgeProvidersService(org, force);
         //  String output = authorService.extractAuthorsGeneric(get);
 
         return Response.ok().entity(result).build();
@@ -261,7 +269,7 @@ public class PubWebService {
         String[] organizations = {"http://redi.cedia.edu.ec/resource/organization/UCUENCA"};
         String params = resultType;
         log.debug("Publications Task", params);
-        String result = commonService.getDataFromDBLPProvidersService(organizations);
+        String result = commonService.getDataFromDBLPProvidersService(organizations, false);
         return Response.ok().entity(result).build();
     }
 
@@ -274,7 +282,7 @@ public class PubWebService {
         String[] organizations = {"http://redi.cedia.edu.ec/resource/organization/UCUENCA"};
         String params = resultType;
         log.debug("Publications Task", params);
-        String result = commonService.getDataFromAcademicsKnowledgeProvidersService(organizations);
+        String result = commonService.getDataFromAcademicsKnowledgeProvidersService(organizations, false);
         return Response.ok().entity(result).build();
     }
 

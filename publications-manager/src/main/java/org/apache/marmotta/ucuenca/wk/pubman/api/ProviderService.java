@@ -29,6 +29,6 @@ public interface ProviderService {
      *
      * @param organizations resources of organizations to extract.
      */
-    void extractAuthors(String[] organizations);
+    void extractAuthors(String[] organizations, boolean force);
 
 }

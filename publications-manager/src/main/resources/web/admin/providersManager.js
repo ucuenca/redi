@@ -198,7 +198,7 @@ function ExtractAk() {
     if (publications.length < 1) {
         alert("No publications selected");
     } else {
-        var listPublications = {"data": publications};
+        var listPublications = {"data": publications, "force":$('input#force').is(':checked')};
         $.ajax({
             type: "POST",
             data: listPublications,
@@ -241,7 +241,7 @@ function ExtractScopus() {
     if (publications.length < 1) {
         alert("No providers selected");
     } else {
-        var listPublications = {"data": publications};
+        var listPublications = {"data": publications, "force":$('input#force').is(':checked')};
         $.ajax({
             type: "POST",
             data: listPublications,
@@ -276,7 +276,7 @@ function ExtractScielo() {
     if (publications.length < 1) {
         alert("No providers selected");
     } else {
-        var listPublications = {"data": publications};
+        var listPublications = {"data": publications, "force":$('input#force').is(':checked')};
         $.ajax({
             type: "POST",
             data: listPublications,
@@ -307,7 +307,7 @@ function ExtractDOAJ() {
     if (publications.length < 1) {
         alert("No providers selected");
     } else {
-        var listPublications = {"data": publications};
+        var listPublications = {"data": publications, "force":$('input#force').is(':checked')};
         $.ajax({
             type: "POST",
             data: listPublications,
@@ -339,7 +339,7 @@ function ExtractORCID() {
     if (publications.length < 1) {
         alert("No providers selected");
     } else {
-        var listPublications = {"data": publications};
+        var listPublications = {"data": publications, "force":$('input#force').is(':checked')};
         $.ajax({
             type: "POST",
             data: listPublications,
@@ -371,7 +371,7 @@ function ExtractDBLP() {
     if (publications.length < 1) {
         alert("No providers selected");
     } else {
-        var listPublications = {"data": publications};
+        var listPublications = {"data": publications, "force":$('input#force').is(':checked')};
         $.ajax({
             type: "POST",
             data: listPublications,
@@ -403,7 +403,7 @@ function ExtractGoogleSchoolar() {
     if (publications.length < 1) {
         alert("No providers selected");
     } else {
-        var listPublications = {"data": publications};
+        var listPublications = {"data": publications, "force":$('input#force').is(':checked')};
         $.ajax({
             type: "POST",
             data: listPublications,
@@ -434,7 +434,7 @@ function ExtractSpringer() {
     if (publications.length < 1) {
         alert("No providers selected");
     } else {
-        var listPublications = {"data": publications};
+        var listPublications = {"data": publications, "force":$('input#force').is(':checked')};
         $.ajax({
             type: "POST",
             data: listPublications,

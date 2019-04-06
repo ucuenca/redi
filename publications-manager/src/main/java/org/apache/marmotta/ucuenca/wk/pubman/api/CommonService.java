@@ -16,21 +16,21 @@ import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Provider;
  */
 public interface CommonService {
 
-    String getDataFromDBLPProvidersService(final String[] organizations);
+    String getDataFromDBLPProvidersService(final String[] organizations, boolean force);
 
-    String getDataFromScopusProvidersService(final String[] organizations);
+    String getDataFromScopusProvidersService(final String[] organizations, boolean force);
 
-    String getDataFromAcademicsKnowledgeProvidersService(final String[] organizations);
+    String getDataFromAcademicsKnowledgeProvidersService(final String[] organizations, boolean force);
 
-    String getDataFromScieloProvidersService(final String[] organizations);
+    String getDataFromScieloProvidersService(final String[] organizations, boolean force);
     
-    String getDataFromDOAJProvidersService(final String[] organizations);
+    String getDataFromDOAJProvidersService(final String[] organizations, boolean force);
     
-    String getDataFromORCIDProvidersService(final String[] organizations);
+    String getDataFromORCIDProvidersService(final String[] organizations, boolean force);
 
-    String getDataFromGoogleScholarProvidersService(final String[] organizations);
+    String getDataFromGoogleScholarProvidersService(final String[] organizations, boolean force);
 
-    String getDataFromSpringerProvidersService(final String[] organizations);
+    String getDataFromSpringerProvidersService(final String[] organizations, boolean force);
 
 
     String createReport(String hostname, String realPath, String name, String type, List<String> params);

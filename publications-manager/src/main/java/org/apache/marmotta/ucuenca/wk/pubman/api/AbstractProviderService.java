@@ -137,7 +137,7 @@ public abstract class AbstractProviderService implements ProviderService {
      * @param organizations URLs of organizations to extract authors.
      */
     @Override
-    public void extractAuthors(String[] organizations) {
+    public void extractAuthors(String[] organizations, boolean force) {
         Map<String, String> msgOrg = new HashMap();
         String providerUri = createProvider(getProviderName(), false);
         Task task = taskManagerService.createSubTask(String.format("%s Extraction", getProviderName()), "Publication Extractor");
@@ -175,7 +175,7 @@ public abstract class AbstractProviderService implements ProviderService {
                         } else {
                             querySearchAuthor = queriesService.getAskObjectQuery(getProviderGraph(), authorResource, filterExpressionSearch());
                         }
-                        boolean isResquestDone = sparqlService.getSparqlService().ask(QueryLanguage.SPARQL, querySearchAuthor);
+                        boolean isResquestDone = !force && sparqlService.getSparqlService().ask(QueryLanguage.SPARQL, querySearchAuthor);
                         if (isResquestDone) {
                             // Register only the search query, given that the resource might be from other author.
                             sparqlFunctionsService.executeInsert(getProviderGraph(), reqResource.replace(" ", ""), OWL.ONE_OF, authorResource);
