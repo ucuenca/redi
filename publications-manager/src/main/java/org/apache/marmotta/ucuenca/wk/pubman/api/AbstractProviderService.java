@@ -183,7 +183,24 @@ public abstract class AbstractProviderService implements ProviderService {
                         }
 
                         try {
-                            ClientResponse response = ldClient.retrieveResource(reqResource);
+                            ClientResponse response = null;
+                            Exception exp = null;
+                            for (int w = 0; w < 3; w++) {
+                                try {
+                                    response = ldClient.retrieveResource(reqResource);
+                                    exp = null;
+                                    break;
+                                } catch (Exception e) {
+                                    exp = e;
+                                    try {
+                                        Thread.sleep(1000 * 5);
+                                    } catch (InterruptedException ex) {
+                                    }
+                                }
+                            }
+                            if (response == null && exp != null) {
+                                throw new DataRetrievalException(exp);
+                            }
 
                             switch (response.getHttpStatus()) {
                                 // Manage only HTTP 200 responses, otherwise error. Which error? Stop or continue with next resource.
