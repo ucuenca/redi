@@ -149,8 +149,8 @@ public class NameUtils {
         double selectionScore = -1;
         for (int i = 0; i < options.size(); i++) {
             List<String> get = options.get(i);
-            double v1 = get.size() > 1 ? 0.1 : 0.0;
-            int v2 = 0;
+            double v1 = get.size() > 1 ? 0.05 : 0.0;
+            double v2 = 0;
             String cn = "";
             for (String n : get) {
                 cn += n + " ";
@@ -170,8 +170,8 @@ public class NameUtils {
         double selectionScore = -1;
         for (int i = 0; i < options.size(); i++) {
             List<String> get = options.get(i);
-            double v1 = get.size() > 1 ? 0.1 : 0.0;
-            int v2 = 0;
+            double v1 = get.size() > 1 ? 0.05 : 0.0;
+            double v2 = 0;
             String cn = "";
             for (String n : get) {
                 cn += n + " ";
