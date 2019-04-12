@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -183,21 +184,20 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                     providersResult.add(mp);
                 }
             } else {
-                ProcessAuthors(Providers, null);
+                //ProcessAuthors(Providers, null);
             }
 
-            for (int w0 = 0; w0 < 4; w0++) {
-                ProcessCoauthors(Providers, true);
-                sparqlService.getGraphDBInstance().dumpBuffer();
-                sparqlUtils.addAll(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "1");
-            }
-            ProcessCoauthors(Providers, false);
-            sparqlService.getGraphDBInstance().dumpBuffer();
-            ProcessPublications(Providers);
-            sparqlService.getGraphDBInstance().dumpBuffer();
+//            for (int w0 = 0; w0 < 4; w0++) {
+//                ProcessCoauthors(Providers, true);
+//                sparqlService.getGraphDBInstance().dumpBuffer();
+//                sparqlUtils.addAll(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "1");
+//            }
+//            ProcessCoauthors(Providers, false);
+//            sparqlService.getGraphDBInstance().dumpBuffer();
+//            ProcessPublications(Providers);
+//            sparqlService.getGraphDBInstance().dumpBuffer();
             mergeAuthors();
             sparqlService.getGraphDBInstance().dumpBuffer();
-
 
 //            sparqlUtils.delete(constantService.getAuthorsSameAsGraph() + "1");
 //            task.updateDetailMessage("Status", String.format("%s Disambiguation", "Coauthors"));
@@ -256,75 +256,215 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         }
     }
 
+    public void compareSubSet(Person a, Person b, Map<String, Set<String>> g, Set<String> usedT) {
+        Boolean checkName = a.checkName(b, true);
+        if (checkName != null && checkName) {
+            if (!g.containsKey(a.URI)) {
+                g.put(a.URI, new HashSet<String>());
+            }
+            g.get(a.URI).add(b.URI);
+            g.get(a.URI).add(a.URI);
+            usedT.add(a.URI);
+            usedT.add(b.URI);
+        }
+    }
+
+    public void compareSubSet(Entry<String, Set<String>> a, Entry<String, Set<String>> b, Map<String, Set<String>> g) {
+        if (a.getValue().containsAll(b.getValue())) {
+            if (!g.containsKey(a.getKey())) {
+                g.put(a.getKey(), new HashSet<String>());
+            }
+            g.get(a.getKey()).add(b.getKey());
+        }
+    }
+
+    public Map<String, Set<String>> clearGroups(Map<String, Set<String>> g) {
+        Map<String, Set<String>> gn = new HashMap<>(g);
+        Set<Entry<String, Set<String>>> entrySet = g.entrySet();
+        List<Entry<String, Set<String>>> ls = new ArrayList<>(entrySet);
+        Map<String, Set<String>> sa = new HashMap<>();
+        for (int i = 0; i < ls.size(); i++) {
+            for (int j = i + 1; j < ls.size(); j++) {
+                Entry<String, Set<String>> get = ls.get(i);
+                Entry<String, Set<String>> get1 = ls.get(j);
+                compareSubSet(get, get1, sa);
+                compareSubSet(get1, get, sa);
+            }
+        }
+        for (Entry<String, Set<String>> s : sa.entrySet()) {
+            Set<String> get = gn.get(s.getKey());
+            for (String ss : s.getValue()) {
+                get.addAll(gn.get(ss));
+            }
+        }
+        for (Entry<String, Set<String>> s : sa.entrySet()) {
+            for (String ss : s.getValue()) {
+                gn.remove(ss);
+            }
+        }
+
+        return gn;
+    }
+
+    public static Set<String> intersection(Set<String> a, Set<String> b) {
+        // unnecessary; just an optimization to iterate over the smaller set
+        if (a.size() > b.size()) {
+            return intersection(b, a);
+        }
+
+        Set<String> results = new HashSet<>();
+
+        for (String element : a) {
+            if (b.contains(element)) {
+                results.add(element);
+            }
+        }
+
+        return results;
+    }
+
+    public Set<String> getAmb(Map<String, Set<String>> g) {
+        Set<String> am = new HashSet<>();
+        Set<Entry<String, Set<String>>> entrySet = g.entrySet();
+        List<Entry<String, Set<String>>> ls = new ArrayList<>(entrySet);
+        for (int i = 0; i < ls.size(); i++) {
+            for (int j = i + 1; j < ls.size(); j++) {
+                Entry<String, Set<String>> get = ls.get(i);
+                Entry<String, Set<String>> get1 = ls.get(j);
+                am.addAll(intersection(get.getValue(), get1.getValue()));
+            }
+        }
+        return am;
+    }
+
     public void mergeAuthors() throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, RepositoryException, RDFHandlerException {
         String qryDisambiguatedCoauthors = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
                 + "select distinct ?a  { \n"
                 + "  graph <" + constantService.getAuthorsSameAsGraph() + "> { \n"
-                + "    ?a <http://www.w3.org/2002/07/owl#sameAs> [] . \n"
+                + "    values ?a { <https://redi.cedia.edu.ec/resource/authors/UCUENCA/oai-pmh/_SAQUICELA_GALARZA____VICTOR_HUGO_> } . \n"
+                //+ "    ?a <http://www.w3.org/2002/07/owl#sameAs> [] . \n"
                 + "  }\n"
                 + "}";
 
         List<Map<String, Value>> queryResponsec = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, qryDisambiguatedCoauthors);
-
-        List<Map<String, Value>> r = new ArrayList<>();
         for (Map<String, Value> rq : queryResponsec) {
+            String group_ = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
+                    + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                    + "\n"
+                    + "select distinct ?rr {\n"
+                    + "    {\n"
+                    + "        select distinct ?rr {\n"
+                    + "    {\n"
+                    + "        select distinct ?rr {\n"
+                    + "    {\n"
+                    + "        select (?b as ?rr)  {\n"
+                    + "            graph <" + constantService.getAuthorsSameAsGraph() + "> {\n"
+                    + "				bind (<" + rq.get("a").stringValue() + "> as ?ssd) .\n"
+                    + "        		{\n"
+                    + "            		?ssd owl:sameAs* ?b .\n"
+                    + "        		} union {\n"
+                    + "            		?b owl:sameAs* ?ssd  .\n"
+                    + "        		} union {\n"
+                    + "            		?ssd owl:sameAs* ?b .\n"
+                    + "            		?x owl:sameAs* ?b .\n"
+                    + "        		} union {\n"
+                    + "            		?ssd owl:sameAs* ?b .\n"
+                    + "            		?b owl:sameAs* ?x .\n"
+                    + "        		} union {\n"
+                    + "            		?b owl:sameAs* ?ssd  .\n"
+                    + "            		?x owl:sameAs* ?b .\n"
+                    + "        		} union {\n"
+                    + "            		?b owl:sameAs* ?ssd  .\n"
+                    + "            		?b owl:sameAs* ?x .\n"
+                    + "        		}	\n"
+                    + "        	}\n"
+                    + "		}\n"
+                    + "    } union {\n"
+                    + "        select (?x as ?rr)  {\n"
+                    + "            graph <" + constantService.getAuthorsSameAsGraph() + "> {\n"
+                    + "                bind (<" + rq.get("a").stringValue() + "> as ?ssd) .\n"
+                    + "        		{\n"
+                    + "            		?ssd owl:sameAs* ?b .\n"
+                    + "        		} union {\n"
+                    + "            		?b owl:sameAs* ?ssd  .\n"
+                    + "        		} union {\n"
+                    + "            		?ssd owl:sameAs* ?b .\n"
+                    + "            		?x owl:sameAs* ?b .\n"
+                    + "        		} union {\n"
+                    + "            		?ssd owl:sameAs* ?b .\n"
+                    + "            		?b owl:sameAs* ?x .\n"
+                    + "        		} union {\n"
+                    + "            		?b owl:sameAs* ?ssd  .\n"
+                    + "            		?x owl:sameAs* ?b .\n"
+                    + "        		} union {\n"
+                    + "            		?b owl:sameAs* ?ssd  .\n"
+                    + "            		?b owl:sameAs* ?x .\n"
+                    + "        		}	\n"
+                    + "        	}\n"
+                    + "		}\n"
+                    + "    }\n"
+                    + "}\n"
+                    + "    } .\n"
+                    + "    filter (str(?rr)!='' ) .\n"
+                    + "}\n"
+                    + "    }  .\n"
+                    + "    graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
+                    + "        ?rr a foaf:Person .\n"
+                    + "    }\n"
+                    + "}\n"
+                    + "";
+            List<Map<String, Value>> query = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, group_);
+            Set<String> myGroup = new HashSet<>();
+            String groq = "";
+            for (Map<String, Value> rqq : query) {
+                myGroup.add(rqq.get("rr").stringValue());
+                groq += "<" + rqq.get("rr").stringValue() + "> ";
+            }
             String qryDisambiguatedCoauthors2 = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
                     + "select ?a ?n ?fn ?ln { \n"
                     + "  graph <" + constantService.getAuthorsProviderGraph() + "> { \n"
-                    + "  bind (<" + rq.get("a").stringValue() + "> as ?a) .\n"
-                    + "  	optional { ?a <http://xmlns.com/foaf/0.1/name> ?n}\n"
-                    + "    optional { ?a <http://xmlns.com/foaf/0.1/givenName> ?fn}\n"
-                    + "    optional { ?a <http://xmlns.com/foaf/0.1/familyName> ?ln}\n"
+                    + "  values ?a { " + groq + " } . \n"
+                    + "    optional { ?a <http://xmlns.com/foaf/0.1/name> ?n . }\n"
+                    + "    optional { ?a <http://xmlns.com/foaf/0.1/givenName> ?fn . }\n"
+                    + "    optional { ?a <http://xmlns.com/foaf/0.1/familyName> ?ln . }\n"
                     + "  }\n"
                     + "}";
             List<Map<String, Value>> rx = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, qryDisambiguatedCoauthors2);
-            r.addAll(rx);
-        }
-        Map<String, Person> persons = getPersons(r);
-        String qryGroups = "select ?a ?b { \n"
-                + "  graph <" + constantService.getAuthorsSameAsGraph() + "> { \n"
-                + "    ?a <http://www.w3.org/2002/07/owl#sameAs> ?c . \n"
-                + "    ?b <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
-                + "  }\n"
-                + "}";
-        List<Map<String, Value>> query = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, qryGroups);
-        Set<Set<String>> groupsAuthors = getGroupsAuthors(query);
+            Map<String, Person> persons = getPersons(rx);
+            Set<String> usedT = new HashSet<>();
+            Map<String, Set<String>> groups = new HashMap<>();
+            List<String> ls = new ArrayList<>(myGroup);
+            for (int i = 0; i < ls.size(); i++) {
+                for (int j = i + 1; j < ls.size(); j++) {
+                    Person get1 = persons.get(ls.get(i));
+                    Person get2 = persons.get(ls.get(j));
+                    compareSubSet(get1, get2, groups, usedT);
+                    compareSubSet(get2, get1, groups, usedT);
+                }
+            }
+            Set<String> alones = new HashSet<>(myGroup);
+            alones.removeAll(usedT);
+            for (String a : alones) {
+                groups.put(a, new HashSet<String>());
+                groups.get(a).add(a);
+            }
+            int size;
+            do {
+                size = groups.size();
+                groups = clearGroups(groups);
+            } while (groups.size() < size);
+            Set<String> amb = getAmb(groups);
+            for (Entry<String, Set<String>> next : groups.entrySet()) {
+                for (String next1 : next.getValue()) {
+                    registerSameAs(constantService.getAuthorsSameAsGraph() + "2G", next.getKey(), next1);
+                    if (amb.contains(next.getKey()) || amb.contains(next1)) {
+                        registerSameAs(constantService.getAuthorsSameAsGraph() + "FixG", next.getKey(), next1);
+                    }
+                }
+            }
 
-        Map<String, Set<String>> ngroups = new HashMap<>();
-        Set<String> sgroups = new HashSet<>();
-        for (Set<String> ag : groupsAuthors) {
-            List<String> ls = new ArrayList<>(ag);
-            String u = null;
-            double score = -1;
-            for (int i = 0; i < ls.size(); i++) {
-                Person get1 = persons.get(ls.get(i));
-                double bestNameLen = get1.bestNameLen();
-                if (bestNameLen > score) {
-                    u = get1.URI;
-                    score = bestNameLen;
-                }
-            }
-            Person getLong = persons.get(u);
-            for (int i = 0; i < ls.size(); i++) {
-                Person get1 = persons.get(ls.get(i));
-                if (!ngroups.containsKey(u)) {
-                    ngroups.put(u, new HashSet<String>());
-                }
-                ngroups.get(u).add(get1.URI);
-                Boolean checkName = getLong.checkName(get1, false);
-                if (checkName == null || !checkName) {
-                    sgroups.add(u);
-                }
-            }
         }
-        for (Entry<String, Set<String>> next : ngroups.entrySet()) {
-            for (String next1 : next.getValue()) {
-                registerSameAs(constantService.getAuthorsSameAsGraph() + "2", next.getKey(), next1);
-                if (sgroups.contains(next.getKey())) {
-                    registerSameAs(constantService.getAuthorsSameAsGraph() + "Fix", next.getKey(), next1);
-                }
-            }
-        }
+
     }
 
     public Set<Set<String>> getGroupsAuthors(List<Map<String, Value>> query) {

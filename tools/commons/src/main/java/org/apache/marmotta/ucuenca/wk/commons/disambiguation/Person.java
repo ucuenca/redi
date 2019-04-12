@@ -57,7 +57,17 @@ public class Person {
         if (checkName != null && checkName == true) {
             Boolean checkAffiliations = checkAffiliations(p);
             Boolean checkCoauthors = checkCoauthors(p);
+            if (this.Coauthors != null && this.Coauthors.size() < 5) {
+                if (checkCoauthors != null && !checkCoauthors) {
+                    checkCoauthors = null;
+                }
+            }
             Boolean checkPublications = checkPublications(p);
+            if (this.Publications != null && this.Publications.size() < 5) {
+                if (checkPublications != null && !checkPublications) {
+                    checkPublications = null;
+                }
+            }
             Boolean checkTopics = checkTopics(p);
             Boolean checkORCIDs = checkORCIDs(p);
             if (checkORCIDs == null
