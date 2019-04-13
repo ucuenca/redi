@@ -101,12 +101,16 @@ public class Person {
     }
 
     public Boolean checkName(Person p, boolean priorFName) {
+      return checkName(p, priorFName, false);
+    }
+    
+    public Boolean checkName(Person p, boolean priorFName, boolean ig) {
         if (Name.isEmpty() || p.Name.isEmpty()) {
             return null;
         }
         List<String> name1 = NameUtils.bestName(Name);
         List<String> name2 = NameUtils.bestName(p.Name);
-        double sim = NameUtils.compareName(name1, name2);
+        double sim = NameUtils.compareName(name1, name2, ig);
         if (priorFName && sim >= thresholdName) {
             double lenOrigin = NameUtils.bestNameLen(Name);
             double lenOther = NameUtils.bestNameLen(p.Name);
