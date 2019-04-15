@@ -284,8 +284,8 @@ public class SPARQLUtils {
 
   public void clearSameAs(String SA, String SAF) throws RepositoryException, MalformedQueryException, UpdateExecutionException {
     String q = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
-        + "delete {\n"
-        + "    graph <" + SA + "> {\n"
+        + "insert {\n"
+        + "    graph <&D&> {\n"
         + "        ?a owl:sameAs ?c .\n"
         + "    }\n"
         + "} where {\n"
@@ -297,7 +297,10 @@ public class SPARQLUtils {
         + "        ?a owl:sameAs ?b .\n"
         + "    }\n"
         + "}";
-    runUpdate(q);
+    transformGraph(SA, SA + "_new", q);
+    deleteGraph(SA);
+    copyGraph(SA + "_new", SA);
+    deleteGraph(SA + "_new");
   }
 
 }
