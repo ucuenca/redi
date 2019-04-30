@@ -186,14 +186,26 @@ function  CompareDate(a, b) {
 
 }
 
-function ExtractAk() {
-    var publications = [];
-    $('tbody tr input:checked').each(function (index) {
-        console.log($(this).val())
-        publications.push($(this).val());
-    })
+function getPublicationsOffset(inx){
+        var publications = [];
+        $('tbody tr input:checked').each(function (index) {
+            var vl= "|0";
+            if ($('input#continue').is(':checked'))
+            {
+                try {
+                    var txv = $(this).parent().parent().children()[inx].firstChild.data;
+                    var txt = txv.split(": ")[1].split("/")[0];
+                    vl = "|"+txt;
+                } catch (rr) {
+                }
+            }
+            publications.push($(this).val()+vl);
+        });
+        return publications;
+}
 
-    console.log(publications);
+function ExtractAk() {
+    var publications = getPublicationsOffset(5);
 
     if (publications.length < 1) {
         alert("No publications selected");
@@ -230,13 +242,7 @@ function ExtractAk() {
 
 
 function ExtractScopus() {
-    var publications = [];
-    $('tbody tr input:checked').each(function (index) {
-        console.log($(this).val())
-        publications.push($(this).val());
-    })
-
-    console.log(publications);
+    var publications = getPublicationsOffset(4);
 
     if (publications.length < 1) {
         alert("No providers selected");
@@ -265,13 +271,7 @@ function ExtractScopus() {
 
 
 function ExtractScielo() {
-    var publications = [];
-    $('tbody tr input:checked').each(function (index) {
-        console.log($(this).val())
-        publications.push($(this).val());
-    })
-
-    console.log(publications);
+    var publications = getPublicationsOffset(9);
 
     if (publications.length < 1) {
         alert("No providers selected");
@@ -296,13 +296,7 @@ function ExtractScielo() {
 }
 
 function ExtractDOAJ() {
-    var publications = [];
-    $('tbody tr input:checked').each(function (index) {
-        console.log($(this).val())
-        publications.push($(this).val());
-    })
-
-    console.log(publications);
+    var publications = getPublicationsOffset(10);
 
     if (publications.length < 1) {
         alert("No providers selected");
@@ -328,13 +322,7 @@ function ExtractDOAJ() {
 
 
 function ExtractORCID() {
-    var publications = [];
-    $('tbody tr input:checked').each(function (index) {
-        console.log($(this).val())
-        publications.push($(this).val());
-    })
-
-    console.log(publications);
+    var publications = getPublicationsOffset(11);
 
     if (publications.length < 1) {
         alert("No providers selected");
@@ -360,13 +348,7 @@ function ExtractORCID() {
 
 
 function ExtractDBLP() {
-    var publications = [];
-    $('tbody tr input:checked').each(function (index) {
-        console.log($(this).val())
-        publications.push($(this).val());
-    })
-
-    console.log(publications);
+    var publications = getPublicationsOffset(6);
 
     if (publications.length < 1) {
         alert("No providers selected");
@@ -392,13 +374,7 @@ function ExtractDBLP() {
 
 
 function ExtractGoogleSchoolar() {
-    var publications = [];
-    $('tbody tr input:checked').each(function (index) {
-        console.log($(this).val())
-        publications.push($(this).val());
-    })
-
-    console.log(publications);
+    var publications = getPublicationsOffset(7);
 
     if (publications.length < 1) {
         alert("No providers selected");
@@ -423,13 +399,7 @@ function ExtractGoogleSchoolar() {
 }
 
 function ExtractSpringer() {
-    var publications = [];
-    $('tbody tr input:checked').each(function (index) {
-        console.log($(this).val())
-        publications.push($(this).val());
-    })
-
-    console.log(publications);
+    var publications = getPublicationsOffset(8);
 
     if (publications.length < 1) {
         alert("No providers selected");

@@ -57,13 +57,13 @@ public class Person {
         if (checkName != null && checkName == true) {
             Boolean checkAffiliations = checkAffiliations(p);
             Boolean checkCoauthors = checkCoauthors(p);
-            if (this.Coauthors != null && this.Coauthors.size() < 5) {
+            if (this.Coauthors != null && this.Coauthors.size() < 15) {
                 if (checkCoauthors != null && !checkCoauthors) {
                     checkCoauthors = null;
                 }
             }
             Boolean checkPublications = checkPublications(p);
-            if (this.Publications != null && this.Publications.size() < 5) {
+            if (this.Publications != null && this.Publications.size() < 10) {
                 if (checkPublications != null && !checkPublications) {
                     checkPublications = null;
                 }
@@ -93,6 +93,7 @@ public class Person {
             }
             if (checkORCIDs != null && checkORCIDs == true) {
                 count++;
+                count++;
             }
             return count >= 2;
 
@@ -101,16 +102,12 @@ public class Person {
     }
 
     public Boolean checkName(Person p, boolean priorFName) {
-      return checkName(p, priorFName, false);
-    }
-    
-    public Boolean checkName(Person p, boolean priorFName, boolean ig) {
         if (Name.isEmpty() || p.Name.isEmpty()) {
             return null;
         }
         List<String> name1 = NameUtils.bestName(Name);
         List<String> name2 = NameUtils.bestName(p.Name);
-        double sim = NameUtils.compareName(name1, name2, ig);
+        double sim = NameUtils.compareName(name1, name2, priorFName);
         if (priorFName && sim >= thresholdName) {
             double lenOrigin = NameUtils.bestNameLen(Name);
             double lenOther = NameUtils.bestNameLen(p.Name);

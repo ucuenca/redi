@@ -29,7 +29,7 @@ public class NameUtils {
     return compareName(name1, name2, false);
   }
 
-  public static double compareName(List<String> name1, List<String> name2, boolean ig) {
+  public static double compareName(List<String> name1, List<String> name2, boolean priorFirst) {
     double sim = -1;
     int tipo = 0;
     String nf1 = "";
@@ -63,7 +63,7 @@ public class NameUtils {
     }
     ModifiedJaccardMod metric = new ModifiedJaccardMod();
     metric.soundexBoost = true;
-    metric.applyMinTokensAbv = !ig;
+    metric.priorFirst = priorFirst;
     boolean hasCompleteMatchs = false;
     switch (tipo) {
       case 1:

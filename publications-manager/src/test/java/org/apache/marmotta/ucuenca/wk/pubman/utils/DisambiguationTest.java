@@ -25,16 +25,18 @@ public class DisambiguationTest {
         Person a = new Person();
         a.Name = new ArrayList<>();
         ArrayList<String> st = new ArrayList<>();
-        st.add("Juan Carlos");
-        st.add("De Los Reyes Bueno");
+        st.add("DARWIN");
+        st.add("ASTUDILLO S");
         a.Name.add(st);
         Person b = new Person();
         b.Name = new ArrayList<>();
         ArrayList<String> st2 = new ArrayList<>();
-        st2.add("Juan Carlos De Los");
-        st2.add("De Los Reyes");
+        st2.add("Silvana Astudillo");
+        //st2.add("De Los Reyes");
         b.Name.add(st2);
-        System.out.println(a.checkName(b, false));
+        System.out.println(a.checkName(b, true));
+        
+        
     }
 
     @Test

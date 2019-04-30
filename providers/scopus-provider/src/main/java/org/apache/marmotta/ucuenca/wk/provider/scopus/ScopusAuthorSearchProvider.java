@@ -18,9 +18,10 @@ package org.apache.marmotta.ucuenca.wk.provider.scopus;
 
 //import org.apache.marmotta.ucuenca.wk.provider.dblp.*;
 import com.google.common.base.Preconditions;
-import java.io.FileWriter;
+import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -33,7 +34,7 @@ import org.apache.marmotta.ldclient.model.ClientConfiguration;
 import org.apache.marmotta.ldclient.model.ClientResponse;
 import org.apache.marmotta.ldclient.services.ldclient.LDClient;
 import org.apache.marmotta.ldclient.services.provider.AbstractHttpProvider;
-import org.apache.marmotta.ucuenca.wk.commons.impl.DistanceServiceImpl;
+import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Person;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -50,16 +51,14 @@ import org.openrdf.model.vocabulary.FOAF;
 /**
  * Support Scopus Author information as XML
  * <p/>
- * Author: Freddy Sumba
- * Author: Jose Luis Cullcay
+ * Author: Freddy Sumba Author: Jose Luis Cullcay
  */
 @ApplicationScoped
 @Deprecated
 public class ScopusAuthorSearchProvider extends AbstractHttpProvider {
-    
+
     //@Inject
     //private DistanceService distanceService;
-    
     public static final String NAME = "Scopus Provider";
     public static final String API = "http://api.elsevier.com/content/search/author?query=%s&format=xml";
     public static final String PATTERN = "http://api\\.elsevier\\.com/content/search/author\\?query\\=authfirst%28(.*)%29authlast%28(.*)%29(.*)\\&apiKey\\=(.*)\\&httpAccept\\=application/xml(.*)";
@@ -70,11 +69,10 @@ public class ScopusAuthorSearchProvider extends AbstractHttpProvider {
     public static Namespace namespacePRISM;
     public static Namespace namespaceATOM;
 
-    private static final String FILENAME = "ComparisonNamesAuthors.csv";
-    
+    //private static final String FILENAME = "ComparisonNamesAuthors.csv";
+
     /*@Inject
     private Logger log;*/
-    
     /**
      * Return the name of this data provider. To be used e.g. in the
      * configuration and in log messages.
@@ -133,8 +131,7 @@ public class ScopusAuthorSearchProvider extends AbstractHttpProvider {
     public List<String> parseResponse(String resource, String requestUrl, Model triples, InputStream input, String contentType) throws DataRetrievalException {
         //log.debug("Request Successful to {0}", requestUrl);
         try {
-            DistanceServiceImpl distanceService = new DistanceServiceImpl();  
-            FileWriter fw = new FileWriter(FILENAME, true);
+            //FileWriter fw = new FileWriter(FILENAME, true);
             ValueFactory factory = ValueFactoryImpl.getInstance();
             final Document doc = new SAXBuilder(XMLReaders.NONVALIDATING).build(input);
             Element aux = doc.getRootElement();
@@ -151,21 +148,19 @@ public class ScopusAuthorSearchProvider extends AbstractHttpProvider {
                     }*/
                     //String orcid = element.getChildText("orcid", NAMESPACE_ATOM);
                     //log.error("Orcid: " + orcid == null? orcid : "");
-                    
+
                     //Compare names
-                    boolean equalNames = false;
-                    
+
                     String fullName = requestUrl.split("&fullName=")[1];
                     String fullNameOrig = fullName.split("&authorURI=")[0].replace("%20", " ");
                     String givenNameOrig = fullNameOrig.split("  ")[0];
                     String surnameOrig = fullNameOrig.split("  ")[1];
-                    
+
                     //String authorURI = fullName.split("&authorURI=")[1].replace("\"", "");
-                    
                     Element preferredName = element.getChild("preferred-name", namespaceATOM);
                     String surname = preferredName.getChildText("surname", namespaceATOM).replace("-", " ");
                     String givenName = preferredName.getChildText("given-name", namespaceATOM);
-                    
+
                     List<Element> nameVariants = element.getChildren("name-variant", namespaceATOM);
                     for (Element nameVariant : nameVariants) {
                         try {
@@ -174,13 +169,18 @@ public class ScopusAuthorSearchProvider extends AbstractHttpProvider {
                         } catch (Exception e) {
                         }
                     }
-                    
-                    double distance = distanceService.jaccardDistance(givenNameOrig + " " + surnameOrig, givenName + " " + surname); //distanceService != null ? distanceService.jaccardDistance(givenNameOrig + " " + surnameOrig, givenName + " " + surname) : 0.85;
-                    
-                    equalNames = distanceService.getEqualNamesWithoutInjects(givenNameOrig, surnameOrig, givenName, surname); //distanceService.getEqualNames(givenNameOrig, surnameOrig, givenName, surname);//distanceService != null ? distanceService.getEqualNames(givenNameOrig, surnameOrig, givenName, surname) : true;
-                                     
-                    fw.write(givenNameOrig + " "  + surnameOrig + "," + givenName + " " + surname + "," + equalNames + "," + distance + "\n"); 
-                    if (equalNames || distance >= 0.85) {
+                    Person p1 = new Person();
+                    p1.Name = new ArrayList<>();
+                    p1.Name.add(Lists.newArrayList(givenNameOrig + " " + surnameOrig));
+
+                    Person p2 = new Person();
+                    p2.Name = new ArrayList<>();
+                    p2.Name.add(Lists.newArrayList(givenName + " " + surname));
+
+                    //double distance = distanceService.jaccardDistance(givenNameOrig + " " + surnameOrig, givenName + " " + surname); //distanceService != null ? distanceService.jaccardDistance(givenNameOrig + " " + surnameOrig, givenName + " " + surname) : 0.85;
+                    //equalNames = distanceService.getEqualNamesWithoutInjects(givenNameOrig, surnameOrig, givenName, surname); //distanceService.getEqualNames(givenNameOrig, surnameOrig, givenName, surname);//distanceService != null ? distanceService.getEqualNames(givenNameOrig, surnameOrig, givenName, surname) : true;
+                    //fw.write(givenNameOrig + " " + surnameOrig + "," + givenName + " " + surname + "," + equalNames + "," + distance + "\n");
+                    if (p1.checkName(p2, false)) {
                         //log.error(givenNameOrig + " "  + surnameOrig + "," + givenName + " " + surname + "," + equalNames + "," + distance);
                         Model candidateModel = null;
                         String authorUrlResourceCleaned = URLRESOURCE.replace("AuthorIdParam", authorIDParam).replace("apiKeyParam", apiKeyParam)
@@ -201,7 +201,7 @@ public class ScopusAuthorSearchProvider extends AbstractHttpProvider {
                 }
 
             }
-            fw.close();
+            //fw.close();
         } catch (IOException e) {
             throw new DataRetrievalException("I/O error while parsing HTML response", e);
         } catch (JDOMException e) {

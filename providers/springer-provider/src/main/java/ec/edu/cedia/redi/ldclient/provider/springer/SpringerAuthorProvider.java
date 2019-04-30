@@ -16,6 +16,7 @@
  */
 package ec.edu.cedia.redi.ldclient.provider.springer;
 
+import com.google.common.collect.Lists;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
 import ec.edu.cedia.redi.ldclient.provider.json.AbstractJSONDataProvider;
@@ -28,6 +29,7 @@ import ec.edu.cedia.redi.ldclient.provider.springer.utils.SpringerUtility;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +41,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.marmotta.ldclient.api.endpoint.Endpoint;
 import org.apache.marmotta.ldclient.api.provider.DataProvider;
 import org.apache.marmotta.ldclient.exception.DataRetrievalException;
-import org.apache.marmotta.ucuenca.wk.commons.disambiguation.utils.NameUtils;
+import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Person;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.BIBO;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
 import org.openrdf.model.Model;
@@ -64,8 +66,7 @@ public class SpringerAuthorProvider extends AbstractJSONDataProvider implements 
     public static final String NAME = "Springer Author Provider";
     public static final String PATTERN = "http://api\\.springer\\.com/meta/v1/json\\?q=(.*)&api_key=.*&p=50&s=(.*)";
     public static final String SPRINGER_URL = "https://link.springer.com/";
-    
-    private static final double THRESHOLD_NAME = 0.9;
+
     private final ConcurrentMap<String, JsonPathValueMapper> mapper = new ConcurrentHashMap<>();
 
     /**
@@ -97,6 +98,9 @@ public class SpringerAuthorProvider extends AbstractJSONDataProvider implements 
             byte[] data = IOUtils.toByteArray(input); // keep data for some reads
             ValueFactory vf = ValueFactoryImpl.getInstance();
             String authorname = SpringerUtility.buildNameFromRequest(resource);
+            Person p1 = new Person();
+            p1.Name = new ArrayList<>();
+            p1.Name.add(Lists.newArrayList(authorname));
             ReadContext ctx = JsonPath.parse(new ByteArrayInputStream(data));
             Map resultsStatistics = ctx.read("$.result[0]");
 
@@ -109,7 +113,10 @@ public class SpringerAuthorProvider extends AbstractJSONDataProvider implements 
                 List<String> creators = ctx.read(String.format("$.records[%s].creators[*].creator", i));
                 boolean isValidCreator = false;
                 for (String creator : creators) {
-                    if (NameUtils.compareName(creator, authorname) >= THRESHOLD_NAME) {
+                    Person p2 = new Person();
+                    p2.Name = new ArrayList<>();
+                    p2.Name.add(Lists.newArrayList(creator));
+                    if (p1.checkName(p2, false)) {
                         isValidCreator = true;
                     }
                 }

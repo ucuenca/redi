@@ -134,7 +134,9 @@ public abstract class AbstractProviderService implements ProviderService {
     /**
      * Extract authors from a particular provider.
      *
-     * @param organizations URLs of organizations to extract authors.
+     * @param organizations URLs of organizations to extract authors and their
+     * offsets.
+     * @param force ignore OneOf Validation
      */
     @Override
     public void extractAuthors(String[] organizations, boolean force) {
@@ -145,7 +147,11 @@ public abstract class AbstractProviderService implements ProviderService {
         task.updateDetailMessage("Graph", getProviderGraph());
         LDClient ldClient = buildDefaultLDClient();
         try {
-            for (String organization : organizations) {
+            for (String organizationx : organizations) {
+                String[] split = organizationx.split("\\|");
+                String organization = split[0];
+                int offset = Integer.parseInt(split[1]);
+
                 List<Map<String, Value>> resultAllAuthors = sparqlService.getSparqlService().query(
                         QueryLanguage.SPARQL, queriesService.getAuthorsDataQuery(organization));
                 List<String> organizationNames = getOrganizationNames(sparqlService.getSparqlService().query(
@@ -160,6 +166,12 @@ public abstract class AbstractProviderService implements ProviderService {
 
                 for (Map<String, Value> map : resultAllAuthors) {
 
+                    if (offset != 0) {
+                        if (processedAuthors + 1 < offset) {
+                            processedAuthors++;
+                            continue;
+                        }
+                    }
                     // Information of local author.
                     String authorResource = map.get("subject").stringValue();
                     String firstName = map.get("fname").stringValue().trim().toLowerCase().replaceAll("\\p{C}", "");
