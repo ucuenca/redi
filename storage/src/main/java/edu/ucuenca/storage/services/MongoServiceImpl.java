@@ -71,6 +71,7 @@ public class MongoServiceImpl implements MongoService {
     private MongoCollection<Document> authors;
     private MongoCollection<Document> statistics;
     private MongoCollection<Document> statisticsByInst;
+    private MongoCollection<Document>statisticsByAuthor;
     private MongoCollection<Document> relatedauthors;
     private MongoCollection<Document> clusters;
     private MongoCollection<Document> clustersTotals;
@@ -101,6 +102,7 @@ public class MongoServiceImpl implements MongoService {
         authorsByDisc = db.getCollection(Collection.AUTHORS_DISCPLINE.getValue());
         countries = db.getCollection(Collection.COUNTRIES.getValue());
         sparqls = db.getCollection(Collection.SPARQLS.getValue());
+        statisticsByAuthor = db.getCollection(Collection.STATISTICS_AUTHOR.getValue());
     }
 
     @Override
@@ -118,12 +120,13 @@ public class MongoServiceImpl implements MongoService {
     
     @Override
     public String getStatisticsByInst(String id) {
-        
-       /* MongoCursor<Document> it = cls.iterator();
-        while (it.hasNext()) {
-            c.add(it.next());
-        }*/
         return statisticsByInst.find(eq("_id", id)).first().toJson();
+       
+    }
+    
+    @Override
+    public String getStatisticsByAuthor(String id) {
+        return statisticsByAuthor.find(eq("_id", id)).first().toJson();
        
     }
 

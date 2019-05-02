@@ -2139,7 +2139,7 @@ public class QueriesServiceImpl implements QueriesService {
                 + "  graph <" + con.getCentralGraph() + "> {\n"
                 + "  ?author schema:memberOf  <" + uri + "> .\n"
                 + "  ?author foaf:publications ?publication.  \n"
-                + "  ?publication bibo:created ?y2 .\n"
+                + "  ?publication bibo:created ?yx . BIND (str(?yx) as ?y2) .\n"
                 + "   bind( strbefore( ?y2, '-' ) as ?y3 ).  \n"
                 + "   bind( strafter( ?y2, ' ' ) as ?y4 ). \n"
                 + "   bind( if (str(?y3)='' && str(?y4)='',?y2, if(str(?y3)='',strafter( ?y2, ' ' ),strbefore( ?y2, '-' ))) as ?y ) \n"
@@ -2187,14 +2187,92 @@ public class QueriesServiceImpl implements QueriesService {
     public String getProvbyInst(String uri) {
         return PREFIXES + "SELECT      ?prov (COUNT (distinct ?pub) as ?total)\n"
                 + "WHERE {\n"
-                + "  graph <"+con.getCentralGraph()+"> {\n"
-                + "  ?author schema:memberOf  <"+uri+"> .\n"
+                + "  graph <" + con.getCentralGraph() + "> {\n"
+                + "  ?author schema:memberOf  <" + uri + "> .\n"
                 + "  ?author foaf:publications ?pub .\n"
                 + "  ?pub  dct:provenance ?prov\n"
                 + "} \n"
-                + "} GROUP BY ?prov order by DESC (?total)\n"
-                + "";
+                + "} GROUP BY ?prov order by DESC (?total)\n";
 
     }
-       
+
+    @Override
+    public String getAuthorPubbyDate(String uri) {
+        return PREFIXES + " SELECT  ?y  (COUNT( ?publication ) as ?total)   \n"
+                + "                WHERE {\n"
+                + "                  graph <" + con.getCentralGraph() + "> {\n"
+                + "      \n"
+                + "              <" + uri + ">  foaf:publications ?publication.  \n"
+                + "                  ?publication bibo:created ?yx . BIND (str(?yx) as ?y2) .\n"
+                + "                   bind( strbefore( ?y2, '-' ) as ?y3 ).  \n"
+                + "                   bind( strafter( ?y2, ' ' ) as ?y4 ). \n"
+                + "                   bind( if (str(?y3)='' && str(?y4)='',?y2, if(str(?y3)='',strafter( ?y2, ' ' ),strbefore( ?y2, '-' ))) as ?y ) \n"
+                + "                     \n"
+                + "                  }\n"
+                + "                }  GROUP BY ?y Order by ASC(?y)";
+
+    }
+
+    @Override
+    public String getConferencebyAuthor(String uri) {
+        return PREFIXES + "SELECT ?b  (GROUP_CONCAT(DISTINCT STR(?y); separator=';') as ?name)  (COUNT( distinct ?publication ) as ?total)   \n"
+                + "                WHERE {\n"
+                + "                  graph <" + con.getCentralGraph() + "> {\n"
+                + "                  <" + uri + ">  foaf:publications ?publication.  \n"
+                + "                  ?publication  dct:isPartOf  ?b.\n"
+                + "                   ?b rdfs:label ?y .\n"
+                + "                   ?b a  <http://purl.org/ontology/bibo/Conference> \n"
+                + "                  }\n"
+                + "                }  GROUP BY ?b Order by Desc(?total)";
+    }
+
+    @Override
+    public String getJournalbyAuthor(String uri) {
+        return PREFIXES + "SELECT ?b  (GROUP_CONCAT(DISTINCT STR(?y); separator=';') as ?name)  (COUNT( distinct ?publication ) as ?total)   \n"
+                + "                WHERE {\n"
+                + "                  graph <" + con.getCentralGraph() + "> {\n"
+                + "                  <" + uri + ">  foaf:publications ?publication.  \n"
+                + "                  ?publication  dct:isPartOf  ?b.\n"
+                + "                   ?b rdfs:label ?y .\n"
+                + "                   ?b a  <http://purl.org/ontology/bibo/Journal> \n"
+                + "                     \n"
+                + "                  }\n"
+                + "                }  GROUP BY ?b Order by Desc(?total)";
+    }
+
+    @Override
+    public String getOrgbyAuyhor(String uri) {
+        return PREFIXES + "SELECT  distinct ?org ?orgname \n"
+                + "#?b  (GROUP_CONCAT(DISTINCT STR(?y); separator=';') as ?name)  (COUNT( ?publication ) as ?total)   \n"
+                + "                WHERE {\n"
+                + "                  graph <" + con.getCentralGraph() + "> { "
+                + "              <" + uri + "> <http://schema.org/memberOf> ?org .\n"
+                + "                    ?org foaf:name ?orgname .                     \n"
+                + "                  }"
+                + "                } ";
+
+    }
+
+    @Override
+    public String getRelevantKbyAuthor(String uri, int limit) {
+        return PREFIXES + "  SELECT   (SAMPLE ( ?l ) as ?lsubject)  (COUNT (?pub) as ?npub)    { \n"
+                + "                 VALUES ?author { <" + uri + "> } .  \n"
+                + "                   ?author     foaf:publications ?pub . \n"
+                + "                ?pub dct:subject ?subject . \n"
+                + "                ?subject rdfs:label ?slabel .\n"
+                + "                 BIND ( LCASE(?slabel) as ?l  )\n"
+                + "  } GROUP BY ?l ORDER BY DESC (?npub) limit " + limit;
+    }
+
+    @Override
+    public String getRelevantProvbyAuthor(String uri) {
+        return PREFIXES + "SELECT   ?prov (COUNT (distinct ?pub) as ?total)\n"
+                + "                WHERE {\n"
+                + "                  graph <" + con.getCentralGraph() + "> {\n"
+                + "                <"+uri+"> foaf:publications ?pub .\n"
+                + "                    ?pub  dct:provenance  ?prov .\n"
+                + "                  }\n"
+                + "                } GROUP BY ?prov order by desc (?total)";
+    }
+
 }

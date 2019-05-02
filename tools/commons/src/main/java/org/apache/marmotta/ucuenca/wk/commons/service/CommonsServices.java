@@ -42,5 +42,7 @@ public interface CommonsServices {
     String mapTojson(Map<String, String> map);
 
     Object getHttpJSON(String query);
+    
+    Map<String, Integer> sortByComparator(Map<String, Integer> unsortMap, final boolean order);
 
 }

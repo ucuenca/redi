@@ -167,6 +167,21 @@ wkhomeServices.factory('StatisticsbyInst', ['$resource', '$http', 'globalData',
     }
 ]);
 
+wkhomeServices.factory('StatisticsbyAuthor', ['$resource', '$http', 'globalData',
+    function ($resource, $http, globalData) {
+        var serverInstance = globalData.serverInstance;
+        return $resource(serverInstance + 'mongo/author-stats?uri=:id', {}, {
+            query: {
+                method: 'GET',
+                params: {id: 'id'},
+                isArray: false,
+                cache: true,
+                headers: {'Accept': 'application/json'}
+            }
+        });
+    }
+]);
+
 wkhomeServices.factory('Authors', ['$resource', '$http', 'globalData',
     function ($resource, $http, globalData) {
         var serverInstance = globalData.serverInstance;

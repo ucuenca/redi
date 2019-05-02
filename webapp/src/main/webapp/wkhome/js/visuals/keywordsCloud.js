@@ -1,9 +1,9 @@
 'use strict';
 
 var pieChart = angular.module('cloudTag', []);
-//	D3	Factory
+//  D3  Factory
 pieChart.factory('d3', function () {
-    return	d3;
+    return  d3;
 });
 pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery', '$window',
     function ($routeParams, d3, globalData, sparqlQuery, $window) {
@@ -164,7 +164,10 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
                 return rValue(d);
             });
             label.style("font-size", function (d) {
-                return Math.max(9, rScale(rValue(d) / 5)) + "px";
+                console.log  (rValue(d));
+                console.log  (d);
+                //return Math.max(9, rScale(rValue(d) / 5)) + "px";
+                return rScale(rValue(d) / 5)+ "px";
             }).style("width", function (d) {
                 return 0.1 * rScale(rValue(d)) + "px";
             });
@@ -177,7 +180,8 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
                 return d.dx + "px";
             });
             return label.each(function (d) {
-                return d.dy = (Number(this.getBoundingClientRect().height) -110).toString();
+                //  antes 110 - JS
+                return d.dy = (Number(this.getBoundingClientRect().height) -50).toString();
             });
         };
         gravity = function (alpha) {
@@ -245,6 +249,8 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
                                     //anchor.append('<img src="/wkhome/images/author-ec.png" class="img-rounded" alt="Logo Cedia" width="20" height="20"        >');4
                                     var name = typeof value["rdfs:label"] === 'string' ? value["rdfs:label"] : _(value["rdfs:label"] ).first();
                                     anchor.append(name + "(" + value["uc:total"]["@value"] + ")");
+                                    console.log ("---------");
+                                    console.log (name + value["uc:total"]["@value"]);
                                     div.append(anchor);
                                     div.append("</br>");
                                     return anchor;
@@ -382,13 +388,37 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
             }
         };
         mouseover = function (d) {
+            console.log (d);
+            showPopover.call(this, d);
             return node.classed("bubble-hover", function (p) {
                 return p === d;
             });
         };
         mouseout = function (d) {
+            removePopovers()
             return node.classed("bubble-hover", false);
         };
+
+         function showPopover(d) {
+    console.log ("OVER");
+                $(this).popover({
+                    placement: 'top',
+                    container: 'body',
+                    trigger: 'manual',
+                    html: true,
+                    content: function () {
+                        return  "<b>Area:</b> " + d.label+ "<br /> <b>N. authors:</b> "+d.value ;
+                            
+                    }
+                });
+               $(this).popover('show')
+            };
+
+ function removePopovers() {
+                $('.popover').each(function () {
+                    $(this).remove();
+                });
+            };
         chart.jitter = function (_) {
             if (!arguments.length) {
                 return jitter;
@@ -439,21 +469,21 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
                 data: '='
             },
             compile: function (element, attrs, transclude) {
-                //	Define	the	dimensions	for	the	chart
+                //  Define  the dimensions  for the chart
                 //var width = 960, height = 500;
                 var elementWidth = parseInt(element.css('width'));
                 var elementHeight = parseInt(element.css('height'));
                 var width = attrs.ctWidth ? attrs.ctWidth : elementWidth;
                 var height = attrs.ctHeight ? attrs.ctHeight : elementHeight;
 
-                //	Create	a	SVG	root	element
+                //  Create  a   SVG root    element
                 var svg = d3.select(element[0]);
 
-                //	Return	the	link	function
-                return	function (scope, element, attrs) {
-                    //	Watch	the	data	attribute	of	the	scope
+                //  Return  the link    function
+                return  function (scope, element, attrs) {
+                    //  Watch   the data    attribute   of  the scope
                     scope.$watch('data', function (newVal, oldVal, scope) {
-                        //	Update	the	chart
+                        //  Update  the chart
                         var data = scope.data;
                         if (data) {
                             draw(svg, width, height, data, scope, attrs);

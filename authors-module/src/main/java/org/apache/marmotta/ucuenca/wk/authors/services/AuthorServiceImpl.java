@@ -599,7 +599,7 @@ public class AuthorServiceImpl implements AuthorService {
                             executeInsert(constantService.getAuthorsGraph(), object, BIBO.ISBN.toString(), value, "integer");
 
                             break;
-                        case "http://purl.org/dc/terms/date":
+                        case "http://purl.org/ontology/bibo/issue":
                             if (object.matches("^[0-9]+-[0-9]+-[0-9]+")) {
                                 executeInsert(constantService.getAuthorsGraph(), object, BIBO.ISSUE.toString(), value, "date");
 

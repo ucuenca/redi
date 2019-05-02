@@ -58,6 +58,20 @@ public class MongoDBWebService {
         }
         return Response.ok().entity(response).build();
     }
+    
+   
+     @GET
+    @Path("/author-stats")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getStatsbyAuthor(@QueryParam("uri") String uri) throws FailMongoConnectionException {
+        String response;
+        try {
+            response = mongoService.getStatisticsByAuthor( uri);
+        } catch (Exception e) {
+            throw new FailMongoConnectionException(String.format("Cannot retrieve author %s", uri), e);
+        }
+        return Response.ok().entity(response).build();
+    }
 
     @GET
     @Path("/cluster")

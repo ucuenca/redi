@@ -433,5 +433,21 @@ public interface QueriesService {
     String getInstAsobyInst(String uri);
     
     String getProvbyInst(String uri);
+    
+    //Stats by Author
+    
+    String getOrgbyAuyhor(String uri);
+    
+    String getRelevantKbyAuthor(String uri, int limit);
+    
+    String getJournalbyAuthor(String uri);
+    
+    String getConferencebyAuthor(String uri);
+    
+    String getAuthorPubbyDate(String uri);
+    
+    String getRelevantProvbyAuthor(String uri);
+      
+      
 
 }
