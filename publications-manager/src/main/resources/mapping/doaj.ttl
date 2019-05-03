@@ -44,12 +44,14 @@ uc:TypeArticleTitle a r2r:Mapping ;
 uc:TypeContributor a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ doaj:contributor ?a" ;
-    r2r:targetPattern "?SUBJ dct:contributor ?a" .
+    r2r:targetPattern "?SUBJ dct:contributor ?a" ;
+    r2r:targetPattern "?a foaf:publications ?SUBJ" .
 
 uc:TypeCreator a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ doaj:creator ?a" ;
-    r2r:targetPattern "?SUBJ dct:creator ?a" .
+    r2r:targetPattern "?SUBJ dct:creator ?a" ;
+    r2r:targetPattern "?a foaf:publications ?SUBJ" .
 
 
 uc:PropDOI a r2r:Mapping ;
