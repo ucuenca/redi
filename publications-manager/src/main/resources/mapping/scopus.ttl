@@ -241,6 +241,7 @@ uc:publicationConference a r2r:Mapping ;
     r2r:transformation "?conferenceURI=concat('https://redi.cedia.edu.ec/conference/', xpath:encode-for-uri(xpath:lower-case(?conference)))" ;
     r2r:targetPattern "?SUBJ dct:isPartOf ?<conferenceURI>" ;
     r2r:targetPattern "?conferenceURI a bibo:Conference" ;
+    r2r:targetPattern "?conferenceURI uc:index uc:ScopusProvider" ;
     r2r:targetPattern "?conferenceURI rdfs:label ?'conference'^^xsd:string" .
     
 uc:publicationJournal a r2r:Mapping ; 
@@ -249,6 +250,7 @@ uc:publicationJournal a r2r:Mapping ;
     r2r:transformation "?journalURI=concat('https://redi.cedia.edu.ec/journal/', xpath:encode-for-uri(xpath:lower-case(?journal)))" ;
     r2r:targetPattern "?SUBJ dct:isPartOf ?<journalURI>" ;
     r2r:targetPattern "?journalURI a bibo:Journal" ;
+    r2r:targetPattern "?journalURI uc:index uc:ScopusProvider" ;
     r2r:targetPattern "?journalURI rdfs:label ?'journal'^^xsd:string" .
     
 uc:publicationBook a r2r:Mapping ; 
@@ -257,4 +259,5 @@ uc:publicationBook a r2r:Mapping ;
     r2r:transformation "?bookURI=concat('https://redi.cedia.edu.ec/book/', xpath:encode-for-uri(xpath:lower-case(?book)))" ;
     r2r:targetPattern "?SUBJ dct:isPartOf ?<bookURI>" ;
     r2r:targetPattern "?bookURI a bibo:Proceedings" ;
+    r2r:targetPattern "?bookURI uc:index uc:ScopusProvider" ;
     r2r:targetPattern "?bookURI rdfs:label ?'book'^^xsd:string" .

@@ -35,15 +35,23 @@ public class ModifiedJaccardMod {
     public boolean applyMinOverlapConstrain = false;
     public double minOverlap = 0.7;
     public int minMatchs = 3;
-    public boolean applyMinTokensAbv = false;
+    public boolean priorFirst = false;
 
-    public int countUniqueTokens(String name) {
+    public double countUniqueTokens(String name) {
         List<String> tokenizer = tokenizer(name.toLowerCase());
         Set<String> s = new HashSet<>();
         for (String sx : tokenizer) {
             s.add(sx);
         }
-        return s.size();
+        double r = 0;
+        for (String sx : s) {
+            if (sx.length() > abvThreshold) {
+                r += 1.0;
+            } else {
+                r += 0.9;
+            }
+        }
+        return r;
     }
 
     public Map.Entry<Integer, Double> distanceName(String name1, String name2) {
@@ -57,13 +65,6 @@ public class ModifiedJaccardMod {
         Map.Entry<Integer, Double> c1 = countMatchs(tks1, tks2);
         double mx = Math.min(tks1.size(), tks2.size());
         double val = (c.getValue() + c1.getValue()) / (c.getKey() + c1.getKey() + mx);
-        if (applyMinTokensAbv) {
-            if (c.getKey() == 0 && maxlen > 1) {
-                val *= 0.7;
-            } else {
-                //int adsd;
-            }
-        }
         if (applyMinOverlapConstrain) {
             double rat = (c.getKey() + c1.getKey() + 0.0) / (maxlen + 0.0);
             if (completeMatchs >= minMatchs && rat >= minOverlap) {
@@ -74,6 +75,7 @@ public class ModifiedJaccardMod {
         return new AbstractMap.SimpleEntry<>(completeMatchs, val);
     }
 
+    @SuppressWarnings("PMD")
     private Map.Entry<Integer, Double> countMatchs(List<String> tokens1, List<String> tokens2) {
         double sumSimilarity = 0;
         int countMatchs = 0;
@@ -86,7 +88,7 @@ public class ModifiedJaccardMod {
                     String token2 = tokens2.get(j);
                     double sim = syntacticSim(token1, token2);
                     boolean fullTokens = (token1.length() > abvThreshold && token2.length() > abvThreshold);
-                    boolean startsw = token1.startsWith(token2) || token2.startsWith(token1);
+                    boolean startsw = priorFirst ? token1.startsWith(token2) : token1.startsWith(token2) || token2.startsWith(token1);
                     boolean condFullMatch = false;
                     boolean condAbvMatch = false;
                     if (fullTokens) {

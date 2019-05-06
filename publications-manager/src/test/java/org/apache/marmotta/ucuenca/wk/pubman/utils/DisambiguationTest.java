@@ -25,16 +25,18 @@ public class DisambiguationTest {
         Person a = new Person();
         a.Name = new ArrayList<>();
         ArrayList<String> st = new ArrayList<>();
-        st.add("Juan Carlos");
-        st.add("De Los Reyes Bueno");
+        st.add("DARWIN");
+        st.add("ASTUDILLO S");
         a.Name.add(st);
         Person b = new Person();
         b.Name = new ArrayList<>();
         ArrayList<String> st2 = new ArrayList<>();
-        st2.add("Juan Carlos De Los");
-        st2.add("De Los Reyes");
+        st2.add("Silvana Astudillo");
+        //st2.add("De Los Reyes");
         b.Name.add(st2);
-        System.out.println(a.checkName(b, false));
+        System.out.println(a.checkName(b, true));
+        
+        
     }
 
     @Test
@@ -43,9 +45,9 @@ public class DisambiguationTest {
         Providers.add(new Provider("Authors", "https://redi.cedia.edu.ec/context/authorsProvider", GraphDB.get("data").getSps()));
         Providers.add(new Provider("Scopus", "https://redi.cedia.edu.ec/context/provider/ScopusProvider", GraphDB.get("data").getSps()));
 
-        List<Person> authors = Providers.get(0).getAuthors("https://redi.cedia.edu.ec/resource/authors/EPN/file/DE_LOS_REYES_BUENO__JUAN_CARLOS");
+        List<Person> authors = Providers.get(0).getAuthors("https://redi.cedia.edu.ec/resource/authors/ESPE/oai-pmh/FUERTES__WALTER");
         Providers.get(0).FillData(authors);
-        List<Person> candidates = Providers.get(1).getCandidates("https://redi.cedia.edu.ec/resource/authors/EPN/file/DE_LOS_REYES_BUENO__JUAN_CARLOS");
+        List<Person> candidates = Providers.get(1).getCandidates("https://redi.cedia.edu.ec/resource/authors/ESPE/oai-pmh/FUERTES__WALTER");
         Providers.get(1).FillData(candidates);
         for (Person q : authors) {
             for (Person p : candidates) {

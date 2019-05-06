@@ -186,19 +186,31 @@ function  CompareDate(a, b) {
 
 }
 
-function ExtractAk() {
-    var publications = [];
-    $('tbody tr input:checked').each(function (index) {
-        console.log($(this).val())
-        publications.push($(this).val());
-    })
+function getPublicationsOffset(inx){
+        var publications = [];
+        $('tbody tr input:checked').each(function (index) {
+            var vl= "|0";
+            if ($('input#continue').is(':checked'))
+            {
+                try {
+                    var txv = $(this).parent().parent().children()[inx].firstChild.data;
+                    var txt = txv.split(": ")[1].split("/")[0];
+                    vl = "|"+txt;
+                } catch (rr) {
+                }
+            }
+            publications.push($(this).val()+vl);
+        });
+        return publications;
+}
 
-    console.log(publications);
+function ExtractAk() {
+    var publications = getPublicationsOffset(5);
 
     if (publications.length < 1) {
         alert("No publications selected");
     } else {
-        var listPublications = {"data": publications};
+        var listPublications = {"data": publications, "force":$('input#force').is(':checked')};
         $.ajax({
             type: "POST",
             data: listPublications,
@@ -230,18 +242,12 @@ function ExtractAk() {
 
 
 function ExtractScopus() {
-    var publications = [];
-    $('tbody tr input:checked').each(function (index) {
-        console.log($(this).val())
-        publications.push($(this).val());
-    })
-
-    console.log(publications);
+    var publications = getPublicationsOffset(4);
 
     if (publications.length < 1) {
         alert("No providers selected");
     } else {
-        var listPublications = {"data": publications};
+        var listPublications = {"data": publications, "force":$('input#force').is(':checked')};
         $.ajax({
             type: "POST",
             data: listPublications,
@@ -265,18 +271,12 @@ function ExtractScopus() {
 
 
 function ExtractScielo() {
-    var publications = [];
-    $('tbody tr input:checked').each(function (index) {
-        console.log($(this).val())
-        publications.push($(this).val());
-    })
-
-    console.log(publications);
+    var publications = getPublicationsOffset(9);
 
     if (publications.length < 1) {
         alert("No providers selected");
     } else {
-        var listPublications = {"data": publications};
+        var listPublications = {"data": publications, "force":$('input#force').is(':checked')};
         $.ajax({
             type: "POST",
             data: listPublications,
@@ -296,18 +296,12 @@ function ExtractScielo() {
 }
 
 function ExtractDOAJ() {
-    var publications = [];
-    $('tbody tr input:checked').each(function (index) {
-        console.log($(this).val())
-        publications.push($(this).val());
-    })
-
-    console.log(publications);
+    var publications = getPublicationsOffset(10);
 
     if (publications.length < 1) {
         alert("No providers selected");
     } else {
-        var listPublications = {"data": publications};
+        var listPublications = {"data": publications, "force":$('input#force').is(':checked')};
         $.ajax({
             type: "POST",
             data: listPublications,
@@ -328,18 +322,12 @@ function ExtractDOAJ() {
 
 
 function ExtractORCID() {
-    var publications = [];
-    $('tbody tr input:checked').each(function (index) {
-        console.log($(this).val())
-        publications.push($(this).val());
-    })
-
-    console.log(publications);
+    var publications = getPublicationsOffset(11);
 
     if (publications.length < 1) {
         alert("No providers selected");
     } else {
-        var listPublications = {"data": publications};
+        var listPublications = {"data": publications, "force":$('input#force').is(':checked')};
         $.ajax({
             type: "POST",
             data: listPublications,
@@ -360,18 +348,12 @@ function ExtractORCID() {
 
 
 function ExtractDBLP() {
-    var publications = [];
-    $('tbody tr input:checked').each(function (index) {
-        console.log($(this).val())
-        publications.push($(this).val());
-    })
-
-    console.log(publications);
+    var publications = getPublicationsOffset(6);
 
     if (publications.length < 1) {
         alert("No providers selected");
     } else {
-        var listPublications = {"data": publications};
+        var listPublications = {"data": publications, "force":$('input#force').is(':checked')};
         $.ajax({
             type: "POST",
             data: listPublications,
@@ -392,18 +374,12 @@ function ExtractDBLP() {
 
 
 function ExtractGoogleSchoolar() {
-    var publications = [];
-    $('tbody tr input:checked').each(function (index) {
-        console.log($(this).val())
-        publications.push($(this).val());
-    })
-
-    console.log(publications);
+    var publications = getPublicationsOffset(7);
 
     if (publications.length < 1) {
         alert("No providers selected");
     } else {
-        var listPublications = {"data": publications};
+        var listPublications = {"data": publications, "force":$('input#force').is(':checked')};
         $.ajax({
             type: "POST",
             data: listPublications,
@@ -423,18 +399,12 @@ function ExtractGoogleSchoolar() {
 }
 
 function ExtractSpringer() {
-    var publications = [];
-    $('tbody tr input:checked').each(function (index) {
-        console.log($(this).val())
-        publications.push($(this).val());
-    })
-
-    console.log(publications);
+    var publications = getPublicationsOffset(8);
 
     if (publications.length < 1) {
         alert("No providers selected");
     } else {
-        var listPublications = {"data": publications};
+        var listPublications = {"data": publications, "force":$('input#force').is(':checked')};
         $.ajax({
             type: "POST",
             data: listPublications,

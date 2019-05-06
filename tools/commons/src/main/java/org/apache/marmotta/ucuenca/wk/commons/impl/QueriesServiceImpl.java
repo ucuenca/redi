@@ -832,7 +832,7 @@ public class QueriesServiceImpl implements QueriesService {
                 //                + "filter (mm:fulltext-search(?name_,\"Mauricio espinoza\")) "
                 //                + "filter (mm:fulltext-search(?name_,\"Saquicela\") || mm:fulltext-search(?name,\"Mauricio espinoza\")) "
                 + "  }"
-                + "} GROUP BY ?subject";
+                + "} GROUP BY ?subject order by ?subject";
     }
 
     @Override

@@ -132,7 +132,7 @@ public class CommonServiceImpl implements CommonService {
     private final JsonNodeFactory factory = JsonNodeFactory.instance;
 
     @Override
-    public String getDataFromSpringerProvidersService(final String[] organizations) {
+    public String getDataFromSpringerProvidersService(final String[] organizations, final boolean force) {
         if (springerThread != null && springerThread.isAlive()) {
             return "Process is executing.";
         }
@@ -140,7 +140,7 @@ public class CommonServiceImpl implements CommonService {
         springerThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                springerProviderService.extractAuthors(organizations);
+                springerProviderService.extractAuthors(organizations, force);
             }
         });
         springerThread.start();
@@ -149,7 +149,7 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public String getDataFromScopusProvidersService(final String[] organizations) {
+    public String getDataFromScopusProvidersService(final String[] organizations, final boolean force) {
         // Find a way to execute thread and get response information.
         if (scopusThread != null && scopusThread.isAlive()) {
             return "Process is executing.";
@@ -158,7 +158,7 @@ public class CommonServiceImpl implements CommonService {
         scopusThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                providerServiceScopus1.extractAuthors(organizations);
+                providerServiceScopus1.extractAuthors(organizations, force);
             }
         });
         scopusThread.start();
@@ -167,14 +167,14 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public String getDataFromAcademicsKnowledgeProvidersService(final String[] organizations) {
+    public String getDataFromAcademicsKnowledgeProvidersService(final String[] organizations, final boolean force) {
         if (academicsThread != null && academicsThread.isAlive()) {
             return "Process is executing.";
         }
         academicsThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                academicsKnowledgeService.extractAuthors(organizations);
+                academicsKnowledgeService.extractAuthors(organizations, force);
             }
         });
         academicsThread.start();
@@ -182,14 +182,14 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public String getDataFromDBLPProvidersService(final String[] organizations) {
+    public String getDataFromDBLPProvidersService(final String[] organizations, final boolean force) {
         if (dblpThread != null && dblpThread.isAlive()) {
             return "Process is executing.";
         }
         dblpThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                providerServiceDblp1.extractAuthors(organizations);
+                providerServiceDblp1.extractAuthors(organizations, force);
             }
         });
         dblpThread.start();
@@ -197,7 +197,7 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public String getDataFromGoogleScholarProvidersService(final String[] organizations) {
+    public String getDataFromGoogleScholarProvidersService(final String[] organizations, final boolean force) {
 
         if (scholarThread != null && scholarThread.isAlive()) {
             return "Process is executing.";
@@ -205,7 +205,7 @@ public class CommonServiceImpl implements CommonService {
         scholarThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                googleProviderService.extractAuthors(organizations);
+                googleProviderService.extractAuthors(organizations, force);
             }
         });
         scholarThread.start();
@@ -385,14 +385,14 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public String getDataFromScieloProvidersService(final String[] organizations) {
+    public String getDataFromScieloProvidersService(final String[] organizations, final boolean force) {
         if (scieloThread != null && scieloThread.isAlive()) {
             return "Process is executing.";
         }
         scieloThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                providerServiceScielo.extractAuthors(organizations);
+                providerServiceScielo.extractAuthors(organizations, force);
             }
         });
         scieloThread.start();
@@ -1181,7 +1181,7 @@ public class CommonServiceImpl implements CommonService {
                     + "        } "
                     + "  } "
                     + "    GRAPH <" + con.getOrganizationsGraph() + "> { "
-                    + "    select (GROUP_CONCAT( DISTINCT ?orgname ;  SEPARATOR = \"|\")  as ?orgnames ) {  "
+                    + "    select (GROUP_CONCAT( DISTINCT ?member ;  SEPARATOR = \"|\")  as ?orgnames ) {  "
                     + "    ?member uc:name ?orgname . "
                     + "    GRAPH <" + con.getCentralGraph() + "> { "
                     + "    <" + uri + "> schema:memberOf ?member "
@@ -1540,14 +1540,14 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public String getDataFromDOAJProvidersService(final String[] organizations) {
+    public String getDataFromDOAJProvidersService(final String[] organizations, final boolean force) {
         if (doajThread != null && doajThread.isAlive()) {
             return "Process is executing.";
         }
         doajThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                providerServiceDOAJ.extractAuthors(organizations);
+                providerServiceDOAJ.extractAuthors(organizations, force);
             }
         });
         doajThread.start();
@@ -1555,14 +1555,14 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public String getDataFromORCIDProvidersService(final String[] organizations) {
+    public String getDataFromORCIDProvidersService(final String[] organizations, final boolean force) {
         if (orcidThread != null && orcidThread.isAlive()) {
             return "Process is executing.";
         }
         orcidThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                providerServiceORCID.extractAuthors(organizations);
+                providerServiceORCID.extractAuthors(organizations, force);
             }
         });
         orcidThread.start();

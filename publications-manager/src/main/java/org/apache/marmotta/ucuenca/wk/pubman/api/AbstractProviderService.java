@@ -134,10 +134,12 @@ public abstract class AbstractProviderService implements ProviderService {
     /**
      * Extract authors from a particular provider.
      *
-     * @param organizations URLs of organizations to extract authors.
+     * @param organizations URLs of organizations to extract authors and their
+     * offsets.
+     * @param force ignore OneOf Validation
      */
     @Override
-    public void extractAuthors(String[] organizations) {
+    public void extractAuthors(String[] organizations, boolean force) {
         Map<String, String> msgOrg = new HashMap();
         String providerUri = createProvider(getProviderName(), false);
         Task task = taskManagerService.createSubTask(String.format("%s Extraction", getProviderName()), "Publication Extractor");
@@ -145,7 +147,11 @@ public abstract class AbstractProviderService implements ProviderService {
         task.updateDetailMessage("Graph", getProviderGraph());
         LDClient ldClient = buildDefaultLDClient();
         try {
-            for (String organization : organizations) {
+            for (String organizationx : organizations) {
+                String[] split = organizationx.split("\\|");
+                String organization = split[0];
+                int offset = Integer.parseInt(split[1]);
+
                 List<Map<String, Value>> resultAllAuthors = sparqlService.getSparqlService().query(
                         QueryLanguage.SPARQL, queriesService.getAuthorsDataQuery(organization));
                 List<String> organizationNames = getOrganizationNames(sparqlService.getSparqlService().query(
@@ -160,6 +166,12 @@ public abstract class AbstractProviderService implements ProviderService {
 
                 for (Map<String, Value> map : resultAllAuthors) {
 
+                    if (offset != 0) {
+                        if (processedAuthors + 1 < offset) {
+                            processedAuthors++;
+                            continue;
+                        }
+                    }
                     // Information of local author.
                     String authorResource = map.get("subject").stringValue();
                     String firstName = map.get("fname").stringValue().trim().toLowerCase().replaceAll("\\p{C}", "");
@@ -175,7 +187,7 @@ public abstract class AbstractProviderService implements ProviderService {
                         } else {
                             querySearchAuthor = queriesService.getAskObjectQuery(getProviderGraph(), authorResource, filterExpressionSearch());
                         }
-                        boolean isResquestDone = sparqlService.getSparqlService().ask(QueryLanguage.SPARQL, querySearchAuthor);
+                        boolean isResquestDone = !force && sparqlService.getSparqlService().ask(QueryLanguage.SPARQL, querySearchAuthor);
                         if (isResquestDone) {
                             // Register only the search query, given that the resource might be from other author.
                             sparqlFunctionsService.executeInsert(getProviderGraph(), reqResource.replace(" ", ""), OWL.ONE_OF, authorResource);
@@ -183,7 +195,24 @@ public abstract class AbstractProviderService implements ProviderService {
                         }
 
                         try {
-                            ClientResponse response = ldClient.retrieveResource(reqResource);
+                            ClientResponse response = null;
+                            Exception exp = null;
+                            for (int w = 0; w < 3; w++) {
+                                try {
+                                    response = ldClient.retrieveResource(reqResource);
+                                    exp = null;
+                                    break;
+                                } catch (Exception e) {
+                                    exp = e;
+                                    try {
+                                        Thread.sleep(1000 * 5);
+                                    } catch (InterruptedException ex) {
+                                    }
+                                }
+                            }
+                            if (response == null && exp != null) {
+                                throw new DataRetrievalException(exp);
+                            }
 
                             switch (response.getHttpStatus()) {
                                 // Manage only HTTP 200 responses, otherwise error. Which error? Stop or continue with next resource.

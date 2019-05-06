@@ -188,6 +188,7 @@ uc:pubjr a r2r:Mapping ;
     r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/scielo/journal/',xpath:encode-for-uri(?b))" ;
     r2r:targetPattern "?SUBJ dct:isPartOf ?<urip>" ;
     r2r:targetPattern "?<urip> a bibo:Journal" ;
+    r2r:targetPattern "?<urip> uc:index uc:Scielo" ;
     r2r:targetPattern "?<urip> rdfs:label ?b" .
 
 

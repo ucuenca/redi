@@ -146,6 +146,7 @@ uc:publicationBook a r2r:Mapping ;
     r2r:transformation "?bookIRI=concat('https://redi.cedia.edu.ec/resource/book/', xpath:lower-case(xpath:encode-for-uri(?name)))" ;
     r2r:targetPattern "?SUBJ dct:isPartOf ?<bookIRI>" ;
     r2r:targetPattern "?bookIRI a bibo:Proceedings" ;
+    r2r:targetPattern "?bookIRI uc:index uc:SpringerProvider" ;
     r2r:targetPattern "?bookIRI rdfs:label ?name" .
 
 uc:publicationJournal a r2r:Mapping ;
@@ -155,4 +156,5 @@ uc:publicationJournal a r2r:Mapping ;
     r2r:transformation "?journalIRI=concat('https://redi.cedia.edu.ec/resource/journal/', xpath:lower-case(xpath:encode-for-uri(?name)))" ;
     r2r:targetPattern "?SUBJ dct:isPartOf ?<journalIRI>" ;
     r2r:targetPattern "?journalIRI a bibo:Journal" ;
+    r2r:targetPattern "?journalIRI uc:index uc:SpringerProvider" ;
     r2r:targetPattern "?journalIRI rdfs:label ?name" .

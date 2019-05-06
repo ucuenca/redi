@@ -18,6 +18,7 @@ bibo:Thesis+(bibo:Thesis, rdfs:label)
 bibo:Collection+(bibo:Collection, rdfs:label)
 
 (
+    uc:index,
     owl:oneOf,
     skos:altLabel,
     rdf:type,

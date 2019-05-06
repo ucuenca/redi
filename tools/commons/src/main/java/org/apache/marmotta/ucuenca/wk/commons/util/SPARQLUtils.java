@@ -10,11 +10,11 @@ import java.util.Map;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
-import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Provider;
 import org.openrdf.model.Value;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.UpdateExecutionException;
+import org.openrdf.repository.RepositoryException;
 
 /**
  *
@@ -23,165 +23,284 @@ import org.openrdf.query.UpdateExecutionException;
 @SuppressWarnings("PMD")
 public class SPARQLUtils {
 
-    private SparqlService sparqlService;
+  private SparqlService sparqlService;
 
-    public SPARQLUtils(SparqlService sparql) {
-        this.sparqlService = sparql;
+  public SPARQLUtils(SparqlService sparql) {
+    this.sparqlService = sparql;
+  }
+
+  public int count(String graph) throws MarmottaException {
+    String c = "select (count (*) as ?co) { graph <" + graph + "> { ?a ?b ?c }}";
+    List<Map<String, Value>> query = sparqlService.query(QueryLanguage.SPARQL, c);
+    return Integer.parseInt(query.get(0).get("co").stringValue());
+  }
+
+  public void delete(String graph) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
+    new LongUpdateQueryExecutor(sparqlService).deleteGraph(graph);
+  }
+
+  public void addAll(String graphTarget, String graphSource) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
+    new LongUpdateQueryExecutor(sparqlService).copyGraph(graphTarget, graphSource);
+  }
+
+  public void removeDuplicatedSameAs(String O, String D) throws RepositoryException, MalformedQueryException, UpdateExecutionException {
+    String OT = O + "__T";
+    String q1 = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
+        + "insert {\n"
+        + "    graph <" + OT + "> {\n"
+        + "        ?a owl:sameAs ?c .\n"
+        + "    }\n"
+        + "} where {\n"
+        + "    graph <" + O + "> {\n"
+        + "        ?a owl:sameAs ?b .\n"
+        + "        ?c owl:sameAs ?b .\n"
+        + "    }\n"
+        + "}";
+    runUpdate(q1);
+    String OTT = OT + "__T";
+    String q2 = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
+        + "insert {\n"
+        + "    graph <" + OTT + "> {\n"
+        + "        ?a owl:sameAs ?c .\n"
+        + "    }\n"
+        + "} where {\n"
+        + "    graph <" + OT + "> {\n"
+        + "        ?a owl:sameAs* ?c .\n"
+        + "    }\n"
+        + "}";
+    runUpdate(q2);
+    String OTTT = OTT + "__T";
+    String q3 = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
+        + "insert {\n"
+        + "    graph <" + OTTT + "> {\n"
+        + "    	?p owl:sameAs ?q .\n"
+        + "	} \n"
+        + "} where {\n"
+        + "    {\n"
+        + "        select ?h (min(?a) as ?p) {\n"
+        + "            {\n"
+        + "                select ?a (md5(group_concat(?c)) as ?h) {\n"
+        + "                    {\n"
+        + "                        select ?a ?c {\n"
+        + "                            graph <" + OTT + "> {\n"
+        + "                                ?a owl:sameAs ?c .\n"
+        + "                            } \n"
+        + "                        } order by ?a ?c\n"
+        + "                    }\n"
+        + "                } group by ?a\n"
+        + "            }\n"
+        + "        } group by ?h\n"
+        + "    }\n"
+        + "    graph <" + OTT + "> {\n"
+        + "    	?p owl:sameAs ?q .\n"
+        + "	} \n"
+        + "}";
+    runUpdate(q3);
+    replaceSameAsSubject(O, D, OTTT);
+    deleteGraph(OT);
+    deleteGraph(OTT);
+    deleteGraph(OTTT);
+
+  }
+
+  public void removeDuplicatedPrior(String G1, String G2, String G, String D) throws RepositoryException, MalformedQueryException, UpdateExecutionException {
+    String q = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
+        + "insert {\n"
+        + "    graph <&D&> {\n"
+        + "        ?q2 owl:sameAs ?p2 .\n"
+        + "    }\n"
+        + "    graph <&I&> {\n"
+        + "        ?q1 owl:sameAs ?p2 .\n"
+        + "    }\n"
+        + "} \n"
+        + "where  {\n"
+        + "    {   \n"
+        + "        select ?c {\n"
+        + "            graph <" + G + "> {\n"
+        + "                ?a owl:sameAs ?c .\n"
+        + "            }\n"
+        + "        } group by ?c having (count (distinct ?a ) > 1 ) \n"
+        + "    }\n"
+        + "    graph <" + G + "> {\n"
+        + "        ?q1 owl:sameAs ?c .\n"
+        + "        ?q2 owl:sameAs ?c .\n"
+        + "    }\n"
+        + "    graph <" + G1 + "> {\n"
+        + "        ?q1 owl:sameAs [] .\n"
+        + "    }\n"
+        + "    graph <" + G2 + "> {\n"
+        + "        ?q2 owl:sameAs ?p2 .\n"
+        + "    }\n"
+        + "}";
+    transformGraph(G, D, q);
+  }
+
+  public void harvestRawData(String S, String D, int up) throws RepositoryException, MalformedQueryException, UpdateExecutionException {
+    for (int i = 1; i <= up; i++) {
+      harvestSameAs(S, D, i, null);
     }
+  }
 
-    public int count(String graph) throws MarmottaException {
-        String c = "select (count (*) as ?co) { graph <" + graph + "> { ?a ?b ?c }}";
-        List<Map<String, Value>> query = sparqlService.query(QueryLanguage.SPARQL, c);
-        return Integer.parseInt(query.get(0).get("co").stringValue());
+  public void harvestSameAs(String S, String D, int level, List<String> providersx) throws RepositoryException, MalformedQueryException, UpdateExecutionException {
+    String providers = "";
+    for (String p : providersx) {
+      providers = " <" + p + "> ";
+
+      String qp = "";
+      String last = "";
+      for (int i = 0; i < level; i++) {
+        String j = i == 0 ? "" : "" + (i - 1);
+        last = "    ?c" + j + " ?p" + i + " ?c" + i + " .\n";
+        qp += last;
+      }
+
+      String q = "insert {\n"
+          + "  graph <" + D + "> {\n"
+          + last
+          + "  }\n"
+          + "}\n"
+          + "where {\n"
+          + "  graph <" + S + "> {\n"
+          + "    ?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
+          + "  }\n"
+          + "  values ?g { " + providers + " } .\n"
+          + "  graph ?g {\n"
+          + qp
+          + "  }\n"
+          + "}";
+      runUpdate(q);
     }
+  }
 
-    public void delete(String graph) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
-        new LongUpdateQueryExecutor(sparqlService).deleteGraph(graph);
-    }
-
-    public void addAll(String graphTarget, String graphSource) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
-        new LongUpdateQueryExecutor(sparqlService).copyGraph(graphTarget, graphSource);
-    }
-
-    public void minus(String graphTarget, String graphUniverse, String graphNot) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException {
-        new LongUpdateQueryExecutor(sparqlService,
-                "	graph <" + graphUniverse + "> {\n"
-                + "		?a ?b ?c \n"
-                + "		filter not exists {\n"
-                + "			graph <" + graphNot + "> {\n"
-                + "				?a ?b ?c .\n"
-                + "			}\n"
-                + "		}		\n"
-                + "	}\n",
-                "	graph <" + graphTarget + "> {\n"
-                + "		?a ?b ?c .\n"
-                + "	}\n",
-                null, "", "?a ?b ?c").execute();
-    }
-
-    public void replaceSameAs(String d, String sag, String dg, String ig, boolean s) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
-        if (s) {
-            new LongUpdateQueryExecutor(sparqlService,
-                    "	graph <" + sag + "> {\n"
-                    + "		?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
-                    + "	}\n"
-                    + "	graph <" + d + "> {\n"
-                    + "		?c ?p ?v .\n"
-                    + "	}\n",
-                    "	graph <" + dg + "> {\n"
-                    + "		?c ?p ?v .\n"
-                    + "	}\n"
-                    + "	graph <" + ig + "> {\n"
-                    + "		?a ?p ?v .\n"
-                    + "	}\n",
-                    null, "", "?c ?p ?v ?a").execute();
-
-        } else {
-            new LongUpdateQueryExecutor(sparqlService,
-                    "	graph <" + sag + "> {\n"
-                    + "		?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
-                    + "	}\n"
-                    + "	graph <" + d + "> {\n"
-                    + "		?v ?p ?c .\n"
-                    + "	}\n",
-                    "	graph <" + dg + "> {\n"
-                    + "		?v ?p ?c .\n"
-                    + "	}\n"
-                    + "	graph <" + ig + "> {\n"
-                    + "		?v ?p ?a .\n"
-                    + "	}\n",
-                    null, "", "?c ?p ?v ?a").execute();
+  public void replaceSameAsObjectExcept(String O, String D, String S, String... E) throws RepositoryException, MalformedQueryException, UpdateExecutionException {
+    String qe = "";
+    if (E.length != 0) {
+      qe = "filter ( ";
+      for (int i = 0; i < E.length; i++) {
+        qe += " ?p != <" + E[i] + "> ";
+        if (i != E.length - 1) {
+          qe += " && ";
         }
+      }
+      qe += " ) .";
     }
+    String q = "insert {\n"
+        + "        graph <&D&> {\n"
+        + "                ?v ?p ?c .\n"
+        + "        }\n"
+        + "        graph <&I&> {\n"
+        + "                ?v ?p ?a .\n"
+        + "        }\n"
+        + "}\n"
+        + "where {\n"
+        + "        graph <" + S + "> {\n"
+        + "                ?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
+        + "        }\n"
+        + "        graph <" + O + "> {\n"
+        + "                ?v ?p ?c .\n"
+        + "                " + qe + "\n"
+        + "        }\n"
+        + "}";
+    transformGraph(O, D, q);
+  }
 
-    public void mergeRawDataSameAs(List<Provider> providersList, String graph, String graphOrigin) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
-        String q = "select distinct ?a { graph <" + graphOrigin + "> { ?a <http://www.w3.org/2002/07/owl#sameAs> ?c . } }";
-        List<Map<String, Value>> query = sparqlService.query(QueryLanguage.SPARQL, q);
-        for (Map<String, Value> ar : query) {
-            String aAU = ar.get("a").stringValue();
-            for (Provider aProvider : providersList) {
-                String providersGraph = aProvider.Graph;
-                new LongUpdateQueryExecutor(sparqlService,
-                        "    graph <" + graphOrigin + "> {\n"
-                        + "        <" + aAU + "> <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
-                        + "    }\n"
-                        + "  graph <" + providersGraph + "> {\n"
-                        + "        ?c ?p ?v .\n"
-                        + "    }\n",
-                        "    graph <" + graph + "> {\n"
-                        + "        ?c ?p ?v .\n"
-                        + "    }\n",
-                        null, "", "?c ?p ?v").execute();
+  public void replaceSameAsSubject(String O, String D, String S) throws RepositoryException, MalformedQueryException, UpdateExecutionException {
+    String q = "insert {\n"
+        + "        graph <&D&> {\n"
+        + "                ?c ?p ?v .\n"
+        + "        }\n"
+        + "        graph <&I&> {\n"
+        + "                ?a ?p ?v .\n"
+        + "        }\n"
+        + "}\n"
+        + "where {\n"
+        + "        graph <" + S + "> {\n"
+        + "                ?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
+        + "        }\n"
+        + "        graph <" + O + "> {\n"
+        + "                ?c ?p ?v .\n"
+        + "        }\n"
+        + "}";
+    transformGraph(O, D, q);
+  }
 
-                new LongUpdateQueryExecutor(sparqlService,
-                        "    graph <" + graphOrigin + "> {\n"
-                        + "        <" + aAU + "> <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
-                        + "    }\n"
-                        + "    graph <" + providersGraph + "> {\n"
-                        + "         ?c ?p ?v .\n"
-                        + "         ?v ?w ?q .\n"
-                        + "    }\n",
-                        "    graph <" + graph + "> {\n"
-                        + "        ?v ?w ?q .\n"
-                        + "    }\n",
-                        null, "", "?v ?w ?q").execute();
+  public void transformGraph(String O, String D, String Q) throws RepositoryException, MalformedQueryException, UpdateExecutionException {
+    String OI = O + "___I";
+    String OD = O + "___D";
+    String UQ = Q.replaceAll("&I&", OI).replaceAll("&D&", OD);
+    runUpdate(UQ);
+    copyGraphFilter(O, OD, D);
+    copyGraph(OI, D);
+    deleteGraph(OI);
+    deleteGraph(OD);
+  }
 
-                new LongUpdateQueryExecutor(sparqlService,
-                        "    graph <" + graphOrigin + "> {\n"
-                        + "        <" + aAU + "> <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
-                        + "    }\n"
-                        + "    graph <" + providersGraph + "> {\n"
-                        + "         ?c ?p ?v .\n"
-                        + "         ?v ?w ?q .\n"
-                        + "        ?q ?z ?m .\n"
-                        + "    }\n",
-                        "    graph <" + graph + "> {\n"
-                        + "        ?q ?z ?m .\n"
-                        + "    }\n",
-                        null, "", "?q ?z ?m").execute();
-            }
-        }
+  public void deleteGraph(String uri) throws RepositoryException, MalformedQueryException, UpdateExecutionException {
+    runUpdate("CLEAR GRAPH <" + uri + ">");
+  }
+
+  public void copyGraph(String org, String des) throws RepositoryException, MalformedQueryException, UpdateExecutionException {
+    String q = "insert {\n"
+        + "    graph <" + des + "> {\n"
+        + "        ?a ?b ?c .\n"
+        + "    }\n"
+        + "} where {\n"
+        + "    graph <" + org + "> {\n"
+        + "        ?a ?b ?c .\n"
+        + "    }\n"
+        + "}";
+    runUpdate(q);
+  }
+
+  public void copyGraphFilter(String org, String fil, String des) throws RepositoryException, MalformedQueryException, UpdateExecutionException {
+    String q = "insert {\n"
+        + "    graph <" + des + "> {\n"
+        + "        ?a ?b ?c .\n"
+        + "    }\n"
+        + "} where {\n"
+        + "    graph <" + org + "> {\n"
+        + "        ?a ?b ?c .\n"
+        + "        filter not exists {\n"
+        + "             graph <" + fil + "> {\n"
+        + "                 ?a ?b ?c .\n"
+        + "             }\n"
+        + "        }\n"
+        + "    }\n"
+        + "}";
+    runUpdate(q);
+  }
+
+  public void runUpdate(String query) throws RepositoryException {
+    try {
+      runUpdateRepository(query);
+    } catch (Exception e) {
+      throw new RepositoryException(e);
     }
+  }
 
-    public void removeDuplicates(String graph) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
-        String q = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
-                + "\n"
-                + "delete {\n"
-                + "	graph <" + graph + "> {\n"
-                + "		?no owl:sameAs ?p .\n"
-                + "	}\n"
-                + "}\n"
-                + "insert {\n"
-                + "	graph <" + graph + "> {\n"
-                + "		?r owl:sameAs ?p .\n"
-                + "		?r owl:sameAs ?no .\n"
-                + "	}\n"
-                + "}\n"
-                + "where {\n"
-                + "	graph <" + graph + "> {\n"
-                + "		?no owl:sameAs ?p .\n"
-                + "	} .\n"
-                + "	{\n"
-                + "		select ?p (count(distinct ?o) as ?c) (max(str(?o)) as ?u) ( iri (?u) as ?r) {\n"
-                + "	  		graph <" + graph + "> {\n"
-                + "	  			?o owl:sameAs ?p .\n"
-                + "	  		}\n"
-                + "		} group by ?p having (?c > 1)\n"
-                + "	}\n"
-                + "}";
-        String qq = "PREFIX owl: <http://www.w3.org/2002/07/owl#> \n"
-                + "insert {	\n"
-                + "	graph <" + graph + "> {\n"
-                + "		?o owl:sameAs ?o .\n"
-                + "	}\n"
-                + "} \n"
-                + "where {\n"
-                + "	graph <" + graph + "> {\n"
-                + "		?o owl:sameAs ?p .\n"
-                + "	}\n"
-                + "}";
-        sparqlService.update(QueryLanguage.SPARQL, q);
-        sparqlService.update(QueryLanguage.SPARQL, qq);
-    }
+  public void runUpdateRepository(String query) throws UpdateExecutionException, MalformedQueryException, InvalidArgumentException, MarmottaException {
+    sparqlService.update(QueryLanguage.SPARQL, query);
+  }
+
+  public void clearSameAs(String SA, String SAF) throws RepositoryException, MalformedQueryException, UpdateExecutionException {
+    String q = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
+        + "insert {\n"
+        + "    graph <&D&> {\n"
+        + "        ?a owl:sameAs ?c .\n"
+        + "    }\n"
+        + "} where {\n"
+        + "    graph <" + SA + "> {\n"
+        + "        ?a owl:sameAs ?c .\n"
+        + "        ?b owl:sameAs ?c .\n"
+        + "    }\n"
+        + "    graph <" + SAF + "> {\n"
+        + "        ?a owl:sameAs ?b .\n"
+        + "    }\n"
+        + "}";
+    transformGraph(SA, SA + "_new", q);
+    deleteGraph(SA);
+    copyGraph(SA + "_new", SA);
+    deleteGraph(SA + "_new");
+  }
 
 }

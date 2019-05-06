@@ -116,7 +116,7 @@ public class OntologyMapperTest {
         assertEquals(scopusModel.size(), 3911);
         Model resultWithMapperFile = OntologyMapper.map(scopusModel, scopusMapper, vocabulary);
         Model resultEmptyMapperFile = OntologyMapper.map(scopusModel, emptyMapper, vocabulary);
-        assertEquals(resultWithMapperFile.size(), 2681);
+        assertEquals(resultWithMapperFile.size(), 2709);
         assertEquals(resultEmptyMapperFile.size(), 0);
     }
 
@@ -140,7 +140,7 @@ public class OntologyMapperTest {
         assertEquals(dblpModel.size(), 788);
         Model resultWithMapperFile = OntologyMapper.map(dblpModel, dblpMapper, vocabulary);
         Model resultEmptyMapperFile = OntologyMapper.map(dblpModel, emptyMapper, vocabulary);
-        assertEquals(resultWithMapperFile.size(), 667);
+        assertEquals(resultWithMapperFile.size(), 694);
         assertEquals(resultEmptyMapperFile.size(), 0);
     }
 
@@ -164,7 +164,7 @@ public class OntologyMapperTest {
         assertEquals(springerModel.size(), 320);
         Model resultWithMapperFile = OntologyMapper.map(springerModel, springerMapper, vocabulary);
         Model resultEmptyMapperFile = OntologyMapper.map(springerModel, emptyMapper, vocabulary);
-        assertEquals(resultWithMapperFile.size(), 533);
+        assertEquals(resultWithMapperFile.size(), 543);
         assertEquals(resultEmptyMapperFile.size(), 0);
     }
 
@@ -176,7 +176,7 @@ public class OntologyMapperTest {
         assertEquals(scieloModel.size(), 108);
         Model resultWithMapperFile = OntologyMapper.map(scieloModel, scieloMapper, vocabulary);
         Model resultEmptyMapperFile = OntologyMapper.map(scieloModel, emptyMapper, vocabulary);
-        assertEquals(resultWithMapperFile.size(), 214);
+        assertEquals(resultWithMapperFile.size(), 219);
         assertEquals(resultEmptyMapperFile.size(), 0);
     }
 
