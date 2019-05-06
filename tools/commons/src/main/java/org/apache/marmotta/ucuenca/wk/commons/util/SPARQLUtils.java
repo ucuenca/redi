@@ -287,6 +287,7 @@ public class SPARQLUtils {
         + "insert {\n"
         + "    graph <&D&> {\n"
         + "        ?a owl:sameAs ?c .\n"
+        + "        ?a owl:sameAs ?b .\n"
         + "    }\n"
         + "} where {\n"
         + "    graph <" + SA + "> {\n"

@@ -194,15 +194,15 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             mergeAuthors();
             sparqlService.getGraphDBInstance().dumpBuffer();
 //      /**/
-//      sparqlUtils.clearSameAs(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "2Fix");
-//      sparqlUtils.replaceSameAsSubject(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "F", constantService.getAuthorsSameAsGraph() + "2");
-//      sparqlUtils.deleteGraph(constantService.getAuthorsSameAsGraph());
-//      sparqlUtils.copyGraph(constantService.getAuthorsSameAsGraph() + "F", constantService.getAuthorsSameAsGraph());
+            sparqlUtils.clearSameAs(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "2Fix");
+            sparqlUtils.replaceSameAsSubject(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "F", constantService.getAuthorsSameAsGraph() + "2");
+            sparqlUtils.deleteGraph(constantService.getAuthorsSameAsGraph());
+            sparqlUtils.copyGraph(constantService.getAuthorsSameAsGraph() + "F", constantService.getAuthorsSameAsGraph());
 //      /**/
-//      ProcessCoauthors(Providers, false);
-//      sparqlService.getGraphDBInstance().dumpBuffer();
-//      ProcessPublications(Providers);
-//      sparqlService.getGraphDBInstance().dumpBuffer();
+            ProcessCoauthors(Providers, false);
+            sparqlService.getGraphDBInstance().dumpBuffer();
+            ProcessPublications(Providers);
+            sparqlService.getGraphDBInstance().dumpBuffer();
         } catch (Exception ex) {
             log.error("Unknown error while disambiguating");
             ex.printStackTrace();
@@ -335,7 +335,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         String qryDisambiguatedCoauthors = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
                 + "select distinct ?a  { \n"
                 + "  graph <" + constantService.getAuthorsSameAsGraph() + "> { \n"
-                //                + "     values ?a { <https://redi.cedia.edu.ec/resource/authors/UCUENCA/file/_ASTUDILLO_SALINAS_____DARWIN_FABIAN_> } ."
+                //                + "     values ?a { <https://redi.cedia.edu.ec/resource/authors/SENESCYT/oai-pmh/WONG_DE_BALZAR__SARA> } ."
                 + "    ?a <http://www.w3.org/2002/07/owl#sameAs> [] . \n"
                 + "  }\n"
                 + "}";
