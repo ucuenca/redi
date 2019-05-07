@@ -139,7 +139,7 @@ public class ModifiedJaccardMod {
                     .equals(sm.simplify(
                             Simplifiers.removeDiacritics()
                                     .simplify(t2)));
-            boost = (soundexBoost ? (equals ? 1.0 + fx : 0.95) : 1);
+            boost = soundexBoost & equals ? 1.0 + fx : 1.0;
         } catch (Exception e) {
         }
         double sim = 0;
