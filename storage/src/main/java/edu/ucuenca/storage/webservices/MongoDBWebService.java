@@ -17,6 +17,7 @@
  */
 package edu.ucuenca.storage.webservices;
 
+import com.mashape.unirest.http.Unirest;
 import edu.ucuenca.storage.api.MongoService;
 import edu.ucuenca.storage.exceptions.FailMongoConnectionException;
 import java.util.List;
@@ -136,14 +137,14 @@ public class MongoDBWebService {
         }
         return Response.ok().entity(response).build();
     }
-            
+
     @GET
     @Path("/statisticsbyInst")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getStatisticsbyInst(@QueryParam("id") String id) throws FailMongoConnectionException {
         String response;
         try {
-            response = mongoService.getStatisticsByInst( id);
+            response = mongoService.getStatisticsByInst(id);
         } catch (Exception e) {
             throw new FailMongoConnectionException(String.format("Cannot retrieve information for id %s", id), e);
         }
@@ -196,10 +197,6 @@ public class MongoDBWebService {
         return Response.ok().entity(response).build();
     }
 
-    
-
-
-
     @POST
     @Path("/sparql")
     @Produces("application/ld+json")
@@ -214,4 +211,33 @@ public class MongoDBWebService {
         return Response.ok().entity(response).build();
     }
 
+    @GET
+    @Path("/getORCIDToken")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response obtainToken(@QueryParam("code") String code, @QueryParam("uri") String uri) throws FailMongoConnectionException {
+        String body = null;
+        try {
+            String app = "";
+            String sec = "";
+            if (uri.contains("rediclon")) {
+                app = "APP-R08L1P7JVVGRW8YN";
+                sec = "8149275b-b855-4643-a4ed-02eb2f845866";
+            } else {
+                app = "APP-7Y3IFBAL9DB2NVJC";
+                sec = "8cffcb48-d32a-48b0-b343-1fd48f2ac15f";
+            }
+
+            body = Unirest.post("https://orcid.org/oauth/token")
+                    .field("client_id", app)
+                    .field("client_secret", sec)
+                    .field("grant_type", "authorization_code")
+                    .field("redirect_uri", uri)
+                    .field("code", code)
+                    .asString().getBody();
+
+        } catch (Exception e) {
+            throw new FailMongoConnectionException(String.format("Cannot retrieve ORCID-token %s", uri), e);
+        }
+        return Response.ok().entity(body).build();
+    }
 }

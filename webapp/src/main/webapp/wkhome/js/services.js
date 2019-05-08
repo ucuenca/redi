@@ -265,3 +265,19 @@ wkhomeServices.service('searchTextResultsService', ['$rootScope', function ($roo
         }
         return this;
     }]);
+
+
+wkhomeServices.factory('getORCIDToken', ['$resource', '$http', 'globalData',
+    function ($resource, $http, globalData) {
+        var serverInstance = globalData.serverInstance;
+        return $resource(serverInstance + 'mongo/getORCIDToken?uri=:uri&code=:code', {}, {
+            query: {
+                method: 'GET',
+                params: {uri: 'uri', code: 'code'},
+                isArray: false,
+                cache: false,
+                headers: {'Accept': 'application/json'}
+            }
+        });
+    }
+]);

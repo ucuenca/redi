@@ -25,6 +25,7 @@
   "dependencies": {
     "angular": "^1.3.x",
     "angular-mocks": "^1.3.x",
+    "ng-cookies": "v1.1.1",
     "angular-swipe": "~0.0.x",
     "jsonld": "~0.3.x",
     "jquery": "~2.1.3",

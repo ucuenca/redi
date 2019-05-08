@@ -16,7 +16,8 @@ var wkhomeApp = angular.module('wkhomeApp', [
     'hm.readmore',
     'ui.bootstrap',
     'ui.bootstrap.locale-dialog',
-    'ngSolr'
+    'ngSolr',
+    'ngCookie'
 ]);
 
 
@@ -137,7 +138,10 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                 when('/group/area', {
                   templateUrl: '/wkhome/partials/genericSubClusterGraph.html',
                 }).
-
+                when('/oauth/callback/:code*', {
+                  templateUrl: '/wkhome/partials/callback.html',
+                }).
+                        
                 when('/:lang/w/search?:text', {//when user search an author in textbox
                     templateUrl: '/wkhome/partials/search.html',
                     //      controller: 'ExploreController'
