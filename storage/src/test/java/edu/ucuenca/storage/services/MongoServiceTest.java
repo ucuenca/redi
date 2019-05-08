@@ -19,6 +19,7 @@ package edu.ucuenca.storage.services;
 
 import edu.ucuenca.storage.AbstractREDIMongoEnv;
 import edu.ucuenca.storage.api.MongoService;
+import edu.ucuenca.storage.api.PopulateMongo;
 import edu.ucuenca.storage.exceptions.FailMongoConnectionException;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -27,11 +28,15 @@ import org.junit.Test;
 public class MongoServiceTest extends AbstractREDIMongoEnv {
 
     private static MongoService mongoService;
+    private static PopulateMongo pmongo;
 
     @Override
     public void registerServices() {
         mongoService = getMarmotta().getService(MongoService.class);
+        pmongo = getMarmotta().getService(PopulateMongo.class);
     }
+    
+    
 
     @Test
     @Ignore
@@ -44,6 +49,17 @@ public class MongoServiceTest extends AbstractREDIMongoEnv {
     public void testAtuhor() {
         Assert.assertTrue("Result should be greater than 1.",
                 mongoService.getAuthor("http://localhost:8080/resource/authors/victor-hugo-saquicela-galarza").length() > 1);
+    }
+    
+    @Test
+   // @Ignore("Fill MongoDB with data")
+    public void testConference() {
+       // Assert.assertTrue("Result should be greater than 1.", );
+        //getStatsConferencebyAuthor (String uri);
+        System.out.print ("RESP");
+         //System.out.print (pmongo);
+          System.out.print ("sig");
+        System.out.print (pmongo.getStatsbyAuthor());
     }
 
     @Test

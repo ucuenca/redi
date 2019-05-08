@@ -60,6 +60,8 @@ Highcharts.chart('containerpc', {
                 }
             }
         }
+    }, credits: {
+        enabled: false
     },
     series: [{
         name: 'Share',

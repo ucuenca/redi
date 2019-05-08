@@ -6,65 +6,45 @@
 //dateLineChart.factory('d3', function () {
  //   return  d3;
 //});
-wkhomeApp.directive('dateLinechart', ["d3", "globalData", "sparqlQuery",
+wkhomeApp.directive('tagCanvas', ["d3", "globalData", "sparqlQuery",
     function (d3, globalData, sparqlQuery) {
 
 
         function draw(id, fData, w, h) {
 
+             //var countries = ['United States', 'Canada', 'Argentina', 'Armenia'];
+             var listk =  fData;
+             var cList = $('#tags ul');
+             for ( var i = 0 ; i< listk.length ;i++)
+             {  var  newelement = $("<li><a href='blanck'>"+listk[i]+"</a></li>");
 
-
-//Highcharts.theme = {};
-
-//Highcharts.setOptions(Highcharts.theme);
-
-//console.log (Highcharts.theme);
-Highcharts.chart('containerLine', {
-    chart: {
-        type: 'line'
-    },
-    title: {
-        text: 'N. publicaciones en el tiempo'
-    },
-    subtitle: {
-        text: ''
-    },
-    xAxis: {
-        categories: fData.ax 
-
-    },
-    yAxis: {
-        title: {
-            text: 'Publicaciones'
-        }
-    },
-    plotOptions: {
-        line: {
-            dataLabels: {
-                enabled: true,
-               style: {
-                fontSize: '10px',
-                fontWeight: 'bold',
-                color : '#1a1a1a'
+               cList.append(newelement);
+               //console.log (li);
+           // console.log (aaa);
             }
-            },
-            enableMouseTracking: true
-        }
-    }, credits: {
-        enabled: false
-    },
-    series: [{
-        name: 'Publicaciones',
-        data: fData.ay
-    }]
-});
+
+
+
+          TagCanvas.Start('myCanvas', 'tags', {
+                    textColour: '#000000',
+                    outlineColour: '#ff00ff',
+                    reverse: true,
+                    depth: 1.0,
+                    weight: true,
+                    weightFrom: 'data-weight',
+                    initial: [0.0, -0.05],
+                    maxSpeed: 0.05,
+                    shadow: '#ccf',
+                    shadowBlur: 3
+                });
+
 
  
         }
         return {
             restrict: 'E',
             scope: {
-                data: '=',
+                datacanvas: '=',
             },
             compile: function (element, attrs, transclude) {
                 //  Create  a   SVG root    element
@@ -79,12 +59,12 @@ Highcharts.chart('containerLine', {
                 //  Return  the link    function
                 return  function (scope, element, attrs) {
                     //  Watch   the data    attribute   of  the scope
-                    scope.$watch('data', function (newVal, oldVal, scope) {
+                    scope.$watch('datacanvas', function (newVal, oldVal, scope) {
                         //  Update  the chart
 
-                        var data = scope.data;
+                        var data = scope.datacanvas;
                             // draw(svg, data, w, h);
-
+                         console.log ("Dibujar"+data);
                         if (data) {
                             draw(svg, data, w, h);
                         }
