@@ -8,6 +8,7 @@ package org.apache.marmotta.ucuenca.wk.commons.disambiguation.utils;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.apache.marmotta.ucuenca.wk.commons.util.ModifiedJaccardMod;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Person;
@@ -22,7 +23,11 @@ public class AffiliationUtils {
     public static double compareTitle(String name1, String name2) {
         ModifiedJaccardMod metric = new ModifiedJaccardMod();
         metric.prioritizeWordOrder = false;
-        double sim = metric.distanceName(name1, name2).getValue();
+        Map.Entry<Integer, Double> distanceName = metric.distanceName(name1, name2);
+        Double sim = distanceName.getValue();
+        if (distanceName.getKey() == 0) {
+            sim *= 0.5;
+        }
         return sim;
     }
 

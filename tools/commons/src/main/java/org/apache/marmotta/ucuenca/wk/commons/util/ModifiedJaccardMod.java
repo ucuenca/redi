@@ -36,6 +36,7 @@ public class ModifiedJaccardMod {
     public double minOverlap = 0.7;
     public int minMatchs = 3;
     public boolean priorFirst = false;
+    public boolean priorOrd = false;
 
     public double countUniqueTokens(String name) {
         List<String> tokenizer = tokenizer(name.toLowerCase());
@@ -56,6 +57,8 @@ public class ModifiedJaccardMod {
 
     public Map.Entry<Integer, Double> distanceName(String name1, String name2) {
         List<String> tks1 = tokenizer(name1.toLowerCase());
+        String firstToken = tks1.isEmpty() ? "" : tks1.get(0);
+        boolean firstTokenUsed = true;
         List<String> tks2 = tokenizer(name2.toLowerCase());
         int maxlen = Math.max(tks1.size(), tks2.size());
         onlyCompleteMatchs = true;
@@ -63,6 +66,9 @@ public class ModifiedJaccardMod {
         Integer completeMatchs = c.getKey();
         onlyCompleteMatchs = false;
         Map.Entry<Integer, Double> c1 = countMatchs(tks1, tks2);
+        if (tks1.contains(firstToken)) {
+            firstTokenUsed = false;
+        }
         double mx = Math.min(tks1.size(), tks2.size());
         double val = (c.getValue() + c1.getValue()) / (c.getKey() + c1.getKey() + mx);
         if (applyMinOverlapConstrain) {
@@ -71,6 +77,9 @@ public class ModifiedJaccardMod {
             } else {
                 val = 0.5 * val;
             }
+        }
+        if (priorOrd && !firstTokenUsed) {
+            val = 0;
         }
         return new AbstractMap.SimpleEntry<>(completeMatchs, val);
     }

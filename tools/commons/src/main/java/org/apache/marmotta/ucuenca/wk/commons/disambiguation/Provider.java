@@ -98,6 +98,7 @@ public class Provider {
                 + "	graph <" + Graph + "> {\n"
                 + "  		?q <http://www.w3.org/2002/07/owl#oneOf> <URI> .\n"
                 + "  		?p <http://www.w3.org/2002/07/owl#oneOf> ?q .\n"
+                //+ "             values ?p { <http://search.scielo.org/data/author/S0798-04692002000100014_3> } ."
                 + "	}\n"
                 //                + "	graph <" + "https://redi.cedia.edu.ec/context/respOneOf" + "> {\n"
                 //                + "  		?x <http://purl.org/dc/terms/author> <URI> .\n"
@@ -280,7 +281,10 @@ public class Provider {
             n.Publications = new ArrayList<>();
             for (Map<String, Value> ar : rsP) {
                 if (ar.get("p") != null) {
-                    n.Publications.add(ar.get("p").stringValue());
+                    String aff = ar.get("p").stringValue();
+                    if (aff != null && !aff.trim().isEmpty()) {
+                        n.Publications.add(aff);
+                    }
                 }
             }
             //get Affiliations
@@ -288,7 +292,10 @@ public class Provider {
             n.Affiliations = new ArrayList<>();
             for (Map<String, Value> ar : rsA) {
                 if (ar.get("p") != null) {
-                    n.Affiliations.add(ar.get("p").stringValue());
+                    String aff = ar.get("p").stringValue();
+                    if (aff != null && !aff.trim().isEmpty()) {
+                        n.Affiliations.add(aff);
+                    }
                 }
             }
             //get Topics
@@ -304,7 +311,10 @@ public class Provider {
             n.ORCIDs = new ArrayList<>();
             for (Map<String, Value> ar : rsOR) {
                 if (ar.get("o") != null) {
-                    n.ORCIDs.add(ar.get("o").stringValue());
+                    String aff = ar.get("o").stringValue();
+                    if (aff != null && !aff.trim().isEmpty()) {
+                        n.ORCIDs.add(aff);
+                    }
                 }
             }
             //
