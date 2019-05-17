@@ -71,7 +71,7 @@ public class MongoServiceImpl implements MongoService {
     private MongoCollection<Document> authors;
     private MongoCollection<Document> statistics;
     private MongoCollection<Document> statisticsByInst;
-    private MongoCollection<Document>statisticsByAuthor;
+    private MongoCollection<Document> statisticsByAuthor;
     private MongoCollection<Document> relatedauthors;
     private MongoCollection<Document> clusters;
     private MongoCollection<Document> clustersTotals;
@@ -79,6 +79,8 @@ public class MongoServiceImpl implements MongoService {
     private MongoCollection<Document> authorsByDisc;
     private MongoCollection<Document> countries;
     private MongoCollection<Document> sparqls;
+
+    private MongoCollection<Document> sessions;
 
     @PostConstruct
     public void initialize() throws FailMongoConnectionException {
@@ -103,6 +105,8 @@ public class MongoServiceImpl implements MongoService {
         countries = db.getCollection(Collection.COUNTRIES.getValue());
         sparqls = db.getCollection(Collection.SPARQLS.getValue());
         statisticsByAuthor = db.getCollection(Collection.STATISTICS_AUTHOR.getValue());
+
+        sessions = db.getCollection(Collection.SESSIONS.getValue());
     }
 
     @Override
@@ -117,17 +121,17 @@ public class MongoServiceImpl implements MongoService {
         return statistics.find(eq("_id", id))
                 .first().toJson();
     }
-    
+
     @Override
     public String getStatisticsByInst(String id) {
         return statisticsByInst.find(eq("_id", id)).first().toJson();
-       
+
     }
-    
+
     @Override
     public String getStatisticsByAuthor(String id) {
         return statisticsByAuthor.find(eq("_id", id)).first().toJson();
-       
+
     }
 
     @Override
@@ -260,5 +264,24 @@ public class MongoServiceImpl implements MongoService {
         catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void registerSession(String orcid, String token) {
+        BasicDBObject key = new BasicDBObject();
+        key.put("orcid", orcid);
+        key.put("token", token);
+        BasicDBObject main = new BasicDBObject();
+        main.append("_id", key);
+        Document parse = Document.parse(main.toJson());
+        sessions.insertOne(parse);
+    }
+
+    @Override
+    public boolean checkSession(String orcid, String token) {
+        BasicDBObject key = new BasicDBObject();
+        key.put("orcid", orcid);
+        key.put("token", token);
+        return sessions.find(eq("_id", key)).iterator().hasNext();
     }
 }
