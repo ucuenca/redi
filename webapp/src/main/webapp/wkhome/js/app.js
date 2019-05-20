@@ -133,6 +133,9 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                 when('/author/network/:authorId*', {
                   templateUrl: '/wkhome/partials/genericRelatedAuthor.html',
                 }).
+                when('/author/profileval/:authorId*', {
+                  templateUrl: '/wkhome/partials/authorVal.html',
+                }).
                 when('/author/profile/:author*', {
                   templateUrl: '/wkhome/partials/authorProfile.html',
                  // controller: 'AuthorProfile'

@@ -55,6 +55,10 @@ public interface MongoService {
     public String getStatisticsByInst(String id);
     
     String getStatisticsByAuthor(String id);
+    
+     public Document getProfileValAuthor(String id);
+     
+    public Document removeProfileValAuthor(String id);
 
     /**
      * Create a connection to {@link com.mongodb.MongoClient}.
@@ -66,7 +70,7 @@ public interface MongoService {
     public enum Collection {
         SPARQLS("sparqls"), AUTHORS("authors"), PUBLICATIONS("publications"), STATISTICS("statistics"),STATISTICS_INST("statistics_inst"),
         RELATEDAUTHORS("relatedauthors"), AUTHORS_DISCPLINE("authors_discipline"), AUTHORS_AREA("authors_area"),
-        COUNTRIES("countries"), CLUSTERS("clusters"), CLUSTERSTOTALS("clusterstotals"), STATISTICS_AUTHOR("statistics_author");
+        COUNTRIES("countries"), CLUSTERS("clusters"), CLUSTERSTOTALS("clusterstotals"), STATISTICS_AUTHOR("statistics_author"), PROFILE_AUTHOR("profile_author");
 
         private final String value;
 

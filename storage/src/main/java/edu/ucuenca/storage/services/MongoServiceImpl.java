@@ -79,6 +79,8 @@ public class MongoServiceImpl implements MongoService {
     private MongoCollection<Document> authorsByDisc;
     private MongoCollection<Document> countries;
     private MongoCollection<Document> sparqls;
+    private MongoCollection<Document> authors_val;
+    
 
     @PostConstruct
     public void initialize() throws FailMongoConnectionException {
@@ -103,6 +105,7 @@ public class MongoServiceImpl implements MongoService {
         countries = db.getCollection(Collection.COUNTRIES.getValue());
         sparqls = db.getCollection(Collection.SPARQLS.getValue());
         statisticsByAuthor = db.getCollection(Collection.STATISTICS_AUTHOR.getValue());
+        authors_val = db.getCollection(Collection.PROFILE_AUTHOR.getValue());
     }
 
     @Override
@@ -145,6 +148,19 @@ public class MongoServiceImpl implements MongoService {
                 .first()
                 .toJson();
     }
+    
+     @Override
+    public Document getProfileValAuthor(String id) {
+        return authors_val.find(eq("_id", id)).first();
+       
+    }
+    
+     @Override
+    public Document removeProfileValAuthor(String id) {
+        return authors_val.findOneAndDelete(eq("_id", id));
+       
+    }
+    
 
     @Override
     public List<Document> getClusters() {
@@ -208,6 +224,8 @@ public class MongoServiceImpl implements MongoService {
         Document first = clustersTotals.find(eq("_id", uri)).first();
         return (List<Document>) first.get("subclusters");
     }
+    
+    
 
     @Override
     public String getSPARQL(String qry) {

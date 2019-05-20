@@ -1,0 +1,14 @@
+
+.valInfoProf {
+	font-size: 13px;
+}
+
+.sectionval {
+
+ display: none;
+}
+
+.sectionval.active {
+
+	display: block;
+}

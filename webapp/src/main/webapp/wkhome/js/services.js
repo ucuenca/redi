@@ -280,3 +280,39 @@ wkhomeServices.service('searchTextResultsService', ['$rootScope', function ($roo
         }
         return this;
     }]);
+
+
+wkhomeServices.factory('profileval', ['$resource', '$http', 'globalData',
+    function ($resource, $http, globalData) {
+        var serverInstance = globalData.serverInstance;
+        return $resource(serverInstance + 'profileval/tablesInfo?uri=:id&orcid=:orcid', {}, {
+            query: {
+                method: 'GET',
+                params: {id: 'id' , orcid : 'orcid'},
+                isArray: false,
+                cache: true,
+                headers: {'Accept': 'application/json'}
+            }
+        });
+    }
+]);
+
+
+wkhomeServices.factory('saveprofile', ['$resource', '$http', 'globalData',
+    function ($resource, $http, globalData) {
+       // $http.defaults.headers.common['content-type'] = 'application/x-www-form-urlencoded';
+       // $http.defaults.headers.common['Accept'] = 'application/json';
+        var transform = function (data) {
+            console.log ($.param(data));
+          
+            return $.param(data);
+        }
+        /* var identifier = function (id) {
+            console.log (id);
+            return $.param(id);
+        }*/
+        var serverInstance = globalData.serverInstance;
+        return $resource(serverInstance + 'profileval/saveData', {}, {
+            querySrv: {method: 'POST', isArray: false,  transformRequest: transform ,   headers: {'Accept': 'application/json'} }
+        });
+    }]);
