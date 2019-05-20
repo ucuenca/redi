@@ -15,8 +15,12 @@
  */
 package ec.edu.cedia.redi.ldclient.test.scholar;
 
+import org.apache.marmotta.ldclient.model.ClientResponse;
 import org.apache.marmotta.ldclient.test.provider.ProviderTestBase;
 import org.junit.Test;
+import org.openrdf.model.Model;
+import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.Rio;
 
 /**
  *

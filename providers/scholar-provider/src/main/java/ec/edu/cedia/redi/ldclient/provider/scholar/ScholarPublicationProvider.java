@@ -98,7 +98,7 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
     protected Map<String, JSoupMapper> getMappings(String resource, String requestUrl) {
         postMappings.clear();
         if (requestUrl.matches(AUTHORS_SEARCH)) {
-            postMappings.put(REDI.NAMESPACE + "googlescholarURL", new CssUriAttrBlacklistQueryParamsMapper("div .gsc_oai_name a", "href", "hl", "oe"));
+            postMappings.put(REDI.NAMESPACE + "googlescholarURL", new CssUriAttrBlacklistQueryParamsMapper("div .gs_ai_name a", "href", "hl", "oe"));
         } else if (requestUrl.matches(PROFILE)) {
             postMappings.put(FOAF.NAMESPACE + "publications", new CssUriAttrWhitelistQueryParamsMapper("div .gsc_a_tr .gsc_a_t a", "data-href", "view_op", "citation_for_view"));
             postMappings.put(FOAF.NAMESPACE + "img", new ScholarImageUriAttrMapper("div#gsc_prf_pua img", "src", "view_op", "user"));
