@@ -186,23 +186,23 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             } else {
                 ProcessAuthors(Providers, null);
             }
-            for (int w0 = 0; w0 < 4; w0++) {
-                ProcessCoauthors(Providers, true);
-                sparqlService.getGraphDBInstance().dumpBuffer();
-                sparqlUtils.addAll(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "1");
-            }
-            mergeAuthors();
-            sparqlService.getGraphDBInstance().dumpBuffer();
-//      /**/
-            sparqlUtils.clearSameAs(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "2Fix");
-            sparqlUtils.replaceSameAsSubject(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "F", constantService.getAuthorsSameAsGraph() + "2");
-            sparqlUtils.deleteGraph(constantService.getAuthorsSameAsGraph());
-            sparqlUtils.copyGraph(constantService.getAuthorsSameAsGraph() + "F", constantService.getAuthorsSameAsGraph());
-//      /**/
-            ProcessCoauthors(Providers, false);
-            sparqlService.getGraphDBInstance().dumpBuffer();
-            ProcessPublications(Providers);
-            sparqlService.getGraphDBInstance().dumpBuffer();
+//            for (int w0 = 0; w0 < 4; w0++) {
+//                ProcessCoauthors(Providers, true);
+//                sparqlService.getGraphDBInstance().dumpBuffer();
+//                sparqlUtils.addAll(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "1");
+//            }
+//            mergeAuthors();
+//            sparqlService.getGraphDBInstance().dumpBuffer();
+////      /**/
+//            sparqlUtils.clearSameAs(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "2Fix");
+//            sparqlUtils.replaceSameAsSubject(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "F", constantService.getAuthorsSameAsGraph() + "2");
+//            sparqlUtils.deleteGraph(constantService.getAuthorsSameAsGraph());
+//            sparqlUtils.copyGraph(constantService.getAuthorsSameAsGraph() + "F", constantService.getAuthorsSameAsGraph());
+////      /**/
+//            ProcessCoauthors(Providers, false);
+//            sparqlService.getGraphDBInstance().dumpBuffer();
+//            ProcessPublications(Providers);
+//            sparqlService.getGraphDBInstance().dumpBuffer();
         } catch (Exception ex) {
             log.error("Unknown error while disambiguating");
             ex.printStackTrace();

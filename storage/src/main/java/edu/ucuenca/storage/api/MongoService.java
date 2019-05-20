@@ -51,14 +51,19 @@ public interface MongoService {
     public String getAuthorsByArea(String cluster, String subcluster);
 
     public List<Document> getCountries();
-    
+
     public String getStatisticsByInst(String id);
-    
-    String getStatisticsByAuthor(String id);
-    
-     public Document getProfileValAuthor(String id);
+
+    public String getStatisticsByAuthor(String id);
+
+    public void registerSession(String orcid, String token);
+      
+    public Document getProfileValAuthor(String id);
      
     public Document removeProfileValAuthor(String id);
+
+    public boolean checkSession(String orcid, String token);
+
 
     /**
      * Create a connection to {@link com.mongodb.MongoClient}.
@@ -68,9 +73,10 @@ public interface MongoService {
     public void connect() throws FailMongoConnectionException;
 
     public enum Collection {
-        SPARQLS("sparqls"), AUTHORS("authors"), PUBLICATIONS("publications"), STATISTICS("statistics"),STATISTICS_INST("statistics_inst"),
+        SPARQLS("sparqls"), AUTHORS("authors"), PUBLICATIONS("publications"), STATISTICS("statistics"), STATISTICS_INST("statistics_inst"),
         RELATEDAUTHORS("relatedauthors"), AUTHORS_DISCPLINE("authors_discipline"), AUTHORS_AREA("authors_area"),
-        COUNTRIES("countries"), CLUSTERS("clusters"), CLUSTERSTOTALS("clusterstotals"), STATISTICS_AUTHOR("statistics_author"), PROFILE_AUTHOR("profile_author");
+        COUNTRIES("countries"), CLUSTERS("clusters"), CLUSTERSTOTALS("clusterstotals"), STATISTICS_AUTHOR("statistics_author"), PROFILE_AUTHOR("profile_author") ,SESSIONS("sessions");
+
 
         private final String value;
 

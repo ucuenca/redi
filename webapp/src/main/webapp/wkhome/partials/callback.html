@@ -1,0 +1,21 @@
+<h1>
+    Welcome to REDI. Oauth 2.0 redirection going on, please wait a moment ... 
+</h1>
+
+
+<div ng-controller="sessionMg">
+    
+</div>
+
+
+
+<script>
+    if ( ! window.location.href.includes('#') ){
+        var qs = window.location.href.split('\?')[1];
+        var prm = qs.split('&');
+        var code = prm[0].split('=')[1];
+        //var code = window.location.href;
+        var red = window.location.origin + "#/oauth/callback/" + encodeURIComponent(code);
+        window.location.href = red ;
+    }
+</script>
