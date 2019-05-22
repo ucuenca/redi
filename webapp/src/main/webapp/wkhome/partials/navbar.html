@@ -43,7 +43,7 @@
             </li>
             <li ng-if="!loggedin()"  >
                 <a class="login-btn-orcid"
-                   href="https://orcid.org/oauth/authorize?client_id={{oapp}}&response_type=code&scope=/authenticate&redirect_uri={{ouri}}"
+                   href="https://orcid.org/oauth/authorize?client_id={{clientId}}&response_type=code&scope=/authenticate&redirect_uri={{callback}}&state={{getState()}}"
                    > 
                     <img src="/wkhome/images/orcid_icon.png" />
                     Log in with ORCID

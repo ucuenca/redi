@@ -282,7 +282,6 @@ wkhomeServices.service('searchTextResultsService', ['$rootScope', function ($roo
     }]);
 
 
-<<<<<<< HEAD
 wkhomeServices.factory('profileval', ['$resource', '$http', 'globalData',
     function ($resource, $http, globalData) {
         var serverInstance = globalData.serverInstance;
@@ -292,7 +291,12 @@ wkhomeServices.factory('profileval', ['$resource', '$http', 'globalData',
                 params: {id: 'id' , orcid : 'orcid'},
                 isArray: false,
                 cache: true,
-=======
+                headers: {'Accept': 'application/json'}
+            }
+        });
+    }
+]);
+
 wkhomeServices.factory('getORCIDToken', ['$resource', '$http', 'globalData',
     function ($resource, $http, globalData) {
         var serverInstance = globalData.serverInstance;
@@ -302,13 +306,11 @@ wkhomeServices.factory('getORCIDToken', ['$resource', '$http', 'globalData',
                 params: {uri: 'uri', code: 'code'},
                 isArray: false,
                 cache: false,
->>>>>>> 8d468add6a259b9fcdfe5ab5b9e525ec907399a1
                 headers: {'Accept': 'application/json'}
             }
         });
     }
 ]);
-<<<<<<< HEAD
 
 
 wkhomeServices.factory('saveprofile', ['$resource', '$http', 'globalData',
@@ -329,5 +331,3 @@ wkhomeServices.factory('saveprofile', ['$resource', '$http', 'globalData',
             querySrv: {method: 'POST', isArray: false,  transformRequest: transform ,   headers: {'Accept': 'application/json'} }
         });
     }]);
-=======
->>>>>>> 8d468add6a259b9fcdfe5ab5b9e525ec907399a1

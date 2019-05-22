@@ -33,7 +33,7 @@ wkhomeApp.service('searchData', function () {
     this.dataRequested = false;
 });
 
-wkhomeApp.service('globalData', ['$window', function ($window) {
+wkhomeApp.service('globalData', ['$window','cookies', function ($window, cookies) {
      var baseURL = $window.location.origin + $window.location.pathname;
     //  baseURL = baseURL.replace("http","https").replace(":" + $window.location.port, "");
      this.serverInstance=baseURL;
@@ -74,6 +74,23 @@ wkhomeApp.service('globalData', ['$window', function ($window) {
     this.urltofindinDBLP = 'http://dblp.uni-trier.de/search?q={0}';
     this.urltofindinSCOPUS = 'http://www.scopus.com/results/results.uri?numberOfFields=0&src=s&clickedLink=&edit=&editSaveSearch=&origin=searchbasic&authorTab=&affiliationTab=&advancedTab=&scint=1&menu=search&tablin=&searchterm1={0}&field1=TITLE&dateType=Publication_Date_Type&yearFrom=Before+1960&yearTo=Present&loadDate=7&documenttype=All&subjects=LFSC&_subjects=on&subjects=HLSC&_subjects=on&subjects=PHSC&_subjects=on&subjects=SOSC&_subjects=on&st1={1}&st2=&sot=b&sdt=b&sl=91&s=TITLE%28{2}%29';
     this.urltofindinACADEMICS = 'https://academic.microsoft.com/#/search?iq=@{0}@&q={1}&filters=&from=0&sort=0';
+    
+    this.client_id = "";
+    this.cookie_prefix = "";
+    this.callback = "";
+    if (window.location.origin.includes('clon')) {
+        this.client_id = 'APP-R08L1P7JVVGRW8YN';
+        this.cookie_prefix = 'REDICLON';
+    } else {
+        this.client_id = 'APP-7Y3IFBAL9DB2NVJC';
+        this.cookie_prefix = 'REDI';                
+    }
+    this.callback = window.location.origin + '/wkhome/partials/callback.html';
+    
+    this.getSession = function (){
+        return cookies.get(this.cookie_prefix + '_ORCID');
+    };
+    
 }]);
 
 wkhomeApp.config(["$routeProvider", "$locationProvider",
@@ -144,7 +161,7 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                 when('/group/area', {
                   templateUrl: '/wkhome/partials/genericSubClusterGraph.html',
                 }).
-                when('/oauth/callback/:code*', {
+                when('/oauth/callback/code/:code*/state/:state*', {
                   templateUrl: '/wkhome/partials/callback.html',
                 }).
                         

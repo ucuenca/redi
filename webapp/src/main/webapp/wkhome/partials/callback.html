@@ -4,18 +4,28 @@
 
 
 <div ng-controller="sessionMg">
-    
+
 </div>
 
 
 
 <script>
-    if ( ! window.location.href.includes('#') ){
-        var qs = window.location.href.split('\?')[1];
-        var prm = qs.split('&');
-        var code = prm[0].split('=')[1];
-        //var code = window.location.href;
-        var red = window.location.origin + "#/oauth/callback/" + encodeURIComponent(code);
-        window.location.href = red ;
+    function getParameterByName(name, url) {
+        if (!url)
+            url = window.location.href;
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+        if (!results)
+            return null;
+        if (!results[2])
+            return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+    if (!window.location.href.includes('#')) {
+        var code = getParameterByName('code');
+        var state = getParameterByName('state');
+        var red = window.location.origin + "#/oauth/callback/code/" + encodeURIComponent(code) + "/state/" + encodeURIComponent(state);
+        window.location.href = red;
     }
 </script>
