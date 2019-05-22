@@ -5,6 +5,9 @@ wkhomeControllers.controller('authorVal', ['$scope', '$routeParams', '$window', 
     var author = $routeParams.authorId ;
     var orcid = "12321321-546546";
     var atk = "123s1ds2d";
+  //  console.log (sessionManagement.getOrcid());
+ //   console.log (sessionManagement.getAccessToken());
+    console.log (globalData);
 
     console.log (author);
 

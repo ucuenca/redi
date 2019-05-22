@@ -36,6 +36,16 @@ wkhomeControllers.controller('sessionMg', ["$scope", "cookies", '$routeParams', 
             });
         }
 
+         $scope.getOrcid = function () {
+            var logg = cookies.get(oappn + '_ORCID');
+              return JSON.parse(logg).orcid;
+         }
+
+         $scope.getAccessToken = function () {
+            var logg = cookies.get(oappn + '_ORCID');
+              return JSON.parse(logg).access_token;
+         }
+
 
 
 
