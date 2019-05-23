@@ -1,13 +1,28 @@
-wkhomeControllers.controller('authorVal', ['$scope', '$routeParams', '$window', 'globalData', 'profileval', 'saveprofile' ,
-  function($scope, $routeParams, $window, globalData, profileval , saveprofile) {
+wkhomeControllers.controller('authorVal', ['$rootScope','$scope', 'cookies' ,'$routeParams', '$window', 'globalData', 'profileval', 'saveprofile' ,
+  function($rootScope , $scope, cookies, $routeParams, $window, globalData, profileval , saveprofile) {
     // Define a new author object
    
     var author = $routeParams.authorId ;
-    var orcid = "12321321-546546";
-    var atk = "123s1ds2d";
-  //  console.log (sessionManagement.getOrcid());
- //   console.log (sessionManagement.getAccessToken());
-    console.log (globalData);
+    var orcid = "";
+    var atk = "";
+   // console.log ("ROOT");
+   // console.log ($rootScope.valor);
+       
+
+     // cookies.set ( globalData.getSession , '{ "name" : "asdasd" , "orcid" : "1234-45687" , "access_token" : "789545645621213"}');
+    // var logg = cookies.get(oappn + '_ORCID');
+    var logg = globalData.getSession();
+    var lo = logg !== undefined && logg !== null && logg !== '';
+     if (lo){
+      $scope.name = JSON.parse(logg).name;
+      $scope.orcid = JSON.parse(logg).orcid;
+      $scope.atk = JSON.parse(logg).access_token;
+     } 
+      orcid = $scope.orcid;
+       atk = $scope.atk;
+    console.log ("Session");
+    console.log ($scope.orcid);
+    console.log ( $scope.atk);
 
     console.log (author);
 

@@ -282,7 +282,6 @@ wkhomeServices.service('searchTextResultsService', ['$rootScope', function ($roo
     }]);
 
 
-
 wkhomeServices.factory('profileval', ['$resource', '$http', 'globalData',
     function ($resource, $http, globalData) {
         var serverInstance = globalData.serverInstance;
@@ -307,7 +306,6 @@ wkhomeServices.factory('getORCIDToken', ['$resource', '$http', 'globalData',
                 params: {uri: 'uri', code: 'code'},
                 isArray: false,
                 cache: false,
-
                 headers: {'Accept': 'application/json'}
             }
         });
