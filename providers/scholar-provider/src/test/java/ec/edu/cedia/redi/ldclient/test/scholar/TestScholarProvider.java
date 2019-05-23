@@ -19,8 +19,12 @@ import org.apache.marmotta.ldclient.model.ClientResponse;
 import org.apache.marmotta.ldclient.test.provider.ProviderTestBase;
 import org.junit.Test;
 import org.openrdf.model.Model;
+import org.openrdf.repository.Repository;
+import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.Rio;
+import org.openrdf.sail.memory.MemoryStore;
 
 /**
  *
@@ -40,6 +44,10 @@ public class TestScholarProvider extends ProviderTestBase {
     public void testScholarProfile() throws Exception {
         String query = "arevalo+univesidad+de+cuenca";
         testResource(String.format(template, query), "scholar-profile.sparql");
+        //ClientResponse retrieveResource = ldclient.retrieveResource(String.format(template, query));
+        //Model data = retrieveResource.getData();
+        //Rio.write(data, System.out, RDFFormat.RDFXML);
+
     }
 
 }
