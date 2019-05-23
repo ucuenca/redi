@@ -9,7 +9,7 @@ wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$windo
     author.uri = $routeParams.author;
     author.encodedUri = encodeURIComponent(author.uri);
     var newhost = $window.location.protocol + '//' + $window.location.hostname + ($window.location.port ? ':8080' : '') + '';
-    var profilevalUri = 'author/profileval/'+author.uri;
+    var profilevalUri = '/author/profileval/'+author.uri;
     console.log ("URL");
     console.log(profilevalUri);
 
