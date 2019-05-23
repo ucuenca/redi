@@ -29,6 +29,7 @@ import org.apache.marmotta.platform.core.api.task.TaskInfo;
 import org.apache.marmotta.platform.core.api.task.TaskManagerService;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
+import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Provider;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
@@ -99,6 +100,9 @@ public class CommonServiceImpl implements CommonService {
 
     @Inject
     private ExternalSPARQLService sparqlService;
+    
+    @Inject
+    private SparqlService sparqlServiceMarmotta;
 
     @Inject
     private CommonsServices com;
@@ -766,7 +770,7 @@ public class CommonServiceImpl implements CommonService {
                     + "    } \n"
                     + "} ";
 
-            List<Map<String, Value>> responseSubClAuthor = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, query);
+            List<Map<String, Value>> responseSubClAuthor = sparqlServiceMarmotta.query(QueryLanguage.SPARQL, query);
             List<Collaborator> collaborators = new ArrayList();
             for (Map<String, Value> authors : responseSubClAuthor) {
                 //Author a = new Author ();
@@ -899,7 +903,7 @@ public class CommonServiceImpl implements CommonService {
                     + "        }\n"
                     + "  }";
 
-            List<Map<String, Value>> responseClAuthor = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, query);
+            List<Map<String, Value>> responseClAuthor = sparqlServiceMarmotta.query(QueryLanguage.SPARQL, query);
             List<Collaborator> collaborators = new ArrayList();
             String[] targ = {};
             for (Map<String, Value> authors : responseClAuthor) {

@@ -3,16 +3,22 @@ wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$windo
     // Define a new author object
     $scope.author = {};
     $scope.coauthors = {};
+
     /*  $scope.coauthors  = [];*/
     var author = $scope.author;
     author.uri = $routeParams.author;
     author.encodedUri = encodeURIComponent(author.uri);
     var newhost = $window.location.protocol + '//' + $window.location.hostname + ($window.location.port ? ':8080' : '') + '';
+    var profilevalUri = '/author/profileval/'+author.uri;
+    console.log ("URL");
+    console.log(profilevalUri);
 
     Authors.query({
       id: author.uri
     }, function(data) {
+      
       $scope.author = data;
+
 
       for (var ki = 0; ki<data.orgs.length; ki++){
           var las = data.orgs[ki].split('/');
@@ -22,11 +28,19 @@ wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$windo
       
       var img = data.img == null ? "/wkhome/images/no_photo.png" : data.img;
       $scope.author.img = img;
+      $scope.author.claimUri =  "https://orcid.org/oauth/authorize?client_id="+globalData.client_id+"&response_type=code&scope=/authenticate&redirect_uri="+globalData.callback+"&state="+ profilevalUri;
+    
     });
 
     $scope.tree = function() {
       $window.location.hash = '/author/tree/' + author.uri;
     };
+
+    $scope.stat = function() {
+
+      $window.location.hash = '/info/statisticsbyAuthor/' + author.uri; 
+    };
+
 
     $scope.network = function() {
 

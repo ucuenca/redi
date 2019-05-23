@@ -86,7 +86,7 @@ public class ProfileValidationImpl implements ProfileValidation {
                 if (p.containsKey("lbls")){
                 obj.put("subject", p.get("lbls").stringValue());
                 }
-                if (table.containsKey(obj.get("uri"))){
+                if (!table.isEmpty() && table.containsKey(obj.get("uri"))){
                 obj.put("status", table.get(obj.get("uri")));
                 } else {
                  obj.put("status", false);
@@ -155,7 +155,7 @@ public class ProfileValidationImpl implements ProfileValidation {
             JSONObject obj = new JSONObject();
             obj.put("name", pair.getKey());
             obj.put("other", pair.getValue());
-            if (table.containsKey(obj.get("name"))){
+            if (!table.isEmpty() &&table.containsKey(obj.get("name"))){
             obj.put("status", table.get(obj.get("name")));
             } else {
             obj.put("status", false);
@@ -185,7 +185,7 @@ public class ProfileValidationImpl implements ProfileValidation {
                 JSONObject obj = new JSONObject();
                 if (p.containsKey("mail")){
                 obj.put("mail", p.get("mail").stringValue());
-                  if (table.containsKey(obj.get("mail"))){
+                  if (!table.isEmpty() && table.containsKey(obj.get("mail"))){
                 obj.put("status", table.get(obj.get("mail")));
                 } else {
                  obj.put("status", false);
@@ -239,7 +239,7 @@ public class ProfileValidationImpl implements ProfileValidation {
                 if (p.containsKey("names")){
                 obj.put("authors", p.get("names").stringValue());
                 }
-                    if (table.containsKey(obj.get("uri"))){
+                    if (!table.isEmpty() && table.containsKey(obj.get("uri"))){
                 obj.put("status", table.get(obj.get("uri")));
                 } else {
                  obj.put("status", false);
@@ -272,7 +272,7 @@ public class ProfileValidationImpl implements ProfileValidation {
     
      public HashMap<String, Boolean> recoverData (Document d, String name) {
           HashMap <String, Boolean> hmap = new HashMap ();
-       if (d.containsKey(name)){
+       if (d!= null && d.containsKey(name)){
          List<Document> ld = (List<Document>) d.get(name);
          Iterator lt = ld.iterator();
           

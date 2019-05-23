@@ -1,10 +1,28 @@
-wkhomeControllers.controller('authorVal', ['$scope', '$routeParams', '$window', 'globalData', 'profileval', 'saveprofile' ,
-  function($scope, $routeParams, $window, globalData, profileval , saveprofile) {
+wkhomeControllers.controller('authorVal', ['$rootScope','$scope', 'cookies' ,'$routeParams', '$window', 'globalData', 'profileval', 'saveprofile' ,
+  function($rootScope , $scope, cookies, $routeParams, $window, globalData, profileval , saveprofile) {
     // Define a new author object
    
     var author = $routeParams.authorId ;
-    var orcid = "12321321-546546";
-    var atk = "123s1ds2d";
+    var orcid = "";
+    var atk = "";
+   // console.log ("ROOT");
+   // console.log ($rootScope.valor);
+       
+
+     // cookies.set ( globalData.getSession , '{ "name" : "asdasd" , "orcid" : "1234-45687" , "access_token" : "789545645621213"}');
+    // var logg = cookies.get(oappn + '_ORCID');
+    var logg = globalData.getSession();
+    var lo = logg !== undefined && logg !== null && logg !== '';
+     if (lo){
+      $scope.name = JSON.parse(logg).name;
+      $scope.orcid = JSON.parse(logg).orcid;
+      $scope.atk = JSON.parse(logg).access_token;
+     } 
+      orcid = $scope.orcid;
+       atk = $scope.atk;
+    console.log ("Session");
+    console.log ($scope.orcid);
+    console.log ( $scope.atk);
 
     console.log (author);
 
@@ -43,11 +61,11 @@ wkhomeControllers.controller('authorVal', ['$scope', '$routeParams', '$window', 
 
          var dataSetn = [];
           _.each(apn.results.bindings, function (a){
-            console.log (a);
+          //  console.log (a);
             var name = [a.name.value];
             dataSetn.push (name);
      });
-           console.log (dataSetn);
+          // console.log (dataSetn);
 
          var datamail = [["mauricio.espi@yahoo.xxx"],["Mauricio.espinoza@ucuenca.edu.ec"]];  
          var dataSetp = [];
@@ -58,7 +76,7 @@ wkhomeControllers.controller('authorVal', ['$scope', '$routeParams', '$window', 
             //var name = [a.name.value];
             //dataSetn.push (name);
      });
-        console.log (dataSetp);
+       // console.log (dataSetp);
          var table;// =  $('#profileval1').DataTable( {});
          var table2;
          var table3;
@@ -77,7 +95,7 @@ wkhomeControllers.controller('authorVal', ['$scope', '$routeParams', '$window', 
          profileval.query({'id': author , 'orcid' : orcid  }, function (data) { 
            waitingDialog.hide();
             var alldata  = [];
-             console.log (data.profiles.data);
+         //    console.log (data.profiles.data);
             var tabla =  rendertable ( data.profiles.data );
             var tabla2 =  rendertable2 ( data.names.data );
             var tabla3 =  rendertable3 ( data.emails.data );
@@ -86,15 +104,27 @@ wkhomeControllers.controller('authorVal', ['$scope', '$routeParams', '$window', 
            // rendertable2 (dataSet)
             alldata.push ({"sec" : "secone" , "nametable": "profiles", "table": tabla , "data" : datasave }, {"sec" : "sectwo", "nametable": "names", "table": tabla2 , "data" : datasave  } , { "sec" : "secthree" , "nametable": "emails", "table": tabla3 ,  "data" : datasave  } ,{ "sec" : "secfour" ,"nametable": "publications", "table": tabla4 , "data" : datasave  });
              pagination (alldata);
+         } , function (some){
+          //  console.log ("Que llega?");
+           console.log (some);
+           alert ("Problemas al cargar los datos");
+              waitingDialog.hide();
          });
 
        
             saveprof = function () {
-       console.log ("Almacenando datos");
-     saveprofile.querySrv({'data': JSON.stringify(dataforsave) , 'id' : orcid , 'uri' : author , 'atk' : atk }, function (data) { 
+            console.log ("Almacenando datos");
+            saveprofile.querySrv({'data': JSON.stringify(dataforsave) , 'id' : orcid , 'uri' : author , 'atk' : atk }, function (data) { 
                console.log ("STATUS");
-               console.log (data);
+             //  console.log (data);
                alert ("Datos almacenados");
+                $('#exampleModal').modal('hide');
+               $window.location.hash = '/author/profile/' + author;
+              
+         } , function (some){
+           // console.log ("Que llega?");
+           console.log (some);
+              waitingDialog.hide();
          });
 
   }
@@ -283,7 +313,7 @@ wkhomeControllers.controller('authorVal', ['$scope', '$routeParams', '$window', 
     //  console.log (table.page());
      $("input:checkbox#maincheckbox."+alldata[i].nametable).prop('checked',false);
        dataforsave[alldata[i].nametable].push( savepag (alldata[i]));
-       console.log (dataforsave);
+      // console.log (dataforsave);
     if ((activetable.page.info().page+1) < activetable.page.info().pages ){
      activetable.page( 'next' ).draw( 'page' );
    }else 
@@ -307,12 +337,12 @@ wkhomeControllers.controller('authorVal', ['$scope', '$routeParams', '$window', 
     
      }
        dataforsave[alldata[i].nametable].pop();
-    console.log (alldata[i].nametable);
+   // console.log (alldata[i].nametable);
 
     }); }
 
     function showsection (i , next  ,alldata) {
-          console.log (i+next);
+         // console.log (i+next);
          if (next && i < alldata.length-1 ){
          
            i++;
@@ -320,11 +350,11 @@ wkhomeControllers.controller('authorVal', ['$scope', '$routeParams', '$window', 
          $(".sectionval").removeClass("active");
          $('#'+sec).addClass("active");
          activetable = alldata[i].table ;
-         console.log ($('#'+sec));
+      //   console.log ($('#'+sec));
         } else if (next && i == alldata.length -1){
             //  alert ("Gracias por participar. En unos dias sus datos seran actualizados");
             console.log ("FINISH");
-            console.log (dataforsave);
+          //  console.log (dataforsave);
             $('#exampleModal').modal();
                // var senddata = {"objeto":dataforsave };
           
