@@ -61,11 +61,11 @@ wkhomeControllers.controller('authorVal', ['$rootScope','$scope', 'cookies' ,'$r
 
          var dataSetn = [];
           _.each(apn.results.bindings, function (a){
-            console.log (a);
+          //  console.log (a);
             var name = [a.name.value];
             dataSetn.push (name);
      });
-           console.log (dataSetn);
+          // console.log (dataSetn);
 
          var datamail = [["mauricio.espi@yahoo.xxx"],["Mauricio.espinoza@ucuenca.edu.ec"]];  
          var dataSetp = [];
@@ -76,7 +76,7 @@ wkhomeControllers.controller('authorVal', ['$rootScope','$scope', 'cookies' ,'$r
             //var name = [a.name.value];
             //dataSetn.push (name);
      });
-        console.log (dataSetp);
+       // console.log (dataSetp);
          var table;// =  $('#profileval1').DataTable( {});
          var table2;
          var table3;
@@ -95,7 +95,7 @@ wkhomeControllers.controller('authorVal', ['$rootScope','$scope', 'cookies' ,'$r
          profileval.query({'id': author , 'orcid' : orcid  }, function (data) { 
            waitingDialog.hide();
             var alldata  = [];
-             console.log (data.profiles.data);
+         //    console.log (data.profiles.data);
             var tabla =  rendertable ( data.profiles.data );
             var tabla2 =  rendertable2 ( data.names.data );
             var tabla3 =  rendertable3 ( data.emails.data );
@@ -104,15 +104,27 @@ wkhomeControllers.controller('authorVal', ['$rootScope','$scope', 'cookies' ,'$r
            // rendertable2 (dataSet)
             alldata.push ({"sec" : "secone" , "nametable": "profiles", "table": tabla , "data" : datasave }, {"sec" : "sectwo", "nametable": "names", "table": tabla2 , "data" : datasave  } , { "sec" : "secthree" , "nametable": "emails", "table": tabla3 ,  "data" : datasave  } ,{ "sec" : "secfour" ,"nametable": "publications", "table": tabla4 , "data" : datasave  });
              pagination (alldata);
+         } , function (some){
+          //  console.log ("Que llega?");
+           console.log (some);
+           alert ("Problemas al cargar los datos");
+              waitingDialog.hide();
          });
 
        
             saveprof = function () {
-       console.log ("Almacenando datos");
-     saveprofile.querySrv({'data': JSON.stringify(dataforsave) , 'id' : orcid , 'uri' : author , 'atk' : atk }, function (data) { 
+            console.log ("Almacenando datos");
+            saveprofile.querySrv({'data': JSON.stringify(dataforsave) , 'id' : orcid , 'uri' : author , 'atk' : atk }, function (data) { 
                console.log ("STATUS");
-               console.log (data);
+             //  console.log (data);
                alert ("Datos almacenados");
+                $('#exampleModal').modal('hide');
+               $window.location.hash = '/author/profile/' + author;
+              
+         } , function (some){
+           // console.log ("Que llega?");
+           console.log (some);
+              waitingDialog.hide();
          });
 
   }
@@ -301,7 +313,7 @@ wkhomeControllers.controller('authorVal', ['$rootScope','$scope', 'cookies' ,'$r
     //  console.log (table.page());
      $("input:checkbox#maincheckbox."+alldata[i].nametable).prop('checked',false);
        dataforsave[alldata[i].nametable].push( savepag (alldata[i]));
-       console.log (dataforsave);
+      // console.log (dataforsave);
     if ((activetable.page.info().page+1) < activetable.page.info().pages ){
      activetable.page( 'next' ).draw( 'page' );
    }else 
@@ -325,12 +337,12 @@ wkhomeControllers.controller('authorVal', ['$rootScope','$scope', 'cookies' ,'$r
     
      }
        dataforsave[alldata[i].nametable].pop();
-    console.log (alldata[i].nametable);
+   // console.log (alldata[i].nametable);
 
     }); }
 
     function showsection (i , next  ,alldata) {
-          console.log (i+next);
+         // console.log (i+next);
          if (next && i < alldata.length-1 ){
          
            i++;
@@ -338,11 +350,11 @@ wkhomeControllers.controller('authorVal', ['$rootScope','$scope', 'cookies' ,'$r
          $(".sectionval").removeClass("active");
          $('#'+sec).addClass("active");
          activetable = alldata[i].table ;
-         console.log ($('#'+sec));
+      //   console.log ($('#'+sec));
         } else if (next && i == alldata.length -1){
             //  alert ("Gracias por participar. En unos dias sus datos seran actualizados");
             console.log ("FINISH");
-            console.log (dataforsave);
+          //  console.log (dataforsave);
             $('#exampleModal').modal();
                // var senddata = {"objeto":dataforsave };
           

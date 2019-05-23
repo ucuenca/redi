@@ -36,6 +36,12 @@ wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$windo
       $window.location.hash = '/author/tree/' + author.uri;
     };
 
+    $scope.stat = function() {
+
+      $window.location.hash = '/info/statisticsbyAuthor/' + author.uri; 
+    };
+
+
     $scope.network = function() {
 
       $window.location.hash = '/author/network/' + author.uri;
