@@ -18,6 +18,7 @@
 package ec.edu.cedia.redi.ldclient.provider.scholar;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import ec.edu.cedia.redi.ldclient.provider.scholar.mapping.ScholarAbstractTextLiteralMapper;
 import ec.edu.cedia.redi.ldclient.provider.scholar.mapping.ScholarAuthorTextLiteralMapper;
 import ec.edu.cedia.redi.ldclient.provider.scholar.mapping.ScholarCitationTextLiteralMapper;
@@ -31,9 +32,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -47,6 +51,7 @@ import org.apache.marmotta.ldclient.provider.html.mapping.CssUriAttrBlacklistQue
 import org.apache.marmotta.ldclient.provider.html.mapping.CssUriAttrMapper;
 import org.apache.marmotta.ldclient.provider.html.mapping.CssUriAttrWhitelistQueryParamsMapper;
 import org.apache.marmotta.ldclient.provider.html.mapping.JSoupMapper;
+import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Person;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.BIBO;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
 import org.apache.tika.parser.txt.CharsetDetector;
@@ -54,6 +59,7 @@ import org.apache.tika.parser.txt.CharsetMatch;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.openrdf.model.Literal;
 import org.openrdf.model.Model;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -62,6 +68,16 @@ import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.model.vocabulary.DCTERMS;
 import org.openrdf.model.vocabulary.FOAF;
 import org.openrdf.model.vocabulary.OWL;
+import org.openrdf.query.BindingSet;
+import org.openrdf.query.MalformedQueryException;
+import org.openrdf.query.QueryEvaluationException;
+import org.openrdf.query.QueryLanguage;
+import org.openrdf.query.TupleQueryResult;
+import org.openrdf.repository.Repository;
+import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryException;
+import org.openrdf.repository.sail.SailRepository;
+import org.openrdf.sail.memory.MemoryStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,13 +92,17 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
     private final ConcurrentHashMap<String, JSoupMapper> postMappings = new ConcurrentHashMap<>();
     private final ValueFactory vf = ValueFactoryImpl.getInstance();
     private static final int PUBLICATIONS_PAGINATION = 100;
+    //For checking coauthors name
+    private ConcurrentHashMap<String, Set<String>> profilePub = new ConcurrentHashMap<>();
+    private Set<String> usedProfiles = new HashSet<>();
+
     /**
      * Pattern matchings
      */
     public static final String AUTHORS_SEARCH = "^https?://scholar\\.google\\.com/citations\\?mauthors\\=(.*)\\&hl=en\\&view_op\\=search_authors";
     public static final String PROFILE = "^https?:\\/\\/scholar\\.google\\.com\\/citations\\?user=.*";
     public static final String PUBLICATION = "^https?:\\/\\/scholar\\.google\\.com\\/citations\\?view_op=view_citation.*";
-
+    
     @Override
     protected List<String> getTypes(URI resource) {
         if (resource.stringValue().matches(PROFILE)) {
@@ -92,7 +112,7 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
         }
         return Collections.emptyList();
     }
-
+    
     @SuppressWarnings("PMD.AvoidDuplicateLiterals")
     @Override
     protected Map<String, JSoupMapper> getMappings(String resource, String requestUrl) {
@@ -127,16 +147,88 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
             postMappings.put(BIBO.NAMESPACE + "volume", new ScholarTableTextLiteralMapper("div#gsc_vcd_table .gs_scl", "gsc_vcd_field", ".gsc_vcd_value", "Volume"));
             postMappings.put(BIBO.NAMESPACE + "abstract", new ScholarAbstractTextLiteralMapper("div#gsc_vcd_table .gs_scl", "gsc_vcd_field", ".gsc_vcd_value", "Description"));
             postMappings.put(REDI.NAMESPACE + "citationCount", new ScholarCitationTextLiteralMapper("div#gsc_vcd_table .gs_scl", "gsc_vcd_field", ".gsc_vcd_value div[style] a  ", "Total citations"));
-
+            
         }
         return postMappings;
     }
-
+    
     @Override
     protected List<String> buildRequestUrl(String resourceUri, Endpoint endpoint) throws DataRetrievalException {
+        profilePub.clear();
+        usedProfiles.clear();
         return Collections.singletonList(resourceUri);
     }
-
+    
+    private void addCount(ConcurrentHashMap<String, Set<String>> mp, String key, List<String> sz) {
+        if (!sz.isEmpty()) {
+            if (mp.get(key) == null) {
+                mp.put(key, new HashSet<String>());
+            }
+            mp.get(key).addAll(sz);
+        }
+    }
+    
+    private void remove(ConcurrentHashMap<String, Set<String>> mp, String pub) {
+        for (Iterator<Map.Entry<String, Set<String>>> it = mp.entrySet().iterator(); it.hasNext();) {
+            Map.Entry<String, Set<String>> next = it.next();
+            next.getValue().remove(pub);
+        }
+    }
+    
+    private void clearCoauthorsName(Model triples, String profile) throws RepositoryException, MalformedQueryException, QueryEvaluationException {
+        Repository repo = new SailRepository(new MemoryStore());
+        repo.initialize();
+        RepositoryConnection connection = repo.getConnection();
+        connection.add(triples);
+        TupleQueryResult evaluaten = connection.prepareTupleQuery(QueryLanguage.SPARQL, "select ?n { <" + profile + "> <http://xmlns.com/foaf/0.1/name> ?n . } ").evaluate();
+        String name = evaluaten.next().getBinding("n").getValue().stringValue();
+        List<String> nameOrg = Lists.newArrayList(name);
+        Person p1 = new Person();
+        p1.Name = new ArrayList<>();
+        p1.Name.add(nameOrg);
+        
+        evaluaten.close();
+        
+        TupleQueryResult evaluate = connection.prepareTupleQuery(QueryLanguage.SPARQL, "select ?p { <" + profile + "> <http://xmlns.com/foaf/0.1/publications> ?p . } ").evaluate();
+        while (evaluate.hasNext()) {
+            BindingSet next = evaluate.next();
+            String stringValue = next.getBinding("p").getValue().stringValue();
+            int countNames = 0;
+            String namer = null;
+            TupleQueryResult evaluatex = connection.prepareTupleQuery(QueryLanguage.SPARQL, "select ?n { <" + stringValue + "> <http://purl.org/dc/terms/contributor> ?n . } ").evaluate();
+            while (evaluatex.hasNext()) {
+                BindingSet next1 = evaluatex.next();
+                String namec = next1.getBinding("n").getValue().stringValue();
+                Person p2 = new Person();
+                p2.Name = new ArrayList<>();
+                p2.Name.add(Lists.newArrayList(namec));
+                if (p1.checkName(p2, false)) {
+                    countNames++;
+                    namer = namec;
+                }
+            }
+            URI profileURI = ValueFactoryImpl.getInstance().createURI(profile);
+            URI pubURI = ValueFactoryImpl.getInstance().createURI(stringValue);
+            URI namepro = ValueFactoryImpl.getInstance().createURI("http://xmlns.com/foaf/0.1/name");
+            if (countNames == 0 || countNames > 1) {
+                //Ignore publication
+                log.info("Publication {} has errors in the couathors names... Ignoring...", stringValue);
+                URI createURI1 = ValueFactoryImpl.getInstance().createURI("http://xmlns.com/foaf/0.1/publications");
+                triples.remove(profileURI, createURI1, pubURI);
+            } else {
+                //Remove coauthor
+                Literal createLiteral = ValueFactoryImpl.getInstance().createLiteral(namer);
+                URI createURI1 = ValueFactoryImpl.getInstance().createURI("http://purl.org/dc/terms/contributor");
+                triples.remove(pubURI, createURI1, createLiteral);
+                triples.add(profileURI, namepro, createLiteral);
+            }
+            evaluatex.close();
+        }
+        evaluate.close();
+        connection.close();
+        repo.shutDown();
+    }
+    
     @Override
     public List<String> parseResponse(String resource, String requestUrl, Model triples, InputStream input, String contentType) throws DataRetrievalException {
         try {
@@ -147,7 +239,7 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
                 String charset = detectEncoding(new ByteArrayInputStream(data), requestUrl);
                 contentType += "; charset=" + charset;
             }
-
+            
             List<String> urls = new ArrayList<>();
             if (requestUrl.matches(AUTHORS_SEARCH)) {
                 urls = super.parseResponse(resource, requestUrl, triples, in, contentType);
@@ -155,14 +247,24 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
             } else if (requestUrl.matches(PROFILE)) {
                 String r = requestUrl.replaceAll("&cstart=.*&pagesize=.*", "");
                 urls = super.parseResponse(r, requestUrl, triples, in, contentType);
+                //addCount(profilePub, r, urls);
             } else if (requestUrl.matches(PUBLICATION)) {
+                remove(profilePub, requestUrl);
                 urls = super.parseResponse(requestUrl, requestUrl, triples, in, contentType);
                 URI r = vf.createURI(requestUrl);
                 triples.add(r, BIBO.URI, r);
+                for (Iterator<Map.Entry<String, Set<String>>> it = profilePub.entrySet().iterator(); it.hasNext();) {
+                    Map.Entry<String, Set<String>> next = it.next();
+                    if (next.getValue().isEmpty() && !usedProfiles.contains(next.getKey())) {
+                        clearCoauthorsName(triples, next.getKey());
+                        usedProfiles.add(next.getKey());
+                    }
+                }
             }
             delay(); // wait after each call.
+
             return urls;
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -171,7 +273,7 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
      * Detect the stream's encoding using Tika, otherwise return default
      * encoding utf-8.
      *
-     * @param input      InputStream to be transformed
+     * @param input InputStream to be transformed
      * @param requestUrl Resource URL - Just for logging
      * @return New ByteArray Stream transformed to the UTF-8 Charset.
      */
@@ -188,7 +290,7 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
         }
         return "utf-8";
     }
-
+    
     @Override
     protected List<String> findAdditionalRequestUrls(String resource, Document document, String requestUrl) {
         List<String> urls = new ArrayList<>();
@@ -216,17 +318,19 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
             for (Element publication : publications) {
                 for (Value value : mapper.map(resource, publication, vf)) {
                     urls.add(value.stringValue());
+                    String r = requestUrl.replaceAll("&cstart=.*&pagesize=.*", "");
+                    addCount(profilePub, r, Lists.newArrayList(value.stringValue()));
                 }
             }
         }
         return urls;
     }
-
+    
     @Override
     public String getName() {
         return PROVIDER_NAME;
     }
-
+    
     @Override
     public String[] listMimeTypes() {
         return new String[]{"text/html"};
@@ -246,7 +350,7 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
             Thread.currentThread().interrupt();
         }
     }
-
+    
     private void registerAuthorProfile(String resource, Model triples) {
         List<URI> profiles = new ArrayList<>();
         for (Value object : triples.filter(null, REDI.GSCHOLAR_URl, null).objects()) {
