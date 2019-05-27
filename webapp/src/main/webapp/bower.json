@@ -54,7 +54,8 @@
     "d3-scale": "^2.0.0",
     "html2canvas": "^1.0.0-alpha.12",
     "datatables.net": "^1.10.19",
-    "datatables.net-dt": "^3.2.2"
+    "datatables.net-dt": "^3.2.2",
+    "tagcanvas": "bower-tagcanvas#^1.0.0"
   },
   "resolutions": {
     "angular-animate": "1.6.4",
