@@ -1229,8 +1229,8 @@ public class CommonServiceImpl implements CommonService {
                     + "  }  "
                     + "} ";
 
-            List<Map<String, Value>> responseAuthor1 = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, metaAuthor1);
-            List<Map<String, Value>> responseAuthor2 = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, metaAuthor2);
+            List<Map<String, Value>> responseAuthor1 = sparqlServiceMarmotta.query(QueryLanguage.SPARQL, metaAuthor1);
+            List<Map<String, Value>> responseAuthor2 = sparqlServiceMarmotta.query(QueryLanguage.SPARQL, metaAuthor2);
             Map<String, Value> get = responseAuthor1.get(0);
             get = CleanEmptyFields(get);
             get.putAll(CleanEmptyFields(responseAuthor2.get(0)));
@@ -1246,7 +1246,7 @@ public class CommonServiceImpl implements CommonService {
                  a.setTopics(getRelevantTopics(topics.split("\\|")));
                  }*/
 
-                List<Map<String, Value>> responseSubclusters = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, querySubCluster);
+                List<Map<String, Value>> responseSubclusters = sparqlServiceMarmotta.query(QueryLanguage.SPARQL, querySubCluster);
                 if (!responseSubclusters.isEmpty()) {
                     //   String[] arrayaux = new String[responseCluster.size()];
                     List<String> subclusters = new ArrayList();
@@ -1260,7 +1260,7 @@ public class CommonServiceImpl implements CommonService {
                     a.setTopics(arrayaux);
                 }
 
-                List<Map<String, Value>> responseCluster = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queryCluster);
+                List<Map<String, Value>> responseCluster = sparqlServiceMarmotta.query(QueryLanguage.SPARQL, queryCluster);
                 if (!responseCluster.isEmpty()) {
                     //   String[] arrayaux = new String[responseCluster.size()];
                     List<String> clusters = new ArrayList();
@@ -1293,7 +1293,7 @@ public class CommonServiceImpl implements CommonService {
                      a.setCluster(lc.split("\\|"));*/
                 }
 
-                List<Map<String, Value>> responseNpub = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, numpubquery);
+                List<Map<String, Value>> responseNpub = sparqlServiceMarmotta.query(QueryLanguage.SPARQL, numpubquery);
                 if (responseNpub.size() > 0 && !responseNpub.get(0).isEmpty()) {
                     String num = responseNpub.get(0).get("tot").stringValue();
                     a.setNpub(num);
