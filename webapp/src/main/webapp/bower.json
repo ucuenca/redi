@@ -55,7 +55,8 @@
     "html2canvas": "^1.0.0-alpha.12",
     "datatables.net": "^1.10.19",
     "datatables.net-dt": "^3.2.2",
-    "tagcanvas": "bower-tagcanvas#^1.0.0"
+    "tagcanvas": "bower-tagcanvas#^1.0.0",
+    "bootstrap-select":"^1.13.10"
   },
   "resolutions": {
     "angular-animate": "1.6.4",
