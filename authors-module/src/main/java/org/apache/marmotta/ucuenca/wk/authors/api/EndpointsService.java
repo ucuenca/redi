@@ -15,6 +15,7 @@ public interface EndpointsService {
      String listEndpoints();
      
      String registerSPARQL (String type , String org, String url , String graph );
+     String registerORCID (String type , String org );
     
      String registerOAI ( String type , String  org , String url , Boolean severemode);
    
