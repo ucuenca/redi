@@ -1,42 +1,56 @@
 <div class="container" ng-controller="authorVal" style="margin-top: 2%;">
-  <section id="secone" class="sectionval active" >
+  <div class="row" style="margin-bottom: 5%">
+  <section id="seczero" class="sectionval active" ng-model='data'>
+     <div id="profvalimg" class="col-md-4 text-center">
+     <img src="{{img}}" alt="author"  width="100"> 
+     </div>
+     <div class="col-md-8 text-left"> 
+  <form>
+  <div class="form-group row">  <h2> {{name}} </h2> </div>
+  
+  <div class="form-group row">
+    <label for="staticEmail" class="col-sm-2 col-form-label">Nombres :</label>
+    <div class="col-sm-10">
+       <input id="inputfname" value="{{fname}}">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="inputPassword" class="col-sm-2 col-form-label">Apellidos:</label>
+    <div class="col-sm-10">
+      <input id="inputlname" value="{{lname}}">
+    </div>
+  </div>
+    <div class="form-group row">
+    <label for="inputPassword" class="col-sm-2 col-form-label">Email:</label>
+    <div class="col-sm-10">
+      <input id="inputemail" value="{{email}}">
+    </div>
+  </div>
+    <div class="form-group row">
+    <label for="inputPassword" class="col-sm-2 col-form-label">Institución:</label>
+    <div class="col-sm-10">
+      <select class="selectpicker"  onchange="changeAction(this.value)"  id="endpoint_org"> 
+        <option selected="selected" value="none"> Seleccione una institución </option>
+        <option ng-repeat="org in orgs" value="{{org.id}}" > {{org.name}} </option> 
+         <option value="Other"> + Otra </option>
+      </select>
+    </div>
+  </div>
+   <div class="form-group row">
+      <label for="inputPassword" class="col-sm-2 col-form-label"></label>
+       <div class="col-sm-10">
+       <input  id="newOrg" style=" display: none" value=""> 
+      </div>
+      </div>
+    </form>
+     
+     </div>
+
+  </section>
+
+  <section id="secone" class="sectionval " >
   <div id="div1" class="row">
    <p><h2 class="text-center">Seleccione los perfiles que considera podrian corresponderle </h2></p>
-   <!--
-   <table class="table">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col"><input type="checkbox" class="custom-control-input" id="defaultUnchecked"></th>
-      <th scope="col">URI</th>
-      <th scope="col">Nombres</th>
-      <th scope="col">Palabras Clave</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-       <th scope="col"><input type="checkbox" class="custom-control-input" id="defaultUnchecked"></th>
-      <td>ESPINOZA MEJIA , JORGE MAURICIO</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <th scope="col"><input type="checkbox" class="custom-control-input" id="defaultUnchecked"></th>
-      <td>Espinoza Fuentes, Fernando Mauricio</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-       <th scope="col"><input type="checkbox" class="custom-control-input" id="defaultUnchecked"></th>
-      <td>ESPINOZA DURAN , ESTEBAN MAURICIO</td>
-      <td>the Bird</td>
-      <td>@twitter</td>
-    </tr>
-  </tbody>
-</table> -->
 
 
 <table id="profileval1"  class="table valInfoProf" style="width:100%">
@@ -101,13 +115,19 @@
    </table>
     </div>
 </section>
- 
+</div>
+ <div class="row">
  <div class="footer">
-  <ul class="pager text-center">
-    <li><a  id="prevButtonTable" ><b>Previous</b></a></li>
-    <li><a id="nextButtonTable" ><b>Next</b></a></li>
+  <ul id ="PagDataVal" ng-show="!showbuttonDespl()" class="pager text-center ">
+    <li><a  id="prevButtonTable" onclick="prev()"><b>Previous</b></a></li>
+    <li><a id="nextButtonTable" onclick="next()"><b>Next</b></a></li>
+  </ul>
+   <ul id ="PagDataSave" ng-show="showbuttonDespl()" class="pager text-center ">
+    <li><a  id="saveButtonTable" onclick="saveOnlyProfile()"><b>Save</b></a></li>
   </ul>
   </div>
+</div>
+</div>
 </div>
 
 
@@ -131,24 +151,3 @@
     </div>
   </div>
 </div>
-
-<!--
-<nav aria-label="Page navigation example">
-  <ul class="pagination text-center">
-    <li class="page-item">
-      <a class="page-link" href="#" aria-label="Previous">
-        <span aria-hidden="true">&laquo;</span>
-        <span class="sr-only">Previous</span>
-      </a>
-    </li>
-    <li class="page-item"><a class="page-link" href="#">1</a></li>
-    <li class="page-item"><a class="page-link" href="#">2</a></li>
-    <li class="page-item"><a class="page-link" href="#">3</a></li>
-    <li class="page-item">
-      <a class="page-link" href="#" aria-label="Next">
-        <span aria-hidden="true">&raquo;</span>
-        <span class="sr-only">Next</span>
-      </a>
-    </li>
-  </ul>
-</nav> -->

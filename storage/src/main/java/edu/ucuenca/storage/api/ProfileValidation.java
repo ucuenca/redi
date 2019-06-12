@@ -20,9 +20,12 @@ public interface ProfileValidation {
     public  JSONObject getProfileNames(String uri , HashMap<String, Boolean> table);
     public  JSONObject getProfileEmail(String uri , HashMap<String, Boolean> table);
     public  JSONObject getPublicationsCandidates(String uri , HashMap<String, Boolean> table);
+    public JSONObject getProfileInst(String uri);
     
     public String totalProfileVal (String uri , String orcid);
     
-     public String saveProfileData (String data , String id , String uri);
+    
+    
+     public String saveProfileData (String data , String id , String uri , String profile);
     
 }

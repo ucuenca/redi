@@ -275,8 +275,23 @@ wkhomeServices.service('searchTextResultsService', ['$rootScope', function ($roo
             this.bucket['data'] = data;
             $rootScope.$broadcast('saveData');
         }
+        this.saveData = function (data , orcid,type) {
+            this.bucket['data'] = data;
+            this.bucket['type'] = type;
+            this.bucket['orcid'] = orcid;
+            $rootScope.$broadcast('saveData');
+        }
+
+         this.getOrcid = function () {
+            return this.bucket['orcid'];
+        }
+
         this.getData = function () {
             return this.bucket['data'];
+        }
+
+        this.getType = function () {
+            return this.bucket['type'];
         }
         return this;
     }]);
@@ -316,7 +331,7 @@ wkhomeServices.factory('getORCIDToken', ['$resource', '$http', 'globalData',
 
 wkhomeServices.factory('saveprofile', ['$resource', '$http', 'globalData',
     function ($resource, $http, globalData) {
-       // $http.defaults.headers.common['content-type'] = 'application/x-www-form-urlencoded';
+          $http.defaults.headers.common['content-type'] = 'application/x-www-form-urlencoded';
        // $http.defaults.headers.common['Accept'] = 'application/json';
         var transform = function (data) {
             console.log ($.param(data));
@@ -329,6 +344,24 @@ wkhomeServices.factory('saveprofile', ['$resource', '$http', 'globalData',
         }*/
         var serverInstance = globalData.serverInstance;
         return $resource(serverInstance + 'profileval/saveData', {}, {
-            querySrv: {method: 'POST', isArray: false,  transformRequest: transform ,   headers: {'Accept': 'application/json'} }
+            querySrv: {method: 'POST', isArray: false,  transformRequest: transform ,   headers: {'Accept': 'application/json' , 'content-type': 'application/x-www-form-urlencoded'} }
         });
     }]);
+
+
+
+wkhomeServices.factory('getOrgs', ['$resource', '$http', 'globalData',
+    function ($resource, $http, globalData) {
+        var serverInstance = globalData.serverInstance;
+         $http.defaults.headers.common['content-type'] = 'application/json';
+        $http.defaults.headers.common['Accept'] = 'application/json';
+        return $resource(serverInstance + 'authors-module/organization/list', {}, {
+            query: {
+                method: 'GET',
+                isArray: false,
+                cache: true ,
+                headers: {'Accept': 'application/json'}
+            }
+        });
+    }
+]);

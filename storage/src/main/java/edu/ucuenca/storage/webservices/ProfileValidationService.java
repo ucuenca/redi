@@ -57,18 +57,19 @@ public class ProfileValidationService {
     @Path("/saveData")
     @Produces(MediaType.APPLICATION_JSON)
     public Response extractAuthors(@Context HttpServletRequest request) {
-         try { 
+         try { request.getParameterMap().get("profile");
              String[] get = request.getParameterMap().get("data"); 
              System.out.print (get[0]);  
              String [] getid = request.getParameterMap().get("id");
              String [] getak = request.getParameterMap().get("atk");
              String [] geturi = request.getParameterMap().get("uri");
+             String [] getprofile = request.getParameterMap().get("profile");
              /* Iterator p = request.getParameterMap().values().iterator();
              while (p.hasNext()){
              Object a =  p.next();
              System.out.print (a);
              }*/
-             pv.saveProfileData(get[0] , getid[0] , geturi[0]);
+             pv.saveProfileData(get[0] , getid[0] , geturi[0] , getprofile[0]);
              String output = "{'resp':'ok'}";
              
              ObjectMapper mapper = new ObjectMapper();

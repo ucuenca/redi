@@ -296,13 +296,15 @@
             <div class="modal-content">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="myModalLabel">{{'SEARCH_RESULTS'|translate}} <small>{{candidates.length}} resultados</small></h4>
+                <h4  ng-show="!getType()"  class="modal-title" id="myModalLabel">{{'SEARCH_RESULTS'|translate}} <small>{{candidates.length}} resultados</small></h4>
+                <h4 ng-show="getType()" class="modal-title" id="myModalLabel"> No dispone aun un perfil asociado a REDI, a continuación se presentan algunos perfiles que podrian corresponderle :</h4>
               </div>
               <div class="modal-body">
                 <div class="row table-responsive">
                   <table class="table table-striped">
                     <thead>
                       <tr>
+                        <th ng-show="getType()" > Claim  </th>
                         <th>{{'name'|translate}}</th>
                         <th ng-show="showSubjects(candidates)">{{'palabras clave'|translate}}</th>
                       </tr>
@@ -310,15 +312,20 @@
                     <tbody>
                       <tr ng-repeat="candidate in candidates">
                         <!-- TODO: Check why grid sys is not working -->
-                        <td class="col-md-3"><a class="candidate" ng-click="selectedOption($event, candidate.path, candidate.id)" href="">{{candidate.val}}</a></td>
-                        <td class="col-md-9" style="font-size: x-small">
+                     <td class="col-md-3" ng-show="getType()" ><a class="cl" ng-click="selectedOptionClaim($event, candidate.path, candidate.id)" href=""> Claim</a></td>
+                     <td class="col-md-3"><a class="candidate" ng-click="selectedOption($event, candidate.path, candidate.id)" href="">{{candidate.val}}</a></td>
+                     <td class="col-md-9" style="font-size: x-small">
                           <p>{{candidate.desc | uppercase}}</p>
                         </td>
                       </tr>
                     </tbody>
                   </table>
+                  
                 </div>
               </div>
+                 <div ng-show="getType()" class="modal-footer">
+                    Si no ha encontrado un posible perfil, cree uno nuevo  <a ng-click="selectedOptionNewProfile($event, candidate.path, candidate.id)"><b>+ añadir perfil </b></a> .
+                </div>
             </div>
           </div>
         </div>

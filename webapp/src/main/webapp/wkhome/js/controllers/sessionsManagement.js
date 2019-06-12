@@ -19,7 +19,8 @@ wkhomeControllers.controller('sessionMg', ["$scope", "cookies", '$routeParams', 
         };
         
         $scope.getState = function () {
-            return window.location.hash.substring(1);
+             return "/author/profileval/_";
+            //return window.location.hash.substring(1);
         };
 
 
