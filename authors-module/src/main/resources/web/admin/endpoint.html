@@ -33,6 +33,7 @@
                 $("tr.file_form").css("display","none");
                 $("tr.OAI_form").css("display","none");
                 $("tr.OJS_form").css("display","none");
+                $("tr.ORCID_form").css("display","none");
                 
                 $("select#endpoint_type").val("sparql");
                 console.log(_SERVER_URL);
@@ -104,6 +105,7 @@
                             <option value="file">FILE</option>
                             <option value="oai-pmh">OAI-PMH</option>
                             <option value="ojs">OJS (OAI)</option>
+                            <option value="orcid">ORCID</option>
                         </select> 
                     </td>
 
@@ -138,6 +140,9 @@
                  <tr class="OJS_form"> 
                     <td style="width: 150px;"> Aditional URLs (separate with ";") </td>
                     <td>  <input type="text" style="width: 400px;" id="endpoint_ad_ojs"> </td>
+                </tr>
+                <tr class="ORCID_form"> 
+                    <em>No parameters needed.</em>
                 </tr>
                 
                  <tr>

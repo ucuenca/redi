@@ -145,6 +145,9 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                 when('/author/publications/:query*/author/:authorId*', {
                   templateUrl: '/wkhome/partials/publications.html',
                 }).
+                when('/search/publications/:query*', {
+                  templateUrl: '/wkhome/partials/publications.html',
+                }).
                 when('/author/tree/:text*', {
                   templateUrl: '/wkhome/partials/search.html',
                 }).

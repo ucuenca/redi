@@ -146,6 +146,7 @@
           <p>{{'LOAD_SEACH_RESULTS' | translate}} ...</p>
           <img src="/wkhome/images/ajax-loader-bar.gif" alt="Loading search results" />
         </div>
+          <div ng-show="documents.length == 0" ng-cloak> <h2>No hay resultados</h2> </div>
         <div class="small" ng-show="documents.length > 0" ng-cloak>
           <div style="padding-bottom: 20px;">{{'SEARCH_RESULTS' | translate}} ({{totalResults}} {{'FOUND' | translate}})</div>
           <div class="alert alert-error" ng-show="error">{{error}}</div>
@@ -212,7 +213,7 @@
         </ul>
       </div>
     </div>
-    <div class="col-lg-2" ng-cloak>
+    <div class="col-lg-2" ng-show="authorURI" ng-cloak >
       <img ng-show="author.photo" ng-src="{{author.photo}}" class="img-responsive" alt="{{author.name}}">
       <a ng-href="#/author/profile/{{authorURI}}"><h3 style="margin: 0px 0px">{{author.name | camelCase}}</h3></a>
       <h5 style="margin: 0px 0px" ng-repeat="institution in author.institutions">{{institution.name}}, <small><i>{{institution.city}}</i></small></h5>

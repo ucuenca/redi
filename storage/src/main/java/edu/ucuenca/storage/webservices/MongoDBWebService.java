@@ -29,6 +29,13 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathFactory;
+import org.apache.commons.io.IOUtils;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
 import org.bson.Document;
 import org.slf4j.Logger;
@@ -242,7 +249,6 @@ public class MongoDBWebService {
                 app = "APP-7Y3IFBAL9DB2NVJC";
                 sec = "8cffcb48-d32a-48b0-b343-1fd48f2ac15f";
             }
-
             HttpResponse<JsonNode> asJson = Unirest.post("https://orcid.org/oauth/token")
                     .field("client_id", app)
                     .field("client_secret", sec)
@@ -250,9 +256,11 @@ public class MongoDBWebService {
                     .field("redirect_uri", uri)
                     .field("code", code).asJson();
             if (asJson.getStatus() == 200) {
-                body = prettyPrintJsonString(asJson.getBody());
-                String orcid = asJson.getBody().getObject().getString("orcid");
-                String access_token = asJson.getBody().getObject().getString("access_token");
+                JsonNode body1 = asJson.getBody();
+                enrichInfo(body1);
+                body = prettyPrintJsonString(body1);
+                String orcid = body1.getObject().getString("orcid");
+                String access_token = body1.getObject().getString("access_token");
                 mongoService.registerSession(orcid, access_token);
             } else {
                 body = "{err:" + asJson.getStatusText() + "}";
@@ -260,16 +268,43 @@ public class MongoDBWebService {
         } catch (Exception e) {
             throw new FailMongoConnectionException(String.format("Cannot retrieve ORCID-token %s", uri), e);
         }
-
         return Response.ok()
                 .entity(body).build();
+    }
+
+    public JsonNode enrichInfo(JsonNode jsonNode) throws Exception {
+        String at = jsonNode.getObject().getString("access_token");
+        String orcid = jsonNode.getObject().getString("orcid");
+        HttpResponse<String> asString = Unirest.get("https://pub.orcid.org/v2.0/" + orcid + "/record").header("Access token", at).asString();
+        try {
+            String gn = runXpath(asString.getBody(), "/record/person/name/given-names");
+            String fn = runXpath(asString.getBody(), "/record/person/name/family-name");
+            String em = runXpath(asString.getBody(), "/record/person/emails/email[1]/email");
+            jsonNode.getObject().put("giveName", gn);
+            jsonNode.getObject().put("familyName", fn);
+            jsonNode.getObject().put("mail", em);
+        } catch (Exception e) {
+            throw new Exception(e);
+        }
+        return jsonNode;
+    }
+
+    public String runXpath(String data, String q) throws Exception {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(false);
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        org.w3c.dom.Document parse = builder.parse(IOUtils.toInputStream(data));
+        XPathFactory xpathFactory = XPathFactory.newInstance();
+        XPath xpath = xpathFactory.newXPath();
+        XPathExpression expr = xpath.compile(q);
+        String name = (String) expr.evaluate(parse, XPathConstants.STRING);
+        return name;
     }
 
     public String prettyPrintJsonString(JsonNode jsonNode) throws Exception {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            Object json = mapper.readValue(jsonNode.toString(), Object.class
-            );
+            Object json = mapper.readValue(jsonNode.toString(), Object.class);
             return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
         } catch (Exception e) {
             throw new Exception("Sorry, pretty print didn't work", e);
