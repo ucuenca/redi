@@ -365,3 +365,19 @@ wkhomeServices.factory('getOrgs', ['$resource', '$http', 'globalData',
         });
     }
 ]);
+
+
+wkhomeServices.factory('getProfile', ['$resource', '$http', 'globalData',
+    function ($resource, $http, globalData) {
+        var serverInstance = globalData.serverInstance;
+        return $resource(serverInstance + 'profileval/profileData?uri=:id&orcid=:orcid', {}, {
+            query: {
+                method: 'GET',
+                params: {id: 'id' , orcid : 'orcid'},
+                isArray: false,
+                cache: true,
+                headers: {'Accept': 'application/json'}
+            }
+        });
+    }
+]);

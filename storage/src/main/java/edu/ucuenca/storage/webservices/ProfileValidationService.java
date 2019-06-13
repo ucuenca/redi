@@ -38,6 +38,18 @@ public class ProfileValidationService {
      @Inject
     private ProfileValidation pv;
      
+        @GET
+        @Path("/profileData")
+        @Produces(MediaType.APPLICATION_JSON)
+        public Response getProfile(@QueryParam("uri") String uri , @QueryParam("orcid") String orcid) throws FailMongoConnectionException {
+        String response;
+        try {
+            response = pv.getProfile(uri , orcid);
+        } catch (Exception e) {
+            throw new FailMongoConnectionException(String.format("Cannot retrieve profile author %s", uri), e);
+        }
+        return Response.ok().entity(response).build();
+    }
      
     @GET
     @Path("/tablesInfo")

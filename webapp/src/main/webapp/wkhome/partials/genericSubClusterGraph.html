@@ -30,13 +30,13 @@
                   <div class="col-md-3 left-panel-subcl">
                 <div class="col-md-auto element-subcl">
                 <h3 class="text-success">{{'Select Research Area'| translate}}:</h3>
-                <select class="form-control" name="board" id="board" ng-change="changeCombo()" ng-model="areaCombo"  ng-options="key.id as key.tag for key  in relatedtags">
+                <select class="selectpicker" data-live-search="true" name="board" id="board" ng-change="changeCombo()" ng-model="areaCombo"  ng-options="key.id as key.tag for key  in relatedtags">
                     <option value="">Select Area</option>
                 </select>
                 </div>
                 <div class="col-md-auto element-subcl">
                 <h3 class="text-success"> Areas de investigación :</h3>
-                <select class="form-control" name="board" id="subcluster" ng-change="changeComboSub()" ng-model="areaCombosub"  ng-options="key.id as key.tag for key  in subtags">
+                <select class="selectpicker" data-live-search="true" name="board" id="subcluster" ng-change="changeComboSub()" ng-model="areaCombosub"  ng-options="key.id as key.tag for key  in subtags">
                     <option value="">Select Area</option>
                 </select>
                 </div>

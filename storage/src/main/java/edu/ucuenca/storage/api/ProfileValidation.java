@@ -24,7 +24,7 @@ public interface ProfileValidation {
     
     public String totalProfileVal (String uri , String orcid);
     
-    
+    public String getProfile (String uri , String orcid);
     
      public String saveProfileData (String data , String id , String uri , String profile);
     

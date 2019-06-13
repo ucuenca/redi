@@ -360,4 +360,14 @@ public class ProfileValidationImpl implements ProfileValidation {
 
   }
 
+  @Override
+  public String getProfile(String uri, String orcid) {
+       Document d = mongos.getProfileValAuthor(orcid);
+       Document obj =  (Document) d.get("profile");
+       obj.append("uri", d.get("uri").toString());
+      // Document uri =      d.get("uri").toString();
+       
+   return obj.toJson() ;
+  } 
+
 }

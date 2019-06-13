@@ -1,13 +1,17 @@
-wkhomeControllers.controller('authorVal', ['$rootScope','$scope', 'cookies' ,'$routeParams', '$window', 'globalData', 'profileval', 'saveprofile' , 'searchTextResultsService','AuthorsService', 'Statistics',
-  function($rootScope , $scope, cookies, $routeParams, $window, globalData, profileval , saveprofile , searchTextResultsService , AuthorsService , Statistics) {
+wkhomeControllers.controller('authorVal', ['$rootScope','$scope', 'cookies' ,'$routeParams', '$window', 'globalData', 'profileval', 'saveprofile' , 'searchTextResultsService','AuthorsService', 'Statistics', 'getProfile' ,
+  function($rootScope , $scope, cookies, $routeParams, $window, globalData, profileval , saveprofile , searchTextResultsService , AuthorsService , Statistics, getProfile) {
     // Define a new author object
-
+    //$window.location.reload();
     var author = $routeParams.authorId ;
     var orcid = "";
     var atk = "";
     var showbuttons = false;
     var neworg = false ;
    // var newProf = author.includes("new");
+
+    
+
+
 
    Statistics.query({
       id: 'barchar'
@@ -26,10 +30,12 @@ wkhomeControllers.controller('authorVal', ['$rootScope','$scope', 'cookies' ,'$r
      //console.log ( select);
      if (select == "Other" ) {
     //  $('#endpoint_org').prop("disabled", true);
-       $('#newOrg').css("display", "inline");
-       neworg = true ;
+      // $('#newOrg').css("display", "inline");
+        $scope.neworg = " ";
+         //neworg = true ;
      } else {
-        $('#newOrg').css("display", "none");
+        $scope.neworg = "";
+       // $('#newOrg').css("display", "none");
 
      }
   }
@@ -42,8 +48,10 @@ function Candidate(id, val, desc, path) {
   this.path = path;
 }
 
+    //cookies.set ( globalData.getSession() , '{ "name" : "Saquicela Victor" , "firstName" :"Victor" , "lastName": "Saquicela" , "email": "vsaquicela@ucuenca.edu.ec" , "orcid" : "0234-45687" , "access_token" : "789545645621213"}');
+    //var logg = cookies.get(globalData.getSession());
 
-    var logg = globalData.getSession();
+   var logg = globalData.getSession();
    var lo = logg !== undefined && logg !== null && logg !== '';
    if (lo){
     $scope.name = JSON.parse(logg).name;
@@ -114,18 +122,71 @@ function Candidate(id, val, desc, path) {
                // console.log ($scope.orcid ==  $routeParams.authorId);
 
              } );
-}
+            }
     
+         function checkProfile (author , orcid) {
+            getProfile.query({'id': author , 'orcid' : orcid  }, function (data) { 
+                   console.log ("REDIR");
+
+                  $window.location.hash = '/author/profileval/' + data.uri;
+                  $window.location.reload(); 
+               //  $route.reload();
+                  console.log (data);
+             } , function (some){
+              // console.log ("!!NoExiste");
+                  candidateAuthors ();
+            });
+         }
 
 
+         function loadProfile (author, orcid) {
+             getProfile.query({'id': author , 'orcid' : orcid  }, function (data) { 
+      
+               $scope.name = data.name;
+               $scope.fname = data.fname;
+               $scope.lname = data.lname;
+               $scope.email = data.email;
+               
+              //onsole.log ($scope.orgs );
+              // $scope.orgs.push ({ id : data.org , name : data.org });
+              //  console.log ($scope.orgs );
+               if (data.org.includes("http")){
+               $scope.org =  data.org;
+               }else {
+                 $scope.org =  "Other";
+                 $scope.neworg = data.org;  
+               }
+              /* if ($("#endpoint_org option[value='"+data.org+"']").val() === undefined){
+                    console.log ("NORECON");
+                    console.log (data.org); 
+                    $scope.org = data.org;
+                 $('#endpoint_org option[value="Other"]').prop('selected', true);
+                  $('#newOrg').prop('value', data.org ) ;
+                   $('#newOrg').css("display", "inline");
+               } else {
+                console.log ("RECON");
+              $scope.org =  data.org;
+              console.log ($scope.org);
+              }*/
+             } , function (some){
+                console.log ("Problemas al cargar los datos");         
+            });
 
-             if (author == "_"){
+         }
 
-              candidateAuthors ();
-            }else if (author == "new_") {
+
+      if (author == "_"){
+             
+        checkProfile (author , orcid);
+       
+          // console.log ("!!PORQ");
+      
+
+    }else if (author == "new_") {
 
        /* $(".showbuttons").removeClass("active");
        $('#PagDataSave').addClass("active");*/
+       loadProfile (author, orcid);
        showbuttons = true;
      } else {
        showData (author , orcid);
@@ -150,6 +211,8 @@ function Candidate(id, val, desc, path) {
        //  $scope.img = data.basic.data[0].img;
 
         $scope.org =  data.basic.data[0].org;
+
+        loadProfile (author, orcid) ;
        $('#endpoint_org option[value="'+$scope.org+'"]').prop('selected', true);
        var tabla =  rendertable ( data.profiles.data );
        var tabla2 =  rendertable2 ( data.names.data );
