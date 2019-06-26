@@ -282,9 +282,12 @@ public class AuthorWebService {
   @Path("/endpoints/extractAuthors")
   @Produces(APPLICATIONJSON)
   public Response extractAuthors(@Context HttpServletRequest request) {
-
+    String scheme = request.getScheme();
+    String serverName = request.getServerName();
+    int serverPort = request.getServerPort();
+    String localName = scheme + "://" + serverName + ":" + serverPort + "/";
     String[] get = request.getParameterMap().get("data[]");
-    String output = authorService.extractAuthorsGeneric(get);
+    String output = authorService.extractAuthorsGeneric(localName, get);
     authorService.postProcessAffiliations(get);
     return Response.ok().entity(output).build();
     //return  Response.status(Status.BAD_REQUEST).entity("Incorrect file format.").build();

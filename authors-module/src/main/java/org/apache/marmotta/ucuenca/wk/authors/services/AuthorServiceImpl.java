@@ -26,12 +26,16 @@ package org.apache.marmotta.ucuenca.wk.authors.services;
 //import cc.mallet.pipe.iterator.ArrayIterator;
 //import cc.mallet.topics.ParallelTopicModel;
 //import cc.mallet.types.InstanceList;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
 import java.io.BufferedReader;
 //import java.io.BufferedWriter;
 //import java.io.FileWriter;
 //import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.text.Normalizer;
 //import java.io.PrintWriter;
@@ -59,8 +63,14 @@ import java.util.logging.Level;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.net.ssl.SSLContext;
 import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContexts;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.marmotta.commons.vocabulary.FOAF;
 import org.apache.marmotta.commons.vocabulary.SCHEMA;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
@@ -89,10 +99,15 @@ import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.BIBO;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openrdf.model.Model;
+import org.openrdf.model.URI;
 //import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.LinkedHashModel;
+import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.model.vocabulary.DCTERMS;
 import org.openrdf.model.vocabulary.OWL;
 import org.openrdf.model.vocabulary.RDF;
@@ -103,6 +118,7 @@ import org.openrdf.query.MalformedQueryException;
 //import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.UpdateExecutionException;
+import org.openrdf.repository.RepositoryConnection;
 //import org.openrdf.query.TupleQuery;
 //import org.openrdf.query.TupleQueryResult;
 //import org.openrdf.repository.RepositoryConnection;
@@ -141,6 +157,8 @@ public class AuthorServiceImpl implements AuthorService {
   @Inject
   private ExternalSPARQLService sparqlService;
 
+  //@Inject
+  //private ProfileValidation pv;
   private static final String STR = "string";
 
   private static final String OAIPROVNAME = "Dspace";
@@ -189,6 +207,58 @@ public class AuthorServiceImpl implements AuthorService {
 //                "http://www.w3.org/2000/01/rdf-schema#label", "http://purl.org");
   }
 
+  private String extractAuthorsORCID(String l, String org, String end) {
+    String rs = "";
+    try {
+      SSLContext sslcontext = SSLContexts.custom()
+              .loadTrustMaterial(null, new TrustSelfSignedStrategy())
+              .build();
+
+      SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslcontext, SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+      CloseableHttpClient httpclient = HttpClients.custom()
+              .setSSLSocketFactory(sslsf)
+              .build();
+      Unirest.setHttpClient(httpclient);
+      HttpResponse<JsonNode> asJson = Unirest.get(l + "profileval/obtainAuthors")
+              .queryString("org", org)
+              .asJson();
+      if (asJson.getStatus() == HttpURLConnection.HTTP_OK) {
+        JsonNode body = asJson.getBody();
+        JSONArray jsonArray = body.getObject().getJSONArray("data");
+        Model m = new LinkedHashModel();
+        ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
+        for (int i = 0; i < jsonArray.length(); i++) {
+          JSONObject jsonObject = jsonArray.getJSONObject(i);
+          String orcid = jsonObject.getString("_id");
+          JSONObject jsonObject1 = jsonObject.getJSONObject("profile");
+          String fullname = jsonObject1.getString("name");
+          String fname = jsonObject1.getString("fname");
+          String lname = jsonObject1.getString("lname");
+          String mail = jsonObject1.getString("email");
+          String orgx = org.replaceAll(constantService.getOrganizationBaseUri(), "");
+          URI createURI = instance.createURI(constantService.getAuthorResource() + "orcid/" + orgx + "/" + orcid);
+          m.add(createURI, RDF.TYPE, FOAF.Person);
+          m.add(createURI, FOAF.name, instance.createLiteral(fullname));
+          m.add(createURI, FOAF.firstName, instance.createLiteral(fname));
+          m.add(createURI, FOAF.lastName, instance.createLiteral(lname));
+          m.add(createURI, instance.createURI("http://www.w3.org/2006/vcard/ns#hasEmail"), instance.createLiteral(mail));
+          m.add(createURI, DCTERMS.PROVENANCE, instance.createURI(end));
+          m.add(createURI, instance.createURI("http://purl.org/spar/scoro/hasORCID"), instance.createURI("https://orcid.org/" + orcid));
+        }
+        RepositoryConnection repositoryConnetion = sparqlService.getRepositoryConnetion();
+        repositoryConnetion.begin();
+        sparqlService.getGraphDBInstance().runSplitAddOp(repositoryConnetion, m, instance.createURI(constantService.getAuthorsGraph()));
+        repositoryConnetion.commit();
+        repositoryConnetion.close();
+        rs = "Success " + jsonArray.length() + "/" + jsonArray.length();
+      }
+    } catch (Exception ex) {
+      log.debug("Error {}", ex);
+      rs = "Fail " + ex;
+    }
+    return rs;
+  }
+
   /**
    * authorDocumentProperty : http://rdaregistry.info/Elements/a/P50161 |
    * http://rdaregistry.info/Elements/a/P50195
@@ -202,7 +272,7 @@ public class AuthorServiceImpl implements AuthorService {
   //private String documentProperty = "http://rdaregistry.info";
   @Override
   @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
-  public String extractAuthorsGeneric(String... endpoints) {
+  public String extractAuthorsGeneric(String l, String... endpoints) {
 
     ConcurrentHashMap msg = new ConcurrentHashMap();
     for (String endpoint : endpoints) {
@@ -235,7 +305,7 @@ public class AuthorServiceImpl implements AuthorService {
             // EndpointsObject.add(e);
           } else if ("orcid".equals(type)) {
             //Read from mongo cache.
-          
+            extractResult = extractAuthorsORCID(l, org, endpoint);
           } else {
 
             String[] urls = url.split(";");
