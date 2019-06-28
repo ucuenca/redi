@@ -17,7 +17,8 @@ var wkhomeApp = angular.module('wkhomeApp', [
     'ui.bootstrap',
     'ui.bootstrap.locale-dialog',
     'ngSolr',
-    'ngCookie'
+    'ngCookie',
+    'ui.select'
 ]);
 
 

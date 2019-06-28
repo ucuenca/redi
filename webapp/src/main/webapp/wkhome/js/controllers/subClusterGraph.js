@@ -3,7 +3,8 @@ wkhomeControllers.controller('subCluster', ['$scope', '$window', 'globalData', '
 
     var cluster = $routeParams.cluster;
     var subcluster = $routeParams.subcluster;
-
+ //  $scope.areaCombosub =  { "tag":"12313"}; 
+      $scope.areaCombo = {};
     Statistics.query({
       id: 'keywords_frequencypub_gt4'
     }, function(data) {
@@ -18,12 +19,14 @@ wkhomeControllers.controller('subCluster', ['$scope', '$window', 'globalData', '
 
     $scope.changeCombo = function() {
       $scope.datacl = {};
+
+      $scope.areaCombosub = {};
       $scope.datacl = {
-        cluster: $scope.areaCombo,
+        cluster: $scope.areaCombo.selected.id,
         subcluster: null
       };
       querySubcluster.query({
-        id: $scope.areaCombo
+        id: $scope.areaCombo.selected.id
       }, function(data) {
         $scope.subtags = [];
         _.map(data.subclusters, function(keyword) {
@@ -38,9 +41,10 @@ wkhomeControllers.controller('subCluster', ['$scope', '$window', 'globalData', '
     $scope.changeComboSub = function() {
       $scope.datacl = {};
       $scope.datacl = {
-        cluster: $scope.areaCombo,
-        subcluster: $scope.areaCombosub
+        cluster: $scope.areaCombo.selected.id,
+        subcluster: $scope.areaCombosub.selected.id
       };
+      console.log ($scope.areaCombosub);
     }
 
     if (cluster && subcluster) {

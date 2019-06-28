@@ -30,15 +30,30 @@
                   <div class="col-md-3 left-panel-subcl">
                 <div class="col-md-auto element-subcl">
                 <h3 class="text-success">{{'Select Research Area'| translate}}:</h3>
-                <select class="selectpicker" data-live-search="true" name="board" id="board" ng-change="changeCombo()" ng-model="areaCombo"  ng-options="key.id as key.tag for key  in relatedtags">
+                <!--<select class="selectpicker" data-live-search="true" name="board" id="board" ng-change="changeCombo()" ng-model="areaCombo"  ng-options="key.id as key.tag for key  in relatedtags">
                     <option value="">Select Area</option>
-                </select>
+                </select>-->
+                   <ui-select ng-model="areaCombo.selected"  ng-change="changeCombo()" theme="bootstrap">
+                     <ui-select-match placeholder="Select area">{{$select.selected.tag}}</ui-select-match>
+                     <ui-select-choices repeat="item in relatedtags | filter: $select.search">  
+                         <div ng-bind-html="item.tag"></div>
+                     </ui-select-choices>
+                 </ui-select>
+
+
                 </div>
                 <div class="col-md-auto element-subcl">
                 <h3 class="text-success"> Areas de investigación :</h3>
-                <select class="selectpicker" data-live-search="true" name="board" id="subcluster" ng-change="changeComboSub()" ng-model="areaCombosub"  ng-options="key.id as key.tag for key  in subtags">
+                  <ui-select ng-model="areaCombosub.selected"  ng-change="changeComboSub()" theme="bootstrap">
+                     <ui-select-match placeholder="Select discipline ">{{$select.selected.tag}}</ui-select-match>
+                     <ui-select-choices repeat="item in subtags | filter: $select.search ">  
+                         <div ng-bind-html="item.tag"></div>
+                     </ui-select-choices>
+                 </ui-select>
+              <!--  <select class="selectpicker" data-live-search="true" name="board" id="subcluster" ng-change="changeComboSub()" ng-model="areaCombosub"  ng-options="key.id as key.tag for key  in subtags">
                     <option value="">Select Area</option>
-                </select>
+                </select> -->
+
                 </div>
 
                 <div class="col-md-auto element-subcl" id="legendBox" >
