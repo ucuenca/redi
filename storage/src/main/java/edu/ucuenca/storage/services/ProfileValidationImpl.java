@@ -5,16 +5,12 @@
  */
 package edu.ucuenca.storage.services;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import static com.hp.hpl.jena.query.QueryExecutionFactory.sparqlService;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import edu.ucuenca.storage.api.MongoService;
 import javax.enterprise.context.ApplicationScoped;
 import edu.ucuenca.storage.api.ProfileValidation;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -59,13 +55,13 @@ public class ProfileValidationImpl implements ProfileValidation {
             + "PREFIX dct: <http://purl.org/dc/terms/>\n"
             + "SELECT distinct ?org ?orgname ?img WHERE {\n"
             + "  graph <" + con.getCentralGraph() + ">{\n"
-            + "   <"+uri+">   <http://schema.org/memberOf>   ?org .\n"
+            + "   <" + uri + ">   <http://schema.org/memberOf>   ?org .\n"
             + "    graph <" + con.getOrganizationsGraph() + "> {\n"
             + "      ?org a [] .\n"
             + "      ?org <http://ucuenca.edu.ec/ontology#name> ?orgname\n"
             + "    }\n"
             + "   OPTIONAL {\n"
-            + "    <"+uri+">   foaf:img  ?img\n"
+            + "    <" + uri + ">   foaf:img  ?img\n"
             + "   }\n"
             + "  }\n"
             + "}";
@@ -80,9 +76,9 @@ public class ProfileValidationImpl implements ProfileValidation {
           obj.put("org", p.get("org").stringValue());
           obj.put("orgName", p.get("orgname").stringValue());
         }
-         if (p.containsKey("img")) {
+        if (p.containsKey("img")) {
           obj.put("img", p.get("img").stringValue());
-         }
+        }
         array.add(obj);
       }
       main.put("data", array);
@@ -362,12 +358,17 @@ public class ProfileValidationImpl implements ProfileValidation {
 
   @Override
   public String getProfile(String uri, String orcid) {
-       Document d = mongos.getProfileValAuthor(orcid);
-       Document obj =  (Document) d.get("profile");
-       obj.append("uri", d.get("uri").toString());
-      // Document uri =      d.get("uri").toString();
-       
-   return obj.toJson() ;
-  } 
+    Document d = mongos.getProfileValAuthor(orcid);
+    Document obj = (Document) d.get("profile");
+    obj.append("uri", d.get("uri").toString());
+    // Document uri =      d.get("uri").toString();
 
+    return obj.toJson();
+  }
+
+  @Override
+  public JSONObject obtainNewProfiles(String org) throws Exception {
+    JSONObject obtainNewProfiles = mongos.obtainNewProfiles(org);
+    return obtainNewProfiles;
+  }
 }
