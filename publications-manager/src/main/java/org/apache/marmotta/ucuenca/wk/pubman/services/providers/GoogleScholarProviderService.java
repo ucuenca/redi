@@ -17,6 +17,7 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.services.providers;
 
+import java.net.URLEncoder;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -44,96 +45,95 @@ import org.apache.marmotta.ucuenca.wk.pubman.exceptions.QuotaLimitException;
  * @author Xavier Sumba <xavier.sumba93@ucuenca.ec>
  */
 public class GoogleScholarProviderService extends AbstractProviderService {
+  
+  private final String template = "https://scholar.google.com/citations?mauthors=%s&hl=en&view_op=search_authors";
+  
+  @Override
+  protected List<String> buildURLs(String firstname, String lastname, List<String> organizations) {
+    List<String> queries = new ArrayList<>(organizations.size());
+    
+    String[] names = firstname.split(" ");
+    if (names.length > 1) {
+      firstname = names[0] + " OR " + names[1];
+    } else {
+      firstname = names[0];
+    }
 
-    private final String template = "https://scholar.google.com/citations?mauthors=%s&hl=en&view_op=search_authors";
-
-    @Override
-    protected List<String> buildURLs(String firstname, String lastname, List<String> organizations) {
-        List<String> queries = new ArrayList<>(organizations.size());
-
-        String[] names = firstname.split(" ");
-        if (names.length > 1) {
-            firstname = names[0] + " OR " + names[1];
-        } else {
-            firstname = names[0];
+    // (^\\h*)|(\\h*$) = Replace non breaking space (#160 ascii)
+    String pattern = "(^[\t\u00A0\u1680\u180e\u2000\u200a\u202f\u205f\u3000]*)|([\t\u00A0\u1680\u180e\u2000\u200a\u202f\u205f\u3000]*$)";
+    firstname = firstname.replaceAll(pattern, "");
+    lastname = lastname.split(" ")[0].replaceAll(pattern, "");
+    for (String organization : organizations) {
+      organization = organization.toLowerCase();
+      String query = String.format("%s %s %s", firstname, lastname, organization)
+              .trim();
+      queries.add(String.format(template, URLEncoder.encode(query)));
+    }
+    return queries;
+  }
+  
+  @Override
+  protected LDClient buildDefaultLDClient() {
+    // Set custom HTTPClient to skip certificate problems with scholar
+    HttpParams httpParams = new BasicHttpParams();
+    
+    SchemeRegistry schemeRegistry = new SchemeRegistry();
+    schemeRegistry.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
+    
+    try {
+      SSLContext sslcontext = SSLContext.getInstance("TLS");
+      sslcontext.init(null, new TrustManager[]{new X509TrustManager() {
+        @Override
+        public X509Certificate[] getAcceptedIssuers() {
+          return null;
         }
-
-        // (^\\h*)|(\\h*$) = Replace non breaking space (#160 ascii)
-        String pattern = "(^[\t\u00A0\u1680\u180e\u2000\u200a\u202f\u205f\u3000]*)|([\t\u00A0\u1680\u180e\u2000\u200a\u202f\u205f\u3000]*$)";
-        firstname = firstname.replaceAll(pattern, "");
-        lastname = lastname.split(" ")[0].replaceAll(pattern, "");
-        for (String organization : organizations) {
-            organization = organization.toLowerCase();
-            String query = String.format("%s %s %s", firstname, lastname, organization)
-                    .trim()
-                    .replace(' ', '+');
-            queries.add(String.format(template, query));
+        
+        @Override
+        public void checkClientTrusted(X509Certificate[] certs,
+                String authType) {
         }
-        return queries;
-    }
-
-    @Override
-    protected LDClient buildDefaultLDClient() {
-        // Set custom HTTPClient to skip certificate problems with scholar
-        HttpParams httpParams = new BasicHttpParams();
-
-        SchemeRegistry schemeRegistry = new SchemeRegistry();
-        schemeRegistry.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
-
-        try {
-            SSLContext sslcontext = SSLContext.getInstance("TLS");
-            sslcontext.init(null, new TrustManager[]{new X509TrustManager() {
-                @Override
-                public X509Certificate[] getAcceptedIssuers() {
-                    return null;
-                }
-
-                @Override
-                public void checkClientTrusted(X509Certificate[] certs,
-                        String authType) {
-                }
-
-                public void checkServerTrusted(X509Certificate[] certs,
-                        String authType) {
-                }
-            }}, new SecureRandom());
-            SSLSocketFactory sf = new SSLSocketFactory(sslcontext, SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-
-            schemeRegistry.register(new Scheme("https", 443, sf));
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
+        
+        public void checkServerTrusted(X509Certificate[] certs,
+                String authType) {
         }
-
-        PoolingClientConnectionManager cm = new PoolingClientConnectionManager(schemeRegistry);
-        cm.setMaxTotal(20);
-        cm.setDefaultMaxPerRoute(10);
-
-        DefaultHttpClient client = new DefaultHttpClient(cm, httpParams);
-
-        ClientConfiguration conf = new ClientConfiguration();
-
-        conf.setHttpClient(client);
-        return new LDClient(conf);
+      }}, new SecureRandom());
+      SSLSocketFactory sf = new SSLSocketFactory(sslcontext, SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+      
+      schemeRegistry.register(new Scheme("https", 443, sf));
+    } catch (NoSuchAlgorithmException e) {
+      e.printStackTrace();
+    } catch (KeyManagementException e) {
+      e.printStackTrace();
     }
-
-    @Override
-    protected void retryPlan() {
-        // TODO: come up with a better plan.
-        throw new RuntimeException(
-                new QuotaLimitException("Cannot continue scrapping Google Scholar. "
-                        + "Restart the process once you can continue sending requests."));
-    }
-
-    @Override
-    protected String getProviderGraph() {
-        return constantService.getGoogleScholarGraph();
-    }
-
-    @Override
-    protected String getProviderName() {
-        return "Google Scholar";
-    }
-
+    
+    PoolingClientConnectionManager cm = new PoolingClientConnectionManager(schemeRegistry);
+    cm.setMaxTotal(20);
+    cm.setDefaultMaxPerRoute(10);
+    
+    DefaultHttpClient client = new DefaultHttpClient(cm, httpParams);
+    
+    ClientConfiguration conf = new ClientConfiguration();
+    
+    conf.setHttpClient(client);
+    return new LDClient(conf);
+  }
+  
+  @Override
+  protected void retryPlan() {
+    // TODO: come up with a better plan.
+    throw new RuntimeException(
+            new QuotaLimitException("Cannot continue scrapping Google Scholar. "
+                    + "Restart the process once you can continue sending requests."));
+  }
+  
+  @Override
+  protected String getProviderGraph() {
+    return constantService.getGoogleScholarGraph();
+  }
+  
+  @Override
+  protected String getProviderName() {
+    return "Google Scholar";
+  }
+  
 }
