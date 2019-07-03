@@ -11,6 +11,7 @@
 	<field name="keywords" class="java.lang.String"/>
 	<field name="organization" class="java.lang.String"/>
 	<field name="areas" class="java.lang.String"/>
+	<field name="mail" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -98,14 +99,16 @@
 				<textElement verticalAlignment="Middle">
 					<font size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{organization} + " --- " + $F{author}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{author} ]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="33" width="554" height="46" isRemoveLineWhenBlank="true" uuid="d86820af-e40e-4df4-a2a0-cfddabac8364"/>
 				<textElement>
 					<font size="9" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Áreas de investigación: " + $F{areas}+"\n"
+				<textFieldExpression><![CDATA["Correo: " + $F{mail} +"\n"
++ "Universidad: " + $F{organization} +"\n"
++"Áreas de investigación: " + $F{areas}+"\n"
 +"Pallabras clave: " + $F{keywords}]]></textFieldExpression>
 			</textField>
 			<line>

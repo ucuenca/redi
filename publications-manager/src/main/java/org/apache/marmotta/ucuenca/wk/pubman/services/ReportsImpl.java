@@ -441,6 +441,7 @@ public class ReportsImpl implements ReportsService {
         for (int w = 0; w < jsonArray.length(); w++) {
           org.json.JSONObject jsonObject = jsonArray.getJSONObject(w);
           JSONObject jsonObjectw = new JSONObject();
+          jsonObjectw.put("mail", jsonObject.isNull("mails") ? "." : jsonObject.getString("mails"));
           jsonObjectw.put("organization", jsonObject.getString("orgs"));
           jsonObjectw.put("author", jsonObject.getString("label"));
           if (scid == null && scname == null) {

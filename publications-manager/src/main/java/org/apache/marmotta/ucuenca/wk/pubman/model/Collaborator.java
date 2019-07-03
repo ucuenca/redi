@@ -27,6 +27,8 @@ public class Collaborator {
   private String[] targets;
   
   private String area;
+  
+  private String mail;
 
   public String getArea() {
     return area;
@@ -34,6 +36,14 @@ public class Collaborator {
 
   public void setArea(String area) {
     this.area = area;
+  }
+
+  public String getMail() {
+    return mail;
+  }
+
+  public void setMail(String mail) {
+    this.mail = mail;
   }
   
   

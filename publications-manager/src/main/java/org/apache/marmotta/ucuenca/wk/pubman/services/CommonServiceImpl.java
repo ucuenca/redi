@@ -711,7 +711,8 @@ public class CommonServiceImpl implements CommonService {
               + "      } "
               + "     } GROUP by ?person "
               + "}\n"
-              + "  {select ?person (group_concat(Distinct ?name ; separator=\";\") as ?names ) \n"
+              + "  {select ?person (group_concat(Distinct ?name ; separator=\";\") as ?names ) "
+              + "                  (group_concat(Distinct ?mail ; separator=\";\") as ?mails )\n"
               + "                {\n"
               + "      GRAPH <" + con.getClusterGraph() + "> { "
               + "          ?person dct:isPartOf <" + cluster + "> . "
@@ -719,6 +720,7 @@ public class CommonServiceImpl implements CommonService {
               + "      }\n"
               + "      GRAPH <" + con.getCentralGraph() + ">  { "
               + "        ?person foaf:name ?name . "
+              + "        optional { ?person <http://www.w3.org/2006/vcard/ns#hasEmail> ?mail } . "
               + "      } "
               + "     } GROUP by ?person\n"
               + "}\n"
@@ -798,11 +800,13 @@ public class CommonServiceImpl implements CommonService {
                  }   */
         String subject = getSubjectAuthor(uri);
         String orgs = authors.get("orgnames").stringValue();
+        String mails = authors.get("mails") != null ? authors.get("mails").stringValue() : "";
         String[] coauthors = {};
         if (authors.containsKey("coauthors")) {
           coauthors = authors.get("coauthors").stringValue().split(";");
         }
         Collaborator cl = new Collaborator(uri, uri, names, lastname, orgs, subject);
+        cl.setMail(mails);
         cl.setArea(orgs);
         cl.setTargets(coauthors);
         cl.setImgUri(img);
@@ -832,6 +836,7 @@ public class CommonServiceImpl implements CommonService {
       newm.put("img", cl.getImgUri());
       newm.put("subject", cl.getSubjects());
       newm.put("orgs", cl.getOrganization());
+      newm.put("mails", cl.getMail());
       lnodes.add(newm);
       for (String target : cl.getTargets()) {
         Map newlink = new HashMap();
@@ -888,7 +893,8 @@ public class CommonServiceImpl implements CommonService {
               + "                    PREFIX uc: <http://ucuenca.edu.ec/ontology#> \n"
               + "                    select * {\n"
               + "                      {\n"
-              + "    select ?sub ?orgnames ?person (group_concat(Distinct ?name ; separator=\";\") as ?names )  (group_concat(DISTINCT ?orgname ; separator=\";\") as ?orgnames2 ) \n"
+              + "    select ?sub ?orgnames ?person (group_concat(Distinct ?name ; separator=\";\") as ?names )  (group_concat(DISTINCT ?orgname ; separator=\";\") as ?orgnames2 ) "
+              + "(group_concat(DISTINCT ?mail ; separator=\";\") as ?mails )\n"
               + "                 {\n"
               + "                 GRAPH <" + con.getClusterGraph() + "> {\n"
               + "                 ?person dct:isPartOf <" + cluster + "> .\n"
@@ -901,6 +907,7 @@ public class CommonServiceImpl implements CommonService {
               + "                  GRAPH <" + con.getCentralGraph() + ">  {  \n"
               + "                       	?person  schema:memberOf ?member . \n"
               + "                     ?person foaf:name ?name .\n"
+              + "                     optional { ?person <http://www.w3.org/2006/vcard/ns#hasEmail> ?mail } .\n"
               + "                                              }  \n"
               + "             GRAPH <https://redi.cedia.edu.ec/context/organization>  { \n"
               + "                         	?member uc:name ?orgname\n"
@@ -920,7 +927,9 @@ public class CommonServiceImpl implements CommonService {
           String subject = getSubjectAuthor(uri);
           String orgs = authors.get("orgnames2").stringValue();
           String orgsarea = authors.get("orgnames").stringValue();
+          String mails = authors.get("mails") != null ? authors.get("mails").stringValue() : "";
           Collaborator cl = new Collaborator(uri, uri, names, "", orgs, subject);
+          cl.setMail(mails);
           cl.setTargets(targ);
           collaborators.add(cl);
           cl.setArea(orgsarea);
