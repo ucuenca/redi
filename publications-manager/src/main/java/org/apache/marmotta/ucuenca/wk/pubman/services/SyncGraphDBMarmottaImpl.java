@@ -8,7 +8,7 @@ package org.apache.marmotta.ucuenca.wk.pubman.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
+import java.util.Random;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.api.triplestore.SesameService;
@@ -153,40 +153,25 @@ public class SyncGraphDBMarmottaImpl implements SyncGraphDBMarmotta {
 
     public void run() throws InterruptedException, MarmottaException {
 
-      boolean run = true;
+      int countExt = countExt();
+      int countLocal = countLocal();
+      int max = Math.max(countExt, countLocal);
+      BoundedExecutor bexecutorService = BoundedExecutor.getThreadPool(5);
       do {
-        int countExt = countExt();
-        int countLocal = countLocal();
-        int max = Math.max(countExt, countLocal);
-        BoundedExecutor bexecutorService = BoundedExecutor.getThreadPool(15);
-        int h = 0;
-        for (int i = 0; i < max; i += limit) {
-          h++;
-          log.info("Mirroring {} - {}/{}", graph, i, max);
-          final int j = i;
-          bexecutorService.submitTask(new Runnable() {
-            @Override
-            public void run() {
-              try {
-                runAdd(j);
-                runDelete(j);
-              } catch (Exception ex) {
-                ex.printStackTrace();
-              }
-            }
-          });
-          if (h % 100 == 0) {
-            int countExtx = countExt();
-            int countLocalx = countLocal();
-            log.info("Checking mirroring {} - {}/{}", graph, countLocal, countExt);
-            if (countExtx == countLocalx) {
-              run = false;
-              break;
+        final int i = new Random().nextInt(max);
+        log.info("Mirroring {} - {}/{}", graph, i, max);
+        bexecutorService.submitTask(new Runnable() {
+          @Override
+          public void run() {
+            try {
+              runAdd(i);
+              runDelete(i);
+            } catch (Exception ex) {
+              ex.printStackTrace();
             }
           }
-        }
-        bexecutorService.end();
-      } while (run);
+        });
+      } while (true);
     }
 
   }
