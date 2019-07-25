@@ -36,8 +36,15 @@ uc:TypePersonEmail a r2r:Mapping ;
 
 uc:TypeArticleTitle a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
-    r2r:sourcePattern "?SUBJ doaj:abstract ?a" ;
+    r2r:sourcePattern "?SUBJ doaj:title ?a" ;
     r2r:targetPattern "?SUBJ dct:title ?a" ;
+    r2r:targetPattern "?SUBJ a bibo:AcademicArticle" ;
+    r2r:targetPattern "?SUBJ dct:provenance uc:DOAJ" .
+
+uc:TypeArticleAbstract a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ doaj:abstract ?a" ;
+    r2r:targetPattern "?SUBJ bibo:abstract ?a" ;
     r2r:targetPattern "?SUBJ a bibo:AcademicArticle" ;
     r2r:targetPattern "?SUBJ dct:provenance uc:DOAJ" .
 
