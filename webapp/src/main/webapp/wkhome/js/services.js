@@ -331,7 +331,7 @@ wkhomeServices.factory('getORCIDToken', ['$resource', '$http', 'globalData',
 
 wkhomeServices.factory('saveprofile', ['$resource', '$http', 'globalData',
     function ($resource, $http, globalData) {
-          $http.defaults.headers.common['content-type'] = 'application/x-www-form-urlencoded';
+          $http.defaults.headers.common['content-type'] = 'application/x-www-form-urlencoded ; charset=UTF-8';
        // $http.defaults.headers.common['Accept'] = 'application/json';
         var transform = function (data) {
             console.log ($.param(data));
@@ -344,7 +344,7 @@ wkhomeServices.factory('saveprofile', ['$resource', '$http', 'globalData',
         }*/
         var serverInstance = globalData.serverInstance;
         return $resource(serverInstance + 'profileval/saveData', {}, {
-            querySrv: {method: 'POST', isArray: false,  transformRequest: transform ,   headers: {'Accept': 'application/json' , 'content-type': 'application/x-www-form-urlencoded'} }
+            querySrv: {method: 'POST', isArray: false,  transformRequest: transform ,   headers: {'Accept': 'application/json' , 'content-type': 'application/x-www-form-urlencoded ; charset=UTF-8'} }
         });
     }]);
 

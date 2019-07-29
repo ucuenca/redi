@@ -90,7 +90,9 @@ public class AuthorWebService {
   }
 
   public boolean isMail(String t) {
-    return t.length() > 0 ? t.matches("^[^@]+@[^@]+\\.[a-zA-Z]{2,}\\s*$") : true;
+   // return t.length() > 0 ? t.matches("^[^@]+@[^@]+\\.[a-zA-Z]{2,}\\s*$") : true;
+   return t.length() > 0 ? t.matches("^[^@]+@[^@]+$") : true;
+   
   }
 
   public boolean isOther(String t) {
