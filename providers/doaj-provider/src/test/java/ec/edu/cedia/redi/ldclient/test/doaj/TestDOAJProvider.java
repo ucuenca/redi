@@ -13,7 +13,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openrdf.model.Model;
 import org.openrdf.repository.RepositoryException;
+import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
+import org.openrdf.rio.Rio;
 
 /**
  *
@@ -25,6 +27,6 @@ public class TestDOAJProvider extends ProviderTestBase {
     public void testDOAJ() throws RepositoryException, DataRetrievalException, RDFHandlerException, FileNotFoundException {
         ClientResponse retrieveResource = ldclient.retrieveResource("https://doaj.org/search/luis-miguel_torres");
         Model data = retrieveResource.getData();
-        Assert.assertEquals(data.size(), 416);
+        Assert.assertEquals(data.size(), 340);
     }
 }

@@ -1,15 +1,15 @@
-wkhomeControllers.controller('subCluster', ['$scope', '$window', 'globalData', 'sparqlQuery', 'searchData', '$routeParams', 'Statistics', 'querySubcluster',
-  function($scope, $window, globalData, sparqlQuery, searchData, $routeParams, Statistics, querySubcluster) {
+wkhomeControllers.controller('subCluster', ['$scope', '$window', 'globalData', 'sparqlQuery', 'searchData', '$routeParams', 'Statistics', 'querySubcluster', 'reportService2', '$sce',
+  function ($scope, $window, globalData, sparqlQuery, searchData, $routeParams, Statistics, querySubcluster, reportService2, $sce) {
 
     var cluster = $routeParams.cluster;
     var subcluster = $routeParams.subcluster;
- //  $scope.areaCombosub =  { "tag":"12313"}; 
-      $scope.areaCombo = {};
+    //  $scope.areaCombosub =  { "tag":"12313"}; 
+    $scope.areaCombo = {};
     Statistics.query({
       id: 'keywords_frequencypub_gt4'
-    }, function(data) {
+    }, function (data) {
       $scope.relatedtags = [];
-      _.map(data["@graph"], function(keyword) {
+      _.map(data["@graph"], function (keyword) {
         $scope.relatedtags.push({
           id: keyword["@id"],
           tag: keyword["rdfs:label"]["@value"]
@@ -17,7 +17,7 @@ wkhomeControllers.controller('subCluster', ['$scope', '$window', 'globalData', '
       });
     });
 
-    $scope.changeCombo = function() {
+    $scope.changeCombo = function () {
       $scope.datacl = {};
 
       $scope.areaCombosub = {};
@@ -27,9 +27,9 @@ wkhomeControllers.controller('subCluster', ['$scope', '$window', 'globalData', '
       };
       querySubcluster.query({
         id: $scope.areaCombo.selected.id
-      }, function(data) {
+      }, function (data) {
         $scope.subtags = [];
-        _.map(data.subclusters, function(keyword) {
+        _.map(data.subclusters, function (keyword) {
           $scope.subtags.push({
             id: keyword["uri"],
             tag: keyword["label-en"]
@@ -38,13 +38,47 @@ wkhomeControllers.controller('subCluster', ['$scope', '$window', 'globalData', '
       });
     }
 
-    $scope.changeComboSub = function() {
+    $scope.exportReport = function (d) {
+
+      var cc = $scope.areaCombo.selected.id;
+      var cc_ = $scope.areaCombo.selected.tag
+      var sc = $scope.areaCombosub.selected ? $scope.areaCombosub.selected.id : undefined;
+      var sc_ = $scope.areaCombosub.selected ? $scope.areaCombosub.selected.tag : undefined;
+      $scope.loading = true;
+
+      var prm = [];
+      if (cc && sc) {
+        prm = [cc, cc_, sc, sc_];
+      } else {
+        prm = [cc, cc_];
+      }
+      var params = {hostname: '', report: 'ReportAuthorCluster2', type: d, param1: prm};
+      reportService2.search(params, function (response) {
+        var res = '';
+        for (var i = 0; i < Object.keys(response).length - 2; i++) {
+          res += response[i];
+        }
+        if (res && res !== '' && res !== 'undefinedundefinedundefinedundefined') {
+          $window.open($sce.trustAsResourceUrl($window.location.origin + res));
+        } else {
+          alert("Error al procesar el reporte. Por favor, espere un momento y vuelva a intentarlo. Si el error persiste, consulte al administrador del sistema.");
+        }
+        $scope.loading = false;
+      });
+    }
+
+    $scope.selectedValue = function () {
+      return $scope.datacl;
+    }
+
+
+    $scope.changeComboSub = function () {
       $scope.datacl = {};
       $scope.datacl = {
         cluster: $scope.areaCombo.selected.id,
         subcluster: $scope.areaCombosub.selected.id
       };
-      console.log ($scope.areaCombosub);
+      console.log($scope.areaCombosub);
     }
 
     if (cluster && subcluster) {

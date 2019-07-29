@@ -188,7 +188,7 @@ public class OntologyMapperTest {
         assertEquals(doajModel.size(), 850);
         Model resultWithMapperFile = OntologyMapper.map(doajModel, doajMapper, vocabulary);
         Model resultEmptyMapperFile = OntologyMapper.map(doajModel, emptyMapper, vocabulary);
-        assertEquals(resultWithMapperFile.size(), 1613);
+        assertEquals(resultWithMapperFile.size(), 1753);
         assertEquals(resultEmptyMapperFile.size(), 0);
     }
     
