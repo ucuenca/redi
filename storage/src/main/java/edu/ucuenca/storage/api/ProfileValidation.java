@@ -32,4 +32,6 @@ public interface ProfileValidation {
 
   public JSONObject obtainNewProfiles(String org) throws Exception;
 
+  public JSONObject getProfileAreas(String uri, HashMap<String, Boolean> tablec, HashMap<String, Boolean> tablesc);
+
 }

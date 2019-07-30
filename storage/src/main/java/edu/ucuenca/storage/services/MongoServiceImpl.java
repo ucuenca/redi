@@ -24,6 +24,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.or;
 import static com.mongodb.client.model.Projections.exclude;
 import static com.mongodb.client.model.Projections.include;
 import static com.mongodb.client.model.Sorts.ascending;
@@ -44,6 +45,7 @@ import javax.inject.Inject;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
 import org.apache.marmotta.platform.core.api.triplestore.SesameService;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -146,12 +148,29 @@ public class MongoServiceImpl implements MongoService {
   }
 
   @Override
-  public String getCluster(String uri) {
-    return clusters.find(eq("_id", uri))
+  public Document getCluster(String... uri) {
+    List<Bson> ls = new ArrayList<>();
+    List<Document> c = new ArrayList<>();
+    for (String p : uri) {
+      Bson eq = eq("_id", p);
+      ls.add(eq);
+    }
+    FindIterable<Document> sort = clusters.find(or(ls))
             .projection(include("subclusters"))
-            .sort(ascending("label-en"))
-            .first()
-            .toJson();
+            .sort(ascending("label-en"));
+    MongoCursor<Document> it = sort.iterator();
+    while (it.hasNext()) {
+      c.add(it.next());
+    }
+    Document parse = new Document();
+
+    if (c.size() == 1) {
+      parse = c.get(0);
+    } else {
+      parse.put("data", c);
+    }
+    return parse;
+
   }
 
   @Override
