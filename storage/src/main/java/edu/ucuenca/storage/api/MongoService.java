@@ -41,7 +41,7 @@ public interface MongoService {
 
   public String getAuthorsByDiscipline(String uri);
 
-  public String getCluster(String uri);
+  public Document getCluster(String ... uri);
 
   public List<Document> getClusters();
 

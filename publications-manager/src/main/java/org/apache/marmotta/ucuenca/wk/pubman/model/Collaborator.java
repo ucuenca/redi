@@ -25,10 +25,10 @@ public class Collaborator {
   private String imgUri;
   private String lastName;
   private String[] targets;
-  
   private String area;
-  
   private String mail;
+
+  private Double DocScore;
 
   public String getArea() {
     return area;
@@ -45,9 +45,6 @@ public class Collaborator {
   public void setMail(String mail) {
     this.mail = mail;
   }
-  
-  
-  
 
   public String[] getTargets() {
     return targets;
@@ -103,6 +100,11 @@ public class Collaborator {
     this.organization = org;
     this.Subjects = Subjects;
     this.lastName = lName;
+  }
+
+  public Collaborator(String authorBase, String uri, String cName, String lName, Double subjectScore, Boolean coauthor, Boolean cluster, String org, String Subjects, Double DocScore) {
+    this(authorBase, uri, cName, lName, subjectScore, coauthor, cluster, org, Subjects);
+    this.DocScore = DocScore;
   }
 
   public String getSubjects() {
@@ -181,6 +183,14 @@ public class Collaborator {
   public Double calcScore() {
     return this.subjectScore * this.getClusterScore() * this.getCoauthorScore();
 
+  }
+
+  public Double getDocScore() {
+    return DocScore;
+  }
+
+  public void setDocScore(Double DocScore) {
+    this.DocScore = DocScore;
   }
 
 }

@@ -414,7 +414,7 @@ public class CommonServiceImpl implements CommonService {
     String describeAuthor = "PREFIX dct: <http://purl.org/dc/terms/> "
             + "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
             + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
-            + "SELECT DISTINCT  ?author (SAMPLE (?names) as ?name) (SAMPLE (?lastname) as ?lname)  ?subject  (SAMPLE (?slabel) as ?label) (COUNT (DISTINCT  ?pub) as ?npub) ?orgname ?img WHERE {   "
+            + "SELECT DISTINCT  ?author (SAMPLE (?names) as ?name) (SAMPLE (?lastname) as ?lname)  (SAMPLE (?slabel) as ?label) ?orgname ?img WHERE {   "
             + "  GRAPH  <" + con.getCentralGraph() + "> {  "
             + "    VALUES ?author {<" + uri + "> } . "
             + "    ?author foaf:name ?names . "
@@ -428,7 +428,7 @@ public class CommonServiceImpl implements CommonService {
             + "     ?org <" + REDI.NAME.toString() + "> ?orgname "
             + "   }  "
             + "   }  "
-            + "}GROUP BY ?author ?subject ?orgname ?img HAVING ( ?npub > 1  )  ORDER BY DESC (?npub)";
+            + "}GROUP BY ?author ?orgname ?img";
     try {
       List<Map<String, Value>> response = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, describeAuthor);
       String imgbase = "";
@@ -443,44 +443,60 @@ public class CommonServiceImpl implements CommonService {
           imgbase = response.get(0).get("img").stringValue();
         }
 
-        double maxScoreAuthor = 0;
+        //double maxScoreAuthor = 0;
         double maXScoreCoauthor = 0;
-        String authorKeywords = "";
+        //String authorKeywords = "";
 
         LinkedHashMap<String, Collaborator> cMap = new LinkedHashMap();
 
         for (Map<String, Value> author : response) {
-          String subject = author.get("subject").stringValue();
+          //String subject = author.get("subject").stringValue();
           if (isStopWord(author.get("label").stringValue())) {
             continue;
           }
-          if (maxScoreAuthor == 0) {
-            maxScoreAuthor = Integer.parseInt(author.get("npub").stringValue());
-          }
+          //if (maxScoreAuthor == 0) {
+          //  maxScoreAuthor = Integer.parseInt(author.get("npub").stringValue());
+          //}
 
-          authorKeywords = author.get("label").stringValue() + "," + authorKeywords;
-          double authorSubjectS = (double) Integer.parseInt(author.get("npub").stringValue());
-
-          String querySubjectCo = "PREFIX dct: <http://purl.org/dc/terms/> "
-                  + "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
-                  + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
-                  + "SELECT DISTINCT  ?author (SAMPLE (?names) as ?name)  (SAMPLE (?lastname) as ?lname) (SAMPLE (?slabel) as ?label) (COUNT (DISTINCT  ?pub) as ?npub)  ?orgname  ?img "
-                  + "WHERE {   "
-                  + "  GRAPH  <" + con.getCentralGraph() + "> {      "
-                  + "    VALUES ?subject { <" + subject + "> } .\n"
-                  + "    ?pub dct:subject ?subject . "
-                  + "    ?subject rdfs:label ?slabel . "
-                  + "    ?author foaf:publications ?pub  .   "
-                  + "    ?author foaf:name ?names . "
-                  + "OPTIONAL { ?author  foaf:familyName ?lastname .}"
-                  + "OPTIONAL { ?author  foaf:img  ?img . } "
-                  + "    ?author  <http://schema.org/memberOf>  ?org . "
-                  + "   GRAPH <" + con.getOrganizationsGraph() + "> { "
-                  + "     ?org <" + REDI.NAME.toString() + "> ?orgname . "
-                  + "   } . "
-                  + "   filter ( ?author !=  <" + uri + "> ) "
-                  + "   }  "
-                  + "}GROUP BY ?author   ?orgname  ?img  HAVING ( ?npub > 1  )  ORDER BY DESC (?npub)";
+          //authorKeywords = author.get("label").stringValue() + "," + authorKeywords;
+          //double authorSubjectS = (double) Integer.parseInt(author.get("npub").stringValue());
+          String querySubjectCo = "PREFIX :<http://www.ontotext.com/graphdb/similarity/> \n"
+                  + "                   PREFIX inst:<http://www.ontotext.com/graphdb/similarity/instance/> \n"
+                  + "                   PREFIX pubo: <http://ontology.ontotext.com/publishing#> \n"
+                  + "                   PREFIX dct: <http://purl.org/dc/terms/>  \n"
+                  + "                   PREFIX foaf: <http://xmlns.com/foaf/0.1/>  \n"
+                  + "                   PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>  \n"
+                  + "                   SELECT DISTINCT  ?author (SAMPLE (?score) as ?scores) (SAMPLE (?names) as ?name)  (SAMPLE (?lastname) as ?lname) (SAMPLE (?slabel) as ?label)  ?orgname  ?img  \n"
+                  + "                   WHERE {    \n"
+                  + "\n"
+                  + "                     {\n"
+                  + "\n"
+                  + "                        SELECT ?author ?score {\n"
+                  + "                                ?search a inst:authorsIdx ;\n"
+                  + "                                    :searchDocumentID <" + uri + ">;\n"
+                  + "                                    :searchParameters \"-numsearchresults 100\";\n"
+                  + "                                    :documentResult ?result .\n"
+                  + "                                ?result :value ?author ;\n"
+                  + "                                        :score ?score.\n"
+                  + "                                       filter ( ?author !=  <" + uri + "> )  \n"
+                  + "                            	}\n"
+                  + "\n"
+                  + "\n"
+                  + "                     } .\n"
+                  + "                     GRAPH  <" + con.getCentralGraph() + "> {       \n"
+                  + "                       ?pub dct:subject ?subject .  \n"
+                  + "                       ?subject rdfs:label ?slabel .  \n"
+                  + "                       ?author foaf:publications ?pub  .    \n"
+                  + "                       ?author foaf:name ?names .  \n"
+                  + "                   OPTIONAL { ?author  foaf:familyName ?lastname .} \n"
+                  + "                   OPTIONAL { ?author  foaf:img  ?img . }  \n"
+                  + "                       ?author  <http://schema.org/memberOf>  ?org .  \n"
+                  + "                      GRAPH <" + con.getOrganizationsGraph() + "> {  \n"
+                  + "                        ?org <http://ucuenca.edu.ec/ontology#name> ?orgname .  \n"
+                  + "                      } .  \n"
+                  + "                      filter ( ?author !=  <" + uri + "> )  \n"
+                  + "                      }   \n"
+                  + "                   }GROUP BY ?author   ?orgname  ?img  ";
 
           List<Map<String, Value>> responseSubAuthor = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, querySubjectCo);
 
@@ -492,19 +508,28 @@ public class CommonServiceImpl implements CommonService {
               lName = coauthor.get("lname").stringValue();
             }
             String coOrg = coauthor.get("orgname").stringValue();
-            int coScore = Integer.parseInt(coauthor.get("npub").stringValue());
+            //int coScore = Integer.parseInt(coauthor.get("npub").stringValue());
             String imgUri = "";
             if (coauthor.containsKey("img")) {
               imgUri = coauthor.get("img").stringValue();
             }
-            double Score = authorSubjectS / (double) maxScoreAuthor;
+            double Score = 2;
+            if (coauthor.containsKey("scores")) {
+              Score = Double.parseDouble(coauthor.get("scores").stringValue());
+//              if (Score == 0) {
+//                Score = 2;
+//              } else {
+//                Score = 1 / Score;
+//              }
+            }
+            //double Score = authorSubjectS / (double) maxScoreAuthor;
 
             if (!cMap.containsKey(couri)) {
-              Collaborator c = new Collaborator(uri, couri, coName, lName, Score * coScore, isCoauthor(uri, couri), isClusterPartner(uri, couri), coOrg, getSubjectAuthor(couri));
+              Collaborator c = new Collaborator(uri, couri, coName, lName, Score, isCoauthor(uri, couri), isClusterPartner(uri, couri), coOrg, getSubjectAuthor(couri), Score);
               c.setImgUri(imgUri);
               cMap.put(couri, c);
-              if (maXScoreCoauthor < c.calcScore()) {
-                maXScoreCoauthor = c.calcScore();
+              if (maXScoreCoauthor < c.getDocScore()) {
+                maXScoreCoauthor = c.getDocScore();
               }
             }
 
@@ -514,7 +539,7 @@ public class CommonServiceImpl implements CommonService {
 
         Collaborator base = new Collaborator(uri, uri, authorName, authorLName, authorOrg, getSubjectAuthor(uri));
         base.setImgUri(imgbase);
-        return coauthorsToJson(base, orderCoauthors(cMap, 15), maXScoreCoauthor);
+        return coauthorsToJson(base, orderCoauthors(cMap, 100), maXScoreCoauthor);
 
       }
     } catch (MarmottaException | org.json.JSONException ex) {
@@ -523,6 +548,11 @@ public class CommonServiceImpl implements CommonService {
     }
     log.debug("No data found for related authors: " + uri);
     return "{\"Error\":\"No Data\"}";
+  }
+
+  public Double graphDBDistance(String U, String U2) {
+
+    return null;
   }
 
   public String getSubjectAuthor(String coUri) throws MarmottaException {
@@ -576,7 +606,8 @@ public class CommonServiceImpl implements CommonService {
       Map newlink = new HashMap();
       newlink.put("source", base.getUri());
       newlink.put("target", e.getValue().getUri());
-      newlink.put("distance", 300 - (300 * e.getValue().calcScore()) / maxScore + "");
+      newlink.put("distance", 300 - (300 * e.getValue().getDocScore()) / maxScore + "");
+      //newlink.put("distance", e.getValue().getDocScore() + "");
       newlink.put("coauthor", e.getValue().isCoauthor().toString());
       llinks.add(newlink);
     }
@@ -1100,8 +1131,8 @@ public class CommonServiceImpl implements CommonService {
     Collections.sort(list, new Comparator<Map.Entry<String, Collaborator>>() {
       @Override
       public int compare(Map.Entry<String, Collaborator> o1, Map.Entry<String, Collaborator> o2) {
-        Double result = o2.getValue().calcScore() - o1.getValue().calcScore();
-        return (int) (result * 10000000);
+        Double result = o2.getValue().getDocScore() - o1.getValue().getDocScore();
+        return (int) (result * 10);
       }
     });
 

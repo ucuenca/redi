@@ -308,6 +308,9 @@ public class ProfileValidationImpl implements ProfileValidation {
     main.put("emails", this.getProfileEmail(uri, recoverData(d, "emails")));
     main.put("publications", this.getPublicationsCandidates(uri, recoverData(d, "publications")));
     main.put("basic", this.getProfileInst(uri));
+    JSONObject profileAreas = this.getProfileAreas(uri, recoverData(d, "clusters"), recoverData(d, "subclusters"));
+    main.put("clusters", profileAreas.get("clusters"));
+    main.put("subclusters", profileAreas.get("subclusters"));
 
     return main.toJSONString();
   }
@@ -370,5 +373,72 @@ public class ProfileValidationImpl implements ProfileValidation {
   public JSONObject obtainNewProfiles(String org) throws Exception {
     JSONObject obtainNewProfiles = mongos.obtainNewProfiles(org);
     return obtainNewProfiles;
+  }
+
+  @Override
+  public JSONObject getProfileAreas(String uri, HashMap<String, Boolean> tablec, HashMap<String, Boolean> tablesc) {
+    String queryClusters = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+            + "PREFIX dct: <http://purl.org/dc/terms/>\n"
+            + "\n"
+            + "select ?c ?len {\n"
+            + "    graph <" + con.getClusterGraph() + "> {\n"
+            + "    	<" + uri + "> dct:isPartOf ?c .\n"
+            + "      ?c a <http://ucuenca.edu.ec/ontology#Cluster> .\n"
+            + "      ?c rdfs:label ?len .\n"
+            + "    }\n"
+            + "} ";
+    String querySubClusters = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+            + "PREFIX dct: <http://purl.org/dc/terms/>\n"
+            + "\n"
+            + "select ?c (group_concat(?len ; separator = ';' ) as ?le ) {\n"
+            + "    graph <" + con.getClusterGraph() + "> {\n"
+            + "    	<" + uri + "> dct:isPartOf ?c .\n"
+            + "      ?c a <http://ucuenca.edu.ec/ontology#SubCluster> .\n"
+            + "      ?c rdfs:label ?len .\n"
+            + "    }\n"
+            + "} group by ?c";
+    try {
+      List<Map<String, Value>> aCluster = sparqlService.query(QueryLanguage.SPARQL, queryClusters);
+      List<Map<String, Value>> aSubCluster = sparqlService.query(QueryLanguage.SPARQL, querySubClusters);
+      JSONObject main = new JSONObject();
+      JSONArray array = new JSONArray();
+      for (Map<String, Value> p : aCluster) {
+        JSONObject obj = new JSONObject();
+        if (p.containsKey("c")) {
+          obj.put("cluster", p.get("c").stringValue());
+          obj.put("label", p.get("len").stringValue());
+        }
+        if (!tablec.isEmpty() && tablec.containsKey(obj.get("cluster"))) {
+          obj.put("status", tablec.get(obj.get("cluster")));
+        } else {
+          obj.put("status", false);
+        }
+        array.add(obj);
+      }
+      JSONObject clus = new JSONObject();
+      clus.put("data", array);
+      main.put("clusters", clus);
+      JSONArray array2 = new JSONArray();
+      for (Map<String, Value> p : aSubCluster) {
+        JSONObject obj = new JSONObject();
+        if (p.containsKey("c")) {
+          obj.put("subcluster", p.get("c").stringValue());
+          obj.put("label", p.get("le").stringValue());
+        }
+        if (!tablesc.isEmpty() && tablesc.containsKey(obj.get("subcluster"))) {
+          obj.put("status", tablesc.get(obj.get("subcluster")));
+        } else {
+          obj.put("status", false);
+        }
+        array2.add(obj);
+      }
+      clus = new JSONObject();
+      clus.put("data", array2);
+      main.put("subclusters", clus);
+      return main;
+    } catch (MarmottaException ex) {
+      Logger.getLogger(ProfileValidationImpl.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return null;
   }
 }
