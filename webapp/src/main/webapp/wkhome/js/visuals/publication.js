@@ -51,7 +51,8 @@ wkhomeApp.directive('publicationTemplate', ['globalData', 'sparqlQuery', '$route
         ngModel: '='
       },
       //  template: 'HOLA : {{ngModel.name}}',
-      templateUrl: 'wkhome/partials/publicationProfile.html',
+      //templateUrl: 'wkhome/partials/publicationProfile.html',
+      templateUrl: 'wkhome/partials/publicationProfilev2.html',
       link: function(scope, iElement, iAttrs, ctrl) {
         // console.log("DIrectiva");
       }

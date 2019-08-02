@@ -8,7 +8,9 @@
   margin-right: 0px;
 }
 .icon-small {
-    height:25px;
+    /*height:25px;*/
+    width: 4vw;
+    height: auto;
     margin:0;
     padding:0;
     background-color: transparent;

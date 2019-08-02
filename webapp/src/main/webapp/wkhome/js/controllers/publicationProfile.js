@@ -12,12 +12,17 @@ wkhomeControllers.controller('publicationProfile', ['$scope', '$routeParams', '$
       var uri = "";
        var route = $window.location.origin;
       console.log (route);
-   
+      
+        $scope.quantity = 4;
+        $scope.quantityf = 5;
 
     $scope.$on('hijo', function(e) {  
      var  uri  = $scope.$parent.$parent.puburi;
         $scope.child(uri);        
     });
+
+
+
 
   
    $scope.exportar = function() {
@@ -29,11 +34,18 @@ wkhomeControllers.controller('publicationProfile', ['$scope', '$routeParams', '$
              ).then(  function (canvas)  {
       var pdf = new jsPDF('p', 'mm', 'a4');
      // pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 211, 298);
-      pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 211, 235);
+      //pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 211, 235);
+        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 200);
       pdf.save(filename);
     });
     }; 
          // $scope.child();   
+
+            $('#myModal').on('hidden.bs.modal', function () {
+        $("body").css("overflow-x","");
+        $("body").css("overflow-y","");
+       // alert ("CLOSE MODAL");
+        });
 
         $scope.child = function ( uri ) {
       waitingDialog.show();
@@ -120,7 +132,7 @@ wkhomeControllers.controller('publicationProfile', ['$scope', '$routeParams', '$
                          img = "wkhome/images/author-default.png";
 
                        }
-                      dataToSend["autores"].push ({ "uri": route+"/#/author/profile/"+auturi , "name":unique(valor["foaf:name"]),"img": img});   
+                      dataToSend["autores"].push ({ "uri": route+"/#/author/profile/"+auturi , "name":basicName(unique(valor["foaf:name"])),"img": img});   
                        break;
                       case "bibo:Proceedings":
                       dataToSend["revista"]["Proceedings"]= unique(valor["rdfs:label"]);
@@ -164,6 +176,7 @@ wkhomeControllers.controller('publicationProfile', ['$scope', '$routeParams', '$
           RecomendService.get({
           search: key
          }, function(result) { 
+            console.log ("RECOMENDACIONES RESP");
            console.log ("Resultado");
            console.log (result.response);
            var recomendacion = [];
@@ -181,23 +194,59 @@ wkhomeControllers.controller('publicationProfile', ['$scope', '$routeParams', '$
 
                console.log (recomendacion);
            }
+         } , function ( fail){
+              var recomendacion = [];
+              console.log ("Related sources not found");
+              /* var r = {"uri": "www.google.com" , "title": "Plataforma para hacer papas fritas" , "authors" : "DON SUCO, EL VILLIE, TU MAMA" };
+               var r2 = {"uri": "www.google.com" , "title": "FISICA para locos" , "authors" : "EL LUCHO, MARA SEXY" };
+               recomendacion.push (r);
+               recomendacion.push (r2);
+               dataToSend["recomendacion"] =  recomendacion;*/
+       
          });    
                
               
 
                  $scope.$apply(function () {
+              $scope.publication.quantity =  4;   
+              $scope.publication.quantityf = 5;
               $scope.publication = dataToSend;
                  });
               console.log (dataToSend);
           }
             waitingDialog.hide();
               $scope.$parent.$parent.showmodal ();
+              $("body").css("overflow-x","hidden");
+              $("body").css("overflow-y","hidden");
+              //overflow-x: hidden;
+              //overflow-y: hidden;
         });
       }); // end  sparqlQuery.querySrv(...
  } // FIN CHILD
         function exportar () {
         console.log ("CLICK");
          }
+
+         function basicName ( str ){
+          str = toTitleCase(str);
+          if (str.indexOf(",") != -1){
+          var espace = str.trim().indexOf(" ");
+          var com = str.trim().indexOf(",");
+          var fname = str.substring(com+1).trim();
+          var findex = fname.indexOf(" ");
+          if (findex < 0) { findex = fname.length }
+          return str.substring(0, espace+1)+", "+ fname.substring (0,findex);
+          }
+          return str;
+          //
+
+         }
+
+         function toTitleCase(str) {
+        return str.replace(/\w\S*/g, function(txt){
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+         });
+        }
 
         function unique( a) {
             return Array.isArray(a) ? a[0] : a;
@@ -237,7 +286,36 @@ wkhomeControllers.controller('publicationProfile', ['$scope', '$routeParams', '$
   }
 
 
-  
+   showmoreauthors = function  () {
+     console.log ("MORE");
+     if ($scope.quantity > 4){
+        $scope.quantity = 4;
+     }else {
+       $scope.quantity = 20;
+     }
+
+      $scope.$apply(function () {
+              $scope.publication.quantity =   $scope.quantity;  
+                 });
+
+     // print ( $scope.publication["authors"]);
+    
+   }
+
+
+     showsources = function () {
+     console.log ("MORE");
+     if ($scope.quantityf > 5){
+        $scope.quantityf = 5;
+     }else {
+       $scope.quantityf = 20;
+     }
+
+      $scope.$apply(function () {
+              $scope.publication.quantityf =   $scope.quantityf;  
+                 });
+
+     }
 
        if ( publication === undefined){
         console.log ("PADRE");

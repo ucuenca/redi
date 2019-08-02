@@ -7,11 +7,13 @@ footer>hr {
   display: inline-block;
   font-style: normal;
   font-weight: 400;
-  height: 25px;
+  /*height: 25px; */
+  height: 8vh;
   line-height: 1;
   position: relative;
   top: 1px;
-  width: 30px;
+  width: 2vw;
+  /*width: 30px; */
 }
 
 .cedia {
@@ -36,4 +38,13 @@ footer>hr {
   width: 100%;
   /*position:relative;*/
   bottom: 0;
+}
+
+#cediacopi {
+  padding-left: 20px;
+}
+
+#logoscopi {
+  padding-right: 20px;
+
 }

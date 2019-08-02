@@ -1,0 +1,105 @@
+
+<div class="col-md-12 resume-wrapper text-center position-relative bodyPub" > 
+    <div class="document mx-auto text-left bg-white shadow-lg p-5 " ng-model="publication" ng-controller="publicationProfile"  id="nodeToRenderAsPDF">
+    <div class="text-right file">
+   <!-- <span class="glyphicon     glyphicon-print"> </span> -->
+      <span class="glyphicon glyphicon-print " ng-click="exportar();" >  </span>
+      <span class="glyphicon glyphicon-remove " data-dismiss="modal">  </span>
+    </div>
+    <h1 class="col-md-12 resume-section-title main pb-3 mb-3 title" onclick="console.log('title');"> <b>{{publication.title}} </b> </h1>
+   <div class="row mainsectionpub">
+    <div class="col-md-8 leftsectionpub">
+    <div class="col-md-12"> 
+    <h5 class=" pb-2 mb-2" > <b>Abstract :</b> </h5>
+     <p class="abstract"> {{publication.abstract}}
+    </p>
+
+    <small class="text-muted">  keywords:  </small>
+          <div class="row col-md-12">
+
+            <ul class="list-inline"> 
+              <span ng-repeat="k in publication.keywords"><li class="list-inline-item">
+                 <span class="badge badge-primary badge-pill">
+                   {{k}}
+                 </span> </li> </span>
+           </ul>
+           
+        </div>
+      </div>
+
+      <div class="col-md-12">
+          <h5 class="pb-2 mb-2" > <b>Fuentes:</b></h5>
+              <div class="row text-center">
+        <span ng-repeat="f in publication.fuentes | limitTo: quantityf ">
+     <div class="col-md-2 author">
+      <a href="{{f.uri}}" target="_blank" >
+     <img class="img-fuente" src="{{f.img}}"> </img><br>
+     <small> {{f.name}} </small>
+      </a>
+     </div>
+     </span>
+     <div class="col-md-2 author">
+       <div id="moresources" onclick="showsources()">   +/- </div>
+     </div>
+
+     </div>
+        </div>
+
+      </div>
+    <div class="col-md-4 rigthsectionpub">
+        <h5 class="pb-2 mb-2" > <b>Autores:</b></h5>
+           <div class="row">
+           <span ng-repeat="a in publication.autores | limitTo: quantity ">
+         <a class="authorlink" href="{{a.uri}}" target="_blank" >
+         <div class=" col-md-3 text-center author">
+         <img class="img-authors" src="{{a.img}}"> </img>
+        <small>{{a.name}}</small>
+         </a>
+       </div>
+        </span>
+          <div class="col-md-12 text-center">
+          <div id="moreauthors" onclick="showmoreauthors()" class="col-md-12">
+          +/-
+          </div>
+          </div>
+          </div>
+       <h5 class="pb-2 mb-2" > <b>Revista:</b></h5>
+          <div class="row ">
+           <div class="col-md-4 revista" ng-if="publication.revista.img">
+         <img class="img-revista" src="{{publication.revista.img}}"> </img>
+         {{publication.revista.title}}
+        </div>
+       <!-- <div class="col-md-1 revista" ng-if="publication.revista.img" > </div> -->
+        <div class="col-md-auto mr-5">
+        <small ng-if="publication.revista.title" class="text-muted"> <b>Journal: </b> {{publication.revista.title}} <br> </small> 
+       <small  ng-if="publication.revista.Conference" class="text-muted"> <b>Conference: </b> {{publication.revista.Conference}} <br> </small> 
+        <small ng-if="publication.revista.Proceedings" class="text-muted"><b>Proceedings: </b> {{publication.revista.Proceedings}} <br> </small> 
+        <small ng-if="publication.revista.Book" class="text-muted"><b>Book: </b> {{publication.revista.Book}} <br></small>
+        </div>
+          </div>
+          </div>      
+
+          </div>
+    
+   
+     
+
+    <h6  class="resume-section-title pb-2 mb-2" > Articulos relacionados </h6>
+      <div class="row relatedart">
+      <span ng-repeat="re in publication.recomendacion">
+          <div class="col-md-11 docrelacionados">  
+           <h5 class="title"> <a href="{{re.uri}}" target="_blank" > <b>{{ re.title}} </b></a> </h5>
+            <p class="text-muted"> {{ re.authors}}</p>
+          </div>
+      </span>
+    </div>
+
+  </div>
+  </div>
+  </div>
+   </div>
+
+
+
+  </div>
+</div>

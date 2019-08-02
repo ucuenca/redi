@@ -14,6 +14,21 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
       return theString;
     };
 
+     $('#searchType').on('change', function () {
+      if (this.value == 'all') {
+        $('#txtSearch').attr("placeholder", "Buscar ...");
+      } else if (this.value == 'authors') {
+        $('#txtSearch').attr("placeholder", "Researcher's name ...");
+      } else if (this.value == 'organizations') {
+        $('#txtSearch').attr("placeholder", "Organization's name ...");
+      } else if (this.value == 'publications') {
+        $('#txtSearch').attr("placeholder", "Publication's keywords ...");
+      }
+    });
+
+     
+        $('#searchType').selectpicker();
+
 
 
     function Candidate(id, val, desc, path) {

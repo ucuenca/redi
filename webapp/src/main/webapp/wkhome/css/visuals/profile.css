@@ -60,6 +60,7 @@ background-position: 0vw 3vw;
   font-family: "Conduit-BI";
   font-size: 2.2vw;
   color: #0095db;
+  line-height: 100%;
 }
 
 .coauthor-list { 
@@ -151,10 +152,29 @@ background-position: 35% 50%;
 /*border: none;*/
 border-bottom: none;
 border-top: none;
-border-right:  none;
+border-right-width: 1.5px;
 }
 
 #netbtn:hover {
+background: url(/wkhome/images/redactive.png);
+background-repeat: no-repeat;
+background-position: 35% 50%;
+
+  
+}
+
+
+#stasbtn {
+background: url(/wkhome/images/red.png);
+background-repeat: no-repeat;
+background-position: 35% 50%;
+/*border: none;*/
+border-bottom: none;
+border-top: none;
+border-right: none;
+}
+
+#stasbtn:hover {
 background: url(/wkhome/images/redactive.png);
 background-repeat: no-repeat;
 background-position: 35% 50%;
@@ -181,7 +201,7 @@ background-position: 35% 50%;
 
 
 .prof-btn span {
-margin-left: 20px;
+margin-left: 4vw;
 font-size: 1.1vw;
 font-family: "Conduit-IT";
 color: #253081;
