@@ -20,43 +20,142 @@ rela.directive('relatedAuthor', ["d3", 'globalData', 'sparqlQuery', '$routeParam
 
       var host = "http://localhost:8080";
 
-      $.ajax({
-        type: "GET",
-        dataType: "JSON", //result data type
-        // url: host + "/pubman/reports/collaboratorsData?URI=https://redi.cedia.edu.ec/resource/authors/UCUENCA/file/_SAQUICELA_GALARZA_____VICTOR_HUGO_" ,
-        // url: host + "/pubman/reports/collaboratorsData?URI=https://redi.cedia.edu.ec/resource/authors/UCUENCA/file/_FEYEN_____JAN_" ,
-        //    url: newhost + "/pubman/reports/collaboratorsData?URI="+uri ,
-        url: globalData.serverInstance + "mongo/relatedauthors?uri=" + uri,
-        success: function (Result) {
+      var svg_ = null;
 
-          if ("Error" in Result) {
+      refresh(true);
+
+
+      function refresh(labels) {
+        $.ajax({
+          type: "GET",
+          dataType: "JSON", //result data type
+          // url: host + "/pubman/reports/collaboratorsData?URI=https://redi.cedia.edu.ec/resource/authors/UCUENCA/file/_SAQUICELA_GALARZA_____VICTOR_HUGO_" ,
+          // url: host + "/pubman/reports/collaboratorsData?URI=https://redi.cedia.edu.ec/resource/authors/UCUENCA/file/_FEYEN_____JAN_" ,
+          //    url: newhost + "/pubman/reports/collaboratorsData?URI="+uri ,
+          url: globalData.serverInstance + "mongo/relatedauthors?uri=" + uri,
+          success: function (Result) {
+
+            if ("Error" in Result) {
+              $('#relatedArea').css("display", "block");
+            } else {
+              if (!labels) {
+
+                var cmbRel = $("#cmbRel").prop('checked');
+                var cmbCoa = $("#cmbCoa").prop('checked');
+                var limit = $("#rangeNum").prop('value');
+
+                var orgs = [];
+                for (var org in organization) {
+                  if ($("#chkOrg_" + organization [org]).prop('checked')) {
+                    orgs.push(org);
+                  }
+                }
+
+                var blck_node = [];
+                for (var nod in Result.nodes) {
+                  if (nod > 0) {
+                    var nod_ = Result.nodes[nod];
+                    if (orgs.indexOf(nod_.group) > -1) {
+                    } else {
+                      blck_node.push(nod_.id);
+                    }
+
+                  }
+                }
+                var blck_new_nod = [];
+                var new_nod = [];
+                for (var nod in Result.links) {
+                  var nod_ = Result.links[nod];
+                  var bbl = false;
+                  if ((cmbRel && nod_.coauthor == 'false') || (cmbCoa && nod_.coauthor == 'true')) {
+                    if (blck_node.indexOf(nod_.target) > -1) {
+                    } else {
+                      if (new_nod.length < limit) {
+                        new_nod.push(nod_);
+                        bbl = true;
+                      }
+                    }
+                  }
+                  if (!bbl) {
+                    blck_new_nod.push(nod_.target);
+                  }
+                }
+                console.log(blck_new_nod);
+                Result.links = new_nod;
+                var sssw = [];
+                for (var nod = 0; nod < Result.nodes.length; nod++) {
+                  var nod_ = Result.nodes[nod];
+                  if (blck_new_nod.indexOf(nod_.id) > -1) {
+                  } else {
+                    sssw.push(nod_);
+                  }
+                }
+                Result.nodes = sssw;
+
+              }
+              console.log(Result);
+              render(Result);
+              if (labels) {
+                etiquetas();
+                events();
+              }
+            }
+
+          },
+          error: function (data) {
+            //document.getElementById("imgloading").style.visibility = "hidden";
             $('#relatedArea').css("display", "block");
-          } else {
-            render(Result);
-            etiquetas();
+            // alert("Error" + data.responseText);
           }
+        });
+      }
 
-        },
-        error: function (data) {
-          //document.getElementById("imgloading").style.visibility = "hidden";
-          $('#relatedArea').css("display", "block");
-          // alert("Error" + data.responseText);
+
+
+      function events() {
+        $("#cmbRel").change(function () {
+          refresh(false);
+        });
+
+        $("#cmbCoa").change(function () {
+          refresh(false);
+        });
+
+        for (var org in organization) {
+          $("#chkOrg_" + organization [org]).change(function () {
+            refresh(false);
+          });
         }
-      });
+
+        $("#rangeNum").change(function (a) {
+          refresh(false);
+          console.log(a);
+          $("#uptoauth").text("Limite: " + $("#rangeNum").prop('value') + " autores");
+        });
+
+
+      }
+
+
 
 
 
       function etiquetas() {
         $("#colores").append("<li class='list-group-item' style='font-weight: bold' >  LEYEND  </li>");
-        $("#colores").append("<li class='list-group-item'> <svg height='5' width='8'> <line x1='0' y1='0' x2='10' y2='0' style='stroke:#999;stroke-width:3'/> </svg>  Related Author  </li>");
-        $("#colores").append("<li class='list-group-item'> <svg height='5' width='8'> <line x1='0' y1='0' x2='10' y2='0' style='stroke:#999;stroke-width:10'/> </svg> Coauthor Relation  </li>");
+        $("#colores").append("<li class='list-group-item'> <input type='checkbox' id='cmbRel' value='' checked> <svg height='5' width='8'> <line x1='0' y1='0' x2='10' y2='0' style='stroke:#999;stroke-width:3'/> </svg>  Related Author  </li>");
+        $("#colores").append("<li class='list-group-item'> <input type='checkbox' id='cmbCoa' value='' checked> <svg height='5' width='8'> <line x1='0' y1='0' x2='10' y2='0' style='stroke:#999;stroke-width:10'/> </svg> Coauthor Relation  </li>");
         $("#colores").append("<li class='list-group-item' style='font-weight: bold' >  ORGANIZATIONS  </li>");
 
         for (var org in organization) {
           console.log(color(organization [org]));
           //  $( "#colores" ).append( "<span style='color:"+color (organization [org])+"'> &#9658 "+org+" </span> " );
-          $("#colores").append("<li class='list-group-item'> <span class='badge ' id='leyend' style='color:" + color(organization [org]) + "' >&#9632 </span>" + org + " </li>");
+          $("#colores").append("<li class='list-group-item organization'> <input type='checkbox' id='chkOrg_" + organization [org] + "' value='" + organization [org] + "' checked> <span class='badge ' id='leyend' style='color:" + color(organization [org]) + "' >&#9632 </span>" + org + " </li>");
         }
+
+        $("#colores").append("<li class='list-group-item' style='font-weight: bold' >  FILTROS  </li>");
+
+        $("#colores").append("<li class='list-group-item'> <input type='range' min='1' max='100' value='20' class='slider' id='rangeNum'> </li>");
+        $("#colores").append("<li class='list-group-item'> <span id ='uptoauth' > Limite: 20 autores</span> </li>");
 
 
       }
@@ -94,14 +193,12 @@ rela.directive('relatedAuthor', ["d3", 'globalData', 'sparqlQuery', '$routeParam
       }
 //numero ancho enlace
       function render(graph) {
-
-        var svg = d3.select("svg"),
-                width = +svg.attr("width"),
-                height = +svg.attr("height");
-
-
-
-
+        var svg = d3.select("svg");
+        svg_ = svg_ == null ? svg : svg_;
+        svg = svg_;
+        svg.selectAll("*").remove();
+        var width = +svg.attr("width");
+        var height = +svg.attr("height");
         var simulation = d3.layout.force()
                 .gravity(0.05).
                 linkDistance(function (d) {

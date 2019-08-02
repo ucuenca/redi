@@ -474,7 +474,7 @@ public class CommonServiceImpl implements CommonService {
                   + "                        SELECT ?author ?score {\n"
                   + "                                ?search a inst:authorsIdx ;\n"
                   + "                                    :searchDocumentID <" + uri + ">;\n"
-                  + "                                    :searchParameters \"-numsearchresults 20\";\n"
+                  + "                                    :searchParameters \"-numsearchresults 100\";\n"
                   + "                                    :documentResult ?result .\n"
                   + "                                ?result :value ?author ;\n"
                   + "                                        :score ?score.\n"
@@ -539,7 +539,7 @@ public class CommonServiceImpl implements CommonService {
 
         Collaborator base = new Collaborator(uri, uri, authorName, authorLName, authorOrg, getSubjectAuthor(uri));
         base.setImgUri(imgbase);
-        return coauthorsToJson(base, orderCoauthors(cMap, 15), maXScoreCoauthor);
+        return coauthorsToJson(base, orderCoauthors(cMap, 100), maXScoreCoauthor);
 
       }
     } catch (MarmottaException | org.json.JSONException ex) {
