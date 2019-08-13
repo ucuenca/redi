@@ -52,7 +52,6 @@ import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.UpdateExecutionException;
-import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFHandlerException;
 import org.semarglproject.vocab.RDF;
@@ -65,7 +64,7 @@ import org.semarglproject.vocab.RDFS;
 @ApplicationScoped
 public class DisambiguationServiceImpl implements DisambiguationService {
 
-  final int MAXTHREADS = 10;
+  final int MAXTHREADS = 5;
 
   @Inject
   private org.slf4j.Logger log;
@@ -184,6 +183,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         }
       } else {
         ProcessAuthors(Providers, null);
+        sparqlService.getGraphDBInstance().dumpBuffer();
       }
       for (int w0 = 0; w0 < 4; w0++) {
         ProcessCoauthors(Providers, true);
@@ -203,6 +203,11 @@ public class DisambiguationServiceImpl implements DisambiguationService {
       ProcessPublications(Providers);
       sparqlService.getGraphDBInstance().dumpBuffer();
     } catch (Exception ex) {
+      try {
+        sparqlService.getGraphDBInstance().dumpBuffer();
+      } catch (Exception ex1) {
+        ex1.printStackTrace();
+      }
       log.error("Unknown error while disambiguating");
       ex.printStackTrace();
     }
@@ -888,17 +893,15 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                 Disambiguate.add(instance.createURI(aSeedAuthor.URI), instance.createURI("http://www.w3.org/2002/07/owl#sameAs"), instance.createURI(aSeedAuthor.URI));
               }
               Disambiguate.add(instance.createURI(aSeedAuthor.URI), instance.createURI("http://dbpedia.org/ontology/status"), instance.createURI(harvestedProvidersListURI));
-              RepositoryConnection connection = sparqlService.getRepositoryConnetion();
-              connection.begin();
-              connection.add(Disambiguate, instance.createURI(constantService.getAuthorsSameAsGraph()));
-              connection.commit();
-              connection.close();
+              sparqlService.getGraphDBInstance().addBuffer(instance.createURI(constantService.getAuthorsSameAsGraph()), Disambiguate);
               task.updateDetailMessage("Status", String.format("Finish disambiguating %s out of %s authors", ix, allx));
               log.info("Finish disambiguating {} out of {} authors", ix, allx);
 
             } catch (Exception ex) {
               log.error("Unknown error while disambiguating");
               ex.printStackTrace();
+              log.info("Retrying...");
+              run();
             }
           }
         });

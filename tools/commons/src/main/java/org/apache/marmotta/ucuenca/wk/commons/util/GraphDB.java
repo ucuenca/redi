@@ -69,7 +69,7 @@ public final class GraphDB {
     spqSelect = "http://201.159.222.25:8180/repositories/" + database;
 
     ConcurrentHashMap<String, String> additionalHttpHeaders = new ConcurrentHashMap<>();
-    additionalHttpHeaders.put("Accept", "application/ld+json");
+    additionalHttpHeaders.put("Accept", "application/sparql-results+json,*/*;q=0.9");
     data.setAdditionalHttpHeaders(additionalHttpHeaders);
     data.initialize();
     SparqlService sparqlService = new SparqlService() {
@@ -100,7 +100,7 @@ public final class GraphDB {
           connection.close();
 
         } catch (Exception ex) {
-          Logger.getLogger(GraphDB.class.getName()).log(Level.SEVERE, null, ex);
+          throw new MarmottaException(ex);
         }
         return t;
       }
@@ -122,7 +122,7 @@ public final class GraphDB {
           }
           connection.close();
         } catch (Exception ex) {
-          Logger.getLogger(GraphDB.class.getName()).log(Level.SEVERE, null, ex);
+          throw new MarmottaException(ex + "" + string);
         }
         return r;
       }
@@ -136,7 +136,7 @@ public final class GraphDB {
           connection.commit();
           connection.close();
         } catch (RepositoryException ex) {
-          Logger.getLogger(GraphDB.class.getName()).log(Level.SEVERE, null, ex);
+          throw new MarmottaException(ex);
         }
       }
 
@@ -207,21 +207,28 @@ public final class GraphDB {
     return r;
   }
 
-  public synchronized void addBuffer(String g, String s, String p, String o) throws RepositoryException, RDFHandlerException {
-    ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
-    URI ug = instance.createURI(g);
+  public synchronized void addBuffer(URI ug, Model mdlAdd) throws RepositoryException, RDFHandlerException {
     Model mdl = hmmdl.get(ug);
     if (mdl == null) {
       mdl = new LinkedHashModel();
       hmmdl.put(ug, mdl);
     }
-    URI us = instance.createURI(s);
-    URI up = instance.createURI(p);
-    URI uo = instance.createURI(o);
-    mdl.add(us, up, uo, ug);
+    mdl.addAll(mdlAdd);
     if (mdl.size() > MAX_TRIPLES_ADD_2) {
       dumpBuffer(ug);
     }
+
+  }
+
+  public synchronized void addBuffer(String g, String s, String p, String o) throws RepositoryException, RDFHandlerException {
+    ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
+    URI ug = instance.createURI(g);
+    URI us = instance.createURI(s);
+    URI up = instance.createURI(p);
+    URI uo = instance.createURI(o);
+    Model mdl = new LinkedHashModel();
+    mdl.add(us, up, uo);
+    addBuffer(ug, mdl);
   }
 
   public void dumpBuffer() throws RepositoryException, RDFHandlerException {
