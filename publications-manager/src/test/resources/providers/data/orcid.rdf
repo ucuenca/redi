@@ -11,6 +11,7 @@
 	<account xmlns="https://orcid.org/ontology/">http://www.twitter.com/nopiedra</account>
 	<aff xmlns="https://orcid.org/ontology/">Universidad Politécnica de Madrid</aff>
 	<aff xmlns="https://orcid.org/ontology/">Universidad Técnica Particular de Loja</aff>
+	<bio xmlns="https://orcid.org/ontology/">Data Science and Open Access</bio>
 	<familyName xmlns="https://orcid.org/ontology/">Piedra</familyName>
 	<givenName xmlns="https://orcid.org/ontology/">Nelson</givenName>
 	<name xmlns="https://orcid.org/ontology/">Piedra N</name>
@@ -65,6 +66,18 @@
 	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434385"/>
 	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434386"/>
 	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434387"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822252"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822253"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822254"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822255"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822256"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822257"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822258"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822259"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822260"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822261"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822262"/>
+	<publications xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822263"/>
 	<topics xmlns="https://orcid.org/ontology/">Open Data, OER, OCW, LinkedData, Semantic Web, RDF, SPARQL</topics>
 </rdf:Description>
 
@@ -1703,6 +1716,359 @@
 
 <rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/46434387_3">
 	<name xmlns="https://orcid.org/ontology/">Piedra Pullaguari, N.O.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822252">
+	<collection xmlns="https://orcid.org/ontology/">RISTI - Revista Iberica de Sistemas e Tecnologias de Informacao</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822252_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822252_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822252_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822252_3"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822252_0"/>
+	<date xmlns="https://orcid.org/ontology/">2019</date>
+	<title xmlns="https://orcid.org/ontology/">A model based on open data for the creation of a latin American and caribbean space for higher education,Un modelo basado en datos abiertos para la creación de un espacio latinoamericano y del caribe de educación superior</title>
+	<type xmlns="https://orcid.org/ontology/">journal-article</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-85061203553&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822252_0">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822252_1">
+	<name xmlns="https://orcid.org/ontology/">Puertas-Bravo, L.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822252_2">
+	<name xmlns="https://orcid.org/ontology/">Mengual-Andrés, S.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822252_3">
+	<name xmlns="https://orcid.org/ontology/">Grau, R.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822253">
+	<collection xmlns="https://orcid.org/ontology/">IMSCI 2018 - 12th International Multi-Conference on Society, Cybernetics and Informatics, Proceedings</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822253_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822253_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822253_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822253_3"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822253_4"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822253_5"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822253_6"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822253_0"/>
+	<date xmlns="https://orcid.org/ontology/">2018</date>
+	<title xmlns="https://orcid.org/ontology/">A subject syllabus similarity analysis to address students mobility issue</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-85056552359&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822253_0">
+	<name xmlns="https://orcid.org/ontology/">Saquicela, V.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822253_1">
+	<name xmlns="https://orcid.org/ontology/">Baculima, F.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822253_2">
+	<name xmlns="https://orcid.org/ontology/">Orellana, G.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822253_3">
+	<name xmlns="https://orcid.org/ontology/">Orellana, M.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822253_4">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822253_5">
+	<name xmlns="https://orcid.org/ontology/">Espinoza, M.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822253_6">
+	<name xmlns="https://orcid.org/ontology/">Vanegas, P.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822254">
+	<collection xmlns="https://orcid.org/ontology/">Proceedings of 2018 IEEE International Conference on Teaching, Assessment, and Learning for Engineering, TALE 2018</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822254_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822254_1"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822254_0"/>
+	<date xmlns="https://orcid.org/ontology/">2019</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/TALE.2018.8615415</doi>
+	<title xmlns="https://orcid.org/ontology/">EntreCompOnto: An Ontology for Semantic Representation of Entrepreneurship Competences</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-85062061731&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822254_0">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822254_1">
+	<name xmlns="https://orcid.org/ontology/">Caro, E.T.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822255">
+	<collection xmlns="https://orcid.org/ontology/">Proceedings - 3rd International Conference on Information Systems and Computer Science, INCISCOS 2018</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822255_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822255_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822255_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822255_3"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822255_4"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822255_5"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822255_0"/>
+	<date xmlns="https://orcid.org/ontology/">2018</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/INCISCOS.2018.00047</doi>
+	<title xmlns="https://orcid.org/ontology/">A study on the impact of pre-processing techniques in Spanish and english text classification over short and large text documents</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-85063213297&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822255_0">
+	<name xmlns="https://orcid.org/ontology/">Orellana, G.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822255_1">
+	<name xmlns="https://orcid.org/ontology/">Arias, B.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822255_2">
+	<name xmlns="https://orcid.org/ontology/">Orellana, M.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822255_3">
+	<name xmlns="https://orcid.org/ontology/">Saquicela, V.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822255_4">
+	<name xmlns="https://orcid.org/ontology/">Baculima, F.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822255_5">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822256">
+	<collection xmlns="https://orcid.org/ontology/">Proceedings - 3rd International Conference on Information Systems and Computer Science, INCISCOS 2018</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822256_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822256_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822256_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822256_3"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822256_4"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822256_0"/>
+	<date xmlns="https://orcid.org/ontology/">2018</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/INCISCOS.2018.00045</doi>
+	<title xmlns="https://orcid.org/ontology/">A text mining methodology to discover syllabi similarities among higher education institutions</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-85063225864&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822256_0">
+	<name xmlns="https://orcid.org/ontology/">Orellana, G.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822256_1">
+	<name xmlns="https://orcid.org/ontology/">Orellana, M.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822256_2">
+	<name xmlns="https://orcid.org/ontology/">Saquicela, V.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822256_3">
+	<name xmlns="https://orcid.org/ontology/">Baculima, F.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822256_4">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822257">
+	<collection xmlns="https://orcid.org/ontology/">Iberian Conference on Information Systems and Technologies, CISTI</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822257_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822257_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822257_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822257_3"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822257_4"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822257_5"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822257_0"/>
+	<date xmlns="https://orcid.org/ontology/">2018</date>
+	<doi xmlns="https://orcid.org/ontology/">10.23919/CISTI.2018.8399303</doi>
+	<title xmlns="https://orcid.org/ontology/">Personalized search of scholarly media: An approach based on semantic web technologies,Búsqueda personalizada de medios de comunicación académica: Un enfoque basado en tecnologías de la Web Semántica</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-85049907967&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822257_0">
+	<name xmlns="https://orcid.org/ontology/">Chicaiza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822257_1">
+	<name xmlns="https://orcid.org/ontology/">Montano, F.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822257_2">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822257_3">
+	<name xmlns="https://orcid.org/ontology/">Quituisaca, L.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822257_4">
+	<name xmlns="https://orcid.org/ontology/">Medina, P.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822257_5">
+	<name xmlns="https://orcid.org/ontology/">Siguenza, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822258">
+	<collection xmlns="https://orcid.org/ontology/">2017 IEEE 37th Central America and Panama Convention, CONCAPAN 2017</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822258_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822258_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822258_2"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822258_0"/>
+	<date xmlns="https://orcid.org/ontology/">2018</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/CONCAPAN.2017.8278531</doi>
+	<title xmlns="https://orcid.org/ontology/">Semantic representation of bibliographic resources cataloged in the UTPL Library</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-85050775645&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822258_0">
+	<name xmlns="https://orcid.org/ontology/">Cabrera-Loayza, M.C.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822258_1">
+	<name xmlns="https://orcid.org/ontology/">Elizalde, R.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822258_2">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822259">
+	<collection xmlns="https://orcid.org/ontology/">Applications in Software Engineering - Proceedings of the 7th International Conference on Software Process Improvement, CIMPS 2018</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822259_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822259_1"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822259_0"/>
+	<date xmlns="https://orcid.org/ontology/">2019</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/CIMPS.2018.8625618</doi>
+	<title xmlns="https://orcid.org/ontology/">Use of Graph Database for the Integration of Heterogeneous Data about Ecuadorian Historical Personages,Uso de Bases de Datos Orientadas a grafos para la Integración de Información Heterogénea acerca de los Personajes Históricos Ecuatorianos</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-85062596732&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822259_0">
+	<name xmlns="https://orcid.org/ontology/">Mosquera, J.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822259_1">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822260">
+	<collection xmlns="https://orcid.org/ontology/">2017 IEEE 37th Central America and Panama Convention, CONCAPAN 2017</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822260_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822260_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822260_2"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822260_0"/>
+	<date xmlns="https://orcid.org/ontology/">2018</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/CONCAPAN.2017.8278534</doi>
+	<title xmlns="https://orcid.org/ontology/">Semantic representation of teaching planning, pilot experience at UTPL</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-85050778414&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822260_0">
+	<name xmlns="https://orcid.org/ontology/">Mora-Arciniegas, M.-B.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822260_1">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822260_2">
+	<name xmlns="https://orcid.org/ontology/">Tenesaca-Luna, G.-A.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822261">
+	<collection xmlns="https://orcid.org/ontology/">Iberian Conference on Information Systems and Technologies, CISTI</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822261_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822261_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822261_2"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822261_0"/>
+	<date xmlns="https://orcid.org/ontology/">2018</date>
+	<doi xmlns="https://orcid.org/ontology/">10.23919/CISTI.2018.8399464</doi>
+	<title xmlns="https://orcid.org/ontology/">Usability of Latin American Public TV,Usabilidad de la TV Pública latinoamericana</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-85049907273&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822261_0">
+	<name xmlns="https://orcid.org/ontology/">Coronel-Salas, G.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822261_1">
+	<name xmlns="https://orcid.org/ontology/">Sanmartin, C.M.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822261_2">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822262">
+	<collection xmlns="https://orcid.org/ontology/">2017 IEEE 37th Central America and Panama Convention, CONCAPAN 2017</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822262_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822262_1"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822262_0"/>
+	<date xmlns="https://orcid.org/ontology/">2018</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/CONCAPAN.2017.8278535</doi>
+	<title xmlns="https://orcid.org/ontology/">Producing linked open data to describe scientific activity from researchers of Ecuadorian universities</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-85048071969&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822262_0">
+	<name xmlns="https://orcid.org/ontology/">Cadme, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822262_1">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822263">
+	<collection xmlns="https://orcid.org/ontology/">Proceedings of 2018 Learning With MOOCS, LWMOOCS 2018</collection>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822263_0"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822263_1"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822263_2"/>
+	<contributors xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822263_3"/>
+	<creator xmlns="https://orcid.org/ontology/" rdf:resource="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822263_0"/>
+	<date xmlns="https://orcid.org/ontology/">2018</date>
+	<doi xmlns="https://orcid.org/ontology/">10.1109/LWMOOCS.2018.8534632</doi>
+	<title xmlns="https://orcid.org/ontology/">Discovering Interaction Patterns on the Use of OERs in Open Online Courses Through the Application of Association Rules</title>
+	<type xmlns="https://orcid.org/ontology/">conference-paper</type>
+	<url xmlns="https://orcid.org/ontology/">http://www.scopus.com/inward/record.url?eid=2-s2.0-85059029411&amp;partnerID=MN8TOARS</url>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822263_0">
+	<name xmlns="https://orcid.org/ontology/">Cadme, E.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822263_1">
+	<name xmlns="https://orcid.org/ontology/">Elizalde, R.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822263_2">
+	<name xmlns="https://orcid.org/ontology/">Cabrera-Loayza, M.C.</name>
+</rdf:Description>
+
+<rdf:Description rdf:about="https://pub.orcid.org/v2.1/0000-0003-1067-8707/work/56822263_3">
+	<name xmlns="https://orcid.org/ontology/">Piedra, N.</name>
 </rdf:Description>
 
 </rdf:RDF>

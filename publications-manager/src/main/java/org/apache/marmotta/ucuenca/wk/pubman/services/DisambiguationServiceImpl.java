@@ -186,12 +186,12 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         //sparqlService.getGraphDBInstance().dumpBuffer();
       }
       for (int w0 = 0; w0 < 4; w0++) {
-        ProcessCoauthors(Providers, true);
-        sparqlService.getGraphDBInstance().dumpBuffer();
-        sparqlUtils.addAll(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "1");
+//        ProcessCoauthors(Providers, true);
+//        sparqlService.getGraphDBInstance().dumpBuffer();
+//        sparqlUtils.addAll(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "1");
       }
-      //mergeAuthors();
-//      sparqlService.getGraphDBInstance().dumpBuffer();
+      mergeAuthors();
+      sparqlService.getGraphDBInstance().dumpBuffer();
 //////      /**/
 //      sparqlUtils.clearSameAs(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "2Fix");
 //      sparqlUtils.replaceSameAsSubject(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "F", constantService.getAuthorsSameAsGraph() + "2");
@@ -349,121 +349,129 @@ public class DisambiguationServiceImpl implements DisambiguationService {
     for (Map<String, Value> rq : queryResponsec) {
       log.info("merging {} - {}", ixx, rq.get("a").stringValue());
       ixx++;
-      String group_ = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
-              + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
-              + "\n"
-              + "select distinct ?rr {\n"
-              + "    {\n"
-              + "        select distinct ?rr {\n"
-              + "    {\n"
-              + "        select distinct ?rr {\n"
-              + "    {\n"
-              + "        select (?b as ?rr)  {\n"
-              + "            graph <" + constantService.getAuthorsSameAsGraph() + "> {\n"
-              + "				bind (<" + rq.get("a").stringValue() + "> as ?ssd) .\n"
-              + "        		{\n"
-              + "            		?ssd owl:sameAs* ?b .\n"
-              + "        		} union {\n"
-              + "            		?b owl:sameAs* ?ssd  .\n"
-              + "        		} union {\n"
-              + "            		?ssd owl:sameAs* ?b .\n"
-              + "            		?x owl:sameAs* ?b .\n"
-              + "        		} union {\n"
-              + "            		?ssd owl:sameAs* ?b .\n"
-              + "            		?b owl:sameAs* ?x .\n"
-              + "        		} union {\n"
-              + "            		?b owl:sameAs* ?ssd  .\n"
-              + "            		?x owl:sameAs* ?b .\n"
-              + "        		} union {\n"
-              + "            		?b owl:sameAs* ?ssd  .\n"
-              + "            		?b owl:sameAs* ?x .\n"
-              + "        		}	\n"
-              + "        	}\n"
-              + "		}\n"
-              + "    } union {\n"
-              + "        select (?x as ?rr)  {\n"
-              + "            graph <" + constantService.getAuthorsSameAsGraph() + "> {\n"
-              + "                bind (<" + rq.get("a").stringValue() + "> as ?ssd) .\n"
-              + "        		{\n"
-              + "            		?ssd owl:sameAs* ?b .\n"
-              + "        		} union {\n"
-              + "            		?b owl:sameAs* ?ssd  .\n"
-              + "        		} union {\n"
-              + "            		?ssd owl:sameAs* ?b .\n"
-              + "            		?x owl:sameAs* ?b .\n"
-              + "        		} union {\n"
-              + "            		?ssd owl:sameAs* ?b .\n"
-              + "            		?b owl:sameAs* ?x .\n"
-              + "        		} union {\n"
-              + "            		?b owl:sameAs* ?ssd  .\n"
-              + "            		?x owl:sameAs* ?b .\n"
-              + "        		} union {\n"
-              + "            		?b owl:sameAs* ?ssd  .\n"
-              + "            		?b owl:sameAs* ?x .\n"
-              + "        		}	\n"
-              + "        	}\n"
-              + "		}\n"
-              + "    }\n"
-              + "}\n"
-              + "    } .\n"
-              + "    filter (str(?rr)!='' ) .\n"
-              + "}\n"
-              + "    }  .\n"
-              + "    graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
-              + "        ?rr a foaf:Person .\n"
-              + "    }\n"
-              + "} order by ?rr\n"
-              + "";
-      List<Map<String, Value>> query = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, group_);
-      Set<String> myGroup = new HashSet<>();
-      String groq = "";
-      for (Map<String, Value> rqq : query) {
-        myGroup.add(rqq.get("rr").stringValue());
-        groq += "<" + rqq.get("rr").stringValue() + "> ";
-      }
-      String qryDisambiguatedCoauthors2 = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
-              + "select ?a ?n ?fn ?ln { \n"
-              + "  graph <" + constantService.getAuthorsProviderGraph() + "> { \n"
-              + "  values ?a { " + groq + " } . \n"
-              + "    optional { ?a <http://xmlns.com/foaf/0.1/name> ?n . }\n"
-              + "    optional { ?a <http://xmlns.com/foaf/0.1/givenName> ?fn . }\n"
-              + "    optional { ?a <http://xmlns.com/foaf/0.1/familyName> ?ln . }\n"
-              + "  }\n"
-              + "}";
-      List<Map<String, Value>> rx = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, qryDisambiguatedCoauthors2);
-      Map<String, Person> persons = getPersons(rx);
-      Set<String> usedT = new HashSet<>();
-      Map<String, Set<String>> groups = new HashMap<>();
-      List<String> ls = new ArrayList<>(myGroup);
-      for (int i = 0; i < ls.size(); i++) {
-        for (int j = i + 1; j < ls.size(); j++) {
-          Person get1 = persons.get(ls.get(i));
-          Person get2 = persons.get(ls.get(j));
-          compareSubSet(get1, get2, groups, usedT);
-          compareSubSet(get2, get1, groups, usedT);
-        }
-      }
-      Set<String> alones = new HashSet<>(myGroup);
-      alones.removeAll(usedT);
-      for (String a : alones) {
-        groups.put(a, new HashSet<String>());
-        groups.get(a).add(a);
-      }
-      int size;
       do {
-        size = groups.size();
-        groups = clearGroups(groups);
-      } while (groups.size() < size);
-      Set<String> amb = getAmb(groups);
-      for (Entry<String, Set<String>> next : groups.entrySet()) {
-        for (String next1 : next.getValue()) {
-          if (amb.contains(next.getKey()) || amb.contains(next1)) {
-            registerSameAs(constantService.getAuthorsSameAsGraph() + "2Fix", next.getKey(), next1);
-          } else {
-            registerSameAs(constantService.getAuthorsSameAsGraph() + "2", next.getKey(), next1);
+        try {
+          String group_ = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
+                  + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                  + "\n"
+                  + "select distinct ?rr {\n"
+                  + "    {\n"
+                  + "        select distinct ?rr {\n"
+                  + "    {\n"
+                  + "        select distinct ?rr {\n"
+                  + "    {\n"
+                  + "        select (?b as ?rr)  {\n"
+                  + "            graph <" + constantService.getAuthorsSameAsGraph() + "> {\n"
+                  + "				bind (<" + rq.get("a").stringValue() + "> as ?ssd) .\n"
+                  + "        		{\n"
+                  + "            		?ssd owl:sameAs* ?b .\n"
+                  + "        		} union {\n"
+                  + "            		?b owl:sameAs* ?ssd  .\n"
+                  + "        		} union {\n"
+                  + "            		?ssd owl:sameAs* ?b .\n"
+                  + "            		?x owl:sameAs* ?b .\n"
+                  + "        		} union {\n"
+                  + "            		?ssd owl:sameAs* ?b .\n"
+                  + "            		?b owl:sameAs* ?x .\n"
+                  + "        		} union {\n"
+                  + "            		?b owl:sameAs* ?ssd  .\n"
+                  + "            		?x owl:sameAs* ?b .\n"
+                  + "        		} union {\n"
+                  + "            		?b owl:sameAs* ?ssd  .\n"
+                  + "            		?b owl:sameAs* ?x .\n"
+                  + "        		}	\n"
+                  + "        	}\n"
+                  + "		}\n"
+                  + "    } union {\n"
+                  + "        select (?x as ?rr)  {\n"
+                  + "            graph <" + constantService.getAuthorsSameAsGraph() + "> {\n"
+                  + "                bind (<" + rq.get("a").stringValue() + "> as ?ssd) .\n"
+                  + "        		{\n"
+                  + "            		?ssd owl:sameAs* ?b .\n"
+                  + "        		} union {\n"
+                  + "            		?b owl:sameAs* ?ssd  .\n"
+                  + "        		} union {\n"
+                  + "            		?ssd owl:sameAs* ?b .\n"
+                  + "            		?x owl:sameAs* ?b .\n"
+                  + "        		} union {\n"
+                  + "            		?ssd owl:sameAs* ?b .\n"
+                  + "            		?b owl:sameAs* ?x .\n"
+                  + "        		} union {\n"
+                  + "            		?b owl:sameAs* ?ssd  .\n"
+                  + "            		?x owl:sameAs* ?b .\n"
+                  + "        		} union {\n"
+                  + "            		?b owl:sameAs* ?ssd  .\n"
+                  + "            		?b owl:sameAs* ?x .\n"
+                  + "        		}	\n"
+                  + "        	}\n"
+                  + "		}\n"
+                  + "    }\n"
+                  + "}\n"
+                  + "    } .\n"
+                  + "    filter (str(?rr)!='' ) .\n"
+                  + "}\n"
+                  + "    }  .\n"
+                  + "    graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
+                  + "        ?rr a foaf:Person .\n"
+                  + "    }\n"
+                  + "} order by ?rr\n"
+                  + "";
+          List<Map<String, Value>> query = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, group_);
+          Set<String> myGroup = new HashSet<>();
+          String groq = "";
+          for (Map<String, Value> rqq : query) {
+            myGroup.add(rqq.get("rr").stringValue());
+            groq += "<" + rqq.get("rr").stringValue() + "> ";
           }
+          String qryDisambiguatedCoauthors2 = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                  + "select ?a ?n ?fn ?ln { \n"
+                  + "  graph <" + constantService.getAuthorsProviderGraph() + "> { \n"
+                  + "  values ?a { " + groq + " } . \n"
+                  + "    optional { ?a <http://xmlns.com/foaf/0.1/name> ?n . }\n"
+                  + "    optional { ?a <http://xmlns.com/foaf/0.1/givenName> ?fn . }\n"
+                  + "    optional { ?a <http://xmlns.com/foaf/0.1/familyName> ?ln . }\n"
+                  + "  }\n"
+                  + "}";
+          List<Map<String, Value>> rx = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, qryDisambiguatedCoauthors2);
+          Map<String, Person> persons = getPersons(rx);
+          Set<String> usedT = new HashSet<>();
+          Map<String, Set<String>> groups = new HashMap<>();
+          List<String> ls = new ArrayList<>(myGroup);
+          for (int i = 0; i < ls.size(); i++) {
+            for (int j = i + 1; j < ls.size(); j++) {
+              Person get1 = persons.get(ls.get(i));
+              Person get2 = persons.get(ls.get(j));
+              compareSubSet(get1, get2, groups, usedT);
+              compareSubSet(get2, get1, groups, usedT);
+            }
+          }
+          Set<String> alones = new HashSet<>(myGroup);
+          alones.removeAll(usedT);
+          for (String a : alones) {
+            groups.put(a, new HashSet<String>());
+            groups.get(a).add(a);
+          }
+          int size;
+          do {
+            size = groups.size();
+            groups = clearGroups(groups);
+          } while (groups.size() < size);
+          Set<String> amb = getAmb(groups);
+          for (Entry<String, Set<String>> next : groups.entrySet()) {
+            for (String next1 : next.getValue()) {
+              if (amb.contains(next.getKey()) || amb.contains(next1)) {
+                registerSameAs(constantService.getAuthorsSameAsGraph() + "2Fix", next.getKey(), next1);
+              } else {
+                registerSameAs(constantService.getAuthorsSameAsGraph() + "2", next.getKey(), next1);
+              }
+            }
+          }
+          break;
+        } catch (Exception e) {
+          e.printStackTrace();
+          log.info("Retrying {} - {}", ixx, rq.get("a").stringValue());
         }
-      }
+      } while (true);
     }
 
   }
@@ -555,6 +563,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             + "	}\n",
             "	graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
             + "		?o a foaf:Organization .\n"
+            + "		?o <http://ucuenca.edu.ec/ontology#memberOf> <https://redi.cedia.edu.ec/> .\n"
             + "		?o foaf:name ?n .\n"
             + "		?o foaf:name ?nn .\n"
             + "	}\n", null, "prefix foaf: <http://xmlns.com/foaf/0.1/>\n"
