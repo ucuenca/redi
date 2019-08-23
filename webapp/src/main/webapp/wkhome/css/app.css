@@ -24,9 +24,7 @@
     padding-top: 10px;
 }
 
-nav.navbar ul.dropdown-menu {
 
-}
 
 .left-column
 {
@@ -171,4 +169,57 @@ ul.dashed > li {
 ul.dashed > li:before {
   content: "-";
   text-indent: -5px;
+}
+
+
+
+
+
+@font-face { 
+  font-family: "Conduit-IT"; 
+  src: url("/wkhome/fonts/ConduitITCStd-Italic.otf") format("opentype"); ;  
+}
+
+
+@font-face { 
+  font-family: "Conduit-LI"; 
+  src: url("/wkhome/fonts/ConduitITCStd-LightItalic.otf") format("opentype"); ;  
+}
+
+
+@font-face { 
+  font-family: "Conduit-ELI"; 
+  src: url("/wkhome/fonts/ConduitITCStd-ExtraLightIta.otf") format("opentype"); ;  
+}
+
+@font-face { 
+  font-family: "Conduit-BLI"; 
+  src: url("/wkhome/fonts/ConduitITCStd-BlackItalic.otf") format("opentype"); ;  
+}
+
+
+@font-face { 
+  font-family: "Conduit-BI"; 
+  src: url("/wkhome/fonts/ConduitITCStd-BoldItalic.otf") format("opentype"); ;  
+}
+
+@font-face { 
+  font-family: "Conduit-EBI"; 
+  src: url("/wkhome/fonts/ConduitITCStd-ExtraBoldIta.otf") format("opentype"); ;  
+}
+
+@font-face { 
+  font-family: "Conduit-EL"; 
+  src: url("/wkhome/fonts/ConduitITCStd-ExtraLight.otf") format("opentype"); ;  
+}
+
+
+@font-face { 
+  font-family: "Conduit-MI"; 
+  src: url("/wkhome/fonts/ConduitITCStd-MediumItalic.otf") format("opentype"); ;  
+}
+
+@font-face { 
+  font-family: "MyriadP"; 
+  src: url("/wkhome/fonts/MyriadPro-Regular.otf") format("opentype"); ;  
 }

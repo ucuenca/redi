@@ -6,11 +6,11 @@
       <span class="glyphicon glyphicon-print " ng-click="exportar();" >  </span>
       <span class="glyphicon glyphicon-remove " data-dismiss="modal">  </span>
     </div>
-    <h1 class="col-md-12 resume-section-title main pb-3 mb-3 title" onclick="console.log('title');"> <b>{{publication.title}} </b> </h1>
+    <h1 class="col-md-12 resume-section-title main pb-3 mb-3 title"  onclick="console.log('title');"> <b>{{publication.title}} </b> </h1>
    <div class="row mainsectionpub">
     <div class="col-md-8 leftsectionpub">
     <div class="col-md-12"> 
-    <h5 class=" pb-2 mb-2" > <b>Abstract :</b> </h5>
+    <h5 class="secTitle pb-2 mb-2" > Abstract : </h5>
      <p class="abstract"> {{publication.abstract}}
     </p>
 
@@ -27,9 +27,9 @@
         </div>
       </div>
 
-      <div class="col-md-12">
-          <h5 class="pb-2 mb-2" > <b>Fuentes:</b></h5>
-              <div class="row text-center">
+      <div class="col-md-12 pubfuentes">
+          <h5 class="secTitle pb-2 mb-2" > Fuentes:</h5>
+              <div class="row text-center pubfuenteslbl">
         <span ng-repeat="f in publication.fuentes | limitTo: quantityf ">
      <div class="col-md-2 author">
       <a href="{{f.uri}}" target="_blank" >
@@ -47,10 +47,10 @@
 
       </div>
     <div class="col-md-4 rigthsectionpub">
-        <h5 class="pb-2 mb-2" > <b>Autores:</b></h5>
-           <div class="row">
+        <h5 class="secTitle pb-2 mb-2" > Autores:</h5>
+           <div class="row pubcoauthors">
            <span ng-repeat="a in publication.autores | limitTo: quantity ">
-         <a class="authorlink" href="{{a.uri}}" target="_blank" >
+         <a class="authorlink col-md-12" href="{{a.uri}}" target="_blank" >
          <div class=" col-md-3 text-center author">
          <img class="img-authors" src="{{a.img}}"> </img>
         <small>{{a.name}}</small>
@@ -63,18 +63,22 @@
           </div>
           </div>
           </div>
-       <h5 class="pb-2 mb-2" > <b>Revista:</b></h5>
-          <div class="row ">
+       <h5 class="secTitle pb-2 mb-2" > Revista:</h5>
+          <div class="row pubrevista">
            <div class="col-md-4 revista" ng-if="publication.revista.img">
          <img class="img-revista" src="{{publication.revista.img}}"> </img>
          {{publication.revista.title}}
         </div>
        <!-- <div class="col-md-1 revista" ng-if="publication.revista.img" > </div> -->
-        <div class="col-md-auto mr-5">
-        <small ng-if="publication.revista.title" class="text-muted"> <b>Journal: </b> {{publication.revista.title}} <br> </small> 
+       <!--   <small ng-if="publication.revista.title" class="text-muted"> <b>Journal: </b> {{publication.revista.title}} <br> </small> 
        <small  ng-if="publication.revista.Conference" class="text-muted"> <b>Conference: </b> {{publication.revista.Conference}} <br> </small> 
         <small ng-if="publication.revista.Proceedings" class="text-muted"><b>Proceedings: </b> {{publication.revista.Proceedings}} <br> </small> 
-        <small ng-if="publication.revista.Book" class="text-muted"><b>Book: </b> {{publication.revista.Book}} <br></small>
+        <small ng-if="publication.revista.Book" class="text-muted"><b>Book: </b> {{publication.revista.Book}} <br></small>           -->
+        <div class="col-md-auto mr-5">
+        <span ng-if="publication.revista.title" class="text-muted"> <b>Journal: </b> {{publication.revista.title}} <br> </span> 
+       <span  ng-if="publication.revista.Conference" class="text-muted"> <b>Conference: </b> {{publication.revista.Conference}} <br> </span> 
+        <span ng-if="publication.revista.Proceedings" class="text-muted"><b>Proceedings: </b> {{publication.revista.Proceedings}} <br> </span> 
+        <span ng-if="publication.revista.Book" class="text-muted"><b>Book: </b> {{publication.revista.Book}} <br></span>
         </div>
           </div>
           </div>      
@@ -84,12 +88,12 @@
    
      
 
-    <h6  class="resume-section-title pb-2 mb-2" > Articulos relacionados </h6>
+    <h6  class="resume-section-title pb-2 mb-2 pubRel" > Articulos relacionados </h6>
       <div class="row relatedart">
       <span ng-repeat="re in publication.recomendacion">
           <div class="col-md-11 docrelacionados">  
            <h5 class="title"> <a href="{{re.uri}}" target="_blank" > <b>{{ re.title}} </b></a> </h5>
-            <p class="text-muted"> {{ re.authors}}</p>
+            <p class="relpubauthor"> {{ re.authors}}</p>
           </div>
       </span>
     </div>

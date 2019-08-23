@@ -38,6 +38,7 @@ footer>hr {
   width: 100%;
   /*position:relative;*/
   bottom: 0;
+  font-family: Conduit-BI;
 }
 
 #cediacopi {
@@ -47,4 +48,9 @@ footer>hr {
 #logoscopi {
   padding-right: 20px;
 
+}
+
+#cediacopi h6 {
+  font-size: 0.9vw;
+    
 }

@@ -2,19 +2,25 @@
   padding:10px;
 }
 
-.navbar { margin-bottom:0px !important; font-size: 0.9vw;}
+nav.navbar ul.dropdown-menu {
+  font-family: MyriadP;
+  font-size: 0.9vw;
+
+}
+.navbar { margin-bottom:0px !important; font-size: 0.9vw; font-family : "MyriadP"; }
 /*.carousel-caption { margin-top:0px !important }*/
 .navbar-right {
   margin-right: 0px;
 }
 .icon-small {
     /*height:25px;*/
-    width: 4vw;
+    width: 90px;
     height: auto;
     margin:0;
     padding:0;
     background-color: transparent;
     border-color: transparent;
+    margin-right:  5px;
 }
 
 .icon-xsmall {
@@ -33,6 +39,18 @@
   padding-right: 25px;
 }
 
+
+.searchbar {
+  padding-top: 10px;
+}
+
+
+/*.bordermenu {
+border-right: 1px solid gray;
+padding-inline: 10px;
+
+}*/
+
  /* Work around for active class in navbar items. It works for dropdown menu */
 .navbar-static-top .navbar-nav > .active>a,
 .navbar-static-top .navbar-nav > .active>a:focus,
@@ -41,7 +59,8 @@
 .dropdown-menu > .active > a:focus,
 .dropdown-menu > .active > a:hover {
   color: #fff;
-  background-color: #b2b3b6;
+  background-color: #c7c8cc;
+  /*background-color: #b2b3b6;*/
 }
 
 .dropdown-menu > li > a,
@@ -59,6 +78,13 @@
   background-color: #4a4d54; /* Changes regular toggle color */
 }
 
+.navdiv {
+
+  padding-top: 25px;
+  padding-bottom: 15px;
+  line-height: 20px;
+  /*font-family: "Conduit-IT";*/
+}
 /* Increase point which navbar collapses */
 @media (max-width: 841px) {
     .navbar-header {
@@ -75,10 +101,13 @@
     .navbar-collapse.collapse {
         display: none!important;
     }
+
     .navbar-nav {
         float: none!important;
         margin: 7.5px -15px;
         font-size:0.9vw;
+
+      
     }
     .navbar-nav>li {
         float: none;
@@ -86,6 +115,11 @@
     .navbar-nav>li>a {
         padding-top: 10px;
         padding-bottom: 10px;
+    }
+    .navbar-nav>li>a::after {
+        content: "|";
+       float: right;
+       color: #fff;
     }
     .navbar-text {
         float: none;
@@ -99,3 +133,20 @@
         overflow: hidden!important;
     }
 }
+
+  .navbar-nav>li>a {
+     /* background-color: blue;*/
+        padding-top: 25px;
+       /*font-family: "Conduit-IT";*/
+        
+    }
+
+
+    .navbar-nav .dropdown {margin-right: 5px ;
+    }
+/*
+  .navbar-nav>li>a::after {
+      content: "|";
+      float: right;
+      color: black;
+    }*/

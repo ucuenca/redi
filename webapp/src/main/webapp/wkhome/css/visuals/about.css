@@ -3,3 +3,23 @@ div.instituion-section {
  padding: 5px;  
 }
 
+
+.mtitle {
+font-family: "Conduit-MI";
+font-size: 1.5vw;
+}
+
+.stitle {
+font-family: "Conduit-MI";
+font-size: 1.2vw;
+}
+
+.ptext {
+font-family: Conduit-LI;
+font-size:  1.1vw;
+}
+
+.contacto {
+	font-family: Conduit-LI;
+    font-size: 1.1vw;
+}

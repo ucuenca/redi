@@ -48,6 +48,7 @@ mr-auto, .mx-auto {
     white-space: nowrap;
     vertical-align: baseline;
     border-radius: 0.25rem;
+    font-family: MyriadP;
 }
 
  .mr-5  {
@@ -74,8 +75,10 @@ mr-auto, .mx-auto {
   }
 
   .abstract {
-   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-   font-size: 1.5rem;
+   font-family: "Conduit-LI";
+   /*font-size: 1.5rem;*/
+   font-size:  1.1vw;
+
   }
 
   .document {
@@ -97,6 +100,10 @@ mr-auto, .mx-auto {
     border-right-width: 1px;
     border-color: black;
     border-right-style: groove;
+    font-family: Conduit-EL;
+    font-size: 1vw;
+   /* font-family: Conduit-EL;*/
+
 
   }
 
@@ -104,11 +111,43 @@ mr-auto, .mx-auto {
   min-height: 5vh;
 }
 
+.secTitle {
 
+  font-family: Conduit-BI;
+  font-size: 1.2vw;
+}
+
+ .pubcoauthors {
+  font-family: Conduit-MI;
+   font-size: 1vw;
+ }
+
+ .pubrevista {
+  font-family: Conduit-EL;
+  font-size: 1vw;
+
+ }
+ .pubfuenteslbl {
+
+  font-family: Conduit-MI;
+ }
+
+ .pubfuentes {
+  margin-top: 10px;
+ }
+
+ .pubRel {
+   font-family: Conduit-MI;
+ }
+
+ .relpubauthor {
+  font-family: Conduit-EL;
+ }
 
   .title{
 
   color: rgb(51, 122, 183);
+  font-family: Conduit-IT;
   }
 
   .img-revista {

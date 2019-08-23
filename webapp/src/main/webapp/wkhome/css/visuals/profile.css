@@ -24,8 +24,18 @@ background-position: 0vw 3vw;
 
 }
 
+.imgProfile {
+
+background-repeat:no-repeat;
+background-position: center; 
+width: 10vw; height: 10vw; border-radius: 50%; border: 2px solid white; 
+background-size: cover;
+margin-left: 100px;
+margin-top: 10px;
+}
+
 .authorData {
-   margin-top: 2vh;
+   margin-top: 4vh;
 
 }
 
@@ -96,7 +106,26 @@ background-position: 0vw 3vw;
 
 }
 
- 
+.autprofilem2 > a {
+    font-family: Conduit-BI;
+    color: gray;
+    font-size: 1.2vw;
+    line-height: 15px;
+}
+
+.bioregion {
+ font-family: Conduit-MI;
+ width: 70%;
+ border-top: solid #E94E1B 1px;
+ margin-block: 8px;
+ border-bottom: solid #E94E1B 1px;
+ padding: 2px;
+}
+
+.sublist {
+  font-family: Conduit-MI;
+  font-size: 1.1vw;
+}
 
   
 #pubButton  {
@@ -216,10 +245,11 @@ color: #253081;
 
 .profileTop {
   min-height: 40vh;
+  margin-top: 2vh
 }
 
 
-
+/*
 @font-face { 
   font-family: "Conduit-IT"; 
   src: url("/wkhome/fonts/ConduitITCStd-Italic.otf") format("opentype"); ;  
@@ -233,4 +263,4 @@ color: #253081;
 @font-face { 
   font-family: "Conduit-EL"; 
   src: url("/wkhome/fonts/ConduitITCStd-ExtraLightIta.otf") format("opentype"); ;  
-}
+}*/

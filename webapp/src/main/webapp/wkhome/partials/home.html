@@ -63,11 +63,15 @@
     <form class="col-sm-12" id="searchForm" ng-controller="searchText" ng-submit="submit()">
         <div class="form-group col-sm-6 col-sm-offset-2">
             <div class="input-group input-group-lg search">
-                <select id="searchType" >
-                <option data-content="<span class='glyphicon glyphicon-th-large'></span>">all</option>
+                <select id="searchType" class="buttonSearch">
+               <!-- <option data-content="<span class='glyphicon glyphicon-th-large'></span>">all</option>
                 <option data-content="<span class='glyphicon glyphicon-user'></span>">authors</option>
                 <option data-content="<span class='glyphicon glyphicon-education'></span>">organizations</option>
-                <option data-content="<span class='glyphicon glyphicon-file'></span>">publications</option>
+                <option data-content="<span class='glyphicon glyphicon-file'></span>">publications</option> -->
+                <option data-content="<span class='glyphicon glyphicon-th-large'></span> &nbsp Todo">all</option>
+                <option data-content="<span class='glyphicon glyphicon-user'></span> &nbsp Autores">authors</option>
+                <option data-content="<span class='glyphicon glyphicon-education'></span>  &nbsp Organizaciones">organizations</option>
+                <option data-content="<span class='glyphicon glyphicon-file'></span>  &nbsp Publicaciones">publications</option>
                 </select>
                 <input id='txtSearch' type="text" ng-model="searchText" class="form-control" placeholder="{{'Search Author or Keyword'| translate}}...">
                 <a class="input-group-addon" href="#" ng-click="submit()"><span ><i class="glyphicon glyphicon-search"></i></span></a>

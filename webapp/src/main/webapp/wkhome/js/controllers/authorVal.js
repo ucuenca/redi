@@ -105,6 +105,7 @@ wkhomeControllers.controller('authorVal', ['$rootScope', '$scope', 'cookies', '$
       $scope.email = JSON.parse(logg).mail;
       $scope.orcid = JSON.parse(logg).orcid;
       $scope.atk = JSON.parse(logg).access_token;
+      $scope.bio = JSON.parse(logg).biography;
     }
     $scope.img = "http://asoclinic.com/wp-content/uploads/2018/02/placeholder-face-big.png";
 
@@ -192,6 +193,7 @@ wkhomeControllers.controller('authorVal', ['$rootScope', '$scope', 'cookies', '$
         $scope.fname = data.fname;
         $scope.lname = data.lname;
         $scope.email = data.email;
+        $scope.bio = data.bio;
 
         //onsole.log ($scope.orgs );
         // $scope.orgs.push ({ id : data.org , name : data.org });
@@ -322,6 +324,7 @@ wkhomeControllers.controller('authorVal', ['$rootScope', '$scope', 'cookies', '$
       profile.fname = $('#inputfname').val();
       profile.lname = $('#inputlname').val();
       profile.email = $('#inputemail').val();
+      profile.bio = $('#biotext').val();
       profile.org = $('#endpoint_org').val();
       if (profile.org === "Other") {
         profile.org = $('#newOrg').val();

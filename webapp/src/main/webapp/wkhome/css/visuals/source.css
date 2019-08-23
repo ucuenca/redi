@@ -9,7 +9,7 @@
 p.source {
     text-align: justify;
     font-size: larger;
-    font-family: cursive;
+    /*font-family: cursive;*/
 }
 
 h3.source.text-success {
@@ -117,4 +117,8 @@ h3.source.text-success {
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
   filter: progid: DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
+}
+
+.authors    {
+  font-family: Conduit-MI !important;
 }
