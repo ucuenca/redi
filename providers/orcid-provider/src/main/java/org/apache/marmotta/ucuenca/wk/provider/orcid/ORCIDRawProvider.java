@@ -154,6 +154,7 @@ public class ORCIDRawProvider extends AbstractHttpProvider {
             ValueFactory factory = ValueFactoryImpl.getInstance();
             List<String> lsURLs = new ArrayList<>();
             Document doc = new SAXBuilder(XMLReaders.NONVALIDATING).build(input);
+            mapProp(true, requestUrl, ORCIDPREFIX + "bio", triples, doc, "/record:record/person:person/person:biography/personal-details:content");
             mapProp(true, requestUrl, ORCIDPREFIX + "familyName", triples, doc, "/record:record/person:person/person:name/personal-details:family-name");
             mapProp(true, requestUrl, ORCIDPREFIX + "givenName", triples, doc, "/record:record/person:person/person:name/personal-details:given-names");
             mapProp(true, requestUrl, ORCIDPREFIX + "name", triples, doc, "/record:record/person:person/person:name/personal-details:credit-name");

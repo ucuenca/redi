@@ -21,10 +21,10 @@ import org.openrdf.rio.RDFHandlerException;
  */
 public class TestORCIDProvider extends ProviderTestBase {
 
-    @Test
-    public void testORCID() throws RepositoryException, DataRetrievalException, RDFHandlerException, FileNotFoundException {
-        ClientResponse retrieveResource = ldclient.retrieveResource("https://orcid.org/search/nelson_piedra");
-        Model data = retrieveResource.getData();
-        Assert.assertEquals(data.size(), 860);
-    }
+  @Test
+  public void testORCID() throws RepositoryException, DataRetrievalException, RDFHandlerException, FileNotFoundException {
+    ClientResponse retrieveResource = ldclient.retrieveResource("https://orcid.org/search/nelson_piedra");
+    Model data = retrieveResource.getData();
+    Assert.assertEquals(data.size(), 1049);
+  }
 }

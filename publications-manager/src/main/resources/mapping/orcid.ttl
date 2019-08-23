@@ -10,13 +10,18 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
 @prefix nature: <http://ns.nature.com/terms/> .
+@prefix bio: <http://purl.org/vocab/bio/0.1/> .
 
 
 
 uc:mapColl1 a r2r:MappingCollection;
-    r2r:prefixDefinitions "vcard: <http://www.w3.org/2006/vcard/ns#> . rdfs: <http://www.w3.org/2000/01/rdf-schema#> . bibo: <http://purl.org/ontology/bibo/> . dct: <http://purl.org/dc/terms/> . scoro: <http://purl.org/spar/scoro/> . schema: <http://schema.org/> . foaf: <http://xmlns.com/foaf/0.1/> . uc: <http://ucuenca.edu.ec/ontology#> . orcid: <https://orcid.org/ontology/> . owl: <http://www.w3.org/2002/07/owl#> . nature: <http://ns.nature.com/terms/> ." .
+    r2r:prefixDefinitions "bio: <http://purl.org/vocab/bio/0.1/> . vcard: <http://www.w3.org/2006/vcard/ns#> . rdfs: <http://www.w3.org/2000/01/rdf-schema#> . bibo: <http://purl.org/ontology/bibo/> . dct: <http://purl.org/dc/terms/> . scoro: <http://purl.org/spar/scoro/> . schema: <http://schema.org/> . foaf: <http://xmlns.com/foaf/0.1/> . uc: <http://ucuenca.edu.ec/ontology#> . orcid: <https://orcid.org/ontology/> . owl: <http://www.w3.org/2002/07/owl#> . nature: <http://ns.nature.com/terms/> ." .
 
 
+uc:orcidBio a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ orcid:bio ?bio" ;
+    r2r:targetPattern "?SUBJ bio:olb ?bio" .
 
 uc:TypePersonORCID a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;

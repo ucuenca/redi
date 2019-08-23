@@ -278,9 +278,11 @@ public class MongoDBWebService {
     String orcid = jsonNode.getObject().getString("orcid");
     HttpResponse<String> asString = Unirest.get("https://pub.orcid.org/v2.0/" + orcid + "/record").header("Access token", at).asString();
     try {
+      String bio = runXpath(asString.getBody(), "/record/person/biography/content");
       String gn = runXpath(asString.getBody(), "/record/person/name/given-names");
       String fn = runXpath(asString.getBody(), "/record/person/name/family-name");
       String em = runXpath(asString.getBody(), "/record/person/emails/email[1]/email");
+      jsonNode.getObject().put("biography", bio);
       jsonNode.getObject().put("giveName", gn);
       jsonNode.getObject().put("familyName", fn);
       jsonNode.getObject().put("mail", em);
