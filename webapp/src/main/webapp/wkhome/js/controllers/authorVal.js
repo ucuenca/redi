@@ -25,6 +25,63 @@ wkhomeControllers.controller('authorVal', ['$rootScope', '$scope', 'cookies', '$
       });
     });
 
+////////////////////////////////
+
+
+    $('#upload_file_btn').click(
+            function (e) {
+              var ins_ser = globalData.serverInstance + 'profileval/uploadPhoto?orcid=' + encodeURIComponent($scope.orcid);
+              var file = $("input#upload_file");
+              var data = file.get(0).files[0];
+              requestUploadFile(ins_ser, data, data.type, {
+                200: function (resp, err) {
+                  var rnd = Math.random();
+                  $scope.auth_img = globalData.serverInstance + 'profileval/getPhoto?orcid=' + encodeURIComponent($scope.orcid) + '&rnd=' + rnd;
+                  $scope.img = $scope.auth_img;
+                  alert("Image imported sucessfully.");
+                  $('#phto').attr('src', $scope.img);
+                }
+              }
+              );
+            }
+    );
+
+
+    function requestUploadFile(url, data, mime, callbacks) {
+      function createRequest() {
+        var request = null;
+        if (window.XMLHttpRequest) {
+          request = new XMLHttpRequest();
+        } else if (window.ActiveXObject) {
+          request = new ActiveXObject("Microsoft.XMLHTTP");
+        } else {
+          throw "request object can not be created"
+        }
+        return request;
+      }
+      var request = createRequest();
+      request.onreadystatechange = function () {
+        if (request.readyState == 4) {
+          if (callbacks.hasOwnProperty(request.status)) {
+            callbacks[request.status](request.responseText, request);
+          }
+        }
+      };
+      request.open('POST', url, true);
+      request.setRequestHeader("Content-Type", mime);
+      request.send(data);
+    }
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////
 
     $scope.subareaCombo = {};
 
@@ -321,6 +378,7 @@ wkhomeControllers.controller('authorVal', ['$rootScope', '$scope', 'cookies', '$
 
     function recoverprof() {
       profile.name = $scope.name;
+      profile.img = $scope.img;
       profile.fname = $('#inputfname').val();
       profile.lname = $('#inputlname').val();
       profile.email = $('#inputemail').val();
@@ -765,6 +823,5 @@ wkhomeControllers.controller('authorVal', ['$rootScope', '$scope', 'cookies', '$
       return data;
     }
   }]);
-
 
 

@@ -2,7 +2,11 @@
   <div class="row" style="margin-bottom: 5%">
     <section id="seczero" class="sectionval active" ng-model='data'>
       <div id="profvalimg" class="col-md-4 text-center">
-        <img src="{{img}}" alt="author"  width="100"> 
+        <img id ="phto" src="{{img}}" alt="author"  width="100"> 
+        <form id="formId" action="/profileval/uploadPhoto" enctype="multipart/form-data" method="post">
+          <input type="file" name="upload" id="upload_file"/><br/>
+          <input type="button" value="Upload" id="upload_file_btn"/>
+        </form>
       </div>
       <div class="col-md-8 text-left"> 
         <form>

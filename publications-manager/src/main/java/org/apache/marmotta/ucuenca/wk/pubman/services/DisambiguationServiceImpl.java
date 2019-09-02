@@ -190,18 +190,18 @@ public class DisambiguationServiceImpl implements DisambiguationService {
 //        sparqlService.getGraphDBInstance().dumpBuffer();
 //        sparqlUtils.addAll(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "1");
       }
-      mergeAuthors();
+//      mergeAuthors();
+//      sparqlService.getGraphDBInstance().dumpBuffer();
+////      /**/
+      sparqlUtils.clearSameAs(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "2Fix");
+      sparqlUtils.replaceSameAsSubject(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "F", constantService.getAuthorsSameAsGraph() + "2");
+      sparqlUtils.deleteGraph(constantService.getAuthorsSameAsGraph());
+      sparqlUtils.copyGraph(constantService.getAuthorsSameAsGraph() + "F", constantService.getAuthorsSameAsGraph());
+////      /**/
+      ProcessCoauthors(Providers, false);
       sparqlService.getGraphDBInstance().dumpBuffer();
-//////      /**/
-//      sparqlUtils.clearSameAs(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "2Fix");
-//      sparqlUtils.replaceSameAsSubject(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "F", constantService.getAuthorsSameAsGraph() + "2");
-//      sparqlUtils.deleteGraph(constantService.getAuthorsSameAsGraph());
-//      sparqlUtils.copyGraph(constantService.getAuthorsSameAsGraph() + "F", constantService.getAuthorsSameAsGraph());
-//////      /**/
-//      ProcessCoauthors(Providers, false);
-//      sparqlService.getGraphDBInstance().dumpBuffer();
-//      ProcessPublications(Providers);
-//      sparqlService.getGraphDBInstance().dumpBuffer();
+      ProcessPublications(Providers);
+      sparqlService.getGraphDBInstance().dumpBuffer();
     } catch (Exception ex) {
       try {
         sparqlService.getGraphDBInstance().dumpBuffer();
@@ -1188,6 +1188,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
           } catch (Exception ex) {
             log.error("Unknown exception while disambiguating publications");
             ex.printStackTrace();
+            run();
           }
         }
       });
