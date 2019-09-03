@@ -25,66 +25,66 @@
  */
 function runGeneralPublication(options) {
 
-    document.getElementById("imgloading").style.visibility = "visible";
+  document.getElementById("imgloading").style.visibility = "visible";
 
-    var endpoint = "http://example";
-    var graphuri = "http://example/data";
-    var settings = {
-        host: options
+  var endpoint = "http://example";
+  var graphuri = "http://example/data";
+  var settings = {
+    host: options
+  }
+  var dataT = {
+    "Endpoint": endpoint,
+    "GraphUri": graphuri
+  };
+
+  $.ajax({
+    type: "POST",
+    data: JSON.stringify(dataT),
+    dataType: "text", //result data type
+    contentType: "application/json", // send data type
+    url: settings.host + "pubman/publications_provider_graph",
+    //    url:  "http://localhost:8079/marmotta/authors-module/update",
+    success: function (Result) {
+      document.getElementById("imgloading").style.visibility = "hidden";
+      alert(Result);
+    },
+    error: function (data) {
+      document.getElementById("imgloading").style.visibility = "hidden";
+      alert("Error" + data.responseText);
     }
-    var dataT = {
-        "Endpoint": endpoint,
-        "GraphUri": graphuri
-    };
-
-    $.ajax({
-        type: "POST",
-        data: JSON.stringify(dataT),
-        dataType: "text", //result data type
-        contentType: "application/json", // send data type
-        url: settings.host + "pubman/publications_provider_graph",
-        //    url:  "http://localhost:8079/marmotta/authors-module/update",
-        success: function (Result) {
-            document.getElementById("imgloading").style.visibility = "hidden";
-            alert(Result);
-        },
-        error: function (data) {
-            document.getElementById("imgloading").style.visibility = "hidden";
-            alert("Error" + data.responseText);
-        }
-    });
+  });
 
 }
 
 function runIndexacionPublications(options) {
 
-    document.getElementById("imgloading").style.visibility = "visible";
+  document.getElementById("imgloading").style.visibility = "visible";
 
-    var endpoint = "http://example";
-    var graphuri = "http://example/data";
-    var settings = {
-        host: options
+  var endpoint = "http://example";
+  var graphuri = "http://example/data";
+  var settings = {
+    host: options
+  }
+  var dataT = {
+    "Endpoint": endpoint,
+    "GraphUri": graphuri
+  };
+
+  $.ajax({
+    type: "POST",
+    data: JSON.stringify(dataT),
+    dataType: "text", //result data type
+    contentType: "application/json", // send data type
+    url: settings.host + "pubman/indexing",
+    success: function (Result) {
+      document.getElementById("imgloading").style.visibility = "hidden";
+      alert(Result);
+    },
+    error: function (data) {
+      document.getElementById("imgloading").style.visibility = "hidden";
+      alert("Error" + data.responseText);
     }
-    var dataT = {
-        "Endpoint": endpoint,
-        "GraphUri": graphuri
-    };
-
-    $.ajax({
-        type: "POST",
-        data: JSON.stringify(dataT),
-        dataType: "text", //result data type
-        contentType: "application/json", // send data type
-        url: settings.host + "pubman/indexing",
-        success: function (Result) {
-            document.getElementById("imgloading").style.visibility = "hidden";
-            alert(Result);
-        },
-        error: function (data) {
-            document.getElementById("imgloading").style.visibility = "hidden";
-            alert("Error" + data.responseText);
-        }
-    });
+  });
 
 }
 
@@ -93,33 +93,33 @@ function runIndexacionPublications(options) {
  */
 function authorsAttr(options) {
 
-    document.getElementById("imgloading").style.visibility = "visible";
+  document.getElementById("imgloading").style.visibility = "visible";
 
-    var endpoint = "http://example";
-    var graphuri = "http://example/data";
-    var settings = {
-        host: options
+  var endpoint = "http://example";
+  var graphuri = "http://example/data";
+  var settings = {
+    host: options
+  }
+  var dataT = {
+    "Endpoint": endpoint,
+    "GraphUri": graphuri
+  };
+
+  $.ajax({
+    type: "POST",
+    data: JSON.stringify(dataT),
+    dataType: "text", //result data type
+    contentType: "application/json", // send data type
+    url: settings.host + "pubman/author_attr",
+    success: function (Result) {
+      document.getElementById("imgloading").style.visibility = "hidden";
+      alert(Result);
+    },
+    error: function (data) {
+      document.getElementById("imgloading").style.visibility = "hidden";
+      alert("Error" + data.responseText);
     }
-    var dataT = {
-        "Endpoint": endpoint,
-        "GraphUri": graphuri
-    };
-
-    $.ajax({
-        type: "POST",
-        data: JSON.stringify(dataT),
-        dataType: "text", //result data type
-        contentType: "application/json", // send data type
-        url: settings.host + "pubman/author_attr",
-        success: function (Result) {
-            document.getElementById("imgloading").style.visibility = "hidden";
-            alert(Result);
-        },
-        error: function (data) {
-            document.getElementById("imgloading").style.visibility = "hidden";
-            alert("Error" + data.responseText);
-        }
-    });
+  });
 
 }
 
@@ -129,168 +129,168 @@ function authorsAttr(options) {
 
 function runUpdatePublication(options) {
 
-    document.getElementById("imgloading").style.visibility = "visible";
+  document.getElementById("imgloading").style.visibility = "visible";
 
-    var endpoint = "http://example";
-    var graphuri = "http://example/data";
-    var update = document.getElementById('updateScopus').checked;
-    var settings = {
-        host: options
+  var endpoint = "http://example";
+  var graphuri = "http://example/data";
+  var update = document.getElementById('updateScopus').checked;
+  var settings = {
+    host: options
+  }
+  var dataT = {
+    "Endpoint": endpoint,
+    "GraphUri": graphuri
+  };
+
+  $.ajax({
+    type: "POST",
+    data: JSON.stringify(dataT),
+    dataType: "text", //result data type
+    contentType: "application/json", // send data type
+    url: settings.host + "pubman/publications?update=" + update,
+    //    url:  "http://localhost:8079/marmotta/authors-module/update",
+    success: function (Result) {
+      document.getElementById("imgloading").style.visibility = "hidden";
+      alert(Result);
+    },
+    error: function (data) {
+      document.getElementById("imgloading").style.visibility = "hidden";
+      alert("Error" + data.responseText);
     }
-    var dataT = {
-        "Endpoint": endpoint,
-        "GraphUri": graphuri
-    };
-
-    $.ajax({
-        type: "POST",
-        data: JSON.stringify(dataT),
-        dataType: "text", //result data type
-        contentType: "application/json", // send data type
-        url: settings.host + "pubman/publications?update=" + update,
-        //    url:  "http://localhost:8079/marmotta/authors-module/update",
-        success: function (Result) {
-            document.getElementById("imgloading").style.visibility = "hidden";
-            alert(Result);
-        },
-        error: function (data) {
-            document.getElementById("imgloading").style.visibility = "hidden";
-            alert("Error" + data.responseText);
-        }
-    });
+  });
 
 }
 
 function runUpdatePublicationGOOGLE(options) {
 
-    document.getElementById("imgloading").style.visibility = "visible";
+  document.getElementById("imgloading").style.visibility = "visible";
 
-    var endpoint = "http://example";
-    var graphuri = "http://example/data";
-    var update = document.getElementById('updateGoogleScholar').checked;
-    var settings = {
-        host: options
+  var endpoint = "http://example";
+  var graphuri = "http://example/data";
+  var update = document.getElementById('updateGoogleScholar').checked;
+  var settings = {
+    host: options
+  }
+  var dataT = {
+    "Endpoint": endpoint,
+    "GraphUri": graphuri
+  };
+
+  $.ajax({
+    type: "POST",
+    data: JSON.stringify(dataT),
+    dataType: "text", //result data type
+    contentType: "application/json", // send data type
+    url: settings.host + "pubman/publications_google?update=" + update,
+    success: function (Result) {
+      document.getElementById("imgloading").style.visibility = "hidden";
+      alert(Result);
+    },
+    error: function (data) {
+      document.getElementById("imgloading").style.visibility = "hidden";
+      alert("Error" + data.responseText);
     }
-    var dataT = {
-        "Endpoint": endpoint,
-        "GraphUri": graphuri
-    };
-
-    $.ajax({
-        type: "POST",
-        data: JSON.stringify(dataT),
-        dataType: "text", //result data type
-        contentType: "application/json", // send data type
-        url: settings.host + "pubman/publications_google?update=" + update,
-        success: function (Result) {
-            document.getElementById("imgloading").style.visibility = "hidden";
-            alert(Result);
-        },
-        error: function (data) {
-            document.getElementById("imgloading").style.visibility = "hidden";
-            alert("Error" + data.responseText);
-        }
-    });
+  });
 
 }
 
 
 function runUpdatePublicationDBLP(options) {
 
-    document.getElementById("imgloading").style.visibility = "visible";
+  document.getElementById("imgloading").style.visibility = "visible";
 
-    var endpoint = "http://example";
-    var graphuri = "http://example/data";
-    var settings = {
-        host: options
+  var endpoint = "http://example";
+  var graphuri = "http://example/data";
+  var settings = {
+    host: options
+  }
+  var dataT = {
+    "Endpoint": endpoint,
+    "GraphUri": graphuri
+  };
+
+  $.ajax({
+    type: "POST",
+    data: JSON.stringify(dataT),
+    dataType: "text", //result data type
+    contentType: "application/json", // send data type
+    url: settings.host + "pubman/publications_dblp",
+    //    url:  "http://localhost:8079/marmotta/authors-module/update",
+    success: function (Result) {
+      document.getElementById("imgloading").style.visibility = "hidden";
+      alert(Result);
+    },
+    error: function (data) {
+      document.getElementById("imgloading").style.visibility = "hidden";
+      alert("Error" + data.responseText);
     }
-    var dataT = {
-        "Endpoint": endpoint,
-        "GraphUri": graphuri
-    };
-
-    $.ajax({
-        type: "POST",
-        data: JSON.stringify(dataT),
-        dataType: "text", //result data type
-        contentType: "application/json", // send data type
-        url: settings.host + "pubman/publications_dblp",
-        //    url:  "http://localhost:8079/marmotta/authors-module/update",
-        success: function (Result) {
-            document.getElementById("imgloading").style.visibility = "hidden";
-            alert(Result);
-        },
-        error: function (data) {
-            document.getElementById("imgloading").style.visibility = "hidden";
-            alert("Error" + data.responseText);
-        }
-    });
+  });
 
 }
 function runUpdatePublicationMA(options) {
 
-    document.getElementById("imgloading").style.visibility = "visible";
+  document.getElementById("imgloading").style.visibility = "visible";
 
-    var endpoint = "http://example";
-    var graphuri = "http://example/data";
-    var settings = {
-        host: options
+  var endpoint = "http://example";
+  var graphuri = "http://example/data";
+  var settings = {
+    host: options
+  }
+  var dataT = {
+    "Endpoint": endpoint,
+    "GraphUri": graphuri
+  };
+
+  $.ajax({
+    type: "POST",
+    data: JSON.stringify(dataT),
+    dataType: "text", //result data type
+    contentType: "application/json", // send data type
+    url: settings.host + "pubman/publications_ma",
+    //    url:  "http://localhost:8079/marmotta/authors-module/update",
+    success: function (Result) {
+      document.getElementById("imgloading").style.visibility = "hidden";
+      alert(Result);
+    },
+    error: function (data) {
+      document.getElementById("imgloading").style.visibility = "hidden";
+      alert("Error" + data.responseText);
     }
-    var dataT = {
-        "Endpoint": endpoint,
-        "GraphUri": graphuri
-    };
-
-    $.ajax({
-        type: "POST",
-        data: JSON.stringify(dataT),
-        dataType: "text", //result data type
-        contentType: "application/json", // send data type
-        url: settings.host + "pubman/publications_ma",
-        //    url:  "http://localhost:8079/marmotta/authors-module/update",
-        success: function (Result) {
-            document.getElementById("imgloading").style.visibility = "hidden";
-            alert(Result);
-        },
-        error: function (data) {
-            document.getElementById("imgloading").style.visibility = "hidden";
-            alert("Error" + data.responseText);
-        }
-    });
+  });
 
 }
 
 
 function runUpdatePublicationAK(options) {
 
-    document.getElementById("imgloading").style.visibility = "visible";
+  document.getElementById("imgloading").style.visibility = "visible";
 
-    var endpoint = "http://example";
-    var graphuri = "http://example/data";
-    var settings = {
-        host: options
+  var endpoint = "http://example";
+  var graphuri = "http://example/data";
+  var settings = {
+    host: options
+  }
+  var dataT = {
+    "Endpoint": endpoint,
+    "GraphUri": graphuri
+  };
+
+  $.ajax({
+    type: "POST",
+    data: JSON.stringify(dataT),
+    dataType: "text", //result data type
+    contentType: "application/json", // send data type
+    url: settings.host + "pubman/publications_ak",
+    //    url:  "http://localhost:8079/marmotta/authors-module/update",
+    success: function (Result) {
+      document.getElementById("imgloading").style.visibility = "hidden";
+      alert(Result);
+    },
+    error: function (data) {
+      document.getElementById("imgloading").style.visibility = "hidden";
+      alert("Error" + data.responseText);
     }
-    var dataT = {
-        "Endpoint": endpoint,
-        "GraphUri": graphuri
-    };
-
-    $.ajax({
-        type: "POST",
-        data: JSON.stringify(dataT),
-        dataType: "text", //result data type
-        contentType: "application/json", // send data type
-        url: settings.host + "pubman/publications_ak",
-        //    url:  "http://localhost:8079/marmotta/authors-module/update",
-        success: function (Result) {
-            document.getElementById("imgloading").style.visibility = "hidden";
-            alert(Result);
-        },
-        error: function (data) {
-            document.getElementById("imgloading").style.visibility = "hidden";
-            alert("Error" + data.responseText);
-        }
-    });
+  });
 
 }
 
@@ -302,41 +302,41 @@ function runUpdatePublicationAK(options) {
  */
 function runPublicationsCount(options) {
 
-    document.getElementById("imgloading").style.visibility = "visible";
+  document.getElementById("imgloading").style.visibility = "visible";
 
-    var endpoint = "http://example";
-    var graphuri = "http://example/data";
-    var settings = {
-        host: options
-    }
-    var dataT = {
-        "Endpoint": endpoint,
-        "GraphUri": graphuri
-    };
+  var endpoint = "http://example";
+  var graphuri = "http://example/data";
+  var settings = {
+    host: options
+  }
+  var dataT = {
+    "Endpoint": endpoint,
+    "GraphUri": graphuri
+  };
 
-    $.ajax({
-        type: "POST",
-        data: JSON.stringify(dataT),
-        dataType: "text", //result data type
-        contentType: "application/json", // send data type
-        url: settings.host + "pubman/count_publications_graph",
-        //    url:  "http://localhost:8079/marmotta/authors-module/update",
-        success: function (Result) {
+  $.ajax({
+    type: "POST",
+    data: JSON.stringify(dataT),
+    dataType: "text", //result data type
+    contentType: "application/json", // send data type
+    url: settings.host + "pubman/count_publications_graph",
+    //    url:  "http://localhost:8079/marmotta/authors-module/update",
+    success: function (Result) {
 
-            var start = new Date().getTime();
-            for (var i = 0; i < 1e7; i++) {
-                if ((new Date().getTime() - start) > 3000) {
-                    break;
-                }
-            }
-            document.getElementById("imgloading").style.visibility = "hidden";
-            alert(Result);
-        },
-        error: function (data) {
-            //document.getElementById("imgloading").style.visibility = "hidden";
-            alert("Error" + data.responseText);
+      var start = new Date().getTime();
+      for (var i = 0; i < 1e7; i++) {
+        if ((new Date().getTime() - start) > 3000) {
+          break;
         }
-    });
+      }
+      document.getElementById("imgloading").style.visibility = "hidden";
+      alert(Result);
+    },
+    error: function (data) {
+      //document.getElementById("imgloading").style.visibility = "hidden";
+      alert("Error" + data.responseText);
+    }
+  });
 
 }
 
@@ -347,34 +347,34 @@ function runPublicationsCount(options) {
  */
 function runUpdatePublicationDspace(options) {
 
-    document.getElementById("imgloading").style.visibility = "visible";
+  document.getElementById("imgloading").style.visibility = "visible";
 
-    var endpoint = "http://example";
-    var graphuri = "http://example/data";
-    var settings = {
-        host: options
+  var endpoint = "http://example";
+  var graphuri = "http://example/data";
+  var settings = {
+    host: options
+  }
+  var dataT = {
+    "Endpoint": endpoint,
+    "GraphUri": graphuri
+  };
+
+  $.ajax({
+    type: "POST",
+    data: JSON.stringify(dataT),
+    dataType: "text", //result data type
+    contentType: "application/json", // send data type
+    url: settings.host + "pubman/publications_dspace",
+    //    url:  "http://localhost:8079/marmotta/authors-module/update",
+    success: function (Result) {
+      document.getElementById("imgloading").style.visibility = "hidden";
+      alert(Result);
+    },
+    error: function (data) {
+      document.getElementById("imgloading").style.visibility = "hidden";
+      alert("Error" + data.responseText);
     }
-    var dataT = {
-        "Endpoint": endpoint,
-        "GraphUri": graphuri
-    };
-
-    $.ajax({
-        type: "POST",
-        data: JSON.stringify(dataT),
-        dataType: "text", //result data type
-        contentType: "application/json", // send data type
-        url: settings.host + "pubman/publications_dspace",
-        //    url:  "http://localhost:8079/marmotta/authors-module/update",
-        success: function (Result) {
-            document.getElementById("imgloading").style.visibility = "hidden";
-            alert(Result);
-        },
-        error: function (data) {
-            document.getElementById("imgloading").style.visibility = "hidden";
-            alert("Error" + data.responseText);
-        }
-    });
+  });
 }
 /**
  * Method that detect Latindex journals
@@ -383,34 +383,34 @@ function runUpdatePublicationDspace(options) {
  */
 function runUpdateLatindex(options) {
 
-    document.getElementById("imgloading").style.visibility = "visible";
+  document.getElementById("imgloading").style.visibility = "visible";
 
-    var endpoint = "http://example";
-    var graphuri = "http://example/data";
-    var settings = {
-        host: options
+  var endpoint = "http://example";
+  var graphuri = "http://example/data";
+  var settings = {
+    host: options
+  }
+  var dataT = {
+    "Endpoint": endpoint,
+    "GraphUri": graphuri
+  };
+
+  $.ajax({
+    type: "POST",
+    data: JSON.stringify(dataT),
+    dataType: "text", //result data type
+    contentType: "application/json", // send data type
+    url: settings.host + "pubman/publications_latindex",
+    //    url:  "http://localhost:8079/marmotta/authors-module/update",
+    success: function (Result) {
+      document.getElementById("imgloading").style.visibility = "hidden";
+      alert(Result);
+    },
+    error: function (data) {
+      document.getElementById("imgloading").style.visibility = "hidden";
+      alert("Error" + data.responseText);
     }
-    var dataT = {
-        "Endpoint": endpoint,
-        "GraphUri": graphuri
-    };
-
-    $.ajax({
-        type: "POST",
-        data: JSON.stringify(dataT),
-        dataType: "text", //result data type
-        contentType: "application/json", // send data type
-        url: settings.host + "pubman/publications_latindex",
-        //    url:  "http://localhost:8079/marmotta/authors-module/update",
-        success: function (Result) {
-            document.getElementById("imgloading").style.visibility = "hidden";
-            alert(Result);
-        },
-        error: function (data) {
-            document.getElementById("imgloading").style.visibility = "hidden";
-            alert("Error" + data.responseText);
-        }
-    });
+  });
 }
 /**
  * Disambiguation Process
@@ -419,34 +419,34 @@ function runUpdateLatindex(options) {
  */
 function runUpdateDisambiguation(options) {
 
-    document.getElementById("imgloading").style.visibility = "visible";
+  document.getElementById("imgloading").style.visibility = "visible";
 
-    var endpoint = "http://example";
-    var graphuri = "http://example/data";
-    var settings = {
-        host: options
+  var endpoint = "http://example";
+  var graphuri = "http://example/data";
+  var settings = {
+    host: options
+  }
+  var dataT = {
+    "Endpoint": endpoint,
+    "GraphUri": graphuri
+  };
+
+  $.ajax({
+    type: "POST",
+    data: JSON.stringify(dataT),
+    dataType: "text", //result data type
+    contentType: "application/json", // send data type
+    url: settings.host + "pubman/publications_disambiguation",
+    //    url:  "http://localhost:8079/marmotta/authors-module/update",
+    success: function (Result) {
+      document.getElementById("imgloading").style.visibility = "hidden";
+      alert(Result);
+    },
+    error: function (data) {
+      document.getElementById("imgloading").style.visibility = "hidden";
+      alert("Error" + data.responseText);
     }
-    var dataT = {
-        "Endpoint": endpoint,
-        "GraphUri": graphuri
-    };
-
-    $.ajax({
-        type: "POST",
-        data: JSON.stringify(dataT),
-        dataType: "text", //result data type
-        contentType: "application/json", // send data type
-        url: settings.host + "pubman/publications_disambiguation",
-        //    url:  "http://localhost:8079/marmotta/authors-module/update",
-        success: function (Result) {
-            document.getElementById("imgloading").style.visibility = "hidden";
-            alert(Result);
-        },
-        error: function (data) {
-            document.getElementById("imgloading").style.visibility = "hidden";
-            alert("Error" + data.responseText);
-        }
-    });
+  });
 }
 
 /**
@@ -456,34 +456,34 @@ function runUpdateDisambiguation(options) {
  */
 function runUpdateCreateCentralGraph(options) {
 
-    document.getElementById("imgloading").style.visibility = "visible";
+  document.getElementById("imgloading").style.visibility = "visible";
 
-    var endpoint = "http://example";
-    var graphuri = "http://example/data";
-    var settings = {
-        host: options
+  var endpoint = "http://example";
+  var graphuri = "http://example/data";
+  var settings = {
+    host: options
+  }
+  var dataT = {
+    "Endpoint": endpoint,
+    "GraphUri": graphuri
+  };
+
+  $.ajax({
+    type: "POST",
+    data: JSON.stringify(dataT),
+    dataType: "text", //result data type
+    contentType: "application/json", // send data type
+    url: settings.host + "pubman/publications_centralgraph",
+    //    url:  "http://localhost:8079/marmotta/authors-module/update",
+    success: function (Result) {
+      document.getElementById("imgloading").style.visibility = "hidden";
+      alert(Result);
+    },
+    error: function (data) {
+      document.getElementById("imgloading").style.visibility = "hidden";
+      alert("Error" + data.responseText);
     }
-    var dataT = {
-        "Endpoint": endpoint,
-        "GraphUri": graphuri
-    };
-
-    $.ajax({
-        type: "POST",
-        data: JSON.stringify(dataT),
-        dataType: "text", //result data type
-        contentType: "application/json", // send data type
-        url: settings.host + "pubman/publications_centralgraph",
-        //    url:  "http://localhost:8079/marmotta/authors-module/update",
-        success: function (Result) {
-            document.getElementById("imgloading").style.visibility = "hidden";
-            alert(Result);
-        },
-        error: function (data) {
-            document.getElementById("imgloading").style.visibility = "hidden";
-            alert("Error" + data.responseText);
-        }
-    });
+  });
 }
 
 
@@ -494,32 +494,72 @@ function runUpdateCreateCentralGraph(options) {
  */
 function runSyncMGDB(options) {
 
-    document.getElementById("imgloading").style.visibility = "visible";
+  document.getElementById("imgloading").style.visibility = "visible";
 
-    var endpoint = "http://example";
-    var graphuri = "http://example/data";
-    var settings = {
-        host: options
+  var endpoint = "http://example";
+  var graphuri = "http://example/data";
+  var settings = {
+    host: options
+  }
+  var dataT = {
+    "Endpoint": endpoint,
+    "GraphUri": graphuri
+  };
+
+  $.ajax({
+    type: "POST",
+    data: JSON.stringify(dataT),
+    dataType: "text", //result data type
+    contentType: "application/json", // send data type
+    url: settings.host + "pubman/publications_sync",
+    //    url:  "http://localhost:8079/marmotta/authors-module/update",
+    success: function (Result) {
+      document.getElementById("imgloading").style.visibility = "hidden";
+      alert(Result);
+    },
+    error: function (data) {
+      document.getElementById("imgloading").style.visibility = "hidden";
+      alert("Error" + data.responseText);
     }
-    var dataT = {
-        "Endpoint": endpoint,
-        "GraphUri": graphuri
-    };
+  });
+}
 
-    $.ajax({
-        type: "POST",
-        data: JSON.stringify(dataT),
-        dataType: "text", //result data type
-        contentType: "application/json", // send data type
-        url: settings.host + "pubman/publications_sync",
-        //    url:  "http://localhost:8079/marmotta/authors-module/update",
-        success: function (Result) {
-            document.getElementById("imgloading").style.visibility = "hidden";
-            alert(Result);
-        },
-        error: function (data) {
-            document.getElementById("imgloading").style.visibility = "hidden";
-            alert("Error" + data.responseText);
-        }
-    });
+
+function requestUploadFile(url, data, mime, callbacks) {
+  function createRequest() {
+    var request = null;
+    if (window.XMLHttpRequest) {
+      request = new XMLHttpRequest();
+    } else if (window.ActiveXObject) {
+      request = new ActiveXObject("Microsoft.XMLHTTP");
+    } else {
+      throw "request object can not be created"
+    }
+    return request;
+  }
+  var request = createRequest();
+  request.onreadystatechange = function () {
+    if (request.readyState == 4) {
+      if (callbacks.hasOwnProperty(request.status)) {
+        callbacks[request.status](request.responseText, request);
+      }
+    }
+  };
+  request.open('POST', url, true);
+  request.setRequestHeader("Content-Type", mime);
+  request.send(data);
+}
+
+function runUploadBanner(options) {
+  var file_id = $("#banner_id").val();
+  var ins_ser = options + 'profileval/uploadBanner?id=' + encodeURIComponent(file_id);
+  var file = $("input#upload_file");
+  var data = file.get(0).files[0];
+  requestUploadFile(ins_ser, data, data.type, {
+    200: function (resp, err) {
+      alert("Image imported sucessfully.");
+    }
+  }
+  );
+
 }

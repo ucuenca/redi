@@ -7,20 +7,16 @@ package edu.ucuenca.storage.webservices;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.jersey.core.header.FormDataContentDisposition;
-import com.sun.jersey.multipart.FormDataParam;
 import edu.ucuenca.storage.api.ProfileValidation;
 import edu.ucuenca.storage.exceptions.FailMongoConnectionException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -124,7 +120,7 @@ public class ProfileValidationService {
   @POST
   @Path("/uploadPhoto")
   @SuppressWarnings({"PMD.ExcessiveMethodLength", "PMD.AvoidDuplicateLiterals", "PMD.NPathComplexity"})
-  public Response uploadAuthors(
+  public Response uploadAuthorsPhoto(
           @HeaderParam(HttpHeaders.CONTENT_TYPE) String type,
           @Context HttpServletRequest request,
           @QueryParam("orcid") String orcid
@@ -154,10 +150,50 @@ public class ProfileValidationService {
   @GET
   @Produces(MediaType.APPLICATION_OCTET_STREAM)
   @Path("/getPhoto")
-  public Response DownloadReport(@QueryParam("orcid") String orcid) {
+  public Response DownloadPhoto(@QueryParam("orcid") String orcid) {
     File file = new File(configurationService.getHome() + File.separator + "profile_photo", orcid.hashCode() + ".jpg");
     Response.ResponseBuilder response = Response.ok((Object) file);
     response.header("Content-Disposition", "attachment; filename=profile.jpg");
+    return response.build();
+  }
+
+  @POST
+  @Path("/uploadBanner")
+  @SuppressWarnings({"PMD.ExcessiveMethodLength", "PMD.AvoidDuplicateLiterals", "PMD.NPathComplexity"})
+  public Response uploadBanner(
+          @HeaderParam(HttpHeaders.CONTENT_TYPE) String type,
+          @Context HttpServletRequest request,
+          @QueryParam("id") String id
+  ) throws IOException {
+    if (type == null || !("image/jpeg".equals(type.toLowerCase()))) {
+      return Response.status(Response.Status.BAD_REQUEST).entity("Incorrect file format.").build();
+    }
+    if (id == null || id.trim().length() <= 0) {
+      return Response.status(Response.Status.BAD_REQUEST).entity("There is not orcid.").build();
+    }
+
+    File f = new File(configurationService.getHome() + File.separator + "banner_photo", id.hashCode() + ".jpg");
+    if (f.exists()) {
+      f.delete();
+    }
+    if (!f.exists()) {
+      f.getParentFile().mkdirs();
+      f.createNewFile();
+    }
+    try (FileOutputStream fos = new FileOutputStream(f)) {
+      IOUtils.copy(request.getInputStream(), fos);
+    }
+
+    return Response.ok().entity(id.hashCode() + ".jpg").build();
+  }
+
+  @GET
+  @Produces(MediaType.APPLICATION_OCTET_STREAM)
+  @Path("/getBanner")
+  public Response DownloadBanner(@QueryParam("id") String id) {
+    File file = new File(configurationService.getHome() + File.separator + "banner_photo", id.hashCode() + ".jpg");
+    Response.ResponseBuilder response = Response.ok((Object) file);
+    response.header("Content-Disposition", "attachment; filename=banner.jpg");
     return response.build();
   }
 }
