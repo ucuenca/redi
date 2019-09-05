@@ -81,40 +81,70 @@
     </div>
   </section>
 
-  <section id ="sectiontwo" class="mainpage">
-    <img src="wkhome/images/banner/howitworks.jpg" alt="New york" style="width:100%;">
+  <section id ="sectiontwo" class="mainpage" style="background: url(wkhome/images/banner/howitworks.jpg); background-size:cover;">
+    <div style="width: 100%;position: absolute;height: 100%;" class="mfont">
+      <br/>
+      <br/>
+      <br/>
+      <div style="width: 100%;text-align: center;">
+        <h1>Cómo funciona</h1>
+      </div>
+      <div style="width: 100%;position: absolute;height: 100%;">
+        <div style="width:33.3%;float: left;display: flex;align-items: center;justify-content: center;height: 50%;vertical-align: middle;">            
+          <h2 style="margin-left: 40%;" >Visualiza y promueve la investigación científica en el país.</h2>
+        </div>
+        <div style="width:33.3%;float: left;display: flex;align-items: center;justify-content: center;height: 80%;vertical-align: middle;">      
+          <h2 style="margin-left: 20%; margin-right: 20%;" >Descubrimiento e identificación de áreas de conocimiento emergentes en el país.</h2>
+        </div>
+        <div style="width:33.3%;float: left;display: flex;align-items: center;justify-content: center;height: 50%;vertical-align: middle;">            
+          <h2 style="margin-right: 40%;" >Formación de grupos de colaboración entre investigadores de forma interinstitucional.</h2>
+        </div>
+      </div>
+
+    </div>
   </section>
 
   <section class="mainpage" style="background: url(wkhome/images/banner/stats.jpg); background-size:cover;color:white;" >
-    <div style="width: 100%;position: absolute;height: 80%;" >            
-      <div style="width:33.3%;float: left;display: flex;align-items: center;justify-content: center;height: 100%;vertical-align: middle;">
+    <div style="width: 100%;position: absolute;height: 80%;" class="mfont">     
+      <br/>
+      <br/>
+      <br/>
+      <div style="width: 100%;text-align: center;">
+        <h1>Estadisticas</h1>
+      </div>
+
+      <div style="width:33.3%;float: left;display: flex;align-items: center;justify-content: center;height: 60%;vertical-align: middle;">
         <div>            
-          <h1>{{data.total.totalAuthors}}</h1>        
-          <h3>autores</h3> 
+          <h1 style="font-size:80px;">{{data.total.totalAuthors}}</h1>        
+          <h2>autores</h2> 
         </div>              
       </div>
-      <div style="width:33.3%;float: left;display: flex;align-items: center;justify-content: center;height: 100%;vertical-align: middle;">
+      <div style="width:33.3%;float: left;display: flex;align-items: center;justify-content: center;height: 60%;vertical-align: middle;">
         <div>            
-          <h1 >{{data.categories.length}}</h1>   
-          <h3>universidades</h3>
+          <h1 style="font-size:80px;">{{data.categories.length}}</h1>   
+          <h2>universidades</h2>
         </div>                      
       </div>
-      <div style="width:33.3%;float: left;display: flex;align-items: center;justify-content: center;height: 100%;vertical-align: middle;">
+      <div style="width:33.3%;float: left;display: flex;align-items: center;justify-content: center;height: 60%;vertical-align: middle;">
         <div>            
-          <h1 >{{data.total.totalPub}}</h1>        
-          <h3>publicaciones</h3>
+          <h1 style="font-size:80px;">{{data.total.totalPub}}</h1>        
+          <h2>publicaciones</h2>
         </div>              
       </div>
     </div>
   </section>
 
-  <section class="mainpage" >
+  <section class="mainpage" style="min-height:30vw;">
     <br/>    
-    <br/><br/>
-    <h2 class="mtitle" style="text-align: center;">MIEMBROS DE REDI</h2>
+    <br/>
+    <br/>
+    <h1 class="mfont" style="text-align: center;">Miembros de REDI</h1>
+    <br/>
+    <br/>
+    <br/>
     <div>    
       <span ng-repeat='org in data.categories'>
-        <img src="wkhome/images/orgs/{{org}}.png" alt="{{org}}" style ='width:80px; max-height:80px;' > 
+        <img src="wkhome/images/orgs/{{org}}.png" alt="{{org}}" title="{{org}}" style ='max-width:60px; max-height:60px;margin-right:20px;margin-left:20px;margin-top:20px' > 
       </span>
     </div>
 
