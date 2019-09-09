@@ -165,14 +165,14 @@ public class ProfileValidationService {
           @Context HttpServletRequest request,
           @QueryParam("id") String id
   ) throws IOException {
-    if (type == null || !("image/jpeg".equals(type.toLowerCase()))) {
+    if (type == null || !("image/png".equals(type.toLowerCase()))) {
       return Response.status(Response.Status.BAD_REQUEST).entity("Incorrect file format.").build();
     }
     if (id == null || id.trim().length() <= 0) {
       return Response.status(Response.Status.BAD_REQUEST).entity("There is not orcid.").build();
     }
 
-    File f = new File(configurationService.getHome() + File.separator + "banner_photo", id.hashCode() + ".jpg");
+    File f = new File(configurationService.getHome() + File.separator + "banner_photo", id.hashCode() + ".png");
     if (f.exists()) {
       f.delete();
     }
@@ -184,16 +184,16 @@ public class ProfileValidationService {
       IOUtils.copy(request.getInputStream(), fos);
     }
 
-    return Response.ok().entity(id.hashCode() + ".jpg").build();
+    return Response.ok().entity(id.hashCode() + ".png").build();
   }
 
   @GET
   @Produces(MediaType.APPLICATION_OCTET_STREAM)
   @Path("/getBanner")
   public Response DownloadBanner(@QueryParam("id") String id) {
-    File file = new File(configurationService.getHome() + File.separator + "banner_photo", id.hashCode() + ".jpg");
+    File file = new File(configurationService.getHome() + File.separator + "banner_photo", id.hashCode() + ".png");
     Response.ResponseBuilder response = Response.ok((Object) file);
-    response.header("Content-Disposition", "attachment; filename=banner.jpg");
+    response.header("Content-Disposition", "attachment; filename=banner.png");
     return response.build();
   }
 }
