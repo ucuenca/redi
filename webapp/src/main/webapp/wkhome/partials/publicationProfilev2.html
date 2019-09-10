@@ -50,10 +50,10 @@
         <h5 class="secTitle pb-2 mb-2" > Autores:</h5>
            <div class="row pubcoauthors">
            <span ng-repeat="a in publication.autores | limitTo: quantity ">
-         <a class="authorlink col-md-12" href="{{a.uri}}" target="_blank" >
+         <a class="authorlink" href="{{a.uri}}" target="_blank" >
          <div class=" col-md-3 text-center author">
          <img class="img-authors" src="{{a.img}}"> </img>
-        <small>{{a.name}}</small>
+        <small class="col-md-12">{{a.name}}</small>
          </a>
        </div>
         </span>

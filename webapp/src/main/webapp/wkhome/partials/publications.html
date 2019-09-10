@@ -213,10 +213,11 @@
         </ul>
       </div>
     </div>
-    <div class="col-lg-2" ng-show="authorURI" ng-cloak >
-      <img ng-show="author.photo" ng-src="{{author.photo}}" class="img-responsive" alt="{{author.name}}">
-      <a ng-href="#/author/profile/{{authorURI}}"><h3 style="margin: 0px 0px">{{author.name | camelCase}}</h3></a>
-      <h5 style="margin: 0px 0px" ng-repeat="institution in author.institutions">{{institution.name}}, <small><i>{{institution.city}}</i></small></h5>
+    <div class="col-lg-2 imgbg" ng-show="authorURI" ng-cloak >
+      <!-- <img ng-show="author.photo" ng-src="{{author.photo}}" class="img-responsive" alt="{{author.name}}"> -->
+      <div class="imgProfilePub" style = "background-image:url('{{author.photo}}')"> </div>
+      <a  class="pubAuthorName" ng-href="#/author/profile/{{authorURI}}"><h3 style="margin: 0px 0px">{{author.name | camelCase}}</h3></a>
+      <h5 class="pubInstName" style="margin: 0px 0px" ng-repeat="institution in author.institutions">{{institution.name}}, <small><i>{{institution.city}}</i></small></h5>
       <br>
       <div ng-show="author.areas">
         <b>{{ 'area.study' | translate }}: </b>

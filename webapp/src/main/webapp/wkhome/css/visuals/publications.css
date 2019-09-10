@@ -14,3 +14,28 @@
 .publicationModal {
 	width: 900px;
 }
+
+
+.pubInstName {
+   font-family: Conduit-IT;
+}
+
+.pubAuthorName {
+	font-family: Conduit-BI;
+}
+
+.imgProfilePub{
+background-repeat:no-repeat;
+background-position: center; 
+width: 9vw; height: 9vw; border-radius: 50%; border: 2px solid white; 
+background-size: cover;
+margin-left: 10%;
+/*margin-top: 10px;*/
+}
+
+.imgbg {
+background-image: url("/wkhome/images/AssetInv.png");
+background-repeat: no-repeat;
+background-size: 50%;
+background-position: right top;
+}
