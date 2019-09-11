@@ -26,7 +26,7 @@ wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$windo
       }
       
       
-      var img = data.img == null ? "/wkhome/images/no_photo.png" : data.img;
+      var img = data.img == null ? "/wkhome/images/no_photo.jpg" : data.img;
       $scope.author.img = img;
       $scope.author.claimUri =  "https://orcid.org/oauth/authorize?client_id="+globalData.client_id+"&response_type=code&scope=/authenticate&redirect_uri="+globalData.callback+"&state="+ profilevalUri;
     

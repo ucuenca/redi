@@ -194,7 +194,7 @@ background-position: 35% 50%;
 
 
 #stasbtn {
-background: url(/wkhome/images/red.png);
+background: url(/wkhome/images/stats.png);
 background-repeat: no-repeat;
 background-position: 35% 50%;
 /*border: none;*/
@@ -204,7 +204,7 @@ border-right: none;
 }
 
 #stasbtn:hover {
-background: url(/wkhome/images/redactive.png);
+background: url(/wkhome/images/stats_active.png);
 background-repeat: no-repeat;
 background-position: 35% 50%;
 
