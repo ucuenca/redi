@@ -27,3 +27,7 @@ font-size:  1.1vw;
 .mfont {
   font-family: "Conduit-MI";
 }
+
+.rowspace {
+	margin : 10px;
+} 
