@@ -355,7 +355,7 @@ public class PopulateMongoImpl implements PopulateMongo {
       // Delete and create collection
       final MongoCollection<Document> collection = db.getCollection(MongoService.Collection.RELATEDAUTHORS.getValue());
       collection.drop();
-      BoundedExecutor threadPool = BoundedExecutor.getThreadPool(5);
+      BoundedExecutor threadPool = BoundedExecutor.getThreadPool(1);
       task.updateMessage("Calculating related authors");
       final List<Map<String, Value>> query = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getAuthorsCentralGraph());
       int i = 0;
