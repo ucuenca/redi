@@ -18,7 +18,7 @@ public class ExternalSPARQLServiceImpl implements ExternalSPARQLService {
     private ConfigurationService conf;
 
     public String getDataBase() {
-        return conf.getStringConfiguration("graphdb.database", "data");
+        return conf.getStringConfiguration("graphdb.database", "redi");
     }
 
     @Override
