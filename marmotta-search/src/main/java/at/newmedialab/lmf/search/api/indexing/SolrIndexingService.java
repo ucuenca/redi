@@ -56,6 +56,7 @@ public interface SolrIndexingService extends WorkerService<SolrCoreRuntime, Solr
     boolean isRunning();
 
     void indexResource(Resource resource, SolrCoreRuntime runtime);
+    void indexResource(Resource resource);
 
 
     /**

@@ -427,4 +427,12 @@ public class SolrIndexingServiceImpl extends WorkerServiceImpl<SolrCoreRuntime,S
     public void notifyEngineRemove(@Observes @Removed SolrCoreConfiguration engine) {
         super.notifyEngineRemove(engine);
     }
+
+  @Override
+  public void indexResource(Resource resource) {
+    List<SolrCoreRuntime> listWorkerRuntimes = this.listWorkerRuntimes();
+    for (SolrCoreRuntime r : listWorkerRuntimes) {
+      indexResource(resource, r);
+    }
+  }
 }

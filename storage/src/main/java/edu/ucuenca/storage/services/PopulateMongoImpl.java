@@ -1198,7 +1198,7 @@ public class PopulateMongoImpl implements PopulateMongo {
           boolean hasNext = collection.find(eq("_id", txtVal.hashCode())).iterator().hasNext();
           if (!hasNext) {
             traductor = trService.traductor(txtVal);
-            traductor = traductor.replaceAll(";;;", " ");
+            traductor = traductor.replaceAll(";;;", " ; ");
             Document dc = new Document();
             dc.put("_id", txtVal.hashCode());
             dc.put("txt", traductor);
