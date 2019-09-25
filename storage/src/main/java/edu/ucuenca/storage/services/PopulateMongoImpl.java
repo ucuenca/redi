@@ -27,8 +27,10 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import static com.mongodb.client.model.Filters.eq;
 import edu.ucuenca.storage.api.MongoService;
 import edu.ucuenca.storage.api.PopulateMongo;
+import edu.ucuenca.storage.utils.TranslatorManager;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
@@ -51,6 +53,7 @@ import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
+import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.DistanceService;
 import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 import org.apache.marmotta.ucuenca.wk.commons.util.BoundedExecutor;
@@ -59,7 +62,11 @@ import org.bson.Document;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.openrdf.model.Literal;
+import org.openrdf.model.Model;
+import org.openrdf.model.URI;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.LinkedHashModel;
+import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
@@ -78,7 +85,7 @@ import org.slf4j.Logger;
  */
 @ApplicationScoped
 public class PopulateMongoImpl implements PopulateMongo {
-
+  
   @Inject
   private ConfigurationService conf;
   @Inject
@@ -99,11 +106,17 @@ public class PopulateMongoImpl implements PopulateMongo {
   private DistanceService distservice;
   @Inject
   private TaskManagerService taskManagerService;
-
+  
+  @Inject
+  private TranslatorManager trService;
+  
+  @Inject
+  private ConstantService conService;
+  
   private static final Map context = new HashMap();
-
+  
   private final JsonNodeFactory factory = JsonNodeFactory.instance;
-
+  
   static {
     context.put("dct", "http://purl.org/dc/terms/");
     context.put("owl", "http://www.w3.org/2002/07/owl#");
@@ -125,14 +138,14 @@ public class PopulateMongoImpl implements PopulateMongo {
     try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));
             StringWriter writter = new StringWriter();) {
       RepositoryConnection conn = sesameService.getConnection();
-
+      
       int num_candidates = 0;
       try {
         MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
         // Delete and create collection
         MongoCollection<Document> collection = db.getCollection(c);
         collection.drop();
-
+        
         RDFWriter jsonldWritter = Rio.createWriter(RDFFormat.JSONLD, writter);
         TupleQueryResult resources = conn.prepareTupleQuery(QueryLanguage.SPARQL, queryResources).evaluate();
         while (resources.hasNext()) {
@@ -164,22 +177,22 @@ public class PopulateMongoImpl implements PopulateMongo {
       log.error("IO error", ex);
     }
   }
-
+  
   private void loadStadistics(String c, HashMap<String, String> queries) {
     try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));
             StringWriter writter = new StringWriter();) {
       RepositoryConnection conn = sesameService.getConnection();
-
+      
       try {
         MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
         // Delete and create collection
         MongoCollection<Document> collection = db.getCollection(c);
         collection.drop();
-
+        
         RDFWriter jsonldWritter = Rio.createWriter(RDFFormat.JSONLD, writter);
         for (String key : queries.keySet()) {
           log.info("Getting {} query", key);
-
+          
           conn.prepareGraphQuery(QueryLanguage.SPARQL, queries.get(key))
                   .evaluate(jsonldWritter);
           Object compact = JsonLdProcessor.compact(JsonUtils.fromString(writter.toString()), context, new JsonLdOptions());
@@ -206,7 +219,7 @@ public class PopulateMongoImpl implements PopulateMongo {
       log.error("IO error", ex);
     }
   }
-
+  
   @Override
   public void authors() {
     final Task task = taskManagerService.createSubTask("Caching authors profiles", "Mongo Service");
@@ -243,13 +256,13 @@ public class PopulateMongoImpl implements PopulateMongo {
     }
     taskManagerService.endTask(task);
   }
-
+  
   @Override
   public void statistics() {
     HashMap<String, String> queries = new HashMap<>();
-
+    
     queries.put("barchar", queriesService.getBarcharDataQuery());
-
+    
     if (countCountries() > 1) {
       queries.put("count_authors", queriesService.getAggregationPublicationsbyCountry());
       queries.put("count_publications", queriesService.getAggreggationAuthorsbyCountry());
@@ -261,7 +274,7 @@ public class PopulateMongoImpl implements PopulateMongo {
     queries.put("keywords_frequencypub_gt4", queriesService.getKeywordsFrequencyPub());
     loadStadistics(MongoService.Collection.STATISTICS.getValue(), queries);
   }
-
+  
   @Override
   public void LoadStatisticsbyInst() {
     Task task = taskManagerService.createSubTask("Caching statistics by Institution", "Mongo Service");
@@ -269,14 +282,14 @@ public class PopulateMongoImpl implements PopulateMongo {
       MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
       MongoCollection<Document> collection = db.getCollection(MongoService.Collection.STATISTICS_INST.getValue());
       collection.drop();
-
+      
       List<String> queries = new ArrayList();
       queries.add("inst_by_area");
       queries.add("pub_by_date");
       queries.add("author_by_inst");
       queries.add("inst_by_inst");
       queries.add("prov_by_inst");
-
+      
       String uri = "";
       String name = "";
       String fullname = "";
@@ -285,7 +298,7 @@ public class PopulateMongoImpl implements PopulateMongo {
       task.updateTotalSteps((org.size() + 1) * (queries.size() + 1));
       int ints = 0;
       for (Map<String, Value> o : org) {
-
+        
         uri = o.get("URI").stringValue();
         name = o.get("name").stringValue();
         fullname = o.get("fullNameEs").stringValue();
@@ -293,16 +306,16 @@ public class PopulateMongoImpl implements PopulateMongo {
         for (String q : queries) {
           ints++;
           String response = statisticsbyInstQuery(uri, q);
-
+          
           parse.append(q, Document.parse(response));
-
+          
           log.info("Stats Inst {} ", uri);
           log.info("Query {}", q);
-
+          
           task.updateProgress(ints);
-
+          
         }
-
+        
         parse.append("_id", uri);
         parse.append("name", name);
         parse.append("fullname", fullname);
@@ -315,7 +328,7 @@ public class PopulateMongoImpl implements PopulateMongo {
       java.util.logging.Logger.getLogger(PopulateMongoImpl.class.getName()).log(Level.INFO, null, ex);
     }
   }
-
+  
   private String statisticsbyInstQuery(String uri, String query) throws MarmottaException {
     // List <Map<String,String>>   
     switch (query) {
@@ -331,22 +344,22 @@ public class PopulateMongoImpl implements PopulateMongo {
         return this.getTopProvbyInst(uri);
       default:
         return null;
-
+      
     }
-
+    
   }
-
+  
   private int countCountries() {
     try {
       List<Map<String, Value>> countc = sparqlService.query(QueryLanguage.SPARQL, queriesService.getCountCountry());
       return Integer.parseInt(countc.get(0).get("ncountry").stringValue());
-
+      
     } catch (MarmottaException ex) {
       java.util.logging.Logger.getLogger(PopulateMongoImpl.class.getName()).log(Level.SEVERE, null, ex);
     }
     return 0;
   }
-
+  
   @Override
   public void networks() {
     final Task task = taskManagerService.createSubTask("Caching related authors", "Mongo Service");
@@ -375,7 +388,7 @@ public class PopulateMongoImpl implements PopulateMongo {
             collection.insertOne(parse);
           }
         });
-
+        
       }
       threadPool.end();
     } catch (Exception w) {
@@ -383,7 +396,7 @@ public class PopulateMongoImpl implements PopulateMongo {
     }
     taskManagerService.endTask(task);
   }
-
+  
   @Override
   public void clusters() {
     Task task = taskManagerService.createSubTask("Caching clusters", "Mongo Service");
@@ -394,11 +407,11 @@ public class PopulateMongoImpl implements PopulateMongo {
       // Delete and create collection
       MongoCollection<Document> collection = db.getCollection(MongoService.Collection.CLUSTERS.getValue());
       collection.drop();
-
+      
       List<Map<String, Value>> clusters = sparqlService.query(QueryLanguage.SPARQL, queriesService.getClusterURIs());
-
+      
       task.updateTotalSteps(clusters.size());
-
+      
       for (int i = 0; i < clusters.size(); i++) {
         String cluster = clusters.get(i).get("c").stringValue();
         // Print progress
@@ -417,7 +430,7 @@ public class PopulateMongoImpl implements PopulateMongo {
       taskManagerService.endTask(task);
     }
   }
-
+  
   public void clustersTotals() {
     try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
       MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
@@ -456,12 +469,12 @@ public class PopulateMongoImpl implements PopulateMongo {
         parse.append("subclusters", lsdoc);
         collection.insertOne(parse);
       }
-
+      
     } catch (MarmottaException ex) {
       log.error(ex.getMessage(), ex);
     }
   }
-
+  
   @Override
   public void authorsByArea() {
     final Task task = taskManagerService.createSubTask("Caching Authors by Area", "Mongo Service");
@@ -471,16 +484,16 @@ public class PopulateMongoImpl implements PopulateMongo {
       // Delete and create collection
       final MongoCollection<Document> collection = db.getCollection(MongoService.Collection.AUTHORS_AREA.getValue());
       collection.drop();
-
+      
       final List<Map<String, Value>> areas = sparqlService.query(QueryLanguage.SPARQL, queriesService.getClusterAndSubclusterURIs());
-
+      
       task.updateTotalSteps(areas.size());
       BoundedExecutor threadPool = BoundedExecutor.getThreadPool(5);
       for (int i = 0; i < areas.size(); i++) {
         final int j = i;
         final String cluster = areas.get(i).get("cluster").stringValue();
         final String subcluster = areas.get(i).get("subcluster").stringValue();
-
+        
         threadPool.submitTask(new Runnable() {
           @Override
           public void run() {
@@ -499,7 +512,7 @@ public class PopulateMongoImpl implements PopulateMongo {
             collection.insertOne(parse);
           }
         });
-
+        
       }
       threadPool.end();
     } catch (MarmottaException | InterruptedException ex) {
@@ -508,7 +521,7 @@ public class PopulateMongoImpl implements PopulateMongo {
       taskManagerService.endTask(task);
     }
   }
-
+  
   @Override
   public void authorsByDiscipline() {
     final Task task = taskManagerService.createSubTask("Caching Authors by Discipline", "Mongo Service");
@@ -518,9 +531,9 @@ public class PopulateMongoImpl implements PopulateMongo {
       // Delete and create collection
       final MongoCollection<Document> collection = db.getCollection(MongoService.Collection.AUTHORS_DISCPLINE.getValue());
       collection.drop();
-
+      
       final List<Map<String, Value>> clusters = sparqlService.query(QueryLanguage.SPARQL, queriesService.getClusterURIs());
-
+      
       task.updateTotalSteps(clusters.size());
       BoundedExecutor threadPool = BoundedExecutor.getThreadPool(5);
       for (int i = 0; i < clusters.size(); i++) {
@@ -545,7 +558,7 @@ public class PopulateMongoImpl implements PopulateMongo {
             collection.insertOne(parse);
           }
         });
-
+        
       }
       threadPool.end();
     } catch (MarmottaException | InterruptedException ex) {
@@ -554,7 +567,7 @@ public class PopulateMongoImpl implements PopulateMongo {
       taskManagerService.endTask(task);
     }
   }
-
+  
   @Override
   public void Countries() {
     Task task = taskManagerService.createSubTask("Caching countries", "Mongo Service");
@@ -574,7 +587,7 @@ public class PopulateMongoImpl implements PopulateMongo {
           Document parse = Document.parse(countriesNodes);
           parse.append("_id", co);
           collection.insertOne(parse);
-
+          
           task.updateDetailMessage("Country", co);
           task.updateProgress(i + 1);
         }
@@ -585,16 +598,16 @@ public class PopulateMongoImpl implements PopulateMongo {
       }
     }
   }
-
+  
   private ObjectNode countrynodes(String name, String code) {
     ObjectNode node = factory.objectNode(); // initializing
     node.put("name", name);
     node.put("code", code);
     return node;
   }
-
+  
   private String getCountryCode(String coName) {
-
+    
     try {
       String Country = URLEncoder.encode(coName, "UTF-8").replace("+", "%20");
       Object js = commonServices.getHttpJSON("https://restcountries.eu/rest/v2/name/" + Country);
@@ -610,19 +623,19 @@ public class PopulateMongoImpl implements PopulateMongo {
         Object r = jo.get("alpha2Code");
         // System.out.println ("---"+r);
         return r.toString();
-
+        
       }
     } catch (UnsupportedEncodingException ex) {
       java.util.logging.Logger.getLogger(PopulateMongoImpl.class.getName()).log(Level.SEVERE, null, ex);
     }
     return null;
   }
-
+  
   @Override
   public void publications() {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
-
+  
   @Override
   public void cleanSPARQLS() {
     try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
@@ -631,7 +644,7 @@ public class PopulateMongoImpl implements PopulateMongo {
       collection.drop();
     }
   }
-
+  
   public String getStatsInstbyPubDate(String uri) throws MarmottaException {
     List<Map<String, Value>> years = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getDatesPubbyInst(uri));
     JSONObject main = new JSONObject();
@@ -647,9 +660,9 @@ public class PopulateMongoImpl implements PopulateMongo {
     }
     main.put("data", array);
     return main.toJSONString();
-
+    
   }
-
+  
   public String getStatsInstbyArea(String uri) throws MarmottaException {
     List<Map<String, Value>> area = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getClustersbyInst(uri));
     JSONObject main = new JSONObject();
@@ -667,7 +680,7 @@ public class PopulateMongoImpl implements PopulateMongo {
     main.put("data", array);
     return main.toJSONString();
   }
-
+  
   public String getTopAuthorbyInst(String uri) throws MarmottaException {
     List<Map<String, Value>> author = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getAuthorsbyInst(uri));
     JSONObject main = new JSONObject();
@@ -685,7 +698,7 @@ public class PopulateMongoImpl implements PopulateMongo {
     main.put("data", array);
     return main.toJSONString();
   }
-
+  
   public String getTopInstbyInst(String uri) throws MarmottaException {
     List<Map<String, Value>> inst = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getInstAsobyInst(uri));
     JSONObject main = new JSONObject();
@@ -703,9 +716,9 @@ public class PopulateMongoImpl implements PopulateMongo {
     main.put("data", array);
     return main.toJSONString();
   }
-
+  
   public String getTopProvbyInst(String uri) throws MarmottaException {
-
+    
     List<Map<String, Value>> prov = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getProvbyInst(uri));
     JSONObject main = new JSONObject();
     JSONArray array = new JSONArray();
@@ -721,14 +734,14 @@ public class PopulateMongoImpl implements PopulateMongo {
       array.add(obj);
     }
     main.put("data", array);
-
+    
     return main.toJSONString();
   }
-
+  
   public String providerName(String text) {
     return StringUtils.join(StringUtils.splitByCharacterTypeCamelCase(text), ' ').replace("Provider", "");
   }
-
+  
   public String getStatsAuthorbyPubDate(String uri) throws MarmottaException {
     List<Map<String, Value>> years = sparqlService.query(QueryLanguage.SPARQL, queriesService.getAuthorPubbyDate(uri));
     JSONObject main = new JSONObject();
@@ -744,7 +757,7 @@ public class PopulateMongoImpl implements PopulateMongo {
     main.put("data", array);
     return main.toJSONString();
   }
-
+  
   public String getStatsRelevantKbyAuthor(String uri) throws MarmottaException {
     List<Map<String, Value>> key = sparqlService.query(QueryLanguage.SPARQL, queriesService.getRelevantKbyAuthor(uri, 15));
     JSONObject main = new JSONObject();
@@ -754,7 +767,7 @@ public class PopulateMongoImpl implements PopulateMongo {
         JSONObject obj = new JSONObject();
         obj.put("subject", k.get("lsubject").stringValue());
         obj.put("total", k.get("npub").stringValue());
-
+        
         array.add(obj);
       }
     }
@@ -782,7 +795,7 @@ public class PopulateMongoImpl implements PopulateMongo {
 
     List<Map<String, Value>> prov = sparqlService.query(QueryLanguage.SPARQL, queriesService.getConferencebyAuthor(uri));
     System.out.print("Dentro ");
-
+    
     Map<String, Integer> auxmap = new HashMap();
     for (Map<String, Value> p : prov) {
       if (!p.containsKey("name")) {
@@ -802,7 +815,7 @@ public class PopulateMongoImpl implements PopulateMongo {
           }
         }
       }
-
+      
       Iterator it = auxmap.entrySet().iterator();
       while (it.hasNext()) {
         Map.Entry pair = (Map.Entry) it.next();
@@ -810,7 +823,7 @@ public class PopulateMongoImpl implements PopulateMongo {
           auxmap.put(pair.getKey().toString(), (Integer) pair.getValue() + Integer.parseInt(p.get("total").stringValue()));
         }
       }
-
+      
     }
     JSONObject main = new JSONObject();
     JSONArray array = new JSONArray();
@@ -823,9 +836,9 @@ public class PopulateMongoImpl implements PopulateMongo {
       obj.put("total", auxmap.get(key));
       array.add(obj);
     }
-
+    
     main.put("data", array);
-
+    
     return main.toJSONString();
   }
 
@@ -878,14 +891,14 @@ public class PopulateMongoImpl implements PopulateMongo {
         obj.put("uri", uriprov);
         obj.put("prov", providerName(uriprov.substring(uriprov.lastIndexOf("#") + 1)));
         obj.put("total", k.get("total").stringValue());
-
+        
         array.add(obj);
       }
     }
     main.put("data", array);
     return main.toJSONString();
   }
-
+  
   private String getLang(Value value) {
     if (value instanceof Literal) {
       Literal lit = (Literal) value;
@@ -893,7 +906,7 @@ public class PopulateMongoImpl implements PopulateMongo {
     }
     return "";
   }
-
+  
   public String getStatsAffbyAuthor(String uri) throws MarmottaException {
     //   List<Map<String, String>> provn = getdataAff();
     List<Map<String, Value>> provn = sparqlService.query(QueryLanguage.SPARQL, queriesService.getOrgbyAuyhor(uri));
@@ -907,12 +920,12 @@ public class PopulateMongoImpl implements PopulateMongo {
         continue;
       }
       String l = getLang(p.get("orgname"));
-
+      
       if ("en".equals(l)) {
         blackl.add(p.get("orgname").stringValue().trim().toLowerCase());
         continue;
       }
-
+      
       String[] cand = p.get("orgname").stringValue().split("(;)|(,)");
       String uricand = p.get("org").stringValue();
       Map<String, Integer> newmap = new HashMap();
@@ -921,7 +934,7 @@ public class PopulateMongoImpl implements PopulateMongo {
         if (validwords(word)) {
           newmap.put(word, 0);
         }
-
+        
       }
       if (affl.isEmpty()) {
         affl.add(newmap);
@@ -940,10 +953,10 @@ public class PopulateMongoImpl implements PopulateMongo {
         if (!match) {
           affl.add(commonServices.sortByComparator(newmap, false));
         }
-
+        
       }
     }
-
+    
     JSONObject main = new JSONObject();
     JSONArray array = new JSONArray();
     List keys = new ArrayList(auxmap.keySet());
@@ -960,9 +973,9 @@ public class PopulateMongoImpl implements PopulateMongo {
         n++;
       }
     }
-
+    
     main.put("data", array);
-
+    
     return main.toJSONString();
     // distservice.jaccardDistance("", "");
     // Map<String, Integer> unsortMap = new HashMap<String, Integer>();
@@ -970,7 +983,7 @@ public class PopulateMongoImpl implements PopulateMongo {
 
     //  return "";
   }
-
+  
   public boolean validwords(String key) {
     List<String> vw = new ArrayList();
     vw.add("university");
@@ -984,15 +997,15 @@ public class PopulateMongoImpl implements PopulateMongo {
         return true;
       }
     }
-
+    
     return false;
-
+    
   }
-
+  
   private Map<String, Integer> compareAff(Map<String, Integer> newmap, Map<String, Integer> oldmap) {
     boolean equival = false;
     Map<String, Integer> temp = new HashMap();
-
+    
     for (String key2 : oldmap.keySet()) {
       for (String key : newmap.keySet()) {
         if (distservice.jaccardDistance(key, key2) > 0.7) {
@@ -1008,7 +1021,7 @@ public class PopulateMongoImpl implements PopulateMongo {
     }
     return equival ? oldmap : null;
   }
-
+  
   @Override
   public String getStatsbyAuthor() {
     String uri = "https://redi.cedia.edu.ec/resource/authors/UCUENCA/oai-pmh/SAQUICELA_GALARZA__VICTOR_HUGO";
@@ -1021,7 +1034,7 @@ public class PopulateMongoImpl implements PopulateMongo {
       return "error";
     }
   }
-
+  
   @Override
   public void LoadStatisticsbyAuthor() {
     final Task task = taskManagerService.createSubTask("Caching statistics by Author", "Mongo Service");
@@ -1029,14 +1042,14 @@ public class PopulateMongoImpl implements PopulateMongo {
       MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
       MongoCollection<Document> collection = db.getCollection(MongoService.Collection.STATISTICS_AUTHOR.getValue());
       collection.drop();
-
+      
       List<String> queries = new ArrayList();
       queries.add("date");
       queries.add("keywords");
       queries.add("providers");
       queries.add("provenance");
       queries.add("conference");
-
+      
       final String uri = "";
       String name = "";
       String fullname = "";
@@ -1048,31 +1061,31 @@ public class PopulateMongoImpl implements PopulateMongo {
       for (Map<String, Value> o : authors) {
         //  j++;
         ints++;
-
+        
         final String a = o.get("a").stringValue();
         task.updateDetailMessage("Author ", a);
         final SynchronizedParse sp = new SynchronizedParse();
         BoundedExecutor threadPool = BoundedExecutor.getThreadPool(5);
-
+        
         log.info("Stats {} ", a);
         log.info("Stats {}/{}. Author: '{}' ", ints, authors.size(), a);
         //task.updateDetailMessage("URI", a);
         task.updateProgress(ints);
         for (final String q : queries) {
-
+          
           threadPool.submitTask(new Runnable() {
             @Override
             public void run() {
-
+              
               String response;
               try {
                 response = statisticsbyAuthorsQuery(a, q);
                 sp.appendParse(Document.parse(response), q);
-
+                
               } catch (MarmottaException ex) {
                 java.util.logging.Logger.getLogger(PopulateMongoImpl.class.getName()).log(Level.SEVERE, null, ex);
               }
-
+              
             }
           });
 
@@ -1101,7 +1114,7 @@ public class PopulateMongoImpl implements PopulateMongo {
       java.util.logging.Logger.getLogger(PopulateMongoImpl.class.getName()).log(Level.SEVERE, null, ex);
     }
   }
-
+  
   private String statisticsbyAuthorsQuery(String uri, String query) throws MarmottaException {
     // List <Map<String,String>>   
     switch (query) {
@@ -1117,20 +1130,103 @@ public class PopulateMongoImpl implements PopulateMongo {
         return this.getStatsConferencebyAuthor(uri);
       default:
         return null;
-
+      
     }
-
+    
   }
+  
+  @Override
+  public void populatePublicationTranslations() {
+    final Task task = taskManagerService.createSubTask("Translating publications", "Mongo Service");
+    try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
+      MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
+      MongoCollection<Document> collection = db.getCollection(MongoService.Collection.TRANSLATIONS.getValue());
+      try {
 
+        //get publications ids
+        List<Map<String, Value>> pubs = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                + "PREFIX bibo: <http://purl.org/ontology/bibo/>\n"
+                + "select distinct ?p {\n"
+                + "    graph <" + conService.getCentralGraph() + "> {\n"
+                + "    	?p a bibo:AcademicArticle .\n"
+                + "    	?p dct:subject [] .\n"
+                + "        [] foaf:publications ?p .\n"
+                + "    }\n"
+                + "}");
+        ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
+        int i = 0;
+        task.updateTotalSteps(pubs.size());
+        for (Map<String, Value> pub : pubs) {
+          i++;
+          task.updateProgress(i);
+          String pURI = pub.get("p").stringValue();
+          URI createURI = instance.createURI(pURI);
+          URI translation = instance.createURI("http://ucuenca.edu.ec/ontology#translation");
+          boolean ask = fastSparqlService.getSparqlService().ask(QueryLanguage.SPARQL, "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                  + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                  + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                  + "PREFIX bibo: <http://purl.org/ontology/bibo/>\n"
+                  + "ask {\n"
+                  + "    graph <" + conService.getCentralGraph() + "> {\n"
+                  + "    	<" + pURI + "> <" + translation.stringValue() + "> [] .\n"
+                  + "    }\n"
+                  + "}");
+          if (ask) {
+            log.info("Translating (skip)... {}", pURI);
+            continue;
+          } else {
+            log.info("Translating ... {}", pURI);
+          }
+          //get kws by id
+          List<Map<String, Value>> kws = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                  + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                  + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                  + "PREFIX bibo: <http://purl.org/ontology/bibo/>\n"
+                  + "select distinct ?k {\n"
+                  + "    graph <" + conService.getCentralGraph() + "> {\n"
+                  + "    	<" + pURI + "> dct:subject ?s .\n"
+                  + "        ?s rdfs:label ?k .\n"
+                  + "    }\n"
+                  + "}");
+          String txtVal = "";
+          for (Map<String, Value> kw : kws) {
+            txtVal += kw.get("k").stringValue() + " ;;; ";
+          }
+          String traductor = "";
+          boolean hasNext = collection.find(eq("_id", txtVal.hashCode())).iterator().hasNext();
+          if (!hasNext) {
+            traductor = trService.traductor(txtVal);
+            traductor = traductor.replaceAll(";;;", " ");
+            Document dc = new Document();
+            dc.put("_id", txtVal.hashCode());
+            dc.put("txt", traductor);
+            collection.insertOne(dc);
+          }
+          Document first = collection.find(eq("_id", txtVal.hashCode())).first();
+          traductor = first.getString("txt");
+          Model md = new LinkedHashModel();
+          md.add(createURI, translation, instance.createLiteral(traductor));
+          fastSparqlService.getGraphDBInstance().addBuffer(instance.createURI(conService.getCentralGraph()), md);
+          fastSparqlService.getGraphDBInstance().dumpBuffer();
+        }
+      } catch (Exception ex) {
+        log.error(ex.getMessage());
+      }
+    }
+    taskManagerService.endTask(task);
+  }
+  
   class SynchronizedParse {
-
+    
     private Document queryparse = new Document();
 
     // Synchronized Method 
     public synchronized void appendParse(Document d, String q) {
       queryparse.append(q, d);
     }
-
+    
     public Document getDoc() {
       return queryparse;
     }
