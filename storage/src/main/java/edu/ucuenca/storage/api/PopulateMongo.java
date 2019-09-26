@@ -16,7 +16,7 @@ public interface PopulateMongo {
   /**
    * Load information of authors in collection authors.
    */
-  public void authors();
+  public void authors(String uri);
 
   /**
    * Load information of publications in collection publications.

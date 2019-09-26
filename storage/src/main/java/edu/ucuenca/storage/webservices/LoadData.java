@@ -44,7 +44,7 @@ public class LoadData {
   @Produces(MediaType.APPLICATION_JSON)
   public Response getAuthor() throws FailMongoConnectionException {
     try {
-      loadService.authors();
+      loadService.authors(null);
     } catch (Exception e) {
       log.error("Cannot load authors into Mongo DB", e);
       throw new FailMongoConnectionException(String.format("Cannot load authors into Mongo DB"), e);
