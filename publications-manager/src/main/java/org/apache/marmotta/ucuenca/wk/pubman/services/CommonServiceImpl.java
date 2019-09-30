@@ -1201,10 +1201,10 @@ public class CommonServiceImpl implements CommonService {
               + "	     }group by ?cl limit 5";
 
       String metaAuthor1 = Prefix
-              + "SELECT   ?names  ?orgnames ?members ?orcids ?imgs ?emails ?homepages ?citations ?hindexs ?i10indexs ?afs ?scs  where { "
+              + "SELECT   ?names  ?orgnames ?members ?orcids ?imgs ?emails ?homepages ?citations ?hindexs ?i10indexs ?afs ?scs ?olb where { "
               + "GRAPH <" + con.getCentralGraph() + "> { "
               + " { "
-              + "    select (GROUP_CONCAT( DISTINCT ?name ;  SEPARATOR = \"|\") as ?names)  "
+              + "   select ?olb (GROUP_CONCAT( DISTINCT ?name ;  SEPARATOR = \"|\") as ?names)  "
               + "   (GROUP_CONCAT( DISTINCT ?orcid ;  SEPARATOR = \"|\") as ?orcids  )  "
               + "   (GROUP_CONCAT( DISTINCT ?img ;  SEPARATOR = \"|\") as ?imgs  )  "
               + "   (GROUP_CONCAT( DISTINCT ?email ;  SEPARATOR = \"|\") as ?emails ) "
@@ -1226,6 +1226,9 @@ public class CommonServiceImpl implements CommonService {
               + "  } "
               + "  OPTIONAL{  "
               + "    <" + uri + "> foaf:img  ?img   "
+              + "  } "
+              + "  OPTIONAL{  "
+              + "    <" + uri + ">  <http://purl.org/vocab/bio/0.1/olb>  ?olb   "
               + "  } "
               + "       OPTIONAL { "
               + "    <" + uri + "> vcard:hasEmail ?email "
@@ -1378,6 +1381,10 @@ public class CommonServiceImpl implements CommonService {
     Map<String, Value> author = responseAuthor.get(0);
     if (author.containsKey("names")) {
       a.setName(getUniqueName(author.get("names").stringValue(), "\\|"));
+    }
+   
+    if (author.containsKey("olb")) {
+      a.setBio(author.get("olb").stringValue());
     }
 
     if (author.containsKey("orgnames")) {

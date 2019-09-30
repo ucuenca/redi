@@ -10,10 +10,12 @@ package org.apache.marmotta.ucuenca.wk.pubman.model;
  *
  * @author joe
  */
+
 public class AuthorProfile {
     private String uri;
     private String name;
     private String orcid;
+    private String bio;
     private String [] orgs;
     private String img;
     private String [] emails;
@@ -23,6 +25,16 @@ public class AuthorProfile {
     private String i10;
     private String [] otheraf;
     private String npub;
+    
+    
+    
+    public String getBio() {
+        return bio;
+    }
+    
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
 
     public String getNpub() {
         return npub;

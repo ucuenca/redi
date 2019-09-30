@@ -25,6 +25,9 @@ wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$windo
           data.orgs[ki] = {orgName:las[las.length-1], org:data.orgs[ki]};
       }
       
+      if ( data.bio.length ) > 300:
+        $scope.author.bio = data.bio.substring(0, 4)+" ..."
+
       
       var img = data.img == null ? "/wkhome/images/no_photo.jpg" : data.img;
       $scope.author.img = img;

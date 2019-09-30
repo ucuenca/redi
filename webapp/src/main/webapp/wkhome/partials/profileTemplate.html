@@ -15,6 +15,7 @@
       <li class="autprofilem2" > <a ng-show="ngModel.orcid" href="https://orcid.org/{{ngModel.orcid}}"><img width="17" src="/wkhome/images/orcid_icon.png"> ORCID: {{ngModel.orcid}} </a> </li>
       <li> 
         <div class="bioregion">
+          {{ngModel.bio}}
         <span ng-repeat="email in ngModel.emails">{{email}} </span> 
         </div>
       </li>
