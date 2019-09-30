@@ -97,6 +97,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>com.github.wikier</groupId>
+      <artifactId>marmotta-search</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
       <groupId>org.apache.marmotta</groupId>
       <artifactId>marmotta-core</artifactId>
       <version>${marmotta.version}</version>

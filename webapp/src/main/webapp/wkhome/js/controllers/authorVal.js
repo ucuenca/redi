@@ -28,23 +28,26 @@ wkhomeControllers.controller('authorVal', ['$rootScope', '$scope', 'cookies', '$
 ////////////////////////////////
 
 
-    $('#upload_file_btn').click(
-            function (e) {
-              var ins_ser = globalData.serverInstance + 'profileval/uploadPhoto?orcid=' + encodeURIComponent($scope.orcid);
-              var file = $("input#upload_file");
-              var data = file.get(0).files[0];
-              requestUploadFile(ins_ser, data, data.type, {
-                200: function (resp, err) {
-                  var rnd = Math.random();
-                  $scope.auth_img = globalData.serverInstance + 'profileval/getPhoto?orcid=' + encodeURIComponent($scope.orcid) + '&rnd=' + rnd;
-                  $scope.img = $scope.auth_img;
-                  alert("Image imported sucessfully.");
-                  $('#phto').attr('src', $scope.img);
-                }
-              }
-              );
-            }
-    );
+//    $('#upload_file_btn').click(
+    uploadImg = function () {
+      var ins_ser = globalData.serverInstance + 'profileval/uploadPhoto?orcid=' + encodeURIComponent($scope.orcid);
+      var file = $("input#upload_file");
+      var data = file.get(0).files[0];
+      requestUploadFile(ins_ser, data, data.type, {
+        0: function (resp, err) {
+          alert('Error al cargar imagen... Usar solo imagenes JPEG');
+        },
+        200: function (resp, err) {
+          var rnd = Math.random();
+          $scope.auth_img = globalData.serverInstance + 'profileval/getPhoto?orcid=' + encodeURIComponent($scope.orcid) + '&rnd=' + rnd;
+          $scope.img = $scope.auth_img;
+          alert("Image imported sucessfully.");
+          $('#phto').attr('src', $scope.img);
+        }
+      }
+      );
+    };
+//    );
 
 
     function requestUploadFile(url, data, mime, callbacks) {
@@ -64,6 +67,8 @@ wkhomeControllers.controller('authorVal', ['$rootScope', '$scope', 'cookies', '$
         if (request.readyState == 4) {
           if (callbacks.hasOwnProperty(request.status)) {
             callbacks[request.status](request.responseText, request);
+          } else {
+            callbacks[0](request.responseText, request);
           }
         }
       };
@@ -823,5 +828,4 @@ wkhomeControllers.controller('authorVal', ['$rootScope', '$scope', 'cookies', '$
       return data;
     }
   }]);
-
 

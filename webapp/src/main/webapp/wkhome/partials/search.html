@@ -1,98 +1,100 @@
+<div style="display:flex;" >
 
-<div class="col-md-12" ng-controller="exploreAuthor" style="padding: 0px;margin: 0px;" >
+  <div class="col-md-12" ng-controller="exploreAuthor" style="padding: 0px;margin: 0px;" >
 
     <div id="scrollToTop"></div>
 
     <div  class="search left col-md-2">
-        <br/>
+      <br/>
 
-        <div  class="tree-node-author-info"  ng-controller="translate" style="height:100vh">
-            <h4 class="search subtitulo" >{{'coauthor' | translate}}</h4>
-            <div class="authorsByPublications">
-                <!-- <span style="font-weigth:bold">Title: </span> -->
-                <div id="title" style="font-size:50pt"></div>
-                <a href="" target="_blank"></a>
-            </div>
-            <hr>
-            <h4 class="search subtitulo">{{'relatedauthors' | translate}}</h4>
-            <a class="btn btn-default center-block viewallrelatedauthors" target="blank"  ng-click="buildnetworks()">{{'see.all' | translate}}</a>
-            <div class="authorsByClusters">
-                <!-- <span style="font-weigth:bold">Title: </span> -->
-                <div id="title" style="font-size:50pt"></div>
-                <a href="" target="_blank"></a>
-            </div>
+      <div  class="tree-node-author-info"  ng-controller="translate" style="height:100vh">
+        <h4 class="search subtitulo" >{{'coauthor'| translate}}</h4>
+        <div class="authorsByPublications">
+          <!-- <span style="font-weigth:bold">Title: </span> -->
+          <div id="title" style="font-size:50pt"></div>
+          <a href="" target="_blank"></a>
         </div>
+        <hr>
+        <h4 class="search subtitulo">{{'relatedauthors'| translate}}</h4>
+        <a class="btn btn-default center-block viewallrelatedauthors" target="blank"  ng-click="buildnetworks()">{{'see.all'| translate}}</a>
+        <div class="authorsByClusters">
+          <!-- <span style="font-weigth:bold">Title: </span> -->
+          <div id="title" style="font-size:50pt"></div>
+          <a href="" target="_blank"></a>
+        </div>
+      </div>
 
     </div>
     <div  class="col-md-7">
-        <div class="container-fluid"  >
-            <div class="row">
-                <div class="col-md-12">
-                </div>
-                <div class="col-md-12">
-                    <explorable-tree data="data" class="tree-main-container" style="display:block; height:100vh; background-color: #F7F8E0"  ifright-Click="ifrightClick(value)"  clickon-Relatedauthor="clickonRelatedauthor(value)" ng-model="value" publication="publication"></explorable-tree>
-                </div>
-            </div>
+      <div class="container-fluid"  >
+        <div class="row">
+          <div class="col-md-12">
+          </div>
+          <div class="col-md-12">
+            <explorable-tree data="data" class="tree-main-container" style="display:block; height:100vh; background-color: #F7F8E0"  ifright-Click="ifrightClick(value)"  clickon-Relatedauthor="clickonRelatedauthor(value)" ng-model="value" publication="publication"></explorable-tree>
+          </div>
         </div>
+      </div>
     </div>
     <div class="col-md-3 panelderecho" style="height:200vh; background-color: #F7F8E0" >
-        <div class="col-md-12">
-            <center><h4 class="search" ng-controller="translate">{{'Research Info'| translate}}</h4></center>
-            <div class="authorinfo">
+      <div class="col-md-12">
+        <center><h4 class="search" ng-controller="translate">{{'Research Info'| translate}}</h4></center>
+        <div class="authorinfo">
 
-            </div>
-            <center><a ng-click="clickPublications()">{{ 'list.pub' | translate }}</a></center>
-            <hr>
-            <div ng-controller="exportController" style="padding: 0px;">
-              <h3 style="padding: 3%">{{'Export pub'| translate }}</h3>
-              <button ng-click="exportData('pdf', 'ReportAuthor', authorId)" title="Export Author Info to PDF">
-                  <img src="./resources/pdf.png" height="36" width="36" />
-              </button>
-              <button ng-click="exportData('xls', 'ReportAuthor', authorId)" title="Export Author Info to Excel" >
-                  <img src="./resources/excel.png" height="36" width="36" />
-              </button>
-              <br/>
-              <p ng-show="loading"><img src="./resources/loading.gif" align="middle" height="20" width="20"> Loading report...</p>
-            </div>
         </div>
-        <div class="col-md-12 tree-node-info" ng-controller="translate">
-            <div class="pubInfo" style="height:15vh">
-              <center><h4 class="search" ng-show="publication">{{'Article Info'| translate}}</h4></center>
-              <h3><span class="row pub-title"><a href="{{publication.id}}" target="_blank">{{publication.title}}</a></span></h3>
-              <p ng-show="publication.abstract">
-                <hm-read-more
-                    hm-text="{{publication.abstract}}" hm-limit="300" hm-more-text="{{ 'read.more' | translate }}"
-                    hm-less-text="{{ 'read.less' | translate}}" hm-dots-class="dots" hm-link-class="links">
-                  </hm-read-more>
-              </p>
-              <div class="row pub-keywords"><small class="label label-default" ng-repeat="keyword in publication.subjects">{{keyword}}</small></div>
-              <div class="row pub-authors"><small ng-repeat="author in publication.authors"><a href="{{author['@id']}}" target="_blank">{{author['foaf:name']}}{{$last ? '' : ', '}}</a></small></div>
-              <div class="row">
-                <small class="pub-pages" ng-show="publication.pages"><strong>{{'pages' | translate}}:</strong>{{publication.pages}}</small>
-                <small class="pub-created" ng-show="publication.created"><strong>{{'created' | translate}}:</strong>{{publication.created}}</small>
-                <small class="pub-doi" ng-show="publication.doi"><strong>DOI:</strong>{{publication.doi}}</small>
-                <small class="pub-issue" ng-show="publication.issue"><strong>{{'issue' | translate}}:</strong>{{publication.issue}}</small>
-                <small class="pub-volume" ng-show="publication.volume"><strong>{{'volume' | translate}}:</strong>{{publication.volume}}</small>
-                <small class="pub-publisher" ng-show="publication.publisher"><strong>{{'publisher' | translate}}:</strong>{{publication.publisher}}</small>
-                <br/>
-                <small class="jor-journal" ng-show="publication.journal.id">
-                  <strong>{{'journal' | translate}}:</strong>
-                  <a target="_blank" href="{{publication.journal.journalURL}}">{{publication.journal.journalName}}</a></small>
-                  <img ng-src="{{publication.journal.journalProvenanceIcon.img}}" ng-show="publication.journal.journalProvenanceIcon.img" alt="{{publication.journal.journalProvenanceIcon.label}}" width="75" height="20" class="img-rounded"/>
-              </div>
-              <div class="row pub-url" ng-show="publication.uri">
-                <a href="{{uri['@id']}}" target="_blank" class="btn btn-default btn-xs col-md-2" role="button" ng-repeat="uri in publication.uri">
-                  <img ng-src="{{uri.img}}" alt="{{uri.label}}" width="25" height="25" class="img-rounded"/>
-                </a>
-              </div>
-              <br>
-              <div class="row pub-format" ng-show="publication.formats" style="display: flex; align-items: center;">
-                <span class="label label-primary col-md-2" ng-show="publication.formats">Export:</span>
-                <a href="{{format.url}}" target="_blank" class="btn btn-default btn-sm col-md-2" ng-repeat="format in publication.formats">
-                  <img ng-src="{{format.img}}" alt="{{format.label}}" width="35" height="35"/>
-                </a>
-              </div>
-            </div>
+        <center><a ng-click="clickPublications()">{{ 'list.pub' | translate }}</a></center>
+        <hr>
+        <div ng-controller="exportController" style="padding: 0px;">
+          <h3 style="padding: 3%">{{'Export pub'| translate }}</h3>
+          <button ng-click="exportData('pdf', 'ReportAuthor', authorId)" title="Export Author Info to PDF">
+            <img src="./resources/pdf.png" height="36" width="36" />
+          </button>
+          <button ng-click="exportData('xls', 'ReportAuthor', authorId)" title="Export Author Info to Excel" >
+            <img src="./resources/excel.png" height="36" width="36" />
+          </button>
+          <br/>
+          <p ng-show="loading"><img src="./resources/loading.gif" align="middle" height="20" width="20"> Loading report...</p>
         </div>
+      </div>
+      <div class="col-md-12 tree-node-info" ng-controller="translate">
+        <div class="pubInfo" style="height:15vh">
+          <center><h4 class="search" ng-show="publication">{{'Article Info'| translate}}</h4></center>
+          <h3><span class="row pub-title"><a href="{{publication.id}}" target="_blank">{{publication.title}}</a></span></h3>
+          <p ng-show="publication.abstract">
+          <hm-read-more
+            hm-text="{{publication.abstract}}" hm-limit="300" hm-more-text="{{ 'read.more' | translate }}"
+            hm-less-text="{{ 'read.less' | translate}}" hm-dots-class="dots" hm-link-class="links">
+          </hm-read-more>
+          </p>
+          <div class="row pub-keywords"><small class="label label-default" ng-repeat="keyword in publication.subjects">{{keyword}}</small></div>
+          <div class="row pub-authors"><small ng-repeat="author in publication.authors"><a href="{{author['@id']}}" target="_blank">{{author['foaf:name']}}{{$last ? '' : ', '}}</a></small></div>
+          <div class="row">
+            <small class="pub-pages" ng-show="publication.pages"><strong>{{'pages'| translate}}:</strong>{{publication.pages}}</small>
+            <small class="pub-created" ng-show="publication.created"><strong>{{'created'| translate}}:</strong>{{publication.created}}</small>
+            <small class="pub-doi" ng-show="publication.doi"><strong>DOI:</strong>{{publication.doi}}</small>
+            <small class="pub-issue" ng-show="publication.issue"><strong>{{'issue'| translate}}:</strong>{{publication.issue}}</small>
+            <small class="pub-volume" ng-show="publication.volume"><strong>{{'volume'| translate}}:</strong>{{publication.volume}}</small>
+            <small class="pub-publisher" ng-show="publication.publisher"><strong>{{'publisher'| translate}}:</strong>{{publication.publisher}}</small>
+            <br/>
+            <small class="jor-journal" ng-show="publication.journal.id">
+              <strong>{{'journal'| translate}}:</strong>
+              <a target="_blank" href="{{publication.journal.journalURL}}">{{publication.journal.journalName}}</a></small>
+            <img ng-src="{{publication.journal.journalProvenanceIcon.img}}" ng-show="publication.journal.journalProvenanceIcon.img" alt="{{publication.journal.journalProvenanceIcon.label}}" width="75" height="20" class="img-rounded"/>
+          </div>
+          <div class="row pub-url" ng-show="publication.uri">
+            <a href="{{uri['@id']}}" target="_blank" class="btn btn-default btn-xs col-md-2" role="button" ng-repeat="uri in publication.uri">
+              <img ng-src="{{uri.img}}" alt="{{uri.label}}" width="25" height="25" class="img-rounded"/>
+            </a>
+          </div>
+          <br>
+          <div class="row pub-format" ng-show="publication.formats" style="display: flex; align-items: center;">
+            <span class="label label-primary col-md-2" ng-show="publication.formats">Export:</span>
+            <a href="{{format.url}}" target="_blank" class="btn btn-default btn-sm col-md-2" ng-repeat="format in publication.formats">
+              <img ng-src="{{format.img}}" alt="{{format.label}}" width="35" height="35"/>
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>

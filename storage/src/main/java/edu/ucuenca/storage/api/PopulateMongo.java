@@ -13,52 +13,51 @@ import org.apache.marmotta.platform.core.exception.MarmottaException;
  */
 public interface PopulateMongo {
 
-    /**
-     * Load information of authors in collection authors.
-     */
-    public void authors();
+  /**
+   * Load information of authors in collection authors.
+   */
+  public void authors(String uri);
 
-    /**
-     * Load information of publications in collection publications.
-     */
-    public void publications();
+  /**
+   * Load information of publications in collection publications.
+   */
+  public void publications();
 
-    /**
-     * Load aggregations for statistics of publications/keywords/authors and
-     * store areas with a frequency greater than 4.F
-     */
-    public void statistics();
+  /**
+   * Load aggregations for statistics of publications/keywords/authors and store
+   * areas with a frequency greater than 4.F
+   */
+  public void statistics();
 
-    /**
-     * Pre-calculate information to network building.
-     */
-    public void networks();
+  /**
+   * Pre-calculate information to network building.
+   */
+  public void networks();
 
-    /**
-     * Information of clusters and subclusters.
-     */
-    public void clusters();
-    
+  /**
+   * Information of clusters and subclusters.
+   */
+  public void clusters();
 
+  /**
+   * Information of authors by area.
+   */
+  public void authorsByArea();
 
-    /**
-     * Information of authors by area.
-     */
-    public void authorsByArea();
-    
-    
-     public void authorsByDiscipline();
-    
-    /**
-     * Information countries for map
-     */
-    public void Countries ();
-    
-    public void cleanSPARQLS();
-    
-    public void LoadStatisticsbyInst();
-    
-    public String getStatsbyAuthor();
-    
-    public void LoadStatisticsbyAuthor();
+  public void authorsByDiscipline();
+
+  /**
+   * Information countries for map
+   */
+  public void Countries();
+
+  public void cleanSPARQLS();
+
+  public void LoadStatisticsbyInst();
+
+  public String getStatsbyAuthor();
+
+  public void LoadStatisticsbyAuthor();
+
+  public void populatePublicationTranslations();
 }

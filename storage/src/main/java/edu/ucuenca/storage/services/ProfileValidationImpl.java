@@ -5,10 +5,12 @@
  */
 package edu.ucuenca.storage.services;
 
+import at.newmedialab.lmf.search.api.indexing.SolrIndexingService;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import edu.ucuenca.storage.api.MongoService;
+import edu.ucuenca.storage.api.PopulateMongo;
 import javax.enterprise.context.ApplicationScoped;
 import edu.ucuenca.storage.api.ProfileValidation;
 import java.util.ArrayList;
@@ -17,18 +19,29 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.marmotta.commons.vocabulary.FOAF;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
+import org.apache.marmotta.platform.core.api.triplestore.SesameService;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
+import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 import org.bson.Document;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
+import org.openrdf.model.Model;
+import org.openrdf.model.URI;
+import org.openrdf.model.impl.LinkedHashModel;
+import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.model.Value;
+import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.query.QueryLanguage;
+import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryException;
+import org.openrdf.rio.RDFHandlerException;
+import org.slf4j.Logger;
 
 /**
  *
@@ -38,15 +51,34 @@ import org.openrdf.query.QueryLanguage;
 public class ProfileValidationImpl implements ProfileValidation {
 
   @Inject
+  private Logger log;
+
+  @Inject
   private ConfigurationService conf;
 
   @Inject
   private SparqlService sparqlService;
+
+  @Inject
+  private ExternalSPARQLService fastSparqlService;
+
   @Inject
   private ConstantService con;
 
   @Inject
   private MongoService mongos;
+
+  @Inject
+  private ConstantService constantService;
+
+  @Inject
+  private SolrIndexingService solrIndexingService;
+
+  @Inject
+  private SesameService sesameService;
+
+  @Inject
+  private PopulateMongo loadService;
 
   @Override
   public JSONObject getProfileInst(String uri) {
@@ -85,7 +117,7 @@ public class ProfileValidationImpl implements ProfileValidation {
       return main;
 
     } catch (MarmottaException ex) {
-      Logger.getLogger(ProfileValidationImpl.class.getName()).log(Level.SEVERE, null, ex);
+      log.debug(ex.getMessage());
     }
 
     return null;
@@ -138,7 +170,7 @@ public class ProfileValidationImpl implements ProfileValidation {
       return main;
 
     } catch (MarmottaException ex) {
-      Logger.getLogger(ProfileValidationImpl.class.getName()).log(Level.SEVERE, null, ex);
+      log.debug(ex.getMessage());
     }
     return null;
   }
@@ -167,7 +199,7 @@ public class ProfileValidationImpl implements ProfileValidation {
       return unifiednames(names, table);
 
     } catch (MarmottaException ex) {
-      Logger.getLogger(ProfileValidationImpl.class.getName()).log(Level.SEVERE, null, ex);
+      log.debug(ex.getMessage());
     }
     return null;
   }
@@ -238,7 +270,7 @@ public class ProfileValidationImpl implements ProfileValidation {
       return main;
 
     } catch (MarmottaException ex) {
-      Logger.getLogger(ProfileValidationImpl.class.getName()).log(Level.SEVERE, null, ex);
+      log.debug(ex.getMessage());
     }
 
     return null;
@@ -292,7 +324,7 @@ public class ProfileValidationImpl implements ProfileValidation {
       return main;
 
     } catch (MarmottaException ex) {
-      Logger.getLogger(ProfileValidationImpl.class.getName()).log(Level.SEVERE, null, ex);
+      log.debug(ex.getMessage());
     }
     return null;
   }
@@ -354,7 +386,60 @@ public class ProfileValidationImpl implements ProfileValidation {
       parse.append("profile", parseprof);
       collection.insertOne(parse);
 
-      return "";
+      if (uri.compareTo("new_") == 0) {
+        updateAuthor(id, parseprof);
+      }
+
+    } catch (Exception ex) {
+      log.info("Error updating author profile {}, {}", id, ex.getMessage());
+    }
+    return "";
+  }
+
+  public void updateAuthor(String orcid, Document profile) throws RepositoryException, RDFHandlerException, InterruptedException {
+    String org = profile.getString("org");
+    String fullname = profile.getString("name");
+    String fname = profile.getString("fname");
+    String lname = profile.getString("lname");
+    String mail = profile.getString("email");
+    String bio = profile.getString("bio");
+    String img = profile.getString("img");
+    boolean orgOk = false;
+    try {
+      orgOk = fastSparqlService.getSparqlService()
+              .ask(QueryLanguage.SPARQL, "ask { graph <" + constantService.getOrganizationsGraph() + "> { <" + org + "> ?p ?v .  }} ");
+    } catch (MarmottaException ex) {
+    }
+
+    if (orgOk) {
+      Model m = new LinkedHashModel();
+      ValueFactoryImpl vfi = ValueFactoryImpl.getInstance();
+      String orgx = org.replaceAll(constantService.getOrganizationBaseUri(), "");
+      URI authURI = vfi.createURI(constantService.getAuthorResource() + "orcid/" + orgx + "/" + orcid);
+      m.add(authURI, RDF.TYPE, FOAF.Person);
+      m.add(authURI, FOAF.name, vfi.createLiteral(fullname));
+      m.add(authURI, FOAF.firstName, vfi.createLiteral(fname));
+      m.add(authURI, FOAF.lastName, vfi.createLiteral(lname));
+      m.add(authURI, vfi.createURI("http://www.w3.org/2006/vcard/ns#hasEmail"), vfi.createLiteral(mail));
+      m.add(authURI, vfi.createURI("http://purl.org/spar/scoro/hasORCID"), vfi.createURI("https://orcid.org/" + orcid));
+      m.add(authURI, vfi.createURI("http://purl.org/vocab/bio/0.1/olb"), vfi.createLiteral(bio));
+      m.add(authURI, vfi.createURI("http://xmlns.com/foaf/0.1/img"), vfi.createURI(img));
+      m.add(authURI, vfi.createURI("http://schema.org/memberOf"), vfi.createURI(org));
+      m.add(authURI, RDF.TYPE, vfi.createURI("http://semanticweb.cs.vu.nl/2009/11/sem/Temporary"));
+
+      URI contxRedi = vfi.createURI(constantService.getCentralGraph());
+      RepositoryConnection connection = sesameService.getConnection();
+      connection.begin();
+      connection.add(m, contxRedi);
+      connection.commit();
+      connection.close();
+      fastSparqlService.getGraphDBInstance().addBuffer(contxRedi, m);
+      fastSparqlService.getGraphDBInstance().dumpBuffer();
+      solrIndexingService.indexResource(authURI);
+      loadService.authors(authURI.stringValue());
+
+    } else {
+      log.info("Ignoring new author {} from {}", orcid, org);
     }
 
   }
@@ -437,7 +522,7 @@ public class ProfileValidationImpl implements ProfileValidation {
       main.put("subclusters", clus);
       return main;
     } catch (MarmottaException ex) {
-      Logger.getLogger(ProfileValidationImpl.class.getName()).log(Level.SEVERE, null, ex);
+      log.debug(ex.getMessage());
     }
     return null;
   }

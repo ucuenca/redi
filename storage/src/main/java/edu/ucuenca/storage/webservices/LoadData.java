@@ -34,119 +34,132 @@ import org.slf4j.Logger;
 @ApplicationScoped
 public class LoadData {
 
-    @Inject
-    private PopulateMongo loadService;
-    @Inject
-    private Logger log;
+  @Inject
+  private PopulateMongo loadService;
+  @Inject
+  private Logger log;
 
-    @POST
-    @Path("/authors")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAuthor() throws FailMongoConnectionException {
-        try {
-            loadService.authors();
-        } catch (Exception e) {
-            log.error("Cannot load authors into Mongo DB", e);
-            throw new FailMongoConnectionException(String.format("Cannot load authors into Mongo DB"), e);
-        }
-        return Response.ok().entity("Authors load successfully").build();
+  @POST
+  @Path("/authors")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getAuthor() throws FailMongoConnectionException {
+    try {
+      loadService.authors(null);
+    } catch (Exception e) {
+      log.error("Cannot load authors into Mongo DB", e);
+      throw new FailMongoConnectionException(String.format("Cannot load authors into Mongo DB"), e);
     }
+    return Response.ok().entity("Authors load successfully").build();
+  }
 
-    @POST
-    @Path("/statistics")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getStatistics() throws FailMongoConnectionException {
-        try {
-            loadService.statistics();
-            loadService.cleanSPARQLS();
-        } catch (Exception e) {
-            log.error("Cannot load statistics into Mongo DB", e);
-            throw new FailMongoConnectionException(String.format("Cannot load statistics into Mongo DB"), e);
-        }
-        return Response.ok().entity("Statistics load successfully").build();
+  @POST
+  @Path("/statistics")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getStatistics() throws FailMongoConnectionException {
+    try {
+      loadService.statistics();
+      loadService.cleanSPARQLS();
+    } catch (Exception e) {
+      log.error("Cannot load statistics into Mongo DB", e);
+      throw new FailMongoConnectionException(String.format("Cannot load statistics into Mongo DB"), e);
     }
-    
-      @POST
-    @Path("/statisticsbyInst")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getStatisticsbyInst() throws FailMongoConnectionException {
-        try {
-            loadService.LoadStatisticsbyInst();
-           
-        } catch (Exception e) {
-            log.error("Cannot load statistics by Inst into Mongo DB", e);
-            throw new FailMongoConnectionException(String.format("Cannot load statistics into Mongo DB"), e);
-        }
-        return Response.ok().entity("Statistics load successfully").build();
-    }
+    return Response.ok().entity("Statistics load successfully").build();
+  }
 
+  @POST
+  @Path("/statisticsbyInst")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getStatisticsbyInst() throws FailMongoConnectionException {
+    try {
+      loadService.LoadStatisticsbyInst();
 
-    @POST
-    @Path("/clusters")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getClusters() throws FailMongoConnectionException {
-        try {
-            loadService.clusters();
-            loadService.Countries();
-        } catch (Exception e) {
-            log.error("Cannot load clusters into Mongo DB", e);
-            throw new FailMongoConnectionException(String.format("Cannot load clusters into Mongo DB"), e);
-        }
-        return Response.ok().entity("Clusters loaded successfully").build();
+    } catch (Exception e) {
+      log.error("Cannot load statistics by Inst into Mongo DB", e);
+      throw new FailMongoConnectionException(String.format("Cannot load statistics into Mongo DB"), e);
     }
-    
-    @POST
-    @Path("/countries")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getCountries() throws FailMongoConnectionException {
-        try {
-            loadService.Countries();
-        } catch (Exception e) {
-            log.error("Cannot load countries and countries into Mongo DB", e);
-            throw new FailMongoConnectionException(String.format("Cannot load countries into Mongo DB"), e);
-        }
-        return Response.ok().entity("countries and countries loaded successfully").build();
-    }
+    return Response.ok().entity("Statistics load successfully").build();
+  }
 
-    @POST
-    @Path("/networks")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response loadNetworks() throws FailMongoConnectionException {
-        try {
-            loadService.networks();
-        } catch (Exception e) {
-            log.error("Cannot load pre-calculated networks into Mongo DB", e);
-            throw new FailMongoConnectionException(String.format("Cannot load pre-calculated networks into Mongo DB"), e);
-        }
-        return Response.ok().entity("Statistics load successfully").build();
+  @POST
+  @Path("/clusters")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getClusters() throws FailMongoConnectionException {
+    try {
+      loadService.clusters();
+      loadService.Countries();
+    } catch (Exception e) {
+      log.error("Cannot load clusters into Mongo DB", e);
+      throw new FailMongoConnectionException(String.format("Cannot load clusters into Mongo DB"), e);
     }
+    return Response.ok().entity("Clusters loaded successfully").build();
+  }
 
-    @POST
-    @Path("/author-by-area")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response loadAuthorByArea() throws FailMongoConnectionException {
-        try {
-            loadService.authorsByDiscipline();
-            loadService.authorsByArea();
-        } catch (Exception e) {
-            log.error("Cannot load authors by area into Mongo DB", e);
-            throw new FailMongoConnectionException(String.format("Cannot load authors by area into Mongo DB"), e);
-        }
-        return Response.ok().entity("Authors by area were successfully loaded into MongoDB").build();
+  @POST
+  @Path("/countries")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getCountries() throws FailMongoConnectionException {
+    try {
+      loadService.Countries();
+    } catch (Exception e) {
+      log.error("Cannot load countries and countries into Mongo DB", e);
+      throw new FailMongoConnectionException(String.format("Cannot load countries into Mongo DB"), e);
     }
-    
-    @POST
-    @Path("/statisticsbyAuthor")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response loadAuthorStats() throws FailMongoConnectionException {
-        try {
-         
-            loadService.LoadStatisticsbyAuthor();
-        } catch (Exception e) {
-            log.error("Cannot load authors stats into Mongo DB", e);
-            throw new FailMongoConnectionException(String.format("Cannot load authors by area into Mongo DB"), e);
-        }
-        return Response.ok().entity("Authors by area were successfully loaded into MongoDB").build();
+    return Response.ok().entity("countries and countries loaded successfully").build();
+  }
+
+  @POST
+  @Path("/networks")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response loadNetworks() throws FailMongoConnectionException {
+    try {
+      loadService.networks();
+    } catch (Exception e) {
+      log.error("Cannot load pre-calculated networks into Mongo DB", e);
+      throw new FailMongoConnectionException(String.format("Cannot load pre-calculated networks into Mongo DB"), e);
     }
+    return Response.ok().entity("Statistics load successfully").build();
+  }
+
+  @POST
+  @Path("/author-by-area")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response loadAuthorByArea() throws FailMongoConnectionException {
+    try {
+      loadService.authorsByDiscipline();
+      loadService.authorsByArea();
+    } catch (Exception e) {
+      log.error("Cannot load authors by area into Mongo DB", e);
+      throw new FailMongoConnectionException(String.format("Cannot load authors by area into Mongo DB"), e);
+    }
+    return Response.ok().entity("Authors by area were successfully loaded into MongoDB").build();
+  }
+
+  @POST
+  @Path("/statisticsbyAuthor")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response loadAuthorStats() throws FailMongoConnectionException {
+    try {
+
+      loadService.LoadStatisticsbyAuthor();
+    } catch (Exception e) {
+      log.error("Cannot load authors stats into Mongo DB", e);
+      throw new FailMongoConnectionException(String.format("Cannot load authors by area into Mongo DB"), e);
+    }
+    return Response.ok().entity("Authors by area were successfully loaded into MongoDB").build();
+  }
+
+  @POST
+  @Path("/translatebyPublication")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response loadTranslatebyPublication() throws FailMongoConnectionException {
+    try {
+
+      loadService.populatePublicationTranslations();
+    } catch (Exception e) {
+      log.error("Cannot load publications tranlation into Mongo DB", e);
+      throw new FailMongoConnectionException(String.format("Cannot load publications tranlation Mongo DB"), e);
+    }
+    return Response.ok().entity("Publications tranlation were successfully loaded into MongoDB").build();
+  }
 
 }

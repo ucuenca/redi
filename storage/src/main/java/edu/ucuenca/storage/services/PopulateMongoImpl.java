@@ -27,8 +27,10 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import static com.mongodb.client.model.Filters.eq;
 import edu.ucuenca.storage.api.MongoService;
 import edu.ucuenca.storage.api.PopulateMongo;
+import edu.ucuenca.storage.utils.TranslatorManager;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
@@ -51,6 +53,7 @@ import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
+import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.DistanceService;
 import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 import org.apache.marmotta.ucuenca.wk.commons.util.BoundedExecutor;
@@ -59,7 +62,11 @@ import org.bson.Document;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.openrdf.model.Literal;
+import org.openrdf.model.Model;
+import org.openrdf.model.URI;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.LinkedHashModel;
+import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
@@ -99,6 +106,12 @@ public class PopulateMongoImpl implements PopulateMongo {
   private DistanceService distservice;
   @Inject
   private TaskManagerService taskManagerService;
+
+  @Inject
+  private TranslatorManager trService;
+
+  @Inject
+  private ConstantService conService;
 
   private static final Map context = new HashMap();
 
@@ -208,14 +221,24 @@ public class PopulateMongoImpl implements PopulateMongo {
   }
 
   @Override
-  public void authors() {
+  public void authors(String uri) {
     final Task task = taskManagerService.createSubTask("Caching authors profiles", "Mongo Service");
     try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
       MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
       // Delete and create collection
       final MongoCollection<Document> collection = db.getCollection(MongoService.Collection.AUTHORS.getValue());
-      collection.drop();
-      final List<Map<String, Value>> authorsRedi = sparqlService.query(QueryLanguage.SPARQL, queriesService.getAuthorsCentralGraph());
+      List<Map<String, Value>> authorsRedi2;
+      if (uri != null) {
+        Document pk = new Document();
+        pk.put("_id", uri);
+        collection.deleteOne(pk);
+        authorsRedi2 = sparqlService.query(QueryLanguage.SPARQL, "select ?a { values ?a { <" + uri + "> } . }");
+      } else {
+        collection.drop();
+        authorsRedi2 = sparqlService.query(QueryLanguage.SPARQL, queriesService.getAuthorsCentralGraph());
+      }
+
+      final List<Map<String, Value>> authorsRedi = authorsRedi2;
       task.updateTotalSteps(authorsRedi.size());
       BoundedExecutor threadPool = BoundedExecutor.getThreadPool(5);
       for (int i = 0; i < authorsRedi.size(); i++) {
@@ -1120,6 +1143,90 @@ public class PopulateMongoImpl implements PopulateMongo {
 
     }
 
+  }
+
+  @Override
+  public void populatePublicationTranslations() {
+    final Task task = taskManagerService.createSubTask("Translating publications", "Mongo Service");
+    try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
+      MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
+      MongoCollection<Document> collection = db.getCollection(MongoService.Collection.TRANSLATIONS.getValue());
+      try {
+
+        //get publications ids
+        List<Map<String, Value>> pubs = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                + "PREFIX bibo: <http://purl.org/ontology/bibo/>\n"
+                + "select distinct ?p {\n"
+                + "    graph <" + conService.getCentralGraph() + "> {\n"
+                + "    	?p a bibo:AcademicArticle .\n"
+                + "    	?p dct:subject [] .\n"
+                + "        [] foaf:publications ?p .\n"
+                + "    }\n"
+                + "}");
+        ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
+        int i = 0;
+        task.updateTotalSteps(pubs.size());
+        for (Map<String, Value> pub : pubs) {
+          i++;
+          task.updateProgress(i);
+          String pURI = pub.get("p").stringValue();
+          URI createURI = instance.createURI(pURI);
+          URI translation = instance.createURI("http://ucuenca.edu.ec/ontology#translation");
+          boolean ask = fastSparqlService.getSparqlService().ask(QueryLanguage.SPARQL, "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                  + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                  + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                  + "PREFIX bibo: <http://purl.org/ontology/bibo/>\n"
+                  + "ask {\n"
+                  + "    graph <" + conService.getCentralGraph() + "> {\n"
+                  + "    	<" + pURI + "> <" + translation.stringValue() + "> [] .\n"
+                  + "    }\n"
+                  + "}");
+          if (ask) {
+            log.info("Translating (skip)... {}", pURI);
+            continue;
+          } else {
+            log.info("Translating ... {}", pURI);
+          }
+          //get kws by id
+          List<Map<String, Value>> kws = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                  + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                  + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                  + "PREFIX bibo: <http://purl.org/ontology/bibo/>\n"
+                  + "select distinct ?k {\n"
+                  + "    graph <" + conService.getCentralGraph() + "> {\n"
+                  + "    	<" + pURI + "> dct:subject ?s .\n"
+                  + "        ?s rdfs:label ?k .\n"
+                  + "    }\n"
+                  + "}");
+          String txtVal = "";
+          for (Map<String, Value> kw : kws) {
+            txtVal += kw.get("k").stringValue() + " ;;; ";
+          }
+          String traductor = "";
+          boolean hasNext = collection.find(eq("_id", txtVal.hashCode())).iterator().hasNext();
+          if (!hasNext) {
+            traductor = trService.traductor(txtVal);
+            traductor = traductor.replaceAll("context ;;;", "").trim();
+            traductor = traductor.replaceAll(";;;", " ; ");
+            Document dc = new Document();
+            dc.put("_id", txtVal.hashCode());
+            dc.put("txt", traductor);
+            collection.insertOne(dc);
+          }
+          Document first = collection.find(eq("_id", txtVal.hashCode())).first();
+          traductor = first.getString("txt");
+          Model md = new LinkedHashModel();
+          md.add(createURI, translation, instance.createLiteral(traductor));
+          fastSparqlService.getGraphDBInstance().addBuffer(instance.createURI(conService.getCentralGraph()), md);
+          fastSparqlService.getGraphDBInstance().dumpBuffer();
+        }
+      } catch (Exception ex) {
+        log.error(ex.getMessage());
+      }
+    }
+    taskManagerService.endTask(task);
   }
 
   class SynchronizedParse {
