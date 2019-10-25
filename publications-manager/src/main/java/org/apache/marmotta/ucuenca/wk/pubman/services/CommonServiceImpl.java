@@ -627,9 +627,11 @@ public class CommonServiceImpl implements CommonService {
             + "   <" + clusterUri + "> a uc:Cluster .\n"
             + "   ?x dct:isPartOf <" + clusterUri + "> .\n"
             + "   ?x dct:isPartOf ?sc .\n"
-            + "   ?x a foaf:Person .\n"
             + "   ?sc dct:isPartOf <" + clusterUri + ">;\n"
             + "       a uc:SubCluster.\n"
+            + "  }\n"
+            + "  GRAPH <" + con.getCentralGraph() + "> {\n"
+            + "   ?x a foaf:Person .\n"
             + "  }\n"
             + "}";
     try {
@@ -1382,7 +1384,7 @@ public class CommonServiceImpl implements CommonService {
     if (author.containsKey("names")) {
       a.setName(getUniqueName(author.get("names").stringValue(), "\\|"));
     }
-   
+
     if (author.containsKey("olb")) {
       a.setBio(author.get("olb").stringValue());
     }
