@@ -627,9 +627,11 @@ public class CommonServiceImpl implements CommonService {
             + "   <" + clusterUri + "> a uc:Cluster .\n"
             + "   ?x dct:isPartOf <" + clusterUri + "> .\n"
             + "   ?x dct:isPartOf ?sc .\n"
-            + "   ?x a foaf:Person .\n"
             + "   ?sc dct:isPartOf <" + clusterUri + ">;\n"
             + "       a uc:SubCluster.\n"
+            + "  }\n"
+            + "  GRAPH <" + con.getCentralGraph() + "> {\n"
+            + "   ?x a foaf:Person .\n"
             + "  }\n"
             + "}";
     try {
@@ -1204,7 +1206,7 @@ public class CommonServiceImpl implements CommonService {
               + "SELECT   ?names  ?orgnames ?members ?orcids ?imgs ?emails ?homepages ?citations ?hindexs ?i10indexs ?afs ?scs ?olb where { "
               + "GRAPH <" + con.getCentralGraph() + "> { "
               + " { "
-              + "   select ?olb (GROUP_CONCAT( DISTINCT ?name ;  SEPARATOR = \"|\") as ?names)  "
+              + "   select (GROUP_CONCAT( DISTINCT ?olbs ;  SEPARATOR = \"|\") as ?olb) (GROUP_CONCAT( DISTINCT ?name ;  SEPARATOR = \"|\") as ?names)  "
               + "   (GROUP_CONCAT( DISTINCT ?orcid ;  SEPARATOR = \"|\") as ?orcids  )  "
               + "   (GROUP_CONCAT( DISTINCT ?img ;  SEPARATOR = \"|\") as ?imgs  )  "
               + "   (GROUP_CONCAT( DISTINCT ?email ;  SEPARATOR = \"|\") as ?emails ) "
@@ -1228,7 +1230,7 @@ public class CommonServiceImpl implements CommonService {
               + "    <" + uri + "> foaf:img  ?img   "
               + "  } "
               + "  OPTIONAL{  "
-              + "    <" + uri + ">  <http://purl.org/vocab/bio/0.1/olb>  ?olb   "
+              + "    <" + uri + ">  <http://purl.org/vocab/bio/0.1/olb>  ?olbs   "
               + "  } "
               + "       OPTIONAL { "
               + "    <" + uri + "> vcard:hasEmail ?email "
@@ -1382,7 +1384,7 @@ public class CommonServiceImpl implements CommonService {
     if (author.containsKey("names")) {
       a.setName(getUniqueName(author.get("names").stringValue(), "\\|"));
     }
-   
+
     if (author.containsKey("olb")) {
       a.setBio(author.get("olb").stringValue());
     }
