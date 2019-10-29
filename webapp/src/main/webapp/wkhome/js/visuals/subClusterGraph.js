@@ -89,6 +89,7 @@ wkhomeApp.directive('subCluster', ["d3", 'globalData', 'sparqlQuery', '$routePar
       function renderCl(graph) {
         // var table = [];
         var clusters = [];
+        graph.nodes = graph.nodes.slice(0,2000);  // Limitar el numero de elementos
 
         maxRadius = 12 - Math.log(graph.nodes.length);
         padding = padding - graph.nodes.length / 200;
