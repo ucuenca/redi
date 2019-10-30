@@ -45,6 +45,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.logging.Level;
 import javax.enterprise.context.ApplicationScoped;
@@ -85,6 +86,7 @@ import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
 import org.slf4j.Logger;
+import scala.actors.threadpool.Arrays;
 
 /**
  *
@@ -1236,14 +1238,20 @@ public class PopulateMongoImpl implements PopulateMongo {
     taskManagerService.endTask(task);
   }
 
+  public String getRandomElement(List<String> list) {
+    Random rand = new Random();
+    return list.get(rand.nextInt(list.size()));
+  }
+
   @Override
   public void populatePublicationKeywords() {
+    String keys = conf.getStringConfiguration("refinitiv.tagging");
+    List<String> asList = Arrays.asList(keys.split(";"));
     final Task task = taskManagerService.createSubTask("Keywords extraction from publications", "Mongo Service");
     try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
       MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
       MongoCollection<Document> collection = db.getCollection(MongoService.Collection.TRANSLATIONS.getValue());
       try {
-
         //get publications ids
         List<Map<String, Value>> pubs = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
                 + "PREFIX bibo: <http://purl.org/ontology/bibo/>\n"
@@ -1313,7 +1321,7 @@ public class PopulateMongoImpl implements PopulateMongo {
               asJson = Unirest.post("https://api.thomsonreuters.com/permid/calais")
                       .header("Content-Type", "text/raw")
                       .header("Accept", "application/json")
-                      .header("x-ag-access-token", "DVwAPJRCCbwYOcJG0QnH85ODH83jNPT5")
+                      .header("x-ag-access-token", getRandomElement(asList))
                       .header("outputFormat", "application/json")
                       .body(txtVal)
                       .asJson();
