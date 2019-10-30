@@ -60,4 +60,6 @@ public interface PopulateMongo {
   public void LoadStatisticsbyAuthor();
 
   public void populatePublicationTranslations();
+  
+  public void populatePublicationKeywords();
 }

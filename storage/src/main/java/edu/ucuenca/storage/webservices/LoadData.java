@@ -155,6 +155,7 @@ public class LoadData {
     try {
 
       loadService.populatePublicationTranslations();
+      loadService.populatePublicationKeywords();
     } catch (Exception e) {
       log.error("Cannot load publications tranlation into Mongo DB", e);
       throw new FailMongoConnectionException(String.format("Cannot load publications tranlation Mongo DB"), e);
