@@ -147,16 +147,21 @@ rela.directive('relatedAuthor', ["d3", 'globalData', 'sparqlQuery', '$routeParam
         $("#colores").append("<li class='list-group-item'> <input type='checkbox' id='cmbRel' value='' checked> <svg height='5' width='8'> <line x1='0' y1='0' x2='10' y2='0' style='stroke:#999;stroke-width:3'/> </svg>  Related Author  </li>");
         $("#colores").append("<li class='list-group-item'> <input type='checkbox' id='cmbCoa' value='' checked> <svg height='5' width='8'> <line x1='0' y1='0' x2='10' y2='0' style='stroke:#999;stroke-width:10'/> </svg> Coauthor Relation  </li>");
 
+
+
         $("#colores").append("<li class='list-group-item' style='font-weight: bold' >  FILTROS  </li>");
+
         $("#colores").append("<li class='list-group-item'> <input type='range' min='1' max='100' value='40' class='slider' id='rangeNum'> </li>");
         $("#colores").append("<li class='list-group-item'> <span id ='uptoauth' > Limite: 40 autores</span> </li>");
 
         $("#colores").append("<li class='list-group-item' style='font-weight: bold' >  ORGANIZATIONS  </li>");
+
         for (var org in organization) {
           console.log(color(organization [org]));
           //  $( "#colores" ).append( "<span style='color:"+color (organization [org])+"'> &#9658 "+org+" </span> " );
           $("#colores").append("<li class='list-group-item organization'> <input type='checkbox' id='chkOrg_" + organization [org] + "' value='" + organization [org] + "' checked> <span class='badge ' id='leyend' style='color:" + color(organization [org]) + "' >&#9632 </span>" + org + " </li>");
         }
+
 
 
 
@@ -199,8 +204,9 @@ rela.directive('relatedAuthor', ["d3", 'globalData', 'sparqlQuery', '$routeParam
         svg_ = svg_ == null ? svg : svg_;
         svg = svg_;
         svg.selectAll("*").remove();
-        var width = +svg.attr("width");
-        var height = +svg.attr("height");
+        svg.style("height", window.screen.height * 0.75 + 'px');
+        var width = $("#svgXXX").width();
+        var height = window.screen.height * 0.75;//+svg.attr("height");
         var simulation = d3.layout.force()
                 .gravity(0.5).
                 linkDistance(function (d) {
@@ -237,7 +243,8 @@ rela.directive('relatedAuthor', ["d3", 'globalData', 'sparqlQuery', '$routeParam
         function showPopover(d) {
           console.log("OVER");
           $(this).popover({
-            placement: 'top',
+            placement: 'auto',
+            animation: false,
             container: 'body',
             trigger: 'manual',
             html: true,
