@@ -58,7 +58,7 @@ rela.directive('relatedAuthor', ["d3", 'globalData', 'sparqlQuery', '$routeParam
               for (var nod in Result.nodes) {
                 if (nod > 0) {
                   var nod_ = Result.nodes[nod];
-                  if (orgs && orgs.indexOf(nod_.group) > -1 || !orgs ) {
+                  if (orgs && orgs.indexOf(nod_.group) > -1 || !orgs) {
                   } else {
                     blck_node.push(nod_.id);
                   }
@@ -146,18 +146,18 @@ rela.directive('relatedAuthor', ["d3", 'globalData', 'sparqlQuery', '$routeParam
         $("#colores").append("<li class='list-group-item' style='font-weight: bold' >  LEYEND  </li>");
         $("#colores").append("<li class='list-group-item'> <input type='checkbox' id='cmbRel' value='' checked> <svg height='5' width='8'> <line x1='0' y1='0' x2='10' y2='0' style='stroke:#999;stroke-width:3'/> </svg>  Related Author  </li>");
         $("#colores").append("<li class='list-group-item'> <input type='checkbox' id='cmbCoa' value='' checked> <svg height='5' width='8'> <line x1='0' y1='0' x2='10' y2='0' style='stroke:#999;stroke-width:10'/> </svg> Coauthor Relation  </li>");
-        $("#colores").append("<li class='list-group-item' style='font-weight: bold' >  ORGANIZATIONS  </li>");
 
+        $("#colores").append("<li class='list-group-item' style='font-weight: bold' >  FILTROS  </li>");
+        $("#colores").append("<li class='list-group-item'> <input type='range' min='1' max='100' value='40' class='slider' id='rangeNum'> </li>");
+        $("#colores").append("<li class='list-group-item'> <span id ='uptoauth' > Limite: 40 autores</span> </li>");
+
+        $("#colores").append("<li class='list-group-item' style='font-weight: bold' >  ORGANIZATIONS  </li>");
         for (var org in organization) {
           console.log(color(organization [org]));
           //  $( "#colores" ).append( "<span style='color:"+color (organization [org])+"'> &#9658 "+org+" </span> " );
           $("#colores").append("<li class='list-group-item organization'> <input type='checkbox' id='chkOrg_" + organization [org] + "' value='" + organization [org] + "' checked> <span class='badge ' id='leyend' style='color:" + color(organization [org]) + "' >&#9632 </span>" + org + " </li>");
         }
 
-        $("#colores").append("<li class='list-group-item' style='font-weight: bold' >  FILTROS  </li>");
-
-        $("#colores").append("<li class='list-group-item'> <input type='range' min='1' max='100' value='40' class='slider' id='rangeNum'> </li>");
-        $("#colores").append("<li class='list-group-item'> <span id ='uptoauth' > Limite: 40 autores</span> </li>");
 
 
       }
