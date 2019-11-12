@@ -38,61 +38,63 @@ rela.directive('relatedAuthor', ["d3", 'globalData', 'sparqlQuery', '$routeParam
             if ("Error" in Result) {
               $('#relatedArea').css("display", "block");
             } else {
+              var cmbRel = true;
+              var cmbCoa = true;
+              var limit = 40;
+              var orgs = null;
               if (!labels) {
-
-                var cmbRel = $("#cmbRel").prop('checked');
-                var cmbCoa = $("#cmbCoa").prop('checked');
-                var limit = $("#rangeNum").prop('value');
-
-                var orgs = [];
+                cmbRel = $("#cmbRel").prop('checked');
+                cmbCoa = $("#cmbCoa").prop('checked');
+                limit = $("#rangeNum").prop('value');
+                orgs = [];
                 for (var org in organization) {
                   if ($("#chkOrg_" + organization [org]).prop('checked')) {
                     orgs.push(org);
                   }
                 }
-
-                var blck_node = [];
-                for (var nod in Result.nodes) {
-                  if (nod > 0) {
-                    var nod_ = Result.nodes[nod];
-                    if (orgs.indexOf(nod_.group) > -1) {
-                    } else {
-                      blck_node.push(nod_.id);
-                    }
-
-                  }
-                }
-                var blck_new_nod = [];
-                var new_nod = [];
-                for (var nod in Result.links) {
-                  var nod_ = Result.links[nod];
-                  var bbl = false;
-                  if ((cmbRel && nod_.coauthor == 'false') || (cmbCoa && nod_.coauthor == 'true')) {
-                    if (blck_node.indexOf(nod_.target) > -1) {
-                    } else {
-                      if (new_nod.length < limit) {
-                        new_nod.push(nod_);
-                        bbl = true;
-                      }
-                    }
-                  }
-                  if (!bbl) {
-                    blck_new_nod.push(nod_.target);
-                  }
-                }
-                console.log(blck_new_nod);
-                Result.links = new_nod;
-                var sssw = [];
-                for (var nod = 0; nod < Result.nodes.length; nod++) {
-                  var nod_ = Result.nodes[nod];
-                  if (blck_new_nod.indexOf(nod_.id) > -1) {
-                  } else {
-                    sssw.push(nod_);
-                  }
-                }
-                Result.nodes = sssw;
-
               }
+
+              var blck_node = [];
+              for (var nod in Result.nodes) {
+                if (nod > 0) {
+                  var nod_ = Result.nodes[nod];
+                  if (orgs && orgs.indexOf(nod_.group) > -1 || !orgs) {
+                  } else {
+                    blck_node.push(nod_.id);
+                  }
+                }
+              }
+              var blck_new_nod = [];
+              var new_nod = [];
+              for (var nod in Result.links) {
+                var nod_ = Result.links[nod];
+                var bbl = false;
+                if ((cmbRel && nod_.coauthor == 'false') || (cmbCoa && nod_.coauthor == 'true')) {
+                  if (blck_node.indexOf(nod_.target) > -1) {
+                  } else {
+                    if (new_nod.length < limit) {
+                      new_nod.push(nod_);
+                      bbl = true;
+                    }
+                  }
+                }
+                if (!bbl) {
+                  blck_new_nod.push(nod_.target);
+                }
+              }
+              console.log(blck_new_nod);
+              Result.links = new_nod;
+              var sssw = [];
+              for (var nod = 0; nod < Result.nodes.length; nod++) {
+                var nod_ = Result.nodes[nod];
+                if (blck_new_nod.indexOf(nod_.id) > -1) {
+                } else {
+                  sssw.push(nod_);
+                }
+              }
+              Result.nodes = sssw;
+
+
               console.log(Result);
               render(Result);
               if (labels) {
@@ -144,6 +146,14 @@ rela.directive('relatedAuthor', ["d3", 'globalData', 'sparqlQuery', '$routeParam
         $("#colores").append("<li class='list-group-item' style='font-weight: bold' >  LEYEND  </li>");
         $("#colores").append("<li class='list-group-item'> <input type='checkbox' id='cmbRel' value='' checked> <svg height='5' width='8'> <line x1='0' y1='0' x2='10' y2='0' style='stroke:#999;stroke-width:3'/> </svg>  Related Author  </li>");
         $("#colores").append("<li class='list-group-item'> <input type='checkbox' id='cmbCoa' value='' checked> <svg height='5' width='8'> <line x1='0' y1='0' x2='10' y2='0' style='stroke:#999;stroke-width:10'/> </svg> Coauthor Relation  </li>");
+
+
+
+        $("#colores").append("<li class='list-group-item' style='font-weight: bold' >  FILTROS  </li>");
+
+        $("#colores").append("<li class='list-group-item'> <input type='range' min='1' max='100' value='40' class='slider' id='rangeNum'> </li>");
+        $("#colores").append("<li class='list-group-item'> <span id ='uptoauth' > Limite: 40 autores</span> </li>");
+
         $("#colores").append("<li class='list-group-item' style='font-weight: bold' >  ORGANIZATIONS  </li>");
 
         for (var org in organization) {
@@ -152,10 +162,7 @@ rela.directive('relatedAuthor', ["d3", 'globalData', 'sparqlQuery', '$routeParam
           $("#colores").append("<li class='list-group-item organization'> <input type='checkbox' id='chkOrg_" + organization [org] + "' value='" + organization [org] + "' checked> <span class='badge ' id='leyend' style='color:" + color(organization [org]) + "' >&#9632 </span>" + org + " </li>");
         }
 
-        $("#colores").append("<li class='list-group-item' style='font-weight: bold' >  FILTROS  </li>");
 
-        $("#colores").append("<li class='list-group-item'> <input type='range' min='1' max='100' value='20' class='slider' id='rangeNum'> </li>");
-        $("#colores").append("<li class='list-group-item'> <span id ='uptoauth' > Limite: 20 autores</span> </li>");
 
 
       }
@@ -197,15 +204,16 @@ rela.directive('relatedAuthor', ["d3", 'globalData', 'sparqlQuery', '$routeParam
         svg_ = svg_ == null ? svg : svg_;
         svg = svg_;
         svg.selectAll("*").remove();
-        var width = +svg.attr("width");
-        var height = +svg.attr("height");
+        svg.style("height", window.screen.height * 0.75 + 'px');
+        var width = $("#svgXXX").width();
+        var height = window.screen.height * 0.75;//+svg.attr("height");
         var simulation = d3.layout.force()
-                .gravity(0.05).
+                .gravity(0.5).
                 linkDistance(function (d) {
                   console.log(d);
                   return distanceCalc(d.distance);
                 })
-                .charge(-700)
+                .charge(-2500)
                 .size([width, height]);
 
         function coauthorFactor(coauthor) {
@@ -235,7 +243,8 @@ rela.directive('relatedAuthor', ["d3", 'globalData', 'sparqlQuery', '$routeParam
         function showPopover(d) {
           console.log("OVER");
           $(this).popover({
-            placement: 'top',
+            placement: 'auto',
+            animation: false,
             container: 'body',
             trigger: 'manual',
             html: true,

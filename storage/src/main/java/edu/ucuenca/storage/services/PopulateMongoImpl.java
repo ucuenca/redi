@@ -23,6 +23,10 @@ import com.github.jsonldjava.core.JsonLdError;
 import com.github.jsonldjava.core.JsonLdOptions;
 import com.github.jsonldjava.core.JsonLdProcessor;
 import com.github.jsonldjava.utils.JsonUtils;
+import com.google.common.collect.Lists;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
@@ -41,6 +45,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 import java.util.logging.Level;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -67,6 +73,8 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.LinkedHashModel;
 import org.openrdf.model.impl.ValueFactoryImpl;
+import org.openrdf.model.vocabulary.RDF;
+import org.openrdf.model.vocabulary.RDFS;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
@@ -78,6 +86,7 @@ import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
 import org.slf4j.Logger;
+import scala.actors.threadpool.Arrays;
 
 /**
  *
@@ -1219,6 +1228,138 @@ public class PopulateMongoImpl implements PopulateMongo {
           traductor = first.getString("txt");
           Model md = new LinkedHashModel();
           md.add(createURI, translation, instance.createLiteral(traductor));
+          fastSparqlService.getGraphDBInstance().addBuffer(instance.createURI(conService.getCentralGraph()), md);
+          fastSparqlService.getGraphDBInstance().dumpBuffer();
+        }
+      } catch (Exception ex) {
+        log.error(ex.getMessage());
+      }
+    }
+    taskManagerService.endTask(task);
+  }
+
+  public String getRandomElement(List<String> list) {
+    Random rand = new Random();
+    return list.get(rand.nextInt(list.size()));
+  }
+
+  @Override
+  public void populatePublicationKeywords() {
+    String keys = conf.getStringConfiguration("refinitiv.tagging");
+    List<String> asList = Arrays.asList(keys.split(";"));
+    final Task task = taskManagerService.createSubTask("Keywords extraction from publications", "Mongo Service");
+    try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
+      MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
+      MongoCollection<Document> collection = db.getCollection(MongoService.Collection.TRANSLATIONS.getValue());
+      try {
+        //get publications ids
+        List<Map<String, Value>> pubs = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "PREFIX bibo: <http://purl.org/ontology/bibo/>\n"
+                + "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                + "select distinct ?p {\n"
+                + "    graph <" + conService.getCentralGraph() + "> {\n"
+                + "        ?o <http://ucuenca.edu.ec/ontology#memberOf> <https://redi.cedia.edu.ec/> . \n"
+                + "        ?a <http://schema.org/memberOf> ?o .\n"
+                + "        ?a foaf:publications ?p .\n"
+                + "        filter not exists {\n"
+                + "            ?p dct:subject ?s .\n"
+                + "            ?s rdfs:label [] .\n"
+                + "        }\n"
+                + "    }\n"
+                + "}  ");
+        ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
+        int i = 0;
+        task.updateTotalSteps(pubs.size());
+        for (Map<String, Value> pub : pubs) {
+          i++;
+          task.updateProgress(i);
+          String pURI = pub.get("p").stringValue();
+          URI createURI = instance.createURI(pURI);
+          URI extracted = instance.createURI("http://ucuenca.edu.ec/ontology#extracted");
+          URI subProp = instance.createURI("http://purl.org/dc/terms/subject");
+          boolean ask = fastSparqlService.getSparqlService().ask(QueryLanguage.SPARQL, "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                  + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                  + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                  + "PREFIX bibo: <http://purl.org/ontology/bibo/>\n"
+                  + "ask {\n"
+                  + "    graph <" + conService.getCentralGraph() + "> {\n"
+                  + "    	<" + pURI + "> dct:subject ?s .\n"
+                  + "    	?s a <" + extracted.toString() + "> .\n"
+                  + "    }\n"
+                  + "}");
+          if (ask) {
+            log.info("Extracting keywords (skip)... {}", pURI);
+            continue;
+          } else {
+            log.info("Extracting keywords ... {}", pURI);
+          }
+          List<Map<String, Value>> kws = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                  + "PREFIX bibo: <http://purl.org/ontology/bibo/>\n"
+                  + "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                  + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                  + "select (group_concat (?t ; separator =' ') as ?k) {\n"
+                  + "    graph <" + conService.getCentralGraph() + "> {\n"
+                  + "        {\n"
+                  + "        	<" + pURI + "> dct:title ?t .\n"
+                  + "        } union {\n"
+                  + "            <" + pURI + "> bibo:abstract ?t .\n"
+                  + "        }\n"
+                  + "    }\n"
+                  + "} ");
+          String txtVal = "";
+          for (Map<String, Value> kw : kws) {
+            txtVal += kw.get("k").stringValue() + " ";
+          }
+          String ktxtVal = "keywords_prefix:" + txtVal;
+          List<String> extractedKws = Lists.newArrayList();
+          boolean hasNext = collection.find(eq("_id", ktxtVal.hashCode())).iterator().hasNext();
+          if (!hasNext) {
+
+            HttpResponse<JsonNode> asJson = null;
+            try {
+              asJson = Unirest.post("https://api.thomsonreuters.com/permid/calais")
+                      .header("Content-Type", "text/raw")
+                      .header("Accept", "application/json")
+                      .header("x-ag-access-token", getRandomElement(asList))
+                      .header("outputFormat", "application/json")
+                      .body(txtVal)
+                      .asJson();
+            } catch (Exception e) {
+            }
+            if (asJson != null && asJson.getStatus() == 200) {
+              JsonNode body1 = asJson.getBody();
+              org.json.JSONObject object = body1.getObject();
+              Set<String> keySet = object.keySet();
+              for (String aK : keySet) {
+                org.json.JSONObject obj = (org.json.JSONObject) object.get(aK);
+                if (obj.has("_typeGroup") && obj.getString("_typeGroup").compareTo("socialTag") == 0) {
+                  extractedKws.add(obj.getString("name"));
+                }
+              }
+              Document dc = new Document();
+              dc.put("_id", ktxtVal.hashCode());
+              dc.put("kws", extractedKws);
+              collection.insertOne(dc);
+            } else {
+              if (asJson != null) {
+                log.error("Invalid request {} for {}, code: {}", txtVal, pURI, asJson.getStatus());
+              } else {
+                log.error("Invalid request {} for {}", txtVal, pURI);
+              }
+              //throw new Exception("Invalid request");
+              continue;
+            }
+          }
+          Document first = collection.find(eq("_id", ktxtVal.hashCode())).first();
+          extractedKws = (List<String>) first.get("kws");
+          Model md = new LinkedHashModel();
+          for (String kw : extractedKws) {
+            URI kwK = instance.createURI(conService.getBaseURI() + "extractedSubject/" + URLEncoder.encode(kw));
+            md.add(createURI, subProp, kwK);
+            md.add(kwK, RDFS.LABEL, instance.createLiteral(kw));
+            md.add(kwK, RDF.TYPE, extracted);
+          }
           fastSparqlService.getGraphDBInstance().addBuffer(instance.createURI(conService.getCentralGraph()), md);
           fastSparqlService.getGraphDBInstance().dumpBuffer();
         }
