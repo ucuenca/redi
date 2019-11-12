@@ -30,12 +30,12 @@
             <div class="col-md-3 left-panel-subcl">
               <div class="col-md-auto element-subcl">
                 <h3 class="text-success">{{'Select Research Area'| translate}}:</h3>
-                <!--<select class="selectpicker" data-live-search="true" name="board" id="board" ng-change="changeCombo()" ng-model="areaCombo"  ng-options="key.id as key.tag for key  in relatedtags">
+                <!--<select class="selectpicker" data-live-search="true" name="board" id="board" ng-change="changeCombo()" ng-model="areaCombo"  ng-options="key.id as key.tag for key  in relatedtags"> person.email as person in ctrl.peopleAsync
                     <option value="">Select Area</option>
                 </select>-->
                 <ui-select ng-model="areaCombo.selected"  ng-change="changeCombo()" theme="bootstrap">
                   <ui-select-match placeholder="Select area">{{$select.selected.tag}}</ui-select-match>
-                  <ui-select-choices repeat="item in relatedtags | filter: $select.search">  
+                  <ui-select-choices repeat="item.id as item in relatedtags | filter: $select.search">  
                     <div ng-bind-html="item.tag"></div>
                   </ui-select-choices>
                 </ui-select>
@@ -45,7 +45,7 @@
                 <h3 class="text-success"> Areas de investigación :</h3>
                 <ui-select ng-model="areaCombosub.selected"  ng-change="changeComboSub()" theme="bootstrap">
                   <ui-select-match placeholder="Select discipline ">{{$select.selected.tag}}</ui-select-match>
-                  <ui-select-choices repeat="item in subtags | filter: $select.search ">  
+                  <ui-select-choices repeat="item.id as item in subtags | filter: $select.search ">  
                     <div ng-bind-html="item.tag"></div>
                   </ui-select-choices>
                 </ui-select>
@@ -74,7 +74,7 @@
             </div> 
             <div class="col-md-9">
               <!-- <svg width="960" height="600"> style="min-width: 960px; min-height: 600px;"-->
-              <svg  width="100%" height="90%" style="min-width: 80vw; min-height: 90vh;" >
+              <svg  width="100%" height="90%" style="" >
 
               <!-- <svg preserveAspectRatio="none" viewBox="0 0 5 3" style="min-width: 960px; min-height: 600px; width: 100vw ; height:80vh;"> -->
               <!-- <svg width="100%" viewBox="0 0 25 25" style="height:100%"> -->

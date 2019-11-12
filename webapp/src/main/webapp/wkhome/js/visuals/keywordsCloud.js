@@ -53,7 +53,7 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
                 + ' } LIMIT 100';
 
 
-        var chart, clear, click, collide, collisionPadding, connectEvents, data, force, gravity, hashchange, height, idValue, jitter, label, margin, maxRadius, minCollisionRadius, mouseout, mouseover, node, rScale, rValue, textValue, tick, transformData, update, updateActive, updateLabels, updateNodes, width;
+        var chart, clear, click, collide, collisionPadding, connectEvents, data, force, gravity, hashchange, height, idValue, jitter, label, margin, maxRadius, minCollisionRadius, mouseout, mouseenter, mouseover, node, rScale, rValue, textValue, tick, transformData, update, updateActive, updateLabels, updateNodes, width;
         var scope;
         var attrs;
 
@@ -164,8 +164,8 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
                 return rValue(d);
             });
             label.style("font-size", function (d) {
-                console.log  (rValue(d));
-                console.log  (d);
+                //console.log  (rValue(d));
+                //console.log  (d);
                 //return Math.max(9, rScale(rValue(d) / 5)) + "px";
                 return rScale(rValue(d) / 5)+ "px";
             }).style("width", function (d) {
@@ -219,7 +219,8 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
         };
         connectEvents = function (d) {
             d.on("click", click);
-            d.on("mouseover", mouseover);
+            /*d.on("mouseover", mouseover);*/
+            d.on("mouseenter", mouseenter);
             return d.on("mouseout", mouseout);
         };
         clear = function () {
@@ -249,8 +250,8 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
                                     //anchor.append('<img src="/wkhome/images/author-ec.png" class="img-rounded" alt="Logo Cedia" width="20" height="20"        >');4
                                     var name = typeof value["rdfs:label"] === 'string' ? value["rdfs:label"] : _(value["rdfs:label"] ).first();
                                     anchor.append(name + "(" + value["uc:total"]["@value"] + ")");
-                                    console.log ("---------");
-                                    console.log (name + value["uc:total"]["@value"]);
+                                    //console.log ("---------");
+                                    //console.log (name + value["uc:total"]["@value"]);
                                     div.append(anchor);
                                     div.append("</br>");
                                     return anchor;
@@ -279,17 +280,26 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
         }
         ;
         click = function (d) {
+
           var id = d.id; // http://skos.um.es/unesco6/*
           var label = d.label;
+          //
+          d.pop = true;
+          removePopovers();
+          console.log ("Mostrando" , id);
+          console.log ("nodo",d);
           // If id is of type Cluster, show Subclusters.
           // Otherwise, show authors by cluster.
+          //mouseout (d);
           if (id.indexOf("http://skos.um.es/unesco6/") !== -1) {
             scope.$apply(function() {
               scope.$parent.selectedItem = id;
+
             });
           } else {
             var cluster = scope.$parent.selectedItem;
             var subcluster = id;
+            //removePopovers();
             $window.location.hash = '/group/area?cluster=' + cluster + '&subcluster=' + subcluster;
           }
             // relatedAuthors(d);
@@ -387,20 +397,28 @@ pieChart.directive('cloudTag', ["$routeParams", "d3", 'globalData', 'sparqlQuery
                 return d3.select("#status").html("<h3>No word is active</h3>");
             }
         };
-        mouseover = function (d) {
+        mouseenter = function (d) {
+            //console.log (d); mouseover
             console.log (d);
+            console.log ("SHOW"+d.pop);
+            if (d.pop){
+                console.log ("Dont show");
+               removePopovers();
+            }else {
             showPopover.call(this, d);
             return node.classed("bubble-hover", function (p) {
                 return p === d;
             });
+            }
+            
         };
         mouseout = function (d) {
-            removePopovers()
+            removePopovers();
             return node.classed("bubble-hover", false);
         };
 
          function showPopover(d) {
-    console.log ("OVER");
+    //console.log ("OVER");
                 $(this).popover({
                     placement: 'top',
                     container: 'body',

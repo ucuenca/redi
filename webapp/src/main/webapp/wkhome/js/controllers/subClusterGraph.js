@@ -3,6 +3,8 @@ wkhomeControllers.controller('subCluster', ['$scope', '$window', 'globalData', '
 
     var cluster = $routeParams.cluster;
     var subcluster = $routeParams.subcluster;
+
+
     //  $scope.areaCombosub =  { "tag":"12313"}; 
     $scope.areaCombo = {};
     Statistics.query({
@@ -17,16 +19,21 @@ wkhomeControllers.controller('subCluster', ['$scope', '$window', 'globalData', '
       });
     });
 
+    
+
     $scope.changeCombo = function () {
+
       $scope.datacl = {};
 
       $scope.areaCombosub = {};
       $scope.datacl = {
-        cluster: $scope.areaCombo.selected.id,
+        cluster: $scope.areaCombo.selected,
         subcluster: null
       };
+
+      console.log ("seleccionado"+ $scope.areaCombo.selected)
       querySubcluster.query({
-        id: $scope.areaCombo.selected.id
+        id: $scope.areaCombo.selected
       }, function (data) {
         $scope.subtags = [];
         _.map(data.subclusters, function (keyword) {
@@ -40,9 +47,9 @@ wkhomeControllers.controller('subCluster', ['$scope', '$window', 'globalData', '
 
     $scope.exportReport = function (d) {
 
-      var cc = $scope.areaCombo.selected.id;
+      var cc = $scope.areaCombo.selected;
       var cc_ = $scope.areaCombo.selected.tag
-      var sc = $scope.areaCombosub.selected ? $scope.areaCombosub.selected.id : undefined;
+      var sc = $scope.areaCombosub.selected ? $scope.areaCombosub.selected : undefined;
       var sc_ = $scope.areaCombosub.selected ? $scope.areaCombosub.selected.tag : undefined;
       $scope.loading = true;
 
@@ -75,18 +82,33 @@ wkhomeControllers.controller('subCluster', ['$scope', '$window', 'globalData', '
     $scope.changeComboSub = function () {
       $scope.datacl = {};
       $scope.datacl = {
-        cluster: $scope.areaCombo.selected.id,
-        subcluster: $scope.areaCombosub.selected.id
+        cluster: $scope.areaCombo.selected,
+        subcluster: $scope.areaCombosub.selected
       };
       console.log($scope.areaCombosub);
     }
 
-    if (cluster && subcluster) {
+    if (cluster && subcluster ) {
+      $scope.areaCombo = { selected : cluster };
+      $scope.changeCombo();
+      $scope.areaCombosub = { selected : subcluster};
+      $scope.changeComboSub();
+      
+
+    }
+
+
+   /* if (cluster && subcluster) {
+      console.log (cluster)
+      console.log (subcluster)
+      console.log ($scope.areaCombo)
       $scope.areaCombo = cluster;
       $scope.changeCombo();
       $scope.areaCombosub = subcluster;
       $scope.changeComboSub();
-    }
+    }*/
+
+
 
   }
 ]);
