@@ -1,5 +1,3 @@
-
-
 <!--<div class='col-md-2' ng-include="'/wkhome/partials/mainmenu.html'"/> -->
 <div class="col-md-12" ng-controller="subCluster" style="display: contents;">
   <!--  <div class="row  justify-content-around" >
@@ -30,12 +28,12 @@
             <div class="col-md-3 left-panel-subcl">
               <div class="col-md-auto element-subcl">
                 <h3 class="text-success">{{'Select Research Area'| translate}}:</h3>
-                <!--<select class="selectpicker" data-live-search="true" name="board" id="board" ng-change="changeCombo()" ng-model="areaCombo"  ng-options="key.id as key.tag for key  in relatedtags"> person.email as person in ctrl.peopleAsync
+                <!--<select class="selectpicker" data-live-search="true" name="board" id="board" ng-change="changeCombo()" ng-model="areaCombo"  ng-options="key.id as key.tag for key  in relatedtags">
                     <option value="">Select Area</option>
                 </select>-->
-                <ui-select ng-model="areaCombo.selected"  ng-change="changeCombo()" theme="bootstrap">
-                  <ui-select-match placeholder="Select area">{{$select.selected.tag}}</ui-select-match>
-                  <ui-select-choices repeat="item.id as item in relatedtags | filter: $select.search">  
+                  <ui-select ng-model="areaCombosub.selected"  ng-change="changeComboSub()" theme="bootstrap">
+                  <ui-select-match placeholder="Select discipline ">{{$select.selected.tag}}</ui-select-match>
+                  <ui-select-choices repeat="item.id as item in subtags | filter: $select.search ">  
                     <div ng-bind-html="item.tag"></div>
                   </ui-select-choices>
                 </ui-select>
@@ -43,7 +41,7 @@
               </div>
               <div class="col-md-auto element-subcl">
                 <h3 class="text-success"> Areas de investigación :</h3>
-                <ui-select ng-model="areaCombosub.selected"  ng-change="changeComboSub()" theme="bootstrap">
+                 <ui-select ng-model="areaCombosub.selected"  ng-change="changeComboSub()" theme="bootstrap">
                   <ui-select-match placeholder="Select discipline ">{{$select.selected.tag}}</ui-select-match>
                   <ui-select-choices repeat="item.id as item in subtags | filter: $select.search ">  
                     <div ng-bind-html="item.tag"></div>
@@ -74,7 +72,7 @@
             </div> 
             <div class="col-md-9">
               <!-- <svg width="960" height="600"> style="min-width: 960px; min-height: 600px;"-->
-              <svg  width="100%" height="90%" style="" >
+              <svg  width="100%" height="90%" style="min-width: 80vw; min-height: 90vh;" >
 
               <!-- <svg preserveAspectRatio="none" viewBox="0 0 5 3" style="min-width: 960px; min-height: 600px; width: 100vw ; height:80vh;"> -->
               <!-- <svg width="100%" viewBox="0 0 25 25" style="height:100%"> -->
