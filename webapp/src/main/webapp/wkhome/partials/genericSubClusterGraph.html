@@ -31,9 +31,9 @@
                 <!--<select class="selectpicker" data-live-search="true" name="board" id="board" ng-change="changeCombo()" ng-model="areaCombo"  ng-options="key.id as key.tag for key  in relatedtags">
                     <option value="">Select Area</option>
                 </select>-->
-                  <ui-select ng-model="areaCombosub.selected"  ng-change="changeComboSub()" theme="bootstrap">
-                  <ui-select-match placeholder="Select discipline ">{{$select.selected.tag}}</ui-select-match>
-                  <ui-select-choices repeat="item.id as item in subtags | filter: $select.search ">  
+                  <ui-select ng-model="areaCombo.selected"  ng-change="changeCombo()" theme="bootstrap">
+                  <ui-select-match placeholder="Select area">{{$select.selected.tag}}</ui-select-match>
+                  <ui-select-choices repeat="item.id as item in relatedtags | filter: $select.search">  
                     <div ng-bind-html="item.tag"></div>
                   </ui-select-choices>
                 </ui-select>
