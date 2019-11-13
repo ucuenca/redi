@@ -22,7 +22,14 @@ wkhomeControllers.controller('publicationProfile', ['$scope', '$routeParams', '$
     });
 
 
+  $scope.loadRelatedAuthor = function (e) {
+       console.log ("Cambiar modal");
+       console.log(e);
 
+       var  uri  = e ;
+     
+       $scope.child(uri);  
+  }
 
   
    $scope.exportar = function() {

@@ -92,7 +92,7 @@
       <div class="row relatedart">
       <span ng-repeat="re in publication.recomendacion">
           <div class="col-md-11 docrelacionados">  
-           <h5 class="title"> <a href="{{re.uri}}" target="_blank" > <b>{{ re.title}} </b></a> </h5>
+           <h5 class="title"> <a ng-click="loadRelatedAuthor(re.uri);" > <b>{{ re.title}} </b></a> </h5>
             <p class="relpubauthor"> {{ re.authors}}</p>
           </div>
       </span>
