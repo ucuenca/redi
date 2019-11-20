@@ -256,31 +256,34 @@
         <!--Fin Importacion de Scripts-->
 
         <script type="text/javascript">
-            <!--
+          <!--
       $(document).ready(function () {
-                var mCarouselTO = setTimeout(function () {
-                    $('#carousel').carousel({
-                        interval: 5000,
-                        cycle: true,
-                    }).trigger('slide');
-                }, 5000);
-                var q = mCarouselTO;
-            });
+            var mCarouselTO = setTimeout(function () {
+              $('#carousel').carousel({
+                interval: 5000,
+                cycle: true,
+              }).trigger('slide');
+            }, 5000);
+            var q = mCarouselTO;
+          });
 -->
-        </script>
+</script>
 
         <!-- For Google Analytycs -->
-        <script>
-        window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-        ga('create', 'UA-85166611-1', 'auto');
+<script>
+          window.ga = window.ga || function () {
+            (ga.q = ga.q || []).push(arguments)
+          };
+          ga.l = +new Date;
+          ga('create', 'UA-85166611-1', 'auto');
 
-        // Replace the following lines with the plugins you want to use.
-        ga('require', 'eventTracker');
-        ga('require', 'outboundLinkTracker');
-        ga('require', 'urlChangeTracker');
-        // ...
+          // Replace the following lines with the plugins you want to use.
+          ga('require', 'eventTracker');
+          ga('require', 'outboundLinkTracker');
+          ga('require', 'urlChangeTracker');
+          // ...
 
-        ga('send', 'pageview');
+          ga('send', 'pageview');
         </script>
         <script async src='https://www.google-analytics.com/analytics.js'></script>
         <script async src='bower_components/autotrack/autotrack.js'></script>
@@ -370,7 +373,7 @@
                         <input type="email" class="form-control" ng-model="email" placeholder="juan@cedia.edu.ec" style="width: 80%;">
                     </div>
                     <div class="col-sm-10">
-                        <label for="staticEmail" class="col-form-label">Tema : </label>
+                        <label for="staticEmail" class="col-form-label">* Tema : </label>
                         <select class="form-control" id="exampleFormControlSelect1" ng-model="topic" style="width: 80%;">
                               <option>Reportar error</option>
                               <option>Sugerencias</option>
@@ -383,9 +386,12 @@
                     </div>
                     <div class="col-sm-10">
                         <label for="staticEmail" class="col-form-label">URL :</label>
-                        <input type="text" class="form-control" ng-model="url" placeholder="http://..." style="width: 80%;">
+                        <input id ="txURL" type="text" class="form-control" ng-model="url" placeholder="http://..." style="width: 80%;">
                     </div>
                     <div class="col-sm-10">
+                      <span/>
+                        <br/>
+                      <label for="staticEmail" class="col-form-label">* Campos obligatorios</label>
                     </div>
                     <div class="col-sm-10">
                         <span/>

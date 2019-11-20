@@ -300,7 +300,9 @@ wkhomeServices.service('searchTextResultsService', ['$rootScope', function ($roo
       this.bucket['orcid'] = orcid;
       $rootScope.$broadcast('saveData');
     }
-
+    this.updateStatus = function () {
+      $rootScope.$broadcast('updateStatus');
+    }
     this.getOrcid = function () {
       return this.bucket['orcid'];
     }

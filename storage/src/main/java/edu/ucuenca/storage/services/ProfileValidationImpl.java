@@ -570,7 +570,7 @@ public class ProfileValidationImpl implements ProfileValidation {
                     + "Contenido : " + content + "\n"
             )
             .buildEmail();
-    mailer.sendMail(emailx);
+    mailer.sendMail(emailx, true);
 
     return "OK";
 
