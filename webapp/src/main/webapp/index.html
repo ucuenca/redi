@@ -133,6 +133,7 @@
         <script src="wkhome/js/controllers/authorVal.js"></script>
         <script src="wkhome/js/controllers/publicationProfile.js"></script>
         <script src="wkhome/js/controllers/sessionsManagement.js"></script>
+        <script src="wkhome/js/controllers/feedback.js"></script>
 
         <script src="wkhome/js/services.js"></script>
 
@@ -335,6 +336,73 @@
           </div>
         </div>
       </div>
+
+
+      <!-- Feedback modal-->
+      <div class="container" ng-controller="feedbackController" >
+        <div id="feedbackmodal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="Feedback form" aria-hidden="true">
+          <div class="modal-dialog  modal-md" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4  class="modal-title" id="myModalLabel">Formulario de contacto</h4>
+              </div>
+              <div class="modal-body">
+                <div class="row table-responsive">
+
+                    
+                    <div>
+                        <i style="margin-left: 15px;" >Ayudanos a mejorar REDI.</i>
+                        <br/>
+                    </div>
+                    <div>
+                        <span/>
+                        <br/>
+                    </div>
+                    
+
+                    <div class="col-sm-10">
+                        <label for="staticEmail" class="col-form-label">* Nombre : </label>
+                        <input type="text" class="form-control" ng-model="name" placeholder="Juan Perez ..." style="width: 80%;">
+                    </div>   
+                    <div class="col-sm-10">
+                        <label for="staticEmail" class="col-form-label">* Correo : </label>
+                        <input type="email" class="form-control" ng-model="email" placeholder="juan@cedia.edu.ec" style="width: 80%;">
+                    </div>
+                    <div class="col-sm-10">
+                        <label for="staticEmail" class="col-form-label">Tema : </label>
+                        <select class="form-control" id="exampleFormControlSelect1" ng-model="topic" style="width: 80%;">
+                              <option>Reportar error</option>
+                              <option>Sugerencias</option>
+                              <option>Otros</option>
+                         </select>
+                    </div>
+                    <div class="col-sm-10">
+                        <label for="staticEmail" class="col-form-label">* Contenido : </label>
+                        <textarea class="form-control" id="exampleFormControlTextarea1" ng-model="content" rows="3" style="width: 80%;"></textarea>
+                    </div>
+                    <div class="col-sm-10">
+                        <label for="staticEmail" class="col-form-label">URL :</label>
+                        <input type="text" class="form-control" ng-model="url" placeholder="http://..." style="width: 80%;">
+                    </div>
+                    <div class="col-sm-10">
+                    </div>
+                    <div class="col-sm-10">
+                        <span/>
+                        <br/>
+                        <button type="submit" onclick="sendReport()" class="btn btn-primary">Enviar</button>
+                    </div>
+
+                </div>
+              </div>
+                 <div class="modal-footer">
+                    Gracias por tu ayuda.
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
 
 </body>
 </html>

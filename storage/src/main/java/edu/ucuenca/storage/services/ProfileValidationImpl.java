@@ -18,8 +18,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import javax.inject.Inject;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.marmotta.commons.vocabulary.FOAF;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
@@ -41,6 +41,12 @@ import org.openrdf.query.QueryLanguage;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFHandlerException;
+import org.simplejavamail.email.Email;
+import org.simplejavamail.email.EmailBuilder;
+import org.simplejavamail.email.EmailPopulatingBuilder;
+import org.simplejavamail.mailer.Mailer;
+import org.simplejavamail.mailer.MailerBuilder;
+import org.simplejavamail.mailer.config.TransportStrategy;
 import org.slf4j.Logger;
 
 /**
@@ -525,5 +531,48 @@ public class ProfileValidationImpl implements ProfileValidation {
       log.debug(ex.getMessage());
     }
     return null;
+  }
+
+  @Override
+  public String sendFeedback(String name, String email, String topic, String content, String url) throws Exception {
+
+    if (name == null || email == null || topic == null || content == null) {
+      throw new Exception("Null Fields");
+    }
+    if (name.trim().isEmpty() || email.trim().isEmpty() || topic.trim().isEmpty() || content.trim().isEmpty()) {
+      throw new Exception("Empty Fields");
+    }
+    url = url != null ? url : "";
+
+    String[] mails = conf.getStringConfiguration("redi.feedback.mail").split(";");
+    Mailer mailer = MailerBuilder
+            .withSMTPServer("190.15.141.2", 25, "no-reply@cedia.org.ec", "")
+            .clearEmailAddressCriteria() // turns off email validation
+            .withDebugLogging(true)
+            .buildMailer();
+
+    EmailPopulatingBuilder bui = EmailBuilder.startingBlank()
+            .from("Notificationes REDI", "no-reply@cedia.org.ec");
+    for (String mmail : mails) {
+      bui = bui.to("Administrador de REDI", mmail);
+    }
+    Email emailx = bui.
+            withSubject("Retroalimentación de REDI: " + StringEscapeUtils.escapeHtml4(topic))
+            .withHTMLText("<i>Nombre</i> : " + StringEscapeUtils.escapeHtml4(name) + "<br/>\n"
+                    + "<i>Correo</i> : " + StringEscapeUtils.escapeHtml4(email) + "<br/>\n"
+                    + "<i>Tema</i> : " + StringEscapeUtils.escapeHtml4(topic) + "<br/>\n"
+                    + "<i>URL</i> : " + StringEscapeUtils.escapeHtml4(url) + "<br/>\n"
+                    + "<i>Contenido</i> : " + StringEscapeUtils.escapeHtml4(content) + "<br/>\n")
+            .withPlainText("Nombre : " + name + "\n"
+                    + "Correo : " + email + "\n"
+                    + "Tema : " + topic + "\n"
+                    + "URL : " + url + "\n"
+                    + "Contenido : " + content + "\n"
+            )
+            .buildEmail();
+    mailer.sendMail(emailx);
+
+    return "OK";
+
   }
 }

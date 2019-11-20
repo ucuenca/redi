@@ -196,4 +196,19 @@ public class ProfileValidationService {
     response.header("Content-Disposition", "attachment; filename=banner.png");
     return response.build();
   }
+
+  @GET
+  @Path("/sendFeedback")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response sendFeedback(@QueryParam("name") String name, @QueryParam("email") String email, @QueryParam("topic") String topic,
+          @QueryParam("content") String content, @QueryParam("url") String url
+  ) throws FailMongoConnectionException {
+    String response;
+    try {
+      response = pv.sendFeedback(name, email, topic, content, url);
+    } catch (Exception e) {
+      throw new FailMongoConnectionException(String.format("Cannot send feedback from  %s", name), e);
+    }
+    return Response.ok().entity(response).build();
+  }
 }
