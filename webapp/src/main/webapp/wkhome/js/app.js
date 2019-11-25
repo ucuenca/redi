@@ -111,7 +111,7 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                   templateUrl: '/wkhome/partials/sources.html'
                 }).
                 when('/info/help', {
-                  templateUrl: '/wkhome/partials/help.html'
+                  templateUrl: '/wkhome/partials/helpact.html'
                 }).
                 when('/tags/cloud', {
                   templateUrl: '/wkhome/partials/keywordsCloud.html',

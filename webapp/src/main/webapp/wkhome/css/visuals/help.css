@@ -1,0 +1,43 @@
+/*  HELP CSS*/
+
+
+.menuhelp {
+background: white;
+}
+
+.imghelp {
+	margin : 10px;
+	margin-bottom: 15px;
+}
+
+.helpborder
+{   
+	border-right-style: groove;
+    border-right-width: 0.5px;
+    min-height: 200px;
+}
+
+.secthelp {
+	margin-bottom: 40px; 
+}
+
+li .subclass{
+	margin-left: 10px; 
+	margin-right: 2px;
+
+}
+
+.helptext>section>p {
+  font-family: "Conduit-LI";
+  font-size: 1.2vw;
+}
+
+.helptext>section>h4 {
+  font-family: Conduit-BI;
+  font-size: 1.2vw;
+}
+
+.menuhelp > * {
+ font-family: Conduit-IT;
+ font-size: 1.1vw;
+}
