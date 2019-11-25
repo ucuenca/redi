@@ -300,7 +300,9 @@ wkhomeServices.service('searchTextResultsService', ['$rootScope', function ($roo
       this.bucket['orcid'] = orcid;
       $rootScope.$broadcast('saveData');
     }
-
+    this.updateStatus = function () {
+      $rootScope.$broadcast('updateStatus');
+    }
     this.getOrcid = function () {
       return this.bucket['orcid'];
     }
@@ -393,6 +395,22 @@ wkhomeServices.factory('getProfile', ['$resource', '$http', 'globalData',
       query: {
         method: 'GET',
         params: {id: 'id', orcid: 'orcid'},
+        isArray: false,
+        cache: true,
+        headers: {'Accept': 'application/json'}
+      }
+    });
+  }
+]);
+
+
+wkhomeServices.factory('sendFeedback', ['$resource', '$http', 'globalData',
+  function ($resource, $http, globalData) {
+    var serverInstance = globalData.serverInstance;
+    return $resource(serverInstance + 'profileval/sendFeedback?name=:name&email=:email&topic=:topic&content=:content&url=:url', {}, {
+      query: {
+        method: 'GET',
+        params: {name: 'name', email: 'email', topic: 'topic', content: 'content', url: 'url'},
         isArray: false,
         cache: true,
         headers: {'Accept': 'application/json'}

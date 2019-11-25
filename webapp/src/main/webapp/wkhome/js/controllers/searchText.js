@@ -14,7 +14,7 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
       return theString;
     };
 
-     $('#searchType').on('change', function () {
+    $('#searchType').on('change', function () {
       if (this.value == 'all') {
         $('#txtSearch').attr("placeholder", "Buscar ...");
       } else if (this.value == 'authors') {
@@ -26,8 +26,8 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
       }
     });
 
-     
-        $('#searchType').selectpicker();
+
+    $('#searchType').selectpicker();
 
 
 

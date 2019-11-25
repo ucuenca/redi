@@ -34,4 +34,6 @@ public interface ProfileValidation {
 
   public JSONObject getProfileAreas(String uri, HashMap<String, Boolean> tablec, HashMap<String, Boolean> tablesc);
 
+  public String sendFeedback(String name, String email, String topic, String content, String url) throws Exception;
+
 }

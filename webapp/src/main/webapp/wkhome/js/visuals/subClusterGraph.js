@@ -275,7 +275,7 @@ wkhomeApp.directive('subCluster', ["d3", 'globalData', 'sparqlQuery', '$routePar
       ;
 
       function etiquetas() {
-        $("#colores").append("<li class='list-group-item' style='font-weight: bold' >  LEYEND  </li>");
+        $("#colores").append("<li class='list-group-item' style='font-weight: bold' >  LEGEND  </li>");
         $("#colores").append("<li class='list-group-item'> <svg height='5' width='8'> <line x1='0' y1='0' x2='10' y2='0' style='stroke:#999;stroke-width:10'/> </svg> Coauthor Relation  </li>");
         $("#colores").append("<li class='list-group-item' style='font-weight: bold' >  ORGANIZATIONS  </li>");
 
