@@ -546,7 +546,7 @@ public class ProfileValidationImpl implements ProfileValidation {
 
     String[] mails = conf.getStringConfiguration("redi.feedback.mail").split(";");
     Mailer mailer = MailerBuilder
-            .withSMTPServer("190.15.141.2", 25, "no-reply@cedia.org.ec", "")
+            .withSMTPServer("190.15.141.2", 25, "no-reply@cedia.org.ec")
             .clearEmailAddressCriteria() // turns off email validation
             .withDebugLogging(true)
             .buildMailer();
@@ -572,7 +572,7 @@ public class ProfileValidationImpl implements ProfileValidation {
             .buildEmail();
     mailer.sendMail(emailx, true);
 
-    return "OK";
+    return " { status : 0 } ";
 
   }
 }
