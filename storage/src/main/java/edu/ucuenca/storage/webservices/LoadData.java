@@ -162,4 +162,17 @@ public class LoadData {
     return Response.ok().entity("Publications tranlation were successfully loaded into MongoDB").build();
   }
 
+  @POST
+  @Path("/applyChanges")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response loadApplyChanges() throws FailMongoConnectionException {
+    try {
+      loadService.populateProfileChanges();
+    } catch (Exception e) {
+      log.error("Cannot load authors changes into Mongo DB", e);
+      throw new FailMongoConnectionException(String.format("Cannot load authors changes into Mongo DB"), e);
+    }
+    return Response.ok().entity("Authors profile changes were successfully loaded into MongoDB").build();
+  }
+
 }

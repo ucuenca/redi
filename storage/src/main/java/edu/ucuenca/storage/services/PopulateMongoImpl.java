@@ -17,6 +17,7 @@
  */
 package edu.ucuenca.storage.services;
 
+import at.newmedialab.lmf.search.api.indexing.SolrIndexingService;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.jsonldjava.core.JsonLdError;
@@ -29,6 +30,7 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import static com.mongodb.client.model.Filters.eq;
@@ -73,6 +75,7 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.LinkedHashModel;
 import org.openrdf.model.impl.ValueFactoryImpl;
+import org.openrdf.model.vocabulary.FOAF;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
 import org.openrdf.query.MalformedQueryException;
@@ -121,6 +124,12 @@ public class PopulateMongoImpl implements PopulateMongo {
 
   @Inject
   private ConstantService conService;
+
+  @Inject
+  private SolrIndexingService solrIndexingService;
+
+  @Inject
+  private PopulateMongo loadService;
 
   private static final Map context = new HashMap();
 
@@ -1368,6 +1377,157 @@ public class PopulateMongoImpl implements PopulateMongo {
       }
     }
     taskManagerService.endTask(task);
+  }
+
+  @Override
+  public void populateProfileChanges() {
+
+    Model addMRedi = new LinkedHashModel();
+    Model delMRedi = new LinkedHashModel();
+    Model addMClusters = new LinkedHashModel();
+    Model delMClusters = new LinkedHashModel();
+
+    List<URI> updateAuthors = new ArrayList<>();
+    List<String> updateIndexResources = new ArrayList<>();
+
+    try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
+      MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
+      final MongoCollection<Document> collection = db.getCollection(MongoService.Collection.PROFILE_AUTHOR.getValue());
+      FindIterable<Document> find = collection.find();
+      for (Document doc : find) {
+        if (doc.getString("uri").compareTo("new_") != 0) {
+          URI authURI = ValueFactoryImpl.getInstance().createURI(doc.getString("uri"));
+          Document profile = (Document) doc.get("profile");
+          if (profile.getString("org").startsWith("https://redi.cedia.edu.ec/resource/organization/")) {
+            addMRedi.add(authURI, ValueFactoryImpl.getInstance().createURI("http://schema.org/memberOf"), ValueFactoryImpl.getInstance().createURI(profile.getString("org")));
+          } else {
+            continue;
+          }
+          updateAuthors.add(authURI);
+          updateIndexResources.add(authURI.stringValue());
+          addMRedi.add(authURI, ValueFactoryImpl.getInstance().createURI("http://purl.org/spar/scoro/hasORCID"), ValueFactoryImpl.getInstance().createLiteral(doc.getString("_id")));
+          addMRedi.add(authURI, FOAF.NAME, ValueFactoryImpl.getInstance().createLiteral(profile.getString("name")));
+          addMRedi.add(authURI, FOAF.GIVEN_NAME, ValueFactoryImpl.getInstance().createLiteral(profile.getString("fname")));
+          addMRedi.add(authURI, FOAF.FAMILY_NAME, ValueFactoryImpl.getInstance().createLiteral(profile.getString("lname")));
+          addMRedi.add(authURI, ValueFactoryImpl.getInstance().createURI("http://www.w3.org/2006/vcard/ns#hasEmail"), ValueFactoryImpl.getInstance().createLiteral(profile.getString("email")));
+          addMRedi.add(authURI, ValueFactoryImpl.getInstance().createURI("http://purl.org/vocab/bio/0.1/olb"), ValueFactoryImpl.getInstance().createLiteral(profile.getString("bio")));
+          addMRedi.add(authURI, FOAF.IMG, ValueFactoryImpl.getInstance().createLiteral(profile.getString("img")));
+
+          List<List<Document>> namesPages = (List<List<Document>>) doc.get("names");
+          for (List<Document> namePage : namesPages) {
+            for (Document name : namePage) {
+              if (name.getString("id").compareTo("on") != 0) {
+                if (name.getBoolean("status")) {
+                  addMRedi.add(authURI, FOAF.NAME, ValueFactoryImpl.getInstance().createLiteral(name.getString("id")));
+                } else {
+                  delMRedi.add(authURI, FOAF.NAME, ValueFactoryImpl.getInstance().createLiteral(name.getString("id")));
+                }
+              }
+            }
+          }
+          namesPages = (List<List<Document>>) doc.get("emails");
+          for (List<Document> namePage : namesPages) {
+            for (Document name : namePage) {
+              if (name.getString("id").compareTo("on") != 0) {
+                if (name.getBoolean("status")) {
+                  addMRedi.add(authURI, ValueFactoryImpl.getInstance().createURI("http://www.w3.org/2006/vcard/ns#hasEmail"), ValueFactoryImpl.getInstance().createLiteral(name.getString("id")));
+                } else {
+                  delMRedi.add(authURI, ValueFactoryImpl.getInstance().createURI("http://www.w3.org/2006/vcard/ns#hasEmail"), ValueFactoryImpl.getInstance().createLiteral(name.getString("id")));
+                }
+              }
+            }
+          }
+          namesPages = (List<List<Document>>) doc.get("publications");
+          for (List<Document> namePage : namesPages) {
+            for (Document name : namePage) {
+              if (name.getString("id").compareTo("on") != 0) {
+                updateIndexResources.add(name.getString("id"));
+                if (name.getBoolean("status")) {
+                  addMRedi.add(authURI, FOAF.PUBLICATIONS, ValueFactoryImpl.getInstance().createURI(name.getString("id")));
+                } else {
+                  delMRedi.add(authURI, FOAF.PUBLICATIONS, ValueFactoryImpl.getInstance().createURI(name.getString("id")));
+                }
+              }
+            }
+          }
+
+          namesPages = (List<List<Document>>) doc.get("clusters");
+          for (List<Document> namePage : namesPages) {
+            for (Document name : namePage) {
+              if (name.getString("id").compareTo("on") != 0) {
+                if (name.getBoolean("status")) {
+                  addMClusters.add(authURI, ValueFactoryImpl.getInstance().createURI("http://purl.org/dc/terms/isPartOf"), ValueFactoryImpl.getInstance().createURI(name.getString("id")));
+                } else {
+                  delMClusters.add(authURI, ValueFactoryImpl.getInstance().createURI("http://purl.org/dc/terms/isPartOf"), ValueFactoryImpl.getInstance().createURI(name.getString("id")));
+                }
+              }
+            }
+          }
+
+          namesPages = (List<List<Document>>) doc.get("subclusters");
+          for (List<Document> namePage : namesPages) {
+            for (Document name : namePage) {
+              if (name.getString("id").compareTo("on") != 0) {
+                if (name.getBoolean("status")) {
+                  addMClusters.add(authURI, ValueFactoryImpl.getInstance().createURI("http://purl.org/dc/terms/isPartOf"), ValueFactoryImpl.getInstance().createURI(name.getString("id")));
+                } else {
+                  delMClusters.add(authURI, ValueFactoryImpl.getInstance().createURI("http://purl.org/dc/terms/isPartOf"), ValueFactoryImpl.getInstance().createURI(name.getString("id")));
+                }
+              }
+            }
+          }
+
+        }
+      }
+
+      URI redGrp = ValueFactoryImpl.getInstance().createURI(conService.getCentralGraph());
+      URI clsGrp = ValueFactoryImpl.getInstance().createURI(conService.getClusterGraph());
+      URI addMRedi_ = ValueFactoryImpl.getInstance().createURI(conService.getCentralGraph() + "_AddLog");
+      URI delMRedi_ = ValueFactoryImpl.getInstance().createURI(conService.getCentralGraph() + "_DelLog");
+      URI addMClusters_ = ValueFactoryImpl.getInstance().createURI(conService.getClusterGraph() + "_AddLog");
+      URI delMClusters_ = ValueFactoryImpl.getInstance().createURI(conService.getClusterGraph() + "_DelLog");
+
+      RepositoryConnection connection = fastSparqlService.getGraphDBInstance().getConnection();
+      RepositoryConnection connection2 = sesameService.getConnection();
+
+      connection.begin();
+      connection2.begin();
+
+      //Save log only in GraphDB
+      fastSparqlService.getGraphDBInstance().runSplitAddOp(connection, addMRedi, addMRedi_);
+      fastSparqlService.getGraphDBInstance().runSplitAddOp(connection, delMRedi, delMRedi_);
+      fastSparqlService.getGraphDBInstance().runSplitAddOp(connection, addMClusters, addMClusters_);
+      fastSparqlService.getGraphDBInstance().runSplitAddOp(connection, delMClusters, delMClusters_);
+
+      //Apply Marmotta
+      fastSparqlService.getGraphDBInstance().runSplitDelOp(connection2, delMRedi, redGrp);
+      fastSparqlService.getGraphDBInstance().runSplitAddOp(connection2, addMRedi, redGrp);
+      fastSparqlService.getGraphDBInstance().runSplitDelOp(connection2, delMClusters, clsGrp);
+      fastSparqlService.getGraphDBInstance().runSplitAddOp(connection2, addMClusters, clsGrp);
+
+      //Apply GraphDB
+      fastSparqlService.getGraphDBInstance().runSplitDelOp(connection, delMRedi, redGrp);
+      fastSparqlService.getGraphDBInstance().runSplitAddOp(connection, addMRedi, redGrp);
+      fastSparqlService.getGraphDBInstance().runSplitDelOp(connection, delMClusters, clsGrp);
+      fastSparqlService.getGraphDBInstance().runSplitAddOp(connection, addMClusters, clsGrp);
+
+      connection.commit();
+      connection2.commit();
+
+      connection.close();
+      connection2.close();
+
+      //Update indexes
+      for (URI authURI : updateAuthors) {
+        loadService.authors(authURI.stringValue());
+      }
+      for (String pubURI : updateIndexResources) {
+        solrIndexingService.indexResource(ValueFactoryImpl.getInstance().createURI(pubURI));
+      }
+    } catch (Exception ex) {
+      log.error(ex.getMessage(), ex);
+    }
+
   }
 
   class SynchronizedParse {

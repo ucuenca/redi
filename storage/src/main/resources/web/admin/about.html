@@ -18,85 +18,90 @@
 
 -->
 <html>
-    <head>
-        <!--###BEGIN_HEAD###-->
-        <script type="text/javascript" src="../../webjars/jquery/1.8.2/jquery.min.js"></script>
-        <script type="text/javascript" src="js/widgets/load_mongo.js"></script>
-        <script>
-            function run(service) {
-                load(_SERVER_URL, service);
-            }
-        </script>
-        <title>About Mongo Storage</title>
-        <!--###END_HEAD###-->
-    </head>
-    <body>
-        <!--###BEGIN_CONTENT###-->
-        <h1>Mongo DB Storage
-            <span id="loader" style="position: relative; top: 4px; margin-left: 10px; display: none;">
-                <img src="img/loader.gif" alt="loading..."/>
-                <span style="font-size: 9pt;"> Loading data into MongoDB...</span>
-            </span>
-        </h1>
+  <head>
+    <!--###BEGIN_HEAD###-->
+    <script type="text/javascript" src="../../webjars/jquery/1.8.2/jquery.min.js"></script>
+    <script type="text/javascript" src="js/widgets/load_mongo.js"></script>
+    <script>
+      function run(service) {
+        load(_SERVER_URL, service);
+      }
+    </script>
+    <title>About Mongo Storage</title>
+    <!--###END_HEAD###-->
+  </head>
+  <body>
+    <!--###BEGIN_CONTENT###-->
+    <h1>Mongo DB Storage
+      <span id="loader" style="position: relative; top: 4px; margin-left: 10px; display: none;">
+        <img src="img/loader.gif" alt="loading..."/>
+        <span style="font-size: 9pt;"> Loading data into MongoDB...</span>
+      </span>
+    </h1>
 
-        <h2>Cache Statistics</h2>
-        <p>
-            For some aggregations, information is stored in Mongo DB, which you can 
-            configure in the <a href="configuration.html">configuration</a> panel.
-            If your Mongo configuration is working properly, a new database called 
-            <i>redi</i> will be created. The aggregations results are in <i>statistics</i>
-            collection. Each result of a query is stored as a document. Until now, there are
-            five queries preprocessed.
+    <h2>Cache Statistics</h2>
+    <p>
+      For some aggregations, information is stored in Mongo DB, which you can 
+      configure in the <a href="configuration.html">configuration</a> panel.
+      If your Mongo configuration is working properly, a new database called 
+      <i>redi</i> will be created. The aggregations results are in <i>statistics</i>
+      collection. Each result of a query is stored as a document. Until now, there are
+      five queries preprocessed.
 
-        <ul>
-            <li><b>barchar</b>: contains information of total of authors and publications for each institution. 
-                This information is used in the barchar view within REDI.</li>
-            <li><b>count_authors</b>: Total of authors on each institution.</li>
-            <li><b>count_publications</b>: Total of publications on each institution.</li>
-            <li><b>count_research_areas</b>: Frequency of research areas.</li>
-            <li><b>keywords_frequencypub_gt4</b>: keywords than have a frequency greater than four.</li>
-        </ul>
-        <button id="btn_statistics" type="button"  onclick="run('statistics')"  value="Statistics">Reload aggregations</button>
-    
-    
+    <ul>
+      <li><b>barchar</b>: contains information of total of authors and publications for each institution. 
+        This information is used in the barchar view within REDI.</li>
+      <li><b>count_authors</b>: Total of authors on each institution.</li>
+      <li><b>count_publications</b>: Total of publications on each institution.</li>
+      <li><b>count_research_areas</b>: Frequency of research areas.</li>
+      <li><b>keywords_frequencypub_gt4</b>: keywords than have a frequency greater than four.</li>
+    </ul>
+    <button id="btn_statistics" type="button"  onclick="run('statistics')"  value="Statistics">Reload aggregations</button>
+
+
     <h2>Cache Statistics by Institution</h2>
     <button id="btn_statisticsbyInst" type="button"  onclick="run('statisticsbyInst')"  value="StatisticsbyInst">Reload statistics by Inst</button>
-    
+
     <h2>Cache authors profiles</h2>
     <p>
-        Authors profiles are stored in Mongo DB in the collection <i>authors</i>.
-        <button id="btn_authors" type="button"  onclick="run('authors')"  value="Authors">Reload authors</button>
+      Authors profiles are stored in Mongo DB in the collection <i>authors</i>.
+      <button id="btn_authors" type="button"  onclick="run('authors')"  value="Authors">Reload authors</button>
     </p>
 
     <h2>Cache pre-calculated networks</h2>
     <p>
-        <button id="btn_networks" type="button"  onclick="run('networks')"  value="Statistics">Reload networks</button>
+      <button id="btn_networks" type="button"  onclick="run('networks')"  value="Statistics">Reload networks</button>
     </p>
 
     <h2>Cache Clusters</h2>
     <p>
-        Clusters  and countries used in dropdown menu (Map, Networks, etc). 
-        <button id="btn_clusters" type="button"  onclick="run('clusters')"  value="Clusters">Reload clusters</button>
+      Clusters  and countries used in dropdown menu (Map, Networks, etc). 
+      <button id="btn_clusters" type="button"  onclick="run('clusters')"  value="Clusters">Reload clusters</button>
     </p>
 
     <h2>Authors by Discipline and Area</h2>
     <p>
-        <button id="btn_author-by-area" type="button"  onclick="run('author-by-area')"  value="Authors by Area">Reload Authors by Area</button>
+      <button id="btn_author-by-area" type="button"  onclick="run('author-by-area')"  value="Authors by Area">Reload Authors by Area</button>
     </p>
-    
+
     <h2>Cache Authors Statistics</h2>
     <p>
-        <button id="btn_statisticsbyAuthor" type="button"  onclick="run('statisticsbyAuthor')"  value="statisticsbyAuthor">Reload statistics by Authors</button>
+      <button id="btn_statisticsbyAuthor" type="button"  onclick="run('statisticsbyAuthor')"  value="statisticsbyAuthor">Reload statistics by Authors</button>
     </p>
-    
-    
-     
+
+
+
     <h2>Translate keyword's publications & Keyword extraction</h2>
     <p>
-        <button id="btn_translatebyPublication" type="button"  onclick="run('translatebyPublication')"  value="translatebyPublication">Translate/Extraction keywords</button>
+      <button id="btn_translatebyPublication" type="button"  onclick="run('translatebyPublication')"  value="translatebyPublication">Translate/Extraction keywords</button>
     </p>
 
 
+    <h2>Apply profile changes</h2>
+    <p>
+      <button id="btn_applyChanges" type="button"  onclick="run('applyChanges')"  value="applyChanges">Apply changes</button>
+    </p>
+
     <!--###END_CONTENT###-->
-</body>
+  </body>
 </html>
