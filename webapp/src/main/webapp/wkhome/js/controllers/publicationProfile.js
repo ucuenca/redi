@@ -193,7 +193,7 @@ wkhomeControllers.controller('publicationProfile', ['$scope', '$routeParams', '$
                recomends.forEach( function(valor, indice, array) { 
                 if(valor["lmf.uri"].trim() != uri){
                   var authors = _.reduce(valor["contributor-name"], function(memo, num){ return  num.toProperCase().replace(",","")+", "+memo; }, "");
-                 var r = {"uri": route+"/#/info/publication/"+valor["lmf.uri"].trim() , "title": valor["title"] , "authors" : authors };
+                 var r = {"uri": valor["lmf.uri"].trim() , "title": valor["title"] , "authors" : authors };
                   recomendacion.push (r);
                 }
                });

@@ -28,8 +28,8 @@ wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$windo
       if ( data.bio && data.bio.length > 300 )  {
         $scope.author.bio = data.bio.substring(0, 300)+" ...";
       
-      }else if (data.bio.length < 1){
-        $scope.author.bio = "Autor registrado en REDI";
+      }else if (data.bio == null || data.bio.length < 1){
+        $scope.author.bio = "Autor registrado en REDI ";
 
       }
 
