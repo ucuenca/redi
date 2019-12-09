@@ -203,12 +203,11 @@ public class ProfileValidationService {
   public Response sendFeedback(@QueryParam("name") String name, @QueryParam("email") String email, @QueryParam("topic") String topic,
           @QueryParam("content") String content, @QueryParam("url") String url
   ) throws FailMongoConnectionException {
-    String response;
     try {
-      response = pv.sendFeedback(name, email, topic, content, url);
+      pv.sendFeedback(name, email, topic, content, url);
+      return Response.ok().build();
     } catch (Exception e) {
       throw new FailMongoConnectionException(String.format("Cannot send feedback from  %s", name), e);
     }
-    return Response.ok().entity(response).build();
   }
 }

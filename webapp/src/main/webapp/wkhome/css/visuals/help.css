@@ -27,6 +27,11 @@ li .subclass{
 
 }
 
+.topclass{
+	margin-right: 5px;
+
+}
+
 .helptext>section>p {
   font-family: "Conduit-LI";
   font-size: 1.2vw;

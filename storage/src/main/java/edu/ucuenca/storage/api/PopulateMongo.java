@@ -62,4 +62,6 @@ public interface PopulateMongo {
   public void populatePublicationTranslations();
   
   public void populatePublicationKeywords();
+  
+  public void populateProfileChanges();
 }

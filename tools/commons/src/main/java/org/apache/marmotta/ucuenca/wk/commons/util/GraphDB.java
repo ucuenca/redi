@@ -196,6 +196,31 @@ public final class GraphDB {
     }
   }
 
+  public void runSplitDelOp(RepositoryConnection connection, Model data, Resource providerContext) throws RepositoryException, RDFHandlerException {
+    LinkedHashModel mp = new LinkedHashModel();
+    for (Statement s : data) {
+      if (mp.size() > MAX_TRIPLES_ADD) {
+        runDelOp(connection, mp, providerContext);
+        mp.clear();
+      }
+      if (s.getObject() instanceof URI && !checkURI(s.getObject().stringValue())
+              || s.getSubject() instanceof URI && !checkURI(s.getSubject().stringValue())) {
+        continue;
+      }
+      mp.add(s);
+    }
+    runDelOp(connection, mp, providerContext);
+  }
+
+  public void runDelOp(RepositoryConnection connection, Model data, Resource providerContext) throws RepositoryException, RDFHandlerException {
+    try {
+      connection.remove(data, providerContext);
+    } catch (Exception e) {
+      Rio.write(data, System.out, RDFFormat.RDFXML);
+      throw e;
+    }
+  }
+
   public boolean checkURI(String ur) {
     boolean r = false;
     try {
