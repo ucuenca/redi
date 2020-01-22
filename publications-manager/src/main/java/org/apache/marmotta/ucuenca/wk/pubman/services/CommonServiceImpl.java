@@ -1630,4 +1630,21 @@ public class CommonServiceImpl implements CommonService {
     return "Data Provider DOAJ are extracted in background.   Please review main.log file for details";
   }
 
+  @Override
+  public String getDataFromScopusUpdateProvidersService(final String[] organizations, final boolean force) {
+    // Find a way to execute thread and get response information.
+    if (scopusThread != null && scopusThread.isAlive()) {
+      return "Process is executing.";
+    }
+
+    scopusThread = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        providerServiceScopus1.extractAuthors(organizations, force);
+      }
+    });
+    scopusThread.start();
+    return "Data Provider SCOPUS are extracted in background.   Please review main.log file for details";
+  }
+
 }

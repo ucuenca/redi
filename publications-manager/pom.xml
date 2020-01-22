@@ -129,7 +129,7 @@
         </plugins>
     </build>
 
-<!--    <repositories>
+    <!--    <repositories>
         <repository>
             <id>fdvsolution.public</id>
             <url>http://nexus.fdvs.com.ar/content/groups/public/</url>
@@ -137,6 +137,13 @@
     </repositories>-->
 
     <dependencies>
+        
+        <dependency>
+            <groupId>com.konghq</groupId>
+            <artifactId>unirest-java</artifactId>
+            <version>3.4.00</version>
+            <classifier>standalone</classifier>
+        </dependency>
         <dependency>
             <groupId>org.apache.marmotta</groupId>
             <artifactId>marmotta-core</artifactId>
@@ -278,7 +285,7 @@
             <version>${servlet.api.version}</version>
             <scope>provided</scope>
         </dependency>
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>org.apache.marmotta</groupId>
             <artifactId>kiwi-versioning</artifactId>
             <version>${marmotta.version}</version>

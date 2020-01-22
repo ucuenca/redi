@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +54,6 @@ import org.semarglproject.vocab.OWL;
 import org.semarglproject.vocab.RDF;
 import org.semarglproject.vocab.RDFS;
 import org.slf4j.Logger;
-import scala.actors.threadpool.Arrays;
 
 /**
  * Default Implementation of {@link ProviderService}. Each provider
@@ -64,7 +64,7 @@ import scala.actors.threadpool.Arrays;
 public abstract class AbstractProviderService implements ProviderService {
 
     @Inject
-    private Logger log;
+    protected Logger log;
 
     @Inject
     private QueriesService queriesService;
@@ -73,10 +73,10 @@ public abstract class AbstractProviderService implements ProviderService {
     private SparqlFunctionsService sparqlFunctionsService;
 
     @Inject
-    private TaskManagerService taskManagerService;
+    protected TaskManagerService taskManagerService;
 
     @Inject
-    private ExternalSPARQLService sparqlService;
+    protected ExternalSPARQLService sparqlService;
 
     //@Inject
     //private SesameService sesameService;

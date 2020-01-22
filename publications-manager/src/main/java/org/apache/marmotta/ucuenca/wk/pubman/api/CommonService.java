@@ -16,59 +16,60 @@ import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Provider;
  */
 public interface CommonService {
 
-    String getDataFromDBLPProvidersService(final String[] organizations, boolean force);
+  String getDataFromDBLPProvidersService(final String[] organizations, boolean force);
 
-    String getDataFromScopusProvidersService(final String[] organizations, boolean force);
+  String getDataFromScopusProvidersService(final String[] organizations, boolean force);
 
-    String getDataFromAcademicsKnowledgeProvidersService(final String[] organizations, boolean force);
+  String getDataFromScopusUpdateProvidersService(final String[] organizations, boolean force);
 
-    String getDataFromScieloProvidersService(final String[] organizations, boolean force);
-    
-    String getDataFromDOAJProvidersService(final String[] organizations, boolean force);
-    
-    String getDataFromORCIDProvidersService(final String[] organizations, boolean force);
+  String getDataFromAcademicsKnowledgeProvidersService(final String[] organizations, boolean force);
 
-    String getDataFromGoogleScholarProvidersService(final String[] organizations, boolean force);
+  String getDataFromScieloProvidersService(final String[] organizations, boolean force);
 
-    String getDataFromSpringerProvidersService(final String[] organizations, boolean force);
+  String getDataFromDOAJProvidersService(final String[] organizations, boolean force);
 
+  String getDataFromORCIDProvidersService(final String[] organizations, boolean force);
 
-    String createReport(String hostname, String realPath, String name, String type, List<String> params);
+  String getDataFromGoogleScholarProvidersService(final String[] organizations, boolean force);
 
-    String getSearchQuery(String textSearch);
+  String getDataFromSpringerProvidersService(final String[] organizations, boolean force);
 
-    String DetectLatindexPublications();
+  String createReport(String hostname, String realPath, String name, String type, List<String> params);
 
-    String runDisambiguationProcess(String[] orgs);
+  String getSearchQuery(String textSearch);
 
-    String runDisambiguationProcess();
+  String DetectLatindexPublications();
 
-    String CentralGraphProcess();
+  String runDisambiguationProcess(String[] orgs);
 
-    String organizationListExtracted();
+  String runDisambiguationProcess();
 
-    String listREDIEndpoints();
+  String CentralGraphProcess();
 
-    boolean deleteREDIEndpoint(String id);
+  String organizationListExtracted();
 
-    String organizationListEnrichment();
+  String listREDIEndpoints();
 
-    List<Provider> getProviders() throws MarmottaException;
+  boolean deleteREDIEndpoint(String id);
 
-    String getCollaboratorsData(String uri);
+  String organizationListEnrichment();
 
-    String getAuthorDataProfile(String author);
+  List<Provider> getProviders() throws MarmottaException;
 
-    String getsubClusterGraph(String cl, String subcl);
-    
-    String getClusterGraph (String cl);
+  String getCollaboratorsData(String uri);
 
-    String getCluster(String cl);
-    
-    String getUniqueName(String names, String separator);
+  String getAuthorDataProfile(String author);
 
-    void registerREDIEndpoint(String name, URL url) throws Exception;
+  String getsubClusterGraph(String cl, String subcl);
 
-    void centralize(String[] endpoints, boolean isUpdate);
+  String getClusterGraph(String cl);
+
+  String getCluster(String cl);
+
+  String getUniqueName(String names, String separator);
+
+  void registerREDIEndpoint(String name, URL url) throws Exception;
+
+  void centralize(String[] endpoints, boolean isUpdate);
 
 }

@@ -263,11 +263,37 @@ function ExtractScopus() {
                 //document.getElementById("imgloading").style.visibility = "hidden";
                 alert("Error" + data.responseText);
             }});
+    }
+}
+
+function ExtractScopusUpdate() {
+    var publications = getPublicationsOffset(4);
+
+    if (publications.length < 1) {
+        alert("No providers selected");
+    } else {
+        var listPublications = {"data": publications, "force":$('input#force').is(':checked')};
+        $.ajax({
+            type: "POST",
+            data: listPublications,
+            dataType: "text", //result data type
+            //contentType : "application/x-www-form-urlencoded; charset=UTF-8" ,
+            url: host + "pubman/publicationsScopusUpdateByOrg",
+            success: function (Result) {
+                console.log(Result);
+             
+
+            },
+            error: function (data) {
+                //document.getElementById("imgloading").style.visibility = "hidden";
+                alert("Error" + data.responseText);
+            }});
 
     }
 
 
 }
+
 
 
 function ExtractScielo() {

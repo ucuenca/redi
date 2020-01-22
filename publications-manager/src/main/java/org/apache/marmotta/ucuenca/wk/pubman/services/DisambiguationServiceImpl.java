@@ -93,6 +93,11 @@ public class DisambiguationServiceImpl implements DisambiguationService {
   private Thread DisambiguationWorker;
   private Thread CentralGraphWorker;
 
+  private static final String TEMP_CA = "1";
+  private static final String SAFE_MERGE = "2";
+  private static final String FIX_MERGE = "2Fix";
+  private static final String FINAL_MERGE = "F";
+
   private String queryMatches(String org) throws MarmottaException, RepositoryException {
 
     String querymatchs = "PREFIX dct: <http://purl.org/dc/terms/>\n"
@@ -182,21 +187,23 @@ public class DisambiguationServiceImpl implements DisambiguationService {
           providersResult.add(mp);
         }
       } else {
-        //ProcessAuthors(Providers, null);
-        //sparqlService.getGraphDBInstance().dumpBuffer();
+//        ProcessAuthors(Providers, null);
+//        sparqlService.getGraphDBInstance().dumpBuffer();
       }
       for (int w0 = 0; w0 < 4; w0++) {
 //        ProcessCoauthors(Providers, true);
 //        sparqlService.getGraphDBInstance().dumpBuffer();
-//        sparqlUtils.addAll(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "1");
+//        sparqlUtils.addAll(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + TEMP_CA);
+//        sparqlUtils.deleteGraph(constantService.getAuthorsSameAsGraph() + TEMP_CA);
       }
 //      mergeAuthors();
 //      sparqlService.getGraphDBInstance().dumpBuffer();
 ////      /**/
-      sparqlUtils.clearSameAs(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "2Fix");
-      sparqlUtils.replaceSameAsSubject(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + "F", constantService.getAuthorsSameAsGraph() + "2");
+      sparqlUtils.clearSameAs(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + FIX_MERGE);
+      sparqlUtils.replaceSameAsSubject(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + FINAL_MERGE, constantService.getAuthorsSameAsGraph() + SAFE_MERGE);
       sparqlUtils.deleteGraph(constantService.getAuthorsSameAsGraph());
-      sparqlUtils.copyGraph(constantService.getAuthorsSameAsGraph() + "F", constantService.getAuthorsSameAsGraph());
+      sparqlUtils.copyGraph(constantService.getAuthorsSameAsGraph() + FINAL_MERGE, constantService.getAuthorsSameAsGraph());
+      sparqlUtils.deleteGraph(constantService.getAuthorsSameAsGraph() + FINAL_MERGE);
 ////      /**/
       ProcessCoauthors(Providers, false);
       sparqlService.getGraphDBInstance().dumpBuffer();
@@ -460,9 +467,9 @@ public class DisambiguationServiceImpl implements DisambiguationService {
           for (Entry<String, Set<String>> next : groups.entrySet()) {
             for (String next1 : next.getValue()) {
               if (amb.contains(next.getKey()) || amb.contains(next1)) {
-                registerSameAs(constantService.getAuthorsSameAsGraph() + "2Fix", next.getKey(), next1);
+                registerSameAs(constantService.getAuthorsSameAsGraph() + FIX_MERGE, next.getKey(), next1);
               } else {
-                registerSameAs(constantService.getAuthorsSameAsGraph() + "2", next.getKey(), next1);
+                registerSameAs(constantService.getAuthorsSameAsGraph() + SAFE_MERGE, next.getKey(), next1);
               }
             }
           }
@@ -1133,7 +1140,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
           if (checkName != null && checkName) {
             pros = true;
             if (onlySameAs) {
-              registerSameAs(constantService.getAuthorsSameAsGraph() + "1", p.URI, groupIndex);
+              registerSameAs(constantService.getAuthorsSameAsGraph() + TEMP_CA, p.URI, groupIndex);
             }
           }
         }

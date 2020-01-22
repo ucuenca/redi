@@ -109,6 +109,20 @@ public class PubWebService {
     return Response.ok().entity(result).build();
     //return  Response.status(Status.BAD_REQUEST).entity("Incorrect file format.").build();
   }
+  
+  @POST
+  @Path("/publicationsScopusUpdateByOrg")
+  public Response readPublicationsPostScopusUpdate(@Context HttpServletRequest request) {
+
+    String[] org = request.getParameterMap().get("data[]");
+    boolean force = request.getParameterMap().get("force")[0].compareTo("true") == 0;
+    String result = commonService.getDataFromScopusUpdateProvidersService(org, force);
+    //  String output = authorService.extractAuthorsGeneric(get);
+
+    return Response.ok().entity(result).build();
+    //return  Response.status(Status.BAD_REQUEST).entity("Incorrect file format.").build();
+  }
+  
 
   @POST
   @Path("/central/store")
