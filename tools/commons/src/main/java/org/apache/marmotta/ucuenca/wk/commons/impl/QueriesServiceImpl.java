@@ -285,7 +285,7 @@ public class QueriesServiceImpl implements QueriesService {
     return "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
             + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
             + "PREFIX REDI: <http://ucuenca.edu.ec/ontology#>"
-            + "select DISTINCT ?URI ?name ?fullNameEn  ?fullNameEs ?alias ?country ?province ?city ?type ?lang ?long "
+            + "select DISTINCT ?URI ?name ?fullNameEn  ?fullNameEs ?alias ?scopusId ?country ?province ?city ?type ?lang ?long "
             + "FROM <" + con.getOrganizationsGraph() + ">"
             + " where "
             + "{   <" + uri + "> <" + RDF.TYPE.toString() + "> <" + FOAF.Organization.toString() + "> . "
@@ -295,6 +295,7 @@ public class QueriesServiceImpl implements QueriesService {
             + "OPTIONAL { <" + uri + ">  <" + REDI.FULLNAME.toString() + "> ?fullNameEn . "
             + "FILTER (langMatches(lang(?fullNameEn), 'en')) } ."
             + "OPTIONAL { <" + uri + "> <" + REDI.ALIAS.toString() + "> ?alias } . "
+            + "OPTIONAL { <" + uri + "> <http://vivoweb.org/ontology/core#scopusId> ?scopusId } . "
             + "OPTIONAL { <" + uri + "> <" + REDI.COUNTRY.toString() + "> ?country } . "
             + "OPTIONAL { <" + uri + "> <" + REDI.PROVINCE.toString() + "> ?province } ."
             + "OPTIONAL { <" + uri + "> <" + REDI.CITY.toString() + "> ?city } . "
@@ -637,7 +638,7 @@ public class QueriesServiceImpl implements QueriesService {
   @Override
   @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
   public String updateGeneric(String graph, String resource, String property, String object, String literal) {
-
+   //cambio para funcionar en graph db se mueve el corchete del optional
     if (isURI(object)) {
       return "WITH  <" + graph + ">"
               + " DELETE  {<" + resource + ">  <" + property + ">  ?o  }"
@@ -647,9 +648,9 @@ public class QueriesServiceImpl implements QueriesService {
       return "WITH  <" + graph + ">"
               + " DELETE  {<" + resource + ">  <" + property + ">  ?o  }"
               + " INSERT {<" + resource + ">  <" + property + ">  '" + object + "'" + literal + " }"
-              + " WHERE {OPTIONAL{<" + resource + ">  <" + property + ">  ?o }."
+              + " WHERE {OPTIONAL{<" + resource + ">  <" + property + ">  ?o ."
               + " BIND( lang(?o) as  ?la  ) . FILTER (  !Bound(?la) || langMatches(?la , '" + literal.replace("@", "") + "'  ) )"
-              + " }";
+              + " }}";
     }
 
   }

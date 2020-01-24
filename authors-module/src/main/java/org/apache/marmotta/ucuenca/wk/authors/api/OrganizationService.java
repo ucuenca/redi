@@ -11,7 +11,7 @@ package org.apache.marmotta.ucuenca.wk.authors.api;
  * @author joe
  */
 public interface OrganizationService {
-      String addOrganization (String acro , String namEn , String namEs , String alias, String country , String prov , String city, String lat , String lon , String type );
+      String addOrganization (String acro , String namEn , String namEs , String alias, String scopusId , String country , String prov , String city, String lat , String lon , String type );
       String loadOrgbyURI(String uri);
 
     /**
@@ -20,6 +20,7 @@ public interface OrganizationService {
      * @param namEn
      * @param namEs
      * @param alias
+     * @param scopusId
      * @param country
      * @param prov
      * @param city
@@ -28,7 +29,7 @@ public interface OrganizationService {
      * @param type
      * @return
      */
-    String editOrg (String acro, String namEn, String namEs, String alias , String country, String prov, String city, String lat, String lon, String type );
+    String editOrg (String acro, String namEn, String namEs, String alias , String scopusId , String country, String prov, String city, String lat, String lon, String type );
       String removeOrgbyURI(String resourceid);
       boolean  askOrganization (String uri );
       String listOrganization ();

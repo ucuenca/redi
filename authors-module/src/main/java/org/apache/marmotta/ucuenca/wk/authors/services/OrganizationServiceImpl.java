@@ -52,13 +52,14 @@ public class OrganizationServiceImpl implements OrganizationService {
       private final  static String LANGES = "@es";
 
     @Override
-    public String addOrganization(String acro, String namEn, String namEs, String alias, String country, String prov, String city, String lat, String lon, String type ) {
+    public String addOrganization(String acro, String namEn, String namEs, String alias, String scopusId , String country, String prov, String city, String lat, String lon, String type ) {
         String uriOrg = con.getOrganizationBaseUri()+acro ;
          if (!askOrganization (uriOrg)) {
              insertOrganization(uriOrg, REDI.NAME.toString(), acro , STR);
              insertOrganization(uriOrg, REDI.FULLNAME.toString(), namEn , LANGEN);
              insertOrganization(uriOrg, REDI.FULLNAME.toString() , namEs , LANGES);
              insertOrganization(uriOrg, REDI.ALIAS.toString() , alias , STR);
+             insertOrganization(uriOrg, "http://vivoweb.org/ontology/core#scopusId", scopusId , STR);
              insertOrganization(uriOrg, REDI.COUNTRY.toString() , country , STR);
              insertOrganization(uriOrg, REDI.PROVINCE.toString(), prov , STR);
              insertOrganization(uriOrg, REDI.CITY.toString(), city , STR);
@@ -155,13 +156,14 @@ public class OrganizationServiceImpl implements OrganizationService {
     
     
     @Override
-   public  String editOrg (String acro, String namEn, String namEs, String alias, String country, String prov, String city, String lat, String lon, String type ) {
+   public  String editOrg (String acro, String namEn, String namEs, String alias, String scopusId, String country, String prov, String city, String lat, String lon, String type ) {
          try {
              String uriOrg = con.getOrganizationBaseUri()+acro ;
              
              editOrganization(uriOrg, REDI.FULLNAME.toString(), namEn , LANGEN);
              editOrganization(uriOrg, REDI.FULLNAME.toString() , namEs , LANGES);
              editOrganization(uriOrg, REDI.ALIAS.toString() , alias , STR);
+             editOrganization(uriOrg, "http://vivoweb.org/ontology/core#scopusId" , scopusId , STR);
              editOrganization(uriOrg, REDI.COUNTRY.toString() , country , STR);
              editOrganization(uriOrg, REDI.PROVINCE.toString(), prov , STR);
              editOrganization(uriOrg, REDI.CITY.toString(), city , STR);
