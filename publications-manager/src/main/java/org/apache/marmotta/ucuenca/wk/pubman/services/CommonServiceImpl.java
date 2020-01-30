@@ -44,6 +44,7 @@ import org.apache.marmotta.ucuenca.wk.pubman.services.providers.AcademicsKnowled
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.DBLPProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.GoogleScholarProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.ScopusProviderService;
+import org.apache.marmotta.ucuenca.wk.pubman.services.providers.ScopusUpdateProviderService;
 import org.apache.marmotta.ucuenca.wk.pubman.services.providers.SpringerProviderService;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
 import org.json.JSONArray;
@@ -123,7 +124,9 @@ public class CommonServiceImpl implements CommonService {
   private org.apache.marmotta.ucuenca.wk.pubman.services.providers.ORCIDProviderService providerServiceORCID;
 
   @Inject
-  private ScopusProviderService providerServiceScopus1;
+  private ScopusProviderService providerServiceScopus;
+  @Inject
+  private ScopusUpdateProviderService providerServiceScopus1;
   private Thread scopusThread;
   private Thread academicsThread;
   private Thread dblpThread;
@@ -162,7 +165,7 @@ public class CommonServiceImpl implements CommonService {
     scopusThread = new Thread(new Runnable() {
       @Override
       public void run() {
-        providerServiceScopus1.extractAuthors(organizations, force);
+        providerServiceScopus.extractAuthors(organizations, force);
       }
     });
     scopusThread.start();
