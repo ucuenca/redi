@@ -19,7 +19,6 @@ import at.newmedialab.lmf.search.api.indexing.SolrIndexingService;
 import at.newmedialab.lmf.search.filters.LMFSearchFilter;
 import at.newmedialab.lmf.search.services.cores.SolrCoreConfiguration;
 import at.newmedialab.lmf.worker.services.WorkerRuntime;
-import org.apache.marmotta.kiwi.model.rdf.KiWiResource;
 import org.apache.marmotta.platform.core.util.CDIContext;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
@@ -42,6 +41,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
+import org.apache.marmotta.ucuenca.wk.commons.function.Cache;
 
 /**
  * A class bundling administrative information about a running SOLR core.
@@ -50,16 +50,15 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public final class SolrCoreRuntime extends WorkerRuntime<SolrCoreConfiguration> {
 
-    private Logger                  log                    = LoggerFactory.getLogger(SolrCoreRuntime.class);
-
+    private Logger log = LoggerFactory.getLogger(SolrCoreRuntime.class);
 
     /**
      * The connection to the SOLR server to be used when committing this core
      */
-    private SolrServer              server;
+    private SolrServer server;
 
     // used to ensure that the servers are initialised only by one thread
-    private final ReentrantLock     serverLock;
+    private final ReentrantLock serverLock;
 
     private SolrIndexingService parent;
 
@@ -86,16 +85,14 @@ public final class SolrCoreRuntime extends WorkerRuntime<SolrCoreConfiguration> 
 
     @Override
     protected void execute(Resource resource) {
-        parent.indexResource(resource,this);
+        parent.indexResource(resource, this);
     }
 
-
-
     /**
-     * Ask the server to retrieve all documents that depend on the resource passed as argument; this
-     * query is
-     * carried out by querying the dependencies field of a document.
-     * 
+     * Ask the server to retrieve all documents that depend on the resource
+     * passed as argument; this query is carried out by querying the
+     * dependencies field of a document.
+     *
      * @param resource
      * @return
      */
@@ -118,9 +115,9 @@ public final class SolrCoreRuntime extends WorkerRuntime<SolrCoreConfiguration> 
     }
 
     /**
-     * Queue the input document in the document queue of this SolrCoreRuntime and check whether it is
-     * necessary to commit.
-     * 
+     * Queue the input document in the document queue of this SolrCoreRuntime
+     * and check whether it is necessary to commit.
+     *
      * @param doc the document to be added to the Solr Core
      */
     public void queueInputDocument(SolrInputDocument doc) {
@@ -138,9 +135,9 @@ public final class SolrCoreRuntime extends WorkerRuntime<SolrCoreConfiguration> 
                     log.warn("({}) rejected document without 'id' for update", config.getName());
                 }
             } catch (IOException e) {
-                log.warn("I/O exception while adding SOLR document to index",e);
+                log.warn("I/O exception while adding SOLR document to index", e);
             } catch (SolrServerException e) {
-                log.warn("server exception while adding SOLR document to index",e);
+                log.warn("server exception while adding SOLR document to index", e);
             } finally {
                 serverLock.unlock();
             }
@@ -148,9 +145,9 @@ public final class SolrCoreRuntime extends WorkerRuntime<SolrCoreConfiguration> 
     }
 
     /**
-     * Queue the deletion of a document in the Solr Core and check whether it is necessary to
-     * commit.
-     * 
+     * Queue the deletion of a document in the Solr Core and check whether it is
+     * necessary to commit.
+     *
      * @param docId
      */
     public void queueDeletion(String docId) {
@@ -162,28 +159,27 @@ public final class SolrCoreRuntime extends WorkerRuntime<SolrCoreConfiguration> 
             //update.setAction(ACTION.COMMIT, false, false);
             server.request(update);
         } catch (IOException e) {
-            log.warn("I/O exception while removing SOLR document from index",e);
+            log.warn("I/O exception while removing SOLR document from index", e);
         } catch (SolrServerException e) {
-            log.warn("server exception while removing SOLR document from index",e);
+            log.warn("server exception while removing SOLR document from index", e);
         } finally {
             serverLock.unlock();
         }
 
     }
 
-
     /**
-     * Force a commit of the solr index managed by this runtime. Used e.g. in testing to ensure the data is commited
-     * and available for searching.
+     * Force a commit of the solr index managed by this runtime. Used e.g. in
+     * testing to ensure the data is commited and available for searching.
      */
     public void commit() {
         serverLock.lock();
         try {
             server.commit();
         } catch (IOException e) {
-            log.warn("I/O exception while removing SOLR document from index",e);
+            log.warn("I/O exception while removing SOLR document from index", e);
         } catch (SolrServerException e) {
-            log.warn("server exception while removing SOLR document from index",e);
+            log.warn("server exception while removing SOLR document from index", e);
         } finally {
             serverLock.unlock();
         }
@@ -219,10 +215,9 @@ public final class SolrCoreRuntime extends WorkerRuntime<SolrCoreConfiguration> 
         super.shutdown();
     }
 
-
     @Override
     public boolean schedule(Resource resource) {
-        if(!super.schedule(resource)) {
+        if (!super.schedule(resource)) {
             queueDeletion(getResourceId(resource));
             return false;
         } else {
@@ -231,11 +226,7 @@ public final class SolrCoreRuntime extends WorkerRuntime<SolrCoreConfiguration> 
     }
 
     private static String getResourceId(Resource r) {
-        if(r instanceof KiWiResource)
-            return String.valueOf(((KiWiResource)r).getId());
-        else
-            return r.stringValue();
+        return Cache.getMD5(r.stringValue());
     }
-
 
 }

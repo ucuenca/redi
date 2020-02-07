@@ -63,298 +63,297 @@ import org.slf4j.Logger;
  */
 public class CommonServiceImpl implements CommonService {
 
-  @Inject
-  private ConstantService con;
+    @Inject
+    ExternalSPARQLService fastsparql;
+    @Inject
+    private ConstantService con;
 
-  @Inject
-  private Logger log;
+    @Inject
+    private Logger log;
 
-  @Inject
-  GoogleScholarProviderService googleProviderService;
+    @Inject
+    GoogleScholarProviderService googleProviderService;
 
-  @Inject
-  SpringerProviderService springerProviderService;
+    @Inject
+    SpringerProviderService springerProviderService;
 
-  @Inject
-  AcademicsKnowledgeProviderService academicsKnowledgeService;
+    @Inject
+    AcademicsKnowledgeProviderService academicsKnowledgeService;
 
-  @Inject
-  DBLPProviderService dblpProviderServiceInt;
+    @Inject
+    DBLPProviderService dblpProviderServiceInt;
 
-  @Inject
-  ReportsService reportService;
+    @Inject
+    ReportsService reportService;
 
-  @Inject
-  ReportsImpl reportsImpl;
+    @Inject
+    ReportsImpl reportsImpl;
 
-  @Inject
-  LantindexDetectionServiceImpl LatindexImpl;
+    @Inject
+    LantindexDetectionServiceImpl LatindexImpl;
 
-  @Inject
-  DisambiguationServiceImpl DisambiguationImpl;
+    @Inject
+    DisambiguationServiceImpl DisambiguationImpl;
 
-  @Inject
-  private Centralize centralize;
+    @Inject
+    private Centralize centralize;
 
-  @Inject
-  private QueriesService queriesService;
+    @Inject
+    private QueriesService queriesService;
 
-  @Inject
-  private ExternalSPARQLService sparqlService;
+    @Inject
+    private ExternalSPARQLService sparqlService;
 
-  @Inject
-  private SparqlService sparqlServiceMarmotta;
+    @Inject
+    private CommonsServices com;
 
-  @Inject
-  private CommonsServices com;
+    @Inject
+    private TaskManagerService task;
 
-  @Inject
-  private TaskManagerService task;
+    @Inject
+    private org.apache.marmotta.ucuenca.wk.pubman.services.providers.DBLPProviderService providerServiceDblp1;
 
-  @Inject
-  private org.apache.marmotta.ucuenca.wk.pubman.services.providers.DBLPProviderService providerServiceDblp1;
+    @Inject
+    private org.apache.marmotta.ucuenca.wk.pubman.services.providers.ScieloProviderService providerServiceScielo;
 
-  @Inject
-  private org.apache.marmotta.ucuenca.wk.pubman.services.providers.ScieloProviderService providerServiceScielo;
+    @Inject
+    private org.apache.marmotta.ucuenca.wk.pubman.services.providers.DOAJProviderService providerServiceDOAJ;
 
-  @Inject
-  private org.apache.marmotta.ucuenca.wk.pubman.services.providers.DOAJProviderService providerServiceDOAJ;
+    @Inject
+    private org.apache.marmotta.ucuenca.wk.pubman.services.providers.ORCIDProviderService providerServiceORCID;
 
-  @Inject
-  private org.apache.marmotta.ucuenca.wk.pubman.services.providers.ORCIDProviderService providerServiceORCID;
+    @Inject
+    private ScopusProviderService providerServiceScopus;
+    @Inject
+    private ScopusUpdateProviderService providerServiceScopus1;
+    private Thread scopusThread;
+    private Thread academicsThread;
+    private Thread dblpThread;
+    private Thread scieloThread;
+    private Thread scholarThread;
+    private Thread springerThread;
+    private Thread doajThread;
+    private Thread orcidThread;
 
-  @Inject
-  private ScopusProviderService providerServiceScopus;
-  @Inject
-  private ScopusUpdateProviderService providerServiceScopus1;
-  private Thread scopusThread;
-  private Thread academicsThread;
-  private Thread dblpThread;
-  private Thread scieloThread;
-  private Thread scholarThread;
-  private Thread springerThread;
-  private Thread doajThread;
-  private Thread orcidThread;
+    private final JsonNodeFactory factory = JsonNodeFactory.instance;
 
-  private final JsonNodeFactory factory = JsonNodeFactory.instance;
+    @Override
+    public String getDataFromSpringerProvidersService(final String[] organizations, final boolean force) {
+        if (springerThread != null && springerThread.isAlive()) {
+            return "Process is executing.";
+        }
 
-  @Override
-  public String getDataFromSpringerProvidersService(final String[] organizations, final boolean force) {
-    if (springerThread != null && springerThread.isAlive()) {
-      return "Process is executing.";
+        springerThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                springerProviderService.extractAuthors(organizations, force);
+            }
+        });
+        springerThread.start();
+        return "Data Provider Springer are extracted in background.   Please review main.log file for details";
+
     }
 
-    springerThread = new Thread(new Runnable() {
-      @Override
-      public void run() {
-        springerProviderService.extractAuthors(organizations, force);
-      }
-    });
-    springerThread.start();
-    return "Data Provider Springer are extracted in background.   Please review main.log file for details";
+    @Override
+    public String getDataFromScopusProvidersService(final String[] organizations, final boolean force) {
+        // Find a way to execute thread and get response information.
+        if (scopusThread != null && scopusThread.isAlive()) {
+            return "Process is executing.";
+        }
 
-  }
+        scopusThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                providerServiceScopus.extractAuthors(organizations, force);
+            }
+        });
+        scopusThread.start();
+        return "Data Provider SCOPUS are extracted in background.   Please review main.log file for details";
 
-  @Override
-  public String getDataFromScopusProvidersService(final String[] organizations, final boolean force) {
-    // Find a way to execute thread and get response information.
-    if (scopusThread != null && scopusThread.isAlive()) {
-      return "Process is executing.";
     }
 
-    scopusThread = new Thread(new Runnable() {
-      @Override
-      public void run() {
-        providerServiceScopus.extractAuthors(organizations, force);
-      }
-    });
-    scopusThread.start();
-    return "Data Provider SCOPUS are extracted in background.   Please review main.log file for details";
-
-  }
-
-  @Override
-  public String getDataFromAcademicsKnowledgeProvidersService(final String[] organizations, final boolean force) {
-    if (academicsThread != null && academicsThread.isAlive()) {
-      return "Process is executing.";
+    @Override
+    public String getDataFromAcademicsKnowledgeProvidersService(final String[] organizations, final boolean force) {
+        if (academicsThread != null && academicsThread.isAlive()) {
+            return "Process is executing.";
+        }
+        academicsThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                academicsKnowledgeService.extractAuthors(organizations, force);
+            }
+        });
+        academicsThread.start();
+        return "Data Provider AK are extracted in background.   Please review main.log file for details";
     }
-    academicsThread = new Thread(new Runnable() {
-      @Override
-      public void run() {
-        academicsKnowledgeService.extractAuthors(organizations, force);
-      }
-    });
-    academicsThread.start();
-    return "Data Provider AK are extracted in background.   Please review main.log file for details";
-  }
 
-  @Override
-  public String getDataFromDBLPProvidersService(final String[] organizations, final boolean force) {
-    if (dblpThread != null && dblpThread.isAlive()) {
-      return "Process is executing.";
+    @Override
+    public String getDataFromDBLPProvidersService(final String[] organizations, final boolean force) {
+        if (dblpThread != null && dblpThread.isAlive()) {
+            return "Process is executing.";
+        }
+        dblpThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                providerServiceDblp1.extractAuthors(organizations, force);
+            }
+        });
+        dblpThread.start();
+        return "Data Provider DBLP are extracted in background.   Please review main.log file for details";
     }
-    dblpThread = new Thread(new Runnable() {
-      @Override
-      public void run() {
-        providerServiceDblp1.extractAuthors(organizations, force);
-      }
-    });
-    dblpThread.start();
-    return "Data Provider DBLP are extracted in background.   Please review main.log file for details";
-  }
 
-  @Override
-  public String getDataFromGoogleScholarProvidersService(final String[] organizations, final boolean force) {
+    @Override
+    public String getDataFromGoogleScholarProvidersService(final String[] organizations, final boolean force) {
 
-    if (scholarThread != null && scholarThread.isAlive()) {
-      return "Process is executing.";
+        if (scholarThread != null && scholarThread.isAlive()) {
+            return "Process is executing.";
+        }
+        scholarThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                googleProviderService.extractAuthors(organizations, force);
+            }
+        });
+        scholarThread.start();
+        return "Data Provider Google Scholar are extracted in background.   Please review main.log file for details";
     }
-    scholarThread = new Thread(new Runnable() {
-      @Override
-      public void run() {
-        googleProviderService.extractAuthors(organizations, force);
-      }
-    });
-    scholarThread.start();
-    return "Data Provider Google Scholar are extracted in background.   Please review main.log file for details";
-  }
 
-  @Override
-  public String createReport(String hostname, String realPath, String name, String type, List<String> params) {
-    return reportService.createReport(hostname, realPath, name, type, params);
-  }
+    @Override
+    public String createReport(String hostname, String realPath, String name, String type, List<String> params) {
+        return reportService.createReport(hostname, realPath, name, type, params);
+    }
 
-  @Override
-  public String getSearchQuery(String textSearch) {
-    return queriesService.getSearchQuery(textSearch);
-  }
+    @Override
+    public String getSearchQuery(String textSearch) {
+        return queriesService.getSearchQuery(textSearch);
+    }
 
-  @Override
-  public String DetectLatindexPublications() {
-    String startProcess = LatindexImpl.startProcess();
+    @Override
+    public String DetectLatindexPublications() {
+        String startProcess = LatindexImpl.startProcess();
 
-    return startProcess;
-  }
+        return startProcess;
+    }
 
-  @Override
-  public String organizationListExtracted() {
-    try {
-      List<Provider> prov = getProviders();
-      /* Map<String, String> mprov = new HashMap();
+    @Override
+    public String organizationListExtracted() {
+        try {
+            List<Provider> prov = getProviders();
+            /* Map<String, String> mprov = new HashMap();
             for (Provider p : prov) {
 
                 mprov.put(p.Graph, p.Name);
 
             }*/
-      String queryOrg = queriesService.getExtractedOrgListD(prov);
-      List<Map<String, Value>> response;
+            String queryOrg = queriesService.getExtractedOrgListD(prov);
+            List<Map<String, Value>> response;
 
-      response = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queryOrg);
-      return com.listmapTojson(response);
-    } catch (MarmottaException ex) {
-      java.util.logging.Logger.getLogger(CommonServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-    }
-
-    return null;
-  }
-
-  @Override
-  public String listREDIEndpoints() {
-    try {
-      List<Map<String, Value>> response = sparqlService.getSparqlService().query(
-              QueryLanguage.SPARQL,
-              queriesService.getListREDIEndpoints()
-      );
-
-      // Generate JSON.
-      JSONArray result = new JSONArray();
-      for (Map<String, Value> map : response) {
-        String id = map.get("id").stringValue();
-
-        // Endpoint info
-        JSONObject endpointInfoJson = com.getObjectfromResult(map);
-
-        // Get statistics of graphs
-        JSONArray statsJson = new JSONArray();
-        List<Map<String, Value>> statistics = sparqlService.getSparqlService().query(
-                QueryLanguage.SPARQL,
-                queriesService.getREDIEndpointStatistics(id)
-        );
-        for (Map<String, Value> statsMap : statistics) {
-          JSONObject stat = com.getObjectfromResult(statsMap);
-          statsJson.put(stat);
+            response = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queryOrg);
+            return com.listmapTojson(response);
+        } catch (MarmottaException ex) {
+            java.util.logging.Logger.getLogger(CommonServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        endpointInfoJson.put("offset", statsJson);
-        result.put(endpointInfoJson);
-      }
-      return new JSONObject().put("data", result).toString();
-    } catch (MarmottaException ex) {
-      log.error(ex.getMessage(), ex);
+        return null;
     }
-    return null;
-  }
 
-  @Override
-  public boolean deleteREDIEndpoint(String id) {
-    try {
-      sparqlService.getSparqlService().update(QueryLanguage.SPARQL,
-              queriesService.delteREDIEndpointQuery(id));
-      return true;
-    } catch (MarmottaException | InvalidArgumentException | MalformedQueryException | UpdateExecutionException ex) {
-      log.error(ex.getMessage(), ex);
-    }
-    return false;
-  }
+    @Override
+    public String listREDIEndpoints() {
+        try {
+            List<Map<String, Value>> response = sparqlService.getSparqlService().query(
+                    QueryLanguage.SPARQL,
+                    queriesService.getListREDIEndpoints()
+            );
 
-  @Override
-  public String organizationListEnrichment() {
-    try {
-      List<Provider> prov = getProviders();
-      Map<String, String> mprov = new HashMap();
-      for (Provider p : prov) {
+            // Generate JSON.
+            JSONArray result = new JSONArray();
+            for (Map<String, Value> map : response) {
+                String id = map.get("id").stringValue();
 
-        mprov.put(p.Graph, p.Name);
+                // Endpoint info
+                JSONObject endpointInfoJson = com.getObjectfromResult(map);
 
-      }
-      String queryOrg = queriesService.getEnrichmentQueryResult(prov);
-      List<Map<String, Value>> response1;
+                // Get statistics of graphs
+                JSONArray statsJson = new JSONArray();
+                List<Map<String, Value>> statistics = sparqlService.getSparqlService().query(
+                        QueryLanguage.SPARQL,
+                        queriesService.getREDIEndpointStatistics(id)
+                );
+                for (Map<String, Value> statsMap : statistics) {
+                    JSONObject stat = com.getObjectfromResult(statsMap);
+                    statsJson.put(stat);
+                }
 
-      String queryd = queriesService.getOrgDisambiguationResult(prov);
-      //   String queryd = queriesService.getOrgDisambiguationResult(mprov);
-      log.info(queryd);
-      List<Map<String, Value>> response2;
-
-      response1 = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queryOrg);
-      response2 = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queryd);
-      log.info("RESP");
-      log.info(response2.toString());
-      for (Map<String, Value> m1 : response1) {
-        for (Map<String, Value> m2 : response2) {
-          if (m1.containsKey("org") && m2.containsKey("org")) {
-            if (m1.get("org").equals(m2.get("org"))) {
-              //m1.putAll(m2);
-              // String log;
-              for (Map.Entry<String, Value> e2 : m2.entrySet()) {
-                m1.put(e2.getKey() + "l", e2.getValue());
-              }
+                endpointInfoJson.put("offset", statsJson);
+                result.put(endpointInfoJson);
             }
-          }
+            return new JSONObject().put("data", result).toString();
+        } catch (MarmottaException ex) {
+            log.error(ex.getMessage(), ex);
         }
-      }
-
-      return com.listmapTojson(response1);
-    } catch (MarmottaException ex) {
-      java.util.logging.Logger.getLogger(CommonServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        return null;
     }
 
-    return null;
-  }
+    @Override
+    public boolean deleteREDIEndpoint(String id) {
+        try {
+            sparqlService.getSparqlService().update(QueryLanguage.SPARQL,
+                    queriesService.delteREDIEndpointQuery(id));
+            return true;
+        } catch (MarmottaException | InvalidArgumentException | MalformedQueryException | UpdateExecutionException ex) {
+            log.error(ex.getMessage(), ex);
+        }
+        return false;
+    }
 
-  @Override
-  public List<Provider> getProviders() throws MarmottaException {
-    List<Provider> Providers = new ArrayList();
-    /*String queryProviders = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
+    @Override
+    public String organizationListEnrichment() {
+        try {
+            List<Provider> prov = getProviders();
+            Map<String, String> mprov = new HashMap();
+            for (Provider p : prov) {
+
+                mprov.put(p.Graph, p.Name);
+
+            }
+            String queryOrg = queriesService.getEnrichmentQueryResult(prov);
+            List<Map<String, Value>> response1;
+
+            String queryd = queriesService.getOrgDisambiguationResult(prov);
+            //   String queryd = queriesService.getOrgDisambiguationResult(mprov);
+            log.info(queryd);
+            List<Map<String, Value>> response2;
+
+            response1 = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queryOrg);
+            response2 = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queryd);
+            log.info("RESP");
+            log.info(response2.toString());
+            for (Map<String, Value> m1 : response1) {
+                for (Map<String, Value> m2 : response2) {
+                    if (m1.containsKey("org") && m2.containsKey("org")) {
+                        if (m1.get("org").equals(m2.get("org"))) {
+                            //m1.putAll(m2);
+                            // String log;
+                            for (Map.Entry<String, Value> e2 : m2.entrySet()) {
+                                m1.put(e2.getKey() + "l", e2.getValue());
+                            }
+                        }
+                    }
+                }
+            }
+
+            return com.listmapTojson(response1);
+        } catch (MarmottaException ex) {
+            java.util.logging.Logger.getLogger(CommonServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return null;
+    }
+
+    @Override
+    public List<Provider> getProviders() throws MarmottaException {
+        List<Provider> Providers = new ArrayList();
+        /*String queryProviders = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
          + "SELECT DISTINCT ?uri ?name ?graph ?main WHERE { "
          + "  GRAPH ?graph { "
          + "  ?uri a <" + REDI.PROVIDER.toString() + "> . "
@@ -362,343 +361,343 @@ public class CommonServiceImpl implements CommonService {
          + "  ?uri <http://ucuenca.edu.ec/ontology#main> ?main"
          + "  }}order  by desc (?main)";*/
 
-    String queryProviders = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>  "
-            + "SELECT DISTINCT ?uri (SAMPLE (?sname) as ?name) (SAMPLE (?sgraph) as ?graph) (SAMPLE (?smain) as ?main) "
-            + "WHERE {  "
-            + " GRAPH ?sgraph {  "
-            + "  ?uri a <" + REDI.PROVIDER.toString() + "> . "
-            + "  ?uri rdfs:label ?sname  . "
-            + " ?uri <http://ucuenca.edu.ec/ontology#main> ?smain "
-            + " }} GROUP BY ?uri  Order  by  desc (?main)";
+        String queryProviders = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>  "
+                + "SELECT DISTINCT ?uri (SAMPLE (?sname) as ?name) (SAMPLE (?sgraph) as ?graph) (SAMPLE (?smain) as ?main) "
+                + "WHERE {  "
+                + " GRAPH ?sgraph {  "
+                + "  ?uri a <" + REDI.PROVIDER.toString() + "> . "
+                + "  ?uri rdfs:label ?sname  . "
+                + " ?uri <http://ucuenca.edu.ec/ontology#main> ?smain "
+                + " }} GROUP BY ?uri  Order  by  desc (?main)";
 
-    List<Map<String, Value>> response = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queryProviders);
-    for (Map<String, Value> prov : response) {
-      Provider p = new Provider(prov.get("name").stringValue().replace(" ", ""), prov.get("graph").stringValue(), sparqlService.getSparqlService());
-      Providers.add(p);
-    }
-    return Providers;
-  }
-
-  @Override
-  public String runDisambiguationProcess(String[] orgs) {
-    String startProcess = DisambiguationImpl.startDisambiguation(orgs);
-    return startProcess;
-  }
-
-  @Override
-  public String CentralGraphProcess() {
-    String startProcess = DisambiguationImpl.startMerge();
-    return startProcess;
-  }
-
-  @Override
-  public String getDataFromScieloProvidersService(final String[] organizations, final boolean force) {
-    if (scieloThread != null && scieloThread.isAlive()) {
-      return "Process is executing.";
-    }
-    scieloThread = new Thread(new Runnable() {
-      @Override
-      public void run() {
-        providerServiceScielo.extractAuthors(organizations, force);
-      }
-    });
-    scieloThread.start();
-    return "Data Provider Scielo are extracted in background.   Please review main.log file for details";
-  }
-
-  @Override
-  public String runDisambiguationProcess() {
-    String startProcess = DisambiguationImpl.startDisambiguation();
-    return startProcess;
-  }
-
-  @Override
-  public String getCollaboratorsData(String uri) {
-    String describeAuthor = "PREFIX dct: <http://purl.org/dc/terms/> "
-            + "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
-            + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
-            + "SELECT DISTINCT  ?author (SAMPLE (?names) as ?name) (SAMPLE (?lastname) as ?lname)  (SAMPLE (?slabel) as ?label) ?orgname ?img WHERE {   "
-            + "  GRAPH  <" + con.getCentralGraph() + "> {  "
-            + "    VALUES ?author {<" + uri + "> } . "
-            + "    ?author foaf:name ?names . "
-            + "    OPTIONAL { ?author  foaf:familyName ?lastname .} "
-            + "    ?author foaf:publications ?pub .   "
-            + "    OPTIONAL { ?author foaf:img ?img . }"
-            + "    ?pub dct:subject ?subject . "
-            + "    ?subject rdfs:label ?slabel . "
-            + "    ?author  <http://schema.org/memberOf>  ?org . "
-            + "   GRAPH <" + con.getOrganizationsGraph() + "> { "
-            + "     ?org <" + REDI.NAME.toString() + "> ?orgname "
-            + "   }  "
-            + "   }  "
-            + "}GROUP BY ?author ?orgname ?img";
-    try {
-      List<Map<String, Value>> response = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, describeAuthor);
-      String imgbase = "";
-      String authorLName = "";
-      if (!response.isEmpty()) {
-        String authorName = response.get(0).get("name").stringValue();
-        if (response.get(0).containsKey("lname")) {
-          authorLName = response.get(0).get("lname").stringValue();
+        List<Map<String, Value>> response = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queryProviders);
+        for (Map<String, Value> prov : response) {
+            Provider p = new Provider(prov.get("name").stringValue().replace(" ", ""), prov.get("graph").stringValue(), sparqlService.getSparqlService());
+            Providers.add(p);
         }
-        String authorOrg = response.get(0).get("orgname").stringValue();
-        if (response.get(0).containsKey("img")) {
-          imgbase = response.get(0).get("img").stringValue();
+        return Providers;
+    }
+
+    @Override
+    public String runDisambiguationProcess(String[] orgs) {
+        String startProcess = DisambiguationImpl.startDisambiguation(orgs);
+        return startProcess;
+    }
+
+    @Override
+    public String CentralGraphProcess() {
+        String startProcess = DisambiguationImpl.startMerge();
+        return startProcess;
+    }
+
+    @Override
+    public String getDataFromScieloProvidersService(final String[] organizations, final boolean force) {
+        if (scieloThread != null && scieloThread.isAlive()) {
+            return "Process is executing.";
         }
-
-        //double maxScoreAuthor = 0;
-        double maXScoreCoauthor = 0;
-        //String authorKeywords = "";
-
-        LinkedHashMap<String, Collaborator> cMap = new LinkedHashMap();
-
-        for (Map<String, Value> author : response) {
-          //String subject = author.get("subject").stringValue();
-          if (isStopWord(author.get("label").stringValue())) {
-            continue;
-          }
-          //if (maxScoreAuthor == 0) {
-          //  maxScoreAuthor = Integer.parseInt(author.get("npub").stringValue());
-          //}
-
-          //authorKeywords = author.get("label").stringValue() + "," + authorKeywords;
-          //double authorSubjectS = (double) Integer.parseInt(author.get("npub").stringValue());
-          String querySubjectCo = "PREFIX :<http://www.ontotext.com/graphdb/similarity/> \n"
-                  + "                   PREFIX inst:<http://www.ontotext.com/graphdb/similarity/instance/> \n"
-                  + "                   PREFIX pubo: <http://ontology.ontotext.com/publishing#> \n"
-                  + "                   PREFIX dct: <http://purl.org/dc/terms/>  \n"
-                  + "                   PREFIX foaf: <http://xmlns.com/foaf/0.1/>  \n"
-                  + "                   PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>  \n"
-                  + "                   SELECT DISTINCT  ?author (SAMPLE (?score) as ?scores) (SAMPLE (?names) as ?name)  (SAMPLE (?lastname) as ?lname) (SAMPLE (?slabel) as ?label)  ?orgname  ?img  \n"
-                  + "                   WHERE {    \n"
-                  + "\n"
-                  + "                     {\n"
-                  + "\n"
-                  + "                        SELECT ?author ?score {\n"
-                  + "                                ?search a inst:authorsIdx ;\n"
-                  + "                                    :searchDocumentID <" + uri + ">;\n"
-                  + "                                    :searchParameters \"-numsearchresults 100\";\n"
-                  + "                                    :documentResult ?result .\n"
-                  + "                                ?result :value ?author ;\n"
-                  + "                                        :score ?score.\n"
-                  + "                                       filter ( ?author !=  <" + uri + "> )  \n"
-                  + "                            	}\n"
-                  + "\n"
-                  + "\n"
-                  + "                     } .\n"
-                  + "                     GRAPH  <" + con.getCentralGraph() + "> {       \n"
-                  + "                       ?pub dct:subject ?subject .  \n"
-                  + "                       ?subject rdfs:label ?slabel .  \n"
-                  + "                       ?author foaf:publications ?pub  .    \n"
-                  + "                       ?author foaf:name ?names .  \n"
-                  + "                   OPTIONAL { ?author  foaf:familyName ?lastname .} \n"
-                  + "                   OPTIONAL { ?author  foaf:img  ?img . }  \n"
-                  + "                       ?author  <http://schema.org/memberOf>  ?org .  \n"
-                  + "                      GRAPH <" + con.getOrganizationsGraph() + "> {  \n"
-                  + "                        ?org <http://ucuenca.edu.ec/ontology#name> ?orgname .  \n"
-                  + "                      } .  \n"
-                  + "                      filter ( ?author !=  <" + uri + "> )  \n"
-                  + "                      }   \n"
-                  + "                   }GROUP BY ?author   ?orgname  ?img  ";
-
-          List<Map<String, Value>> responseSubAuthor = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, querySubjectCo);
-
-          for (Map<String, Value> coauthor : responseSubAuthor) {
-            String couri = coauthor.get("author").stringValue();
-            String coName = coauthor.get("name").stringValue();
-            String lName = "";
-            if (coauthor.containsKey("lname")) {
-              lName = coauthor.get("lname").stringValue();
+        scieloThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                providerServiceScielo.extractAuthors(organizations, force);
             }
-            String coOrg = coauthor.get("orgname").stringValue();
-            //int coScore = Integer.parseInt(coauthor.get("npub").stringValue());
-            String imgUri = "";
-            if (coauthor.containsKey("img")) {
-              imgUri = coauthor.get("img").stringValue();
-            }
-            double Score = 2;
-            if (coauthor.containsKey("scores")) {
-              Score = Double.parseDouble(coauthor.get("scores").stringValue());
+        });
+        scieloThread.start();
+        return "Data Provider Scielo are extracted in background.   Please review main.log file for details";
+    }
+
+    @Override
+    public String runDisambiguationProcess() {
+        String startProcess = DisambiguationImpl.startDisambiguation();
+        return startProcess;
+    }
+
+    @Override
+    public String getCollaboratorsData(String uri) {
+        String describeAuthor = "PREFIX dct: <http://purl.org/dc/terms/> "
+                + "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
+                + "SELECT DISTINCT  ?author (SAMPLE (?names) as ?name) (SAMPLE (?lastname) as ?lname)  (SAMPLE (?slabel) as ?label) ?orgname ?img WHERE {   "
+                + "  GRAPH  <" + con.getCentralGraph() + "> {  "
+                + "    VALUES ?author {<" + uri + "> } . "
+                + "    ?author foaf:name ?names . "
+                + "    OPTIONAL { ?author  foaf:familyName ?lastname .} "
+                + "    ?author foaf:publications ?pub .   "
+                + "    OPTIONAL { ?author foaf:img ?img . }"
+                + "    ?pub dct:subject ?subject . "
+                + "    ?subject rdfs:label ?slabel . "
+                + "    ?author  <http://schema.org/memberOf>  ?org . "
+                + "   GRAPH <" + con.getOrganizationsGraph() + "> { "
+                + "     ?org <" + REDI.NAME.toString() + "> ?orgname "
+                + "   }  "
+                + "   }  "
+                + "}GROUP BY ?author ?orgname ?img";
+        try {
+            List<Map<String, Value>> response = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, describeAuthor);
+            String imgbase = "";
+            String authorLName = "";
+            if (!response.isEmpty()) {
+                String authorName = response.get(0).get("name").stringValue();
+                if (response.get(0).containsKey("lname")) {
+                    authorLName = response.get(0).get("lname").stringValue();
+                }
+                String authorOrg = response.get(0).get("orgname").stringValue();
+                if (response.get(0).containsKey("img")) {
+                    imgbase = response.get(0).get("img").stringValue();
+                }
+
+                //double maxScoreAuthor = 0;
+                double maXScoreCoauthor = 0;
+                //String authorKeywords = "";
+
+                LinkedHashMap<String, Collaborator> cMap = new LinkedHashMap();
+
+                for (Map<String, Value> author : response) {
+                    //String subject = author.get("subject").stringValue();
+                    if (isStopWord(author.get("label").stringValue())) {
+                        continue;
+                    }
+                    //if (maxScoreAuthor == 0) {
+                    //  maxScoreAuthor = Integer.parseInt(author.get("npub").stringValue());
+                    //}
+
+                    //authorKeywords = author.get("label").stringValue() + "," + authorKeywords;
+                    //double authorSubjectS = (double) Integer.parseInt(author.get("npub").stringValue());
+                    String querySubjectCo = "PREFIX :<http://www.ontotext.com/graphdb/similarity/> \n"
+                            + "                   PREFIX inst:<http://www.ontotext.com/graphdb/similarity/instance/> \n"
+                            + "                   PREFIX pubo: <http://ontology.ontotext.com/publishing#> \n"
+                            + "                   PREFIX dct: <http://purl.org/dc/terms/>  \n"
+                            + "                   PREFIX foaf: <http://xmlns.com/foaf/0.1/>  \n"
+                            + "                   PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>  \n"
+                            + "                   SELECT DISTINCT  ?author (SAMPLE (?score) as ?scores) (SAMPLE (?names) as ?name)  (SAMPLE (?lastname) as ?lname) (SAMPLE (?slabel) as ?label)  ?orgname  ?img  \n"
+                            + "                   WHERE {    \n"
+                            + "\n"
+                            + "                     {\n"
+                            + "\n"
+                            + "                        SELECT ?author ?score {\n"
+                            + "                                ?search a inst:authorsIdx ;\n"
+                            + "                                    :searchDocumentID <" + uri + ">;\n"
+                            + "                                    :searchParameters \"-numsearchresults 100\";\n"
+                            + "                                    :documentResult ?result .\n"
+                            + "                                ?result :value ?author ;\n"
+                            + "                                        :score ?score.\n"
+                            + "                                       filter ( ?author !=  <" + uri + "> )  \n"
+                            + "                            	}\n"
+                            + "\n"
+                            + "\n"
+                            + "                     } .\n"
+                            + "                     GRAPH  <" + con.getCentralGraph() + "> {       \n"
+                            + "                       ?pub dct:subject ?subject .  \n"
+                            + "                       ?subject rdfs:label ?slabel .  \n"
+                            + "                       ?author foaf:publications ?pub  .    \n"
+                            + "                       ?author foaf:name ?names .  \n"
+                            + "                   OPTIONAL { ?author  foaf:familyName ?lastname .} \n"
+                            + "                   OPTIONAL { ?author  foaf:img  ?img . }  \n"
+                            + "                       ?author  <http://schema.org/memberOf>  ?org .  \n"
+                            + "                      GRAPH <" + con.getOrganizationsGraph() + "> {  \n"
+                            + "                        ?org <http://ucuenca.edu.ec/ontology#name> ?orgname .  \n"
+                            + "                      } .  \n"
+                            + "                      filter ( ?author !=  <" + uri + "> )  \n"
+                            + "                      }   \n"
+                            + "                   }GROUP BY ?author   ?orgname  ?img  ";
+
+                    List<Map<String, Value>> responseSubAuthor = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, querySubjectCo);
+
+                    for (Map<String, Value> coauthor : responseSubAuthor) {
+                        String couri = coauthor.get("author").stringValue();
+                        String coName = coauthor.get("name").stringValue();
+                        String lName = "";
+                        if (coauthor.containsKey("lname")) {
+                            lName = coauthor.get("lname").stringValue();
+                        }
+                        String coOrg = coauthor.get("orgname").stringValue();
+                        //int coScore = Integer.parseInt(coauthor.get("npub").stringValue());
+                        String imgUri = "";
+                        if (coauthor.containsKey("img")) {
+                            imgUri = coauthor.get("img").stringValue();
+                        }
+                        double Score = 2;
+                        if (coauthor.containsKey("scores")) {
+                            Score = Double.parseDouble(coauthor.get("scores").stringValue());
 //              if (Score == 0) {
 //                Score = 2;
 //              } else {
 //                Score = 1 / Score;
 //              }
+                        }
+                        //double Score = authorSubjectS / (double) maxScoreAuthor;
+
+                        if (!cMap.containsKey(couri)) {
+                            Collaborator c = new Collaborator(uri, couri, coName, lName, Score, isCoauthor(uri, couri), isClusterPartner(uri, couri), coOrg, getSubjectAuthor(couri), Score);
+                            c.setImgUri(imgUri);
+                            cMap.put(couri, c);
+                            if (maXScoreCoauthor < c.getDocScore()) {
+                                maXScoreCoauthor = c.getDocScore();
+                            }
+                        }
+
+                    }
+
+                }
+
+                Collaborator base = new Collaborator(uri, uri, authorName, authorLName, authorOrg, getSubjectAuthor(uri));
+                base.setImgUri(imgbase);
+                return coauthorsToJson(base, orderCoauthors(cMap, 100), maXScoreCoauthor);
+
             }
-            //double Score = authorSubjectS / (double) maxScoreAuthor;
+        } catch (MarmottaException | org.json.JSONException ex) {
+            java.util.logging.Logger.getLogger(CommonServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            log.debug(ex.getMessage());
+        }
+        log.debug("No data found for related authors: " + uri);
+        return "{\"Error\":\"No Data\"}";
+    }
 
-            if (!cMap.containsKey(couri)) {
-              Collaborator c = new Collaborator(uri, couri, coName, lName, Score, isCoauthor(uri, couri), isClusterPartner(uri, couri), coOrg, getSubjectAuthor(couri), Score);
-              c.setImgUri(imgUri);
-              cMap.put(couri, c);
-              if (maXScoreCoauthor < c.getDocScore()) {
-                maXScoreCoauthor = c.getDocScore();
-              }
+    public Double graphDBDistance(String U, String U2) {
+
+        return null;
+    }
+
+    public String getSubjectAuthor(String coUri) throws MarmottaException {
+        String querySubject = "PREFIX dct: <http://purl.org/dc/terms/> "
+                + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>  "
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>  "
+                + "SELECT ?author (GROUP_CONCAT (DISTINCT ?lsubject ;separator= \", \") as ?lsubjects) WHERE { "
+                + "SELECT ?subject  (SAMPLE ( ?slabel ) as ?lsubject)  (COUNT (?pub) as ?npub)    { "
+                + " VALUES ?author { <" + coUri + "> } .  \n"
+                + "   ?author     foaf:publications ?pub . "
+                + "?pub dct:subject ?subject . "
+                + "?subject rdfs:label ?slabel } GROUP BY ?subject ORDER BY DESC (?npub) limit 10 "
+                + " } GROUP BY ?author";
+
+        List<Map<String, Value>> response = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, querySubject);
+        if (!response.isEmpty()) {
+            String resp = "";
+            String subject = response.get(0).get("lsubjects").stringValue();
+            for (String r : getRelevantTopics(subject.toLowerCase().split(","))) {
+                resp = r + ", " + resp;
             }
+            return resp;
+        } else {
+            return "";
+        }
+    }
 
-          }
+    public String coauthorsToJson(Collaborator base, LinkedHashMap<String, Collaborator> cMap, Double maxScore) throws org.json.JSONException {
+        List<Map<String, String>> lnodes = new ArrayList();
 
+        Map newm = new HashMap();
+        newm.put("id", base.getUri());
+        newm.put("group", base.getOrganization());
+        newm.put("label", base.getcName());
+        newm.put("img", base.getImgUri());
+        newm.put("lastname", base.getLastName());
+        newm.put("subject", base.getSubjects());
+        lnodes.add(newm);
+
+        List<Map<String, String>> llinks = new ArrayList();
+        for (Map.Entry<String, Collaborator> e : cMap.entrySet()) {
+            newm = new HashMap();
+            newm.put("id", e.getValue().getUri());
+            newm.put("group", e.getValue().getOrganization());
+            newm.put("label", e.getValue().getcName());
+            newm.put("lastname", e.getValue().getLastName());
+            newm.put("img", e.getValue().getImgUri());
+            newm.put("subject", e.getValue().getSubjects());
+            lnodes.add(newm);
+
+            Map newlink = new HashMap();
+            newlink.put("source", base.getUri());
+            newlink.put("target", e.getValue().getUri());
+            newlink.put("distance", 300 - (300 * e.getValue().getDocScore()) / maxScore + "");
+            //newlink.put("distance", e.getValue().getDocScore() + "");
+            newlink.put("coauthor", e.getValue().isCoauthor().toString());
+            llinks.add(newlink);
         }
 
-        Collaborator base = new Collaborator(uri, uri, authorName, authorLName, authorOrg, getSubjectAuthor(uri));
-        base.setImgUri(imgbase);
-        return coauthorsToJson(base, orderCoauthors(cMap, 100), maXScoreCoauthor);
+        return mergeJSON(listmapTojson(lnodes, "nodes"), listmapTojson(llinks, "links"), "nodes", "links");
 
-      }
-    } catch (MarmottaException | org.json.JSONException ex) {
-      java.util.logging.Logger.getLogger(CommonServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-      log.debug(ex.getMessage());
-    }
-    log.debug("No data found for related authors: " + uri);
-    return "{\"Error\":\"No Data\"}";
-  }
-
-  public Double graphDBDistance(String U, String U2) {
-
-    return null;
-  }
-
-  public String getSubjectAuthor(String coUri) throws MarmottaException {
-    String querySubject = "PREFIX dct: <http://purl.org/dc/terms/> "
-            + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>  "
-            + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>  "
-            + "SELECT ?author (GROUP_CONCAT (DISTINCT ?lsubject ;separator= \", \") as ?lsubjects) WHERE { "
-            + "SELECT ?subject  (SAMPLE ( ?slabel ) as ?lsubject)  (COUNT (?pub) as ?npub)    { "
-            + " VALUES ?author { <" + coUri + "> } .  \n"
-            + "   ?author     foaf:publications ?pub . "
-            + "?pub dct:subject ?subject . "
-            + "?subject rdfs:label ?slabel } GROUP BY ?subject ORDER BY DESC (?npub) limit 10 "
-            + " } GROUP BY ?author";
-
-    List<Map<String, Value>> response = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, querySubject);
-    if (!response.isEmpty()) {
-      String resp = "";
-      String subject = response.get(0).get("lsubjects").stringValue();
-      for (String r : getRelevantTopics(subject.toLowerCase().split(","))) {
-        resp = r + ", " + resp;
-      }
-      return resp;
-    } else {
-      return "";
-    }
-  }
-
-  public String coauthorsToJson(Collaborator base, LinkedHashMap<String, Collaborator> cMap, Double maxScore) throws org.json.JSONException {
-    List<Map<String, String>> lnodes = new ArrayList();
-
-    Map newm = new HashMap();
-    newm.put("id", base.getUri());
-    newm.put("group", base.getOrganization());
-    newm.put("label", base.getcName());
-    newm.put("img", base.getImgUri());
-    newm.put("lastname", base.getLastName());
-    newm.put("subject", base.getSubjects());
-    lnodes.add(newm);
-
-    List<Map<String, String>> llinks = new ArrayList();
-    for (Map.Entry<String, Collaborator> e : cMap.entrySet()) {
-      newm = new HashMap();
-      newm.put("id", e.getValue().getUri());
-      newm.put("group", e.getValue().getOrganization());
-      newm.put("label", e.getValue().getcName());
-      newm.put("lastname", e.getValue().getLastName());
-      newm.put("img", e.getValue().getImgUri());
-      newm.put("subject", e.getValue().getSubjects());
-      lnodes.add(newm);
-
-      Map newlink = new HashMap();
-      newlink.put("source", base.getUri());
-      newlink.put("target", e.getValue().getUri());
-      newlink.put("distance", 300 - (300 * e.getValue().getDocScore()) / maxScore + "");
-      //newlink.put("distance", e.getValue().getDocScore() + "");
-      newlink.put("coauthor", e.getValue().isCoauthor().toString());
-      llinks.add(newlink);
     }
 
-    return mergeJSON(listmapTojson(lnodes, "nodes"), listmapTojson(llinks, "links"), "nodes", "links");
-
-  }
-
-  @Override
-  public String getCluster(String clusterUri) {
-    String querySC = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
-            + "PREFIX dct: <http://purl.org/dc/terms/>\n"
-            + "prefix uc: <http://ucuenca.edu.ec/ontology#> \n"
-            + "prefix foaf: <http://xmlns.com/foaf/0.1/> \n"
-            + "SELECT distinct ?sc WHERE {\n"
-            + "  GRAPH <" + con.getClusterGraph() + "> {\n"
-            + "   <" + clusterUri + "> a uc:Cluster .\n"
-            + "   ?x dct:isPartOf <" + clusterUri + "> .\n"
-            + "   ?x dct:isPartOf ?sc .\n"
-            + "   ?sc dct:isPartOf <" + clusterUri + ">;\n"
-            + "       a uc:SubCluster.\n"
-            + "  }\n"
-            + "  GRAPH <" + con.getCentralGraph() + "> {\n"
-            + "   ?x a foaf:Person .\n"
-            + "  }\n"
-            + "}";
-    try {
-      List<Map<String, Value>> subclustersRslt = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, querySC);
-      ArrayNode subclusters = factory.arrayNode();
-      for (Map<String, Value> sc : subclustersRslt) {
-        String subclusterUri = sc.get("sc").stringValue();
-        ObjectNode subcluster = getClusterInfo(subclusterUri, "uc:SubCluster");
-        subclusters.add(subcluster);
-      }
-      ObjectNode cluster = getClusterInfo(clusterUri, "uc:Cluster");
-      cluster.put("subclusters", subclusters);
-      return cluster.toString();
-    } catch (MarmottaException ex) {
-      log.error("Cannot generate JSON", ex);
-    }
-    return null;
-  }
-
-  private ObjectNode getClusterInfo(String subcluster, String type) throws MarmottaException {
-    String queryName = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
-            + "prefix uc: <http://ucuenca.edu.ec/ontology#> \n"
-            + "SELECT ?name WHERE {\n"
-            + "  GRAPH <" + con.getClusterGraph() + "> {\n"
-            + "   <%s> a %s;\n"
-            + "         rdfs:label ?name.\n"
-            + "  }\n"
-            + "}";
-    String queryTotal = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
-            + "PREFIX dct: <http://purl.org/dc/terms/>\n"
-            + "SELECT DISTINCT (count(?p) as ?t) WHERE {\n"
-            + "  GRAPH <" + con.getClusterGraph() + "> {\n"
-            + "  	?p dct:isPartOf <%s>;\n"
-            + "       a foaf:Person.\n"
-            + "  }\n"
-            + "}";
-
-    List<Map<String, Value>> names = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, String.format(queryName, subcluster, type));
-    List<Map<String, Value>> total = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, String.format(queryTotal, subcluster));
-
-    ObjectNode node = factory.objectNode(); // initializing
-    node.put("uri", subcluster);
-    for (Map<String, Value> name : names) {
-      Literal l = ((Literal) name.get("name"));
-      if (l.getLanguage() != null) {
-        node.put("label-" + l.getLanguage(), l.getLabel());
-      } else {
-        node.put("label", l.getLabel());
-      }
+    @Override
+    public String getCluster(String clusterUri) {
+        String querySC = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "prefix uc: <http://ucuenca.edu.ec/ontology#> \n"
+                + "prefix foaf: <http://xmlns.com/foaf/0.1/> \n"
+                + "SELECT distinct ?sc WHERE {\n"
+                + "  GRAPH <" + con.getClusterGraph() + "> {\n"
+                + "   <" + clusterUri + "> a uc:Cluster .\n"
+                + "   ?x dct:isPartOf <" + clusterUri + "> .\n"
+                + "   ?x dct:isPartOf ?sc .\n"
+                + "   ?sc dct:isPartOf <" + clusterUri + ">;\n"
+                + "       a uc:SubCluster.\n"
+                + "  }\n"
+                + "  GRAPH <" + con.getCentralGraph() + "> {\n"
+                + "   ?x a foaf:Person .\n"
+                + "  }\n"
+                + "}";
+        try {
+            List<Map<String, Value>> subclustersRslt = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, querySC);
+            ArrayNode subclusters = factory.arrayNode();
+            for (Map<String, Value> sc : subclustersRslt) {
+                String subclusterUri = sc.get("sc").stringValue();
+                ObjectNode subcluster = getClusterInfo(subclusterUri, "uc:SubCluster");
+                subclusters.add(subcluster);
+            }
+            ObjectNode cluster = getClusterInfo(clusterUri, "uc:Cluster");
+            cluster.put("subclusters", subclusters);
+            return cluster.toString();
+        } catch (MarmottaException ex) {
+            log.error("Cannot generate JSON", ex);
+        }
+        return null;
     }
 
-    String t_ = total.get(0).get("t").stringValue();
-    node.put("authors", t_);
+    private ObjectNode getClusterInfo(String subcluster, String type) throws MarmottaException {
+        String queryName = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "prefix uc: <http://ucuenca.edu.ec/ontology#> \n"
+                + "SELECT ?name WHERE {\n"
+                + "  GRAPH <" + con.getClusterGraph() + "> {\n"
+                + "   <%s> a %s;\n"
+                + "         rdfs:label ?name.\n"
+                + "  }\n"
+                + "}";
+        String queryTotal = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                + "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "SELECT DISTINCT (count(?p) as ?t) WHERE {\n"
+                + "  GRAPH <" + con.getClusterGraph() + "> {\n"
+                + "  	?p dct:isPartOf <%s>;\n"
+                + "       a foaf:Person.\n"
+                + "  }\n"
+                + "}";
 
-    return node;
-  }
+        List<Map<String, Value>> names = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, String.format(queryName, subcluster, type));
+        List<Map<String, Value>> total = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, String.format(queryTotal, subcluster));
 
-  @Override
-  public String getsubClusterGraph(String cluster, String subcluster) {
-    try {
-      // cluster = "http://skos.um.es/unesco6/1203";
-      // subcluster = "http://dbpedia.org/resource/Semantic_Web";
+        ObjectNode node = factory.objectNode(); // initializing
+        node.put("uri", subcluster);
+        for (Map<String, Value> name : names) {
+            Literal l = ((Literal) name.get("name"));
+            if (l.getLanguage() != null) {
+                node.put("label-" + l.getLanguage(), l.getLabel());
+            } else {
+                node.put("label", l.getLabel());
+            }
+        }
 
-      /* String query = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+        String t_ = total.get(0).get("t").stringValue();
+        node.put("authors", t_);
+
+        return node;
+    }
+
+    @Override
+    public String getsubClusterGraph(String cluster, String subcluster) {
+        try {
+            // cluster = "http://skos.um.es/unesco6/1203";
+            // subcluster = "http://dbpedia.org/resource/Semantic_Web";
+
+            /* String query = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
              + "PREFIX dct: <http://purl.org/dc/terms/>\n"
              + "prefix schema: <http://schema.org/>  \n"
              + "prefix uc: <http://ucuenca.edu.ec/ontology#> \n"
@@ -728,170 +727,170 @@ public class CommonServiceImpl implements CommonService {
              + "     ?coauthor dct:isPartOf <" + subcluster + "> .  \n"
              + "}\n"
              + "} GROUP by ?person ";*/
-      String query = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
-              + "PREFIX dct: <http://purl.org/dc/terms/>\n"
-              + "prefix schema: <http://schema.org/>  \n"
-              + "prefix uc: <http://ucuenca.edu.ec/ontology#> \n"
-              + "SELECT * { "
-              + "  { "
-              + "    select ?person (group_concat(DISTINCT ?orgname ; separator=\";\") as ?orgnames ) {\n"
-              + "      GRAPH <" + con.getClusterGraph() + "> {\n"
-              + "          ?person dct:isPartOf <" + cluster + "> .\n"
-              + "          ?person dct:isPartOf <" + subcluster + "> .\n"
-              + "      } "
-              + "      GRAPH <" + con.getCentralGraph() + ">  {  "
-              + "      	?person  schema:memberOf ?member . "
-              + "      }  "
-              + "      GRAPH <" + con.getOrganizationsGraph() + ">  { \n"
-              + "       	?member uc:name ?orgname "
-              + "      } "
-              + "     } GROUP by ?person "
-              + "}\n"
-              + "  {select ?person (group_concat(Distinct ?name ; separator=\";\") as ?names ) "
-              + "                  (group_concat(Distinct ?mail ; separator=\";\") as ?mails )\n"
-              + "                {\n"
-              + "      GRAPH <" + con.getClusterGraph() + "> { "
-              + "          ?person dct:isPartOf <" + cluster + "> . "
-              + "          ?person dct:isPartOf <" + subcluster + "> ."
-              + "      }\n"
-              + "      GRAPH <" + con.getCentralGraph() + ">  { "
-              + "        ?person foaf:name ?name . "
-              + "        optional { ?person <http://www.w3.org/2006/vcard/ns#hasEmail> ?mail } . "
-              + "      } "
-              + "     } GROUP by ?person\n"
-              + "}\n"
-              + "    {\n"
-              + "      \n"
-              + "      select ?person ( sample (?lastname) as ?lastn) ( sample (?imgs) as ?img)  \n"
-              + "      {select * {\n"
-              + "      GRAPH <" + con.getClusterGraph() + "> { "
-              + "          ?person dct:isPartOf <" + cluster + "> . "
-              + "          ?person dct:isPartOf <" + subcluster + "> . "
-              + "      } "
-              + "      GRAPH <" + con.getCentralGraph() + ">  { \n"
-              + "        OPTIONAL { ?person foaf:familyName ?lastname } . "
-              + "        OPTIONAL {  ?person  foaf:img  ?imgs }  . "
-              + "      }  "
-              + "	} "
-              + "} GROUP by ?person "
-              + "}\n"
-              + "{\n"
-              + "  select ?person (group_concat( Distinct ?s ; separator=\";\") as ?subjects ) {\n"
-              + "      GRAPH <" + con.getClusterGraph() + "> { "
-              + "          ?person dct:isPartOf <" + cluster + "> . "
-              + "          ?person dct:isPartOf <" + subcluster + "> .\n"
-              + "      }\n"
-              + "      GRAPH <" + con.getCentralGraph() + ">  { \n"
-              + "        ?person foaf:publications ?pub . \n"
-              //     + "        ?pub dct:subject [rdfs:label ?s] .\n"
-              //     + "   OPTIONAL {?pub dct:subject ?sub"
-              //     + "   OPTIONAL { ?sub rdfs:label ?s }}"
-              + "      } \n"
-              + "     } GROUP by ?person \n"
-              + "}\n"
-              + "     optional {\n"
-              + "      select ?person (group_concat(DISTINCT ?coauthor ; separator=\";\") as ?coauthors) {\n"
-              + "        GRAPH <" + con.getClusterGraph() + "> {\n"
-              + "            ?coauthor dct:isPartOf <" + cluster + "> .\n"
-              + "            ?coauthor dct:isPartOf <" + subcluster + "> .\n"
-              + "            ?person dct:isPartOf <" + cluster + "> .\n"
-              + "            ?person dct:isPartOf <" + subcluster + "> .\n "
-              + "      GRAPH <" + con.getCentralGraph() + ">  {  "
-              + "      	?coauthor  schema:memberOf ?member . "
-              + "      }  "
-              + "      GRAPH <" + con.getOrganizationsGraph() + ">  { \n"
-              + "       	?member uc:name ?orgname "
-              + "      } "
-              + "        }\n"
-              + "        graph <" + con.getCentralGraph() + "> {\n"
-              + "            ?coauthor foaf:publications ?pub . \n"
-              + "        	?person foaf:publications ?pub . \n"
-              + "        	filter (?coauthor!=?person )\n"
-              + "      	}\n"
-              + "      }GROUP by ?person\n"
-              + "    } \n"
-              + "} ";
+            String query = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                    + "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                    + "prefix schema: <http://schema.org/>  \n"
+                    + "prefix uc: <http://ucuenca.edu.ec/ontology#> \n"
+                    + "SELECT * { "
+                    + "  { "
+                    + "    select ?person (group_concat(DISTINCT ?orgname ; separator=\";\") as ?orgnames ) {\n"
+                    + "      GRAPH <" + con.getClusterGraph() + "> {\n"
+                    + "          ?person dct:isPartOf <" + cluster + "> .\n"
+                    + "          ?person dct:isPartOf <" + subcluster + "> .\n"
+                    + "      } "
+                    + "      GRAPH <" + con.getCentralGraph() + ">  {  "
+                    + "      	?person  schema:memberOf ?member . "
+                    + "      }  "
+                    + "      GRAPH <" + con.getOrganizationsGraph() + ">  { \n"
+                    + "       	?member uc:name ?orgname "
+                    + "      } "
+                    + "     } GROUP by ?person "
+                    + "}\n"
+                    + "  {select ?person (group_concat(Distinct ?name ; separator=\";\") as ?names ) "
+                    + "                  (group_concat(Distinct ?mail ; separator=\";\") as ?mails )\n"
+                    + "                {\n"
+                    + "      GRAPH <" + con.getClusterGraph() + "> { "
+                    + "          ?person dct:isPartOf <" + cluster + "> . "
+                    + "          ?person dct:isPartOf <" + subcluster + "> ."
+                    + "      }\n"
+                    + "      GRAPH <" + con.getCentralGraph() + ">  { "
+                    + "        ?person foaf:name ?name . "
+                    + "        optional { ?person <http://www.w3.org/2006/vcard/ns#hasEmail> ?mail } . "
+                    + "      } "
+                    + "     } GROUP by ?person\n"
+                    + "}\n"
+                    + "    {\n"
+                    + "      \n"
+                    + "      select ?person ( sample (?lastname) as ?lastn) ( sample (?imgs) as ?img)  \n"
+                    + "      {select * {\n"
+                    + "      GRAPH <" + con.getClusterGraph() + "> { "
+                    + "          ?person dct:isPartOf <" + cluster + "> . "
+                    + "          ?person dct:isPartOf <" + subcluster + "> . "
+                    + "      } "
+                    + "      GRAPH <" + con.getCentralGraph() + ">  { \n"
+                    + "        OPTIONAL { ?person foaf:familyName ?lastname } . "
+                    + "        OPTIONAL {  ?person  foaf:img  ?imgs }  . "
+                    + "      }  "
+                    + "	} "
+                    + "} GROUP by ?person "
+                    + "}\n"
+                    + "{\n"
+                    + "  select ?person (group_concat( Distinct ?s ; separator=\";\") as ?subjects ) {\n"
+                    + "      GRAPH <" + con.getClusterGraph() + "> { "
+                    + "          ?person dct:isPartOf <" + cluster + "> . "
+                    + "          ?person dct:isPartOf <" + subcluster + "> .\n"
+                    + "      }\n"
+                    + "      GRAPH <" + con.getCentralGraph() + ">  { \n"
+                    + "        ?person foaf:publications ?pub . \n"
+                    //     + "        ?pub dct:subject [rdfs:label ?s] .\n"
+                    //     + "   OPTIONAL {?pub dct:subject ?sub"
+                    //     + "   OPTIONAL { ?sub rdfs:label ?s }}"
+                    + "      } \n"
+                    + "     } GROUP by ?person \n"
+                    + "}\n"
+                    + "     optional {\n"
+                    + "      select ?person (group_concat(DISTINCT ?coauthor ; separator=\";\") as ?coauthors) {\n"
+                    + "        GRAPH <" + con.getClusterGraph() + "> {\n"
+                    + "            ?coauthor dct:isPartOf <" + cluster + "> .\n"
+                    + "            ?coauthor dct:isPartOf <" + subcluster + "> .\n"
+                    + "            ?person dct:isPartOf <" + cluster + "> .\n"
+                    + "            ?person dct:isPartOf <" + subcluster + "> .\n "
+                    + "      GRAPH <" + con.getCentralGraph() + ">  {  "
+                    + "      	?coauthor  schema:memberOf ?member . "
+                    + "      }  "
+                    + "      GRAPH <" + con.getOrganizationsGraph() + ">  { \n"
+                    + "       	?member uc:name ?orgname "
+                    + "      } "
+                    + "        }\n"
+                    + "        graph <" + con.getCentralGraph() + "> {\n"
+                    + "            ?coauthor foaf:publications ?pub . \n"
+                    + "        	?person foaf:publications ?pub . \n"
+                    + "        	filter (?coauthor!=?person )\n"
+                    + "      	}\n"
+                    + "      }GROUP by ?person\n"
+                    + "    } \n"
+                    + "} ";
 
-      List<Map<String, Value>> responseSubClAuthor = sparqlServiceMarmotta.query(QueryLanguage.SPARQL, query);
-      List<Collaborator> collaborators = new ArrayList();
-      for (Map<String, Value> authors : responseSubClAuthor) {
-        //Author a = new Author ();
+            List<Map<String, Value>> responseSubClAuthor = fastsparql.getSparqlService().query(QueryLanguage.SPARQL, query);
+            List<Collaborator> collaborators = new ArrayList();
+            for (Map<String, Value> authors : responseSubClAuthor) {
+                //Author a = new Author ();
 
-        String uri = authors.get("person").stringValue();
-        String names = getUniqueName(authors.get("names").stringValue(), ";");
-        String lastname = "";
-        if (authors.containsKey("lastn")) {
-          lastname = authors.get("lastn").stringValue();
-        } else {
-          lastname = names;
-        };
-        String img = "";
-        if (authors.containsKey("img")) {
-          img = authors.get("img").stringValue();
-        }
-        /*  String[] subjects = getRelevantTopics(authors.get("subjects").stringValue().split(";"));
+                String uri = authors.get("person").stringValue();
+                String names = getUniqueName(authors.get("names").stringValue(), ";");
+                String lastname = "";
+                if (authors.containsKey("lastn")) {
+                    lastname = authors.get("lastn").stringValue();
+                } else {
+                    lastname = names;
+                };
+                String img = "";
+                if (authors.containsKey("img")) {
+                    img = authors.get("img").stringValue();
+                }
+                /*  String[] subjects = getRelevantTopics(authors.get("subjects").stringValue().split(";"));
                  String join = "";
                  for (String str :subjects){
                  join = join+", "+str;
                  }   */
-        String subject = getSubjectAuthor(uri);
-        String orgs = authors.get("orgnames").stringValue();
-        String mails = authors.get("mails") != null ? authors.get("mails").stringValue() : "";
-        String[] coauthors = {};
-        if (authors.containsKey("coauthors")) {
-          coauthors = authors.get("coauthors").stringValue().split(";");
+                String subject = getSubjectAuthor(uri);
+                String orgs = authors.get("orgnames").stringValue();
+                String mails = authors.get("mails") != null ? authors.get("mails").stringValue() : "";
+                String[] coauthors = {};
+                if (authors.containsKey("coauthors")) {
+                    coauthors = authors.get("coauthors").stringValue().split(";");
+                }
+                Collaborator cl = new Collaborator(uri, uri, names, lastname, orgs, subject);
+                cl.setMail(mails);
+                cl.setArea(orgs);
+                cl.setTargets(coauthors);
+                cl.setImgUri(img);
+                collaborators.add(cl);
+
+            }
+
+            return coauthorsSubClToJson(collaborators);
+
+        } catch (MarmottaException ex) {
+            java.util.logging.Logger.getLogger(CommonServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Collaborator cl = new Collaborator(uri, uri, names, lastname, orgs, subject);
-        cl.setMail(mails);
-        cl.setArea(orgs);
-        cl.setTargets(coauthors);
-        cl.setImgUri(img);
-        collaborators.add(cl);
+        return null;
 
-      }
-
-      return coauthorsSubClToJson(collaborators);
-
-    } catch (MarmottaException ex) {
-      java.util.logging.Logger.getLogger(CommonServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    return null;
-
-  }
-
-  public String coauthorsSubClToJson(List<Collaborator> collaborators) throws org.json.JSONException {
-    List<Map<String, String>> lnodes = new ArrayList();
-
-    List<Map<String, String>> llinks = new ArrayList();
-    for (Collaborator cl : collaborators) {
-      Map newm = new HashMap();
-      newm.put("id", cl.getUri());
-      newm.put("group", cl.getArea());
-      newm.put("label", cl.getcName());
-      newm.put("lastname", cl.getLastName());
-      newm.put("img", cl.getImgUri());
-      newm.put("subject", cl.getSubjects());
-      newm.put("orgs", cl.getOrganization());
-      newm.put("mails", cl.getMail());
-      lnodes.add(newm);
-      for (String target : cl.getTargets()) {
-        Map newlink = new HashMap();
-        newlink.put("source", cl.getUri());
-        newlink.put("target", target);
-        newlink.put("distance", "10");
-        newlink.put("coauthor", "true");
-        llinks.add(newlink);
-      }
     }
 
-    return mergeJSON(listmapTojson(lnodes, "nodes"), listmapTojson(llinks, "links"), "nodes", "links");
+    public String coauthorsSubClToJson(List<Collaborator> collaborators) throws org.json.JSONException {
+        List<Map<String, String>> lnodes = new ArrayList();
 
-  }
+        List<Map<String, String>> llinks = new ArrayList();
+        for (Collaborator cl : collaborators) {
+            Map newm = new HashMap();
+            newm.put("id", cl.getUri());
+            newm.put("group", cl.getArea());
+            newm.put("label", cl.getcName());
+            newm.put("lastname", cl.getLastName());
+            newm.put("img", cl.getImgUri());
+            newm.put("subject", cl.getSubjects());
+            newm.put("orgs", cl.getOrganization());
+            newm.put("mails", cl.getMail());
+            lnodes.add(newm);
+            for (String target : cl.getTargets()) {
+                Map newlink = new HashMap();
+                newlink.put("source", cl.getUri());
+                newlink.put("target", target);
+                newlink.put("distance", "10");
+                newlink.put("coauthor", "true");
+                llinks.add(newlink);
+            }
+        }
 
-  @Override
-  public String getClusterGraph(String cluster) {
-    try {
-      /*  String query = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+        return mergeJSON(listmapTojson(lnodes, "nodes"), listmapTojson(llinks, "links"), "nodes", "links");
+
+    }
+
+    @Override
+    public String getClusterGraph(String cluster) {
+        try {
+            /*  String query = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
                     + "PREFIX dct: <http://purl.org/dc/terms/>\n"
                     + "PREFIX schema: <http://schema.org/>  \n"
                     + "PREFIX uc: <http://ucuenca.edu.ec/ontology#> \n"
@@ -922,267 +921,267 @@ public class CommonServiceImpl implements CommonService {
                     + "    }\n"
                     + "}";*/
 
-      String query = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
-              + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
-              + "                    PREFIX dct: <http://purl.org/dc/terms/>\n"
-              + "                    PREFIX schema: <http://schema.org/>  \n"
-              + "                    PREFIX uc: <http://ucuenca.edu.ec/ontology#> \n"
-              + "                    select * {\n"
-              + "                      {\n"
-              + "    select ?sub ?orgnames ?person (group_concat(Distinct ?name ; separator=\";\") as ?names )  (group_concat(DISTINCT ?orgname ; separator=\";\") as ?orgnames2 ) "
-              + "(group_concat(DISTINCT ?mail ; separator=\";\") as ?mails )\n"
-              + "                 {\n"
-              + "                 GRAPH <" + con.getClusterGraph() + "> {\n"
-              + "                 ?person dct:isPartOf <" + cluster + "> .\n"
-              + "                 ?person dct:isPartOf ?sub .\n"
-              + "                 ?sub   dct:isPartOf <" + cluster + "> ."
-              + "                 ?sub a  <http://ucuenca.edu.ec/ontology#SubCluster> .\n"
-              + "                   ?sub rdfs:label ?orgnames .\n"
-              + "                   filter ( lang(?orgnames) = \"en\" )\n"
-              + "                                              } \n"
-              + "                  GRAPH <" + con.getCentralGraph() + ">  {  \n"
-              + "                       	?person  schema:memberOf ?member . \n"
-              + "                     ?person foaf:name ?name .\n"
-              + "                     optional { ?person <http://www.w3.org/2006/vcard/ns#hasEmail> ?mail } .\n"
-              + "                                              }  \n"
-              + "             GRAPH <https://redi.cedia.edu.ec/context/organization>  { \n"
-              + "                         	?member uc:name ?orgname\n"
-              + "                                              }\n"
-              + "                  } GROUP by ?sub ?orgnames ?person   Order by ?sub \n"
-              + "        }\n"
-              + "  }";
+            String query = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                    + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                    + "                    PREFIX dct: <http://purl.org/dc/terms/>\n"
+                    + "                    PREFIX schema: <http://schema.org/>  \n"
+                    + "                    PREFIX uc: <http://ucuenca.edu.ec/ontology#> \n"
+                    + "                    select * {\n"
+                    + "                      {\n"
+                    + "    select ?sub ?orgnames ?person (group_concat(Distinct ?name ; separator=\";\") as ?names )  (group_concat(DISTINCT ?orgname ; separator=\";\") as ?orgnames2 ) "
+                    + "(group_concat(DISTINCT ?mail ; separator=\";\") as ?mails )\n"
+                    + "                 {\n"
+                    + "                 GRAPH <" + con.getClusterGraph() + "> {\n"
+                    + "                 ?person dct:isPartOf <" + cluster + "> .\n"
+                    + "                 ?person dct:isPartOf ?sub .\n"
+                    + "                 ?sub   dct:isPartOf <" + cluster + "> ."
+                    + "                 ?sub a  <http://ucuenca.edu.ec/ontology#SubCluster> .\n"
+                    + "                   ?sub rdfs:label ?orgnames .\n"
+                    + "                   filter ( lang(?orgnames) = \"en\" )\n"
+                    + "                                              } \n"
+                    + "                  GRAPH <" + con.getCentralGraph() + ">  {  \n"
+                    + "                       	?person  schema:memberOf ?member . \n"
+                    + "                     ?person foaf:name ?name .\n"
+                    + "                     optional { ?person <http://www.w3.org/2006/vcard/ns#hasEmail> ?mail } .\n"
+                    + "                                              }  \n"
+                    + "             GRAPH <https://redi.cedia.edu.ec/context/organization>  { \n"
+                    + "                         	?member uc:name ?orgname\n"
+                    + "                                              }\n"
+                    + "                  } GROUP by ?sub ?orgnames ?person   Order by ?sub \n"
+                    + "        }\n"
+                    + "  }";
 
-      List<Map<String, Value>> responseClAuthor = sparqlServiceMarmotta.query(QueryLanguage.SPARQL, query);
-      List<Collaborator> collaborators = new ArrayList();
-      String[] targ = {};
-      for (Map<String, Value> authors : responseClAuthor) {
-        authors = CleanEmptyFields(authors);
-        if (!authors.isEmpty()) {
-          String uri = authors.get("person").stringValue();
-          String names = getUniqueName(authors.get("names").stringValue(), ";");
-          String subject = getSubjectAuthor(uri);
-          String orgs = authors.get("orgnames2").stringValue();
-          String orgsarea = authors.get("orgnames").stringValue();
-          String mails = authors.get("mails") != null ? authors.get("mails").stringValue() : "";
-          Collaborator cl = new Collaborator(uri, uri, names, "", orgs, subject);
-          cl.setMail(mails);
-          cl.setTargets(targ);
-          collaborators.add(cl);
-          cl.setArea(orgsarea);
-        }
-      }
-      return coauthorsSubClToJson(collaborators);
-
-    } catch (MarmottaException ex) {
-
-      java.util.logging.Logger.getLogger(CommonServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-      return "ERROR" + ex;
-    }
-
-  }
-
-  @Deprecated
-  public String getCollaboratorsData(String uri, String nada) {
-
-    try {
-
-      String querySubrel = "PREFIX dct: <http://purl.org/dc/terms/> "
-              + "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
-              + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>  "
-              + "SELECT  (COUNT (DISTINCT  ?pub) as ?sc) (COUNT (DISTINCT  ?opub) as ?nc) ?s ?co  ?orgname (SAMPLE(?names) as ?name)  "
-              + " WHERE {  "
-              + "  GRAPH  <" + con.getCentralGraph().replace("http:", "https:") + "> { "
-              + "  VALUES ?author {<" + uri + "> } . "
-              + "  ?author foaf:publications ?pub . "
-              + "  ?pub dct:subject ?s . "
-              + "  ?opub dct:subject ?s . "
-              + "  ?co  foaf:publications ?opub  . "
-              + " filter ( ?co !=  ?author ) .  "
-              + "  ?co foaf:name ?names . "
-              + "  ?co  <http://schema.org/memberOf>  ?org . "
-              + "   GRAPH <https://redi.cedia.edu.ec/context/organization> { "
-              + "     ?org <http://ucuenca.edu.ec/ontology#name> ?orgname "
-              + "   } "
-              + "} } GROUP BY ?s ?co ?clo ?orgname HAVING ( ?nc > 1  && ?sc > 1 ) ORDER BY DESC (?sc) DESC(?nc)";
-
-      List<Map<String, Value>> response = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, querySubrel);
-      int maxvalue = 0;
-      Double maxScore = 0.0;
-      if (response.size() > 0) {
-        maxvalue = Integer.parseInt(response.get(0).get("sc").stringValue());
-        LinkedHashMap<String, Collaborator> cMap = new LinkedHashMap();
-        for (Map<String, Value> author : response) {
-          int sc = Integer.parseInt(author.get("sc").stringValue());
-          int nc = Integer.parseInt(author.get("nc").stringValue());
-          String org = author.get("orgname").stringValue();
-          String co = author.get("co").stringValue();
-          //  author.get("s").stringValue();
-          //  author.get("co").stringValue();
-          double Score = sc / maxvalue;
-
-          //c.setSubjectScore((int) (Score * nc));
-          if (!cMap.containsKey(co)) {
-            Collaborator c = new Collaborator(uri, co, author.get("name").stringValue(), "", Score * nc, isCoauthor(uri, co), isClusterPartner(uri, co), org, "");
-            cMap.put(co, c);
-            if (maxScore < c.calcScore()) {
-              maxScore = c.calcScore();
+            List<Map<String, Value>> responseClAuthor = fastsparql.getSparqlService().query(QueryLanguage.SPARQL, query);
+            List<Collaborator> collaborators = new ArrayList();
+            String[] targ = {};
+            for (Map<String, Value> authors : responseClAuthor) {
+                authors = CleanEmptyFields(authors);
+                if (!authors.isEmpty()) {
+                    String uri = authors.get("person").stringValue();
+                    String names = getUniqueName(authors.get("names").stringValue(), ";");
+                    String subject = getSubjectAuthor(uri);
+                    String orgs = authors.get("orgnames2").stringValue();
+                    String orgsarea = authors.get("orgnames").stringValue();
+                    String mails = authors.get("mails") != null ? authors.get("mails").stringValue() : "";
+                    Collaborator cl = new Collaborator(uri, uri, names, "", orgs, subject);
+                    cl.setMail(mails);
+                    cl.setTargets(targ);
+                    collaborators.add(cl);
+                    cl.setArea(orgsarea);
+                }
             }
-          }
-        }
-        List<Map<String, String>> lnodes = new ArrayList();
+            return coauthorsSubClToJson(collaborators);
 
-        Map newm = new HashMap();
-        newm.put("id", uri);
-        newm.put("group", "2");
-        lnodes.add(newm);
+        } catch (MarmottaException ex) {
 
-        List<Map<String, String>> llinks = new ArrayList();
-        for (Map.Entry<String, Collaborator> e : cMap.entrySet()) {
-          newm = new HashMap();
-          newm.put("id", e.getValue().getUri());
-          newm.put("group", e.getValue().getOrganization());
-          newm.put("org", e.getValue().getOrganization());
-          newm.put("label", e.getValue().getcName());
-          lnodes.add(newm);
-
-          Map newlink = new HashMap();
-          newlink.put("source", uri);
-          newlink.put("target", e.getValue().getUri());
-          newlink.put("distance", 300 - (300 * e.getValue().calcScore()) / maxScore + "");
-          newlink.put("coauthor", e.getValue().isCoauthor().toString());
-          llinks.add(newlink);
-          // newm.put(e, e)
+            java.util.logging.Logger.getLogger(CommonServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return "ERROR" + ex;
         }
 
-        //    listmapTojson (lnodes , "nodes");
-        //    listmapTojson (llinks , "links");
-        //  Provider p = new Provider(prov.get("name").stringValue().replace(" ", ""), prov.get("graph").stringValue(), sparqlService , Boolean.parseBoolean(prov.get("main").stringValue()));
-        // Providers.add(p);
-        // return listmapTojson (lnodes , "nodes").toString().replace("{", uri)+","+listmapTojson (llinks , "links").toString().replace("", "");
-        return mergeJSON(listmapTojson(lnodes, "nodes"), listmapTojson(llinks, "links"), "nodes", "links");
-        //  mergeJSON (listmapTojson (lnodes , "nodes") ,listmapTojson (llinks , "links") );
-      }
-      return "";
-    } catch (MarmottaException ex) {
-      java.util.logging.Logger.getLogger(CommonServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-      return "";
-    } catch (org.json.JSONException ex) {
-      java.util.logging.Logger.getLogger(CommonServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    return null;
-  }
-
-  public Boolean isCoauthor(String uri, String candidate) throws MarmottaException {
-    String queryisCoauthor = "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
-            + "ASK  FROM <" + con.getCentralGraph() + ">   { "
-            + "  <" + uri + ">  foaf:publications ?pub  . "
-            + "  <" + candidate + ">   foaf:publications ?pub   "
-            + "}";
-    return sparqlService.getSparqlService().ask(QueryLanguage.SPARQL, queryisCoauthor);
-  }
-
-  public Boolean isClusterPartner(String uri, String candidate) throws MarmottaException {
-    String queryC = "PREFIX dct: <http://purl.org/dc/terms/> "
-            + "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
-            + "ASK  FROM <" + con.getClusterGraph() + ">    {  "
-            + "<" + uri + ">   dct:isPartOf ?scl   .\n"
-            + "?scl  a <http://ucuenca.edu.ec/ontology#SubCluster> .\n"
-            + "<" + candidate + ">  dct:isPartOf  ?scl "
-            + "}";
-
-    return sparqlService.getSparqlService().ask(QueryLanguage.SPARQL, queryC);
-  }
-
-  public JSONArray listmapTojson(List<Map<String, String>> list, String nameobject) throws org.json.JSONException {
-    JSONObject jsonh1 = new JSONObject();
-
-    JSONArray jsonArr = new JSONArray();
-    for (Map<String, String> map : list) {
-      JSONObject jsonObj = new JSONObject();
-      for (Map.Entry<String, String> entry : map.entrySet()) {
-        String key = entry.getKey();
-        String value = entry.getValue();
-        jsonObj.put(key, value);
-      }
-      jsonArr.put(jsonObj);
     }
 
-    //return jsonArr.toString();
-    return jsonArr;
-    //return jsonh1.put(nameobject, jsonArr);
-  }
+    @Deprecated
+    public String getCollaboratorsData(String uri, String nada) {
 
-  public String mergeJSON(JSONArray j1, JSONArray j2, String name1, String name2) throws org.json.JSONException {
-    JSONObject jsonGlobal = new JSONObject();
-    jsonGlobal.put(name1, j1);
-    jsonGlobal.put(name2, j2);
-    return jsonGlobal.toString();
-  }
+        try {
 
-  public Boolean isStopWord(String keyword) {
-    LinkedList l = new LinkedList();
-    l.add("ecuador");
-    l.add("venezuela");
-    l.add("south america");
-    l.add("latin america");
+            String querySubrel = "PREFIX dct: <http://purl.org/dc/terms/> "
+                    + "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
+                    + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>  "
+                    + "SELECT  (COUNT (DISTINCT  ?pub) as ?sc) (COUNT (DISTINCT  ?opub) as ?nc) ?s ?co  ?orgname (SAMPLE(?names) as ?name)  "
+                    + " WHERE {  "
+                    + "  GRAPH  <" + con.getCentralGraph().replace("http:", "https:") + "> { "
+                    + "  VALUES ?author {<" + uri + "> } . "
+                    + "  ?author foaf:publications ?pub . "
+                    + "  ?pub dct:subject ?s . "
+                    + "  ?opub dct:subject ?s . "
+                    + "  ?co  foaf:publications ?opub  . "
+                    + " filter ( ?co !=  ?author ) .  "
+                    + "  ?co foaf:name ?names . "
+                    + "  ?co  <http://schema.org/memberOf>  ?org . "
+                    + "   GRAPH <https://redi.cedia.edu.ec/context/organization> { "
+                    + "     ?org <http://ucuenca.edu.ec/ontology#name> ?orgname "
+                    + "   } "
+                    + "} } GROUP BY ?s ?co ?clo ?orgname HAVING ( ?nc > 1  && ?sc > 1 ) ORDER BY DESC (?sc) DESC(?nc)";
 
-    return l.contains(keyword.toLowerCase());
-  }
+            List<Map<String, Value>> response = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, querySubrel);
+            int maxvalue = 0;
+            Double maxScore = 0.0;
+            if (response.size() > 0) {
+                maxvalue = Integer.parseInt(response.get(0).get("sc").stringValue());
+                LinkedHashMap<String, Collaborator> cMap = new LinkedHashMap();
+                for (Map<String, Value> author : response) {
+                    int sc = Integer.parseInt(author.get("sc").stringValue());
+                    int nc = Integer.parseInt(author.get("nc").stringValue());
+                    String org = author.get("orgname").stringValue();
+                    String co = author.get("co").stringValue();
+                    //  author.get("s").stringValue();
+                    //  author.get("co").stringValue();
+                    double Score = sc / maxvalue;
 
-  private LinkedHashMap<String, Collaborator> orderCoauthors(LinkedHashMap<String, Collaborator> cMap, int number) {
+                    //c.setSubjectScore((int) (Score * nc));
+                    if (!cMap.containsKey(co)) {
+                        Collaborator c = new Collaborator(uri, co, author.get("name").stringValue(), "", Score * nc, isCoauthor(uri, co), isClusterPartner(uri, co), org, "");
+                        cMap.put(co, c);
+                        if (maxScore < c.calcScore()) {
+                            maxScore = c.calcScore();
+                        }
+                    }
+                }
+                List<Map<String, String>> lnodes = new ArrayList();
 
-    List<Map.Entry<String, Collaborator>> list = new LinkedList<>(cMap.entrySet());
+                Map newm = new HashMap();
+                newm.put("id", uri);
+                newm.put("group", "2");
+                lnodes.add(newm);
 
-    Collections.sort(list, new Comparator<Map.Entry<String, Collaborator>>() {
-      @Override
-      public int compare(Map.Entry<String, Collaborator> o1, Map.Entry<String, Collaborator> o2) {
-        Double result = o2.getValue().getDocScore() - o1.getValue().getDocScore();
-        return (int) (result * 10);
-      }
-    });
+                List<Map<String, String>> llinks = new ArrayList();
+                for (Map.Entry<String, Collaborator> e : cMap.entrySet()) {
+                    newm = new HashMap();
+                    newm.put("id", e.getValue().getUri());
+                    newm.put("group", e.getValue().getOrganization());
+                    newm.put("org", e.getValue().getOrganization());
+                    newm.put("label", e.getValue().getcName());
+                    lnodes.add(newm);
 
-    LinkedHashMap<String, Collaborator> result = new LinkedHashMap<>();
-    int count = 0;
-    for (Map.Entry<String, Collaborator> entry : list) {
-      result.put(entry.getKey(), entry.getValue());
-      if (count < number) {
-        count++;
-      } else {
-        break;
-      }
+                    Map newlink = new HashMap();
+                    newlink.put("source", uri);
+                    newlink.put("target", e.getValue().getUri());
+                    newlink.put("distance", 300 - (300 * e.getValue().calcScore()) / maxScore + "");
+                    newlink.put("coauthor", e.getValue().isCoauthor().toString());
+                    llinks.add(newlink);
+                    // newm.put(e, e)
+                }
+
+                //    listmapTojson (lnodes , "nodes");
+                //    listmapTojson (llinks , "links");
+                //  Provider p = new Provider(prov.get("name").stringValue().replace(" ", ""), prov.get("graph").stringValue(), sparqlService , Boolean.parseBoolean(prov.get("main").stringValue()));
+                // Providers.add(p);
+                // return listmapTojson (lnodes , "nodes").toString().replace("{", uri)+","+listmapTojson (llinks , "links").toString().replace("", "");
+                return mergeJSON(listmapTojson(lnodes, "nodes"), listmapTojson(llinks, "links"), "nodes", "links");
+                //  mergeJSON (listmapTojson (lnodes , "nodes") ,listmapTojson (llinks , "links") );
+            }
+            return "";
+        } catch (MarmottaException ex) {
+            java.util.logging.Logger.getLogger(CommonServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return "";
+        } catch (org.json.JSONException ex) {
+            java.util.logging.Logger.getLogger(CommonServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public Boolean isCoauthor(String uri, String candidate) throws MarmottaException {
+        String queryisCoauthor = "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
+                + "ASK  FROM <" + con.getCentralGraph() + ">   { "
+                + "  <" + uri + ">  foaf:publications ?pub  . "
+                + "  <" + candidate + ">   foaf:publications ?pub   "
+                + "}";
+        return sparqlService.getSparqlService().ask(QueryLanguage.SPARQL, queryisCoauthor);
+    }
+
+    public Boolean isClusterPartner(String uri, String candidate) throws MarmottaException {
+        String queryC = "PREFIX dct: <http://purl.org/dc/terms/> "
+                + "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
+                + "ASK  FROM <" + con.getClusterGraph() + ">    {  "
+                + "<" + uri + ">   dct:isPartOf ?scl   .\n"
+                + "?scl  a <http://ucuenca.edu.ec/ontology#SubCluster> .\n"
+                + "<" + candidate + ">  dct:isPartOf  ?scl "
+                + "}";
+
+        return sparqlService.getSparqlService().ask(QueryLanguage.SPARQL, queryC);
+    }
+
+    public JSONArray listmapTojson(List<Map<String, String>> list, String nameobject) throws org.json.JSONException {
+        JSONObject jsonh1 = new JSONObject();
+
+        JSONArray jsonArr = new JSONArray();
+        for (Map<String, String> map : list) {
+            JSONObject jsonObj = new JSONObject();
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue();
+                jsonObj.put(key, value);
+            }
+            jsonArr.put(jsonObj);
+        }
+
+        //return jsonArr.toString();
+        return jsonArr;
+        //return jsonh1.put(nameobject, jsonArr);
+    }
+
+    public String mergeJSON(JSONArray j1, JSONArray j2, String name1, String name2) throws org.json.JSONException {
+        JSONObject jsonGlobal = new JSONObject();
+        jsonGlobal.put(name1, j1);
+        jsonGlobal.put(name2, j2);
+        return jsonGlobal.toString();
+    }
+
+    public Boolean isStopWord(String keyword) {
+        LinkedList l = new LinkedList();
+        l.add("ecuador");
+        l.add("venezuela");
+        l.add("south america");
+        l.add("latin america");
+
+        return l.contains(keyword.toLowerCase());
+    }
+
+    private LinkedHashMap<String, Collaborator> orderCoauthors(LinkedHashMap<String, Collaborator> cMap, int number) {
+
+        List<Map.Entry<String, Collaborator>> list = new LinkedList<>(cMap.entrySet());
+
+        Collections.sort(list, new Comparator<Map.Entry<String, Collaborator>>() {
+            @Override
+            public int compare(Map.Entry<String, Collaborator> o1, Map.Entry<String, Collaborator> o2) {
+                Double result = o2.getValue().getDocScore() - o1.getValue().getDocScore();
+                return (int) (result * 10);
+            }
+        });
+
+        LinkedHashMap<String, Collaborator> result = new LinkedHashMap<>();
+        int count = 0;
+        for (Map.Entry<String, Collaborator> entry : list) {
+            result.put(entry.getKey(), entry.getValue());
+            if (count < number) {
+                count++;
+            } else {
+                break;
+            }
+
+        }
+
+        return result;
 
     }
 
-    return result;
+    @Override
+    public String getAuthorDataProfile(String uri) {
 
-  }
+        String Prefix = "prefix foaf: <http://xmlns.com/foaf/0.1/> "
+                + "prefix vcard: <http://www.w3.org/2006/vcard/ns#> "
+                + "prefix scoro: <http://purl.org/spar/scoro/> "
+                + "prefix schema: <http://schema.org/> "
+                + "prefix uc: <http://ucuenca.edu.ec/ontology#> "
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "PREFIX dct: <http://purl.org/dc/terms/>";
 
-  @Override
-  public String getAuthorDataProfile(String uri) {
+        // uri = "https://redi.cedia.edu.ec/resource/authors/UCUENCA/file/_SAQUICELA_GALARZA_____VICTOR_HUGO_";
+        try {
 
-    String Prefix = "prefix foaf: <http://xmlns.com/foaf/0.1/> "
-            + "prefix vcard: <http://www.w3.org/2006/vcard/ns#> "
-            + "prefix scoro: <http://purl.org/spar/scoro/> "
-            + "prefix schema: <http://schema.org/> "
-            + "prefix uc: <http://ucuenca.edu.ec/ontology#> "
-            + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
-            + "PREFIX dct: <http://purl.org/dc/terms/>";
+            String numpubquery = Prefix + "Select (count( distinct ?pub) as ?tot) where { "
+                    + "GRAPH   <" + con.getCentralGraph() + "> {"
+                    + "   <" + uri + ">  foaf:publications ?pub  }"
+                    + "}";
 
-    // uri = "https://redi.cedia.edu.ec/resource/authors/UCUENCA/file/_SAQUICELA_GALARZA_____VICTOR_HUGO_";
-    try {
+            String querytopics = Prefix
+                    + "Select (GROUP_CONCAT( DISTINCT ?topicl ;  SEPARATOR = \"|\") as ?topicls )  where { "
+                    + "GRAPH   <" + con.getCentralGraph() + "> { "
+                    + "   <" + uri + ">  foaf:topic_interest [rdfs:label ?topicl]                                                                                            	}\n"
+                    + "}";
 
-      String numpubquery = Prefix + "Select (count( distinct ?pub) as ?tot) where { "
-              + "GRAPH   <" + con.getCentralGraph() + "> {"
-              + "   <" + uri + ">  foaf:publications ?pub  }"
-              + "}";
-
-      String querytopics = Prefix
-              + "Select (GROUP_CONCAT( DISTINCT ?topicl ;  SEPARATOR = \"|\") as ?topicls )  where { "
-              + "GRAPH   <" + con.getCentralGraph() + "> { "
-              + "   <" + uri + ">  foaf:topic_interest [rdfs:label ?topicl]                                                                                            	}\n"
-              + "}";
-
-      /* String queryCluster = Prefix
+            /* String queryCluster = Prefix
              + "Select distinct ?lc where { "
              + "GRAPH   <" + con.getClusterGraph() + "> {"
              + "     ?pubc uc:hasPerson <" + uri + "> ."
@@ -1191,150 +1190,150 @@ public class CommonServiceImpl implements CommonService {
              + "                      FILTER (lang(?lc) = 'en')       "
              + "           } "
              + "}";*/
-      String queryCluster = Prefix
-              + "SELECT  ?cl   (sample(?clabel_) as ?clabel) FROM <" + con.getClusterGraph() + "> WHERE  {\n"
-              + "  <" + uri + ">  dct:isPartOf ?cl .\n"
-              + "	?cl a <http://ucuenca.edu.ec/ontology#Cluster> .\n"
-              + "	 ?cl rdfs:label ?clabel_.\n"
-              + "	     }group by ?cl";
+            String queryCluster = Prefix
+                    + "SELECT  ?cl   (sample(?clabel_) as ?clabel) FROM <" + con.getClusterGraph() + "> WHERE  {\n"
+                    + "  <" + uri + ">  dct:isPartOf ?cl .\n"
+                    + "	?cl a <http://ucuenca.edu.ec/ontology#Cluster> .\n"
+                    + "	 ?cl rdfs:label ?clabel_.\n"
+                    + "	     }group by ?cl";
 
-      String querySubCluster = Prefix
-              + "SELECT  ?cl   (sample(?clabel_) as ?clabel) FROM <" + con.getClusterGraph() + "> WHERE  {\n"
-              + "  <" + uri + ">  dct:isPartOf ?cl .\n"
-              + "	?cl a <http://ucuenca.edu.ec/ontology#SubCluster> .\n"
-              + "	 ?cl rdfs:label ?clabel_.\n"
-              + "	     }group by ?cl limit 5";
+            String querySubCluster = Prefix
+                    + "SELECT  ?cl   (sample(?clabel_) as ?clabel) FROM <" + con.getClusterGraph() + "> WHERE  {\n"
+                    + "  <" + uri + ">  dct:isPartOf ?cl .\n"
+                    + "	?cl a <http://ucuenca.edu.ec/ontology#SubCluster> .\n"
+                    + "	 ?cl rdfs:label ?clabel_.\n"
+                    + "	     }group by ?cl limit 5";
 
-      String metaAuthor1 = Prefix
-              + "SELECT   ?names  ?orgnames ?members ?orcids ?imgs ?emails ?homepages ?citations ?hindexs ?i10indexs ?afs ?scs ?olb where { "
-              + "GRAPH <" + con.getCentralGraph() + "> { "
-              + " { "
-              + "   select (GROUP_CONCAT( DISTINCT ?olbs ;  SEPARATOR = \"|\") as ?olb) (GROUP_CONCAT( DISTINCT ?name ;  SEPARATOR = \"|\") as ?names)  "
-              + "   (GROUP_CONCAT( DISTINCT ?orcid ;  SEPARATOR = \"|\") as ?orcids  )  "
-              + "   (GROUP_CONCAT( DISTINCT ?img ;  SEPARATOR = \"|\") as ?imgs  )  "
-              + "   (GROUP_CONCAT( DISTINCT ?email ;  SEPARATOR = \"|\") as ?emails ) "
-              + "   (GROUP_CONCAT( DISTINCT ?homepage ;  SEPARATOR = \"|\") as ?homepages  ) "
-              + "   (GROUP_CONCAT( DISTINCT ?citation ;  SEPARATOR = \"|\") as ?citations  )           	"
-              + "   (GROUP_CONCAT( DISTINCT ?hindex  ;  SEPARATOR = \"|\") as ?hindexs  ) "
-              + "   (GROUP_CONCAT( DISTINCT ?i10index  ;  SEPARATOR = \"|\") as ?i10indexs  )  "
-              + "   (GROUP_CONCAT( DISTINCT ?sc  ;  SEPARATOR = \"|\") as ?scs  ) "
-              + "   (GROUP_CONCAT( DISTINCT ?af  ;  SEPARATOR = \"|\") as ?afs  ) "
-              + "   { "
-              + "    <" + uri + ">   foaf:name ?name . "
-              + "    OPTIONAL { <" + uri + "> schema:memberOf ?member . } "
-              + "     OPTIONAL { "
-              + "     ?member foaf:name ?afname . "
-              + "     BIND(CONCAT(STR(?member), ';' , STR(?afname) ) AS ?af)  "
-              + "     } "
-              + "   OPTIONAL { "
-              + "    <" + uri + "> scoro:hasORCID ?orcid "
-              + "  } "
-              + "  OPTIONAL{  "
-              + "    <" + uri + "> foaf:img  ?img   "
-              + "  } "
-              + "  OPTIONAL{  "
-              + "    <" + uri + ">  <http://purl.org/vocab/bio/0.1/olb>  ?olbs   "
-              + "  } "
-              + "       OPTIONAL { "
-              + "    <" + uri + "> vcard:hasEmail ?email "
-              + "  } "
-              + "        } "
-              + "  } "
-              + "    GRAPH <" + con.getOrganizationsGraph() + "> { "
-              + "    select (GROUP_CONCAT( DISTINCT ?member ;  SEPARATOR = \"|\")  as ?orgnames ) {  "
-              + "    ?member uc:name ?orgname . "
-              + "    GRAPH <" + con.getCentralGraph() + "> { "
-              + "    <" + uri + "> schema:memberOf ?member "
-              + "      }  "
-              + "      } "
-              + "      } "
-              + "  }  "
-              + "} ";
-      String metaAuthor2 = Prefix
-              + "SELECT   ?names  ?orgnames ?members ?orcids ?imgs ?emails ?homepages ?citations ?hindexs ?i10indexs ?afs ?scs  where { "
-              + "GRAPH <" + con.getCentralGraph() + "> { "
-              + " { "
-              + "    select (GROUP_CONCAT( DISTINCT ?name ;  SEPARATOR = \"|\") as ?names)  "
-              + "   (GROUP_CONCAT( DISTINCT ?orcid ;  SEPARATOR = \"|\") as ?orcids  )  "
-              + "   (GROUP_CONCAT( DISTINCT ?img ;  SEPARATOR = \"|\") as ?imgs  )  "
-              + "   (GROUP_CONCAT( DISTINCT ?email ;  SEPARATOR = \"|\") as ?emails ) "
-              + "   (GROUP_CONCAT( DISTINCT ?homepage ;  SEPARATOR = \"|\") as ?homepages  ) "
-              + "   (GROUP_CONCAT( DISTINCT ?citation ;  SEPARATOR = \"|\") as ?citations  )           	"
-              + "   (GROUP_CONCAT( DISTINCT ?hindex  ;  SEPARATOR = \"|\") as ?hindexs  ) "
-              + "   (GROUP_CONCAT( DISTINCT ?i10index  ;  SEPARATOR = \"|\") as ?i10indexs  )  "
-              + "   (GROUP_CONCAT( DISTINCT ?sc  ;  SEPARATOR = \"|\") as ?scs  ) "
-              + "   (GROUP_CONCAT( DISTINCT ?af  ;  SEPARATOR = \"|\") as ?afs  ) "
-              + "   { "
-              + "   OPTIONAL { "
-              + "     <" + uri + ">  foaf:homepage  ?homepage "
-              + "  } "
-              + "   OPTIONAL { "
-              + "     <" + uri + ">  uc:citationCount  ?citation "
-              + "      }  "
-              + "   OPTIONAL { "
-              + "     <" + uri + ">       uc:h-index ?hindex "
-              + "       }  "
-              + "     OPTIONAL { "
-              + "    <" + uri + ">       uc:i10-index ?i10index "
-              + "       }  "
-              + "    OPTIONAL { "
-              + "      <" + uri + "> foaf:holdsAccount ?sc  "
-              + "       } "
-              + "        } "
-              + "  } "
-              + "  }  "
-              + "} ";
+            String metaAuthor1 = Prefix
+                    + "SELECT   ?names  ?orgnames ?members ?orcids ?imgs ?emails ?homepages ?citations ?hindexs ?i10indexs ?afs ?scs ?olb where { "
+                    + "GRAPH <" + con.getCentralGraph() + "> { "
+                    + " { "
+                    + "   select (GROUP_CONCAT( DISTINCT ?olbs ;  SEPARATOR = \"|\") as ?olb) (GROUP_CONCAT( DISTINCT ?name ;  SEPARATOR = \"|\") as ?names)  "
+                    + "   (GROUP_CONCAT( DISTINCT ?orcid ;  SEPARATOR = \"|\") as ?orcids  )  "
+                    + "   (GROUP_CONCAT( DISTINCT ?img ;  SEPARATOR = \"|\") as ?imgs  )  "
+                    + "   (GROUP_CONCAT( DISTINCT ?email ;  SEPARATOR = \"|\") as ?emails ) "
+                    + "   (GROUP_CONCAT( DISTINCT ?homepage ;  SEPARATOR = \"|\") as ?homepages  ) "
+                    + "   (GROUP_CONCAT( DISTINCT ?citation ;  SEPARATOR = \"|\") as ?citations  )           	"
+                    + "   (GROUP_CONCAT( DISTINCT ?hindex  ;  SEPARATOR = \"|\") as ?hindexs  ) "
+                    + "   (GROUP_CONCAT( DISTINCT ?i10index  ;  SEPARATOR = \"|\") as ?i10indexs  )  "
+                    + "   (GROUP_CONCAT( DISTINCT ?sc  ;  SEPARATOR = \"|\") as ?scs  ) "
+                    + "   (GROUP_CONCAT( DISTINCT ?af  ;  SEPARATOR = \"|\") as ?afs  ) "
+                    + "   { "
+                    + "    <" + uri + ">   foaf:name ?name . "
+                    + "    OPTIONAL { <" + uri + "> schema:memberOf ?member . } "
+                    + "     OPTIONAL { "
+                    + "     ?member foaf:name ?afname . "
+                    + "     BIND(CONCAT(STR(?member), ';' , STR(?afname) ) AS ?af)  "
+                    + "     } "
+                    + "   OPTIONAL { "
+                    + "    <" + uri + "> scoro:hasORCID ?orcid "
+                    + "  } "
+                    + "  OPTIONAL{  "
+                    + "    <" + uri + "> foaf:img  ?img   "
+                    + "  } "
+                    + "  OPTIONAL{  "
+                    + "    <" + uri + ">  <http://purl.org/vocab/bio/0.1/olb>  ?olbs   "
+                    + "  } "
+                    + "       OPTIONAL { "
+                    + "    <" + uri + "> vcard:hasEmail ?email "
+                    + "  } "
+                    + "        } "
+                    + "  } "
+                    + "    GRAPH <" + con.getOrganizationsGraph() + "> { "
+                    + "    select (GROUP_CONCAT( DISTINCT ?member ;  SEPARATOR = \"|\")  as ?orgnames ) {  "
+                    + "    ?member uc:name ?orgname . "
+                    + "    GRAPH <" + con.getCentralGraph() + "> { "
+                    + "    <" + uri + "> schema:memberOf ?member "
+                    + "      }  "
+                    + "      } "
+                    + "      } "
+                    + "  }  "
+                    + "} ";
+            String metaAuthor2 = Prefix
+                    + "SELECT   ?names  ?orgnames ?members ?orcids ?imgs ?emails ?homepages ?citations ?hindexs ?i10indexs ?afs ?scs  where { "
+                    + "GRAPH <" + con.getCentralGraph() + "> { "
+                    + " { "
+                    + "    select (GROUP_CONCAT( DISTINCT ?name ;  SEPARATOR = \"|\") as ?names)  "
+                    + "   (GROUP_CONCAT( DISTINCT ?orcid ;  SEPARATOR = \"|\") as ?orcids  )  "
+                    + "   (GROUP_CONCAT( DISTINCT ?img ;  SEPARATOR = \"|\") as ?imgs  )  "
+                    + "   (GROUP_CONCAT( DISTINCT ?email ;  SEPARATOR = \"|\") as ?emails ) "
+                    + "   (GROUP_CONCAT( DISTINCT ?homepage ;  SEPARATOR = \"|\") as ?homepages  ) "
+                    + "   (GROUP_CONCAT( DISTINCT ?citation ;  SEPARATOR = \"|\") as ?citations  )           	"
+                    + "   (GROUP_CONCAT( DISTINCT ?hindex  ;  SEPARATOR = \"|\") as ?hindexs  ) "
+                    + "   (GROUP_CONCAT( DISTINCT ?i10index  ;  SEPARATOR = \"|\") as ?i10indexs  )  "
+                    + "   (GROUP_CONCAT( DISTINCT ?sc  ;  SEPARATOR = \"|\") as ?scs  ) "
+                    + "   (GROUP_CONCAT( DISTINCT ?af  ;  SEPARATOR = \"|\") as ?afs  ) "
+                    + "   { "
+                    + "   OPTIONAL { "
+                    + "     <" + uri + ">  foaf:homepage  ?homepage "
+                    + "  } "
+                    + "   OPTIONAL { "
+                    + "     <" + uri + ">  uc:citationCount  ?citation "
+                    + "      }  "
+                    + "   OPTIONAL { "
+                    + "     <" + uri + ">       uc:h-index ?hindex "
+                    + "       }  "
+                    + "     OPTIONAL { "
+                    + "    <" + uri + ">       uc:i10-index ?i10index "
+                    + "       }  "
+                    + "    OPTIONAL { "
+                    + "      <" + uri + "> foaf:holdsAccount ?sc  "
+                    + "       } "
+                    + "        } "
+                    + "  } "
+                    + "  }  "
+                    + "} ";
 
-      List<Map<String, Value>> responseAuthor1 = sparqlServiceMarmotta.query(QueryLanguage.SPARQL, metaAuthor1);
-      List<Map<String, Value>> responseAuthor2 = sparqlServiceMarmotta.query(QueryLanguage.SPARQL, metaAuthor2);
-      Map<String, Value> get = responseAuthor1.get(0);
-      get = CleanEmptyFields(get);
-      get.putAll(CleanEmptyFields(responseAuthor2.get(0)));
-      get = CleanEmptyFields(get);
-      List<Map<String, Value>> responseAuthor = Lists.newArrayList(get);
-      AuthorProfile a = new AuthorProfile();
-      if (!responseAuthor.isEmpty()) {
-        a = proccessAuthor(responseAuthor);
-        //DEPRECATED
-        /*  List<Map<String, Value>> responsetopics = sparqlService.query(QueryLanguage.SPARQL, querytopics);
+            List<Map<String, Value>> responseAuthor1 = fastsparql.getSparqlService().query(QueryLanguage.SPARQL, metaAuthor1);
+            List<Map<String, Value>> responseAuthor2 = fastsparql.getSparqlService().query(QueryLanguage.SPARQL, metaAuthor2);
+            Map<String, Value> get = responseAuthor1.get(0);
+            get = CleanEmptyFields(get);
+            get.putAll(CleanEmptyFields(responseAuthor2.get(0)));
+            get = CleanEmptyFields(get);
+            List<Map<String, Value>> responseAuthor = Lists.newArrayList(get);
+            AuthorProfile a = new AuthorProfile();
+            if (!responseAuthor.isEmpty()) {
+                a = proccessAuthor(responseAuthor);
+                //DEPRECATED
+                /*  List<Map<String, Value>> responsetopics = sparqlService.query(QueryLanguage.SPARQL, querytopics);
                  if (responsetopics.size() > 0 && !responsetopics.get(0).isEmpty()) {
                  String topics = responsetopics.get(0).get("topicls").stringValue();
                  a.setTopics(getRelevantTopics(topics.split("\\|")));
                  }*/
 
-        List<Map<String, Value>> responseSubclusters = sparqlServiceMarmotta.query(QueryLanguage.SPARQL, querySubCluster);
-        if (!responseSubclusters.isEmpty()) {
-          //   String[] arrayaux = new String[responseCluster.size()];
-          List<String> subclusters = new ArrayList();
-          for (Map<String, Value> mp : responseSubclusters) {
-            if (mp.get("clabel") != null) {
-              subclusters.add(mp.get("clabel").stringValue());
-            }
-          }
-          String[] arrayaux = new String[subclusters.size()];
-          arrayaux = subclusters.toArray(arrayaux);
-          a.setTopics(arrayaux);
-        }
+                List<Map<String, Value>> responseSubclusters = fastsparql.getSparqlService().query(QueryLanguage.SPARQL, querySubCluster);
+                if (!responseSubclusters.isEmpty()) {
+                    //   String[] arrayaux = new String[responseCluster.size()];
+                    List<String> subclusters = new ArrayList();
+                    for (Map<String, Value> mp : responseSubclusters) {
+                        if (mp.get("clabel") != null) {
+                            subclusters.add(mp.get("clabel").stringValue());
+                        }
+                    }
+                    String[] arrayaux = new String[subclusters.size()];
+                    arrayaux = subclusters.toArray(arrayaux);
+                    a.setTopics(arrayaux);
+                }
 
-        List<Map<String, Value>> responseCluster = sparqlServiceMarmotta.query(QueryLanguage.SPARQL, queryCluster);
-        if (!responseCluster.isEmpty()) {
-          //   String[] arrayaux = new String[responseCluster.size()];
-          List<String> clusters = new ArrayList();
-          for (Map<String, Value> mp : responseCluster) {
-            // When groping clusters, KiWi returns weirds results.
-            // When there is not clusters for an author, it returns 
-            // null instead of returning an empty List. The group by
-            // is used to avoid showing repeated results as a result
-            // an empty space.
-            if (mp.get("clabel") != null) {
-              clusters.add(mp.get("clabel").stringValue());
-            }
-          }
-          String[] arrayaux = new String[clusters.size()];
-          arrayaux = clusters.toArray(arrayaux);
-          a.setCluster(arrayaux);
+                List<Map<String, Value>> responseCluster = fastsparql.getSparqlService().query(QueryLanguage.SPARQL, queryCluster);
+                if (!responseCluster.isEmpty()) {
+                    //   String[] arrayaux = new String[responseCluster.size()];
+                    List<String> clusters = new ArrayList();
+                    for (Map<String, Value> mp : responseCluster) {
+                        // When groping clusters, KiWi returns weirds results.
+                        // When there is not clusters for an author, it returns 
+                        // null instead of returning an empty List. The group by
+                        // is used to avoid showing repeated results as a result
+                        // an empty space.
+                        if (mp.get("clabel") != null) {
+                            clusters.add(mp.get("clabel").stringValue());
+                        }
+                    }
+                    String[] arrayaux = new String[clusters.size()];
+                    arrayaux = clusters.toArray(arrayaux);
+                    a.setCluster(arrayaux);
 
-          /*   int np = Integer.parseInt(responseCluster.get(0).get("pub").stringValue());
+                    /*   int np = Integer.parseInt(responseCluster.get(0).get("pub").stringValue());
                      int min = (int) (np - np * 0.1);
                      List<String> clusters = new ArrayList();
                      for (Map<String, Value> mp : responseCluster) {
@@ -1347,307 +1346,307 @@ public class CommonServiceImpl implements CommonService {
                      a.setCluster(arrayaux);*/
  /* String lc = responseCluster.get(0).get("lc").stringValue();
                      a.setCluster(lc.split("\\|"));*/
-        }
+                }
 
-        List<Map<String, Value>> responseNpub = sparqlServiceMarmotta.query(QueryLanguage.SPARQL, numpubquery);
-        if (responseNpub.size() > 0 && !responseNpub.get(0).isEmpty()) {
-          String num = responseNpub.get(0).get("tot").stringValue();
-          a.setNpub(num);
-        }
-      }
-      return objecttoJson(a);
-    } catch (MarmottaException ex) {
-      java.util.logging.Logger.getLogger(CommonServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    return "{Status:Error}";
-  }
-
-  private Map<String, Value> CleanEmptyFields(Map<String, Value> mp) {
-    Set<String> kp = new HashSet<>();
-    Set<String> rm = new HashSet<>();
-    for (Entry<String, Value> an : mp.entrySet()) {
-      if (!an.getValue().stringValue().isEmpty()) {
-        kp.add(an.getKey());
-      }
-    }
-    for (Entry<String, Value> an : mp.entrySet()) {
-      if (!kp.contains(an.getKey())) {
-        rm.add(an.getKey());
-      }
-    }
-    for (String st : rm) {
-      mp.remove(st);
-    }
-    return mp;
-  }
-
-  private AuthorProfile proccessAuthor(List<Map<String, Value>> responseAuthor) {
-    AuthorProfile a = new AuthorProfile();
-    Map<String, Value> author = responseAuthor.get(0);
-    if (author.containsKey("names")) {
-      a.setName(getUniqueName(author.get("names").stringValue(), "\\|"));
-    }
-
-    if (author.containsKey("olb")) {
-      a.setBio(author.get("olb").stringValue());
-    }
-
-    if (author.containsKey("orgnames")) {
-      a.setOrg(author.get("orgnames").stringValue().split("\\|"));
-    }
-
-    if (author.containsKey("orcids")) {
-      a.setOrcid(getUniqueOrcid(author.get("orcids").stringValue()));
-    }
-    if (author.containsKey("imgs")) {
-      a.setImg(author.get("imgs").stringValue().split("\\|")[0]);
-    }
-    if (author.containsKey("emails")) {
-      a.setEmails(author.get("emails").stringValue().split("\\|"));
-    }
-
-    if (author.containsKey("homepages")) {
-      a.setHomepages(author.get("homepages").stringValue().split("\\|"));
-    }
-
-    if (author.containsKey("citations")) {
-      a.setCitation(getMaxValue(author.get("citations").stringValue().split("\\|")) + "");
-    }
-
-    if (author.containsKey("homepages")) {
-      a.setHomepages(author.get("homepages").stringValue().split("\\|"));
-    }
-
-    if (author.containsKey("hindexs")) {
-      a.setHindex(getMaxValue(author.get("hindexs").stringValue().split("\\|")) + "");
-    }
-    if (author.containsKey("i10indexs")) {
-      a.setI10(getMaxValue(author.get("i10indexs").stringValue().split("\\|")) + "");
-    }
-
-    if (author.containsKey("afs")) {
-      a.setOtheraf(getListOrg(author.get("afs").stringValue().split("\\|")));
-    }
-
-    if (author.containsKey("scs")) {
-      a.setOtherProfile(getListOtherProfile(author.get("scs").stringValue().split("\\|")));
-    }
-
-    return a;
-  }
-
-  public String getUniqueName(String names, String separator) {
-    int tokenmax = 0;
-    int lengthmax = 0;
-    String candidate = "";
-    String[] listNames = names.split(separator);
-    String candidateF = "";
-    for (String name : listNames) {
-      int tokens = name.split(" ").length;
-      int length = name.length();
-      if (tokens >= tokenmax && length > lengthmax) {
-        tokenmax = tokens;
-        lengthmax = length;
-        if (name.contains(",")) {
-          candidateF = name;
-        } else {
-          candidate = name;
-        }
-      }
-
-    }
-
-    return candidateF.length() > 1 ? candidateF : candidate;
-  }
-
-  private String getUniqueOrcid(String orcids) {
-
-    return orcids.split("\\|")[0];
-
-  }
-
-  private int getMaxValue(String[] split) {
-    //String [] citations = split.split("|");
-    int citasmax = 0;
-    for (String c : split) {
-      if (citasmax < Integer.parseInt(c.trim())) {
-        citasmax = Integer.parseInt(c.trim());
-      }
-    }
-    return citasmax;
-  }
-
-  private String[] getListOrg(String[] org) {
-    List<String> afiliations = new ArrayList();
-    for (String af : org) {
-      if (af.split(";").length > 1) {
-        String uri = af.split(";")[0];
-        String name = af.split(";")[1];
-        if (!uri.contains(con.getBaseURI())) {
-          afiliations.add(name);
-        }
-      }
-    }
-    return afiliations.toArray(new String[0]);
-  }
-
-  private String[] getListOtherProfile(String[] scs) {
-    List<String> otherprof = new ArrayList<String>();
-    for (String prof : scs) {
-      if (!prof.contains(con.getBaseURI())) {
-        otherprof.add(prof);
-      }
-    }
-    return otherprof.toArray(new String[0]);
-  }
-
-  private String objecttoJson(Object o) {
-    ObjectMapper mapper = new ObjectMapper();
-    try {
-      return mapper.writeValueAsString(o);
-    } catch (JsonProcessingException ex) {
-      java.util.logging.Logger.getLogger(CommonServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    return "";
-  }
-
-  private String[] getRelevantTopics(String[] split) {
-    Map<String, Integer> aux = new HashMap();
-    for (String topic : split) {
-      for (String comparetopic : split) {
-        if (comparetopic.contains(topic)) {
-          if (aux.containsKey(topic)) {
-            aux.put(topic, aux.get(topic) + 1);
-          } else {
-            aux.put(topic, 0);
-          }
-        }
-      }
-    }
-
-    List<String> ordertopic = orderMap(aux);
-
-    return ordertopic.size() > 5 ? ordertopic.subList(0, 5).toArray(new String[0]) : ordertopic.toArray(new String[0]);
-  }
-
-  private List<String> orderMap(Map<String, Integer> aux) {
-
-    Comparator<Entry<String, Integer>> valueComparator = new Comparator<Entry<String, Integer>>() {
-
-      @Override
-      public int compare(Entry<String, Integer> e1, Entry<String, Integer> e2) {
-        int v1 = e1.getValue();
-        int v2 = e2.getValue();
-        return v2 - v1;
-      }
-    };
-
-    // Sort method needs a List, so let's first convert Set to List in Java
-    List<Entry<String, Integer>> listOfEntries = new ArrayList<Entry<String, Integer>>(aux.entrySet());
-
-    // sorting HashMap by values using comparator
-    Collections.sort(listOfEntries, valueComparator);
-    List<String> auxlist = new ArrayList();
-    for (Entry<String, Integer> e : listOfEntries) {
-      auxlist.add(e.getKey());
-    }
-    return auxlist;
-  }
-
-  @Override
-  public void registerREDIEndpoint(String name, URL url) throws Exception {
-    String base = "https://redi.cedia.edu.ec";
-
-    String id = base + "/resource/endpoint/redi/" + name.hashCode();
-    String baseContext = base + url.getPath() + "context/";
-
-    log.debug("New endpoint information.\nName: {} \nID: {}\nBase context: {}\nURL: {}",
-            name, id, baseContext, url);
-
-    boolean exists = sparqlService.getSparqlService().ask(QueryLanguage.SPARQL,
-            queriesService.isREDIEndpointStored(id));
-    if (!exists) {
-      sparqlService.getSparqlService().update(QueryLanguage.SPARQL,
-              queriesService.insertREDIEndpoints(id, name,
-                      url.toExternalForm(),
-                      baseContext));
-    } else {
-      throw new Exception("Endpoint already exists");
-    }
-  }
-
-  @Override
-  public void centralize(String[] endpoints, boolean isUpdate) {
-    Map<String, List<TaskInfo>> tasks = task.getTasksByGroup();
-
-    for (String endpoint : endpoints) {
-      try {
-        // Check if execution is being processed.
-        if (tasks.containsKey("Centralization")) {
-          List<TaskInfo> info = tasks.get("Centralization");
-          for (TaskInfo taskInfo : info) {
-            if (taskInfo.getName().equals(endpoint)) {
-              log.info("Endpoint '{}' is being executed.", endpoint);
-              return;
+                List<Map<String, Value>> responseNpub = fastsparql.getSparqlService().query(QueryLanguage.SPARQL, numpubquery);
+                if (responseNpub.size() > 0 && !responseNpub.get(0).isEmpty()) {
+                    String num = responseNpub.get(0).get("tot").stringValue();
+                    a.setNpub(num);
+                }
             }
-          }
+            return objecttoJson(a);
+        } catch (MarmottaException ex) {
+            java.util.logging.Logger.getLogger(CommonServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "{Status:Error}";
+    }
+
+    private Map<String, Value> CleanEmptyFields(Map<String, Value> mp) {
+        Set<String> kp = new HashSet<>();
+        Set<String> rm = new HashSet<>();
+        for (Entry<String, Value> an : mp.entrySet()) {
+            if (!an.getValue().stringValue().isEmpty()) {
+                kp.add(an.getKey());
+            }
+        }
+        for (Entry<String, Value> an : mp.entrySet()) {
+            if (!kp.contains(an.getKey())) {
+                rm.add(an.getKey());
+            }
+        }
+        for (String st : rm) {
+            mp.remove(st);
+        }
+        return mp;
+    }
+
+    private AuthorProfile proccessAuthor(List<Map<String, Value>> responseAuthor) {
+        AuthorProfile a = new AuthorProfile();
+        Map<String, Value> author = responseAuthor.get(0);
+        if (author.containsKey("names")) {
+            a.setName(getUniqueName(author.get("names").stringValue(), "\\|"));
         }
 
-        if (isUpdate) {
-          centralize.resetCopy(endpoint);
+        if (author.containsKey("olb")) {
+            a.setBio(author.get("olb").stringValue());
         }
-        centralize.copy(endpoint);
-      } catch (Exception ex) {
-        log.error(ex.getMessage(), ex);
-      }
-    }
-  }
 
-  @Override
-  public String getDataFromDOAJProvidersService(final String[] organizations, final boolean force) {
-    if (doajThread != null && doajThread.isAlive()) {
-      return "Process is executing.";
-    }
-    doajThread = new Thread(new Runnable() {
-      @Override
-      public void run() {
-        providerServiceDOAJ.extractAuthors(organizations, force);
-      }
-    });
-    doajThread.start();
-    return "Data Provider DOAJ are extracted in background.   Please review main.log file for details";
-  }
+        if (author.containsKey("orgnames")) {
+            a.setOrg(author.get("orgnames").stringValue().split("\\|"));
+        }
 
-  @Override
-  public String getDataFromORCIDProvidersService(final String[] organizations, final boolean force) {
-    if (orcidThread != null && orcidThread.isAlive()) {
-      return "Process is executing.";
-    }
-    orcidThread = new Thread(new Runnable() {
-      @Override
-      public void run() {
-        providerServiceORCID.extractAuthors(organizations, force);
-      }
-    });
-    orcidThread.start();
-    return "Data Provider DOAJ are extracted in background.   Please review main.log file for details";
-  }
+        if (author.containsKey("orcids")) {
+            a.setOrcid(getUniqueOrcid(author.get("orcids").stringValue()));
+        }
+        if (author.containsKey("imgs")) {
+            a.setImg(author.get("imgs").stringValue().split("\\|")[0]);
+        }
+        if (author.containsKey("emails")) {
+            a.setEmails(author.get("emails").stringValue().split("\\|"));
+        }
 
-  @Override
-  public String getDataFromScopusUpdateProvidersService(final String[] organizations, final boolean force) {
-    // Find a way to execute thread and get response information.
-    if (scopusThread != null && scopusThread.isAlive()) {
-      return "Process is executing.";
+        if (author.containsKey("homepages")) {
+            a.setHomepages(author.get("homepages").stringValue().split("\\|"));
+        }
+
+        if (author.containsKey("citations")) {
+            a.setCitation(getMaxValue(author.get("citations").stringValue().split("\\|")) + "");
+        }
+
+        if (author.containsKey("homepages")) {
+            a.setHomepages(author.get("homepages").stringValue().split("\\|"));
+        }
+
+        if (author.containsKey("hindexs")) {
+            a.setHindex(getMaxValue(author.get("hindexs").stringValue().split("\\|")) + "");
+        }
+        if (author.containsKey("i10indexs")) {
+            a.setI10(getMaxValue(author.get("i10indexs").stringValue().split("\\|")) + "");
+        }
+
+        if (author.containsKey("afs")) {
+            a.setOtheraf(getListOrg(author.get("afs").stringValue().split("\\|")));
+        }
+
+        if (author.containsKey("scs")) {
+            a.setOtherProfile(getListOtherProfile(author.get("scs").stringValue().split("\\|")));
+        }
+
+        return a;
     }
 
-    scopusThread = new Thread(new Runnable() {
-      @Override
-      public void run() {
-        providerServiceScopus1.extractAuthors(organizations, force);
-      }
-    });
-    scopusThread.start();
-    return "Data Provider SCOPUS are extracted in background.   Please review main.log file for details";
-  }
+    public String getUniqueName(String names, String separator) {
+        int tokenmax = 0;
+        int lengthmax = 0;
+        String candidate = "";
+        String[] listNames = names.split(separator);
+        String candidateF = "";
+        for (String name : listNames) {
+            int tokens = name.split(" ").length;
+            int length = name.length();
+            if (tokens >= tokenmax && length > lengthmax) {
+                tokenmax = tokens;
+                lengthmax = length;
+                if (name.contains(",")) {
+                    candidateF = name;
+                } else {
+                    candidate = name;
+                }
+            }
+
+        }
+
+        return candidateF.length() > 1 ? candidateF : candidate;
+    }
+
+    private String getUniqueOrcid(String orcids) {
+
+        return orcids.split("\\|")[0];
+
+    }
+
+    private int getMaxValue(String[] split) {
+        //String [] citations = split.split("|");
+        int citasmax = 0;
+        for (String c : split) {
+            if (citasmax < Integer.parseInt(c.trim())) {
+                citasmax = Integer.parseInt(c.trim());
+            }
+        }
+        return citasmax;
+    }
+
+    private String[] getListOrg(String[] org) {
+        List<String> afiliations = new ArrayList();
+        for (String af : org) {
+            if (af.split(";").length > 1) {
+                String uri = af.split(";")[0];
+                String name = af.split(";")[1];
+                if (!uri.contains(con.getBaseURI())) {
+                    afiliations.add(name);
+                }
+            }
+        }
+        return afiliations.toArray(new String[0]);
+    }
+
+    private String[] getListOtherProfile(String[] scs) {
+        List<String> otherprof = new ArrayList<String>();
+        for (String prof : scs) {
+            if (!prof.contains(con.getBaseURI())) {
+                otherprof.add(prof);
+            }
+        }
+        return otherprof.toArray(new String[0]);
+    }
+
+    private String objecttoJson(Object o) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.writeValueAsString(o);
+        } catch (JsonProcessingException ex) {
+            java.util.logging.Logger.getLogger(CommonServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "";
+    }
+
+    private String[] getRelevantTopics(String[] split) {
+        Map<String, Integer> aux = new HashMap();
+        for (String topic : split) {
+            for (String comparetopic : split) {
+                if (comparetopic.contains(topic)) {
+                    if (aux.containsKey(topic)) {
+                        aux.put(topic, aux.get(topic) + 1);
+                    } else {
+                        aux.put(topic, 0);
+                    }
+                }
+            }
+        }
+
+        List<String> ordertopic = orderMap(aux);
+
+        return ordertopic.size() > 5 ? ordertopic.subList(0, 5).toArray(new String[0]) : ordertopic.toArray(new String[0]);
+    }
+
+    private List<String> orderMap(Map<String, Integer> aux) {
+
+        Comparator<Entry<String, Integer>> valueComparator = new Comparator<Entry<String, Integer>>() {
+
+            @Override
+            public int compare(Entry<String, Integer> e1, Entry<String, Integer> e2) {
+                int v1 = e1.getValue();
+                int v2 = e2.getValue();
+                return v2 - v1;
+            }
+        };
+
+        // Sort method needs a List, so let's first convert Set to List in Java
+        List<Entry<String, Integer>> listOfEntries = new ArrayList<Entry<String, Integer>>(aux.entrySet());
+
+        // sorting HashMap by values using comparator
+        Collections.sort(listOfEntries, valueComparator);
+        List<String> auxlist = new ArrayList();
+        for (Entry<String, Integer> e : listOfEntries) {
+            auxlist.add(e.getKey());
+        }
+        return auxlist;
+    }
+
+    @Override
+    public void registerREDIEndpoint(String name, URL url) throws Exception {
+        String base = "https://redi.cedia.edu.ec";
+
+        String id = base + "/resource/endpoint/redi/" + name.hashCode();
+        String baseContext = base + url.getPath() + "context/";
+
+        log.debug("New endpoint information.\nName: {} \nID: {}\nBase context: {}\nURL: {}",
+                name, id, baseContext, url);
+
+        boolean exists = sparqlService.getSparqlService().ask(QueryLanguage.SPARQL,
+                queriesService.isREDIEndpointStored(id));
+        if (!exists) {
+            sparqlService.getSparqlService().update(QueryLanguage.SPARQL,
+                    queriesService.insertREDIEndpoints(id, name,
+                            url.toExternalForm(),
+                            baseContext));
+        } else {
+            throw new Exception("Endpoint already exists");
+        }
+    }
+
+    @Override
+    public void centralize(String[] endpoints, boolean isUpdate) {
+        Map<String, List<TaskInfo>> tasks = task.getTasksByGroup();
+
+        for (String endpoint : endpoints) {
+            try {
+                // Check if execution is being processed.
+                if (tasks.containsKey("Centralization")) {
+                    List<TaskInfo> info = tasks.get("Centralization");
+                    for (TaskInfo taskInfo : info) {
+                        if (taskInfo.getName().equals(endpoint)) {
+                            log.info("Endpoint '{}' is being executed.", endpoint);
+                            return;
+                        }
+                    }
+                }
+
+                if (isUpdate) {
+                    centralize.resetCopy(endpoint);
+                }
+                centralize.copy(endpoint);
+            } catch (Exception ex) {
+                log.error(ex.getMessage(), ex);
+            }
+        }
+    }
+
+    @Override
+    public String getDataFromDOAJProvidersService(final String[] organizations, final boolean force) {
+        if (doajThread != null && doajThread.isAlive()) {
+            return "Process is executing.";
+        }
+        doajThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                providerServiceDOAJ.extractAuthors(organizations, force);
+            }
+        });
+        doajThread.start();
+        return "Data Provider DOAJ are extracted in background.   Please review main.log file for details";
+    }
+
+    @Override
+    public String getDataFromORCIDProvidersService(final String[] organizations, final boolean force) {
+        if (orcidThread != null && orcidThread.isAlive()) {
+            return "Process is executing.";
+        }
+        orcidThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                providerServiceORCID.extractAuthors(organizations, force);
+            }
+        });
+        orcidThread.start();
+        return "Data Provider DOAJ are extracted in background.   Please review main.log file for details";
+    }
+
+    @Override
+    public String getDataFromScopusUpdateProvidersService(final String[] organizations, final boolean force) {
+        // Find a way to execute thread and get response information.
+        if (scopusThread != null && scopusThread.isAlive()) {
+            return "Process is executing.";
+        }
+
+        scopusThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                providerServiceScopus1.extractAuthors(organizations, force);
+            }
+        });
+        scopusThread.start();
+        return "Data Provider SCOPUS are extracted in background.   Please review main.log file for details";
+    }
 
 }

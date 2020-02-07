@@ -23,9 +23,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.marmotta.commons.vocabulary.FOAF;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
-import org.apache.marmotta.platform.core.api.triplestore.SesameService;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
-import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 import org.bson.Document;
@@ -46,7 +44,6 @@ import org.simplejavamail.email.EmailBuilder;
 import org.simplejavamail.email.EmailPopulatingBuilder;
 import org.simplejavamail.mailer.Mailer;
 import org.simplejavamail.mailer.MailerBuilder;
-import org.simplejavamail.mailer.config.TransportStrategy;
 import org.slf4j.Logger;
 
 /**
@@ -62,8 +59,6 @@ public class ProfileValidationImpl implements ProfileValidation {
   @Inject
   private ConfigurationService conf;
 
-  @Inject
-  private SparqlService sparqlService;
 
   @Inject
   private ExternalSPARQLService fastSparqlService;
@@ -80,8 +75,6 @@ public class ProfileValidationImpl implements ProfileValidation {
   @Inject
   private SolrIndexingService solrIndexingService;
 
-  @Inject
-  private SesameService sesameService;
 
   @Inject
   private PopulateMongo loadService;
@@ -104,7 +97,7 @@ public class ProfileValidationImpl implements ProfileValidation {
             + "  }\n"
             + "}";
     try {
-      List<Map<String, Value>> qmail = sparqlService.query(QueryLanguage.SPARQL, querymail);
+      List<Map<String, Value>> qmail = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, querymail);
       JSONObject main = new JSONObject();
       JSONArray array = new JSONArray();
       for (Map<String, Value> p : qmail) {
@@ -154,7 +147,7 @@ public class ProfileValidationImpl implements ProfileValidation {
             + "} group by ?object";
 
     try {
-      List<Map<String, Value>> prof = sparqlService.query(QueryLanguage.SPARQL, queryprofile);
+      List<Map<String, Value>> prof = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queryprofile);
       JSONObject main = new JSONObject();
       JSONArray array = new JSONArray();
       for (Map<String, Value> p : prof) {
@@ -193,7 +186,7 @@ public class ProfileValidationImpl implements ProfileValidation {
             + "} ";
 
     try {
-      List<Map<String, Value>> prof = sparqlService.query(QueryLanguage.SPARQL, queryprofile);
+      List<Map<String, Value>> prof = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queryprofile);
       JSONObject main = new JSONObject();
       JSONArray array = new JSONArray();
       List<String> names = new ArrayList();
@@ -256,7 +249,7 @@ public class ProfileValidationImpl implements ProfileValidation {
             + " <" + uri + ">  <http://www.w3.org/2006/vcard/ns#hasEmail> ?mail  }\n"
             + "} ";
     try {
-      List<Map<String, Value>> qmail = sparqlService.query(QueryLanguage.SPARQL, querymail);
+      List<Map<String, Value>> qmail = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, querymail);
       JSONObject main = new JSONObject();
       JSONArray array = new JSONArray();
       for (Map<String, Value> p : qmail) {
@@ -305,7 +298,7 @@ public class ProfileValidationImpl implements ProfileValidation {
             + "} group by ?pub";
 
     try {
-      List<Map<String, Value>> prof = sparqlService.query(QueryLanguage.SPARQL, queryprofile);
+      List<Map<String, Value>> prof = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queryprofile);
       JSONObject main = new JSONObject();
       JSONArray array = new JSONArray();
       for (Map<String, Value> p : prof) {
@@ -434,7 +427,7 @@ public class ProfileValidationImpl implements ProfileValidation {
       m.add(authURI, RDF.TYPE, vfi.createURI("http://semanticweb.cs.vu.nl/2009/11/sem/Temporary"));
 
       URI contxRedi = vfi.createURI(constantService.getCentralGraph());
-      RepositoryConnection connection = sesameService.getConnection();
+      RepositoryConnection connection = fastSparqlService.getRepositoryConnetion();
       connection.begin();
       connection.add(m, contxRedi);
       connection.commit();
@@ -489,8 +482,8 @@ public class ProfileValidationImpl implements ProfileValidation {
             + "    }\n"
             + "} group by ?c";
     try {
-      List<Map<String, Value>> aCluster = sparqlService.query(QueryLanguage.SPARQL, queryClusters);
-      List<Map<String, Value>> aSubCluster = sparqlService.query(QueryLanguage.SPARQL, querySubClusters);
+      List<Map<String, Value>> aCluster = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queryClusters);
+      List<Map<String, Value>> aSubCluster = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, querySubClusters);
       JSONObject main = new JSONObject();
       JSONArray array = new JSONArray();
       for (Map<String, Value> p : aCluster) {

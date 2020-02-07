@@ -26,7 +26,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
 
-import org.apache.marmotta.kiwi.model.rdf.KiWiStringLiteral;
 import org.apache.marmotta.ldpath.api.backend.RDFBackend;
 import org.apache.marmotta.platform.core.api.content.ContentService;
 import org.apache.marmotta.platform.ldpath.api.AutoRegisteredLDPathFunction;
@@ -38,6 +37,7 @@ import org.slf4j.Logger;
 import at.newmedialab.lmf.search.util.LabColorSpace;
 
 import com.google.common.base.Preconditions;
+import org.openrdf.model.impl.ValueFactoryImpl;
 
 @ApplicationScoped
 public class ProminentColorsFunction extends AutoRegisteredLDPathFunction {
@@ -93,8 +93,9 @@ public class ProminentColorsFunction extends AutoRegisteredLDPathFunction {
         return Collections.emptySet();
     }
 
-    protected KiWiStringLiteral createResultLiteral(final Color c, float boost) {
-        return new KiWiStringLiteral(String.format("%d,%d,%d", c.getRed(), c.getGreen(), c.getBlue()));
+    protected Literal createResultLiteral(final Color c, float boost) {
+        ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
+        return instance.createLiteral(String.format("%d,%d,%d", c.getRed(), c.getGreen(), c.getBlue()));
     }
 
     protected int getClosestColorIndex(int color) {

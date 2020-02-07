@@ -18,7 +18,6 @@ package at.newmedialab.lmf.search.services.indexing;
 import static org.apache.marmotta.commons.sesame.repository.ResourceUtils.getTypes;
 
 import java.io.StringReader;
-import java.net.*;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -36,14 +35,11 @@ import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
 import org.apache.marmotta.commons.sesame.repository.ResourceUtils;
 import org.apache.marmotta.commons.sesame.transactions.model.TransactionData;
-import org.apache.marmotta.kiwi.model.rdf.KiWiResource;
-import org.apache.marmotta.kiwi.model.rdf.KiWiUriResource;
 import org.apache.marmotta.ldpath.backend.sesame.ContextAwareSesameConnectionBackend;
 import org.apache.marmotta.ldpath.backend.sesame.SesameConnectionBackend;
 import org.apache.marmotta.ldpath.exception.LDPathParseException;
 import org.apache.marmotta.ldpath.model.fields.FieldMapping;
 import org.apache.marmotta.ldpath.model.programs.Program;
-import org.apache.marmotta.platform.core.api.triplestore.SesameService;
 import org.apache.marmotta.platform.core.events.SystemStartupEvent;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.core.qualifiers.event.Created;
@@ -64,6 +60,9 @@ import at.newmedialab.lmf.search.api.program.SolrProgramService;
 import at.newmedialab.lmf.search.services.cores.SolrCoreConfiguration;
 import at.newmedialab.lmf.worker.services.WorkerRuntime;
 import at.newmedialab.lmf.worker.services.WorkerServiceImpl;
+import org.apache.marmotta.ucuenca.wk.commons.function.Cache;
+import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
+import org.openrdf.model.impl.ValueFactoryImpl;
 
 /**
  * Add file description here!
@@ -71,13 +70,13 @@ import at.newmedialab.lmf.worker.services.WorkerServiceImpl;
  * User: sschaffe
  */
 @ApplicationScoped
-public class SolrIndexingServiceImpl extends WorkerServiceImpl<SolrCoreRuntime,SolrCoreConfiguration> implements SolrIndexingService {
+public class SolrIndexingServiceImpl extends WorkerServiceImpl<SolrCoreRuntime, SolrCoreConfiguration> implements SolrIndexingService {
 
     @Inject
     private Logger log;
 
     @Inject
-    private SesameService sesameService;
+    private ExternalSPARQLService sesameService;
 
     @Inject
     private SolrCoreService solrCoreService;
@@ -85,18 +84,16 @@ public class SolrIndexingServiceImpl extends WorkerServiceImpl<SolrCoreRuntime,S
     @Inject
     private SolrProgramService solrProgramService;
 
-
     public SolrIndexingServiceImpl() {
     }
-
 
     public void startupEvent(@Observes SystemStartupEvent e) {
 
     }
 
-
     /**
-     * Return a name to identify this worker service implementation. Needs to be implemented by subclasses.
+     * Return a name to identify this worker service implementation. Needs to be
+     * implemented by subclasses.
      *
      * @return
      */
@@ -106,7 +103,8 @@ public class SolrIndexingServiceImpl extends WorkerServiceImpl<SolrCoreRuntime,S
     }
 
     /**
-     * Create a worker runtime using the configuration passed as argument. Needs to be implemented by subclasses.
+     * Create a worker runtime using the configuration passed as argument. Needs
+     * to be implemented by subclasses.
      *
      * @param config
      * @return
@@ -117,7 +115,8 @@ public class SolrIndexingServiceImpl extends WorkerServiceImpl<SolrCoreRuntime,S
     }
 
     /**
-     * Return a list of all currently active worker configurations. Needs to be implemented by subclasses.
+     * Return a list of all currently active worker configurations. Needs to be
+     * implemented by subclasses.
      *
      * @return
      */
@@ -126,44 +125,44 @@ public class SolrIndexingServiceImpl extends WorkerServiceImpl<SolrCoreRuntime,S
         return solrCoreService.listSolrCores();
     }
 
-
     /**
-     * This method is executed before rescheduling of resources in a configuration takes place. Can be used
-     * to tun necessary cleanups before execution. By default, does nothing.
+     * This method is executed before rescheduling of resources in a
+     * configuration takes place. Can be used to tun necessary cleanups before
+     * execution. By default, does nothing.
      * <p/>
-     * For SOLR, in case of a complete reschedule of an engine we delete the existing index before rescheduling.
+     * For SOLR, in case of a complete reschedule of an engine we delete the
+     * existing index before rescheduling.
      *
      * @param config
      */
     @Override
     public void doBeforeReschedule(SolrCoreConfiguration config) {
-        if(config.isClearBeforeReschedule() && runtimes.containsKey(config.getName())) {
+        if (config.isClearBeforeReschedule() && runtimes.containsKey(config.getName())) {
             runtimes.get(config.getName()).clear();
         }
     }
 
-
     /**
      * Schedule all dependencies dependency tracking is enabled.
+     *
      * @param config
      * @param resource
      */
     @Override
     public void doAfterReschedule(SolrCoreConfiguration config, Resource resource) {
         // schedule all resources that depend on the resource ...
-        if(config.isUpdateDependencies() && resource instanceof URI) {
+        if (config.isUpdateDependencies() && resource instanceof URI) {
             SolrCoreRuntime core = runtimes.get(config.getName());
 
-            Collection<URI> dependencies = core.listDependent(sesameService.getRepository().getValueFactory(), (URI) resource);
-            if(dependencies.size() > 0) {
-                log.info("scheduling {} resources depending on {} ...",dependencies.size(),resource);
-                for(URI dep : dependencies) {
+            Collection<URI> dependencies = core.listDependent(ValueFactoryImpl.getInstance(), (URI) resource);
+            if (dependencies.size() > 0) {
+                log.info("scheduling {} resources depending on {} ...", dependencies.size(), resource);
+                for (URI dep : dependencies) {
                     core.schedule(dep);
                 }
             }
         }
     }
-
 
     /**
      * Rebuild the SOLR index from scratch, using the currently visible triples
@@ -176,9 +175,9 @@ public class SolrIndexingServiceImpl extends WorkerServiceImpl<SolrCoreRuntime,S
 
     @Override
     public void rebuildIndex(Collection<String> coreNames) {
-        for(String coreName : coreNames) {
+        for (String coreName : coreNames) {
             SolrCoreConfiguration engine = solrCoreService.getSolrCore(coreName);
-            if(engine != null) {
+            if (engine != null) {
                 reschedule(engine);
             }
         }
@@ -186,7 +185,7 @@ public class SolrIndexingServiceImpl extends WorkerServiceImpl<SolrCoreRuntime,S
 
     @Override
     public void commit() {
-        for(SolrCoreRuntime runtime : runtimes.values()) {
+        for (SolrCoreRuntime runtime : runtimes.values()) {
             runtime.commit();
         }
     }
@@ -194,22 +193,24 @@ public class SolrIndexingServiceImpl extends WorkerServiceImpl<SolrCoreRuntime,S
     @Override
     public void indexResource(Resource resource, SolrCoreRuntime runtime) {
         Program<Value> program = runtime.getConfiguration().getProgram();
-        if(program == null) {
+        if (program == null) {
             try {
                 program = solrProgramService.parseProgram(new StringReader(runtime.getConfiguration().getProgramString()));
                 runtime.getConfiguration().setProgram(program);
             } catch (LDPathParseException e) {
-                log.error("error parsing path program for engine {}",runtime.getConfiguration().getName(),e);
+                log.error("error parsing path program for engine {}", runtime.getConfiguration().getName(), e);
                 return;
             }
         }
 
-        if (resource == null) return;
+        if (resource == null) {
+            return;
+        }
         final String coreName = runtime.getConfiguration().getName();
         final String rID = getResourceId(resource);
 
         try {
-            final RepositoryConnection connection = sesameService.getConnection();
+            final RepositoryConnection connection = sesameService.getRepositoryConnetion();
             try {
                 connection.begin();
 
@@ -251,16 +252,16 @@ public class SolrIndexingServiceImpl extends WorkerServiceImpl<SolrCoreRuntime,S
                     connection.commit();
                     return;
                 } else if (log.isTraceEnabled() && program.getFilter() != null) {
-                    log.trace("({}) <{}> matches filter '{}', indexing...", coreName, resource, program.getFilter().getPathExpression(backend) );
+                    log.trace("({}) <{}> matches filter '{}', indexing...", coreName, resource, program.getFilter().getPathExpression(backend));
                 }
 
                 SolrInputDocument doc = new SolrInputDocument();
 
                 doc.addField("id", rID);
                 doc.addField("lmf.indexed", new Date());
-                if (resource instanceof KiWiUriResource) {
-                    doc.addField("lmf.created", ((KiWiUriResource) resource).getCreated());
-                }
+//                if (resource instanceof KiWiUriResource) {
+//                    doc.addField("lmf.created", ((KiWiUriResource) resource).getCreated());
+//                }
 
                 if (resource instanceof URI) {
                     URI r = (URI) resource;
@@ -278,9 +279,9 @@ public class SolrIndexingServiceImpl extends WorkerServiceImpl<SolrCoreRuntime,S
                 }
 
                 for (Resource type : getTypes(connection, resource)) {
-                    if (type instanceof KiWiUriResource) {
-                        doc.addField("lmf.type", type.stringValue());
-                    }
+                    //if (type instanceof KiWiUriResource) {
+                    doc.addField("lmf.type", type.stringValue());
+                    //}
                 }
 
                 // Set the document boost
@@ -303,10 +304,10 @@ public class SolrIndexingServiceImpl extends WorkerServiceImpl<SolrCoreRuntime,S
                     //FIXME: Temporary fixing due LDPath reverse properties selector bug
                     Map<Value, List<Value>> paths = null;
                     Collection<?> values = null;
-                    if(runtime.getConfiguration().isUpdateDependencies()) {
+                    if (runtime.getConfiguration().isUpdateDependencies()) {
                         paths = new HashMap<Value, List<Value>>();
                         values = rule.getValues(backend, resource, paths);
-                    }else{
+                    } else {
                         values = rule.getValues(backend, resource);
                     }
                     //
@@ -331,7 +332,7 @@ public class SolrIndexingServiceImpl extends WorkerServiceImpl<SolrCoreRuntime,S
                             }
                         }
                     } catch (Exception ex) {
-                        log.error("({}) exception while building path indexes for <{}>, field {}: {}", coreName, resource, rule.getFieldName(), ex.getMessage() );
+                        log.error("({}) exception while building path indexes for <{}>, field {}: {}", coreName, resource, rule.getFieldName(), ex.getMessage());
                         log.debug("(" + coreName + ") stacktrace", ex);
                     }
                     if (runtime.getConfiguration().isUpdateDependencies()) {
@@ -341,7 +342,7 @@ public class SolrIndexingServiceImpl extends WorkerServiceImpl<SolrCoreRuntime,S
                     }
                 }
 
-                if(runtime.getConfiguration().isUpdateDependencies()) {
+                if (runtime.getConfiguration().isUpdateDependencies()) {
                     for (Value dependency : dependencies) {
                         if (dependency instanceof URI && !dependency.equals(resource)) {
                             doc.addField("lmf.dependencies", dependency.stringValue());
@@ -358,51 +359,54 @@ public class SolrIndexingServiceImpl extends WorkerServiceImpl<SolrCoreRuntime,S
         } catch (RepositoryException e) {
             log.warn("Could not build index document for " + resource.stringValue(), e);
         } catch (Throwable t) {
-            log.error("unknown error while indexing document",t);
+            log.error("unknown error while indexing document", t);
         }
     }
 
     private boolean isMultiValuedField(FieldMapping<?, Value> rule) {
         try {
             // Field type location is always single
-            if ("location".equals(solrProgramService.getSolrFieldType(rule.getFieldType().toString()))) return false;
+            if ("location".equals(solrProgramService.getSolrFieldType(rule.getFieldType().toString()))) {
+                return false;
+            }
         } catch (MarmottaException e) {
             // ignore
         }
         // If defined for the field
-        if (rule.getFieldConfig() != null && rule.getFieldConfig().containsKey("multiValued"))
+        if (rule.getFieldConfig() != null && rule.getFieldConfig().containsKey("multiValued")) {
             return Boolean.parseBoolean(rule.getFieldConfig().get("multiValued"));
+        }
 
         // We use multiValued=true as default.
         return true;
     }
 
     /**
-     * Return an appropriate resource id, depending on which backend implementation is used.
+     * Return an appropriate resource id, depending on which backend
+     * implementation is used.
      *
      * @param r
      * @return
      */
     private static String getResourceId(Resource r) {
-        if(r instanceof KiWiResource)
-            return String.valueOf(((KiWiResource)r).getId());
-        else
-            return r.stringValue();
+        return Cache.getMD5(r.stringValue());
     }
 
-
     /**
-     * Return when none of the indexers are performing actions (i.e. all are waiting for resources).
+     * Return when none of the indexers are performing actions (i.e. all are
+     * waiting for resources).
+     *
      * @return
      */
     @Override
     public boolean isRunning() {
-        for(WorkerRuntime<?> runtime : runtimes.values()) {
-            if(runtime.isRunning()) return true;
+        for (WorkerRuntime<?> runtime : runtimes.values()) {
+            if (runtime.isRunning()) {
+                return true;
+            }
         }
         return false;
     }
-
 
     @Override
     public void notifyTransactionCommit(@Observes @AfterCommit TransactionData data) {
@@ -428,11 +432,11 @@ public class SolrIndexingServiceImpl extends WorkerServiceImpl<SolrCoreRuntime,S
         super.notifyEngineRemove(engine);
     }
 
-  @Override
-  public void indexResource(Resource resource) {
-    List<SolrCoreRuntime> listWorkerRuntimes = this.listWorkerRuntimes();
-    for (SolrCoreRuntime r : listWorkerRuntimes) {
-      indexResource(resource, r);
+    @Override
+    public void indexResource(Resource resource) {
+        List<SolrCoreRuntime> listWorkerRuntimes = this.listWorkerRuntimes();
+        for (SolrCoreRuntime r : listWorkerRuntimes) {
+            indexResource(resource, r);
+        }
     }
-  }
 }

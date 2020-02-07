@@ -21,7 +21,6 @@ import org.apache.marmotta.commons.sesame.transactions.model.TransactionData;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
 import org.apache.marmotta.platform.core.api.statistics.StatisticsModule;
 import org.apache.marmotta.platform.core.api.statistics.StatisticsService;
-import org.apache.marmotta.platform.core.api.triplestore.SesameService;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.repository.RepositoryConnection;
@@ -30,6 +29,7 @@ import org.slf4j.Logger;
 
 import at.newmedialab.lmf.worker.api.WorkerService;
 import at.newmedialab.lmf.worker.model.WorkerConfiguration;
+import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 
 /**
  * Add file description here!
@@ -50,7 +50,7 @@ public abstract class WorkerServiceImpl<S extends WorkerRuntime<T>, T extends Wo
 
 
     @Inject
-    protected SesameService sesameService;
+    protected ExternalSPARQLService sesameService;
 
 
 
@@ -140,7 +140,7 @@ public abstract class WorkerServiceImpl<S extends WorkerRuntime<T>, T extends Wo
 
                 try {
                     int count = 0;
-                    RepositoryConnection con = sesameService.getConnection();
+                    RepositoryConnection con = sesameService.getRepositoryConnetion(); 
                     try {
                         con.begin();
                         for(Iterator<Resource> it = listResources(con).iterator(); it.hasNext() && !runtime.isAborted(); ) {

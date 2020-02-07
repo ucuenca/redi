@@ -29,7 +29,6 @@ import org.apache.marmotta.ldpath.exception.LDPathParseException;
 import org.apache.marmotta.ldpath.model.fields.FieldMapping;
 import org.apache.marmotta.ldpath.model.programs.Program;
 import org.apache.marmotta.platform.core.api.triplestore.ContextService;
-import org.apache.marmotta.platform.core.api.triplestore.SesameService;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.repository.RepositoryConnection;
@@ -46,6 +45,7 @@ import javax.ws.rs.core.Response.Status;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.*;
+import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 
 /**
  * Add file description here!
@@ -72,7 +72,7 @@ public class SolrCoreWebService {
     private ContextService contextService;
 
     @Inject
-    private SesameService sesameService;
+    private ExternalSPARQLService sesameService;
 
     @POST
     @Path("/{name}")
@@ -222,7 +222,7 @@ public class SolrCoreWebService {
     public Response checkProgram(@Context HttpServletRequest request) {
         try {
             final Program<Value> program = programService.parseProgram(request.getReader());
-            RepositoryConnection conn = sesameService.getConnection();
+            RepositoryConnection conn = sesameService.getRepositoryConnetion();
             try {
                 conn.begin();
                 SesameConnectionBackend backend = SesameConnectionBackend.withConnection(conn);
@@ -261,7 +261,7 @@ public class SolrCoreWebService {
             log.trace("Program parsed, found {} fields", program.getFields().size());
 
             HashMap<String, Object> result = new HashMap<String, Object>();
-            RepositoryConnection conn = sesameService.getConnection();
+            RepositoryConnection conn = sesameService.getRepositoryConnetion();
             try {
                 conn.begin();
                 SesameConnectionBackend backend = SesameConnectionBackend.withConnection(conn);
