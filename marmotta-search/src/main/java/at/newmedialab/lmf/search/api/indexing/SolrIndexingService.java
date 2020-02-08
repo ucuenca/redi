@@ -34,6 +34,7 @@ import java.util.Collection;
 public interface SolrIndexingService extends WorkerService<SolrCoreRuntime, SolrCoreConfiguration> {
 
 
+    public void initFilters(SolrCoreRuntime c);
 
     /**
      * Rebuild the SOLR index from scratch, using the currently visible triples in the triple store.
