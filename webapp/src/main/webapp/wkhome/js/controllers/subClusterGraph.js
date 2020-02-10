@@ -1,8 +1,8 @@
 wkhomeControllers.controller('subCluster', ['$scope', '$window', 'globalData', 'sparqlQuery', 'searchData', '$routeParams', 'Statistics', 'querySubcluster', 'reportService2', '$sce',
   function ($scope, $window, globalData, sparqlQuery, searchData, $routeParams, Statistics, querySubcluster, reportService2, $sce) {
 
-    var cluster = $routeParams.cluster;
-    var subcluster = $routeParams.subcluster;
+     var cluster = $routeParams.cluster;
+     var subcluster = $routeParams.subcluster;
 
 
     //  $scope.areaCombosub =  { "tag":"12313"}; 
@@ -42,8 +42,6 @@ wkhomeControllers.controller('subCluster', ['$scope', '$window', 'globalData', '
             cluster: $scope.areaCombo.selected.id,
             subcluster: null
          };
-      
-
       }
 
       console.log ("seleccionado"+ $scope.areaCombo.selected)
@@ -110,9 +108,14 @@ wkhomeControllers.controller('subCluster', ['$scope', '$window', 'globalData', '
         cluster: $scope.areaCombo.selected.id,
         subcluster: $scope.areaCombosub.selected.id
       };
-      console.log($scope.areaCombosub);
-    }
+      if (cluster) {
+        cluster = undefined;
+      }
+      if (subcluster) {
+        subcluster = undefined;
+      }
 
+    }
     if (cluster && subcluster ) {
       //console.log($scope.relatedtags);
       //$scope.areaCombo = { selected : {'id' : cluster, tag:''} };
