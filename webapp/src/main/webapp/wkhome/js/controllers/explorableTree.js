@@ -13,13 +13,14 @@ wkhomeControllers.controller('exploreAuthor', ['$routeParams', '$scope', '$rootS
                             + '<' + $scope.authorId + '> foaf:name ?name;'
                             + '      a foaf:Person;'
                             + '      foaf:img ?img.'
-                            + ' } WHERE { '
+                            + ' } WHERE { select * {'
                             + '   GRAPH <' + globalData.centralGraph + '> {'
                             + '      <' + $scope.authorId + '> foaf:name ?name.'
                             + '      OPTIONAL{<' + $scope.authorId + '> foaf:img ?img}'
                             + '     }'
-                            + ' } LIMIT 1 ';
+                            + ' } LIMIT 1 }';
         sparqlQuery.querySrv({query: getAuthorInfo}, function (rdf) {
+            rdf = [{"@graph" : rdf , "@id": "https://redi.cedia.edu.ec/context/default"}] ; 
             jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                 $scope.$apply(function () {
                     $scope.data = compacted;
