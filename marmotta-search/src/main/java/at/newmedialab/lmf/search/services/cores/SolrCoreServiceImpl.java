@@ -33,7 +33,6 @@ import org.apache.marmotta.ldpath.model.fields.FieldMapping;
 import org.apache.marmotta.ldpath.model.programs.Program;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
 import org.apache.marmotta.platform.core.api.modules.ModuleService;
-import org.apache.marmotta.platform.core.api.triplestore.SesameService;
 import org.apache.marmotta.platform.core.events.ConfigurationChangedEvent;
 import org.apache.marmotta.platform.core.events.SystemStartupEvent;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
@@ -65,6 +64,7 @@ import java.io.*;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 
 /**
  * Add file description here!
@@ -113,7 +113,7 @@ public class SolrCoreServiceImpl implements SolrCoreService {
     private ModuleService moduleService;
 
     @Inject
-    private SesameService sesameService;
+    private ExternalSPARQLService sesameService;
 
     @Inject @Created
     private Event<SolrCoreConfiguration> coreCreatedEvent;

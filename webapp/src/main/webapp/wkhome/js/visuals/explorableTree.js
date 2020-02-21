@@ -107,6 +107,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
             }
             function executeRelatedAuthors(querytoExecute, divtoload) {
                 sparqlQuery.querySrv({query: querytoExecute}, function (rdf) {
+            rdf = [{"@graph" : rdf , "@id": "https://redi.cedia.edu.ec/context/default"}] ; 
                     jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                         var authorInfo = $('div.tree-node-author-info .' + divtoload);
                         authorInfo.html('');
@@ -211,6 +212,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                 var autInfo = $('div.authorinfo');
                 autInfo.html('');
                 sparqlQuery.querySrv({query: authorDataSparqlQuery}, function (rdf) {
+            rdf = [{"@graph" : rdf , "@id": "https://redi.cedia.edu.ec/context/default"}] ; 
                     jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                         if (compacted["@graph"]) {
                             var entity = compacted["@graph"][0];
@@ -253,7 +255,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                         var sparqlquery = String.format(getRelatedAuthorsByClustersQuery, author["foaf:name"], id);
                         waitingDialog.show("Loading Authors Related with " + author["foaf:name"]);
                         sparqlQuery.querySrv({query: sparqlquery}, function (rdf) {
-
+            rdf = [{"@graph" : rdf , "@id": "https://redi.cedia.edu.ec/context/default"}] ; 
                             jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                                 if (compacted)
                                 {
@@ -301,6 +303,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                                 + '?obbaut ?propub ?objpub.'
                                 + '}}';
                         sparqlQuery.querySrv({query: getExternalAuthorFromLocal}, function (rdf) {
+            rdf = [{"@graph" : rdf , "@id": "https://redi.cedia.edu.ec/context/default"}] ; 
                             jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                                 if (!compacted["@graph"]) {
                                     authorRestQuery.query({resource: authorToFind}, function (rdf) {
@@ -348,7 +351,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                                     + '  ?pub dct:title ?title.'
                                     + '}}';
                             sparqlQuery.querySrv({query: queryPublications}, function (rdf) {
-
+            rdf = [{"@graph" : rdf , "@id": "https://redi.cedia.edu.ec/context/default"}] ; 
                                 jsonld.compact(rdf, globalData.CONTEXT, function (err, data) {
                                     var rs = data;
                                     node.author.jsonld["@context"] = _.extend(node.author.jsonld["@context"], globalData.CONTEXT);
@@ -455,6 +458,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                             +"  }"
                             +"  optional {"
                             +"      select * {"
+                            +"      graph <"+globalData.centralGraph+"> {"
                             +"              ?c ?d ?e ."
                             +"              filter (?d = foaf:name || "
                             +"                      ?d = <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> || "
@@ -462,9 +466,11 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                             +"                      ?d = rdfs:label  "
                             +"                      ) ."
                             +"          }"
+                            +"          }"
                             +"  }"
                             +"  optional {"
                             +"      select * { "
+                            +"      graph <"+globalData.centralGraph+"> {"
                             +"              ?c <http://www.w3.org/2002/07/owl#sameAs> ?eq ."
                             //+"    graph <"+globalData.latindexGraph+"> { "
                             +"              ?eq a <http://redi.cedia.edu.ec/ontology/journal> ."
@@ -472,12 +478,14 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                             +"              filter ( ?p=rdfs:label || ?p=bibo:uri || (?p=<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> && ?v = bibo:Journal) ). "
                             //+"          }"
                             +"          }"
+                            +"          }"
                             +"  }"
                             +" }";
 
                       waitingDialog.show("Searching ...");
 
                     sparqlQuery.querySrv({query: query}, function (rdf) {
+            rdf = [{"@graph" : rdf , "@id": "https://redi.cedia.edu.ec/context/default"}] ; 
                         jsonld.compact(rdf, globalData.CONTEXT, function (err, compacted) {
                           waitingDialog.hide();
                           var authors = [];

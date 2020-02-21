@@ -56,9 +56,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
 import org.apache.marmotta.platform.core.api.task.Task;
 import org.apache.marmotta.platform.core.api.task.TaskManagerService;
-import org.apache.marmotta.platform.core.api.triplestore.SesameService;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
-import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
@@ -103,11 +101,7 @@ public class PopulateMongoImpl implements PopulateMongo {
   @Inject
   private QueriesService queriesService;
   @Inject
-  private SparqlService sparqlService;
-  @Inject
   private ExternalSPARQLService fastSparqlService;
-  @Inject
-  private SesameService sesameService;
   @Inject
   private Logger log;
   @Inject
@@ -155,7 +149,7 @@ public class PopulateMongoImpl implements PopulateMongo {
   private void loadResources(String queryResources, String queryDescribe, String c) {
     try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));
             StringWriter writter = new StringWriter();) {
-      RepositoryConnection conn = sesameService.getConnection();
+      RepositoryConnection conn = fastSparqlService.getRepositoryConnetion();
 
       int num_candidates = 0;
       try {
@@ -199,7 +193,7 @@ public class PopulateMongoImpl implements PopulateMongo {
   private void loadStadistics(String c, HashMap<String, String> queries) {
     try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));
             StringWriter writter = new StringWriter();) {
-      RepositoryConnection conn = sesameService.getConnection();
+      RepositoryConnection conn = fastSparqlService.getRepositoryConnetion();
 
       try {
         MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
@@ -250,10 +244,10 @@ public class PopulateMongoImpl implements PopulateMongo {
         Document pk = new Document();
         pk.put("_id", uri);
         collection.deleteOne(pk);
-        authorsRedi2 = sparqlService.query(QueryLanguage.SPARQL, "select ?a { values ?a { <" + uri + "> } . }");
+        authorsRedi2 = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, "select ?a { values ?a { <" + uri + "> } . }");
       } else {
         collection.drop();
-        authorsRedi2 = sparqlService.query(QueryLanguage.SPARQL, queriesService.getAuthorsCentralGraph());
+        authorsRedi2 = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getAuthorsCentralGraph());
       }
 
       final List<Map<String, Value>> authorsRedi = authorsRedi2;
@@ -321,7 +315,7 @@ public class PopulateMongoImpl implements PopulateMongo {
       String uri = "";
       String name = "";
       String fullname = "";
-      List<Map<String, Value>> org = sparqlService.query(QueryLanguage.SPARQL, queriesService.getListOrganizationQuery());
+      List<Map<String, Value>> org = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getListOrganizationQuery());
       Document parse = new Document();
       task.updateTotalSteps((org.size() + 1) * (queries.size() + 1));
       int ints = 0;
@@ -379,7 +373,7 @@ public class PopulateMongoImpl implements PopulateMongo {
 
   private int countCountries() {
     try {
-      List<Map<String, Value>> countc = sparqlService.query(QueryLanguage.SPARQL, queriesService.getCountCountry());
+      List<Map<String, Value>> countc = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getCountCountry());
       return Integer.parseInt(countc.get(0).get("ncountry").stringValue());
 
     } catch (MarmottaException ex) {
@@ -436,7 +430,7 @@ public class PopulateMongoImpl implements PopulateMongo {
       MongoCollection<Document> collection = db.getCollection(MongoService.Collection.CLUSTERS.getValue());
       collection.drop();
 
-      List<Map<String, Value>> clusters = sparqlService.query(QueryLanguage.SPARQL, queriesService.getClusterURIs());
+      List<Map<String, Value>> clusters = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getClusterURIs());
 
       task.updateTotalSteps(clusters.size());
 
@@ -467,7 +461,7 @@ public class PopulateMongoImpl implements PopulateMongo {
       MongoCollection<Document> collection = db.getCollection(MongoService.Collection.CLUSTERSTOTALS.getValue());
       collection.drop();
       log.info("Counting clusters");
-      List<Map<String, Value>> query = sparqlService.query(QueryLanguage.SPARQL, queriesService.getClusterTotals());
+      List<Map<String, Value>> query = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getClusterTotals());
       log.info("Writing totals");
       for (Map<String, Value> a : query) {
         String label = a.get("k").stringValue();
@@ -480,7 +474,7 @@ public class PopulateMongoImpl implements PopulateMongo {
         parse.append("k", label);
         parse.append("totalAuthors", tot);
         List<BasicDBObject> lsdoc = new ArrayList<>();
-        List<Map<String, Value>> query1 = sparqlService.query(QueryLanguage.SPARQL, queriesService.getSubClusterTotals(uri));
+        List<Map<String, Value>> query1 = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getSubClusterTotals(uri));
         for (Map<String, Value> b : query1) {
           if (b.get("sc") == null) {
             continue;
@@ -513,7 +507,7 @@ public class PopulateMongoImpl implements PopulateMongo {
       final MongoCollection<Document> collection = db.getCollection(MongoService.Collection.AUTHORS_AREA.getValue());
       collection.drop();
 
-      final List<Map<String, Value>> areas = sparqlService.query(QueryLanguage.SPARQL, queriesService.getClusterAndSubclusterURIs());
+      final List<Map<String, Value>> areas = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getClusterAndSubclusterURIs());
 
       task.updateTotalSteps(areas.size());
       BoundedExecutor threadPool = BoundedExecutor.getThreadPool(5);
@@ -560,7 +554,7 @@ public class PopulateMongoImpl implements PopulateMongo {
       final MongoCollection<Document> collection = db.getCollection(MongoService.Collection.AUTHORS_DISCPLINE.getValue());
       collection.drop();
 
-      final List<Map<String, Value>> clusters = sparqlService.query(QueryLanguage.SPARQL, queriesService.getClusterURIs());
+      final List<Map<String, Value>> clusters = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getClusterURIs());
 
       task.updateTotalSteps(clusters.size());
       BoundedExecutor threadPool = BoundedExecutor.getThreadPool(5);
@@ -606,7 +600,7 @@ public class PopulateMongoImpl implements PopulateMongo {
       MongoCollection<Document> collection = db.getCollection(MongoService.Collection.COUNTRIES.getValue());
       collection.drop();
       try {
-        List<Map<String, Value>> countries = sparqlService.query(QueryLanguage.SPARQL, queriesService.getCountries());
+        List<Map<String, Value>> countries = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getCountries());
         task.updateTotalSteps(countries.size());
         for (int i = 0; i < countries.size(); i++) {
           String co = countries.get(i).get("co").stringValue();
@@ -771,7 +765,7 @@ public class PopulateMongoImpl implements PopulateMongo {
   }
 
   public String getStatsAuthorbyPubDate(String uri) throws MarmottaException {
-    List<Map<String, Value>> years = sparqlService.query(QueryLanguage.SPARQL, queriesService.getAuthorPubbyDate(uri));
+    List<Map<String, Value>> years = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getAuthorPubbyDate(uri));
     JSONObject main = new JSONObject();
     JSONArray array = new JSONArray();
     for (Map<String, Value> y : years) {
@@ -787,7 +781,7 @@ public class PopulateMongoImpl implements PopulateMongo {
   }
 
   public String getStatsRelevantKbyAuthor(String uri) throws MarmottaException {
-    List<Map<String, Value>> key = sparqlService.query(QueryLanguage.SPARQL, queriesService.getRelevantKbyAuthor(uri, 15));
+    List<Map<String, Value>> key = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getRelevantKbyAuthor(uri, 15));
     JSONObject main = new JSONObject();
     JSONArray array = new JSONArray();
     for (Map<String, Value> k : key) {
@@ -821,7 +815,7 @@ public class PopulateMongoImpl implements PopulateMongo {
     //  List<Map<String, Value>> prov1 = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getConferencebyAuthor(uri));
     // System.out.print (prov1);
 
-    List<Map<String, Value>> prov = sparqlService.query(QueryLanguage.SPARQL, queriesService.getConferencebyAuthor(uri));
+    List<Map<String, Value>> prov = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getConferencebyAuthor(uri));
     System.out.print("Dentro ");
 
     Map<String, Integer> auxmap = new HashMap();
@@ -909,7 +903,7 @@ public class PopulateMongoImpl implements PopulateMongo {
     }*/
  /*providerName(uriprov.substring(uriprov.lastIndexOf("#") + 1)) */
   public String getStatsProvbyAuthor(String uri) throws MarmottaException {
-    List<Map<String, Value>> key = sparqlService.query(QueryLanguage.SPARQL, queriesService.getRelevantProvbyAuthor(uri));
+    List<Map<String, Value>> key = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getRelevantProvbyAuthor(uri));
     JSONObject main = new JSONObject();
     JSONArray array = new JSONArray();
     for (Map<String, Value> k : key) {
@@ -937,7 +931,7 @@ public class PopulateMongoImpl implements PopulateMongo {
 
   public String getStatsAffbyAuthor(String uri) throws MarmottaException {
     //   List<Map<String, String>> provn = getdataAff();
-    List<Map<String, Value>> provn = sparqlService.query(QueryLanguage.SPARQL, queriesService.getOrgbyAuyhor(uri));
+    List<Map<String, Value>> provn = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getOrgbyAuyhor(uri));
     List<Map<String, Integer>> affl = new ArrayList();
     Map<String, Integer> auxmap = new HashMap();
     List<String> blackl = new ArrayList();
@@ -1081,7 +1075,7 @@ public class PopulateMongoImpl implements PopulateMongo {
       final String uri = "";
       String name = "";
       String fullname = "";
-      final List<Map<String, Value>> authors = sparqlService.query(QueryLanguage.SPARQL, queriesService.getAuthorsCentralGraph());
+      final List<Map<String, Value>> authors = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getAuthorsCentralGraph());
       Document parse = new Document();
       task.updateTotalSteps(authors.size());
       int ints = 0;
@@ -1488,7 +1482,7 @@ public class PopulateMongoImpl implements PopulateMongo {
       URI delMClusters_ = ValueFactoryImpl.getInstance().createURI(conService.getClusterGraph() + "_DelLog");
 
       RepositoryConnection connection = fastSparqlService.getGraphDBInstance().getConnection();
-      RepositoryConnection connection2 = sesameService.getConnection();
+      RepositoryConnection connection2 = fastSparqlService.getRepositoryConnetion();
 
       connection.begin();
       connection2.begin();
@@ -1500,10 +1494,10 @@ public class PopulateMongoImpl implements PopulateMongo {
       fastSparqlService.getGraphDBInstance().runSplitAddOp(connection, delMClusters, delMClusters_);
 
       //Apply Marmotta
-      fastSparqlService.getGraphDBInstance().runSplitDelOp(connection2, delMRedi, redGrp);
-      fastSparqlService.getGraphDBInstance().runSplitAddOp(connection2, addMRedi, redGrp);
-      fastSparqlService.getGraphDBInstance().runSplitDelOp(connection2, delMClusters, clsGrp);
-      fastSparqlService.getGraphDBInstance().runSplitAddOp(connection2, addMClusters, clsGrp);
+//      fastSparqlService.getGraphDBInstance().runSplitDelOp(connection2, delMRedi, redGrp);
+//      fastSparqlService.getGraphDBInstance().runSplitAddOp(connection2, addMRedi, redGrp);
+//      fastSparqlService.getGraphDBInstance().runSplitDelOp(connection2, delMClusters, clsGrp);
+//      fastSparqlService.getGraphDBInstance().runSplitAddOp(connection2, addMClusters, clsGrp);
 
       //Apply GraphDB
       fastSparqlService.getGraphDBInstance().runSplitDelOp(connection, delMRedi, redGrp);

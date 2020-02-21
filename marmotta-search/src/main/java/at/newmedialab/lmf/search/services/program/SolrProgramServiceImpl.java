@@ -25,7 +25,6 @@ import org.apache.marmotta.ldpath.model.programs.Program;
 import org.apache.marmotta.ldpath.model.transformers.StringTransformer;
 import org.apache.marmotta.ldpath.parser.Configuration;
 import org.apache.marmotta.ldpath.parser.DefaultConfiguration;
-import org.apache.marmotta.platform.core.api.triplestore.SesameService;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.ldpath.api.AutoRegisteredLDPathFunction;
 import org.openrdf.model.Value;
@@ -44,6 +43,7 @@ import java.io.Reader;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 
 /**
  * Add file description here!
@@ -57,7 +57,7 @@ public class SolrProgramServiceImpl implements SolrProgramService {
     private Logger                           log;
 
     @Inject
-    private SesameService sesameService;
+    private ExternalSPARQLService sesameService;
 
     private Configuration<Value> ldpathConfig;
 
@@ -230,7 +230,7 @@ public class SolrProgramServiceImpl implements SolrProgramService {
     @Override
     public Program<Value> parseProgram(Reader r) throws LDPathParseException {
         try {
-            RepositoryConnection connection = sesameService.getConnection();
+            RepositoryConnection connection = sesameService.getRepositoryConnetion();
             try {
                 connection.begin();
                 SesameConnectionBackend backend = SesameConnectionBackend.withConnection(connection);

@@ -1,56 +1,80 @@
 wkhomeControllers.controller('subCluster', ['$scope', '$window', 'globalData', 'sparqlQuery', 'searchData', '$routeParams', 'Statistics', 'querySubcluster', 'reportService2', '$sce',
   function ($scope, $window, globalData, sparqlQuery, searchData, $routeParams, Statistics, querySubcluster, reportService2, $sce) {
 
-    var cluster = $routeParams.cluster;
-    var subcluster = $routeParams.subcluster;
+     var cluster = $routeParams.cluster;
+     var subcluster = $routeParams.subcluster;
 
 
     //  $scope.areaCombosub =  { "tag":"12313"}; 
+    //tag: keyword["rdfs:label"]["@value"] == undefined ? keyword["rdfs:label"] : keyword["rdfs:label"]["@value"] 
     $scope.areaCombo = {};
     Statistics.query({
       id: 'keywords_frequencypub_gt4'
     }, function (data) {
       $scope.relatedtags = [];
       _.map(data["@graph"], function (keyword) {
-        $scope.relatedtags.push({
+        var ims = {
           id: keyword["@id"],
-          tag: keyword["rdfs:label"]["@value"] == undefined ? keyword["rdfs:label"] : keyword["rdfs:label"]["@value"]  
-        });
+          tag: keyword["rdfs:label"]["@value"]
+        };
+        $scope.relatedtags.push(ims);
+        if (cluster) {
+            if (keyword["@id"] == cluster){
+                $scope.areaCombo.selected = ims;
+            }
+        }
       });
+    
+      if (subcluster){
+        $scope.changeCombo();        
+      }
+
     });
 
     
 
     $scope.changeCombo = function () {
 
-      $scope.datacl = {};
-
       $scope.areaCombosub = {};
-      $scope.datacl = {
-        cluster: $scope.areaCombo.selected,
-        subcluster: null
-      };
+
+      if (!subcluster){
+        $scope.datacl = {};
+        $scope.datacl = {
+            cluster: $scope.areaCombo.selected.id,
+            subcluster: null
+         };
+      }
 
       console.log ("seleccionado"+ $scope.areaCombo.selected)
       querySubcluster.query({
-        id: $scope.areaCombo.selected
+        id: $scope.areaCombo.selected.id
       }, function (data) {
         $scope.subtags = [];
         _.map(data.subclusters, function (keyword) {
-          $scope.subtags.push({
+            var imx = {
             id: keyword["uri"],
             tag: keyword["label-en"]
-          });
+          };
+          $scope.subtags.push(imx);
+
+          if (subcluster){
+            if (keyword["uri"] == subcluster){
+                $scope.areaCombosub.selected = imx;
+            }
+          }
         });
+            if (subcluster) {
+                $scope.changeComboSub();
+            }
       });
     }
 
     $scope.exportReport = function (d) {
 
-      var cc = $scope.areaCombo.selected;
+      var cc = $scope.areaCombo.selected.id;
       var cc_ = $scope.areaCombo.selected.tag
-      var sc = $scope.areaCombosub.selected ? $scope.areaCombosub.selected : undefined;
-      var sc_ = $scope.areaCombosub.selected ? $scope.areaCombosub.selected.tag : undefined;
+      var sc = $scope.areaCombosub.selected && $scope.areaCombosub.selected.id ? $scope.areaCombosub.selected.id : undefined;
+      var sc_ = $scope.areaCombosub.selected && $scope.areaCombosub.selected.id ? $scope.areaCombosub.selected.tag : undefined;
       $scope.loading = true;
 
       var prm = [];
@@ -80,19 +104,25 @@ wkhomeControllers.controller('subCluster', ['$scope', '$window', 'globalData', '
 
 
     $scope.changeComboSub = function () {
-      $scope.datacl = {};
+      //$scope.datacl = {};
       $scope.datacl = {
-        cluster: $scope.areaCombo.selected,
-        subcluster: $scope.areaCombosub.selected
+        cluster: $scope.areaCombo.selected.id,
+        subcluster: $scope.areaCombosub.selected.id
       };
-      console.log($scope.areaCombosub);
-    }
+      if (cluster) {
+        cluster = undefined;
+      }
+      if (subcluster) {
+        subcluster = undefined;
+      }
 
+    }
     if (cluster && subcluster ) {
-      $scope.areaCombo = { selected : cluster };
-      $scope.changeCombo();
-      $scope.areaCombosub = { selected : subcluster};
-      $scope.changeComboSub();
+      //console.log($scope.relatedtags);
+      //$scope.areaCombo = { selected : {'id' : cluster, tag:''} };
+      //$scope.changeCombo();
+      //$scope.areaCombosub = { selected : {'id' : subcluster, tag:''}};
+      //$scope.changeComboSub();
       
 
     }
