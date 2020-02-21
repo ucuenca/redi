@@ -14,7 +14,7 @@ wkhomeControllers.controller('subCluster', ['$scope', '$window', 'globalData', '
       _.map(data["@graph"], function (keyword) {
         $scope.relatedtags.push({
           id: keyword["@id"],
-          tag: keyword["rdfs:label"]["@value"]
+          tag: keyword["rdfs:label"]["@value"] == undefined ? keyword["rdfs:label"] : keyword["rdfs:label"]["@value"]  
         });
       });
     });

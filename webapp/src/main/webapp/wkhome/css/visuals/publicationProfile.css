@@ -306,13 +306,20 @@ color: blue;
  /*  Publications  */ 
 
  #myModal {
-  overflow-y: scroll
+  overflow-y: scroll;
+  z-index: 1005;
  }
-
+ 
+.modal-backdrop {
+    z-index: 1000;
+}
 
 .publicationModal {
   width: 85vw;
 }
+
+
+
 
 /* OLD VERSION */
 

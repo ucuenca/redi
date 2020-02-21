@@ -69,7 +69,7 @@ wkhomeControllers.controller('publicationProfile', ['$scope', '$routeParams', '$
   + "?v ?h ?q . "
   + "} where { "
   + "graph <https://redi.cedia.edu.ec/context/redi> { "
-  + "values ?p { bibo:uri rdf:type dct:title bibo:abstract dct:subject dct:creator dct:contributor dct:isPartOf } . "
+  + "values ?p { bibo:uri rdf:type dct:title bibo:abstract dct:subject dct:creator dct:contributor dct:isPartOf bibo:doi bibo:isbn} . "
   + "values ?h { foaf:name rdfs:label rdf:type foaf:img } . "
   + "<"+uri+"> ?p ?v . "
   + "optional {?v ?h ?q .} "
@@ -105,6 +105,9 @@ wkhomeControllers.controller('publicationProfile', ['$scope', '$routeParams', '$
                      case "bibo:AcademicArticle":
                       dataToSend ["title"] = unique( valor ["dct:title"]);
                       dataToSend ["abstract"] = unique(valor ["bibo:abstract"]);
+                      dataToSend ["doi"] = unique(valor ["bibo:doi"]);
+                      dataToSend ["isbn"] = unique(valor ["bibo:isbn"]);
+
                        if ("bibo:uri" in valor ) {
                         var f = [];
                          _.each(valor["bibo:uri"], function (v){  console.log (v["@id"]); return    v["@id"] === undefined ? f.push (v) : f.push( v["@id"]); })
