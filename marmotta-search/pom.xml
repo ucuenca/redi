@@ -56,8 +56,8 @@
         </dependency>
         <dependency>
             <groupId>org.apache.marmotta</groupId>
-            <artifactId>marmotta-ldcache-file-mod</artifactId>
-            <version>${project.version}</version>
+            <artifactId>marmotta-ldcache-file</artifactId>
+            <version>${marmotta.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.marmotta</groupId>

@@ -511,11 +511,6 @@
         </dependency>
         <dependency>
             <groupId>org.apache.marmotta</groupId>
-            <artifactId>marmotta-ldp</artifactId>
-            <version>${marmotta.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.marmotta</groupId>
             <artifactId>marmotta-sparql</artifactId>
             <version>${marmotta.version}</version>
         </dependency>
