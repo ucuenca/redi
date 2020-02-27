@@ -154,7 +154,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                 if (author["foaf:name"]) {
                     //********** AUTORES RELACIONADOS - POR CLUSTERING *********//
                     var relatedAuthorsClustersQuery = String.format(getRelatedAuthorsByClustersQuery, author["foaf:name"], id);
-                    executeRelatedAuthors(relatedAuthorsClustersQuery, "authorsByClusters");
+                    //executeRelatedAuthors(relatedAuthorsClustersQuery, "authorsByClusters");
                     //********** AUTORES RELACIONADOS - POR PUBLICACION *********//
                     var relatedAuthosPublicationsQuery = String.format(getRelatedAuthorsByPublicationsQuery, author["foaf:name"], id);
                     executeRelatedAuthors(relatedAuthosPublicationsQuery, "authorsByPublications");
