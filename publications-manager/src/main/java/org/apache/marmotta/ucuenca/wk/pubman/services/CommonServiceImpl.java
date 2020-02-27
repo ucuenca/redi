@@ -837,7 +837,7 @@ public class CommonServiceImpl implements CommonService {
                 String orgs = authors.get("orgnames").stringValue();
                 String mails = authors.get("mails") != null ? authors.get("mails").stringValue() : "";
                 String[] coauthors = {};
-                if (authors.containsKey("coauthors")) {
+                if (authors.containsKey("coauthors") && !authors.get("coauthors").stringValue().isEmpty() ) {
                     coauthors = authors.get("coauthors").stringValue().split(";");
                 }
                 Collaborator cl = new Collaborator(uri, uri, names, lastname, orgs, subject);

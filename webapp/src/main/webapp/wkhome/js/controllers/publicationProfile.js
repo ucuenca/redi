@@ -225,7 +225,8 @@ wkhomeControllers.controller('publicationProfile', ['$scope', '$routeParams', '$
               console.log (dataToSend);
           }
             waitingDialog.hide();
-              $scope.$parent.$parent.showmodal ();
+             _altmetric_embed_init(); // Reload altmetrics
+             $scope.$parent.$parent.showmodal ();
               $("body").css("overflow-x","hidden");
               $("body").css("overflow-y","hidden");
               //overflow-x: hidden;
