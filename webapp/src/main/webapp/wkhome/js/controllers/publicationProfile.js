@@ -137,7 +137,9 @@ wkhomeControllers.controller('publicationProfile', ['$scope', '$routeParams', '$
 
                        if ("foaf:img" in valor)
                        {
-                         img = valor["foaf:img"]["@id"];
+                         //img = valor["foaf:img"]["@id"];
+                         img = unique (valor["foaf:img"])["@id"];
+                       
                        }else {
                          img = "wkhome/images/author-default.png";
 
