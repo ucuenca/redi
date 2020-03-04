@@ -301,11 +301,18 @@ wkhomeApp.directive('subCluster', ["d3", 'globalData', 'sparqlQuery', '$routePar
       ;
 
       function distanceCalc(distance) {
-        if (distance > 3) {
+        if (distance > 5) {
           console.log(200 - parseInt(distance) * 10);
-          return 250 - parseInt(distance) * 10;
+          //return 250 - parseInt(distance) * 10;
+          var expand =  Math.floor(Math.random() * 200); 
+          //return 200  + expand ;
+          return 50  + expand
+        } else if (distance > 2) {
+          console.log(200 - parseInt(distance) * 10);
+          //return 250 - parseInt(distance) * 10;
+          return 200;
         } else {
-          return 150;
+          return 100;
         }
       }
 
@@ -349,12 +356,14 @@ wkhomeApp.directive('subCluster', ["d3", 'globalData', 'sparqlQuery', '$routePar
         }
 
         var simulation = d3.layout.force()
-                .gravity(0.09).
-                linkDistance(function (d) {
+                .gravity(0.09)
+                .linkDistance(function (d) {
                   console.log(d);
+                  //return d.distance;
                   return distanceCalc(d.source.coautor);
                 })
-                .charge(-600)
+                .linkStrength(0.2)
+                .charge(-700)
                 .size([width, height]);
 
         function coauthorFactor(coauthor) {
