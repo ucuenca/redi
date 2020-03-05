@@ -48,10 +48,12 @@ wkhomeControllers.controller('publicationProfile', ['$scope', '$routeParams', '$
     }; 
          // $scope.child();   
 
-            $('#myModal').on('hidden.bs.modal', function () {
-        $("body").css("overflow-x","");
-        $("body").css("overflow-y","");
-       // alert ("CLOSE MODAL");
+          $(function(){ // let all dom elements are loaded
+         $('#myModal').on('hide.bs.modal', function (e) {
+           $("body").css("overflow-x","auto");
+           $("body").css("overflow-y","auto");
+
+        });
         });
 
         $scope.child = function ( uri ) {
