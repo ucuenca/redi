@@ -2,14 +2,17 @@
 <div class="col-md-12 resume-wrapper text-center position-relative bodyPub" > 
     <div class="document mx-auto text-left bg-white shadow-lg p-5 " ng-model="publication" ng-controller="publicationProfile"  id="nodeToRenderAsPDF">
     <div class="text-right file">
-   <!-- <span class="glyphicon     glyphicon-print"> </span> -->
+   <!-- <span class="glyphicon     glyphicon-print"> </span> <div class='altmetric-embed' data-badge-popover='right' data-doi='{{publication.doi}}' data-isbn='{{publication.isbn}}' ></div>  -->
       <span class="glyphicon glyphicon-print " ng-click="exportar();" >  </span>
       <span class="glyphicon glyphicon-remove " data-dismiss="modal">  </span>
     </div>
-    <!-- <h1 class="col-md-12 resume-section-title main pb-3 mb-3 title"  onclick="console.log('title');"> <b>{{publication.title}} </b>  -->
-    <h1 class="col-md-12 resume-section-title  pb-3 mb-3 title"  onclick="console.log('title');"> <b>{{publication.title}} </b> 
-    <div class='altmetric-embed' data-badge-popover='right' data-doi='{{publication.doi}}' data-isbn='{{publication.isbn}}' ></div> 
-    </h1>
+    <h1 class="col-md-12 resume-section-title   pb-3 mb-3 title"  onclick="console.log('title');"> <b>{{publication.title}} </b> 
+   <!-- <div class='altmetric-embed' data-badge-popover='right' data-doi='10.1590/S0103-40142004000300021'></div>   --> 
+    <div class="col-md-12"><div class='altmetric-embed badgeone' data-badge-popover='right' data-doi='{{publication.doi}}' data-isbn='{{publication.isbn}}' ></div>
+    <span class="__dimensions_badge_embed__" data-doi="{{publication.doi}}" data-style="small_rectangle"></span> </div>  </h1>
+   
+    
+    
    <div class="row mainsectionpub">
     <div class="col-md-8 leftsectionpub">
     <div class="col-md-12"> 

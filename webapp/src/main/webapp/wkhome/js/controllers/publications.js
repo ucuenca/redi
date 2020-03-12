@@ -44,6 +44,10 @@ wkhomeControllers.controller('PublicationsController', ['$scope', '$window', 'gl
 
         }
 
+         function unique( a) {
+            return Array.isArray(a) ? a[0] : a;
+        }
+
 
 
         var JournalController = function ($scope, $uibModalInstance, collections, Journal) {
@@ -101,7 +105,7 @@ wkhomeControllers.controller('PublicationsController', ['$scope', '$window', 'gl
                         });
                         author = {};
                         author.name = typeof (entity["foaf:name"]) === 'string' ? entity["foaf:name"] : _.first(entity["foaf:name"]);
-                        author.photo = entity["foaf:img"] ? entity["foaf:img"]["@id"] : '/wkhome/images/no_photo.png';
+                        author.photo = entity["foaf:img"] ? unique(entity["foaf:img"]["@id"]) : '/wkhome/images/no_photo.png';
                         author.institutions = [];
                         _.each(entity["schema:memberOf"], function (v) {
                             var provenance = typeof (v) === 'object' ?
