@@ -355,4 +355,9 @@ public class ConstantServiceImpl implements ConstantService {
         return getBaseResource() + "status/";
     }
 
+    @Override
+    public String getCrossrefGraph() {
+        return confService.getBaseContext() + "provider/CrossrefProvider";
+    }
+
 }

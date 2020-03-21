@@ -26,6 +26,8 @@ public interface CommonService {
 
   String getDataFromScieloProvidersService(final String[] organizations, boolean force);
 
+  String getDataFromCrossrefProvidersService(final String[] organizations, boolean force);
+
   String getDataFromDOAJProvidersService(final String[] organizations, boolean force);
 
   String getDataFromORCIDProvidersService(final String[] organizations, boolean force);
