@@ -258,6 +258,20 @@ public class AuthorServiceImpl implements AuthorService {
     }
     return rs;
   }
+  
+  private String extractAuthorsVIVO(String org, String end, String url) {
+    String rs = ""+org+end+url;
+    try {
+        //rs = "Success " + jsonArray.length() + "/" + jsonArray.length();
+      
+    } catch (Exception ex) {
+      log.debug("Error {}", ex);
+      rs = "Fail " + ex;
+    }
+    return rs;
+  }
+  
+  
 
   /**
    * authorDocumentProperty : http://rdaregistry.info/Elements/a/P50161 |
@@ -306,6 +320,9 @@ public class AuthorServiceImpl implements AuthorService {
           } else if ("orcid".equals(type)) {
             //Read from mongo cache.
             extractResult = extractAuthorsORCID(l, org, endpoint);
+          } else if ("vivo".equals(type)) {
+            //Read from mongo cache.
+            extractResult = extractAuthorsVIVO(org, endpoint, url);
           } else {
 
             String[] urls = url.split(";");

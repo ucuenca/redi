@@ -34,6 +34,7 @@
                 $("tr.OAI_form").css("display","none");
                 $("tr.OJS_form").css("display","none");
                 $("tr.ORCID_form").css("display","none");
+                $("tr.VIVO_form").css("display","none");
                 
                 $("select#endpoint_type").val("sparql");
                 console.log(_SERVER_URL);
@@ -106,6 +107,7 @@
                             <option value="oai-pmh">OAI-PMH</option>
                             <option value="ojs">OJS (OAI)</option>
                             <option value="orcid">ORCID</option>
+                            <option value="vivo">VIVO</option>
                         </select> 
                     </td>
 
@@ -145,6 +147,10 @@
                     <td>
                       <em>No parameters needed.</em>
                     </td>
+                </tr>
+                <tr class="VIVO_form"> 
+                    <td style="width: 150px;"> VIVO URL </td>
+                    <td>  <input type="text" style="width: 400px;" id="endpoint_vivo"> </td>
                 </tr>
                 
                  <tr>

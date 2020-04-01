@@ -270,6 +270,13 @@ public class AuthorWebService {
     String result = endpointsService.registerORCID(type, org);
     return Response.ok().entity(result).build();
   }
+  
+  @POST
+  @Path("/endpointVIVORegister")
+  public Response endpointVIVORegister(@QueryParam("type") String type, @QueryParam("org") String org, @QueryParam("url") String u) {
+    String result = endpointsService.registerVIVO(type, org, u);
+    return Response.ok().entity(result).build();
+  }
 
   @POST
   @Path("/endpointOAIRegister")
