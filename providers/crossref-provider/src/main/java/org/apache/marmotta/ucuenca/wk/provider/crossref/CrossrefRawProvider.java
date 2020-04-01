@@ -64,7 +64,7 @@ public class CrossrefRawProvider extends AbstractHttpProvider {
 
     private static final int MAX_AUTHORS_PER_PAPER = 20;
     private static Logger log = LoggerFactory.getLogger(CrossrefRawProvider.class);
-    public static final int MAX_RESULTS = 500;
+    public static final int MAX_RESULTS = 1000;
     private ConcurrentHashMap<String, Integer> stats = new ConcurrentHashMap<String, Integer>();
     public static final String NAME = "Crossref Raw Provider";
     public static final String PATTERN = "https://search\\.crossref\\.org/search/.*";
