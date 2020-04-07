@@ -14,7 +14,7 @@
   var host = _SERVER_URL;
 // var host = "https://rediclon.cedia.edu.ec/";
 function loadTables() {
-     var Providers = ["Dspace","Ojs","SCOPUS","AcademicsKnowledge", "DBLP", "GoogleScholar","Springer","SCIELO", "DOAJ", "ORCID", "Crossref"];  
+     var Providers = ["Dspace","Ojs","SCOPUS","AcademicsKnowledge", "DBLP", "GoogleScholar","Springer","SCIELO", "DOAJ", "ORCID", "CROSSREF"];  
      
       var columns = [ {"data":"Selection"} , { "data":"name"}];
       
