@@ -20,6 +20,7 @@ import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.platform.sparql.api.sparql.QueryType;
 import org.apache.marmotta.platform.sparql.api.sparql.SparqlService;
 import org.apache.marmotta.platform.sparql.services.sparqlio.rdf.SPARQLGraphResultWriter;
+import org.openrdf.model.Literal;
 import org.openrdf.model.Model;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -27,6 +28,7 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.LinkedHashModel;
 import org.openrdf.model.impl.ValueFactoryImpl;
+import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.query.Binding;
 import org.openrdf.query.BooleanQuery;
 import org.openrdf.query.MalformedQueryException;
@@ -52,232 +54,244 @@ import org.openrdf.rio.Rio;
  */
 public final class GraphDB {
 
-  private static GraphDB eta;
-  private static final int MAX_TRIPLES_ADD = 1000;
-  private static final int MAX_TRIPLES_ADD_2 = 2000;
-  private SPARQLRepository data;
-  private SparqlService sps;
-  private ConcurrentHashMap<URI, Model> hmmdl = new ConcurrentHashMap<>();
-  private String spqSelect;
+    private static GraphDB eta;
+    private static final int MAX_TRIPLES_ADD = 1000;
+    private static final int MAX_TRIPLES_ADD_2 = 2000;
+    private SPARQLRepository data;
+    private SparqlService sps;
+    private ConcurrentHashMap<URI, Model> hmmdl = new ConcurrentHashMap<>();
+    private String spqSelect;
 
-  public SparqlService getSps() {
-    return sps;
-  }
+    public SparqlService getSps() {
+        return sps;
+    }
 
-  private GraphDB(String database) throws RepositoryException {
-    data = new SPARQLRepository("http://201.159.222.25:8180/repositories/" + database, "http://201.159.222.25:8180/repositories/" + database + "/statements");
-    spqSelect = "http://201.159.222.25:8180/repositories/" + database;
+    private GraphDB(String database) throws RepositoryException {
+        data = new SPARQLRepository("http://201.159.222.25:8180/repositories/" + database, "http://201.159.222.25:8180/repositories/" + database + "/statements");
+        spqSelect = "http://201.159.222.25:8180/repositories/" + database;
 
-    ConcurrentHashMap<String, String> additionalHttpHeaders = new ConcurrentHashMap<>();
-    additionalHttpHeaders.put("Accept", "application/sparql-results+json,*/*;q=0.9");
-    data.setAdditionalHttpHeaders(additionalHttpHeaders);
-    data.initialize();
-    SparqlService sparqlService = new SparqlService() {
-      @Override
-      public Query parseQuery(QueryLanguage ql, String string) throws RepositoryException, MalformedQueryException {
-        throw new UnsupportedOperationException(NOT_SUPPORTED_YET); //To change body of generated methods, choose Tools | Templates.
-      }
-
-      @Override
-      public QueryType getQueryType(QueryLanguage ql, String string) throws MalformedQueryException {
-        throw new UnsupportedOperationException(NOT_SUPPORTED_YET); //To change body of generated methods, choose Tools | Templates.
-      }
-
-      @Override
-      public void query(QueryLanguage ql, String string, OutputStream pout, String string1, int i) throws MarmottaException, TimeoutException, MalformedQueryException {
-        throw new UnsupportedOperationException(NOT_SUPPORTED_YET); //To change body of generated methods, choose Tools | Templates.
-      }
-
-      @Override
-      public boolean ask(QueryLanguage ql, String string) throws MarmottaException {
-        boolean t = false;
-        try {
-          RepositoryConnection connection = getConnection();
-          connection.begin();
-          BooleanQuery prepareBooleanQuery = connection.prepareBooleanQuery(ql, string);
-          t = prepareBooleanQuery.evaluate();
-          connection.commit();
-          connection.close();
-
-        } catch (Exception ex) {
-          throw new MarmottaException(ex);
-        }
-        return t;
-      }
-
-      @Override
-      public List<Map<String, Value>> query(QueryLanguage ql, String string) throws MarmottaException {
-        List<Map<String, Value>> r = new ArrayList<>();
-        try {
-          RepositoryConnection connection = getConnection();
-          TupleQueryResult evaluate = connection.prepareTupleQuery(ql, string).evaluate();
-          while (evaluate.hasNext()) {
-            Iterator<Binding> iterator = evaluate.next().iterator();
-            ConcurrentHashMap<String, Value> mp = new ConcurrentHashMap<>();
-            while (iterator.hasNext()) {
-              Binding next = iterator.next();
-              mp.put(next.getName(), next.getValue());
+        ConcurrentHashMap<String, String> additionalHttpHeaders = new ConcurrentHashMap<>();
+        additionalHttpHeaders.put("Accept", "application/sparql-results+json,*/*;q=0.9");
+        data.setAdditionalHttpHeaders(additionalHttpHeaders);
+        data.initialize();
+        SparqlService sparqlService = new SparqlService() {
+            @Override
+            public Query parseQuery(QueryLanguage ql, String string) throws RepositoryException, MalformedQueryException {
+                throw new UnsupportedOperationException(NOT_SUPPORTED_YET); //To change body of generated methods, choose Tools | Templates.
             }
-            r.add(mp);
-          }
-          connection.close();
-        } catch (Exception ex) {
-          throw new MarmottaException(ex + "" + string);
+
+            @Override
+            public QueryType getQueryType(QueryLanguage ql, String string) throws MalformedQueryException {
+                throw new UnsupportedOperationException(NOT_SUPPORTED_YET); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void query(QueryLanguage ql, String string, OutputStream pout, String string1, int i) throws MarmottaException, TimeoutException, MalformedQueryException {
+                throw new UnsupportedOperationException(NOT_SUPPORTED_YET); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public boolean ask(QueryLanguage ql, String string) throws MarmottaException {
+                boolean t = false;
+                try {
+                    RepositoryConnection connection = getConnection();
+                    connection.begin();
+                    BooleanQuery prepareBooleanQuery = connection.prepareBooleanQuery(ql, string);
+                    t = prepareBooleanQuery.evaluate();
+                    connection.commit();
+                    connection.close();
+
+                } catch (Exception ex) {
+                    throw new MarmottaException(ex);
+                }
+                return t;
+            }
+
+            @Override
+            public List<Map<String, Value>> query(QueryLanguage ql, String string) throws MarmottaException {
+                List<Map<String, Value>> r = new ArrayList<>();
+                try {
+                    RepositoryConnection connection = getConnection();
+                    TupleQueryResult evaluate = connection.prepareTupleQuery(ql, string).evaluate();
+                    while (evaluate.hasNext()) {
+                        Iterator<Binding> iterator = evaluate.next().iterator();
+                        ConcurrentHashMap<String, Value> mp = new ConcurrentHashMap<>();
+                        while (iterator.hasNext()) {
+                            Binding next = iterator.next();
+                            mp.put(next.getName(), next.getValue());
+                        }
+                        r.add(mp);
+                    }
+                    connection.close();
+                } catch (Exception ex) {
+                    throw new MarmottaException(ex + "" + string);
+                }
+                return r;
+            }
+
+            @Override
+            public void update(QueryLanguage ql, String string) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
+                try {
+                    RepositoryConnection connection = getConnection();
+                    connection.begin();
+                    connection.prepareUpdate(ql, string).execute();
+                    connection.commit();
+                    connection.close();
+                } catch (RepositoryException ex) {
+                    throw new MarmottaException(ex);
+                }
+            }
+
+            @Override
+            public void query(QueryLanguage ql, String string, TupleQueryResultWriter writer, BooleanQueryResultWriter writer1, SPARQLGraphResultWriter writer2, int i) throws MarmottaException, MalformedQueryException, QueryEvaluationException, TimeoutException {
+                throw new UnsupportedOperationException(NOT_SUPPORTED_YET); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void query(QueryLanguage ql, String string, QueryResultWriter writer, int i) throws MarmottaException, MalformedQueryException, QueryEvaluationException, TimeoutException {
+                throw new UnsupportedOperationException(NOT_SUPPORTED_YET); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void createServiceDescription(RDFWriter writer, String string, boolean bln) throws RDFHandlerException {
+                throw new UnsupportedOperationException(NOT_SUPPORTED_YET); //To change body of generated methods, choose Tools | Templates.
+            }
+            private static final String NOT_SUPPORTED_YET = "Not supported yet.";
+        };
+        sps = sparqlService;
+    }
+
+    @SuppressWarnings("PMD")
+    public static GraphDB get(String database) throws RepositoryException {
+        if (eta == null) {
+            eta = new GraphDB(database);
+        }
+        return eta;
+    }
+
+    public RepositoryConnection getConnection() throws RepositoryException {
+        return data.getConnection();
+    }
+
+    @SuppressWarnings("PMD")
+    public void runSplitAddOp(RepositoryConnection connection, Model data, Resource providerContext) throws RepositoryException, RDFHandlerException {
+        LinkedHashModel mp = new LinkedHashModel();
+        for (Statement s : data) {
+            if (mp.size() > MAX_TRIPLES_ADD) {
+                runAddOp(connection, mp, providerContext);
+                mp.clear();
+            }
+            if (s.getObject() instanceof URI && !checkURI(s.getObject().stringValue())
+                    || s.getSubject() instanceof URI && !checkURI(s.getSubject().stringValue())) {
+                continue;
+            }
+            boolean ignore = false;
+            Value v = s.getObject();
+            if (v instanceof Literal) {
+                Literal xs = (Literal) v;
+                if (xs.getDatatype() !=null && xs.getDatatype().equals(RDF.LANGSTRING) && (xs.getLanguage() == null || xs.getLanguage().trim().isEmpty())) {
+                    mp.add(s.getSubject(), s.getPredicate(), ValueFactoryImpl.getInstance().createLiteral(xs.stringValue()));
+                    ignore = true;
+                }
+            }
+            if (!ignore) {
+                mp.add(s);
+            }
+        }
+        runAddOp(connection, mp, providerContext);
+    }
+
+    public void runAddOp(RepositoryConnection connection, Model data, Resource providerContext) throws RepositoryException, RDFHandlerException {
+        try {
+            connection.add(data, providerContext);
+        } catch (Exception e) {
+            Rio.write(data, System.out, RDFFormat.RDFXML);
+            throw e;
+        }
+    }
+
+    public void runSplitDelOp(RepositoryConnection connection, Model data, Resource providerContext) throws RepositoryException, RDFHandlerException {
+        LinkedHashModel mp = new LinkedHashModel();
+        for (Statement s : data) {
+            if (mp.size() > MAX_TRIPLES_ADD) {
+                runDelOp(connection, mp, providerContext);
+                mp.clear();
+            }
+            if (s.getObject() instanceof URI && !checkURI(s.getObject().stringValue())
+                    || s.getSubject() instanceof URI && !checkURI(s.getSubject().stringValue())) {
+                continue;
+            }
+            mp.add(s);
+        }
+        runDelOp(connection, mp, providerContext);
+    }
+
+    public void runDelOp(RepositoryConnection connection, Model data, Resource providerContext) throws RepositoryException, RDFHandlerException {
+        try {
+            connection.remove(data, providerContext);
+        } catch (Exception e) {
+            Rio.write(data, System.out, RDFFormat.RDFXML);
+            throw e;
+        }
+    }
+
+    public boolean checkURI(String ur) {
+        boolean r = false;
+        try {
+            java.net.URI.create(ur);
+            r = true;
+        } catch (Exception w) {
+            Logger.getLogger(GraphDB.class.getName()).log(Level.SEVERE, null, w);
         }
         return r;
-      }
+    }
 
-      @Override
-      public void update(QueryLanguage ql, String string) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException {
-        try {
-          RepositoryConnection connection = getConnection();
-          connection.begin();
-          connection.prepareUpdate(ql, string).execute();
-          connection.commit();
-          connection.close();
-        } catch (RepositoryException ex) {
-          throw new MarmottaException(ex);
+    public synchronized void addBuffer(URI ug, Model mdlAdd) throws RepositoryException, RDFHandlerException {
+        Model mdl = hmmdl.get(ug);
+        if (mdl == null) {
+            mdl = new LinkedHashModel();
+            hmmdl.put(ug, mdl);
         }
-      }
+        mdl.addAll(mdlAdd);
+        if (mdl.size() > MAX_TRIPLES_ADD_2) {
+            dumpBuffer(ug);
+        }
 
-      @Override
-      public void query(QueryLanguage ql, String string, TupleQueryResultWriter writer, BooleanQueryResultWriter writer1, SPARQLGraphResultWriter writer2, int i) throws MarmottaException, MalformedQueryException, QueryEvaluationException, TimeoutException {
-        throw new UnsupportedOperationException(NOT_SUPPORTED_YET); //To change body of generated methods, choose Tools | Templates.
-      }
-
-      @Override
-      public void query(QueryLanguage ql, String string, QueryResultWriter writer, int i) throws MarmottaException, MalformedQueryException, QueryEvaluationException, TimeoutException {
-        throw new UnsupportedOperationException(NOT_SUPPORTED_YET); //To change body of generated methods, choose Tools | Templates.
-      }
-
-      @Override
-      public void createServiceDescription(RDFWriter writer, String string, boolean bln) throws RDFHandlerException {
-        throw new UnsupportedOperationException(NOT_SUPPORTED_YET); //To change body of generated methods, choose Tools | Templates.
-      }
-      private static final String NOT_SUPPORTED_YET = "Not supported yet.";
-    };
-    sps = sparqlService;
-  }
-
-  @SuppressWarnings("PMD")
-  public static GraphDB get(String database) throws RepositoryException {
-    if (eta == null) {
-      eta = new GraphDB(database);
-    }
-    return eta;
-  }
-
-  public RepositoryConnection getConnection() throws RepositoryException {
-    return data.getConnection();
-  }
-
-  public void runSplitAddOp(RepositoryConnection connection, Model data, Resource providerContext) throws RepositoryException, RDFHandlerException {
-    LinkedHashModel mp = new LinkedHashModel();
-    for (Statement s : data) {
-      if (mp.size() > MAX_TRIPLES_ADD) {
-        runAddOp(connection, mp, providerContext);
-        mp.clear();
-      }
-      if (s.getObject() instanceof URI && !checkURI(s.getObject().stringValue())
-              || s.getSubject() instanceof URI && !checkURI(s.getSubject().stringValue())) {
-        continue;
-      }
-      mp.add(s);
-    }
-    runAddOp(connection, mp, providerContext);
-  }
-
-  public void runAddOp(RepositoryConnection connection, Model data, Resource providerContext) throws RepositoryException, RDFHandlerException {
-    try {
-      connection.add(data, providerContext);
-    } catch (Exception e) {
-      Rio.write(data, System.out, RDFFormat.RDFXML);
-      throw e;
-    }
-  }
-
-  public void runSplitDelOp(RepositoryConnection connection, Model data, Resource providerContext) throws RepositoryException, RDFHandlerException {
-    LinkedHashModel mp = new LinkedHashModel();
-    for (Statement s : data) {
-      if (mp.size() > MAX_TRIPLES_ADD) {
-        runDelOp(connection, mp, providerContext);
-        mp.clear();
-      }
-      if (s.getObject() instanceof URI && !checkURI(s.getObject().stringValue())
-              || s.getSubject() instanceof URI && !checkURI(s.getSubject().stringValue())) {
-        continue;
-      }
-      mp.add(s);
-    }
-    runDelOp(connection, mp, providerContext);
-  }
-
-  public void runDelOp(RepositoryConnection connection, Model data, Resource providerContext) throws RepositoryException, RDFHandlerException {
-    try {
-      connection.remove(data, providerContext);
-    } catch (Exception e) {
-      Rio.write(data, System.out, RDFFormat.RDFXML);
-      throw e;
-    }
-  }
-
-  public boolean checkURI(String ur) {
-    boolean r = false;
-    try {
-      java.net.URI.create(ur);
-      r = true;
-    } catch (Exception w) {
-      Logger.getLogger(GraphDB.class.getName()).log(Level.SEVERE, null, w);
-    }
-    return r;
-  }
-
-  public synchronized void addBuffer(URI ug, Model mdlAdd) throws RepositoryException, RDFHandlerException {
-    Model mdl = hmmdl.get(ug);
-    if (mdl == null) {
-      mdl = new LinkedHashModel();
-      hmmdl.put(ug, mdl);
-    }
-    mdl.addAll(mdlAdd);
-    if (mdl.size() > MAX_TRIPLES_ADD_2) {
-      dumpBuffer(ug);
     }
 
-  }
-
-  public synchronized void addBuffer(String g, String s, String p, String o) throws RepositoryException, RDFHandlerException {
-    ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
-    URI ug = instance.createURI(g);
-    URI us = instance.createURI(s);
-    URI up = instance.createURI(p);
-    URI uo = instance.createURI(o);
-    Model mdl = new LinkedHashModel();
-    mdl.add(us, up, uo);
-    addBuffer(ug, mdl);
-  }
-
-  public void dumpBuffer() throws RepositoryException, RDFHandlerException {
-    Set<URI> keySet = hmmdl.keySet();
-    for (URI g : keySet) {
-      dumpBuffer(g);
+    public synchronized void addBuffer(String g, String s, String p, String o) throws RepositoryException, RDFHandlerException {
+        ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
+        URI ug = instance.createURI(g);
+        URI us = instance.createURI(s);
+        URI up = instance.createURI(p);
+        URI uo = instance.createURI(o);
+        Model mdl = new LinkedHashModel();
+        mdl.add(us, up, uo);
+        addBuffer(ug, mdl);
     }
-  }
 
-  public void dumpBuffer(URI g) throws RepositoryException, RDFHandlerException {
-    Model mdl = hmmdl.get(g);
-    RepositoryConnection connection = getConnection();
-    connection.begin();
-    runAddOp(connection, mdl, g);
-    connection.commit();
-    connection.close();
-    mdl.clear();
-  }
+    public void dumpBuffer() throws RepositoryException, RDFHandlerException {
+        Set<URI> keySet = hmmdl.keySet();
+        for (URI g : keySet) {
+            dumpBuffer(g);
+        }
+    }
 
-  public String getSpqSelect() {
-    return spqSelect;
-  }
+    public void dumpBuffer(URI g) throws RepositoryException, RDFHandlerException {
+        Model mdl = hmmdl.get(g);
+        RepositoryConnection connection = getConnection();
+        connection.begin();
+        runAddOp(connection, mdl, g);
+        connection.commit();
+        connection.close();
+        mdl.clear();
+    }
 
-  public void setSpqSelect(String spqSelect) {
-    this.spqSelect = spqSelect;
-  }
+    public String getSpqSelect() {
+        return spqSelect;
+    }
+
+    public void setSpqSelect(String spqSelect) {
+        this.spqSelect = spqSelect;
+    }
 }
