@@ -177,6 +177,11 @@
         </dependency>
         <dependency>
             <groupId>ec.edu.cedia.redi</groupId>
+            <artifactId>crossref-provider</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ec.edu.cedia.redi</groupId>
             <artifactId>doaj-provider</artifactId>
             <version>${project.version}</version>
         </dependency>

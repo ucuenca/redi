@@ -112,8 +112,8 @@ public class ModifiedJaccardMod {
                         int maxTkSz = Math.min(tokens1.size(), tokens2.size());
                         double ix = maxTkSz - i;
                         double jx = maxTkSz - j;
-                        ix = ix / (maxTkSz + 0.0);
-                        jx = jx / (maxTkSz + 0.0);
+                        ix = Math.abs(ix / (maxTkSz + 0.0));
+                        jx = Math.abs(jx / (maxTkSz + 0.0));
                         double ij = Math.abs(Math.min(ix, jx) / Math.max(ix, jx));
                         sumSimilarity += prioritizeWordOrder ? ij * sim : sim;
                         countMatchs++;

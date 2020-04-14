@@ -117,6 +117,9 @@ public class CommonServiceImpl implements CommonService {
     private org.apache.marmotta.ucuenca.wk.pubman.services.providers.ScieloProviderService providerServiceScielo;
 
     @Inject
+    private org.apache.marmotta.ucuenca.wk.pubman.services.providers.CrossrefProviderService providerServiceCrossref;
+    
+    @Inject
     private org.apache.marmotta.ucuenca.wk.pubman.services.providers.DOAJProviderService providerServiceDOAJ;
 
     @Inject
@@ -130,6 +133,7 @@ public class CommonServiceImpl implements CommonService {
     private Thread academicsThread;
     private Thread dblpThread;
     private Thread scieloThread;
+    private Thread crossrefThread;
     private Thread scholarThread;
     private Thread springerThread;
     private Thread doajThread;
@@ -403,6 +407,21 @@ public class CommonServiceImpl implements CommonService {
         });
         scieloThread.start();
         return "Data Provider Scielo are extracted in background.   Please review main.log file for details";
+    }
+    
+    @Override
+    public String getDataFromCrossrefProvidersService(final String[] organizations, final boolean force) {
+        if (crossrefThread != null && crossrefThread.isAlive()) {
+            return "Process is executing.";
+        }
+        crossrefThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                providerServiceCrossref.extractAuthors(organizations, force);
+            }
+        });
+        crossrefThread.start();
+        return "Data Provider Crossref are extracted in background.   Please review main.log file for details";
     }
 
     @Override

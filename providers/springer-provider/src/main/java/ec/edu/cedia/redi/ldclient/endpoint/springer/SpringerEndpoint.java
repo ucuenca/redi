@@ -32,7 +32,7 @@ public class SpringerEndpoint extends Endpoint {
     public SpringerEndpoint() {
         super(SpringerAuthorProvider.NAME, SpringerAuthorProvider.NAME, SpringerAuthorProvider.PATTERN, null, 86400L);
         setPriority(PRIORITY_MEDIUM);
-        addContentType(new ContentType("text", "html", Charset.forName("utf-8")));
+        addContentType(new ContentType("application", "json", Charset.forName("utf-8")));
     }
 
 }

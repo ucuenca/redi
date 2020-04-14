@@ -14,7 +14,7 @@
   var host = _SERVER_URL;
 // var host = "https://rediclon.cedia.edu.ec/";
 function loadTables() {
-     var Providers = ["Dspace","Ojs","SCOPUS","AcademicsKnowledge", "DBLP", "GoogleScholar","Springer","SCIELO", "DOAJ", "ORCID"];  
+     var Providers = ["Dspace","Ojs","SCOPUS","AcademicsKnowledge", "DBLP", "GoogleScholar","Springer","SCIELO", "DOAJ", "ORCID", "CROSSREF"];  
      
       var columns = [ {"data":"Selection"} , { "data":"name"}];
       
@@ -309,6 +309,31 @@ function ExtractScielo() {
             dataType: "text", //result data type
             //contentType : "application/x-www-form-urlencoded; charset=UTF-8" ,
             url: host + "pubman/publicationsScieloByOrg",
+            success: function (Result) {
+                console.log(Result);
+
+            },
+            error: function (data) {
+                //document.getElementById("imgloading").style.visibility = "hidden";
+                alert("Error" + data.responseText);
+            }});
+
+    }
+}
+
+function ExtractCrossref() {
+    var publications = getPublicationsOffset(9);
+
+    if (publications.length < 1) {
+        alert("No providers selected");
+    } else {
+        var listPublications = {"data": publications, "force":$('input#force').is(':checked')};
+        $.ajax({
+            type: "POST",
+            data: listPublications,
+            dataType: "text", //result data type
+            //contentType : "application/x-www-form-urlencoded; charset=UTF-8" ,
+            url: host + "pubman/publicationsCrossrefByOrg",
             success: function (Result) {
                 console.log(Result);
 

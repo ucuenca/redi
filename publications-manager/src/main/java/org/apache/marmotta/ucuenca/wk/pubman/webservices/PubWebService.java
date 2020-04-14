@@ -206,6 +206,18 @@ public class PubWebService {
 
     return Response.ok().entity(result).build();
   }
+  
+  @POST
+  @Path("/publicationsCrossrefByOrg")
+  public Response readPublicationsPostCrossref(@Context HttpServletRequest request) {
+
+    String[] org = request.getParameterMap().get("data[]");
+    boolean force = request.getParameterMap().get("force")[0].compareTo("true") == 0;
+    String result = commonService.getDataFromCrossrefProvidersService(org, force);
+
+    return Response.ok().entity(result).build();
+  }
+  
 
   @POST
   @Path("/publicationsDOAJByOrg")

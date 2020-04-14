@@ -53,6 +53,8 @@ wkhomeApp.directive('logoProfile', function(){
       scope.type = "scopus";
     } else if (scope.uri.indexOf("scholar.google.com") !== -1){
       scope.type = "scholar";
+    } else {
+      scope.type = "external";
     }
   }
 

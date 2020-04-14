@@ -62,6 +62,7 @@ function selectEndpoint(e) {
         $("tr.OJS_form").css("display", "none");
         $("tr.ORCID_form").css("display", "none");
         $("tr.CERIF_form").css("display", "none");
+        $("tr.VIVO_form").css("display", "none");
     } else if ("file" == e) {
         $("tr.sparql_form").css("display", "none");
         $("tr.file_form").css("display", "block");
@@ -69,6 +70,7 @@ function selectEndpoint(e) {
         $("tr.OJS_form").css("display", "none");
         $("tr.ORCID_form").css("display", "none");
         $("tr.CERIF_form").css("display", "none");
+        $("tr.VIVO_form").css("display", "none");
     } else if ("oai-pmh" == e) {
         $("tr.sparql_form").css("display", "none");
         $("tr.file_form").css("display", "none");
@@ -76,13 +78,15 @@ function selectEndpoint(e) {
         $("tr.OJS_form").css("display", "none");
         $("tr.ORCID_form").css("display", "none");
         $("tr.CERIF_form").css("display", "none");
+        $("tr.VIVO_form").css("display", "none");
     } else if ("ojs" == e) {
         $("tr.OJS_form").css("display", "block");
         $("tr.sparql_form").css("display", "none");
         $("tr.file_form").css("display", "none");
         $("tr.OAI_form").css("display", "none");
         $("tr.ORCID_form").css("display", "none");
-        $("tr.CERIF_form").css("display", "none");    
+        $("tr.CERIF_form").css("display", "none");
+        $("tr.VIVO_form").css("display", "none");
   }  else if ("cerif" == e) {
         $("tr.CERIF_form").css("display", "block");
         $("tr.OJS_form").css("display", "none");
@@ -90,14 +94,24 @@ function selectEndpoint(e) {
         $("tr.file_form").css("display", "none");
         $("tr.OAI_form").css("display", "none");
         $("tr.ORCID_form").css("display", "none");
+         $("tr.VIVO_form").css("display", "none");
     } 
-     else {
+     else if ("orcid" == e) {
         $("tr.OJS_form").css("display", "none");
         $("tr.sparql_form").css("display", "none");
         $("tr.file_form").css("display", "none");
         $("tr.OAI_form").css("display", "none");
         $("tr.CERIF_form").css("display", "none");
         $("tr.ORCID_form").css("display", "block");
+        $("tr.VIVO_form").css("display", "none");
+    } else if ("vivo" == e) {
+        $("tr.OJS_form").css("display", "none");
+        $("tr.sparql_form").css("display", "none");
+        $("tr.file_form").css("display", "none");
+        $("tr.OAI_form").css("display", "none");
+        $("tr.ORCID_form").css("display", "none");
+        $("tr.VIVO_form").css("display", "block");
+        $("tr.CERIF_form").css("display", "none");
     }
 
 
@@ -113,6 +127,7 @@ function cleanEndpoint() {
     $("input#endpoint_cerif").val("");
     $("input#endpoint_ad_ojs").val("");
     $('input#check_oai').prop('checked', true);
+    $("input#endpoint_vivo").val("");
 }
 
 function newEndpoint() {
@@ -142,6 +157,9 @@ function newEndpoint() {
         uploadOAI(type, org, val1, false);
     }  else if (type == "orcid") {
         uploadORCID(type, org);
+    } else if (type == "vivo") {
+        var val1 = $("input#endpoint_vivo").val();
+        uploadVIVO(type, org, val1);
     }
 
     //  console.log ("val1"+val1);
@@ -155,6 +173,22 @@ function uploadORCID(type, org) {
         type: "POST",
         dataType: "text", //result data type
         url: host + "authors-module/endpointORCIDRegister?type=" + type + "&org=" + org,
+        success: function (Result) {
+            table.ajax.reload(null, false);
+            alert(Result);
+        },
+        error: function (data) {
+            //document.getElementById("imgloading").style.visibility = "hidden";
+            alert("Error" + data.responseText);
+        }
+    });
+}
+
+function uploadVIVO(type, org, v) {
+    $.ajax({
+        type: "POST",
+        dataType: "text", //result data type
+        url: host + "authors-module/endpointVIVORegister?type=" + type + "&org=" + org + "&url=" + v,
         success: function (Result) {
             table.ajax.reload(null, false);
             alert(Result);

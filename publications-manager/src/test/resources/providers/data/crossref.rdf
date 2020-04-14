@@ -1,0 +1,2495 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1007%2F978-3-030-33547-2_12">
+	<collection xmlns="http://search.crossref.org/ontology/">Advances in Intelligent Systems and Computing</collection>
+	<collection xmlns="http://search.crossref.org/ontology/">Trends and Applications in Software Engineering</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1007%2F978-3-030-33547-2_12_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1007%2F978-3-030-33547-2_12_1"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1007%2F978-3-030-33547-2_12_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2019-10-17</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1007/978-3-030-33547-2_12</doi>
+	<isbn xmlns="http://search.crossref.org/ontology/">9783030335465</isbn>
+	<isbn xmlns="http://search.crossref.org/ontology/">9783030335472</isbn>
+	<issn xmlns="http://search.crossref.org/ontology/">2194-5357</issn>
+	<issn xmlns="http://search.crossref.org/ontology/">2194-5365</issn>
+	<page xmlns="http://search.crossref.org/ontology/">141-155</page>
+	<publisher xmlns="http://search.crossref.org/ontology/">Springer International Publishing</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Linked Data and Musical Information to Improvement the Cultural and Heritage Knowledge Management</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Book"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1007/978-3-030-33547-2_12</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://link.springer.com/content/pdf/10.1007/978-3-030-33547-2_12</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1007%2F978-3-030-33547-2_12_0">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1007%2F978-3-030-33547-2_12_1">
+	<family xmlns="http://search.crossref.org/ontology/">Mosquera Arévalo</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jean Paúl</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1007%2F978-3-030-42531-9_33">
+	<collection xmlns="http://search.crossref.org/ontology/">Applied Technologies</collection>
+	<collection xmlns="http://search.crossref.org/ontology/">Communications in Computer and Information Science</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1007%2F978-3-030-42531-9_33_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1007%2F978-3-030-42531-9_33_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1007%2F978-3-030-42531-9_33_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1007%2F978-3-030-42531-9_33_3"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1007%2F978-3-030-42531-9_33_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2020</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1007/978-3-030-42531-9_33</doi>
+	<isbn xmlns="http://search.crossref.org/ontology/">9783030425302</isbn>
+	<isbn xmlns="http://search.crossref.org/ontology/">9783030425319</isbn>
+	<issn xmlns="http://search.crossref.org/ontology/">1865-0929</issn>
+	<issn xmlns="http://search.crossref.org/ontology/">1865-0937</issn>
+	<page xmlns="http://search.crossref.org/ontology/">415-425</page>
+	<publisher xmlns="http://search.crossref.org/ontology/">Springer International Publishing</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Learning Analytics as a Tool to Support Teaching</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Book"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1007/978-3-030-42531-9_33</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://link.springer.com/content/pdf/10.1007/978-3-030-42531-9_33</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1007%2F978-3-030-42531-9_33_0">
+	<family xmlns="http://search.crossref.org/ontology/">Cabrera-Loayza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Ma. Carmen</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1007%2F978-3-030-42531-9_33_1">
+	<family xmlns="http://search.crossref.org/ontology/">Cadme</family>
+	<given xmlns="http://search.crossref.org/ontology/">Elizabeth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1007%2F978-3-030-42531-9_33_2">
+	<family xmlns="http://search.crossref.org/ontology/">Elizalde</family>
+	<given xmlns="http://search.crossref.org/ontology/">René</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1007%2F978-3-030-42531-9_33_3">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1007%2F978-3-319-11716-4_2">
+	<collection xmlns="http://search.crossref.org/ontology/">Communications in Computer and Information Science</collection>
+	<collection xmlns="http://search.crossref.org/ontology/">Knowledge Engineering and the Semantic Web</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1007%2F978-3-319-11716-4_2_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1007%2F978-3-319-11716-4_2_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1007%2F978-3-319-11716-4_2_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1007%2F978-3-319-11716-4_2_3"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1007%2F978-3-319-11716-4_2_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2014</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1007/978-3-319-11716-4_2</doi>
+	<isbn xmlns="http://search.crossref.org/ontology/">9783319117157</isbn>
+	<isbn xmlns="http://search.crossref.org/ontology/">9783319117164</isbn>
+	<issn xmlns="http://search.crossref.org/ontology/">1865-0929</issn>
+	<issn xmlns="http://search.crossref.org/ontology/">1865-0937</issn>
+	<page xmlns="http://search.crossref.org/ontology/">15-28</page>
+	<publisher xmlns="http://search.crossref.org/ontology/">Springer International Publishing</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Domain Categorization of Open Educational Resources Based on Linked Data</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Book"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1007/978-3-319-11716-4_2</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://link.springer.com/content/pdf/10.1007/978-3-319-11716-4_2</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1007%2F978-3-319-11716-4_2_0">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1007%2F978-3-319-11716-4_2_1">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1007%2F978-3-319-11716-4_2_2">
+	<family xmlns="http://search.crossref.org/ontology/">Lopez-Vargas</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jorge</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1007%2F978-3-319-11716-4_2_3">
+	<family xmlns="http://search.crossref.org/ontology/">Tovar-Caro</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1007%2F978-3-319-29585-5_1">
+	<collection xmlns="http://search.crossref.org/ontology/">Communications in Computer and Information Science</collection>
+	<collection xmlns="http://search.crossref.org/ontology/">Computer Supported Education</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1007%2F978-3-319-29585-5_1_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1007%2F978-3-319-29585-5_1_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1007%2F978-3-319-29585-5_1_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1007%2F978-3-319-29585-5_1_3"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1007%2F978-3-319-29585-5_1_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2016</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1007/978-3-319-29585-5_1</doi>
+	<isbn xmlns="http://search.crossref.org/ontology/">9783319295848</isbn>
+	<isbn xmlns="http://search.crossref.org/ontology/">9783319295855</isbn>
+	<issn xmlns="http://search.crossref.org/ontology/">1865-0929</issn>
+	<issn xmlns="http://search.crossref.org/ontology/">1865-0937</issn>
+	<page xmlns="http://search.crossref.org/ontology/">3-18</page>
+	<publisher xmlns="http://search.crossref.org/ontology/">Springer International Publishing</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Open Education Practices as Answer to New Demands of Training in Entrepreneurship Competences: The Role of Recommender Systems</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Book"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1007/978-3-319-29585-5_1</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://link.springer.com/content/pdf/10.1007/978-3-319-29585-5_1</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1007%2F978-3-319-29585-5_1_0">
+	<family xmlns="http://search.crossref.org/ontology/">Tovar</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1007%2F978-3-319-29585-5_1_1">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1007%2F978-3-319-29585-5_1_2">
+	<family xmlns="http://search.crossref.org/ontology/">López</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jorge</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1007%2F978-3-319-29585-5_1_3">
+	<family xmlns="http://search.crossref.org/ontology/">Chizaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1007%2F978-3-319-69341-5_19">
+	<collection xmlns="http://search.crossref.org/ontology/">Advances in Intelligent Systems and Computing</collection>
+	<collection xmlns="http://search.crossref.org/ontology/">Trends and Applications in Software Engineering</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1007%2F978-3-319-69341-5_19_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1007%2F978-3-319-69341-5_19_1"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1007%2F978-3-319-69341-5_19_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2017-10-12</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1007/978-3-319-69341-5_19</doi>
+	<isbn xmlns="http://search.crossref.org/ontology/">9783319693408</isbn>
+	<isbn xmlns="http://search.crossref.org/ontology/">9783319693415</isbn>
+	<issn xmlns="http://search.crossref.org/ontology/">2194-5357</issn>
+	<issn xmlns="http://search.crossref.org/ontology/">2194-5365</issn>
+	<page xmlns="http://search.crossref.org/ontology/">207-218</page>
+	<publisher xmlns="http://search.crossref.org/ontology/">Springer International Publishing</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">SmartLand-LD: A Linked Data approach for Integration of heterogeneous datasets to intelligent management of high biodiversity territories</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Book"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1007/978-3-319-69341-5_19</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://link.springer.com/content/pdf/10.1007/978-3-319-69341-5_19</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1007%2F978-3-319-69341-5_19_0">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1007%2F978-3-319-69341-5_19_1">
+	<family xmlns="http://search.crossref.org/ontology/">Suárez</family>
+	<given xmlns="http://search.crossref.org/ontology/">Juan Pablo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1007%2F978-3-662-52925-6_15">
+	<collection xmlns="http://search.crossref.org/ontology/">Lecture Notes in Educational Technology</collection>
+	<collection xmlns="http://search.crossref.org/ontology/">Open Education: from OERs to MOOCs</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1007%2F978-3-662-52925-6_15_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1007%2F978-3-662-52925-6_15_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1007%2F978-3-662-52925-6_15_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1007%2F978-3-662-52925-6_15_3"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1007%2F978-3-662-52925-6_15_4"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1007%2F978-3-662-52925-6_15_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2016-08-12</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1007/978-3-662-52925-6_15</doi>
+	<isbn xmlns="http://search.crossref.org/ontology/">9783662529232</isbn>
+	<isbn xmlns="http://search.crossref.org/ontology/">9783662529256</isbn>
+	<issn xmlns="http://search.crossref.org/ontology/">2196-4963</issn>
+	<issn xmlns="http://search.crossref.org/ontology/">2196-4971</issn>
+	<page xmlns="http://search.crossref.org/ontology/">283-313</page>
+	<publisher xmlns="http://search.crossref.org/ontology/">Springer Berlin Heidelberg</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Using Linked Data to Blended Educational Materials With OER—A General Context of Synergy: Linked Data for Describe, Discovery and Retrieve OER and Human Beings Knowledge to Provide Context</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Book"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1007/978-3-662-52925-6_15</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://link.springer.com/content/pdf/10.1007/978-3-662-52925-6_15</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1007%2F978-3-662-52925-6_15_0">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1007%2F978-3-662-52925-6_15_1">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1007%2F978-3-662-52925-6_15_2">
+	<family xmlns="http://search.crossref.org/ontology/">Atenas</family>
+	<given xmlns="http://search.crossref.org/ontology/">Javiera</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1007%2F978-3-662-52925-6_15_3">
+	<family xmlns="http://search.crossref.org/ontology/">Lopez-Vargas</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jorge</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1007%2F978-3-662-52925-6_15_4">
+	<family xmlns="http://search.crossref.org/ontology/">Tovar</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1016%2Fj.advengsoft.2018.05.005">
+	<collection xmlns="http://search.crossref.org/ontology/">Advances in Engineering Software</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1016%2Fj.advengsoft.2018.05.005_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1016%2Fj.advengsoft.2018.05.005_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1016%2Fj.advengsoft.2018.05.005_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1016%2Fj.advengsoft.2018.05.005_3"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1016%2Fj.advengsoft.2018.05.005_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2018-09</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1016/j.advengsoft.2018.05.005</doi>
+	<doi xmlns="http://search.crossref.org/ontology/">S0965997818301200</doi>
+	<issn xmlns="http://search.crossref.org/ontology/">0965-9978</issn>
+	<language xmlns="http://search.crossref.org/ontology/">en</language>
+	<page xmlns="http://search.crossref.org/ontology/">13-24</page>
+	<publisher xmlns="http://search.crossref.org/ontology/">Elsevier BV</publisher>
+	<subject xmlns="http://search.crossref.org/ontology/">General Engineering</subject>
+	<subject xmlns="http://search.crossref.org/ontology/">Software</subject>
+	<title xmlns="http://search.crossref.org/ontology/">Optimizing presetting attributes by softcomputing techniques to improve tapered roller bearings working conditions</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Journal"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1016/j.advengsoft.2018.05.005</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">https://api.elsevier.com/content/article/PII:S0965997818301200?httpAccept=text/plain</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">https://api.elsevier.com/content/article/PII:S0965997818301200?httpAccept=text/xml</uri>
+	<volume xmlns="http://search.crossref.org/ontology/">123</volume>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1016%2Fj.advengsoft.2018.05.005_0">
+	<family xmlns="http://search.crossref.org/ontology/">Fernandez Martinez</family>
+	<given xmlns="http://search.crossref.org/ontology/">Roberto</given>
+	<orcid xmlns="http://search.crossref.org/ontology/">http://orcid.org/0000-0002-9436-6577</orcid>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1016%2Fj.advengsoft.2018.05.005_1">
+	<family xmlns="http://search.crossref.org/ontology/">Lostado Lorza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Ruben</given>
+	<orcid xmlns="http://search.crossref.org/ontology/">http://orcid.org/0000-0001-5902-6078</orcid>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1016%2Fj.advengsoft.2018.05.005_2">
+	<family xmlns="http://search.crossref.org/ontology/">Santos Delgado</family>
+	<given xmlns="http://search.crossref.org/ontology/">Ana A.</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1016%2Fj.advengsoft.2018.05.005_3">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra Pullaguari</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson O.</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1049%2Fiet-sen.2010.0046">
+	<collection xmlns="http://search.crossref.org/ontology/">IET Software</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1049%2Fiet-sen.2010.0046_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1049%2Fiet-sen.2010.0046_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1049%2Fiet-sen.2010.0046_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1049%2Fiet-sen.2010.0046_3"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1049%2Fiet-sen.2010.0046_4"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1049%2Fiet-sen.2010.0046_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2010</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1049/iet-sen.2010.0046</doi>
+	<issn xmlns="http://search.crossref.org/ontology/">1751-8806</issn>
+	<issue xmlns="http://search.crossref.org/ontology/">6</issue>
+	<language xmlns="http://search.crossref.org/ontology/">en</language>
+	<page xmlns="http://search.crossref.org/ontology/">407</page>
+	<publisher xmlns="http://search.crossref.org/ontology/">Institution of Engineering and Technology (IET)</publisher>
+	<subject xmlns="http://search.crossref.org/ontology/">Computer Graphics and Computer-Aided Design</subject>
+	<title xmlns="http://search.crossref.org/ontology/">Usage of social and semantic web technologies to design a searching architecture for software requirement artefacts</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Journal"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1049/iet-sen.2010.0046</uri>
+	<volume xmlns="http://search.crossref.org/ontology/">4</volume>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1049%2Fiet-sen.2010.0046_0">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">J.</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1049%2Fiet-sen.2010.0046_1">
+	<family xmlns="http://search.crossref.org/ontology/">López</family>
+	<given xmlns="http://search.crossref.org/ontology/">J.</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1049%2Fiet-sen.2010.0046_2">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">N.</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1049%2Fiet-sen.2010.0046_3">
+	<family xmlns="http://search.crossref.org/ontology/">Martínez</family>
+	<given xmlns="http://search.crossref.org/ontology/">O.</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1049%2Fiet-sen.2010.0046_4">
+	<family xmlns="http://search.crossref.org/ontology/">Tovar</family>
+	<given xmlns="http://search.crossref.org/ontology/">E.</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1108%2Fprog-07-2012-0045">
+	<collection xmlns="http://search.crossref.org/ontology/">Program</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1108%2Fprog-07-2012-0045_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1108%2Fprog-07-2012-0045_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1108%2Fprog-07-2012-0045_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1108%2Fprog-07-2012-0045_3"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1108%2Fprog-07-2012-0045_4"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1108%2Fprog-07-2012-0045_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2014-01-28</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1108/PROG-07-2012-0045</doi>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1108/prog-07-2012-0045</doi>
+	<issn xmlns="http://search.crossref.org/ontology/">0033-0337</issn>
+	<issue xmlns="http://search.crossref.org/ontology/">1</issue>
+	<language xmlns="http://search.crossref.org/ontology/">en</language>
+	<page xmlns="http://search.crossref.org/ontology/">16-40</page>
+	<publisher xmlns="http://search.crossref.org/ontology/">Emerald</publisher>
+	<subject xmlns="http://search.crossref.org/ontology/">Information Systems</subject>
+	<subject xmlns="http://search.crossref.org/ontology/">Library and Information Sciences</subject>
+	<title xmlns="http://search.crossref.org/ontology/">Consuming and producing linked open data: the case of OpenCourseWare</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Journal"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1108/prog-07-2012-0045</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://www.emeraldinsight.com/doi/full/10.1108/PROG-07-2012-0045</uri>
+	<volume xmlns="http://search.crossref.org/ontology/">48</volume>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1108%2Fprog-07-2012-0045_0">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1108%2Fprog-07-2012-0045_1">
+	<family xmlns="http://search.crossref.org/ontology/">Tovar</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1108%2Fprog-07-2012-0045_2">
+	<family xmlns="http://search.crossref.org/ontology/">Colomo-Palacios</family>
+	<given xmlns="http://search.crossref.org/ontology/">Ricardo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1108%2Fprog-07-2012-0045_3">
+	<family xmlns="http://search.crossref.org/ontology/">Lopez-Vargas</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jorge</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1108%2Fprog-07-2012-0045_4">
+	<family xmlns="http://search.crossref.org/ontology/">Alexandra Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fcimps.2018.8625618">
+	<collection xmlns="http://search.crossref.org/ontology/">2018 7th International Conference On Software Process Improvement (CIMPS)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fcimps.2018.8625618_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fcimps.2018.8625618_1"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fcimps.2018.8625618_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2018-10</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/cimps.2018.8625618</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2018 7th International Conference On Software Process Improvement (CIMPS)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781728101583</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Use of Graph Database for the Integration of Heterogeneous Data about Ecuadorian Historical Personages</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/cimps.2018.8625618</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/8610359/8625610/08625618.pdf?arnumber=8625618</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fcimps.2018.8625618_0">
+	<family xmlns="http://search.crossref.org/ontology/">Mosquera</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jean</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fcimps.2018.8625618_1">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fconcapan.2017.8278531">
+	<collection xmlns="http://search.crossref.org/ontology/">2017 IEEE 37th Central America and Panama Convention (CONCAPAN XXXVII)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fconcapan.2017.8278531_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fconcapan.2017.8278531_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fconcapan.2017.8278531_2"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fconcapan.2017.8278531_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2017-11</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/concapan.2017.8278531</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2017 IEEE 37th Central America and Panama Convention (CONCAPAN XXXVII)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781538635094</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Semantic representation of bibliographic resources cataloged in the UTPL Library</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/concapan.2017.8278531</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/8266733/8278456/08278531.pdf?arnumber=8278531</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fconcapan.2017.8278531_0">
+	<family xmlns="http://search.crossref.org/ontology/">Cabrera-Loayza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Ma. Carmen</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fconcapan.2017.8278531_1">
+	<family xmlns="http://search.crossref.org/ontology/">Elizalde</family>
+	<given xmlns="http://search.crossref.org/ontology/">Rene</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fconcapan.2017.8278531_2">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fconcapan.2017.8278534">
+	<collection xmlns="http://search.crossref.org/ontology/">2017 IEEE 37th Central America and Panama Convention (CONCAPAN XXXVII)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fconcapan.2017.8278534_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fconcapan.2017.8278534_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fconcapan.2017.8278534_2"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fconcapan.2017.8278534_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2017-11</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/concapan.2017.8278534</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2017 IEEE 37th Central America and Panama Convention (CONCAPAN XXXVII)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781538635094</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Semantic representation of teaching planning, pilot experience at UTPL</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/concapan.2017.8278534</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/8266733/8278456/08278534.pdf?arnumber=8278534</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fconcapan.2017.8278534_0">
+	<family xmlns="http://search.crossref.org/ontology/">Mora-Arciniegas</family>
+	<given xmlns="http://search.crossref.org/ontology/">Maria-Belen</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fconcapan.2017.8278534_1">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fconcapan.2017.8278534_2">
+	<family xmlns="http://search.crossref.org/ontology/">Tenesaca-Luna</family>
+	<given xmlns="http://search.crossref.org/ontology/">Gladys-Alicia</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fconcapan.2017.8278535">
+	<collection xmlns="http://search.crossref.org/ontology/">2017 IEEE 37th Central America and Panama Convention (CONCAPAN XXXVII)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fconcapan.2017.8278535_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fconcapan.2017.8278535_1"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fconcapan.2017.8278535_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2017-11</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/concapan.2017.8278535</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2017 IEEE 37th Central America and Panama Convention (CONCAPAN)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781538635094</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Producing linked open data to describe scientific activity from researchers of Ecuadorian universities</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/concapan.2017.8278535</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/8266733/8278456/08278535.pdf?arnumber=8278535</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fconcapan.2017.8278535_0">
+	<family xmlns="http://search.crossref.org/ontology/">Cadme</family>
+	<given xmlns="http://search.crossref.org/ontology/">Elizabeth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fconcapan.2017.8278535_1">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5492349">
+	<collection xmlns="http://search.crossref.org/ontology/">IEEE EDUCON 2010 Conference</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5492349_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5492349_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5492349_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5492349_3"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5492349_4"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5492349_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2010-04</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/educon.2010.5492349</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2010 IEEE Education Engineering 2010 - The Future of Global Learning Engineering Education (EDUCON 2010)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781424465682</isbn>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781424465712</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Measuring collaboration and creativity skills through rubrics: Experience from UTPL collaborative social networks course</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/educon.2010.5492349</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx5/5487606/5492336/05492349.pdf?arnumber=5492349</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5492349_0">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5492349_1">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5492349_2">
+	<family xmlns="http://search.crossref.org/ontology/">Lopez</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jorge</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5492349_3">
+	<family xmlns="http://search.crossref.org/ontology/">Romero</family>
+	<given xmlns="http://search.crossref.org/ontology/">Audrey</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5492349_4">
+	<family xmlns="http://search.crossref.org/ontology/">Tovar</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5492453">
+	<collection xmlns="http://search.crossref.org/ontology/">IEEE EDUCON 2010 Conference</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5492453_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5492453_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5492453_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5492453_3"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5492453_4"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5492453_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2010-04</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/educon.2010.5492453</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2010 IEEE Education Engineering 2010 - The Future of Global Learning Engineering Education (EDUCON 2010)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781424465682</isbn>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781424465712</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">An approach for description of Open Educational Resources based on semantic technologies</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/educon.2010.5492453</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx5/5487606/5492336/05492453.pdf?arnumber=5492453</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5492453_0">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5492453_1">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5492453_2">
+	<family xmlns="http://search.crossref.org/ontology/">Lopez</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jorge</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5492453_3">
+	<family xmlns="http://search.crossref.org/ontology/">Martinez</family>
+	<given xmlns="http://search.crossref.org/ontology/">Oscar</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5492453_4">
+	<family xmlns="http://search.crossref.org/ontology/">Caro</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo Tovar</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5493061">
+	<collection xmlns="http://search.crossref.org/ontology/">IEEE EDUCON 2010 Conference</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5493061_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5493061_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5493061_10"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5493061_11"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5493061_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5493061_3"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5493061_4"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5493061_5"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5493061_6"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5493061_7"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5493061_8"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5493061_9"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5493061_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2010-04</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/educon.2010.5493061</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2010 IEEE Education Engineering 2010 - The Future of Global Learning Engineering Education (EDUCON 2010)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781424465682</isbn>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781424465712</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Meta-analysis of the TAEE project applying social network analysis</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/educon.2010.5493061</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx5/5487606/5492336/05493061.pdf?arnumber=5493061</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5493061_0">
+	<family xmlns="http://search.crossref.org/ontology/">Vargas</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jorge A. Lopez</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5493061_1">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5493061_10">
+	<family xmlns="http://search.crossref.org/ontology/">Benito</family>
+	<given xmlns="http://search.crossref.org/ontology/">Manuel</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5493061_11">
+	<family xmlns="http://search.crossref.org/ontology/">Landaluce</family>
+	<given xmlns="http://search.crossref.org/ontology/">Ariana</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5493061_2">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jeanneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5493061_3">
+	<family xmlns="http://search.crossref.org/ontology/">Tovar</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5493061_4">
+	<family xmlns="http://search.crossref.org/ontology/">Blazques</family>
+	<given xmlns="http://search.crossref.org/ontology/">Manuel</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5493061_5">
+	<family xmlns="http://search.crossref.org/ontology/">Castro</family>
+	<given xmlns="http://search.crossref.org/ontology/">Manuel</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5493061_6">
+	<family xmlns="http://search.crossref.org/ontology/">Arriaga</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jesus</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5493061_7">
+	<family xmlns="http://search.crossref.org/ontology/">Pescador</family>
+	<given xmlns="http://search.crossref.org/ontology/">Fernando</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5493061_8">
+	<family xmlns="http://search.crossref.org/ontology/">Romo</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jesus</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2010.5493061_9">
+	<family xmlns="http://search.crossref.org/ontology/">Casquero</family>
+	<given xmlns="http://search.crossref.org/ontology/">Oskar</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2011.5773281">
+	<collection xmlns="http://search.crossref.org/ontology/">2011 IEEE Global Engineering Education Conference (EDUCON)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2011.5773281_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2011.5773281_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2011.5773281_2"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2011.5773281_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2011-04</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/educon.2011.5773281</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2011 IEEE Global Engineering Education Conference (EDUCON)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781612846422</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Quality model proposal for educational material production in OCW sites</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/educon.2011.5773281</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx5/5765866/5773100/05773281.pdf?arnumber=5773281</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2011.5773281_0">
+	<family xmlns="http://search.crossref.org/ontology/">Romero Pelaez</family>
+	<given xmlns="http://search.crossref.org/ontology/">Audrey</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2011.5773281_1">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra Pullaguari</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2011.5773281_2">
+	<family xmlns="http://search.crossref.org/ontology/">Tovar Caro</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2011.5773299">
+	<collection xmlns="http://search.crossref.org/ontology/">2011 IEEE Global Engineering Education Conference (EDUCON)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2011.5773299_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2011.5773299_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2011.5773299_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2011.5773299_3"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2011.5773299_4"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2011.5773299_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2011-04</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/educon.2011.5773299</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2011 IEEE Global Engineering Education Conference (EDUCON)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781612846422</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Finding OERs with Social-Semantic search</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/educon.2011.5773299</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx5/5765866/5773100/05773299.pdf?arnumber=5773299</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2011.5773299_0">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2011.5773299_1">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2011.5773299_2">
+	<family xmlns="http://search.crossref.org/ontology/">Lopez</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jorge</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2011.5773299_3">
+	<family xmlns="http://search.crossref.org/ontology/">Tovar</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2011.5773299_4">
+	<family xmlns="http://search.crossref.org/ontology/">Martinez</family>
+	<given xmlns="http://search.crossref.org/ontology/">Oscar</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2012.6201202">
+	<collection xmlns="http://search.crossref.org/ontology/">Proceedings of the 2012 IEEE Global Engineering Education Conference (EDUCON)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2012.6201202_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2012.6201202_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2012.6201202_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2012.6201202_3"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2012.6201202_4"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2012.6201202_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2012-04</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/educon.2012.6201202</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2012 IEEE Global Engineering Education Conference (EDUCON)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781467314558</isbn>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781467314565</isbn>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781467314572</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Combining Linked Data and mobiles devices to improve access to OCW</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/educon.2012.6201202</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx5/6196361/6201007/06201202.pdf?arnumber=6201202</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2012.6201202_0">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2012.6201202_1">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2012.6201202_2">
+	<family xmlns="http://search.crossref.org/ontology/">Lopez</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jorge</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2012.6201202_3">
+	<family xmlns="http://search.crossref.org/ontology/">Tovar</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2012.6201202_4">
+	<family xmlns="http://search.crossref.org/ontology/">Martinez-Bonastre</family>
+	<given xmlns="http://search.crossref.org/ontology/">Oscar</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2013.6530269">
+	<collection xmlns="http://search.crossref.org/ontology/">2013 IEEE Global Engineering Education Conference (EDUCON)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2013.6530269_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2013.6530269_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2013.6530269_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2013.6530269_3"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2013.6530269_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2013-03</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/educon.2013.6530269</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2013 IEEE Global Engineering Education Conference (EDUCON)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781467361095</isbn>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781467361101</isbn>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781467361118</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">OCW-S: Enablers for building sustainable open education evolving OCW and MOOC</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/educon.2013.6530269</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/6522574/6530074/06530269.pdf?arnumber=6530269</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2013.6530269_0">
+	<family xmlns="http://search.crossref.org/ontology/">Tovar</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2013.6530269_1">
+	<family xmlns="http://search.crossref.org/ontology/">Dimovska</family>
+	<given xmlns="http://search.crossref.org/ontology/">A.</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2013.6530269_2">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">N.</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2013.6530269_3">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">J.</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2014.6826249">
+	<collection xmlns="http://search.crossref.org/ontology/">2014 IEEE Global Engineering Education Conference (EDUCON)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2014.6826249_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2014.6826249_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2014.6826249_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2014.6826249_3"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2014.6826249_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2014-04</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/educon.2014.6826249</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2014 IEEE Global Engineering Education Conference (EDUCON)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781479931910</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Supporting openness of MOOCs contents through of an OER and OCW framework based on Linked Data technologies</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/educon.2014.6826249</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/6820095/6826048/06826249.pdf?arnumber=6826249</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2014.6826249_0">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2014.6826249_1">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2014.6826249_2">
+	<family xmlns="http://search.crossref.org/ontology/">Lopez</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jorge</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2014.6826249_3">
+	<family xmlns="http://search.crossref.org/ontology/">Tovar Caro</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2015.7096092">
+	<collection xmlns="http://search.crossref.org/ontology/">2015 IEEE Global Engineering Education Conference (EDUCON)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2015.7096092_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2015.7096092_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2015.7096092_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2015.7096092_3"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2015.7096092_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2015-03</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/educon.2015.7096092</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2015 IEEE Global Engineering Education Conference (EDUCON)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781479919086</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Towards a learning analytics approach for supporting discovery and reuse of OER an approach based on Social Networks Analysis and Linked Open Data</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/educon.2015.7096092</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/7086909/7095933/07096092.pdf?arnumber=7096092</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2015.7096092_0">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2015.7096092_1">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2015.7096092_2">
+	<family xmlns="http://search.crossref.org/ontology/">Lopez</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jorge</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2015.7096092_3">
+	<family xmlns="http://search.crossref.org/ontology/">Tovar Caro</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2016.7474652">
+	<collection xmlns="http://search.crossref.org/ontology/">2016 IEEE Global Engineering Education Conference (EDUCON)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2016.7474652_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2016.7474652_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2016.7474652_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2016.7474652_3"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2016.7474652_4"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2016.7474652_5"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2016.7474652_6"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2016.7474652_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2016-04</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/educon.2016.7474652</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2016 IEEE Global Engineering Education Conference (EDUCON)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781467386333</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">A contribution to encourage the dissemination of academic publishing: Finding diffusion media by means of a search engine based on semantic technologies</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/educon.2016.7474652</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/7469053/7474513/07474652.pdf?arnumber=7474652</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2016.7474652_0">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2016.7474652_1">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2016.7474652_2">
+	<family xmlns="http://search.crossref.org/ontology/">Lopez</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jorge</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2016.7474652_3">
+	<family xmlns="http://search.crossref.org/ontology/">Quituisaca</family>
+	<given xmlns="http://search.crossref.org/ontology/">Lilia</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2016.7474652_4">
+	<family xmlns="http://search.crossref.org/ontology/">Montano-Sosoranga</family>
+	<given xmlns="http://search.crossref.org/ontology/">Fabricio</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2016.7474652_5">
+	<family xmlns="http://search.crossref.org/ontology/">Medina</family>
+	<given xmlns="http://search.crossref.org/ontology/">Paul</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2016.7474652_6">
+	<family xmlns="http://search.crossref.org/ontology/">Tovar-Caro</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2016.7474706">
+	<collection xmlns="http://search.crossref.org/ontology/">2016 IEEE Global Engineering Education Conference (EDUCON)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2016.7474706_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2016.7474706_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2016.7474706_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2016.7474706_3"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2016.7474706_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2016-04</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/educon.2016.7474706</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2016 IEEE Global Engineering Education Conference (EDUCON)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781467386333</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Integrating OER in the design of educational material: Blended learning and linked-open-educational-resources-data approach</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/educon.2016.7474706</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/7469053/7474513/07474706.pdf?arnumber=7474706</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2016.7474706_0">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2016.7474706_1">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2016.7474706_2">
+	<family xmlns="http://search.crossref.org/ontology/">Lopez</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jorge</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2016.7474706_3">
+	<family xmlns="http://search.crossref.org/ontology/">Caro</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo Tovar</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2017.7943018">
+	<collection xmlns="http://search.crossref.org/ontology/">2017 IEEE Global Engineering Education Conference (EDUCON)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2017.7943018_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2017.7943018_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2017.7943018_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2017.7943018_3"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2017.7943018_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2017-04</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/educon.2017.7943018</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2017 IEEE Global Engineering Education Conference (EDUCON)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781509054671</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Recommendation of open educational resources. An approach based on linked open data</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/educon.2017.7943018</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/7936435/7942803/07943018.pdf?arnumber=7943018</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2017.7943018_0">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2017.7943018_1">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2017.7943018_2">
+	<family xmlns="http://search.crossref.org/ontology/">Lopez-Vargas</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jorge</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2017.7943018_3">
+	<family xmlns="http://search.crossref.org/ontology/">Tovar-Caro</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2017.7943089">
+	<collection xmlns="http://search.crossref.org/ontology/">2017 IEEE Global Engineering Education Conference (EDUCON)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2017.7943089_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2017.7943089_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2017.7943089_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2017.7943089_3"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2017.7943089_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2017-04</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/educon.2017.7943089</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2017 IEEE Global Engineering Education Conference (EDUCON)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781509054671</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">A rating system that open-data repositories must satisfy to be considered OER: Reusing open data resources in teaching</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/educon.2017.7943089</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/7936435/7942803/07943089.pdf?arnumber=7943089</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2017.7943089_0">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2017.7943089_1">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2017.7943089_2">
+	<family xmlns="http://search.crossref.org/ontology/">Lopez</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jorge</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2017.7943089_3">
+	<family xmlns="http://search.crossref.org/ontology/">Caro</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo Tovar</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2018.8363382">
+	<collection xmlns="http://search.crossref.org/ontology/">2018 IEEE Global Engineering Education Conference (EDUCON)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2018.8363382_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2018.8363382_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2018.8363382_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2018.8363382_3"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2018.8363382_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2018-04</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/educon.2018.8363382</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2018 IEEE Global Engineering Education Conference (EDUCON)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781538629574</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Discovery of potential collaboration networks from open knowledge sources</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/educon.2018.8363382</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/8360187/8363090/08363382.pdf?arnumber=8363382</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2018.8363382_0">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2018.8363382_1">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2018.8363382_2">
+	<family xmlns="http://search.crossref.org/ontology/">Lopez-Vargas</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jorge</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2018.8363382_3">
+	<family xmlns="http://search.crossref.org/ontology/">Tovar-Caro</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2018.8363473">
+	<collection xmlns="http://search.crossref.org/ontology/">2018 IEEE Global Engineering Education Conference (EDUCON)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2018.8363473_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2018.8363473_1"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2018.8363473_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2018-04</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/educon.2018.8363473</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2018 IEEE Global Engineering Education Conference (EDUCON)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781538629574</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">LOD-CS2013: Multileaming through a semantic representation of IEEE computer science curricula</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/educon.2018.8363473</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/8360187/8363090/08363473.pdf?arnumber=8363473</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2018.8363473_0">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2018.8363473_1">
+	<family xmlns="http://search.crossref.org/ontology/">Caro</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo Tovar</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725067">
+	<collection xmlns="http://search.crossref.org/ontology/">2019 IEEE Global Engineering Education Conference (EDUCON)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725067_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725067_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725067_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725067_3"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725067_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2019-04</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/educon.2019.8725067</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2019 IEEE Global Engineering Education Conference (EDUCON)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781538695067</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">A Proposal of Quality Assessment of OER Based on Emergent Technology</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/educon.2019.8725067</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/8718248/8725024/08725067.pdf?arnumber=8725067</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725067_0">
+	<family xmlns="http://search.crossref.org/ontology/">Romero-Pelaez</family>
+	<given xmlns="http://search.crossref.org/ontology/">Audrey</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725067_1">
+	<family xmlns="http://search.crossref.org/ontology/">Segarra-Faggioni</family>
+	<given xmlns="http://search.crossref.org/ontology/">Veronica</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725067_2">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725067_3">
+	<family xmlns="http://search.crossref.org/ontology/">Tovar</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725203">
+	<collection xmlns="http://search.crossref.org/ontology/">2019 IEEE Global Engineering Education Conference (EDUCON)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725203_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725203_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725203_10"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725203_11"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725203_12"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725203_13"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725203_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725203_3"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725203_4"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725203_5"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725203_6"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725203_7"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725203_8"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725203_9"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725203_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2019-04</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/educon.2019.8725203</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2019 IEEE Global Engineering Education Conference (EDUCON)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781538695067</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Do MOOCs Sustain the UNESCO’s Quality Education Goal?</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/educon.2019.8725203</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/8718248/8725024/08725203.pdf?arnumber=8725203</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725203_0">
+	<family xmlns="http://search.crossref.org/ontology/">Tovar</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725203_1">
+	<family xmlns="http://search.crossref.org/ontology/">Tabuenca</family>
+	<given xmlns="http://search.crossref.org/ontology/">Bernardo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725203_10">
+	<family xmlns="http://search.crossref.org/ontology/">Martin</family>
+	<given xmlns="http://search.crossref.org/ontology/">Sergio</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725203_11">
+	<family xmlns="http://search.crossref.org/ontology/">Castro</family>
+	<given xmlns="http://search.crossref.org/ontology/">Manuel</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725203_12">
+	<family xmlns="http://search.crossref.org/ontology/">Meier</family>
+	<given xmlns="http://search.crossref.org/ontology/">Russ</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725203_13">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725203_2">
+	<family xmlns="http://search.crossref.org/ontology/">Alzaghoul</family>
+	<given xmlns="http://search.crossref.org/ontology/">Ahmed</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725203_3">
+	<family xmlns="http://search.crossref.org/ontology/">Kloos</family>
+	<given xmlns="http://search.crossref.org/ontology/">Carlos Delgado</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725203_4">
+	<family xmlns="http://search.crossref.org/ontology/">Sluss</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jim</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725203_5">
+	<family xmlns="http://search.crossref.org/ontology/">Lopez-Rey</family>
+	<given xmlns="http://search.crossref.org/ontology/">Africa</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725203_6">
+	<family xmlns="http://search.crossref.org/ontology/">Ruiz</family>
+	<given xmlns="http://search.crossref.org/ontology/">Elena</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725203_7">
+	<family xmlns="http://search.crossref.org/ontology/">Garcia-Loro</family>
+	<given xmlns="http://search.crossref.org/ontology/">Felix</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725203_8">
+	<family xmlns="http://search.crossref.org/ontology/">Sancristobal</family>
+	<given xmlns="http://search.crossref.org/ontology/">Elio</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Feducon.2019.8725203_9">
+	<family xmlns="http://search.crossref.org/ontology/">Artacho</family>
+	<given xmlns="http://search.crossref.org/ontology/">Miguel Rodriguez</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie.2013.6684885">
+	<collection xmlns="http://search.crossref.org/ontology/">2013 IEEE Frontiers in Education Conference (FIE)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie.2013.6684885_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie.2013.6684885_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie.2013.6684885_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie.2013.6684885_3"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie.2013.6684885_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2013-10</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/fie.2013.6684885</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2013 IEEE Frontiers in Education Conference (FIE)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781467352611</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Using linked open data to improve the search of open educational resources for engineering students</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/fie.2013.6684885</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/6679339/6684765/06684885.pdf?arnumber=6684885</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie.2013.6684885_0">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie.2013.6684885_1">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie.2013.6684885_2">
+	<family xmlns="http://search.crossref.org/ontology/">Lopez</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jorge</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie.2013.6684885_3">
+	<family xmlns="http://search.crossref.org/ontology/">Tovar</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie.2014.7044050">
+	<collection xmlns="http://search.crossref.org/ontology/">2014 IEEE Frontiers in Education Conference (FIE) Proceedings</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie.2014.7044050_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie.2014.7044050_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie.2014.7044050_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie.2014.7044050_3"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie.2014.7044050_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2014-10</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/fie.2014.7044050</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2014 IEEE Frontiers in Education Conference (FIE)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781479939220</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Roadmap towards the openness of educational resources: Outcomes of the participation in the eMadrid network</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/fie.2014.7044050</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/7017968/7043978/07044050.pdf?arnumber=7044050</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie.2014.7044050_0">
+	<family xmlns="http://search.crossref.org/ontology/">Caro</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo Tovar</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie.2014.7044050_1">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie.2014.7044050_2">
+	<family xmlns="http://search.crossref.org/ontology/">Lopez-Vargas</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jorge</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie.2014.7044050_3">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie.2014.7044454">
+	<collection xmlns="http://search.crossref.org/ontology/">2014 IEEE Frontiers in Education Conference (FIE) Proceedings</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie.2014.7044454_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie.2014.7044454_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie.2014.7044454_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie.2014.7044454_3"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie.2014.7044454_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2014-10</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/fie.2014.7044454</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2014 IEEE Frontiers in Education Conference (FIE)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781479939220</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Recommendation of OERs shared in social media based-on social networks analysis approach</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/fie.2014.7044454</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/7017968/7043978/07044454.pdf?arnumber=7044454</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie.2014.7044454_0">
+	<family xmlns="http://search.crossref.org/ontology/">Lopez-Vargas</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jorge</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie.2014.7044454_1">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie.2014.7044454_2">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie.2014.7044454_3">
+	<family xmlns="http://search.crossref.org/ontology/">Tovar</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie.2015.7344314">
+	<collection xmlns="http://search.crossref.org/ontology/">2015 IEEE Frontiers in Education Conference (FIE)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie.2015.7344314_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie.2015.7344314_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie.2015.7344314_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie.2015.7344314_3"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie.2015.7344314_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2015-10</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/fie.2015.7344314</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2015 IEEE Frontiers in Education Conference (FIE)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781479984541</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">A user profile definition in context of recommendation of open educational resources. An approach based on linked open vocabularies</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/fie.2015.7344314</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/7344010/7344011/07344314.pdf?arnumber=7344314</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie.2015.7344314_0">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie.2015.7344314_1">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie.2015.7344314_2">
+	<family xmlns="http://search.crossref.org/ontology/">Lopez-Vargas</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jorge</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie.2015.7344314_3">
+	<family xmlns="http://search.crossref.org/ontology/">Tovar-Caro</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie.2016.7757660">
+	<collection xmlns="http://search.crossref.org/ontology/">2016 IEEE Frontiers in Education Conference (FIE)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie.2016.7757660_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie.2016.7757660_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie.2016.7757660_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie.2016.7757660_3"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie.2016.7757660_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2016-10</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/fie.2016.7757660</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2016 IEEE Frontiers in Education Conference (FIE)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781509017904</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Guidelines to producing structured interoperable data from Open Access Repositories</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/fie.2016.7757660</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/7749394/7757333/07757660.pdf?arnumber=7757660</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie.2016.7757660_0">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie.2016.7757660_1">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie.2016.7757660_2">
+	<family xmlns="http://search.crossref.org/ontology/">Lopez-Vargas</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jorge</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie.2016.7757660_3">
+	<family xmlns="http://search.crossref.org/ontology/">Caro</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo Tovar</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie43999.2019.9028502">
+	<collection xmlns="http://search.crossref.org/ontology/">2019 IEEE Frontiers in Education Conference (FIE)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie43999.2019.9028502_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie43999.2019.9028502_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie43999.2019.9028502_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie43999.2019.9028502_3"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie43999.2019.9028502_4"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ffie43999.2019.9028502_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2019-10</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/fie43999.2019.9028502</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2019 IEEE Frontiers in Education Conference (FIE)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781728117461</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Open Repositories as Entrepreneurship Skills Sharpener for Young Engineers and Trainers</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/fie43999.2019.9028502</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/9011701/9028348/09028502.pdf?arnumber=9028502</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie43999.2019.9028502_0">
+	<family xmlns="http://search.crossref.org/ontology/">Caro</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo Tovar</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie43999.2019.9028502_1">
+	<family xmlns="http://search.crossref.org/ontology/">Arcilla</family>
+	<given xmlns="http://search.crossref.org/ontology/">Bernardo Tabuernca</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie43999.2019.9028502_2">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie43999.2019.9028502_3">
+	<family xmlns="http://search.crossref.org/ontology/">Sicilia</family>
+	<given xmlns="http://search.crossref.org/ontology/">Ignacio Noguerol</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ffie43999.2019.9028502_4">
+	<family xmlns="http://search.crossref.org/ontology/">Gil</family>
+	<given xmlns="http://search.crossref.org/ontology/">Manuel Castro</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ficalt.2009.224">
+	<collection xmlns="http://search.crossref.org/ontology/">2009 Ninth IEEE International Conference on Advanced Learning Technologies</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ficalt.2009.224_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ficalt.2009.224_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ficalt.2009.224_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ficalt.2009.224_3"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ficalt.2009.224_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2009-07</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/icalt.2009.224</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2009 Ninth IEEE International Conference on Advanced Learning Technologies (ICALT)</event>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Open Educational Practices and Resources Based on Social Software: UTPL Experience</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/icalt.2009.224</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx5/5194137/5194138/05194287.pdf?arnumber=5194287</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ficalt.2009.224_0">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ficalt.2009.224_1">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ficalt.2009.224_2">
+	<family xmlns="http://search.crossref.org/ontology/">Tovar</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ficalt.2009.224_3">
+	<family xmlns="http://search.crossref.org/ontology/">Martinez</family>
+	<given xmlns="http://search.crossref.org/ontology/">Oscar</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ficalt.2010.64">
+	<collection xmlns="http://search.crossref.org/ontology/">2010 10th IEEE International Conference on Advanced Learning Technologies</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ficalt.2010.64_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ficalt.2010.64_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ficalt.2010.64_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ficalt.2010.64_3"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ficalt.2010.64_4"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ficalt.2010.64_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2010-07</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/icalt.2010.64</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2010 IEEE 10th International Conference on Advanced Learning Technologies (ICALT)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781424471447</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Design Study of OER-CC Ontology - A Semantic Web Approach to Describe Open Educational Resources</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/icalt.2010.64</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx5/5570018/5571093/05571257.pdf?arnumber=5571257</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ficalt.2010.64_0">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ficalt.2010.64_1">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ficalt.2010.64_2">
+	<family xmlns="http://search.crossref.org/ontology/">López</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jorge</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ficalt.2010.64_3">
+	<family xmlns="http://search.crossref.org/ontology/">Tovar</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ficalt.2010.64_4">
+	<family xmlns="http://search.crossref.org/ontology/">Martínez</family>
+	<given xmlns="http://search.crossref.org/ontology/">Oscar</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ficalt.2019.00011">
+	<collection xmlns="http://search.crossref.org/ontology/">2019 IEEE 19th International Conference on Advanced Learning Technologies (ICALT)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ficalt.2019.00011_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ficalt.2019.00011_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ficalt.2019.00011_2"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ficalt.2019.00011_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2019-07</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/icalt.2019.00011</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2019 IEEE 19th International Conference on Advanced Learning Technologies (ICALT)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781728134857</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Building Conversational Interface for Customer Support Applied to Open Campus an Open Online Course Provider</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/icalt.2019.00011</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/8809605/8820810/08820928.pdf?arnumber=8820928</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ficalt.2019.00011_0">
+	<family xmlns="http://search.crossref.org/ontology/">Herrera</family>
+	<given xmlns="http://search.crossref.org/ontology/">Andre</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ficalt.2019.00011_1">
+	<family xmlns="http://search.crossref.org/ontology/">Yaguachi</family>
+	<given xmlns="http://search.crossref.org/ontology/">Lady</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ficalt.2019.00011_2">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Finciscos.2018.00045">
+	<collection xmlns="http://search.crossref.org/ontology/">2018 International Conference on Information Systems and Computer Science (INCISCOS)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Finciscos.2018.00045_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Finciscos.2018.00045_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Finciscos.2018.00045_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Finciscos.2018.00045_3"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Finciscos.2018.00045_4"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Finciscos.2018.00045_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2018-11</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/inciscos.2018.00045</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2018 International Conference on Information Systems and Computer Science (INCISCOS)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781538676127</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">A Text Mining Methodology to Discover Syllabi Similarities among Higher Education Institutions</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/inciscos.2018.00045</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/8563038/8564492/08564537.pdf?arnumber=8564537</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Finciscos.2018.00045_0">
+	<family xmlns="http://search.crossref.org/ontology/">Orellana</family>
+	<given xmlns="http://search.crossref.org/ontology/">Gerardo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Finciscos.2018.00045_1">
+	<family xmlns="http://search.crossref.org/ontology/">Orellana</family>
+	<given xmlns="http://search.crossref.org/ontology/">Marcos</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Finciscos.2018.00045_2">
+	<family xmlns="http://search.crossref.org/ontology/">Saquicela</family>
+	<given xmlns="http://search.crossref.org/ontology/">Victor</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Finciscos.2018.00045_3">
+	<family xmlns="http://search.crossref.org/ontology/">Baculima</family>
+	<given xmlns="http://search.crossref.org/ontology/">Fernando</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Finciscos.2018.00045_4">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Finciscos.2018.00047">
+	<collection xmlns="http://search.crossref.org/ontology/">2018 International Conference on Information Systems and Computer Science (INCISCOS)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Finciscos.2018.00047_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Finciscos.2018.00047_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Finciscos.2018.00047_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Finciscos.2018.00047_3"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Finciscos.2018.00047_4"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Finciscos.2018.00047_5"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Finciscos.2018.00047_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2018-11</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/inciscos.2018.00047</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2018 International Conference on Information Systems and Computer Science (INCISCOS)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781538676127</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">A Study on the Impact of Pre-Processing Techniques in Spanish and English Text Classification over Short and Large Text Documents</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/inciscos.2018.00047</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/8563038/8564492/08564539.pdf?arnumber=8564539</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Finciscos.2018.00047_0">
+	<family xmlns="http://search.crossref.org/ontology/">Orellana</family>
+	<given xmlns="http://search.crossref.org/ontology/">Gerardo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Finciscos.2018.00047_1">
+	<family xmlns="http://search.crossref.org/ontology/">Arias</family>
+	<given xmlns="http://search.crossref.org/ontology/">Belen</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Finciscos.2018.00047_2">
+	<family xmlns="http://search.crossref.org/ontology/">Orellana</family>
+	<given xmlns="http://search.crossref.org/ontology/">Marcos</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Finciscos.2018.00047_3">
+	<family xmlns="http://search.crossref.org/ontology/">Saquicela</family>
+	<given xmlns="http://search.crossref.org/ontology/">Victor</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Finciscos.2018.00047_4">
+	<family xmlns="http://search.crossref.org/ontology/">Baculima</family>
+	<given xmlns="http://search.crossref.org/ontology/">Fernando</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Finciscos.2018.00047_5">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fithet.2015.7218024">
+	<collection xmlns="http://search.crossref.org/ontology/">2015 International Conference on Information Technology Based Higher Education and Training (ITHET)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fithet.2015.7218024_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fithet.2015.7218024_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fithet.2015.7218024_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fithet.2015.7218024_3"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fithet.2015.7218024_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2015-06</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/ithet.2015.7218024</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2015 International Conference on Information Technology Based Higher Education and Training (ITHET)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781479917563</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Promotion of self-learning by means of Open Educational Resources and semantic technologies</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/ithet.2015.7218024</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/7180537/7217955/07218024.pdf?arnumber=7218024</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fithet.2015.7218024_0">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fithet.2015.7218024_1">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fithet.2015.7218024_2">
+	<family xmlns="http://search.crossref.org/ontology/">Lopez</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jorge</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fithet.2015.7218024_3">
+	<family xmlns="http://search.crossref.org/ontology/">Caro</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo Tovar</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Flwmoocs.2018.8534632">
+	<collection xmlns="http://search.crossref.org/ontology/">2018 Learning With MOOCS (LWMOOCS)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Flwmoocs.2018.8534632_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Flwmoocs.2018.8534632_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Flwmoocs.2018.8534632_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Flwmoocs.2018.8534632_3"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Flwmoocs.2018.8534632_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2018-09</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/lwmoocs.2018.8534632</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2018 Learning With MOOCS (LWMOOCS)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781538665336</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Discovering Interaction Patterns on the Use of OERs in Open Online Courses Through the Application of Association Rules</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/lwmoocs.2018.8534632</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/8515682/8534584/08534632.pdf?arnumber=8534632</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Flwmoocs.2018.8534632_0">
+	<family xmlns="http://search.crossref.org/ontology/">Cadme</family>
+	<given xmlns="http://search.crossref.org/ontology/">Elizabeth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Flwmoocs.2018.8534632_1">
+	<family xmlns="http://search.crossref.org/ontology/">Elizalde</family>
+	<given xmlns="http://search.crossref.org/ontology/">Rene</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Flwmoocs.2018.8534632_2">
+	<family xmlns="http://search.crossref.org/ontology/">Cabrera-Loayza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Ma. Carmen</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Flwmoocs.2018.8534632_3">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Frita.2015.2486387">
+	<collection xmlns="http://search.crossref.org/ontology/">IEEE Revista Iberoamericana de Tecnologias del Aprendizaje</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Frita.2015.2486387_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Frita.2015.2486387_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Frita.2015.2486387_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Frita.2015.2486387_3"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Frita.2015.2486387_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2015-11</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/rita.2015.2486387</doi>
+	<issn xmlns="http://search.crossref.org/ontology/">1932-8540</issn>
+	<issue xmlns="http://search.crossref.org/ontology/">4</issue>
+	<page xmlns="http://search.crossref.org/ontology/">262-268</page>
+	<publisher xmlns="http://search.crossref.org/ontology/">Institute of Electrical and Electronics Engineers (IEEE)</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">OER Recommendation for Entrepreneurship Using a Framework Based on Social Network Analysis</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Journal"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/rita.2015.2486387</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/6245520/7322310/07293125.pdf?arnumber=7293125</uri>
+	<volume xmlns="http://search.crossref.org/ontology/">10</volume>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Frita.2015.2486387_0">
+	<family xmlns="http://search.crossref.org/ontology/">Lopez-Vargas</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jorge</given>
+	<orcid xmlns="http://search.crossref.org/ontology/">http://orcid.org/0000-0001-5305-7762</orcid>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Frita.2015.2486387_1">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Frita.2015.2486387_2">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Frita.2015.2486387_3">
+	<family xmlns="http://search.crossref.org/ontology/">Tovar</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751870">
+	<collection xmlns="http://search.crossref.org/ontology/">2016 International Symposium on Computers in Education (SIIE)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751870_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751870_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751870_10"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751870_11"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751870_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751870_3"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751870_4"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751870_5"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751870_6"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751870_7"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751870_8"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751870_9"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751870_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2016-09</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/siie.2016.7751870</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2016 International Symposium on Computers in Education (SIIE)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781509045969</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">eMadrid project: MOOCs and learning analytics</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/siie.2016.7751870</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/7736610/7751810/07751870.pdf?arnumber=7751870</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751870_0">
+	<family xmlns="http://search.crossref.org/ontology/">Kloos</family>
+	<given xmlns="http://search.crossref.org/ontology/">Carlos Delgado</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751870_1">
+	<family xmlns="http://search.crossref.org/ontology/">Alario-Hoyos</family>
+	<given xmlns="http://search.crossref.org/ontology/">Carlos</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751870_10">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751870_11">
+	<family xmlns="http://search.crossref.org/ontology/">Lopez</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jorge</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751870_2">
+	<family xmlns="http://search.crossref.org/ontology/">Fernandez-Panadero</family>
+	<given xmlns="http://search.crossref.org/ontology/">Carmen</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751870_3">
+	<family xmlns="http://search.crossref.org/ontology/">Estevez-Ayres</family>
+	<given xmlns="http://search.crossref.org/ontology/">Iria</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751870_4">
+	<family xmlns="http://search.crossref.org/ontology/">Munoz-Merino</family>
+	<given xmlns="http://search.crossref.org/ontology/">Pedro J.</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751870_5">
+	<family xmlns="http://search.crossref.org/ontology/">Cobos</family>
+	<given xmlns="http://search.crossref.org/ontology/">Ruth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751870_6">
+	<family xmlns="http://search.crossref.org/ontology/">Moreno</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jaime</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751870_7">
+	<family xmlns="http://search.crossref.org/ontology/">Tovar</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751870_8">
+	<family xmlns="http://search.crossref.org/ontology/">Cabedo</family>
+	<given xmlns="http://search.crossref.org/ontology/">Rosa</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751870_9">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751873">
+	<collection xmlns="http://search.crossref.org/ontology/">2016 International Symposium on Computers in Education (SIIE)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751873_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751873_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751873_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751873_3"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751873_4"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751873_5"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751873_6"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751873_7"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751873_8"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751873_9"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751873_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2016-09</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/siie.2016.7751873</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2016 International Symposium on Computers in Education (SIIE)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781509045969</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Open educational resources and standards in the eMadrid network</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/siie.2016.7751873</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/7736610/7751810/07751873.pdf?arnumber=7751873</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751873_0">
+	<family xmlns="http://search.crossref.org/ontology/">Caro</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo Tovar</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751873_1">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751873_2">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751873_3">
+	<family xmlns="http://search.crossref.org/ontology/">Lopez</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jorge</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751873_4">
+	<family xmlns="http://search.crossref.org/ontology/">Artacho</family>
+	<given xmlns="http://search.crossref.org/ontology/">Miguel Rodriguez</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751873_5">
+	<family xmlns="http://search.crossref.org/ontology/">Castro</family>
+	<given xmlns="http://search.crossref.org/ontology/">Manuel</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751873_6">
+	<family xmlns="http://search.crossref.org/ontology/">Martin</family>
+	<given xmlns="http://search.crossref.org/ontology/">Sergio</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751873_7">
+	<family xmlns="http://search.crossref.org/ontology/">Ruiz</family>
+	<given xmlns="http://search.crossref.org/ontology/">Elio San Cristobal</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751873_8">
+	<family xmlns="http://search.crossref.org/ontology/">Diaz</family>
+	<given xmlns="http://search.crossref.org/ontology/">Gabriel</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fsiie.2016.7751873_9">
+	<family xmlns="http://search.crossref.org/ontology/">Loro</family>
+	<given xmlns="http://search.crossref.org/ontology/">Felix Garcia</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ftale.2018.8615415">
+	<collection xmlns="http://search.crossref.org/ontology/">2018 IEEE International Conference on Teaching, Assessment, and Learning for Engineering (TALE)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ftale.2018.8615415_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ftale.2018.8615415_1"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Ftale.2018.8615415_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2018-12</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/tale.2018.8615415</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2018 IEEE International Conference on Teaching, Assessment, and Learning for Engineering (TALE)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781538665220</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">EntreCompOnto: An Ontology for Semantic Representation of Entrepreneurship Competences</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/tale.2018.8615415</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/8600698/8615123/08615415.pdf?arnumber=8615415</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ftale.2018.8615415_0">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Ftale.2018.8615415_1">
+	<family xmlns="http://search.crossref.org/ontology/">Caro</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo Tovar</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fte.2014.2359257">
+	<collection xmlns="http://search.crossref.org/ontology/">IEEE Transactions on Education</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fte.2014.2359257_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fte.2014.2359257_1"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1109%2Fte.2014.2359257_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2014-11</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1109/te.2014.2359257</doi>
+	<issn xmlns="http://search.crossref.org/ontology/">0018-9359</issn>
+	<issn xmlns="http://search.crossref.org/ontology/">1557-9638</issn>
+	<issue xmlns="http://search.crossref.org/ontology/">4</issue>
+	<page xmlns="http://search.crossref.org/ontology/">213-219</page>
+	<publisher xmlns="http://search.crossref.org/ontology/">Institute of Electrical and Electronics Engineers (IEEE)</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Guest Editorial: Open Educational Resources in Engineering Education: Various Perspectives Opening the Education of Engineers</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Journal"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1109/te.2014.2359257</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/13/6937232/06937240.pdf?arnumber=6937240</uri>
+	<volume xmlns="http://search.crossref.org/ontology/">57</volume>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fte.2014.2359257_0">
+	<family xmlns="http://search.crossref.org/ontology/">Tovar</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1109%2Fte.2014.2359257_1">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1145%2F1551722.1551756">
+	<collection xmlns="http://search.crossref.org/ontology/">Proceedings of the 2009 Euro American Conference on Telematics and Information Systems New Opportunities to increase Digital Citizenship - EATIS '09</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1145%2F1551722.1551756_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1145%2F1551722.1551756_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1145%2F1551722.1551756_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1145%2F1551722.1551756_3"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1145%2F1551722.1551756_4"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1145%2F1551722.1551756_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2009</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1145/1551722.1551756</doi>
+	<event xmlns="http://search.crossref.org/ontology/">the 2009 Euro American Conference</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781605583983</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">ACM Press</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Open educational practices and resources based on social software, UTPL experience</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dl.acm.org/ft_gateway.cfm?id=1551756&amp;amp;ftid=643849&amp;amp;dwn=1</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1145/1551722.1551756</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1145%2F1551722.1551756_0">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1145%2F1551722.1551756_1">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1145%2F1551722.1551756_2">
+	<family xmlns="http://search.crossref.org/ontology/">López</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jorge</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1145%2F1551722.1551756_3">
+	<family xmlns="http://search.crossref.org/ontology/">Tovar</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1145%2F1551722.1551756_4">
+	<family xmlns="http://search.crossref.org/ontology/">Martínez</family>
+	<given xmlns="http://search.crossref.org/ontology/">Oscar</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1145%2F3309772.3309804">
+	<collection xmlns="http://search.crossref.org/ontology/">Proceedings of the 2nd International Conference on Applications of Intelligent Systems  - APPIS '19</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1145%2F3309772.3309804_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1145%2F3309772.3309804_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1145%2F3309772.3309804_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1145%2F3309772.3309804_3"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1145%2F3309772.3309804_4"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1145%2F3309772.3309804_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2019</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1145/3309772.3309804</doi>
+	<event xmlns="http://search.crossref.org/ontology/">the 2nd International Conference</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781450360852</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">ACM Press</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Linked open knowledge organization systems</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dl.acm.org/ft_gateway.cfm?id=3309804&amp;ftid=2071573&amp;dwn=1</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1145/3309772.3309804</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1145%2F3309772.3309804_0">
+	<affiliation xmlns="http://search.crossref.org/ontology/">Univ. Técnica Particular de Loja, Loja, Ecuador</affiliation>
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1145%2F3309772.3309804_1">
+	<affiliation xmlns="http://search.crossref.org/ontology/">Universidad de Guayaquil, Guayaquil, Ecuador</affiliation>
+	<family xmlns="http://search.crossref.org/ontology/">Tapia-Leon</family>
+	<given xmlns="http://search.crossref.org/ontology/">Mariela</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1145%2F3309772.3309804_2">
+	<affiliation xmlns="http://search.crossref.org/ontology/">Univ. Técnica Particular de Loja, Loja, Ecuador</affiliation>
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1145%2F3309772.3309804_3">
+	<affiliation xmlns="http://search.crossref.org/ontology/">Univ. Técnica Particular de Loja, Loja, Ecuador</affiliation>
+	<family xmlns="http://search.crossref.org/ontology/">Lopez-Vargas</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jorge</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1145%2F3309772.3309804_4">
+	<affiliation xmlns="http://search.crossref.org/ontology/">Universidad Politécnica de Madrid, Madrid, Spain</affiliation>
+	<family xmlns="http://search.crossref.org/ontology/">Tovar-Caro</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1145%2F3378184.3378229">
+	<collection xmlns="http://search.crossref.org/ontology/">Proceedings of the 3rd International Conference on Applications of Intelligent Systems</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1145%2F3378184.3378229_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1145%2F3378184.3378229_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1145%2F3378184.3378229_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1145%2F3378184.3378229_3"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.1145%2F3378184.3378229_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2020-01-07</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1145/3378184</doi>
+	<doi xmlns="http://search.crossref.org/ontology/">10.1145/3378184.3378229</doi>
+	<event xmlns="http://search.crossref.org/ontology/">APPIS 2020: 3rd International Conference on Applications of Intelligent Systems</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9781450376303</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">ACM</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Application of data anonymization in Learning Analytics</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.1145/3378184.3378229</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1145%2F3378184.3378229_0">
+	<affiliation xmlns="http://search.crossref.org/ontology/">Universidad Técnica Particular de Loja, Loja, Ecuador</affiliation>
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1145%2F3378184.3378229_1">
+	<affiliation xmlns="http://search.crossref.org/ontology/">Universidad Técnica Particular de Loja, Loja, Ecuador</affiliation>
+	<family xmlns="http://search.crossref.org/ontology/">Cabrera-Loayza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Ma. Carmen</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1145%2F3378184.3378229_2">
+	<affiliation xmlns="http://search.crossref.org/ontology/">Universidad Técnica Particular de Loja, Loja, Ecuador</affiliation>
+	<family xmlns="http://search.crossref.org/ontology/">Elizalde</family>
+	<given xmlns="http://search.crossref.org/ontology/">Rene</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.1145%2F3378184.3378229_3">
+	<affiliation xmlns="http://search.crossref.org/ontology/">Universidad Técnica Particular de Loja, Loja, Ecuador</affiliation>
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.17013%2Fristi.26.104-121">
+	<collection xmlns="http://search.crossref.org/ontology/">RISTI - Revista Ibérica de Sistemas e Tecnologias de Informação</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.17013%2Fristi.26.104-121_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.17013%2Fristi.26.104-121_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.17013%2Fristi.26.104-121_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.17013%2Fristi.26.104-121_3"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.17013%2Fristi.26.104-121_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2018-03-18</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.17013/risti.26.104-121</doi>
+	<issn xmlns="http://search.crossref.org/ontology/">1646-9895</issn>
+	<page xmlns="http://search.crossref.org/ontology/">104-121</page>
+	<publisher xmlns="http://search.crossref.org/ontology/">AISTI</publisher>
+	<subject xmlns="http://search.crossref.org/ontology/">General Computer Science</subject>
+	<title xmlns="http://search.crossref.org/ontology/">Hacia la Interoperabilidad Semántica para el Manejo Inteligente y Sostenible de Territorios de Alta Biodiversidad usando SmartLand-LD</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Journal"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.17013/risti.26.104-121</uri>
+	<volume xmlns="http://search.crossref.org/ontology/">26</volume>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.17013%2Fristi.26.104-121_0">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.17013%2Fristi.26.104-121_2">
+	<family xmlns="http://search.crossref.org/ontology/">Suárez</family>
+	<given xmlns="http://search.crossref.org/ontology/">Juan Pablo</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.20868%2Fupm.thesis.44551">
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.20868%2Fupm.thesis.44551_0"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.20868%2Fupm.thesis.44551_0"/>
+	<doi xmlns="http://search.crossref.org/ontology/">10.20868/upm.thesis.44551</doi>
+	<publisher xmlns="http://search.crossref.org/ontology/">Universidad Politecnica de Madrid - University Library</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Marco de Trabajo de Interoperabilidad Semántica para la Educación Abierta : un enfoque para la Integración de Sistemas de Información de Recursos Educativos Abiertos autónomos, distribuidos y heterogéneos</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Journal"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.20868/upm.thesis.44551</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.20868%2Fupm.thesis.44551_0">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra Pullaguari</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson Oswaldo</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.21125%2Finted.2016.1641">
+	<collection xmlns="http://search.crossref.org/ontology/">INTED2016 Proceedings</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.21125%2Finted.2016.1641_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.21125%2Finted.2016.1641_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.21125%2Finted.2016.1641_2"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.21125%2Finted.2016.1641_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2016-03</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.21125/inted.2016.1641</doi>
+	<event xmlns="http://search.crossref.org/ontology/">International Technology, Education and Development Conference</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9788460856177</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IATED</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">PEDAGOGICAL CHALLENGES IN A DIGITAL WORLD</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.21125/inted.2016.1641</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.21125%2Finted.2016.1641_0">
+	<family xmlns="http://search.crossref.org/ontology/">Rivera</family>
+	<given xmlns="http://search.crossref.org/ontology/">Diana</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.21125%2Finted.2016.1641_1">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.21125%2Finted.2016.1641_2">
+	<family xmlns="http://search.crossref.org/ontology/">Iriarte</family>
+	<given xmlns="http://search.crossref.org/ontology/">Margoth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.23919%2Fcisti.2017.7975939">
+	<collection xmlns="http://search.crossref.org/ontology/">2017 12th Iberian Conference on Information Systems and Technologies (CISTI)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.23919%2Fcisti.2017.7975939_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.23919%2Fcisti.2017.7975939_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.23919%2Fcisti.2017.7975939_2"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.23919%2Fcisti.2017.7975939_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2017-06</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.23919/cisti.2017.7975939</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2017 12th Iberian Conference on Information Systems and Technologies (CISTI)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9789899843479</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Characterization of natural events and epidemics from Twitter: El Niño, Zika and Chikungunya</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.23919/cisti.2017.7975939</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/7966453/7975671/07975939.pdf?arnumber=7975939</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.23919%2Fcisti.2017.7975939_0">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.23919%2Fcisti.2017.7975939_1">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.23919%2Fcisti.2017.7975939_2">
+	<family xmlns="http://search.crossref.org/ontology/">Torres-Guarnizo</family>
+	<given xmlns="http://search.crossref.org/ontology/">Diana</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.23919%2Fcisti.2018.8399303">
+	<collection xmlns="http://search.crossref.org/ontology/">2018 13th Iberian Conference on Information Systems and Technologies (CISTI)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.23919%2Fcisti.2018.8399303_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.23919%2Fcisti.2018.8399303_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.23919%2Fcisti.2018.8399303_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.23919%2Fcisti.2018.8399303_3"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.23919%2Fcisti.2018.8399303_4"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.23919%2Fcisti.2018.8399303_5"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.23919%2Fcisti.2018.8399303_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2018-06</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.23919/cisti.2018.8399303</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2018 13th Iberian Conference on Information Systems and Technologies (CISTI)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9789899843486</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Personalized search of scholarly media: An approach based on semantic web technologies</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.23919/cisti.2018.8399303</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/8390719/8398632/08399303.pdf?arnumber=8399303</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.23919%2Fcisti.2018.8399303_0">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.23919%2Fcisti.2018.8399303_1">
+	<family xmlns="http://search.crossref.org/ontology/">Montano</family>
+	<given xmlns="http://search.crossref.org/ontology/">Fabricio</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.23919%2Fcisti.2018.8399303_2">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.23919%2Fcisti.2018.8399303_3">
+	<family xmlns="http://search.crossref.org/ontology/">Quituisaca</family>
+	<given xmlns="http://search.crossref.org/ontology/">Lilia</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.23919%2Fcisti.2018.8399303_4">
+	<family xmlns="http://search.crossref.org/ontology/">Medina</family>
+	<given xmlns="http://search.crossref.org/ontology/">Paul</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.23919%2Fcisti.2018.8399303_5">
+	<family xmlns="http://search.crossref.org/ontology/">Siguenza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Josefina</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.23919%2Fcisti.2018.8399464">
+	<collection xmlns="http://search.crossref.org/ontology/">2018 13th Iberian Conference on Information Systems and Technologies (CISTI)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.23919%2Fcisti.2018.8399464_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.23919%2Fcisti.2018.8399464_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.23919%2Fcisti.2018.8399464_2"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.23919%2Fcisti.2018.8399464_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2018-06</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.23919/cisti.2018.8399464</doi>
+	<event xmlns="http://search.crossref.org/ontology/">2018 13th Iberian Conference on Information Systems and Technologies (CISTI)</event>
+	<isbn xmlns="http://search.crossref.org/ontology/">9789899843486</isbn>
+	<publisher xmlns="http://search.crossref.org/ontology/">IEEE</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Usability of Latin American Public TV</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.23919/cisti.2018.8399464</uri>
+	<uri xmlns="http://search.crossref.org/ontology/">http://xplorestaging.ieee.org/ielx7/8390719/8398632/08399464.pdf?arnumber=8399464</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.23919%2Fcisti.2018.8399464_0">
+	<family xmlns="http://search.crossref.org/ontology/">Coronel-Salas</family>
+	<given xmlns="http://search.crossref.org/ontology/">Gabriela</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.23919%2Fcisti.2018.8399464_1">
+	<family xmlns="http://search.crossref.org/ontology/">Sanmartin</family>
+	<given xmlns="http://search.crossref.org/ontology/">Catalina Mier</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.23919%2Fcisti.2018.8399464_2">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.5753%2Fcbie.wcbie.2015.971">
+	<collection xmlns="http://search.crossref.org/ontology/">Anais dos Workshops do IV Congresso Brasileiro de Informática na Educação (CBIE 2015)</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.5753%2Fcbie.wcbie.2015.971_0"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.5753%2Fcbie.wcbie.2015.971_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2015-10-26</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.5753/cbie.wcbie.2015.971</doi>
+	<event xmlns="http://search.crossref.org/ontology/">II Workshop sobre Recursos Educativos Abiertos</event>
+	<publisher xmlns="http://search.crossref.org/ontology/">Sociedade Brasileira de Computação - SBC</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">Linked Data en Repositorios Digitales de Latinoamerica</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Proceedings"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.5753/cbie.wcbie.2015.971</uri>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.5753%2Fcbie.wcbie.2015.971_0">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.5944%2Fopenpraxis.6.2.122">
+	<collection xmlns="http://search.crossref.org/ontology/">Open Praxis</collection>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.5944%2Fopenpraxis.6.2.122_0"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.5944%2Fopenpraxis.6.2.122_1"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.5944%2Fopenpraxis.6.2.122_2"/>
+	<contributor xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.5944%2Fopenpraxis.6.2.122_3"/>
+	<creator xmlns="http://search.crossref.org/ontology/" rdf:resource="http://search.crossref.org/data/publication/10.5944%2Fopenpraxis.6.2.122_0"/>
+	<date xmlns="http://search.crossref.org/ontology/">2014-04-23</date>
+	<doi xmlns="http://search.crossref.org/ontology/">10.5944/openpraxis.6.2.122</doi>
+	<issn xmlns="http://search.crossref.org/ontology/">2304-070X</issn>
+	<issue xmlns="http://search.crossref.org/ontology/">2</issue>
+	<publisher xmlns="http://search.crossref.org/ontology/">UNED - Universidad Nacional de Educacion a Distancia</publisher>
+	<title xmlns="http://search.crossref.org/ontology/">An Architecture based on Linked Data technologies for the Integration and reuse of OER in MOOCs Context</title>
+	<type xmlns="http://search.crossref.org/ontology/" rdf:resource="http://purl.org/ontology/bibo/Journal"/>
+	<uri xmlns="http://search.crossref.org/ontology/">http://dx.doi.org/10.5944/openpraxis.6.2.122</uri>
+	<volume xmlns="http://search.crossref.org/ontology/">6</volume>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.5944%2Fopenpraxis.6.2.122_0">
+	<family xmlns="http://search.crossref.org/ontology/">Piedra</family>
+	<given xmlns="http://search.crossref.org/ontology/">Nelson</given>
+	<oneOf xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="https://search.crossref.org/search/nelson_piedra"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.5944%2Fopenpraxis.6.2.122_1">
+	<family xmlns="http://search.crossref.org/ontology/">Chicaiza</family>
+	<given xmlns="http://search.crossref.org/ontology/">Janneth Alexandra</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.5944%2Fopenpraxis.6.2.122_2">
+	<family xmlns="http://search.crossref.org/ontology/">López</family>
+	<given xmlns="http://search.crossref.org/ontology/">Jorge</given>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://search.crossref.org/data/publication/10.5944%2Fopenpraxis.6.2.122_3">
+	<family xmlns="http://search.crossref.org/ontology/">Tovar</family>
+	<given xmlns="http://search.crossref.org/ontology/">Edmundo</given>
+</rdf:Description>
+
+</rdf:RDF>

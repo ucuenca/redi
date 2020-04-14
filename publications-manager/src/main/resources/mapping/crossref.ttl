@@ -1,0 +1,186 @@
+
+@prefix r2r: <http://www4.wiwiss.fu-berlin.de/bizer/r2r/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix cr: <http://search.crossref.org/ontology/> .
+@prefix uc: <http://ucuenca.edu.ec/ontology#> .  
+@prefix scoro: <http://purl.org/spar/scoro/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix bibo: <http://purl.org/ontology/bibo/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix nature: <http://ns.nature.com/terms/>.
+
+
+uc:mapColl1 a r2r:MappingCollection;
+    r2r:prefixDefinitions "nature: <http://ns.nature.com/terms/>. vcard: <http://www.w3.org/2006/vcard/ns#> . rdfs: <http://www.w3.org/2000/01/rdf-schema#> . bibo: <http://purl.org/ontology/bibo/> . dct: <http://purl.org/dc/terms/> . scoro: <http://purl.org/spar/scoro/> . schema: <http://schema.org/> . foaf: <http://xmlns.com/foaf/0.1/> . uc: <http://ucuenca.edu.ec/ontology#> . cr: <http://search.crossref.org/ontology/> . owl: <http://www.w3.org/2002/07/owl#> ." .
+
+uc:AffN a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ cr:affiliation ?name" ;
+    r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/crossref/affiliation/',xpath:encode-for-uri(?name))" ;
+    r2r:targetPattern "?SUBJ schema:memberOf ?<urip>" ;
+    r2r:targetPattern "?<urip> foaf:name ?name" ;
+    r2r:targetPattern "?<urip> a foaf:Organization" .
+
+
+uc:NameC a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ cr:family ?fname . ?SUBJ cr:given ?gname ." ;
+    r2r:transformation "?cname = concat(?fname, ' , ', ?gname)" ;
+    r2r:targetPattern "?SUBJ foaf:name ?cname" ;
+    r2r:targetPattern "?SUBJ foaf:givenName ?gname" ;
+    r2r:targetPattern "?SUBJ foaf:familyName ?fname" ;
+    r2r:targetPattern "?SUBJ a foaf:Person"  ;
+    r2r:targetPattern "?SUBJ dct:provenance uc:Crossref" .
+
+
+uc:NameF a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ cr:family ?fname . optional { ?SUBJ cr:given ?gname . }. filter (!bound(?gname)) . " ;
+    r2r:targetPattern "?SUBJ foaf:name ?fname" ;
+    r2r:targetPattern "?SUBJ a foaf:Person"  ;
+    r2r:targetPattern "?SUBJ dct:provenance uc:Crossref" .
+
+uc:NameG a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ cr:given ?gname . optional { ?SUBJ cr:family ?fname . } . filter (!bound(?fname)) . " ;
+    r2r:targetPattern "?SUBJ foaf:name ?gname" ;
+    r2r:targetPattern "?SUBJ a foaf:Person"  ;
+    r2r:targetPattern "?SUBJ dct:provenance uc:Crossref" .
+
+
+
+uc:NameM a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ cr:orcid ?orcid" ;
+    r2r:targetPattern "?SUBJ scoro:hasORCID ?orcid" ;
+    r2r:targetPattern "?SUBJ a foaf:Person" ;
+    r2r:targetPattern "?SUBJ dct:provenance uc:Crossref" .
+
+
+uc:oneOf a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ owl:oneOf ?b" ;
+    r2r:targetPattern "?SUBJ owl:oneOf ?b" .
+
+
+uc:publicationsC a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ cr:creator ?b" ;
+    r2r:targetPattern "?b foaf:publications ?SUBJ";
+    r2r:targetPattern "?SUBJ dct:creator ?b" ;
+    r2r:targetPattern "?SUBJ dct:contributor ?b" ;
+    r2r:targetPattern "?SUBJ a bibo:AcademicArticle" ;
+    r2r:targetPattern "?SUBJ dct:provenance uc:Crossref" .
+
+
+uc:publicationsCo a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ cr:contributor ?b" ;
+    r2r:targetPattern "?b foaf:publications ?SUBJ";
+    r2r:targetPattern "?SUBJ dct:contributor ?b" ;
+    r2r:targetPattern "?SUBJ a bibo:AcademicArticle" ;
+    r2r:targetPattern "?SUBJ dct:provenance uc:Crossref" . 
+
+
+
+
+uc:publicationstitle a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ cr:title ?b" ;
+    r2r:targetPattern "?SUBJ dct:title ?b" .
+
+uc:publicationsabstr a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ cr:abstract ?b" ;
+    r2r:targetPattern "?SUBJ bibo:abstract ?b" .
+
+
+uc:pubkw a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ cr:subject ?b " ;
+    r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/crossref/keyword/',xpath:encode-for-uri(?b))" ;
+    r2r:targetPattern "?SUBJ dct:subject ?<urip>" ;
+    r2r:targetPattern "?<urip> rdfs:label ?b" .
+
+uc:publicationuri a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ cr:uri ?b" ;
+    r2r:targetPattern "?SUBJ bibo:uri ?b" .
+
+
+uc:publicationpages a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ cr:page ?b" ;
+    r2r:targetPattern "?SUBJ bibo:pages ?b" .
+
+
+uc:publicationIssue a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ cr:issue ?b" ;
+    r2r:targetPattern "?SUBJ bibo:issue ?b" .
+
+
+uc:publicationVolume a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ cr:volume ?b" ;
+    r2r:targetPattern "?SUBJ bibo:volume ?b" .
+
+
+uc:publicationIssn a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ cr:issn ?b" ;
+    r2r:targetPattern "?SUBJ bibo:issn ?b" .
+
+uc:publicationIsbn a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ cr:isbn ?b" ;
+    r2r:targetPattern "?SUBJ bibo:isbn ?b" .
+
+
+
+uc:publicationDoi a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ cr:doi ?b" ;
+    r2r:targetPattern "?SUBJ bibo:doi ?b" .
+
+
+uc:publicationLang a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ cr:language ?b" ;
+    r2r:targetPattern "?SUBJ dct:language ?b" .
+
+
+
+uc:publicationDate a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ cr:date ?b" ;
+    r2r:targetPattern "?SUBJ nature:coverDate ?b" .
+
+uc:pubpbl a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ cr:publisher ?b " ;
+    r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/crossref/publisher/',xpath:encode-for-uri(?b))" ;
+    r2r:targetPattern "?SUBJ dct:publisher ?<urip>" ;
+    r2r:targetPattern "?<urip> a foaf:Organization" ;
+    r2r:targetPattern "?<urip> rdfs:label ?b" .
+
+
+
+uc:pubjr a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ cr:collection ?b .  ?SUBJ cr:type ?t ." ;
+    r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/crossref/collection/',xpath:encode-for-uri(?b))" ;
+    r2r:targetPattern "?SUBJ dct:isPartOf ?<urip>" ;
+    r2r:targetPattern "?<urip> a ?t" ;
+    r2r:targetPattern "?<urip> rdfs:label ?b" .
+
+uc:pubconf a r2r:Mapping ;
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ cr:event ?b . " ;
+    r2r:transformation "?urip = concat('https://redi.cedia.edu.ec/crossref/conference/',xpath:encode-for-uri(?b))" ;
+    r2r:targetPattern "?SUBJ dct:isPartOf ?<urip>" ;
+    r2r:targetPattern "?<urip> a bibo:Conference" ;
+    r2r:targetPattern "?<urip> rdfs:label ?b" .

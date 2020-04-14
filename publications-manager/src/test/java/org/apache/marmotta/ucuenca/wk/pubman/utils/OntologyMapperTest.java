@@ -46,6 +46,7 @@ public class OntologyMapperTest {
   private static Model dblpModel;
   private static Model scholarModel;
   private static Model scieloModel;
+  private static Model crossrefModel;
   private static Model springerModel;
   private static Model doajModel;
   private static Model orcidModel;
@@ -55,6 +56,7 @@ public class OntologyMapperTest {
   private static InputStream dblpMapper;
   private static InputStream scholarMapper;
   private static InputStream scieloMapper;
+  private static InputStream crossrefMapper;
   private static InputStream springerMapper;
   private static InputStream doajMapper;
   private static InputStream orcidMapper;
@@ -70,6 +72,7 @@ public class OntologyMapperTest {
       dblpModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/dblp.rdf"), "", RDFFormat.RDFXML);
       scholarModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/scholar.rdf"), "", RDFFormat.RDFXML);
       scieloModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/scielo.rdf"), "", RDFFormat.RDFXML);
+      crossrefModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/crossref.rdf"), "", RDFFormat.RDFXML);
       doajModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/doaj.rdf"), "", RDFFormat.RDFXML);
       orcidModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/orcid.rdf"), "", RDFFormat.RDFXML);
       springerModel = Rio.parse(OntologyMapperTest.class.getResourceAsStream("/providers/data/springer.ttl"), "", RDFFormat.TURTLE);
@@ -83,6 +86,7 @@ public class OntologyMapperTest {
     scholarMapper = OntologyMapper.class.getResourceAsStream("/mapping/google_scholar.ttl");
     springerMapper = OntologyMapper.class.getResourceAsStream("/mapping/springer.ttl");
     scieloMapper = OntologyMapper.class.getResourceAsStream("/mapping/scielo.ttl");
+    crossrefMapper = OntologyMapper.class.getResourceAsStream("/mapping/crossref.ttl");
     doajMapper = OntologyMapper.class.getResourceAsStream("/mapping/doaj.ttl");
     orcidMapper = OntologyMapper.class.getResourceAsStream("/mapping/orcid.ttl");
     emptyMapper = new ByteArrayInputStream(new byte[]{});
@@ -204,4 +208,19 @@ public class OntologyMapperTest {
     assertEquals(resultEmptyMapperFile.size(), 0);
   }
 
+    /**
+   * Test ontology mapping of Crossref vocabulary.
+   */
+  @Test
+  public void testCrossrefOntologyMapping() throws RDFHandlerException {
+    assertEquals(crossrefModel.size(), 1539);
+    Model resultWithMapperFile = OntologyMapper.map(crossrefModel, crossrefMapper, vocabulary);
+    Model resultEmptyMapperFile = OntologyMapper.map(crossrefModel, emptyMapper, vocabulary);
+    //Rio.write(resultWithMapperFile,System.out,RDFFormat.RDFXML);
+    
+    assertEquals(resultWithMapperFile.size(), 2834);
+    assertEquals(resultEmptyMapperFile.size(), 0);
+  }
+  
+  
 }
