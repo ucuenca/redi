@@ -6,7 +6,7 @@
   "repository": "https://santteegt@bitbucket.org/ecsemanticrep/watiqay-khuska-ecuadorian-semantic-repository-for-researchers.git",
   "license": "MIT",
   "devDependencies": {
-    "bower": "^1.3.1",
+    "bower": "^1.8.8",
     "del": "^2.2.2",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.1",
