@@ -162,6 +162,8 @@ public class AuthorServiceImpl implements AuthorService {
   private static final String STR = "string";
 
   private static final String OAIPROVNAME = "Dspace";
+  
+   private static final String CERIFPROVNAME = "Cerif";
 
   private static final String OJSPROVNAME = "Ojs";
   /* @Inject 
@@ -307,17 +309,22 @@ public class AuthorServiceImpl implements AuthorService {
             //Read from mongo cache.
             extractResult = extractAuthorsORCID(l, org, endpoint);
           } else {
-
+             String min = "1";
             String[] urls = url.split(";");
             for (String u : urls) {
               e = new EndpointOAI(status, org, u, type, endpoint, mode);
-              extractResult = extractAuthorGeneric(e, "1", mode);
+              if ("cerif".equals(type)){
+                min = "0";
+              }
+              extractResult = extractAuthorGeneric(e, min , mode);
               String nametype = type;
               if (extractResult.contains("Success")) {
                 if ("oai-pmh".equals(type)) {
                   nametype = OAIPROVNAME;
                 } else if ("ojs".equals(type)) {
                   nametype = OJSPROVNAME;
+                } else if ("cerif".equals(type)) {
+                  nametype = CERIFPROVNAME;
                 }
                 String providerUri = createProvider(nametype, constantService.getAuthorsGraph(), true);
                 registerDate(org, providerUri, extractResult, nametype, constantService.getAuthorsGraph());
@@ -523,6 +530,12 @@ public class AuthorServiceImpl implements AuthorService {
                     insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, DCTERMS.IS_VERSION_OF.toString(), buildLocalURI(object, endpoint.getType(), endpoint.getName()));
                     // sparqlFunctionsService.updateAuthor(insert);
                     break;
+                    
+                   case "https://www.openaire.eu/cerif-profile/1.1/MemberOf":
+                     createproject (localResource, object , endpoint);
+                     
+                    break;
+                    
                   case "http://www.w3.org/2002/07/owl#sameAs": // If sameas found include the provenance
                     //SparqlEndpoint newEndpoint = matchWithProvenance(object);
                     /* if (newEndpoint != null) {
@@ -620,6 +633,26 @@ public class AuthorServiceImpl implements AuthorService {
 
   }
 
+  @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})        
+  private void createproject (String uri, String object , EndpointObject endpoint) throws UpdateException {
+    String query = queriesService.getPublicationDetails(object); 
+    List<HashMap> describeProject = endpoint.querySource(query);
+    String property = "";
+    String value = "";
+    for (HashMap result : describeProject) {
+      
+       if (result.containsKey("property") && result.containsKey("hasValue")) {
+          property = result.get("property").toString();
+          value = result.get("hasValue").toString();
+           executeInsert(constantService.getAuthorsGraph(), object, property, value);
+       }
+    
+    }
+    
+    executeInsert(constantService.getAuthorsGraph(), uri, "https://www.openaire.eu/cerif-profile/1.1/linksToProject", object);
+  }
+   
+  @SuppressWarnings({"PMD.AvoidDuplicateLiterals","PMD.ExcessiveMethodLength"})
   private void createDoc(String uri, String object, String type, EndpointObject e, String relation) throws UpdateException, UnsupportedEncodingException {
     if ("http://purl.org/ontology/bibo/Article".equals(type)) {
 
@@ -652,6 +685,19 @@ public class AuthorServiceImpl implements AuthorService {
               break;
             case "http://purl.org/dc/terms/subject":
               generateSubjects(object, value);
+
+              break;
+            case "http://purl.org/ontology/bibo/doi":
+              executeInsert(constantService.getAuthorsGraph(), object, BIBO.DOI.toString(), value);
+
+              break; 
+            case "http://purl.org/ontology/bibo/conference":
+              executeInsert(constantService.getAuthorsGraph(), object, BIBO.CONFERENCE.toString(), value);
+
+              break;
+              
+            case "http://purl.org/dc/terms/publisher":
+              executeInsert(constantService.getAuthorsGraph(), object, DCTERMS.PUBLISHER.toString(), value);
 
               break;
             case "http://purl.org/ontology/bibo/issn":

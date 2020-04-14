@@ -153,6 +153,11 @@ public abstract class EndpointObject implements Comparable<EndpointObject> {
 
         return configurationService.getStringConfiguration("extraction.transformation.ojs");
     }
+     
+     public String getCERIFTransfPath() {
+
+        return configurationService.getStringConfiguration("extraction.transformation.cerif");
+    }
 
     public String getOutputFilesPath() {
 

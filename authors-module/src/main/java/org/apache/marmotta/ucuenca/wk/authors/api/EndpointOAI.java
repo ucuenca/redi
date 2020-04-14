@@ -114,7 +114,10 @@ public class EndpointOAI extends EndpointObject {
             if (super.getType().equals("ojs")) { 
              folder = "OJS";
              path = this.getOJSTransfPath();
-            }else {
+            } else if (super.getType().equals("cerif")) { 
+             folder = "CERIF";
+             path = this.getCERIFTransfPath();
+            } else {
              folder = "OAI";
                path = this.getOAITransfPath();
             }

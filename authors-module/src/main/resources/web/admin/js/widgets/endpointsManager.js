@@ -61,29 +61,42 @@ function selectEndpoint(e) {
         $("tr.OAI_form").css("display", "none");
         $("tr.OJS_form").css("display", "none");
         $("tr.ORCID_form").css("display", "none");
+        $("tr.CERIF_form").css("display", "none");
     } else if ("file" == e) {
         $("tr.sparql_form").css("display", "none");
         $("tr.file_form").css("display", "block");
         $("tr.OAI_form").css("display", "none");
         $("tr.OJS_form").css("display", "none");
         $("tr.ORCID_form").css("display", "none");
+        $("tr.CERIF_form").css("display", "none");
     } else if ("oai-pmh" == e) {
         $("tr.sparql_form").css("display", "none");
         $("tr.file_form").css("display", "none");
         $("tr.OAI_form").css("display", "block");
         $("tr.OJS_form").css("display", "none");
         $("tr.ORCID_form").css("display", "none");
+        $("tr.CERIF_form").css("display", "none");
     } else if ("ojs" == e) {
         $("tr.OJS_form").css("display", "block");
         $("tr.sparql_form").css("display", "none");
         $("tr.file_form").css("display", "none");
         $("tr.OAI_form").css("display", "none");
         $("tr.ORCID_form").css("display", "none");
-    } else {
+        $("tr.CERIF_form").css("display", "none");    
+  }  else if ("cerif" == e) {
+        $("tr.CERIF_form").css("display", "block");
         $("tr.OJS_form").css("display", "none");
         $("tr.sparql_form").css("display", "none");
         $("tr.file_form").css("display", "none");
         $("tr.OAI_form").css("display", "none");
+        $("tr.ORCID_form").css("display", "none");
+    } 
+     else {
+        $("tr.OJS_form").css("display", "none");
+        $("tr.sparql_form").css("display", "none");
+        $("tr.file_form").css("display", "none");
+        $("tr.OAI_form").css("display", "none");
+        $("tr.CERIF_form").css("display", "none");
         $("tr.ORCID_form").css("display", "block");
     }
 
@@ -97,6 +110,7 @@ function cleanEndpoint() {
     $("input#endpoint_file").val("");
     $("input#endpoint_oai").val("");
     $("input#endpoint_ojs").val("");
+    $("input#endpoint_cerif").val("");
     $("input#endpoint_ad_ojs").val("");
     $('input#check_oai').prop('checked', true);
 }
@@ -123,7 +137,10 @@ function newEndpoint() {
             val1 = val1.trim() + ";" + val2.trim();
         }
         uploadOAI(type, org, val1, true);
-    } else if (type == "orcid") {
+    }  else if (type == "cerif") {
+        var val1 = $("input#endpoint_cerif").val();
+        uploadOAI(type, org, val1, false);
+    }  else if (type == "orcid") {
         uploadORCID(type, org);
     }
 
