@@ -230,6 +230,9 @@ wkhomeControllers.controller('publicationProfile', ['$scope', '$routeParams', '$
           }
             waitingDialog.hide();
              _altmetric_embed_init(); // Reload altmetrics
+             if ($scope.publication.doi){
+             window.__dimensions_embed.addBadges();
+             }
              $scope.$parent.$parent.showmodal ();
               $("body").css("overflow-x","hidden");
               $("body").css("overflow-y","hidden");
