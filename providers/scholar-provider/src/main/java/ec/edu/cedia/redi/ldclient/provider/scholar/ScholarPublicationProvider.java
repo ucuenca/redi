@@ -102,7 +102,7 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
     public static final String AUTHORS_SEARCH = "^https?://scholar\\.google\\.com/citations\\?mauthors\\=(.*)\\&hl=en\\&view_op\\=search_authors";
     public static final String PROFILE = "^https?:\\/\\/scholar\\.google\\.com\\/citations\\?user=.*";
     public static final String PUBLICATION = "^https?:\\/\\/scholar\\.google\\.com\\/citations\\?view_op=view_citation.*";
-    
+
     @Override
     protected List<String> getTypes(URI resource) {
         if (resource.stringValue().matches(PROFILE)) {
@@ -112,7 +112,7 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
         }
         return Collections.emptyList();
     }
-    
+
     @SuppressWarnings("PMD.AvoidDuplicateLiterals")
     @Override
     protected Map<String, JSoupMapper> getMappings(String resource, String requestUrl) {
@@ -147,18 +147,18 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
             postMappings.put(BIBO.NAMESPACE + "volume", new ScholarTableTextLiteralMapper("div#gsc_vcd_table .gs_scl", "gsc_vcd_field", ".gsc_vcd_value", "Volume"));
             postMappings.put(BIBO.NAMESPACE + "abstract", new ScholarAbstractTextLiteralMapper("div#gsc_vcd_table .gs_scl", "gsc_vcd_field", ".gsc_vcd_value", "Description"));
             postMappings.put(REDI.NAMESPACE + "citationCount", new ScholarCitationTextLiteralMapper("div#gsc_vcd_table .gs_scl", "gsc_vcd_field", ".gsc_vcd_value div[style] a  ", "Total citations"));
-            
+
         }
         return postMappings;
     }
-    
+
     @Override
     protected List<String> buildRequestUrl(String resourceUri, Endpoint endpoint) throws DataRetrievalException {
         profilePub.clear();
         usedProfiles.clear();
         return Collections.singletonList(resourceUri);
     }
-    
+
     private void addCount(ConcurrentHashMap<String, Set<String>> mp, String key, List<String> sz) {
         if (!sz.isEmpty()) {
             if (mp.get(key) == null) {
@@ -167,14 +167,14 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
             mp.get(key).addAll(sz);
         }
     }
-    
+
     private void remove(ConcurrentHashMap<String, Set<String>> mp, String pub) {
         for (Iterator<Map.Entry<String, Set<String>>> it = mp.entrySet().iterator(); it.hasNext();) {
             Map.Entry<String, Set<String>> next = it.next();
             next.getValue().remove(pub);
         }
     }
-    
+
     private void clearCoauthorsName(Model triples, String profile) throws RepositoryException, MalformedQueryException, QueryEvaluationException {
         Repository repo = new SailRepository(new MemoryStore());
         repo.initialize();
@@ -186,9 +186,9 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
         Person p1 = new Person();
         p1.Name = new ArrayList<>();
         p1.Name.add(nameOrg);
-        
+
         evaluaten.close();
-        
+
         TupleQueryResult evaluate = connection.prepareTupleQuery(QueryLanguage.SPARQL, "select ?p { <" + profile + "> <http://xmlns.com/foaf/0.1/publications> ?p . } ").evaluate();
         while (evaluate.hasNext()) {
             BindingSet next = evaluate.next();
@@ -228,7 +228,7 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
         connection.close();
         repo.shutDown();
     }
-    
+
     @Override
     public List<String> parseResponse(String resource, String requestUrl, Model triples, InputStream input, String contentType) throws DataRetrievalException {
         try {
@@ -239,19 +239,20 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
                 String charset = detectEncoding(new ByteArrayInputStream(data), requestUrl);
                 contentType += "; charset=" + charset;
             }
-            
+
             List<String> urls = new ArrayList<>();
             if (requestUrl.matches(AUTHORS_SEARCH)) {
                 urls = super.parseResponse(resource, requestUrl, triples, in, contentType);
                 registerAuthorProfile(resource, triples);
             } else if (requestUrl.matches(PROFILE)) {
-                String r = requestUrl.replaceAll("&cstart=.*&pagesize=.*", "");
+                String r = requestUrl.replaceAll("&hl=en&cstart=.*&pagesize=.*", "");
                 urls = super.parseResponse(r, requestUrl, triples, in, contentType);
                 //addCount(profilePub, r, urls);
             } else if (requestUrl.matches(PUBLICATION)) {
-                remove(profilePub, requestUrl);
-                urls = super.parseResponse(requestUrl, requestUrl, triples, in, contentType);
-                URI r = vf.createURI(requestUrl);
+                String requestRes = requestUrl.replaceAll("&hl=en", "");
+                remove(profilePub, requestRes);
+                urls = super.parseResponse(requestRes, requestUrl, triples, in, contentType);
+                URI r = vf.createURI(requestRes);
                 triples.add(r, BIBO.URI, r);
                 for (Iterator<Map.Entry<String, Set<String>>> it = profilePub.entrySet().iterator(); it.hasNext();) {
                     Map.Entry<String, Set<String>> next = it.next();
@@ -290,7 +291,7 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
         }
         return "utf-8";
     }
-    
+
     @Override
     protected List<String> findAdditionalRequestUrls(String resource, Document document, String requestUrl) {
         List<String> urls = new ArrayList<>();
@@ -299,7 +300,7 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
             Elements profiles = mapper.select(document);
             for (Element profile : profiles) {
                 for (Value v : mapper.map(resource, profile, vf)) {
-                    String url = String.format("%s&cstart=%s&pagesize=100", v.stringValue(), 0);
+                    String url = String.format("%s&hl=en&cstart=%s&pagesize=100", v.stringValue(), 0);
                     urls.add(url);
                 }
             }
@@ -317,20 +318,20 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
             }
             for (Element publication : publications) {
                 for (Value value : mapper.map(resource, publication, vf)) {
-                    urls.add(value.stringValue());
-                    String r = requestUrl.replaceAll("&cstart=.*&pagesize=.*", "");
+                    urls.add(value.stringValue() + "&hl=en");
+                    String r = requestUrl.replaceAll("&hl=en&cstart=.*&pagesize=.*", "");
                     addCount(profilePub, r, Lists.newArrayList(value.stringValue()));
                 }
             }
         }
         return urls;
     }
-    
+
     @Override
     public String getName() {
         return PROVIDER_NAME;
     }
-    
+
     @Override
     public String[] listMimeTypes() {
         return new String[]{"text/html"};
@@ -350,7 +351,7 @@ public class ScholarPublicationProvider extends AbstractHTMLDataProvider impleme
             Thread.currentThread().interrupt();
         }
     }
-    
+
     private void registerAuthorProfile(String resource, Model triples) {
         List<URI> profiles = new ArrayList<>();
         for (Value object : triples.filter(null, REDI.GSCHOLAR_URl, null).objects()) {
