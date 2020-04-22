@@ -26,6 +26,9 @@ import org.junit.Assume;
 import org.junit.Test;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
+import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFHandlerException;
+import org.openrdf.rio.Rio;
 
 /**
  *
@@ -33,7 +36,7 @@ import org.openrdf.repository.RepositoryException;
  */
 public class TestAcademicsKnowledgeProvider extends ProviderTestBase {
 
-    private final String apikey = "ea5d85a6c789488185bfae69efab1418";
+    private final String apikey = "3abf84865d5c426d942277f16c9c229d";
 
     /**
      * Tests the extraction of an author and his publications. This test might
@@ -46,7 +49,7 @@ public class TestAcademicsKnowledgeProvider extends ProviderTestBase {
      * @throws org.openrdf.repository.RepositoryException
      */
     @Test
-    public void testAcademicsKnowledgeAPI() throws RepositoryException {
+    public void testAcademicsKnowledgeAPI() throws RepositoryException, RDFHandlerException {
 
         String uri = "https://api.labs.cognitive.microsoft.com/academic/v1.0/evaluate?"
                 + "expr=And(Ty=%271%27,%20AuN=%27mauricio%20espinoza%27)&"

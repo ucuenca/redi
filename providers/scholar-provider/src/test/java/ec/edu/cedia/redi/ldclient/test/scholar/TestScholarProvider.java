@@ -42,7 +42,7 @@ public class TestScholarProvider extends ProviderTestBase {
      */
     @Test
     public void testScholarProfile() throws Exception {
-        String query = "arevalo+univesidad+de+cuenca";
+        String query = "carvallo+juan+univesidad+del+azuay";
         testResource(String.format(template, query), "scholar-profile.sparql");
         //ClientResponse retrieveResource = ldclient.retrieveResource(String.format(template, query));
         //Model data = retrieveResource.getData();
