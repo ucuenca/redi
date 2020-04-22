@@ -2203,7 +2203,21 @@ public class QueriesServiceImpl implements QueriesService {
 
   @Override
   public String getAuthorPubbyDate(String uri) {
-    return PREFIXES + " SELECT  ?y  (COUNT( ?publication ) as ?total)   \n"
+     return PREFIXES + " SELECT  ?y  (COUNT( distinct ?publication ) as ?total)   \n"
+            + "                WHERE {\n"
+            + "                  graph <" + con.getCentralGraph() + "> {\n"
+            + "      \n"
+            + "              <" + uri + ">  foaf:publications ?publication.  \n"
+            + "                  ?publication <http://schema.org/copyrightYear>|<http://ns.nature.com/terms/coverDate>  ?yx   .               "
+            + "         BIND (str(?yx) as ?y2) .\n" +
+"                        bind( strbefore( ?y2, '-' ) as ?y3 ).  \n" +
+"                        bind( strafter( ?y2, ' ' ) as ?y4 ). \n" +
+"                         bind( if (str(?y3)='' && str(?y4)='',?y2, if(str(?y3)='',strafter( ?y2, ' ' ),strbefore( ?y2, '-' ))) as ?y ) .\n" +
+"                          FILTER regex(?y, '^[0-9]*$')"
+            + "                  }\n"
+            + "                }  GROUP BY ?y Order by ASC(?y)";
+     
+   /* return PREFIXES + " SELECT  ?y  (COUNT( distinct ?publication ) as ?total)   \n"
             + "                WHERE {\n"
             + "                  graph <" + con.getCentralGraph() + "> {\n"
             + "      \n"
@@ -2214,7 +2228,7 @@ public class QueriesServiceImpl implements QueriesService {
             + "                   bind( if (str(?y3)='' && str(?y4)='',?y2, if(str(?y3)='',strafter( ?y2, ' ' ),strbefore( ?y2, '-' ))) as ?y ) \n"
             + "                     \n"
             + "                  }\n"
-            + "                }  GROUP BY ?y Order by ASC(?y)";
+            + "                }  GROUP BY ?y Order by ASC(?y)"; */
 
   }
 
