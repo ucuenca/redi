@@ -113,6 +113,7 @@ uc:PropYE a r2r:Mapping ;
     r2r:targetPattern "?SUBJ nature:coverDate ?a"  .
 
 
+
 uc:PropPubli a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ doaj:publisher ?a" ;

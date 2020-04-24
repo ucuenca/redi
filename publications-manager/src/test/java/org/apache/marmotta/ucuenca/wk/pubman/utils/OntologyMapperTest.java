@@ -20,11 +20,17 @@ package org.apache.marmotta.ucuenca.wk.pubman.utils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
 import org.apache.commons.io.IOUtils;
 import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openrdf.model.Model;
+import org.openrdf.model.Statement;
+import org.openrdf.model.Value;
+import org.openrdf.model.URI;
+import org.openrdf.model.ValueFactory;
+import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFParseException;
@@ -144,7 +150,7 @@ public class OntologyMapperTest {
     assertEquals(dblpModel.size(), 788);
     Model resultWithMapperFile = OntologyMapper.map(dblpModel, dblpMapper, vocabulary);
     Model resultEmptyMapperFile = OntologyMapper.map(dblpModel, emptyMapper, vocabulary);
-    assertEquals(resultWithMapperFile.size(), 694);
+    assertEquals(resultWithMapperFile.size(), 724);
     assertEquals(resultEmptyMapperFile.size(), 0);
   }
 
@@ -156,7 +162,8 @@ public class OntologyMapperTest {
     assertEquals(scholarModel.size(), 920);
     Model resultWithMapperFile = OntologyMapper.map(scholarModel, scholarMapper, vocabulary);
     Model resultEmptyMapperFile = OntologyMapper.map(scholarModel, emptyMapper, vocabulary);
-    assertEquals(resultWithMapperFile.size(), 1850);
+    
+    assertEquals(resultWithMapperFile.size(), 1909); 
     assertEquals(resultEmptyMapperFile.size(), 0);
   }
 
@@ -216,9 +223,7 @@ public class OntologyMapperTest {
     assertEquals(crossrefModel.size(), 1539);
     Model resultWithMapperFile = OntologyMapper.map(crossrefModel, crossrefMapper, vocabulary);
     Model resultEmptyMapperFile = OntologyMapper.map(crossrefModel, emptyMapper, vocabulary);
-    //Rio.write(resultWithMapperFile,System.out,RDFFormat.RDFXML);
-    
-    assertEquals(resultWithMapperFile.size(), 2834);
+    assertEquals(resultWithMapperFile.size(), 2892);
     assertEquals(resultEmptyMapperFile.size(), 0);
   }
   

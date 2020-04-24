@@ -124,7 +124,9 @@ uc:articlesPages a r2r:Mapping ;
 uc:articlesCreation a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ dblp:yearOfPublication ?t" ;
-    r2r:targetPattern "?SUBJ bibo:created ?t" .
+    r2r:targetPattern "?SUBJ bibo:created ?t"  ;
+    r2r:targetPattern "?SUBJ schema:copyrightYear ?t" .
+
 
 
 uc:uri a r2r:Mapping ;
@@ -305,7 +307,8 @@ uc:ispartofSeriesOVSpage a r2r:Mapping ;
 uc:ispartofSeriesOVSyear a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ dblp:publishedAsPartOf ?tt . ?tt dblp:yearOfPublication ?t . " ;
-    r2r:targetPattern "?SUBJ bibo:created ?t".
+    r2r:targetPattern "?SUBJ bibo:created ?t" ;
+    r2r:targetPattern "?SUBJ schema:copyrightYear ?t" .
 
 uc:Person_https a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
@@ -410,7 +413,8 @@ uc:articlesPages_https a r2r:Mapping ;
 uc:articlesCreation_https a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ dblps:yearOfPublication ?t" ;
-    r2r:targetPattern "?SUBJ bibo:created ?t" .
+    r2r:targetPattern "?SUBJ bibo:created ?t"  ;
+    r2r:targetPattern "?SUBJ schema:copyrightYear ?t" .
 
 
 uc:uri_https a r2r:Mapping ;
@@ -591,4 +595,5 @@ uc:ispartofSeriesOVSpage_https a r2r:Mapping ;
 uc:ispartofSeriesOVSyear_https a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
     r2r:sourcePattern "?SUBJ dblps:publishedAsPartOf ?tt . ?tt dblps:yearOfPublication ?t . " ;
-    r2r:targetPattern "?SUBJ bibo:created ?t".
+    r2r:targetPattern "?SUBJ bibo:created ?t" ;
+    r2r:targetPattern "?SUBJ schema:copyrightYear ?t" .

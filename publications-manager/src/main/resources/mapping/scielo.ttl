@@ -180,7 +180,11 @@ uc:publicationDate a r2r:Mapping ;
     r2r:sourcePattern "?SUBJ scielo:created ?b" ;
     r2r:targetPattern "?SUBJ bibo:created ?b" .
 
-
+uc:publicationCopyright a r2r:Mapping ; 
+    r2r:partOfMappingCollection uc:mapColl1 ;
+    r2r:sourcePattern "?SUBJ scielo:created ?created" ;
+    r2r:transformation "?cdate= [ add( xpath:string-length( xpath:substring-before( replaceAll('/','-',?created)  ,  '-')) , xpath:string-length( xpath:substring-after(replaceAll('/','-',?created) , ' '))) = 0 ?  replaceAll('/','-',?created) : [ xpath:string-length( xpath:substring-before(replaceAll('/','-',?created) ,  '-')) = 0 ?  xpath:substring-after( replaceAll('/','-',?created)  ,  ' ') : xpath:substring-before(replaceAll('/','-',?created)  ,  '-') ]   ] " ;
+    r2r:targetPattern "?SUBJ schema:copyrightYear ?'cdate'^^xsd:string" .
 
 uc:pubjr a r2r:Mapping ;
     r2r:partOfMappingCollection uc:mapColl1 ;
