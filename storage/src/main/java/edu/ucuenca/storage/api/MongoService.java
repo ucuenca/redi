@@ -33,7 +33,7 @@ public interface MongoService {
    */
   public String getAuthor(String uri);
 
-  public String getSPARQL(String qry);
+  public String getSPARQL(String qry, String format);
 
   public String getStatistics(String id);
 

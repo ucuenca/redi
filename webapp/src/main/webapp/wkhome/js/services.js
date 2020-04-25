@@ -46,7 +46,7 @@ wkhomeServices.factory('sparqlQuery', ['$resource', '$http', 'globalData',
     }
     var serverInstance = globalData.serverInstance;
     return $resource(serverInstance + 'mongo/sparql', {}, {
-      querySrv: {method: 'POST', isArray: true, transformRequest: transform, headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}}
+      querySrv: {method: 'POST', isArray: true, transformRequest: transform, headers: {'Accept':'*', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}}
     });
   }]);
 
