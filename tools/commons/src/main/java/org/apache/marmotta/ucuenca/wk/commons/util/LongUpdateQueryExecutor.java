@@ -28,7 +28,7 @@ public class LongUpdateQueryExecutor {
     private String prefix;
     private String project;
     private SparqlService sparql;
-    private static final int BULK = 1000;
+    private static final int BULK = 10000;
 
     public LongUpdateQueryExecutor(SparqlService sparql) {
         this.sparql = sparql;
