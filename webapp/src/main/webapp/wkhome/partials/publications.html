@@ -126,7 +126,7 @@
       <div class="reading-column">
         <div class="loading" ng-show="loading" ng-cloak>
           <p>{{'LOAD_SEACH_RESULTS' | translate}} ...</p>
-          <img src="/wkhome/images/ajax-loader-bar.gif" alt="Loading search results" />
+          <img src="wkhome/images/ajax-loader-bar.gif" alt="Loading search results" />
         </div>
         <div class="small" ng-show="documents.length > 0" ng-cloak>
           <div style="padding-bottom: 20px;">{{'SEARCH_RESULTS' | translate}} ({{totalResults}} {{'FOUND' | translate}})</div>
@@ -134,7 +134,7 @@
           <div class="alert alert-info" ng-show="message">{{message}}</div>
         </div>
         <article ng-repeat="doc in documents" class="document" ng-cloak>
-          <img src="/wkhome/images/journal.png" alt="type" width="12" style="margin-right: 5px"><a ng-href="{{doc['lmf.uri']}}" class="title" target="_blank"><b>{{doc.title}}</b></a>
+          <img src="wkhome/images/journal.png" alt="type" width="12" style="margin-right: 5px"><a ng-href="{{doc['lmf.uri']}}" class="title" target="_blank"><b>{{doc.title}}</b></a>
            <div class="row">
             <div class="col-lg-1" ng-show="doc['journal-img']">
               <img ng-src="{{doc['journal-img'][0]}}" alt="" height="95px">

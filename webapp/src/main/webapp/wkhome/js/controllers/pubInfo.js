@@ -125,7 +125,7 @@ wkhomeControllers.controller('pubInfoController', ['$routeParams', '$scope', '$w
                                 _.map(values, function (value) {
                                     var datastring = JSON.stringify(value);
                                     var anchor = $("<a class='relatedauthors' target='blank' onclick = 'return clickonRelatedauthor(\"" + value["@id"] + "\")'  >").text("");
-                                    anchor.append('<img src="/wkhome/images/author-ec.png" class="img-rounded" alt="Logo Cedia" width="20" height="20"        >');
+                                    anchor.append('<img src="wkhome/images/author-ec.png" class="img-rounded" alt="Logo Cedia" width="20" height="20"        >');
 
                                     anchor.append(value["rdfs:label"]);
                                     div.append(anchor);
