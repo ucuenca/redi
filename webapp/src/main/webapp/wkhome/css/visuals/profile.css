@@ -8,7 +8,7 @@
 color:#788080;
 /*background-image: url("/wkhome/images/cedia.png");*/
 /*background-image: url("/wkhome/images/logoCedia.PNG");*/
-background-image: url("/wkhome/images/Asset.png");
+background-image: url("wkhome/images/Asset.png");
 
 background-repeat: no-repeat;
 background-size: 15%;
@@ -38,7 +38,7 @@ background-position: 0vw 3vw;
   border-style: solid;
   margin-right: 10%;
   min-height: 60vh;
-  background-image: url("/wkhome/images/manos2.PNG");
+  background-image: url("wkhome/images/manos2.PNG");
   background-size: 65vh;
 /*background-color: #6600ff ; */
 
@@ -99,7 +99,7 @@ background-position: 0vw 3vw;
 
   
 #pubButton  {
-background: url(/wkhome/images/pub.png);
+background: url(wkhome/images/pub.png);
 background-repeat: no-repeat;
 background-position: 35% 50%;
 border-bottom: none;
@@ -110,7 +110,7 @@ border-right-width: 1.5px;
 #pubButton:hover  {
  /*background: url(/wkhome/images/pubactive.png);
   background-repeat: no-repeat;*/
-  background: url(/wkhome/images/pubactive.png);
+  background: url(wkhome/images/pubactive.png);
   background-repeat: no-repeat;
   background-position: 35% 50%;
   border-bottom: none;
@@ -120,7 +120,7 @@ border-right-width: 1.5px;
 
 
 #treebtn {
-background: url(/wkhome/images/tree.png);
+background: url(wkhome/images/tree.png);
 background-repeat: no-repeat;
 background-position: 35% 50%;
 border-bottom: none;
@@ -134,7 +134,7 @@ border-right-width: 1.5px;
 #treebtn:hover  {
  /*background: url(/wkhome/images/pubactive.png);
   background-repeat: no-repeat;*/
-  background: url(/wkhome/images/treeactive.png);
+  background: url(wkhome/images/treeactive.png);
   background-repeat: no-repeat;
   background-position: 35% 50%;
 
@@ -145,7 +145,7 @@ border-right-width: 1.5px;
 }
 
 #netbtn {
-background: url(/wkhome/images/red.png);
+background: url(wkhome/images/red.png);
 background-repeat: no-repeat;
 background-position: 35% 50%;
 /*border: none;*/
@@ -155,7 +155,7 @@ border-right:  none;
 }
 
 #netbtn:hover {
-background: url(/wkhome/images/redactive.png);
+background: url(wkhome/images/redactive.png);
 background-repeat: no-repeat;
 background-position: 35% 50%;
 
@@ -202,15 +202,15 @@ color: #253081;
 
 @font-face { 
   font-family: "Conduit-IT"; 
-  src: url("/wkhome/fonts/ConduitITCStd-Italic.otf") format("opentype"); ;  
+  src: url("wkhome/fonts/ConduitITCStd-Italic.otf") format("opentype"); ;  
 }
 
 @font-face { 
   font-family: "Conduit-BI"; 
-  src: url("/wkhome/fonts/ConduitITCStd-BlackItalic.otf") format("opentype"); ;  
+  src: url("wkhome/fonts/ConduitITCStd-BlackItalic.otf") format("opentype"); ;  
 }
 
 @font-face { 
   font-family: "Conduit-EL"; 
-  src: url("/wkhome/fonts/ConduitITCStd-ExtraLightIta.otf") format("opentype"); ;  
+  src: url("wkhome/fonts/ConduitITCStd-ExtraLightIta.otf") format("opentype"); ;  
 }

@@ -13,7 +13,7 @@ wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$windo
       id: author.uri
     }, function(data) {
       $scope.author = data;
-      var img = data.img == null ? "/wkhome/images/no_photo.png" : data.img;
+      var img = data.img == null ? "wkhome/images/no_photo.png" : data.img;
       $scope.author.img = img;
     });
 
@@ -68,7 +68,7 @@ wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$windo
                   var coauthor = {};
                   var authorname = typeof value["rdfs:label"] == "string" ? value["rdfs:label"] : _.first(value["rdfs:label"], 1);
                   var anchor = $("<a class='listCoauthor' target='blank' onclick='return clickonRelatedauthor(\"" + value["@id"] + "\")'  >").text("");
-                  var img = value["foaf:img"] ? value["foaf:img"]["@id"] : "/wkhome/images/author-ec.png";
+                  var img = value["foaf:img"] ? value["foaf:img"]["@id"] : "wkhome/images/author-ec.png";
                   coauthor.authorname = authorname;
                   coauthor.id = value["@id"];
                   coauthor.img = img;
