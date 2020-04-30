@@ -99,95 +99,95 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
       $locationProvider.hashPrefix('');
       $routeProvider.
                 when('/', {
-                    templateUrl: '/wkhome/partials/home.html',
+                    templateUrl: 'wkhome/partials/home.html',
                 }).
                 when('/info/about', {
-                  templateUrl: '/wkhome/partials/about.html'
+                  templateUrl: 'wkhome/partials/about.html'
                 }).
                  when('/info/work', {
-                  templateUrl: '/wkhome/partials/work.html'
+                  templateUrl: 'wkhome/partials/work.html'
                 }).
                 when('/info/sources', {
-                  templateUrl: '/wkhome/partials/sources.html'
+                  templateUrl: 'wkhome/partials/sources.html'
                 }).
                 when('/info/help', {
-                  templateUrl: '/wkhome/partials/helpact.html'
+                  templateUrl: 'wkhome/partials/helpact.html'
                 }).
                 when('/tags/cloud', {
-                  templateUrl: '/wkhome/partials/keywordsCloud.html',
+                  templateUrl: 'wkhome/partials/keywordsCloud.html',
                 }).
                 when('/cloud/group-by?area=:area', {
-                  templateUrl: '/wkhome/partials/groupbyCloud.html',
+                  templateUrl: 'wkhome/partials/groupbyCloud.html',
                 }).
                 when('/cloud/group-by', {
-                  templateUrl: '/wkhome/partials/groupbyCloud.html',
+                  templateUrl: 'wkhome/partials/groupbyCloud.html',
                 }).
                 when('/view/map', {
-                  templateUrl: '/wkhome/partials/map.html',
+                  templateUrl: 'wkhome/partials/map.html',
                 }).
                 when('/cloud/clusters', {
-                  templateUrl: '/wkhome/partials/clusterGroupByCloud.html',
+                  templateUrl: 'wkhome/partials/clusterGroupByCloud.html',
                 }).
                 when('/info/statistics', {
-                  templateUrl: '/wkhome/partials/statistics.html',
+                  templateUrl: 'wkhome/partials/statistics.html',
                 }).
                 when('/info/statisticsbyInst/:inst*', {
-                  templateUrl: '/wkhome/partials/statisticsbyInst.html',
+                  templateUrl: 'wkhome/partials/statisticsbyInst.html',
                 }).
                 when('/info/statisticsbyAuthor/:author*', {
-                  templateUrl: '/wkhome/partials/statisticsbyAuthor.html',
+                  templateUrl: 'wkhome/partials/statisticsbyAuthor.html',
                 }).
                  when('/info/publication/:pub*', {
-                  templateUrl: '/wkhome/partials/publicationProfile.html',
+                  templateUrl: 'wkhome/partials/publicationProfile.html',
                 }).
                 when('/view/datacube', {
-                  templateUrl: '/wkhome/partials/dataCube.html',
+                  templateUrl: 'wkhome/partials/dataCube.html',
                 }).
                 when('/author/publications/:query*/author/:authorId*', {
-                  templateUrl: '/wkhome/partials/publications.html',
+                  templateUrl: 'wkhome/partials/publications.html',
                 }).
                 when('/search/publications/:query*', {
-                  templateUrl: '/wkhome/partials/publications.html',
+                  templateUrl: 'wkhome/partials/publications.html',
                 }).
                 when('/author/tree/:text*', {
-                  templateUrl: '/wkhome/partials/search.html',
+                  templateUrl: 'wkhome/partials/search.html',
                 }).
                 when('/author/network/:authorId*', {
-                  templateUrl: '/wkhome/partials/genericRelatedAuthor.html',
+                  templateUrl: 'wkhome/partials/genericRelatedAuthor.html',
                 }).
                 when('/author/profileval/:authorId*', {
-                  templateUrl: '/wkhome/partials/authorVal.html',
+                  templateUrl: 'wkhome/partials/authorVal.html',
                 }).
                 when('/author/profile/:author*', {
-                  templateUrl: '/wkhome/partials/authorProfile.html',
+                  templateUrl: 'wkhome/partials/authorProfile.html',
                  // controller: 'AuthorProfile'
                 }).
                 when('/group/area', {
-                  templateUrl: '/wkhome/partials/genericSubClusterGraph.html',
+                  templateUrl: 'wkhome/partials/genericSubClusterGraph.html',
                 }).
                 when('/oauth/callback/code/:code*/state/:state*', {
-                  templateUrl: '/wkhome/partials/callback.html',
+                  templateUrl: 'wkhome/partials/callback.html',
                 }).
                         
                 when('/:lang/w/search?:text', {//when user search an author in textbox
-                    templateUrl: '/wkhome/partials/search.html',
+                    templateUrl: 'wkhome/partials/search.html',
                     //      controller: 'ExploreController'
                 }).
                 when('/:lang/w/listAllText', {
-                    templateUrl: '/wkhome/partials/listPublications.html', //'/wkhome/partials/searchListPublications.html',
+                    templateUrl: 'wkhome/partials/listPublications.html', //'/wkhome/partials/searchListPublications.html',
                 }).
                 when('/:lang/w/clusters?:text', {
-                    templateUrl: '/wkhome/partials/clustersCloud.html',
+                    templateUrl: 'wkhome/partials/clustersCloud.html',
                 }).
                 when('/:lang/b/', {
-                    templateUrl: '/wkhome/partials/geoplain.html',
+                    templateUrl: 'wkhome/partials/geoplain.html',
                     controller: 'worldPath'
                 }).
                 when('/:lang/d3/:geoId.json', {
-                    templateUrl: '/wkhome/partials/phone-detail.html',
+                    templateUrl: 'wkhome/partials/phone-detail.html',
                 }).
                 when('/:lang/cloud/keywords', {
-                    templateUrl: '/wkhome/partials/clusterKeywordsCloud.html',
+                    templateUrl: 'wkhome/partials/clusterKeywordsCloud.html',
                 }).
                 otherwise({
                     redirectTo: '/'
@@ -201,7 +201,7 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
 
     wkhomeApp.config(["$translateProvider", function ($translateProvider) {
       $translateProvider.useStaticFilesLoader({
-          prefix: '/wkhome/translations/locale-',
+          prefix: 'wkhome/translations/locale-',
           suffix: '.json'
       });
       // $translateProvider.translations("en", wkhomeApp.labels_en);

@@ -144,7 +144,7 @@
       <div class="reading-column">
         <div class="loading" ng-show="loading" ng-cloak>
           <p>{{'LOAD_SEACH_RESULTS' | translate}} ...</p>
-          <img src="/wkhome/images/ajax-loader-bar.gif" alt="Loading search results" />
+          <img src="wkhome/images/ajax-loader-bar.gif" alt="Loading search results" />
         </div>
           <div ng-show="documents.length == 0" ng-cloak> <h2>No hay resultados</h2> </div>
         <div class="small" ng-show="documents.length > 0" ng-cloak>
@@ -153,7 +153,7 @@
           <div class="alert alert-info" ng-show="message">{{message}}</div>
         </div>
         <article ng-repeat="doc in documents" class="document" ng-cloak>
-          <img src="/wkhome/images/journal.png" alt="type" width="12" style="margin-right: 5px">
+          <img src="wkhome/images/journal.png" alt="type" width="12" style="margin-right: 5px">
           <!--<a ng-href="{{doc['lmf.uri']}}" class="title" target="_blank"><b>{{doc.title}}</b></a> -->
           <a ng-click=" openmodal(doc['lmf.uri'])" class="title" ><b>{{doc.title}}</b></a>
            <div class="row">

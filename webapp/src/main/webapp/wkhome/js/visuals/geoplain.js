@@ -64,7 +64,7 @@ myChart.directive('geoPlain', ["d3", 'd3JSON',
 				    .attr("dy", ".71em")
 				    .text(function(d) { return d.key; });
 				//var test = d3JSON.query();
-				d3.json("/wkhome/d3/world-50m.json", function(error, world) {
+				d3.json("wkhome/d3/world-50m.json", function(error, world) {
 				//d3.json("http://bl.ocks.org/mbostock/raw/4090846/world-50m.json", function(error, world) {
 				  if (error) throw error;
 

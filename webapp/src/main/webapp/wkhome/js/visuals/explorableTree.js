@@ -132,7 +132,7 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                                     if (value["rdfs:label"] && value["uc:total"]["@value"]) {
                                         var authorname = typeof value["rdfs:label"] == "string" ? value["rdfs:label"] : _.first(value["rdfs:label"], 1);
                                         var anchor = $("<a class='relatedauthors' target='blank' onclick = 'return clickonRelatedauthor(\"" + value["@id"] + "\")'  >").text("");
-                                        var img = value["foaf:img"] ? value["foaf:img"]["@id"] : "/wkhome/images/author-ec.png";
+                                        var img = value["foaf:img"] ? value["foaf:img"]["@id"] : "wkhome/images/author-ec.png";
                                         anchor.append('<img src="' + img + '" class="img-rounded" alt="Logo Cedia" width="20" height="20"        >');
                                         anchor.append(authorname + "(" + value["uc:total"]["@value"] + ")");
                                         div.append(anchor);
@@ -494,11 +494,11 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                           var publication = _.findWhere(compacted["@graph"], {"@type": "bibo:AcademicArticle"});
                           var journal = _.findWhere(compacted["@graph"], {"@type": "bibo:Journal"});
                           var exportpath = location.protocol+ '//' + location.host + location.pathname + "resource?uri=" + publication["@id"] + "&format={0}";
-                          var formats = [{url: String.format(exportpath,"application/rdf%2Bjson"), label: "RDF/JSON", img: "/wkhome/images/rdf-json.png"} ,
-                          {url: String.format(exportpath, "application/rdf%2Bxml"), label: "RDF/XML", img: "/wkhome/images/rdf-xml.png"},
-                          {url: String.format(exportpath, "text/turtle"), label: "Turtle", img: "/wkhome/images/turtle.png"},
-                          {url: String.format(exportpath, "text/rdf%2Bn3"), label: "N3", img: "/wkhome/images/n3.png"},
-                          {url: String.format(exportpath, "application/ld%2Bjson"), label: "JSON-LD", img: "/wkhome/images/json-ld.png"}];
+                          var formats = [{url: String.format(exportpath,"application/rdf%2Bjson"), label: "RDF/JSON", img: "wkhome/images/rdf-json.png"} ,
+                          {url: String.format(exportpath, "application/rdf%2Bxml"), label: "RDF/XML", img: "wkhome/images/rdf-xml.png"},
+                          {url: String.format(exportpath, "text/turtle"), label: "Turtle", img: "wkhome/images/turtle.png"},
+                          {url: String.format(exportpath, "text/rdf%2Bn3"), label: "N3", img: "wkhome/images/n3.png"},
+                          {url: String.format(exportpath, "application/ld%2Bjson"), label: "JSON-LD", img: "wkhome/images/json-ld.png"}];
 
                           /**
                           * Get only a element in string format when there's a list,
@@ -539,39 +539,39 @@ explorableTree.directive('explorableTree', ['d3', 'globalData', 'sparqlQuery', '
                             if (url.indexOf("scholar.google.com") !== -1) {
                               val["source"] = "scholar";
                               val["label"] = "Google Scholar";
-                              val["img"] = "/wkhome/images/scholar.png";
+                              val["img"] = "wkhome/images/scholar.png";
                             } else if (url.indexOf("academic.microsoft.com") !== -1) {
                               val["source"] = "academics";
                               val["label"] = "Academics Knowledge";
-                              val["img"] = "/wkhome/images/academics.png";
+                              val["img"] = "wkhome/images/academics.png";
                             } else if (url.indexOf("dblp.com") !== -1) {
                               val["source"] = "dblp";
                               val["label"] = "DBLP";
-                              val["img"] = "/wkhome/images/dblp.png";
+                              val["img"] = "wkhome/images/dblp.png";
                             } else if (url.indexOf("scopus.com") !== -1) {
                               val["source"] = "scopus";
                               val["label"] = "Scopus";
-                              val["img"] = "/wkhome/images/scopus.png";
+                              val["img"] = "wkhome/images/scopus.png";
                             } else if (url.indexOf("researchgate.net") !== -1) {
                               val["source"] = "research-gate";
                               val["label"] = "Research Gate";
-                              val["img"] = "/wkhome/images/researchgate.png";
+                              val["img"] = "wkhome/images/researchgate.png";
                             }else if (url.indexOf("latindex.org") !== -1) {
                               val["source"] = "latindex";
                               val["label"] = "Latindex";
-                              val["img"] = "/wkhome/images/latindex.jpg";
+                              val["img"] = "wkhome/images/latindex.jpg";
                             } else if (url.indexOf("springer.com") !== -1) {
                               val["source"] = "springer";
                               val["label"] = "Springer";
-                              val["img"] = "/wkhome/images/springer.png";
+                              val["img"] = "wkhome/images/springer.png";
                             } else if (url.indexOf("pdf") !== -1) {
                               val["source"] = "pdf";
                               val["label"] = "PDF source";
-                              val["img"] = "/wkhome/images/pdf.png";
+                              val["img"] = "wkhome/images/pdf.png";
                             } else {
                               val["source"] = "web";
                               val["label"] = "Web source";
-                              val["img"] = "/wkhome/images/world.png";
+                              val["img"] = "wkhome/images/world.png";
                             }
                             return val;
                           };

@@ -105,7 +105,7 @@ wkhomeControllers.controller('PublicationsController', ['$scope', '$window', 'gl
                         });
                         author = {};
                         author.name = typeof (entity["foaf:name"]) === 'string' ? entity["foaf:name"] : _.first(entity["foaf:name"]);
-                        author.photo = entity["foaf:img"] ? unique(entity["foaf:img"]["@id"]) : '/wkhome/images/no_photo.png';
+                        author.photo = entity["foaf:img"] ? unique(entity["foaf:img"]["@id"]) : 'wkhome/images/no_photo.png';
                         author.institutions = [];
                         _.each(entity["schema:memberOf"], function (v) {
                             var provenance = typeof (v) === 'object' ?
