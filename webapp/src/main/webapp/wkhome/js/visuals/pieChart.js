@@ -9,7 +9,7 @@ pieChart.directive('pieChart', ["d3", "globalData", "sparqlQuery",
     function (d3, globalData, sparqlQuery) {
 
         //  we  will    soon    implement   this    function
-        var draw = function draw(svg, width, height, entityName, data, scope) {
+        var draw = function draw(svg, width, height, entityName, data, stats, scope) {
             var outerRadius = height / 1.7,
                     innerRadius = outerRadius / 10,
                     cornerRadius = 10;
@@ -109,11 +109,11 @@ pieChart.directive('pieChart', ["d3", "globalData", "sparqlQuery",
                          console.log ("key");
                         console.log (key);
                          console.log (d);
-                          if (entityName === 'Articles' || entityName === 'Researchers')
-                       {
-                             window.location.href = "/#/info/statisticsbyInst/"+key;
+                          if (stats == 'areas')
+                       {   window.location.href = "/#/group/area?cluster="+key;
+                             
                        }else {
-                            window.location.href = "/#/info/statisticsbyInst/"+key;
+                            indow.location.href = "/#/info/statisticsbyInst/"+key;
 
                        }
 
@@ -286,8 +286,9 @@ pieChart.directive('pieChart', ["d3", "globalData", "sparqlQuery",
                         var data = scope.data;
                         if (data) {
                             var entityName = data.entityName;
+                            var stats = data.statsName;
                             data = data.data;
-                            draw(svg, width, height, entityName, data, scope);
+                            draw(svg, width, height, entityName, data, stats, scope);
                         }
                     }, true);
 

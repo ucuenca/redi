@@ -11,15 +11,18 @@ wkhomeControllers.controller('countResearchAreas', ['$routeParams', '$scope', 'g
       var endpoints = data['@graph'];
       var dataToSend = []
       endpoints.forEach(function(endpoint) {
+        var uri = endpoint['@id'];
         var label = endpoint['uc:name'].hasOwnProperty('@value') ? endpoint['uc:name']['@value'] : endpoint['uc:name'] ;
         var value = endpoint['uc:total'].length > 1 ? endpoint['uc:total'][0]['@value'] : endpoint['uc:total']['@value'];
         dataToSend.push({
+          uri : uri,
           label: label,
           value: value
         });
       });
       $scope.data = {
         'entityName': 'Researchers',
+        'statsName': 'areas',
         'data': _.last(_.sortBy(dataToSend, function(d) { return parseInt(d.value); }), 22)
       };
     });

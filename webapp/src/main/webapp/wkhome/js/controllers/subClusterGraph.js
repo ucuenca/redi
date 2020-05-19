@@ -25,7 +25,7 @@ wkhomeControllers.controller('subCluster', ['$scope', '$window', 'globalData', '
         }
       });
     
-      if (subcluster){
+      if (cluster || subcluster){
         $scope.changeCombo();        
       }
 
