@@ -58,7 +58,8 @@
     "tagcanvas": "bower-tagcanvas#^1.0.0",
     "bootstrap-select": "^1.13.10",
     "ng-bootstrap-select": "^0.5.0",
-    "angular-ui-select": "^0.19.8"
+    "angular-ui-select": "^0.19.8",
+    "angular-easy-social-share": "^1.0.2"
   },
   "resolutions": {
     "angular-animate": "1.6.4",

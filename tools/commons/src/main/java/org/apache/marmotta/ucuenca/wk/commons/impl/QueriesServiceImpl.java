@@ -2123,17 +2123,17 @@ public class QueriesServiceImpl implements QueriesService {
 
   @Override
   public String getClustersbyInst(String uri) {
-    return PREFIXES + "SELECT ?area ?nameng (COUNT(DISTINCT ?author) as ?total)      WHERE {  \n"
+    return PREFIXES + "SELECT ?area (SAMPLE(?namengs) as ?nameng) (COUNT(DISTINCT ?author) as ?total)      WHERE {  \n"
             + "  GRAPH <" + con.getCentralGraph() + "> {\n"
             + "  ?author schema:memberOf  <" + uri + "> \n"
             + "          }\n"
             + "                GRAPH <" + con.getClusterGraph() + "> {\n"
             + "                  ?area a uc:Cluster;\n"
-            + "                   rdfs:label ?nameng .\n"
-            + "                  FILTER( lang(?nameng) = 'en') .\n"
+            + "                   rdfs:label ?namengs .\n"
+            + "                  FILTER( lang(?namengs) = 'en') .\n"
             + "                   ?author dct:isPartOf ?area.\n"
             + "                  }\n"
-            + "                } GROUP BY ?area ?nameng   Order by DESC(?total)";
+            + "                } GROUP BY ?area   Order by DESC(?total)";
 
   }
 

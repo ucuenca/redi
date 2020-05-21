@@ -223,3 +223,8 @@ ul.dashed > li:before {
   font-family: "MyriadP"; 
   src: url("../fonts/MyriadPro-Regular.otf") format("opentype"); ;  
 }
+
+/* REDES SOCIALES*/
+.td-easy-social-share a {
+  margin: 1px;
+}
