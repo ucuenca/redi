@@ -1,9 +1,8 @@
 
-<hr>
-<hr>
+
 <!--<div class='col-md-2' ng-include="'/wkhome/partials/mainmenu.html'"/> -->
 
-<div class="col-md-12" style="display: contents;">
+<div class="container-fluid" style="margin-top: 10px;">
 
     <div class="row">
 
@@ -12,27 +11,27 @@
 
 
 
-                <h2 class="text-success ">
+                <h3 class="colorblue">
                     {{'Location by Research Area'| translate}}  <br>
 
-                </h2>
+                </h3>
                 <hr>
 
-                <h3 class="text-primary">{{'Research Area'| translate }}</h3><h3 class="tag" style="color: #B18904"></h3>
+                <h4 class="text-primary">{{'Research Area'| translate }}</h3><h3 class="tag" style="color: #B18904"></h4>
                 <br>
-                <h3 class="text-primary">{{'Total Autores'| translate }}</h3><h3 class="total" style="color: #B18904"></h3>
+                <h4 class="text-primary">{{'Total Autores'| translate }}</h3><h3 class="total" style="color: #B18904"></h4>
                 <hr>
-                <h3 class="text-primary">{{'Institute'| translate}}</h3><h3 class="name" style="color: #B18904"></h3>
+                <h4 class="text-primary">{{'Institute'| translate}}</h3><h3 class="name" style="color: #B18904"></h4>
                 <br>
-                <h3 class="text-primary">{{'Full Name'| translate}}</h3><h3 class="fullname" style="color: #B18904"></h3>
+                <h4 class="text-primary">{{'Full Name'| translate}}</h3><h3 class="fullname" style="color: #B18904"></h4>
                 <br>
-                <h3 class="text-primary">{{'City'| translate }}</h3><h3 class="city" style="color: #B18904"></h3>
+                <h4 class="text-primary">{{'City'| translate }}</h3><h3 class="city" style="color: #B18904"></h4>
                 <br>
-                <h3 class="text-primary">{{'Province'| translate }}</h3><h3 class="province" style="color: #B18904"></h3>
+                <h4 class="text-primary">{{'Province'| translate }}</h3><h3 class="province" style="color: #B18904"></h4>
                 <br>
-                <h3 class="text-primary">{{'Latitude'| translate}}</h3><h3 class="latitude" style="color: #B18904"></h3>
+                <h4 class="text-primary">{{'Latitude'| translate}}</h3><h3 class="latitude" style="color: #B18904"></h4>
                 <br>
-                <h3 class="text-primary">{{'Longitude'| translate}}</h3><h3 class="longitude" style="color: #B18904"></h3>
+                <h4 class="text-primary">{{'Longitude'| translate}}</h3><h3 class="longitude" style="color: #B18904"></h4>
 
             </div>
 
@@ -40,13 +39,13 @@
 
                <div class="col-md-7">
                  <div class="col-md-5">
-                <h3 class="text-success">{{'Select Research Area'| translate}}:</h3>
+                <h4 class="colorcian">{{'Select Research Area'| translate}}:</h4>
                 <select class="form-control" name="board" id="board" ng-model="selectedTagItem"  ng-options="key.id as key.value for key  in relatedtags">
                     <option value="">Select Theme</option>
                 </select>
                 </div>
                  <div class="col-md-5">
-                <h3 class="text-success"> Pais:</h3>
+                <h4 class="colorcian"> Pais:</h4>
                 <select class="form-control"  name="co" ng-change="changeCountry()" ng-model="mapOptions" id="country"  ng-options="key.id as key.value for key  in countryoptions">
                       <option value="">Select Country</option> 
                  <!--   <option value="ec" >Ecuador</option>

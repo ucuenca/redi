@@ -36,3 +36,31 @@ z-index: 100;
  background-color: lightgray;
 
 }
+
+.centered {
+text-align: center;
+
+}
+
+.centered > div {
+ float: none;
+ display: inline-block;
+ margin-bottom: 20px;
+
+
+}
+
+.footnotebar {
+
+background-color: #0083db;
+color: white;
+min-height: 70px;
+display: flex;
+align-items: center;
+}
+
+.socialshare > div > a > img {
+	max-height: 15px;
+}
+
+/*style="width:33.3%;float: left;display: flex;align-items: center;justify-content: center;height: 60%;vertical-align: middle;"*/

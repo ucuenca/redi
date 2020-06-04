@@ -1,7 +1,8 @@
 {
-  "HOME":"Home",
-  "ABOUT":"About",
-  "HELP":"Help",
+  "HOME":"HOME",
+  "ABOUT":"ABOUT",
+  "WORKS":"HOW WORK",
+  "HELP":"HELP",
   "SEARCH":"Search",
   "SOURCES": "Data Sources",
   "SEARCH_RESULTS":"Search Results",

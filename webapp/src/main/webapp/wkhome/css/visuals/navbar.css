@@ -3,11 +3,12 @@
 }
 
 nav.navbar ul.dropdown-menu {
-  font-family: MyriadP;
-  font-size: 0.9vw;
+  font-family: "G-M";
+  font-size: 0.8vw;
+  
 
 }
-.navbar { margin-bottom:0px !important; font-size: 0.9vw; font-family : "MyriadP"; }
+.navbar { margin-bottom:0px !important; font-size: 0.8vw; font-family : "G-B"; }
 /*.carousel-caption { margin-top:0px !important }*/
 .navbar-right {
   margin-right: 0px;
@@ -51,6 +52,11 @@ padding-inline: 10px;
 
 }*/
 
+.navbarcolor {
+ background-color: #0083db;
+ color: #0089db;
+}
+
  /* Work around for active class in navbar items. It works for dropdown menu */
 .navbar-static-top .navbar-nav > .active>a,
 .navbar-static-top .navbar-nav > .active>a:focus,
@@ -59,13 +65,18 @@ padding-inline: 10px;
 .dropdown-menu > .active > a:focus,
 .dropdown-menu > .active > a:hover {
   color: #fff;
-  background-color: #c7c8cc;
+  background-color: #0089db;
   /*background-color: #b2b3b6;*/
 }
 
-.dropdown-menu > li > a,
+
+.nav .open > a {
+ background-color: #0089db;
+}
+
 .nav > li > a {
-  color: #4a4d54;
+ /* color: #4a4d54;*/
+ color : white;
 }
 
 
@@ -75,7 +86,7 @@ padding-inline: 10px;
 
 .navbar-toggle .icon-bar,
 .navbar-toggle .icon-bar:hover {
-  background-color: #4a4d54; /* Changes regular toggle color */
+  background-color: #0089db; /*#4a4d54; /* Changes regular toggle color */
 }
 
 .navdiv {
@@ -121,6 +132,8 @@ padding-inline: 10px;
        float: right;
        color: #fff;
     }
+
+  
     .navbar-text {
         float: none;
         margin: 15px 0;
@@ -141,6 +154,10 @@ padding-inline: 10px;
         
     }
 
+   .navbar-nav > li >  a:focus, .navbar-nav > li >  a:hover {
+      background-color:   #0089db !important;
+
+    }
 
     .navbar-nav .dropdown {margin-right: 5px ;
     }

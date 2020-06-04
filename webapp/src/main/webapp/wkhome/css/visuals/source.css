@@ -25,7 +25,7 @@ h3.source.text-success {
 .source.authors th {
     
    text-align: center;
-   background-color: #DDD;
+  background-color: #21C1D2;
     
 }
 
@@ -120,5 +120,6 @@ h3.source.text-success {
 }
 
 .authors    {
-  font-family: Conduit-MI !important;
+  /*font-family: Conduit-MI !important;*/
+  font-family: G-M;
 }

@@ -1,5 +1,56 @@
 /* app css stylesheet */
 
+html{
+  background-color:  white;
+}
+
+body{
+    color:#494d53;
+    font-family: G-Book;
+}
+
+
+h1 {
+  font-family: G-Bl;
+
+}
+
+h2 {
+ font-family: G-B;
+}
+
+h3 {
+  font-family: G-M;
+}
+
+h4 {
+  font-family: G-M;
+}
+
+h5 {
+  font-family: G-M;
+}
+
+p {
+  font-family: G-Book;
+  color:#494d53;
+  text-align: justify;
+}
+
+
+b {
+   font-family: G-M;
+}
+
+.colorblue {
+  color:#252881;
+}
+
+.colorcian {
+  color:#21C1D2 ;
+}
+
+
 
 .header {
     width: 100%;
@@ -171,6 +222,33 @@ ul.dashed > li:before {
   text-indent: -5px;
 }
 
+@font-face { 
+  font-family: "G-Bl"; 
+  src: url("../fonts/Gotham/Gotham-Black.otf") format("opentype"); ;  
+}
+
+
+@font-face { 
+  font-family: "G-B"; 
+  src: url("../fonts/Gotham/Gotham-Bold.otf") format("opentype"); ;  
+}
+
+
+@font-face { 
+  font-family: "G-M"; 
+  src: url("../fonts/Gotham/Gotham-Medium.otf") format("opentype"); ;  
+}
+
+
+@font-face { 
+  font-family: "G-L"; 
+  src: url("../fonts/Gotham/Gotham-Light.otf") format("opentype"); ;  
+}
+
+@font-face { 
+  font-family: "G-Book"; 
+  src: url("../fonts/Gotham/Gotham-Book.otf") format("opentype"); ;  
+}
 
 
 
@@ -223,6 +301,7 @@ ul.dashed > li:before {
   font-family: "MyriadP"; 
   src: url("../fonts/MyriadPro-Regular.otf") format("opentype"); ;  
 }
+
 
 /* REDES SOCIALES*/
 .td-easy-social-share a {
