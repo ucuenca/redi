@@ -14,8 +14,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Person;
+import org.apache.marmotta.ucuenca.wk.commons.util.BoundedExecutor;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.model.vocabulary.OWL;
@@ -24,6 +27,7 @@ import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.sparql.SPARQLRepository;
 
 /**
@@ -36,7 +40,7 @@ public class SameAsVIVO {
    * @param args the command line arguments
    */
   public static void main(String[] args) throws Exception {
-    SPARQLRepository data = new SPARQLRepository("http://201.159.222.25:8180/repositories/" + "test_projs", "http://201.159.222.25:8180/repositories/" + "test_projs" + "/statements");
+    final SPARQLRepository data = new SPARQLRepository("http://201.159.222.25:8180/repositories/" + "test_projs", "http://201.159.222.25:8180/repositories/" + "test_projs" + "/statements");
     ConcurrentHashMap<String, String> additionalHttpHeaders = new ConcurrentHashMap<>();
     additionalHttpHeaders.put("Accept", "application/sparql-results+json,*/*;q=0.9");
     data.setAdditionalHttpHeaders(additionalHttpHeaders);
@@ -46,12 +50,12 @@ public class SameAsVIVO {
             + "PREFIX dct: <http://purl.org/dc/terms/>\n"
             + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
             + "select distinct ?o ?p ?o_n ?first ?last {\n"
-            + "	graph <https://redi.cedia.edu.ec/context/vivo> {\n"
+            + "	graph <https://redi.cedia.edu.ec/context/vivoNew> {\n"
             + "        ?r a <http://vivoweb.org/ontology/core#FacultyPosition>.\n"
             + "        ?r <http://vivoweb.org/ontology/core#relates> ?p .\n"
             + "        ?r <http://vivoweb.org/ontology/core#relates> ?o .\n"
             + "        ?o a <http://vivoweb.org/ontology/core#University> .\n"
-            + "        ?p a foaf:Person .\n"
+            + "        ?p a <http://vivoweb.org/ontology/core#FacultyMember> .\n"
             + "        ?o rdfs:label ?o_n .\n"
             + "        ?p <http://purl.obolibrary.org/obo/ARG_2000028> ?vp.\n"
             + "        ?vp <http://www.w3.org/2006/vcard/ns#hasName> ?vnp .\n"
@@ -76,28 +80,38 @@ public class SameAsVIVO {
             + "    }\n"
             + "}"));
 
-    for (Map.Entry<String, Person> a : vivo.entrySet()) {
-      for (Map.Entry<String, Person> b : cepra.entrySet()) {
-        if (b.getKey().toLowerCase().contains("saquicela") && a.getKey().toLowerCase().contains("de79f4cc7c46d261717a15ffee4f36e6")){
-          int ass=0;
-        }
-        Boolean checkName = a.getValue().checkName(b.getValue(), true);
-        if (checkName != null && checkName) {
-          Boolean checkAffiliations = a.getValue().checkAffiliations(b.getValue());
-          if (checkAffiliations != null && checkAffiliations) {
-            RepositoryConnection connection = data.getConnection();
-            connection.begin();
-            connection.add(ValueFactoryImpl.getInstance().createURI(a.getKey()),
-                    OWL.SAMEAS, ValueFactoryImpl.getInstance().createURI(b.getKey()),
-                    ValueFactoryImpl.getInstance().createURI("https://redi.cedia.edu.ec/context/vivo-cepra"));
-            connection.commit();
-            connection.close();
+    BoundedExecutor threadPool = BoundedExecutor.getThreadPool(4);
+    for (final Map.Entry<String, Person> a : vivo.entrySet()) {
+      for (final Map.Entry<String, Person> b : cepra.entrySet()) {
+
+        threadPool.submitTask(new Runnable() {
+          @Override
+          public void run() {
+            try {
+              Boolean checkName = a.getValue().checkName(b.getValue(), true);
+              if (checkName != null && checkName) {
+                Boolean checkAffiliations = a.getValue().checkAffiliations(b.getValue());
+                if (checkAffiliations != null && checkAffiliations) {
+
+                  RepositoryConnection connection = data.getConnection();
+                  connection.begin();
+                  connection.add(ValueFactoryImpl.getInstance().createURI(a.getKey()),
+                          OWL.SAMEAS, ValueFactoryImpl.getInstance().createURI(b.getKey()),
+                          ValueFactoryImpl.getInstance().createURI("https://redi.cedia.edu.ec/context/vivo-cepra"));
+                  connection.commit();
+                  connection.close();
+                }
+              }
+            } catch (RepositoryException ex) {
+              Logger.getLogger(SameAsVIVO.class.getName()).log(Level.SEVERE, null, ex);
+            }
           }
-        }
+        });
 
       }
     }
 
+    threadPool.end();
     data.shutDown();
   }
 
