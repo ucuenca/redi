@@ -33,7 +33,7 @@
   </form>
 </div> -->
 
-<div class="container-fluid" ng-controller="barChart">
+<div class="container-fluid" ng-controller="barChart" style="margin-left:-15px; margin-right:-15px">
   <section class="mainpage" id="header" > 
     <div id="myCarousel" class="carousel slide" data-ride="carousel">
 
@@ -84,68 +84,74 @@
   <section id ="sectiontwo" class="mainpage" style="background: url(wkhome/images/banner/howitworks.jpg); background-size:cover;">
     <div style="width: 100%;position: absolute;height: 100%;" class="mfont">
       <br/>
-      <br/>
-      <br/>
-      <div style="width: 100%;text-align: center;">
+   
+      <!--<div style="width: 100%;text-align: center;">
         <h1>Cómo funciona</h1>
+      </div> -->
+       <div class="row col-md-12 text-center colorblue" style="margin-top:8%">
+        <div class="col-md-4 ">        
+          <h5 style="margin-left: 50%; margin-top: 27%" > VISUALIZA Y PROMUEVE LA INVESTIGACÍON CIENTÍFICA EN EL PAÍS</h5>
+        </div>
+        <div class="col-md-4">     
+          <h5 style="margin-left: 20%; margin-right: 20%;" >DESCUBRIMIENTO E IDENTIFICACIÓN DE ÁREAS DE CONOCIMIENTO EMERGENTES EN EL PAÍS.</h5>
+        </div>
+        <div class="col-md-4">            
+          <h5 style="margin-right: 40%; margin-top: 27% " >FORMACIÓN DE GRUPOS DE COLABORACIÓN ENTRE INVESTIGADORES DE FORMA INTERINSTITUCIONAL</h5>
+        </div>
       </div>
-      <div style="width: 100%;position: absolute;height: 100%;">
-        <div style="width:33.3%;float: left;display: flex;align-items: center;justify-content: center;height: 50%;vertical-align: middle;">            
-          <h2 style="margin-left: 40%;" >Visualiza y promueve la investigación científica en el país.</h2>
-        </div>
-        <div style="width:33.3%;float: left;display: flex;align-items: center;justify-content: center;height: 80%;vertical-align: middle;">      
-          <h2 style="margin-left: 20%; margin-right: 20%;" >Descubrimiento e identificación de áreas de conocimiento emergentes en el país.</h2>
-        </div>
-        <div style="width:33.3%;float: left;display: flex;align-items: center;justify-content: center;height: 50%;vertical-align: middle;">            
-          <h2 style="margin-right: 40%;" >Formación de grupos de colaboración entre investigadores de forma interinstitucional.</h2>
-        </div>
-      </div>
+       </div>
 
-    </div>
+
+  
   </section>
 
-  <section class="mainpage" style="background: url(wkhome/images/banner/stats.jpg); background-size:cover;color:white;" >
-    <div style="width: 100%;position: absolute;height: 80%;" class="mfont">     
+  <section class="mainpage" style="background: url(wkhome/images/diseño2020/BannerEstadisticas.png); background-size:cover;color:white;" >
+    <div style="width: 100%;position: absolute;height: 80%;" >     
       <br/>
       <br/>
       <br/>
       <div style="width: 100%;text-align: center;">
-        <h1>Estadisticas</h1>
+        <h1 class="colorcian">ESTADÍSTICAS</h1>
       </div>
-
-      <div style="width:33.3%;float: left;display: flex;align-items: center;justify-content: center;height: 60%;vertical-align: middle;">
+      <div class="row col-md-12 text-center" style="margin-top:5%">
+      <div class="col-md-5">
         <div>            
           <h1 style="font-size:80px;">{{data.total.totalAuthors}}</h1>        
-          <h2>autores</h2> 
+          <h2>AUTORES</h2> 
         </div>              
       </div>
-      <div style="width:33.3%;float: left;display: flex;align-items: center;justify-content: center;height: 60%;vertical-align: middle;">
+      <div class="col-md-2">
         <div>            
           <h1 style="font-size:80px;">{{data.categories.length}}</h1>   
-          <h2>universidades</h2>
+          <h2>UNIVERSIDADES</h2>
         </div>                      
       </div>
-      <div style="width:33.3%;float: left;display: flex;align-items: center;justify-content: center;height: 60%;vertical-align: middle;">
+      <div class="col-md-5">
         <div>            
           <h1 style="font-size:80px;">{{data.total.totalPub}}</h1>        
-          <h2>publicaciones</h2>
+          <h2>PUBLICACIONES</h2>
         </div>              
       </div>
+
     </div>
+    </div>
+
   </section>
 
   <section class="mainpage" style="min-height:30vw;">
     <br/>    
     <br/>
     <br/>
-    <h1 class="mfont" style="text-align: center;">Miembros de REDI</h1>
+    <h1  class="text-center colorblue" >MIEMBROS DE REDI</h1>
     <br/>
     <br/>
     <br/>
-    <div>    
-      <span ng-repeat='org in data.categories'>
-        <img src="wkhome/images/orgs/{{org}}.png" alt="{{org}}" title="{{org}}" style ='max-width:60px; max-height:60px;margin-right:20px;margin-left:20px;margin-top:20px' > 
-      </span>
+    <div class="row col-md-12 centered" >    
+      <div class="col-md-1"  ng-repeat='org in data.categories'>
+        <span  style="width: 60px ; height: 60px ; margin:10px ">
+         <img src="wkhome/images/orgs/{{org}}.png" alt="{{org}}" title="{{org}}" style="max-width: 60px ; max-height: 60px " > 
+        </span>
+      </div>
     </div>
 
   </section>

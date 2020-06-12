@@ -7,11 +7,12 @@
   <div class="col-sm-8 authorData">
     <ul>
       <li style="width: 100%;">
-        <font id="NameAuthorProfile">{{ngModel.name}} </font>  &nbsp
+     
+        <h4 id="NameAuthorProfile">{{ngModel.name}}   &nbsp 
         <!--[<a  target="_blank" href="{{ngModel.claimUri}}">claim </a>] -->
-          <a title="Verificar Perfil" target="_blank" href="{{ngModel.claimUri}}"> <img style="margin-top: -5px" alt="Verificar Perfil" width= "30px"; src="wkhome/images/chkProfile.png"> </a> 
+        <a title="Verificar Perfil" target="_blank" href="{{ngModel.claimUri}}"> <img style="margin-top: -5px" alt="Verificar Perfil" width= "25px"; src="wkhome/images/chkProfile.png"> </a>  </h4>
       </li>
-      <li class="autprofilem2" > <a ng-repeat="org in ngModel.orgs"  target="_blank" href="/#/info/statisticsbyInst/{{org.org}}"> {{ org.orgName }} </a> </li>
+      <li class="autprofilem2" > <a ng-repeat="org in ngModel.orgs"  target="_blank" href="/#/info/statisticsbyInst/{{org.org}}"> {{ org.orgName }}  </a> </li>
       <li class="autprofilem2" > <a ng-show="ngModel.orcid" href="https://orcid.org/{{ngModel.orcid}}"><img width="17" src="wkhome/images/orcid_icon.png"> ORCID: {{ngModel.orcid}} </a> </li>
       <li> <div share-square="true" share-links="Facebook, Twitter, LinkedIn" share-title="REDI - {{ngModel.name}} "> Compartir perfil en: </div> </li>
       <li> 
@@ -36,7 +37,7 @@
   <div class="col-sm-4">
     <ul>
       <li class="head-list">
-        <font> <strong> {{ "general.information" | translate }}  </strong> </font>
+        <font>  {{ "general.information" | translate }}   </font>
       </li>
       <li class="sublist" ng-show="ngModel.npub"> N. Pub : {{ngModel.npub}} </li>
       <li class="sublist"  ng-show="ngModel.citation"> N. Citation : {{ngModel.citation}} </li>

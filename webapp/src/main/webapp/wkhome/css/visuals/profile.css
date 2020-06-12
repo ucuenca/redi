@@ -67,8 +67,8 @@ margin-top: 10px;
 
  #NameAuthorProfile {
 
-  font-family: "Conduit-BI";
-  font-size: 2.2vw;
+  font-family: "G-M";
+  /*font-size: 2.2vw;*/
   color: #0095db;
   line-height: 100%;
 }
@@ -107,24 +107,25 @@ margin-top: 10px;
 }
 
 .autprofilem2 > a {
-    font-family: Conduit-BI;
+    font-family: G-M;
     color: gray;
-    font-size: 1.2vw;
+    font-size: 1vw;
     line-height: 15px;
 }
 
 .bioregion {
- font-family: Conduit-MI;
+ font-family: G-M;
  width: 70%;
  border-top: solid #E94E1B 1px;
  margin-block: 8px;
  border-bottom: solid #E94E1B 1px;
  padding: 2px;
+ font-size: 10px;
 }
 
 .sublist {
-  font-family: Conduit-MI;
-  font-size: 1.1vw;
+  font-family: G-M;
+  font-size: 1vw;
 }
 
   
@@ -213,9 +214,9 @@ background-position: 35% 50%;
 
 .head-list {
   margin-bottom: 5px;
-  color: #243082;
-  font-family: "Conduit-IT";
-  font-size: 1.3vw;
+  color: #252881;
+  font-family: "G-M";
+  font-size: 1vw;
   border-bottom-style: solid;
   border-color: #E94E1B;
   border-width: 1px;
@@ -231,8 +232,8 @@ background-position: 35% 50%;
 
 .prof-btn span {
 margin-left: 4vw;
-font-size: 1.1vw;
-font-family: "Conduit-IT";
+font-size: 1vw;
+font-family: "G-B";
 color: #253081;
 
 
