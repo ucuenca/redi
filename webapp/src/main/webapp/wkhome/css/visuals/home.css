@@ -4,7 +4,7 @@
   border-bottom: #FFFFFF solid 1px;
  /* position: relative; */
  /* width: 100%; */
-  max-height: 1000px;
+  max-height: 500px;
   background-size: contain;
   background-position: center;
 
@@ -13,9 +13,14 @@
   
 }
 
+div.item img {
+width:100%; 
+height:500px !important;
+}
+
 
 #header .search {
-bottom: -45vh;
+top: 270px;
 width: 40vw;
 margin-right: 90vw;
 }
@@ -28,7 +33,9 @@ z-index: 100;
 }
 
  .mainpage {
- min-height: 40vw;
+ /*min-height: 32vw;*/
+ 	height: 500px;
+ }
 
 }
 
@@ -52,11 +59,12 @@ text-align: center;
 
 .footnotebar {
 
-background-color: #0083db;
+background-color: #252881;
 color: white;
 min-height: 70px;
 display: flex;
 align-items: center;
+padding-left:40%
 }
 
 .socialshare > div > a > img {

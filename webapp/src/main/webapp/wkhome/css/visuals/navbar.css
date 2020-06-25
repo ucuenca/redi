@@ -53,8 +53,13 @@ padding-inline: 10px;
 }*/
 
 .navbarcolor {
- background-color: #0083db;
+ background-color: #252881;
  color: #0089db;
+ margin-top: 35px!important;
+ max-width: 100%;
+ padding-left: 25px;
+ max-height: 65px;
+     /*margin-left: -15px;*/
 }
 
  /* Work around for active class in navbar items. It works for dropdown menu */
@@ -167,3 +172,28 @@ padding-inline: 10px;
       float: right;
       color: black;
     }*/
+  
+.logo-repo {
+    height: 60px;
+}
+.img-responsive{
+  display: block;
+    max-width: 100%;
+    height: auto;
+    margin-left: 2%;
+  
+}
+.socialhead {
+    border-radius: 50px;
+    border: 1px solid #e6e6e6;
+    height: 50px;
+    width: 50px;
+    text-align: center;
+    color: #c3c3c3;
+    margin: 5px;
+    padding: 18px 10px 10px 10px;
+}
+.icons-right {
+    text-align: right;
+    padding-right: 2%;
+}

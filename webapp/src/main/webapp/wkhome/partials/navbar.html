@@ -1,6 +1,22 @@
 <!-- MENU DESPLEGABLE -->
 <nav class="navbar navbar-static-top" ng-controller="searchTextResults">
-  <div class="container-fluid navbarcolor">
+  <div >
+    <div class="col-md-3 text-left logo-repo">
+
+  <a href="https://redi.cedia.edu.ec/">
+       <img class="img-responsive" src="/wkhome/images/diseno2020/logoredicolor.png" alt="Aquí iría el logo del repositorio" style="padding-top:15px; scale:80%">
+  </a>  
+
+    </div>
+    <div class="col-md-9 icons-right">
+
+  <a class="socialhead" href="https://www.facebook.com/CEDIAec/" target="_blank"><i class="fa fa-facebook fa-fw fa-2x" aria-hidden="true" style="padding-top: 30px;"></i></a>
+        <a class="socialhead" href="https://twitter.com/CEDIAec" target="_blank"><i class="fa fa-twitter fa-fw fa-2x" aria-hidden="true" style="padding-top: 30px;"></i></a>
+        <a class="socialhead" href="https://www.instagram.com/CEDIAec/" target="_blank"><i class="fa fa-instagram fa-fw fa-2x" aria-hidden="true" style="padding-top: 30px;"></i></a>
+        <a class="socialhead" href="https://www.youtube.com/channel/UCk4DIPllwo_VmErBacs6JBg" target="_blank"><i class="fa fa-youtube fa-fw fa-2x" aria-hidden="true" style="padding-top: 30px;"></i></a>
+    </div>
+  
+  <div class="col-md-12 navbarcolor">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -12,22 +28,29 @@
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" ng-controller="navbarController" style="margin-top: 1%;margin-bottom: 2%;" >
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" ng-controller="navbarController"  >
       <ul class="nav navbar-nav">
-        <li class="dropdown">
+             <li ng-class="dropdown">
+            
+          <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span src="" alt="INICIO" class="img-thumbnail icon-small" style="width: 50px;">{{'HOME'| translate | uppercase}}</span><span class="caret" ></span></a>
+          <ul class="dropdown-menu">
+            <li ng-class="{ active: isActive('/tags/cloud') }"><a href="#/tags/cloud">{{'Clustering by Research Area'| translate | uppercase  }}</a></li>
+            <li ng-class="{ active: isActive('/group/area') }"><a href="#/group/area">{{'Group By Area'| translate | uppercase  }}</a></li>
+            <li ng-class="{ active: isActive('/geo-views/sources') }"><a href="#/view/map">{{'Map View'| translate | uppercase  }}</a></li>
+            <li role="separator" class="divider"></li>
+            <li ng-class="{ active: isActive('/statistics') }"><a href="#/info/statistics">{{'Statistics'| translate | uppercase  }}</a></li>
+          </ul>
+        </li>
+       <!-- <li class="dropdown">
           <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img src="wkhome/images/diseño2020/logo.png" alt="logo redi" class="img-thumbnail icon-small"><span></span><span class="caret" style="margin-left: 5px;" ></span></a>
           <ul class="dropdown-menu">
             <li ng-class="{ active: isActive('/tags/cloud') }"><a href="#/tags/cloud">{{'Clustering by Research Area'| translate | uppercase  }}</a></li>
             <li ng-class="{ active: isActive('/group/area') }"><a href="#/group/area">{{'Group By Area'| translate | uppercase  }}</a></li>
-            <!-- <li ng-class="{ active: isActive('/cloud/clusters') }"><a href="#/cloud/clusters">{{'Clustering by Research Area'| translate}}</a></li> -->
             <li ng-class="{ active: isActive('/geo-views/sources') }"><a href="#/view/map">{{'Map View'| translate | uppercase  }}</a></li>
             <li role="separator" class="divider"></li>
             <li ng-class="{ active: isActive('/statistics') }"><a href="#/info/statistics">{{'Statistics'| translate | uppercase  }}</a></li>
-            <!-- <li role="separator" class="divider"></li> -->
-            <!-- <li ng-class="{ active: isActive('/datacube') }"><a href="#/view/datacube">{{'data_cube' | translate}}</a></li> -->
           </ul>
-        </li>
-        <li ng-class="{ active: isActive('/') }"><a href="#/">{{'HOME'| translate | uppercase}}</a></li>
+        </li>-->
         <li class="navdiv">|</li>
         <li ng-class="{ active: isActive('/about') }"><a href="#/info/about"> <div class="bordermenu"> {{'ABOUT'| translate | uppercase }}</div> </a></li>
          <li class="navdiv" > | </li>
@@ -64,7 +87,7 @@
         </li>
       </ul>
       <form class="navbar-form navbar-right" ng-submit="submit()" ng-controller="searchText" ng-hide="isHome()">
-        <div class="form-group">
+        <div class="form-group" style="margin-top: 5px;">
           <input type="text" class="form-control" ng-model="searchText" placeholder="{{'SEARCH'| translate}}..">
         </div>
       </form>
