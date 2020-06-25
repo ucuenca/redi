@@ -89,29 +89,29 @@ public class SyncGraphDBMarmottaImpl implements SyncGraphDBMarmotta {
     }
 
     public Model obtainDelete(int offset) throws RepositoryException, MarmottaException {
-      String spqSelect = ess.getGraphDBInstance().getSpqSelect();
-      String dl = "select * {\n"
-              + "  {\n"
-              + "    select * {\n"
-              + "        graph <" + graph + "> {\n"
-              + "            ?a ?b ?c .\n"
-              + "        }\n"
-              + "    } limit " + limit + " offset " + offset + "\n"
-              + "  } .\n"
-              + "  \n"
-              + "  filter not exists {\n"
-              + "  	service <" + spqSelect + "> {\n"
-              + "    	graph <" + graph + "> {\n"
-              + "    		?a ?b ?c .\n"
-              + "        }\n"
-              + "    }\n"
-              + "  }\n"
-              + "}";
+//      String spqSelect = ess.getGraphDBInstance().getSpqSelect();
+//      String dl = "select * {\n"
+//              + "  {\n"
+//              + "    select * {\n"
+//              + "        graph <" + graph + "> {\n"
+//              + "            ?a ?b ?c .\n"
+//              + "        }\n"
+//              + "    } limit " + limit + " offset " + offset + "\n"
+//              + "  } .\n"
+//              + "  \n"
+//              + "  filter not exists {\n"
+//              + "  	service <" + spqSelect + "> {\n"
+//              + "    	graph <" + graph + "> {\n"
+//              + "    		?a ?b ?c .\n"
+//              + "        }\n"
+//              + "    }\n"
+//              + "  }\n"
+//              + "}";
       Model m = new LinkedHashModel();
-      List<Map<String, Value>> query1 = ss.query(QueryLanguage.SPARQL, dl);
-      for (Map<String, Value> a : query1) {
-        m.add((Resource) a.get("a"), (URI) a.get("b"), a.get("c"));
-      }
+//      List<Map<String, Value>> query1 = ss.query(QueryLanguage.SPARQL, dl);
+//      for (Map<String, Value> a : query1) {
+//        m.add((Resource) a.get("a"), (URI) a.get("b"), a.get("c"));
+//      }
       return m;
     }
 

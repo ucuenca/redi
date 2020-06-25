@@ -60,16 +60,18 @@ public final class GraphDB {
   private SPARQLRepository data;
   private SparqlService sps;
   private ConcurrentHashMap<URI, Model> hmmdl = new ConcurrentHashMap<>();
-  private String spqSelect;
+  //private String spqSelect;
 
   public SparqlService getSps() {
     return sps;
   }
 
-  private GraphDB(String database) throws RepositoryException {
-    data = new SPARQLRepository("http://201.159.222.25:8180/repositories/" + database, "http://201.159.222.25:8180/repositories/" + database + "/statements");
-    spqSelect = "http://201.159.222.25:8180/repositories/" + database;
-
+  private GraphDB(String server, String database, String user, String pass) throws RepositoryException {
+    data = new SPARQLRepository(server + "repositories/" + database, server + "repositories/" + database + "/statements");
+    if (user != null && pass != null) {
+      data.setUsernameAndPassword(user, pass);
+    }
+    //spqSelect = server + "repositories/" + database;
     ConcurrentHashMap<String, String> additionalHttpHeaders = new ConcurrentHashMap<>();
     additionalHttpHeaders.put("Accept", "application/sparql-results+json,*/*;q=0.9");
     data.setAdditionalHttpHeaders(additionalHttpHeaders);
@@ -162,9 +164,9 @@ public final class GraphDB {
   }
 
   @SuppressWarnings("PMD")
-  public static GraphDB get(String database) throws RepositoryException {
+  public static GraphDB get(String server, String database, String user, String pass) throws RepositoryException {
     if (eta == null) {
-      eta = new GraphDB(database);
+      eta = new GraphDB(server, database, user, pass);
     }
     return eta;
   }
@@ -302,12 +304,12 @@ public final class GraphDB {
     connection.close();
     mdl.clear();
   }
-
-  public String getSpqSelect() {
-    return spqSelect;
-  }
-
-  public void setSpqSelect(String spqSelect) {
-    this.spqSelect = spqSelect;
-  }
+//
+//  public String getSpqSelect() {
+//    return spqSelect;
+//  }
+//
+//  public void setSpqSelect(String spqSelect) {
+//    this.spqSelect = spqSelect;
+//  }
 }

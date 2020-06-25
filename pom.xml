@@ -65,7 +65,8 @@
         <module>authors-module</module>    
         <module>marmotta-worker</module>
         <module>marmotta-utils</module>
-        <module>marmotta-search</module>    
+        <module>marmotta-search</module> 
+        <module>marmotta-user</module>    
         <module>publications-manager</module>        
         <module>storage</module>
         <module>webapp</module>

@@ -44,8 +44,8 @@ public class DisambiguationTest {
     @Test
     public void test() throws RepositoryException, MarmottaException {
         List<Provider> Providers = new ArrayList<>();
-        Providers.add(new Provider("Authors", "https://redi.cedia.edu.ec/context/authorsProvider", GraphDB.get("data").getSps()));
-        Providers.add(new Provider("Scopus", "https://redi.cedia.edu.ec/context/provider/ScopusProvider", GraphDB.get("data").getSps()));
+        //Providers.add(new Provider("Authors", "https://redi.cedia.edu.ec/context/authorsProvider", GraphDB.get("data").getSps()));
+        //Providers.add(new Provider("Scopus", "https://redi.cedia.edu.ec/context/provider/ScopusProvider", GraphDB.get("data").getSps()));
 
         List<Person> authors = Providers.get(0).getAuthors("https://redi.cedia.edu.ec/resource/authors/UCUENCA/oai-pmh/PEREZ_GANAN__MARIA_DEL_ROCIO");
         Providers.get(0).FillData(authors);

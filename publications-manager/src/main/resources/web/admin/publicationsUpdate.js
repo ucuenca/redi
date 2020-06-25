@@ -552,7 +552,7 @@ function requestUploadFile(url, data, mime, callbacks) {
 
 function runUploadBanner(options) {
   var file_id = $("#banner_id").val();
-  var ins_ser = options + 'profileval/uploadBanner?id=' + encodeURIComponent(file_id);
+  var ins_ser = options + 'populate/uploadBanner?id=' + encodeURIComponent(file_id);
   var file = $("input#upload_file");
   var data = file.get(0).files[0];
   requestUploadFile(ins_ser, data, data.type, {

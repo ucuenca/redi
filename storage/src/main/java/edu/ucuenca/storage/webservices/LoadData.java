@@ -19,11 +19,19 @@ package edu.ucuenca.storage.webservices;
 
 import edu.ucuenca.storage.api.PopulateMongo;
 import edu.ucuenca.storage.exceptions.FailMongoConnectionException;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.apache.commons.io.IOUtils;
+import org.apache.marmotta.platform.core.api.config.ConfigurationService;
 import org.slf4j.Logger;
 
 /**
@@ -37,7 +45,39 @@ public class LoadData {
   @Inject
   private PopulateMongo loadService;
   @Inject
+  private ConfigurationService configurationService;
+  @Inject
   private Logger log;
+
+  @POST
+  @Path("/uploadBanner")
+  @SuppressWarnings({"PMD.ExcessiveMethodLength", "PMD.AvoidDuplicateLiterals", "PMD.NPathComplexity"})
+  public Response uploadBanner(
+          @HeaderParam(HttpHeaders.CONTENT_TYPE) String type,
+          @Context HttpServletRequest request,
+          @QueryParam("id") String id
+  ) throws IOException {
+    if (type == null || !("image/png".equals(type.toLowerCase()))) {
+      return Response.status(Response.Status.BAD_REQUEST).entity("Incorrect file format.").build();
+    }
+    if (id == null || id.trim().length() <= 0) {
+      return Response.status(Response.Status.BAD_REQUEST).entity("There is not orcid.").build();
+    }
+
+    File f = new File(configurationService.getHome() + File.separator + "banner_photo", id.hashCode() + ".png");
+    if (f.exists()) {
+      f.delete();
+    }
+    if (!f.exists()) {
+      f.getParentFile().mkdirs();
+      f.createNewFile();
+    }
+    try (FileOutputStream fos = new FileOutputStream(f)) {
+      IOUtils.copy(request.getInputStream(), fos);
+    }
+
+    return Response.ok().entity(id.hashCode() + ".png").build();
+  }
 
   @POST
   @Path("/authors")

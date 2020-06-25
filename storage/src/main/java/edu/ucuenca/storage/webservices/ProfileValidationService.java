@@ -157,36 +157,6 @@ public class ProfileValidationService {
     return response.build();
   }
 
-  @POST
-  @Path("/uploadBanner")
-  @SuppressWarnings({"PMD.ExcessiveMethodLength", "PMD.AvoidDuplicateLiterals", "PMD.NPathComplexity"})
-  public Response uploadBanner(
-          @HeaderParam(HttpHeaders.CONTENT_TYPE) String type,
-          @Context HttpServletRequest request,
-          @QueryParam("id") String id
-  ) throws IOException {
-    if (type == null || !("image/png".equals(type.toLowerCase()))) {
-      return Response.status(Response.Status.BAD_REQUEST).entity("Incorrect file format.").build();
-    }
-    if (id == null || id.trim().length() <= 0) {
-      return Response.status(Response.Status.BAD_REQUEST).entity("There is not orcid.").build();
-    }
-
-    File f = new File(configurationService.getHome() + File.separator + "banner_photo", id.hashCode() + ".png");
-    if (f.exists()) {
-      f.delete();
-    }
-    if (!f.exists()) {
-      f.getParentFile().mkdirs();
-      f.createNewFile();
-    }
-    try (FileOutputStream fos = new FileOutputStream(f)) {
-      IOUtils.copy(request.getInputStream(), fos);
-    }
-
-    return Response.ok().entity(id.hashCode() + ".png").build();
-  }
-
   @GET
   @Produces(MediaType.APPLICATION_OCTET_STREAM)
   @Path("/getBanner")
