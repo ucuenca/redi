@@ -95,11 +95,16 @@ public class DisambiguationServiceImpl implements DisambiguationService {
   private Thread DisambiguationWorker;
   private Thread CentralGraphWorker;
 
-  private static final String TEMP_CA = "1";
   private static final String SAFE_MERGE = "2";
   private static final String FIX_MERGE = "2Fix";
-  private static final String FINAL_MERGE = "F";
   private static final String ASA_C = "Complete";
+  private static final String ASA_D = "Delete";
+  private static final String ASA_I = "Insert";
+  private static final String ASA_D2 = "Delete2";
+  private static final String ASA_DF2 = "DeleteFix2";
+  private static final String ASA_I2 = "Insert2";
+  private static final String ASA_F = "Final";
+  private static final String ASA_FINAL = "FinalClean";
 
   private String queryMatches(String org) throws MarmottaException, RepositoryException {
 
@@ -175,11 +180,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
 
   @Override
   public void Process(String[] orgs) {
-    DB make = DBMaker.newFileDB(new File("/tmp/mdp"))
-            //.deleteFilesAfterClose()
-            .closeOnJvmShutdown()
-            .transactionDisable()
-            .make();
+    DB make = DBMaker.newTempFileDB().make();
 
     try {
       SPARQLUtils sparqlUtils = new SPARQLUtils(sparqlService.getSparqlService());
@@ -197,31 +198,32 @@ public class DisambiguationServiceImpl implements DisambiguationService {
           providersResult.add(mp);
         }
       } else {
-//        ProcessAuthors(Providers, null);
-//        sparqlService.getGraphDBInstance().dumpBuffer();
-//        sparqlUtils.copyGraph(constantService.getAuthorsGraph(), constantService.getAuthorsGraph() + ASA_C);
+        //ProcessAuthors(Providers, null);
+        //sparqlUtils.copyGraph(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + ASA_C);
       }
-      ///.getHashMap("temp");
-
-      for (int w0 = 0; w0 < 5; w0++) {
-        completeLinkage(Providers, make);
-      }
-      make.commit();
-      make.compact();
-      make.close();
-//            mergeAuthors();
-//            sparqlService.getGraphDBInstance().dumpBuffer();
+//      for (int w0 = 0; w0 < 5; w0++) {
+//        completeLinkage(Providers, make);
+//      }
+//
+//      sparqlUtils.deleteGraph(constantService.getAuthorsSameAsGraph() + ASA_F);
+//      sparqlUtils.deleteGraph(constantService.getAuthorsSameAsGraph() + SAFE_MERGE);
+//      sparqlUtils.deleteGraph(constantService.getAuthorsSameAsGraph() + FIX_MERGE);
+//
+//      sparqlUtils.copyGraph(constantService.getAuthorsSameAsGraph() + ASA_C, constantService.getAuthorsSameAsGraph() + ASA_F);
+//      sparqlUtils.minusGraph(constantService.getAuthorsSameAsGraph() + ASA_F, constantService.getAuthorsSameAsGraph() + ASA_D);
+//      sparqlUtils.copyGraph(constantService.getAuthorsSameAsGraph() + ASA_I, constantService.getAuthorsSameAsGraph() + ASA_F);
+//      mergeAuthors();
+      sparqlUtils.minusGraph(constantService.getAuthorsSameAsGraph() + SAFE_MERGE, constantService.getAuthorsSameAsGraph() + ASA_D2);
+      sparqlUtils.copyGraph(constantService.getAuthorsSameAsGraph() + ASA_I2, constantService.getAuthorsSameAsGraph() + SAFE_MERGE);
+      sparqlUtils.minusGraph(constantService.getAuthorsSameAsGraph() + FIX_MERGE, constantService.getAuthorsSameAsGraph() + ASA_D2);
+      
 ////      /**/
-//            sparqlUtils.clearSameAs(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + FIX_MERGE);
-//            sparqlUtils.replaceSameAsSubject(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + FINAL_MERGE, constantService.getAuthorsSameAsGraph() + SAFE_MERGE);
-//            sparqlUtils.deleteGraph(constantService.getAuthorsSameAsGraph());
-//            sparqlUtils.copyGraph(constantService.getAuthorsSameAsGraph() + FINAL_MERGE, constantService.getAuthorsSameAsGraph());
-//            sparqlUtils.deleteGraph(constantService.getAuthorsSameAsGraph() + FINAL_MERGE);
+//            sparqlUtils.clearSameAs(constantService.getAuthorsSameAsGraph()  + ASA_F , constantService.getAuthorsSameAsGraph() + FIX_MERGE);
+//            sparqlUtils.replaceSameAsSubject(constantService.getAuthorsSameAsGraph() + ASA_F , constantService.getAuthorsSameAsGraph() + ASA_FINAL, constantService.getAuthorsSameAsGraph() + SAFE_MERGE);
+//            sparqlUtils.deleteGraph(constantService.getAuthorsSameAsGraph() + ASA_F);
+//            sparqlUtils.copyGraph(constantService.getAuthorsSameAsGraph() + ASA_FINAL, constantService.getAuthorsSameAsGraph()+ ASA_F);
+//            sparqlUtils.deleteGraph(constantService.getAuthorsSameAsGraph() + ASA_FINAL);
 //////      /**/
-//            ProcessCoauthors(Providers, false);
-//            sparqlService.getGraphDBInstance().dumpBuffer();
-//            ProcessPublications(Providers);
-//            sparqlService.getGraphDBInstance().dumpBuffer();
     } catch (Exception ex) {
       try {
         sparqlService.getGraphDBInstance().dumpBuffer();
@@ -365,145 +367,151 @@ public class DisambiguationServiceImpl implements DisambiguationService {
     return am;
   }
 
-  public void mergeAuthors() throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, RepositoryException, RDFHandlerException {
+  public void mergeAuthors() throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, RepositoryException, RDFHandlerException, InterruptedException {
+    BoundedExecutor bexecutorService = BoundedExecutor.getThreadPool(MAXTHREADS);
     String qryDisambiguatedCoauthors = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
             + "select distinct ?a  { \n"
-            + "  graph <" + constantService.getAuthorsSameAsGraph() + "> { \n"
-            //                + "     values ?a { <https://redi.cedia.edu.ec/resource/authors/SENESCYT/oai-pmh/WONG_DE_BALZAR__SARA> } ."
+            + "  graph <" + constantService.getAuthorsSameAsGraph() + ASA_F + "> { \n"
             + "    ?a <http://www.w3.org/2002/07/owl#sameAs> [] . \n"
             + "  }\n"
             + "}";
 
     List<Map<String, Value>> queryResponsec = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, qryDisambiguatedCoauthors);
-    int ixx = 0;
-    for (Map<String, Value> rq : queryResponsec) {
+    int ixxy = 0;
+    for (final Map<String, Value> rq : queryResponsec) {
+      final int ixx = ixxy++;
       log.info("merging {} - {}", ixx, rq.get("a").stringValue());
-      ixx++;
-      do {
-        try {
-          String group_ = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
-                  + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
-                  + "\n"
-                  + "select distinct ?rr {\n"
-                  + "    {\n"
-                  + "        select distinct ?rr {\n"
-                  + "    {\n"
-                  + "        select distinct ?rr {\n"
-                  + "    {\n"
-                  + "        select (?b as ?rr)  {\n"
-                  + "            graph <" + constantService.getAuthorsSameAsGraph() + "> {\n"
-                  + "				bind (<" + rq.get("a").stringValue() + "> as ?ssd) .\n"
-                  + "        		{\n"
-                  + "            		?ssd owl:sameAs* ?b .\n"
-                  + "        		} union {\n"
-                  + "            		?b owl:sameAs* ?ssd  .\n"
-                  + "        		} union {\n"
-                  + "            		?ssd owl:sameAs* ?b .\n"
-                  + "            		?x owl:sameAs* ?b .\n"
-                  + "        		} union {\n"
-                  + "            		?ssd owl:sameAs* ?b .\n"
-                  + "            		?b owl:sameAs* ?x .\n"
-                  + "        		} union {\n"
-                  + "            		?b owl:sameAs* ?ssd  .\n"
-                  + "            		?x owl:sameAs* ?b .\n"
-                  + "        		} union {\n"
-                  + "            		?b owl:sameAs* ?ssd  .\n"
-                  + "            		?b owl:sameAs* ?x .\n"
-                  + "        		}	\n"
-                  + "        	}\n"
-                  + "		}\n"
-                  + "    } union {\n"
-                  + "        select (?x as ?rr)  {\n"
-                  + "            graph <" + constantService.getAuthorsSameAsGraph() + "> {\n"
-                  + "                bind (<" + rq.get("a").stringValue() + "> as ?ssd) .\n"
-                  + "        		{\n"
-                  + "            		?ssd owl:sameAs* ?b .\n"
-                  + "        		} union {\n"
-                  + "            		?b owl:sameAs* ?ssd  .\n"
-                  + "        		} union {\n"
-                  + "            		?ssd owl:sameAs* ?b .\n"
-                  + "            		?x owl:sameAs* ?b .\n"
-                  + "        		} union {\n"
-                  + "            		?ssd owl:sameAs* ?b .\n"
-                  + "            		?b owl:sameAs* ?x .\n"
-                  + "        		} union {\n"
-                  + "            		?b owl:sameAs* ?ssd  .\n"
-                  + "            		?x owl:sameAs* ?b .\n"
-                  + "        		} union {\n"
-                  + "            		?b owl:sameAs* ?ssd  .\n"
-                  + "            		?b owl:sameAs* ?x .\n"
-                  + "        		}	\n"
-                  + "        	}\n"
-                  + "		}\n"
-                  + "    }\n"
-                  + "}\n"
-                  + "    } .\n"
-                  + "    filter (str(?rr)!='' ) .\n"
-                  + "}\n"
-                  + "    }  .\n"
-                  + "    graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
-                  + "        ?rr a foaf:Person .\n"
-                  + "    }\n"
-                  + "} order by ?rr\n"
-                  + "";
-          List<Map<String, Value>> query = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, group_);
-          Set<String> myGroup = new HashSet<>();
-          String groq = "";
-          for (Map<String, Value> rqq : query) {
-            myGroup.add(rqq.get("rr").stringValue());
-            groq += "<" + rqq.get("rr").stringValue() + "> ";
-          }
-          String qryDisambiguatedCoauthors2 = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
-                  + "select ?a ?n ?fn ?ln { \n"
-                  + "  graph <" + constantService.getAuthorsProviderGraph() + "> { \n"
-                  + "  values ?a { " + groq + " } . \n"
-                  + "    optional { ?a <http://xmlns.com/foaf/0.1/name> ?n . }\n"
-                  + "    optional { ?a <http://xmlns.com/foaf/0.1/givenName> ?fn . }\n"
-                  + "    optional { ?a <http://xmlns.com/foaf/0.1/familyName> ?ln . }\n"
-                  + "  }\n"
-                  + "}";
-          List<Map<String, Value>> rx = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, qryDisambiguatedCoauthors2);
-          Map<String, Person> persons = getPersons(rx);
-          Set<String> usedT = new HashSet<>();
-          Map<String, Set<String>> groups = new HashMap<>();
-          List<String> ls = new ArrayList<>(myGroup);
-          for (int i = 0; i < ls.size(); i++) {
-            for (int j = i + 1; j < ls.size(); j++) {
-              Person get1 = persons.get(ls.get(i));
-              Person get2 = persons.get(ls.get(j));
-              compareSubSet(get1, get2, groups, usedT);
-              compareSubSet(get2, get1, groups, usedT);
-            }
-          }
-          Set<String> alones = new HashSet<>(myGroup);
-          alones.removeAll(usedT);
-          for (String a : alones) {
-            groups.put(a, new HashSet<String>());
-            groups.get(a).add(a);
-          }
-          int size;
+      bexecutorService.submitTask(new Runnable() {
+        @Override
+        public void run() {
           do {
-            size = groups.size();
-            groups = clearGroups(groups);
-          } while (groups.size() < size);
-          Set<String> amb = getAmb(groups);
-          for (Entry<String, Set<String>> next : groups.entrySet()) {
-            for (String next1 : next.getValue()) {
-              if (amb.contains(next.getKey()) || amb.contains(next1)) {
-                registerSameAs(constantService.getAuthorsSameAsGraph() + FIX_MERGE, next.getKey(), next1);
-              } else {
-                registerSameAs(constantService.getAuthorsSameAsGraph() + SAFE_MERGE, next.getKey(), next1);
+            try {
+              String group_ = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
+                      + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                      + "\n"
+                      + "select distinct ?rr {\n"
+                      + "    {\n"
+                      + "        select distinct ?rr {\n"
+                      + "    {\n"
+                      + "        select distinct ?rr {\n"
+                      + "    {\n"
+                      + "        select (?b as ?rr)  {\n"
+                      + "            graph <" + constantService.getAuthorsSameAsGraph() + ASA_F + "> {\n"
+                      + "				bind (<" + rq.get("a").stringValue() + "> as ?ssd) .\n"
+                      + "        		{\n"
+                      + "            		?ssd owl:sameAs* ?b .\n"
+                      + "        		} union {\n"
+                      + "            		?b owl:sameAs* ?ssd  .\n"
+                      + "        		} union {\n"
+                      + "            		?ssd owl:sameAs* ?b .\n"
+                      + "            		?x owl:sameAs* ?b .\n"
+                      + "        		} union {\n"
+                      + "            		?ssd owl:sameAs* ?b .\n"
+                      + "            		?b owl:sameAs* ?x .\n"
+                      + "        		} union {\n"
+                      + "            		?b owl:sameAs* ?ssd  .\n"
+                      + "            		?x owl:sameAs* ?b .\n"
+                      + "        		} union {\n"
+                      + "            		?b owl:sameAs* ?ssd  .\n"
+                      + "            		?b owl:sameAs* ?x .\n"
+                      + "        		}	\n"
+                      + "        	}\n"
+                      + "		}\n"
+                      + "    } union {\n"
+                      + "        select (?x as ?rr)  {\n"
+                      + "            graph <" + constantService.getAuthorsSameAsGraph() + ASA_F + "> {\n"
+                      + "                bind (<" + rq.get("a").stringValue() + "> as ?ssd) .\n"
+                      + "        		{\n"
+                      + "            		?ssd owl:sameAs* ?b .\n"
+                      + "        		} union {\n"
+                      + "            		?b owl:sameAs* ?ssd  .\n"
+                      + "        		} union {\n"
+                      + "            		?ssd owl:sameAs* ?b .\n"
+                      + "            		?x owl:sameAs* ?b .\n"
+                      + "        		} union {\n"
+                      + "            		?ssd owl:sameAs* ?b .\n"
+                      + "            		?b owl:sameAs* ?x .\n"
+                      + "        		} union {\n"
+                      + "            		?b owl:sameAs* ?ssd  .\n"
+                      + "            		?x owl:sameAs* ?b .\n"
+                      + "        		} union {\n"
+                      + "            		?b owl:sameAs* ?ssd  .\n"
+                      + "            		?b owl:sameAs* ?x .\n"
+                      + "        		}	\n"
+                      + "        	}\n"
+                      + "		}\n"
+                      + "    }\n"
+                      + "}\n"
+                      + "    } .\n"
+                      + "    filter (str(?rr)!='' ) .\n"
+                      + "}\n"
+                      + "    }  .\n"
+                      + "    graph <" + constantService.getAuthorsProviderGraph() + "> {\n"
+                      + "        ?rr a foaf:Person .\n"
+                      + "    }\n"
+                      + "} order by ?rr\n"
+                      + "";
+              List<Map<String, Value>> query = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, group_);
+              Set<String> myGroup = new HashSet<>();
+              String groq = "";
+              for (Map<String, Value> rqq : query) {
+                myGroup.add(rqq.get("rr").stringValue());
+                groq += "<" + rqq.get("rr").stringValue() + "> ";
               }
+              String qryDisambiguatedCoauthors2 = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                      + "select ?a ?n ?fn ?ln { \n"
+                      + "  graph <" + constantService.getAuthorsProviderGraph() + "> { \n"
+                      + "  values ?a { " + groq + " } . \n"
+                      + "    optional { ?a <http://xmlns.com/foaf/0.1/name> ?n . }\n"
+                      + "    optional { ?a <http://xmlns.com/foaf/0.1/givenName> ?fn . }\n"
+                      + "    optional { ?a <http://xmlns.com/foaf/0.1/familyName> ?ln . }\n"
+                      + "  }\n"
+                      + "}";
+              List<Map<String, Value>> rx = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, qryDisambiguatedCoauthors2);
+              Map<String, Person> persons = getPersons(rx);
+              Set<String> usedT = new HashSet<>();
+              Map<String, Set<String>> groups = new HashMap<>();
+              List<String> ls = new ArrayList<>(myGroup);
+              for (int i = 0; i < ls.size(); i++) {
+                for (int j = i + 1; j < ls.size(); j++) {
+                  Person get1 = persons.get(ls.get(i));
+                  Person get2 = persons.get(ls.get(j));
+                  compareSubSet(get1, get2, groups, usedT);
+                  compareSubSet(get2, get1, groups, usedT);
+                }
+              }
+              Set<String> alones = new HashSet<>(myGroup);
+              alones.removeAll(usedT);
+              for (String a : alones) {
+                groups.put(a, new HashSet<String>());
+                groups.get(a).add(a);
+              }
+              int size;
+              do {
+                size = groups.size();
+                groups = clearGroups(groups);
+              } while (groups.size() < size);
+              Set<String> amb = getAmb(groups);
+              for (Entry<String, Set<String>> next : groups.entrySet()) {
+                for (String next1 : next.getValue()) {
+                  if (amb.contains(next.getKey()) || amb.contains(next1)) {
+                    registerSameAs(constantService.getAuthorsSameAsGraph() + FIX_MERGE, next.getKey(), next1);
+                  } else {
+                    registerSameAs(constantService.getAuthorsSameAsGraph() + SAFE_MERGE, next.getKey(), next1);
+                  }
+                }
+              }
+              break;
+            } catch (Exception e) {
+              e.printStackTrace();
+              log.info("Retrying {} - {}", ixx, rq.get("a").stringValue());
             }
-          }
-          break;
-        } catch (Exception e) {
-          e.printStackTrace();
-          log.info("Retrying {} - {}", ixx, rq.get("a").stringValue());
+          } while (true);
         }
-      } while (true);
+      });
     }
-
+    bexecutorService.end();
+    sparqlService.getGraphDBInstance().dumpBuffer();
   }
 
   public Set<Set<String>> getGroupsAuthors(List<Map<String, Value>> query) {
@@ -867,28 +875,30 @@ public class DisambiguationServiceImpl implements DisambiguationService {
       final Person aSeedAuthor = allAuthors.get(i);
       final List<Map.Entry<Provider, List<Person>>> Candidates = new ArrayList<>();
       Candidates.add(new AbstractMap.SimpleEntry<Provider, List<Person>>(MainAuthorsProvider, Lists.newArrayList(aSeedAuthor)));
-      List<Provider> providersHarvested = new ArrayList<>();
       //Check Harvested Data
-      List<Map<String, Value>> queryResponse = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, "select ?g (if (sum(?xc)>0,1,0) as ?p)  {\n"
+      List<Map<String, Value>> queryResponse = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, "select ?g ?p {\n"
               + "    values ?g { " + harvestedProvidersList + " } .\n"
               + "    graph ?g {\n"
               + "        optional {\n"
-              + "   			?x <http://www.w3.org/2002/07/owl#oneOf> <" + aSeedAuthor.URI + "> .\n"
-              + "   			bind (1 as ?xc) .\n"
+              + "   			?q <http://www.w3.org/2002/07/owl#oneOf> <" + aSeedAuthor.URI + "> .\n"
+              + "         ?p <http://www.w3.org/2002/07/owl#oneOf> ?q.\n"
               + "        }\n"
               + "    }\n"
-              + "} group by ?g");
-      String harvestedProvidersListRes = "";
-
-      for (int j = 1; j < AuthorsProviderslist.size(); j++) {
-        for (Map<String, Value> aresh : queryResponse) {
-          if (AuthorsProviderslist.get(j).Graph.compareTo(aresh.get("g").stringValue()) == 0) {
-            harvestedProvidersListRes += aresh.get("p").stringValue();
-            if (aresh.get("p").stringValue().compareTo("1") == 0) {
-              providersHarvested.add(AuthorsProviderslist.get(j));
-            }
-          }
+              + "}");
+      Map<String, Set<String>> qRHM = new HashMap<>();
+      for (Map<String, Value> aresh : queryResponse) {
+        String g = aresh.get("g").stringValue();
+        if (!qRHM.containsKey(g)) {
+          qRHM.put(g, new HashSet<String>());
         }
+        if (aresh.get("p") != null) {
+          qRHM.get(g).add(aresh.get("p").stringValue());
+        }
+      }
+      String harvestedProvidersListRes = "";
+      for (int j = 1; j < AuthorsProviderslist.size(); j++) {
+        Set<String> get = qRHM.get(AuthorsProviderslist.get(j).Graph);
+        harvestedProvidersListRes += !get.isEmpty() ? "1" : "0";
       }
       final String harvestedProvidersListURI = constantService.getDisambiguationStatusResource() + harvestedProvidersListRes;
       boolean alreadyProcessed = sparqlService.getSparqlService().ask(QueryLanguage.SPARQL, "ask from <" + constantService.getAuthorsSameAsGraph() + "> { <" + aSeedAuthor.URI + "> <http://dbpedia.org/ontology/status> <" + harvestedProvidersListURI + "> }");
@@ -899,8 +909,8 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         //Get candidates and disambiguate
         for (int j = 1; j < AuthorsProviderslist.size(); j++) {
           Provider aSecondaryProvider = AuthorsProviderslist.get(j);
-          if (providersHarvested.contains(aSecondaryProvider)) {
-            List<Person> aProviderCandidates = aSecondaryProvider.getCandidates(aSeedAuthor.URI);
+          if (!qRHM.get(aSecondaryProvider.Graph).isEmpty()) {
+            List<Person> aProviderCandidates = aSecondaryProvider.getCandidates(qRHM.get(aSecondaryProvider.Graph));
             if (!aProviderCandidates.isEmpty()) {
               Candidates.add(new AbstractMap.SimpleEntry<>(aSecondaryProvider, aProviderCandidates));
             }
@@ -948,6 +958,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
       }
     }
     bexecutorService.end();
+    sparqlService.getGraphDBInstance().dumpBuffer();
     return ProvidersElements;
   }
 
@@ -982,9 +993,13 @@ public class DisambiguationServiceImpl implements DisambiguationService {
     final List<Map<String, Value>> queryResponse = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, qryDisambiguatedCoauthors);
     int i = 0;
     for (Map<String, Value> anAuthor : queryResponse) {
+      if (i % 500 == 0) {
+        System.gc();
+      }
       final int ix = i;
       final String authorURI = anAuthor.get("p").stringValue();
       task.updateDetailMessage("Threads", bexecutorService.workingThreads() + "");
+      task.updateDetailMessage("Status", "" + i);
       bexecutorService.submitTask(new Runnable() {
         @Override
         public void run() {
@@ -1015,9 +1030,13 @@ public class DisambiguationServiceImpl implements DisambiguationService {
     final List<Map<String, Value>> queryResponse2 = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, qryDisambiguatedCoauthors);
     i = 0;
     for (Map<String, Value> anPublication : queryResponse2) {
+      if (i % 1000 == 0) {
+        System.gc();
+      }
       final int ix = i;
       final String pubURI = anPublication.get("p").stringValue();
       task.updateDetailMessage("Threads", bexecutorService.workingThreads() + "");
+      task.updateDetailMessage("Status", "" + i);
       bexecutorService.submitTask(new Runnable() {
         @Override
         public void run() {

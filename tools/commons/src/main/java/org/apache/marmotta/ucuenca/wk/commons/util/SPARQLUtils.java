@@ -324,6 +324,27 @@ public class SPARQLUtils {
     deleteGraph(graph + "__X");
   }
 
+    public void minusGraph(String graph, String graph2) throws RepositoryException, MalformedQueryException, UpdateExecutionException {
+    String q = "insert {\n"
+            + "        graph <&D&> {\n"
+            + "                ?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
+            + "        }\n"
+            + "}\n"
+            + "where {\n"
+            + "        graph <" + graph + "> {\n"
+            + "                ?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
+            + "        }\n"
+            + "        graph <" + graph2 + "> {\n"
+            + "                ?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
+            + "        }\n"
+            + "}";
+    transformGraph(graph, graph + "__X", q);
+    deleteGraph(graph);
+    copyGraph(graph + "__X", graph);
+    deleteGraph(graph + "__X");
+  }
+  
+  
   public void mergeSameAs(String graph) throws MarmottaException, RepositoryException, MalformedQueryException, UpdateExecutionException {
     int c = 0;
     int c1 = 0;

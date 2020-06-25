@@ -292,6 +292,9 @@ public final class GraphDB {
 
   public void dumpBuffer(URI g) throws RepositoryException, RDFHandlerException {
     Model mdl = hmmdl.get(g);
+    if (mdl.isEmpty()) {
+      return;
+    }
     RepositoryConnection connection = getConnection();
     connection.begin();
     runAddOp(connection, mdl, g);

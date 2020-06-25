@@ -40,32 +40,27 @@ public class SameAsVIVO {
    * @param args the command line arguments
    */
   public static void main(String[] args) throws Exception {
-    final SPARQLRepository data = new SPARQLRepository("http://201.159.222.25:8180/repositories/" + "test_projs", "http://201.159.222.25:8180/repositories/" + "test_projs" + "/statements");
-    ConcurrentHashMap<String, String> additionalHttpHeaders = new ConcurrentHashMap<>();
-    additionalHttpHeaders.put("Accept", "application/sparql-results+json,*/*;q=0.9");
-    data.setAdditionalHttpHeaders(additionalHttpHeaders);
-    data.initialize();
 
-    Map<String, Person> vivo = ObtPerson(query(data, QueryLanguage.SPARQL, "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
-            + "PREFIX dct: <http://purl.org/dc/terms/>\n"
-            + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
-            + "select distinct ?o ?p ?o_n ?first ?last {\n"
-            + "	graph <https://redi.cedia.edu.ec/context/vivoNew> {\n"
-            + "        ?r a <http://vivoweb.org/ontology/core#FacultyPosition>.\n"
-            + "        ?r <http://vivoweb.org/ontology/core#relates> ?p .\n"
-            + "        ?r <http://vivoweb.org/ontology/core#relates> ?o .\n"
-            + "        ?o a <http://vivoweb.org/ontology/core#University> .\n"
-            + "        ?p a <http://vivoweb.org/ontology/core#FacultyMember> .\n"
-            + "        ?o rdfs:label ?o_n .\n"
-            + "        ?p <http://purl.obolibrary.org/obo/ARG_2000028> ?vp.\n"
-            + "        ?vp <http://www.w3.org/2006/vcard/ns#hasName> ?vnp .\n"
-            + "        ?vnp <http://www.w3.org/2006/vcard/ns#givenName> ?first .\n"
-            + "		?vnp <http://www.w3.org/2006/vcard/ns#familyName> ?last .\n"
-            + "        \n"
-            + "    }\n"
-            + "}"));
+    final SPARQLRepository data_rp = gRepository("data");
+    final SPARQLRepository vivo_rp = gRepository("test_projs");
 
-    Map<String, Person> cepra = ObtPerson(query(data, QueryLanguage.SPARQL, "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+    Map<String, Person> redi = ObtPerson(query(data_rp, QueryLanguage.SPARQL, "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+            + "PREFIX schema: <http://schema.org/>\n"
+            + "select distinct ?o ?p ?p_n ?o_n ?first ?last {\n"
+            + "    graph <https://redi.cedia.edu.ec/context/redi> {\n"
+            + "        ?p foaf:img [] .\n"
+            + "        ?p schema:memberOf ?o .\n"
+            + "        ?o foaf:name ?o_n .\n"
+            + "        {\n"
+            + "            ?p foaf:name ?p_n .\n"
+            + "        } union {\n"
+            + "            ?p foaf:firstName ?first .\n"
+            + "            ?p foaf:lastName ?last .\n"
+            + "        }\n"
+            + "    }    \n"
+            + "} "));
+
+    Map<String, Person> cepra = ObtPerson(query(vivo_rp, QueryLanguage.SPARQL, "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
             + "PREFIX dct: <http://purl.org/dc/terms/>\n"
             + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
             + "select distinct ?o ?p ?o_n ?p_n {\n"
@@ -81,7 +76,7 @@ public class SameAsVIVO {
             + "}"));
 
     BoundedExecutor threadPool = BoundedExecutor.getThreadPool(4);
-    for (final Map.Entry<String, Person> a : vivo.entrySet()) {
+    for (final Map.Entry<String, Person> a : redi.entrySet()) {
       for (final Map.Entry<String, Person> b : cepra.entrySet()) {
 
         threadPool.submitTask(new Runnable() {
@@ -93,7 +88,7 @@ public class SameAsVIVO {
                 Boolean checkAffiliations = a.getValue().checkAffiliations(b.getValue());
                 if (checkAffiliations != null && checkAffiliations) {
 
-                  RepositoryConnection connection = data.getConnection();
+                  RepositoryConnection connection = vivo_rp.getConnection();
                   connection.begin();
                   connection.add(ValueFactoryImpl.getInstance().createURI(a.getKey()),
                           OWL.SAMEAS, ValueFactoryImpl.getInstance().createURI(b.getKey()),
@@ -112,7 +107,18 @@ public class SameAsVIVO {
     }
 
     threadPool.end();
-    data.shutDown();
+    vivo_rp.shutDown();
+    data_rp.shutDown();
+  }
+
+  public static SPARQLRepository gRepository(String dbs) throws RepositoryException {
+    final SPARQLRepository data = new SPARQLRepository("http://201.159.222.25:8180/repositories/" + dbs, "http://201.159.222.25:8180/repositories/" + dbs + "/statements");
+    ConcurrentHashMap<String, String> additionalHttpHeaders = new ConcurrentHashMap<>();
+    additionalHttpHeaders.put("Accept", "application/sparql-results+json,*/*;q=0.9");
+    data.setAdditionalHttpHeaders(additionalHttpHeaders);
+    data.initialize();
+
+    return data;
   }
 
   public static Map<String, Person> ObtPerson(List<Map<String, Value>> lst) {
