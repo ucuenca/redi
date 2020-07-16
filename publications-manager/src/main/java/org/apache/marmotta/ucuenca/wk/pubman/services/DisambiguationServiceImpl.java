@@ -7,7 +7,6 @@ package org.apache.marmotta.ucuenca.wk.pubman.services;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -45,7 +44,6 @@ import org.apache.marmotta.ucuenca.wk.commons.util.ModifiedJaccardMod;
 import org.apache.marmotta.ucuenca.wk.commons.util.SPARQLUtils;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
-import org.mapdb.HTreeMap;
 import org.openrdf.model.Model;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.LinkedHashModel;
@@ -213,9 +211,9 @@ public class DisambiguationServiceImpl implements DisambiguationService {
 //      sparqlUtils.minusGraph(constantService.getAuthorsSameAsGraph() + ASA_F, constantService.getAuthorsSameAsGraph() + ASA_D);
 //      sparqlUtils.copyGraph(constantService.getAuthorsSameAsGraph() + ASA_I, constantService.getAuthorsSameAsGraph() + ASA_F);
 //      mergeAuthors();
-      sparqlUtils.minusGraph(constantService.getAuthorsSameAsGraph() + SAFE_MERGE, constantService.getAuthorsSameAsGraph() + ASA_D2);
-      sparqlUtils.copyGraph(constantService.getAuthorsSameAsGraph() + ASA_I2, constantService.getAuthorsSameAsGraph() + SAFE_MERGE);
-      sparqlUtils.minusGraph(constantService.getAuthorsSameAsGraph() + FIX_MERGE, constantService.getAuthorsSameAsGraph() + ASA_D2);
+//      sparqlUtils.minusGraph(constantService.getAuthorsSameAsGraph() + SAFE_MERGE, constantService.getAuthorsSameAsGraph() + ASA_D2);
+//      sparqlUtils.copyGraph(constantService.getAuthorsSameAsGraph() + ASA_I2, constantService.getAuthorsSameAsGraph() + SAFE_MERGE);
+//      sparqlUtils.minusGraph(constantService.getAuthorsSameAsGraph() + FIX_MERGE, constantService.getAuthorsSameAsGraph() + ASA_D2);
       
 ////      /**/
 //            sparqlUtils.clearSameAs(constantService.getAuthorsSameAsGraph()  + ASA_F , constantService.getAuthorsSameAsGraph() + FIX_MERGE);
