@@ -85,13 +85,13 @@ final public class VIVOExtractor {
     }
 
     @SuppressWarnings("PMD")
-    public static void linkFundingOrganizations(DisambiguationUtilsService dus, Model m, Model sa) throws RepositoryException, MalformedQueryException, QueryEvaluationException, MarmottaException {
+    public static void linkOrganizations(DisambiguationUtilsService dus, Model m, Model sa) throws RepositoryException, MalformedQueryException, QueryEvaluationException, MarmottaException {
 
         Model funds = extractData(m, "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
                 + "construct {\n"
                 + "    ?o foaf:name ?la .\n"
                 + "} where {\n"
-                + "    ?proj <https://www.openaire.eu/cerif-profile/1.1/Funded> ?o .\n"
+                + "    ?o a foaf:Organization.\n"
                 + "    ?o foaf:name ?la .\n"
                 + "}");
         ConcurrentHashMap<String, Set<String>> mp = new ConcurrentHashMap<>();
@@ -114,12 +114,12 @@ final public class VIVOExtractor {
     }
 
     @SuppressWarnings("PMD")
-    public static void linkOrganizations(DisambiguationUtilsService dus, Model m, Model mend, String endp) throws RepositoryException, MalformedQueryException, QueryEvaluationException, MarmottaException {
-        Model affs = extractData(m, "PREFIX schema: <http://schema.org/> \n"
+    public static void linkOrganizations2(DisambiguationUtilsService dus, Model m, Model mend, String endp) throws RepositoryException, MalformedQueryException, QueryEvaluationException, MarmottaException {
+        Model affs = extractData(m, "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n PREFIX schema: <http://schema.org/> \n"
                 + "construct {\n"
-                + "    ?o schema:affiliation ?aff .\n"
+                + "    ?p schema:affiliation ?aff .\n"
                 + "} where {\n"
-                + "    ?o schema:affiliation ?aff .\n"
+                + "    ?p schema:memberOf ?o. ?o foaf:name ?aff .\n"
                 + "}");
         ConcurrentHashMap<String, Set<String>> mp = new ConcurrentHashMap<>();
         for (Statement st : affs) {
@@ -148,7 +148,7 @@ final public class VIVOExtractor {
     }
 
     @SuppressWarnings("PMD")
-    public static void download(String tipe, String base, Model str, Resource p, String parent, String endp, boolean recursive, String baseAuthURI, Model mapAuthURI) throws UnirestException, IOException, RDFParseException, Exception {
+    public static void download(String tipe, String base, Model str, Resource p, String parent, String endp, boolean recursive, String baseAuthURI, String projBase, Model mapAuthURI) throws UnirestException, IOException, RDFParseException, Exception {
         HttpResponse<String> respn = null;
         respn = Unirest.get(base + "/individual?uri=" + URLEncoder.encode(p.stringValue()) + "&format=rdfxml").asString();
 
@@ -183,18 +183,18 @@ final public class VIVOExtractor {
 
                     Set<Value> vls = parse.filter(p, ValueFactoryImpl.getInstance().createURI("http://purl.obolibrary.org/obo/ARG_2000028"), null).objects();
                     for (Value x : vls) {
-                        download("vcard", base, str, (Resource) x, p.stringValue(), endp, true, baseAuthURI, mapAuthURI);
+                        download("vcard", base, str, (Resource) x, p.stringValue(), endp, true, baseAuthURI, projBase, mapAuthURI);
                     }
                     vls = parse.filter(p, ValueFactoryImpl.getInstance().createURI("http://vivoweb.org/ontology/core#relatedBy"), null).objects();
                     for (Value x : vls) {
                         if (!parse.filter((Resource) x, RDF.TYPE, ValueFactoryImpl.getInstance().createURI("http://vivoweb.org/ontology/core#Position")).objects().isEmpty()) {
-                            download("Position", base, str, (Resource) x, p.stringValue(), endp, true, baseAuthURI, mapAuthURI);
+                            download("Position", base, str, (Resource) x, p.stringValue(), endp, true, baseAuthURI, projBase, mapAuthURI);
                         }
                         if (!parse.filter((Resource) x, RDF.TYPE, ValueFactoryImpl.getInstance().createURI("http://vivoweb.org/ontology/core#Authorship")).objects().isEmpty()) {
-                            download("Authorship", base, str, (Resource) x, null, endp, true, baseAuthURI, mapAuthURI);
+                            download("Authorship", base, str, (Resource) x, null, endp, true, baseAuthURI, projBase, mapAuthURI);
                         }
                         if (!parse.filter((Resource) x, RDF.TYPE, ValueFactoryImpl.getInstance().createURI("http://vivoweb.org/ontology/core#Grant")).objects().isEmpty()) {
-                            download("Grant", base, str, (Resource) x, null, endp, true, baseAuthURI, mapAuthURI);
+                            download("Grant", base, str, (Resource) x, null, endp, true, baseAuthURI, projBase, mapAuthURI);
                         }
 
                     }
@@ -220,7 +220,7 @@ final public class VIVOExtractor {
                             + "    ?a <http://vivoweb.org/ontology/core#start> ?i .\n"
                             + "}").objects();
                     for (Value x : intvx) {
-                        download("proj_intv_start", base, str, (Resource) x, parent, endp, true, baseAuthURI, mapAuthURI);
+                        download("proj_intv_start", base, str, (Resource) x, parent, endp, true, baseAuthURI, projBase, mapAuthURI);
                     }
                     intvx = extractData(parse, "construct {\n"
                             + "    ?a <http://vivoweb.org/ontology/core#end> ?i .\n"
@@ -228,12 +228,15 @@ final public class VIVOExtractor {
                             + "    ?a <http://vivoweb.org/ontology/core#end> ?i .\n"
                             + "}").objects();
                     for (Value x : intvx) {
-                        download("proj_intv_end", base, str, (Resource) x, parent, endp, true, baseAuthURI, mapAuthURI);
+                        download("proj_intv_end", base, str, (Resource) x, parent, endp, true, baseAuthURI, projBase, mapAuthURI);
                     }
 
                     break;
 
                 case "Grant":
+                    URI newURIProj = ValueFactoryImpl.getInstance().createURI(projBase + Cache.getMD5(p.stringValue()));
+                    mapAuthURI.add(newURIProj, OWL.SAMEAS, p);
+
                     str.addAll(extractData(parse, "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
                             + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
                             + "PREFIX schema: <http://schema.org/> "
@@ -247,6 +250,18 @@ final public class VIVOExtractor {
                             + "?pp <http://vivoweb.org/ontology/core#relates> ?l . "
                             + "?l a <http://xmlns.com/foaf/0.1/Person> . "
                             + "}"));
+                    
+                    str.addAll(extractData(parse, "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
+                            + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
+                            + "PREFIX schema: <http://schema.org/> "
+                            + "construct { "
+                            + " ?pp a <http://xmlns.com/foaf/0.1/Project> . "
+                            + " ?pp <https://www.openaire.eu/cerif-profile/1.1/linksToOrganisationUnit> ?l . "
+                            + " ?l a foaf:Organization ."
+                            + "} where { values ?pp {<" + p.stringValue() + ">} . "
+                            + "?pp <http://vivoweb.org/ontology/core#relates> ?l . "
+                            + "?l a <http://vivoweb.org/ontology/core#University> . "
+                            + "}"));
 
                     str.addAll(extractData(parse, "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
                             + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
@@ -254,7 +269,7 @@ final public class VIVOExtractor {
                             + "construct { "
                             + " ?o a <http://xmlns.com/foaf/0.1/Organization> . "
                             + " ?o foaf:name ?la . "
-                            + " ?proj <https://www.openaire.eu/cerif-profile/1.1/Funded> ?o . "
+                            + " ?proj foaf:fundedBy ?o . "
                             + "} where { values ?proj { <" + p.stringValue() + "> } . "
                             + "?proj <http://vivoweb.org/ontology/core#assignedBy> ?o . "
                             + "?o rdfs:label ?la . "
@@ -266,7 +281,7 @@ final public class VIVOExtractor {
                             + "    ?a <http://vivoweb.org/ontology/core#dateTimeInterval> ?i .\n"
                             + "}").objects();
                     for (Value x : intv) {
-                        download("proj_intv", base, str, (Resource) x, p.stringValue(), endp, true, baseAuthURI, mapAuthURI);
+                        download("proj_intv", base, str, (Resource) x, p.stringValue(), endp, true, baseAuthURI, projBase, mapAuthURI);
                     }
 
                     break;
@@ -317,7 +332,7 @@ final public class VIVOExtractor {
                             + "?l a <http://purl.org/ontology/bibo/Document> . }").subjects();
                     for (Resource x : rspl) {
                         if (recursive) {
-                            download("document", base, str, x, p.stringValue(), endp, true, baseAuthURI, mapAuthURI);
+                            download("document", base, str, x, p.stringValue(), endp, true, baseAuthURI, projBase, mapAuthURI);
                         }
                     }
                     break;
@@ -336,10 +351,10 @@ final public class VIVOExtractor {
                     int c = 0;
                     for (Value x : vls) {
                         if (c == 0) {
-                            download("Authorship", base, str, (Resource) x, "creator", endp, false, baseAuthURI, mapAuthURI);
+                            download("Authorship", base, str, (Resource) x, "creator", endp, false, baseAuthURI, projBase, mapAuthURI);
                         } else {
                             //contributor
-                            download("Authorship", base, str, (Resource) x, null, endp, false, baseAuthURI, mapAuthURI);
+                            download("Authorship", base, str, (Resource) x, null, endp, false, baseAuthURI, projBase, mapAuthURI);
                         }
                         c++;
                     }
@@ -364,7 +379,7 @@ final public class VIVOExtractor {
                             + "?pp <http://vivoweb.org/ontology/core#dateTimeValue> ?da ."
                             + "}").objects();
                     for (Value x : vls) {
-                        download("dateTime", base, str, (Resource) x, p.stringValue(), endp, true, baseAuthURI, mapAuthURI);
+                        download("dateTime", base, str, (Resource) x, p.stringValue(), endp, true, baseAuthURI, projBase, mapAuthURI);
                     }
 
                     vls = extractData(parse, "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
@@ -378,7 +393,7 @@ final public class VIVOExtractor {
                             + "}").objects();
                     for (Value x : vls) {
                         str.add(p, ValueFactoryImpl.getInstance().createURI("http://purl.org/dc/terms/isPartOf"), x);
-                        download("journal", base, str, (Resource) x, p.stringValue(), endp, true, baseAuthURI, mapAuthURI);
+                        download("journal", base, str, (Resource) x, p.stringValue(), endp, true, baseAuthURI, projBase, mapAuthURI);
                     }
 
                     ////////////////////
@@ -410,7 +425,7 @@ final public class VIVOExtractor {
                             + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
                             + "PREFIX schema: <http://schema.org/> "
                             + "construct { "
-                            + "<" + parent + "> schema:affiliation ?aff . "
+                            + "<" + parent + "> schema:memberOf ?l . ?l a foaf:Organization . ?l foaf:name ?aff . "
                             + "} where { values ?pp {<" + p.stringValue() + ">} . ?pp <http://vivoweb.org/ontology/core#relates> ?l . "
                             + "?l a <http://vivoweb.org/ontology/core#University> . ?l rdfs:label ?aff .}"));
 
@@ -418,7 +433,7 @@ final public class VIVOExtractor {
                             + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
                             + "PREFIX schema: <http://schema.org/> "
                             + "construct { "
-                            + "<" + parent + "> schema:affiliation ?aff . "
+                            + "<" + parent + "> schema:memberOf ?l . ?l a foaf:Organization . ?l foaf:name ?aff . "
                             + "} where { values ?pp {<" + p.stringValue() + ">} . ?pp <http://vivoweb.org/ontology/core#relates> ?l . "
                             + "?l a <http://vivoweb.org/ontology/core#Department> . ?l rdfs:label ?aff .}"));
                     break;
@@ -428,21 +443,21 @@ final public class VIVOExtractor {
                             + "?pp <http://www.w3.org/2006/vcard/ns#hasName> ?l ."
                             + "} where { values ?pp {<" + p.stringValue() + ">} . ?pp <http://www.w3.org/2006/vcard/ns#hasName> ?l . }").objects();
                     for (Value x : vlsx) {
-                        download("vcard_name", base, str, (Resource) x, parent, endp, true, baseAuthURI, mapAuthURI);
+                        download("vcard_name", base, str, (Resource) x, parent, endp, true, baseAuthURI, projBase, mapAuthURI);
                     }
                     vlsx = extractData(parse, "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
                             + "construct { "
                             + "?pp <http://www.w3.org/2006/vcard/ns#hasEmail> ?l ."
                             + "} where { values ?pp {<" + p.stringValue() + ">} . ?pp <http://www.w3.org/2006/vcard/ns#hasEmail> ?l . }").objects();
                     for (Value x : vlsx) {
-                        download("vcard_email", base, str, (Resource) x, parent, endp, true, baseAuthURI, mapAuthURI);
+                        download("vcard_email", base, str, (Resource) x, parent, endp, true, baseAuthURI, projBase, mapAuthURI);
                     }
                     vlsx = extractData(parse, "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
                             + "construct { "
                             + "?pp <http://www.w3.org/2006/vcard/ns#hasTelephone> ?l ."
                             + "} where { values ?pp {<" + p.stringValue() + ">} . ?pp <http://www.w3.org/2006/vcard/ns#hasTelephone> ?l . }").objects();
                     for (Value x : vlsx) {
-                        download("vcard_phone", base, str, (Resource) x, parent, endp, true, baseAuthURI, mapAuthURI);
+                        download("vcard_phone", base, str, (Resource) x, parent, endp, true, baseAuthURI, projBase, mapAuthURI);
                     }
                     break;
                 case "vcard_phone":

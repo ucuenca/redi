@@ -290,14 +290,15 @@ public class AuthorServiceImpl implements AuthorService {
                 Set<Resource> subjects = parse.filter(null, RDF.TYPE, FOAF.PERSON).subjects();
                 String orgx = org.replaceAll(constantService.getOrganizationBaseUri(), "");
                 String authBase = constantService.getAuthorResource() + "vivo/" + orgx + "/";
+                String projBase = constantService.getProjectResource() + "vivo/" + orgx + "/";
                 Model sameAsMappins = new LinkedHashModel();
                 int co = 0;
                 for (Resource rsx : subjects) {
                     log.info("Extracting author {}, {}/{}", rsx.stringValue(), co, subjects.size());
-                    VIVOExtractor.download("person", url, output, rsx, null, end, true, authBase, sameAsMappins);
+                    VIVOExtractor.download("person", url, output, rsx, null, end, true, authBase, projBase, sameAsMappins);
                     //
-                    VIVOExtractor.linkOrganizations(disambiguationUtils, output, output2, end);
-                    VIVOExtractor.linkFundingOrganizations(disambiguationUtils, output, sameAsMappins);
+                    VIVOExtractor.linkOrganizations(disambiguationUtils, output, sameAsMappins);
+                    VIVOExtractor.linkOrganizations2(disambiguationUtils, output, output2, end);
                     //
                     repositoryConnetion.begin();
                     sparqlService.getGraphDBInstance().runSplitAddOp(repositoryConnetion, output, instance.createURI(constantService.getAuthorsGraph() + "_Beta"));
