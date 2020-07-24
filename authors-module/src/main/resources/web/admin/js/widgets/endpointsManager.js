@@ -154,7 +154,8 @@ function newEndpoint() {
         uploadOAI(type, org, val1, true);
     }  else if (type == "cerif") {
         var val1 = $("input#endpoint_cerif").val();
-        uploadOAI(type, org, val1, false);
+        var check = $('input#check_cerif').is(':checked');
+        uploadOAI(type, org, val1, check);
     }  else if (type == "orcid") {
         uploadORCID(type, org);
     } else if (type == "vivo") {

@@ -1,19 +1,41 @@
-wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$window', 'globalData', 'sparqlQuery', 'Authors',
-  function($scope, $routeParams, $window, globalData, sparqlQuery, Authors) {
+wkhomeControllers.controller('projectProfile', ['$scope', '$routeParams', '$window', 'globalData', 'sparqlQuery', 'Projects',
+  function($scope, $routeParams, $window, globalData, sparqlQuery, Projects) {
     // Define a new author object
-    $scope.author = {};
+    $scope.project = {};
     $scope.coauthors = {};
 
     /*  $scope.coauthors  = [];*/
-    var author = $scope.author;
-    author.uri = $routeParams.pjid;
-    author.encodedUri = encodeURIComponent(author.uri);
-    var newhost = $window.location.protocol + '//' + $window.location.hostname + ($window.location.port ? ':8080' : '') + '';
-    var profilevalUri = '/author/profileval/'+author.uri;
-    console.log ("URL");
-    console.log(profilevalUri);
+    var project = $scope.project;
+    project.uri = $routeParams.project;
 
-    $scope.author = [ "title" : "REDI" , "bio" = "Este proyecto es chevere" ];
+    project.encodedUri = encodeURIComponent(project.uri);
+    var newhost = $window.location.protocol + '//' + $window.location.hostname + ($window.location.port ? ':8080' : '') + '';
+    var profilevalUri = '/project/profileval/'+project.uri;
+    console.log ("URL");
+    console.log(project.uri);
+
+    $scope.project = { "name" : "REDI" , "bio" : "Este proyecto es chevere" };
+
+    Projects.query({
+      id: project.uri
+    }, function(data) {
+       var projectdata = data.data;
+      //$scope.project = data; 
+       projectdata.members = $.map( projectdata.members.split("|") , acro );
+       projectdata.funders = $.map(projectdata.funders.split("|"), acro );
+        projectdata.img = '/wkhome/images/proj.png';
+
+          
+
+      //$scope.project = { "title" : projectdata.title , "bio" : "Este proyecto es chevere" };
+      $scope.project = projectdata;
+      console.log (projectdata);
+    });
+
+    function acro ( uri ) {
+      return uri.slice(uri.lastIndexOf("/")+1);
+
+    }
 
 
     /*Authors.query({
@@ -44,23 +66,23 @@ wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$windo
     });*/
 
     $scope.tree = function() {
-      $window.location.hash = '/author/tree/' + author.uri;
+      $window.location.hash = '/author/tree/' + project.uri;
     };
 
     $scope.stat = function() {
 
-      $window.location.hash = '/info/statisticsbyAuthor/' + author.uri; 
+      $window.location.hash = '/info/statisticsbyAuthor/' + project.uri; 
     };
 
 
     $scope.network = function() {
 
-      $window.location.hash = '/author/network/' + author.uri;
+      $window.location.hash = '/author/network/' + project.uri;
     };
 
     $scope.publication = function() {
 
-      $window.location.hash = '/author/publications/q=author:%22' + author.uri + '%22&fl=*&rows=10&wt=json/author/' + author.uri;
+      $window.location.hash = '/author/publications/q=author:%22' + project.uri + '%22&fl=*&rows=10&wt=json/author/' + project.uri;
     };
 
     $scope.clickonRelatedauthor = function(uri) {
@@ -69,10 +91,11 @@ wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$windo
     }
 
     function executeRelatedAuthors1(querytoExecute, divtoload) {
-
+       console.log (querytoExecute);
       sparqlQuery.querySrv({
         query: querytoExecute
       }, function(rdf) {
+        console.log (rdf);
 
         jsonld.compact(rdf, globalData.CONTEXT, function(err, compacted) {
           var authorInfo = $('div.coauthor-panel .' + divtoload);
@@ -96,7 +119,7 @@ wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$windo
               var coauthors = [];
               _.map(values, function(value) {
 
-                if (value["rdfs:label"] && value["uc:total"]["@value"]) {
+                if (value["rdfs:label"] ) {
                   var coauthor = {};
                   var authorname = typeof value["rdfs:label"] == "string" ? value["rdfs:label"] : _.first(value["rdfs:label"], 1);
                   var anchor = $("<a class='listCoauthor' target='blank' onclick='return clickonRelatedauthor(\"" + value["@id"] + "\")'  >").text("");
@@ -104,7 +127,6 @@ wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$windo
                   coauthor.authorname = authorname;
                   coauthor.id = value["@id"];
                   coauthor.img = img;
-                  coauthor.total = value["uc:total"]["@value"];
                   coauthors.push(coauthor);
 
                   return "";
@@ -122,31 +144,30 @@ wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$windo
       }); // end  sparqlQuery.querySrv(...
     };
 
-
+    globalData.centralGraph = 'https://redi.cedia.edu.ec/context/redi';
     //cambiar por centralgraph
     var getRelatedAuthorsByPublicationsQuery = globalData.PREFIX +
-      'CONSTRUCT {' +
-      '  <http://ucuenca.edu.ec/wkhuska/resultTitle> a uc:pagetitle;' +
-      '                                              uc:viewtitle "Authors Related With {0}".' +
-      '  ?subject rdfs:label ?name.' +
-      '  ?subject uc:total ?totalPub .' +
-      '  ?subject foaf:img ?img .' +
-      '} WHERE  {' +
-      '  SELECT ?subject (MAX(str(?name_)) as ?name) (COUNT( DISTINCT ?pub) as ?totalPub) (MAX(str(?img_)) as ?imgm) (IRI (?imgm) as ?img)' +
-      '  WHERE { GRAPH <' + globalData.centralGraph + '> {' +
-      '    <' + author.uri + '> foaf:publications ?pub.' +
-      '    ?subject foaf:publications ?pub;' +
-      '             foaf:name ?name_ ; schema:memberOf ?org .' +
-      '     OPTIONAL{?subject  foaf:img ?img_.}' +
-      '    FILTER(<' + author.uri + '> != ?subject)' +
-      '  } GRAPH <'+globalData.organizationsGraph+'> { ?org ?prop ?val } } GROUP BY ?subject  order by desc(?totalPub) limit 6' +
-      '}';
+      'CONSTRUCT {\n' +
+      '        <http://ucuenca.edu.ec/wkhuska/resultTitle> a uc:pagetitle;\n' +
+      '                                                    uc:viewtitle \"Authors Related With {0}\".\n' +
+      '        ?person rdfs:label ?name.\n' +
+      '        ?person foaf:img ?img .\n' +
+      '      } WHERE  {\n' +
+      '        SELECT ?person (MAX(str(?name_)) as ?name) (MAX(str(?img_)) as ?imgm) (IRI (?imgm) as ?img)\n' +
+      '        WHERE { GRAPH <'+globalData.centralGraph +'> {\n' +
+      '          <'+project.uri+'> <https://www.openaire.eu/cerif-profile/1.1/linksToPerson> ?person.\n' +
+      '          ?person foaf:name ?name_  .\n' +
+      '           OPTIONAL{?person  foaf:img ?img_.}\n' +
+      '         \n' +
+      '        } \n' +
+      '    } group by ?person }  ';
 
     function relatedAuthors(id) {
+
       // var relatedAuthosPublicationsQuery = String.format(getRelatedAuthorsByPublicationsQuery, author["foaf:name"], id);
       executeRelatedAuthors1(getRelatedAuthorsByPublicationsQuery, "coauthor-list");
     };
-    relatedAuthors(author.uri);
+    relatedAuthors(project.uri);
 
 
 

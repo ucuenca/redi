@@ -282,7 +282,7 @@ public class AuthorWebService {
   @Path("/endpointOAIRegister")
   public Response endpointOAIRegister(@QueryParam("type") String type, @QueryParam("org") String org, @QueryParam("url") String url, @QueryParam("severe") Boolean severemode) {
     //String result = organizationService.editOrg( acro, namEn, namEs, coun, prov, city, lan, lon, type);
-    String result = endpointsService.registerOAI(type, org, url, severemode);
+    String result = endpointsService.registerOAI(type, org, url, severemode , false );
     return Response.ok().entity(result).build();
     //return  Response.status(Status.BAD_REQUEST).entity("Incorrect file format.").build();
   }

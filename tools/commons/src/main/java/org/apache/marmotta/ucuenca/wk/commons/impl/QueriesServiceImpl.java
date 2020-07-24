@@ -41,7 +41,8 @@ public class QueriesServiceImpl implements QueriesService {
           + " PREFIX uc: <http://ucuenca.edu.ec/ontology#> "
           + " PREFIX schema: <http://schema.org/> "
           + " PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> "
-          + " PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>";
+          + " PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
+          + " PREFIX cerif: <https://www.openaire.eu/cerif-profile/1.1/>";
 
   private final static String OWLSAMEAS = "<http://www.w3.org/2002/07/owl#sameAs>";
 
@@ -2293,5 +2294,32 @@ public class QueriesServiceImpl implements QueriesService {
             + "                  }\n"
             + "                } GROUP BY ?prov order by desc (?total)";
   }
+  
+  @Override
+  public String getProjects () {
+   return PREFIXES + "select distinct ?uri \n" +
+                      "where { " +
+                      "    graph <" + con.getCentralGraph() + "> {\n" +
+                      "        ?uri a <http://xmlns.com/foaf/0.1/Project>  \n" +
+                      "   }" +
+                      "}";
+  }
+  
+  
+  @Override
+  public String getProjectInfo (String uri) {
+   return PREFIXES + "select distinct ?title (CONCAT(STR(DAY(?sdate)), '-', STR(MONTH(?sdate)), '-', STR(YEAR(?sdate))) as ?starDate)  (CONCAT(STR(DAY(?edate)), '-', STR(MONTH(?edate)), '-', STR(YEAR(?edate))) as ?endDate) (GROUP_CONCAT(DISTINCT STR(?funded); separator='|') as ?funders) (GROUP_CONCAT(DISTINCT STR(?org); separator='|') as ?orgs)\n" +
+                      "where {\n" +
+                      "    graph <https://redi.cedia.edu.ec/context/redi> {\n" +
+                      "<"+uri+"> dct:title ?title .\n" +
+                      "OPTIONAL {  <"+uri+"> cerif:StartDate ?sdate   }\n" +
+                      "OPTIONAL {  <"+uri+"> cerif:EndDate ?edate .   }\n" +
+                      "OPTIONAL {  <"+uri+"> foaf:fundedBy ?funded  }       \n" +
+                      "OPTIONAL {  <"+uri+"> <https://www.openaire.eu/cerif-profile/1.1/linksToOrganisationUnit> ?org \n" +
+                      "        } " +
+                      "   } " +
+                      "} group by ?title  ?sdate ?edate ";
+  }
+  
 
 }

@@ -35,6 +35,7 @@
                 $("tr.OJS_form").css("display","none");
                 $("tr.ORCID_form").css("display","none");
                 $("tr.VIVO_form").css("display","none");
+                $("tr.CERIF_form").css("display","none");
                 
                 $("select#endpoint_type").val("sparql");
                 console.log(_SERVER_URL);
@@ -147,6 +148,10 @@
                  <tr class="CERIF_form"> 
                     <td style="width: 150px;"> OAI_CERIF  Main URL </td>
                     <td>  <input type="text" style="width: 400px;" id="endpoint_cerif"> </td>
+                </tr>
+                <tr class="CERIF_form"> 
+                    <td style="width: 150px;"> Create aditional endpoints for others affiliations  </td>
+                    <td>  <input type="checkbox" value="" style="width: 50px;" id="check_cerif"> </td>
                 </tr>
                 <tr class="ORCID_form">
                     <td>

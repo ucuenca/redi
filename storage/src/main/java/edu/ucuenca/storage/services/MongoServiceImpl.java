@@ -87,6 +87,7 @@ public class MongoServiceImpl implements MongoService {
     private MongoCollection<Document> countries;
     private MongoCollection<Document> sparqls;
     private MongoCollection<Document> authors_val;
+    private MongoCollection<Document> projects;
 
     private MongoCollection<Document> sessions;
 
@@ -114,6 +115,7 @@ public class MongoServiceImpl implements MongoService {
         sparqls = db.getCollection(Collection.SPARQLS.getValue());
         statisticsByAuthor = db.getCollection(Collection.STATISTICS_AUTHOR.getValue());
         authors_val = db.getCollection(Collection.PROFILE_AUTHOR.getValue());
+        projects = db.getCollection(Collection.PROJECTPROFILE.getValue());
         sessions = db.getCollection(Collection.SESSIONS.getValue());
 
     }
@@ -123,6 +125,12 @@ public class MongoServiceImpl implements MongoService {
         return authors.find(eq("_id", uri))
                 .first()
                 .toJson();
+    }
+    
+    @Override
+    public Document getProfileValAuthor(String id) {
+        return authors_val.find(eq("_id", id)).first();
+
     }
 
     @Override
@@ -177,8 +185,8 @@ public class MongoServiceImpl implements MongoService {
     }
 
     @Override
-    public Document getProfileValAuthor(String id) {
-        return authors_val.find(eq("_id", id)).first();
+    public Document getProfileProject(String id) {
+        return projects.find(eq("_id", id)).first();
 
     }
 

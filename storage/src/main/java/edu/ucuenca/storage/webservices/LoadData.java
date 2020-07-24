@@ -119,6 +119,19 @@ public class LoadData {
     }
     return Response.ok().entity("Statistics load successfully").build();
   }
+  
+    @POST
+  @Path("/projects")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getProjects() throws FailMongoConnectionException {
+    try {
+      loadService.ProjectProfile();
+    } catch (Exception e) {
+      log.error("Cannot load clusters into Mongo DB", e);
+      throw new FailMongoConnectionException(String.format("Cannot load clusters into Mongo DB"), e);
+    }
+    return Response.ok().entity("Projects loaded successfully").build();
+  }
 
   @POST
   @Path("/clusters")

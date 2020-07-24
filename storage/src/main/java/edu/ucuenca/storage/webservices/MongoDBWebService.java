@@ -148,6 +148,19 @@ public class MongoDBWebService {
         }
         return Response.ok().entity(response).build();
     }
+    
+    @GET
+    @Path("/project")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProjects(@QueryParam("uri") String uri) throws FailMongoConnectionException {
+        Document response;
+        try {
+            response = mongoService.getProfileProject(uri);
+        } catch (Exception e) {
+            throw new FailMongoConnectionException("Cannot retrieve projects", e);
+        }
+        return Response.ok().entity(response).build();
+    }
 
     @GET
     @Path("/statistics")

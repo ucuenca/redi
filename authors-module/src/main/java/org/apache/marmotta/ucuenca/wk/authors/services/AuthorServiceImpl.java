@@ -95,6 +95,7 @@ import org.apache.marmotta.ucuenca.wk.authors.services.utils.VIVOExtractor;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Person;
 //import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
+import org.apache.marmotta.ucuenca.wk.commons.service.DisambiguationUtilsService;
 import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 //import org.apache.marmotta.ucuenca.wk.commons.service.DistanceService;
 //import org.apache.marmotta.ucuenca.wk.commons.service.KeywordsService;
@@ -163,6 +164,9 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Inject
     private ExternalSPARQLService sparqlService;
+    
+    @Inject
+    private DisambiguationUtilsService dserv;
 
     //@Inject
     //private ProfileValidation pv;
@@ -353,11 +357,11 @@ public class AuthorServiceImpl implements AuthorService {
                     if ("file".equals(type)) {
                         e = new EndpointFile(status, org, url, type, endpoint);
                         //  EndpointsObject.add(e);
-                        extractResult = extractAuthorGeneric(e, "0", false);
+                        extractResult = extractAuthorGeneric(e, "0", false , false);
 
                     } else if ("sparql".equals(type)) {
                         e = new EndpointSPARQL(status, org, url, type, graph, endpoint);
-                        extractResult = extractAuthorGeneric(e, "1", false);
+                        extractResult = extractAuthorGeneric(e, "1", false , false);
                         // EndpointsObject.add(e);
                     } else if ("orcid".equals(type)) {
                         //Read from mongo cache.
@@ -374,7 +378,7 @@ public class AuthorServiceImpl implements AuthorService {
               if ("cerif".equals(type)){
                 min = "0";
               }
-              extractResult = extractAuthorGeneric(e, min , mode);
+              extractResult = extractAuthorGeneric(e, min , false , mode);
               String nametype = type;
               if (extractResult.contains("Success")) {
                 if ("oai-pmh".equals(type)) {
@@ -498,12 +502,12 @@ public class AuthorServiceImpl implements AuthorService {
         return jsonObj.toString();
     }
 
-    @SuppressWarnings({"PMD.ExcessiveMethodLength", "PMD.UnusedPrivateMethod", "PMD.AvoidDuplicateLiterals"})
-    private String extractAuthorGeneric(EndpointObject endpoint, String min, Boolean mode) {
+    @SuppressWarnings({"PMD.ExcessiveMethodLength", "PMD.UnusedPrivateMethod", "PMD.AvoidDuplicateLiterals","PMD.NcssMethodCount", "PMD.NPathComplexity"})
+    private String extractAuthorGeneric(EndpointObject endpoint, String min, Boolean mode , Boolean tempGraph) {
         int tripletasCargadas = 0; //cantidad de tripletas actualizadaas
         int contAutoresNuevosNoCargados = 0; //cantidad de actores nuevos no cargados
         int contAutoresNuevosEncontrados = 0; //hace referencia a la cantidad de actores existentes en el archivo temporal antes de la actualizacion
-
+        
         if (endpoint.prepareQuery()) {
             log.info("Endpoint listo");
             int authorsSize = 0;
@@ -536,12 +540,12 @@ public class AuthorServiceImpl implements AuthorService {
                             npub = Integer.parseInt(pub.get(0).get("npub").toString());
                             localnpub = Integer.parseInt(sparqlFunctionsService.querylocal(countPublicationslocal(localResource)).get(0).get("npub").stringValue());
                         }
-
+                        String provenance = endpoint.getResourceId();
                         if (!askauthor || npub > localnpub) {
                             contAutoresNuevosEncontrados++;
                             printPercentProcess(contAutoresNuevosEncontrados, authorsSize, endpoint.getName());
                             log.info("Update : " + localResource + " NPub:" + localnpub + " ->" + npub);
-//  String localResource = buildLocalURI(resource);
+                            //  String localResource = buildLocalURI(resource);
                             // String localResource = buildLocalURI(resource, endpoint.getType(), endpoint.getName());
                             //String   queryAuthor = "Select * where {<"+resource+"> ?y ?z}";
                             // TupleQueryResult tripletasResult =  executelocalquery ( queryAuthor , repo);
@@ -582,7 +586,13 @@ public class AuthorServiceImpl implements AuthorService {
                                         break;
                                     case "http://rdaregistry.info/Elements/u/P60095": // store foaf:name
                                         insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, SCHEMA.affiliation.toString(), object);
+                                        if (tempGraph) {
+                                        String resp = generateTempEndpoint (object ,  endpoint.getType() , endpoint.getAccess() );
+                                         if (resp != null) {
+                                         provenance = resp;
+                                         }
                                         // sparqlFunctionsService.updateAuthor(insert);
+                                        }
                                         break;
                                     case "http://purl.org/dc/terms/isVersionOf":
                                         insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, DCTERMS.IS_VERSION_OF.toString(), buildLocalURI(object, endpoint.getType(), endpoint.getName()));
@@ -611,6 +621,7 @@ public class AuthorServiceImpl implements AuthorService {
                                             createDoc(localResource, object, type, endpoint, predicate);
                                         }
                                         break;
+                                        
                                     default:
 
                                 }
@@ -622,7 +633,7 @@ public class AuthorServiceImpl implements AuthorService {
                             String sameAs = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, OWL.SAMEAS.toString(), resource);
                             sparqlFunctionsService.updateAuthor(sameAs);
 
-                            String provenanceQueryInsert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, DCTERMS.PROVENANCE.toString(), endpoint.getResourceId());
+                            String provenanceQueryInsert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, DCTERMS.PROVENANCE.toString(), provenance );
                             sparqlFunctionsService.updateAuthor(provenanceQueryInsert);
 
                             String foafPerson = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, RDF.TYPE.toString(), FOAF.PERSON.toString());
@@ -660,11 +671,33 @@ public class AuthorServiceImpl implements AuthorService {
             return "Fail: Access";
         }
     }
+    
+    @SuppressWarnings({"PMD.AvoidLiteralsInIfCondition"})
+    private String generateTempEndpoint (String org , String type , String url ) {
+        
+        List<String> lo = new ArrayList ();
+        String nurl =  url+"-"+org;
+      try {
+        lo.add(org.replace("-", ""));
+        List <String> uriorg = dserv.lookForOrganizations(lo);
+        if ( !(uriorg == null || uriorg.isEmpty()  || uriorg.get(0).isEmpty())) {
+         String resp =  endpointService.registerOAI(type, uriorg.get(0).substring(uriorg.get(0).lastIndexOf('/') + 1) , nurl, false, true);
+        log.info("Temporal Endpoint"+resp); 
+        if ("Successfull Registration".equals(resp) || "Endpoint Already Exist".equals(resp)){
+        return constantService.getEndpointBaseUri() + type + "/" + org+"_temp";}
+        }
+      } catch (MarmottaException ex) {
+        java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+      }
+         return null;
+    }
 
     private String buildLocalURI(String resource, String type, String name) {
         return constantService.getAuthorResource() + name + "/" + type + "/" + resource.substring(resource.lastIndexOf('/') + 1);
         // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    
 
     private String countPublications(String resource) {
         String autor = "<" + resource + ">";

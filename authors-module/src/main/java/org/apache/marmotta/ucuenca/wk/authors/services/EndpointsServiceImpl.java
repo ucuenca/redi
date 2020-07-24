@@ -62,8 +62,10 @@ public class EndpointsServiceImpl implements EndpointsService {
   private final static String FAIL = "Fail";
 
   @Override
-  public String registerSPARQL(String type, String org, String url, String graph) {
+  public String registerSPARQL(String type, String org, String url, String graph ) {
+    
     String resourceId = con.getEndpointBaseUri() + type + "/" + org;
+   
     EndpointObject endpoint = new EndpointSPARQL(INITIALSTATUS, org, url, type, graph, resourceId);
     //  con.getEndpointBaseUri();
     try {
@@ -77,9 +79,14 @@ public class EndpointsServiceImpl implements EndpointsService {
   }
 
   @Override
-  public String registerOAI(String type, String org, String url, Boolean severemode) {
+  public String registerOAI(String type, String org, String url, Boolean severemode , Boolean temp) {
+     String resourceId = con.getEndpointBaseUri() + type + "/" + org;
+    if (temp) { 
+    resourceId = resourceId+"_temp";
+    }
+    
     // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    String resourceId = con.getEndpointBaseUri() + type + "/" + org;
+    //String resourceId = con.getEndpointBaseUri() + type + "/" + org;
     EndpointObject endpoint = new EndpointOAI(INITIALSTATUS, org, url, type, resourceId, severemode);
     try {
 
@@ -95,6 +102,7 @@ public class EndpointsServiceImpl implements EndpointsService {
     // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     String resourceId = con.getEndpointBaseUri() + type + "/" + org;
     EndpointObject endpoint = new EndpointFile(INITIALSTATUS, org, file, type, resourceId);
+    
     try {
       return insertEndpoint(endpoint);
     } catch (MarmottaException ex) {
@@ -116,7 +124,7 @@ public class EndpointsServiceImpl implements EndpointsService {
     }
   }
 
-  private String insertEndpoint(EndpointObject endpoint) throws MarmottaException {
+  private String insertEndpoint(EndpointObject endpoint ) throws MarmottaException {
     if (!askEndpoint(endpoint.getResourceId())) {
       try {
         insertEndpoint(endpoint.getResourceId(), RDF.TYPE.toString(), REDI.ENDPOINT.toString(), STR);
@@ -128,6 +136,8 @@ public class EndpointsServiceImpl implements EndpointsService {
         if (endpoint instanceof EndpointOAI) {
           insertEndpoint(endpoint.getResourceId(), REDI.EXTRACTION_MODE.toString(), ((EndpointOAI) endpoint).isSeveremode().toString(), STR);
         }
+         /*insertEndpoint(endpoint.getResourceId(), REDI.BELONGTO.toString(), org, STR);*/
+        
         String org = con.getOrganizationBaseUri() + endpoint.getName();
         if (orgserv.askOrganization(org)) {
           insertEndpoint(endpoint.getResourceId(), REDI.BELONGTO.toString(), org, STR);
@@ -140,7 +150,7 @@ public class EndpointsServiceImpl implements EndpointsService {
         return "Fail:" + ex;
       }
     }
-    return FAIL + " Endpoint Already Exist";
+    return "Endpoint Already Exist";
 
   }
 

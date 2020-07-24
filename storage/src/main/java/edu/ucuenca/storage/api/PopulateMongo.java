@@ -38,6 +38,8 @@ public interface PopulateMongo {
    * Information of clusters and subclusters.
    */
   public void clusters();
+  
+  public void ProjectProfile();
 
   /**
    * Information of authors by area.

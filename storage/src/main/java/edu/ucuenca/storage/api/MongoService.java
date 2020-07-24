@@ -52,6 +52,8 @@ public interface MongoService {
   public String getAuthorsByArea(String cluster, String subcluster);
 
   public List<Document> getCountries();
+  
+  public Document getProfileProject(String id);
 
   public String getStatisticsByInst(String id);
 
@@ -77,7 +79,8 @@ public interface MongoService {
   public enum Collection {
     SPARQLS("sparqls"), AUTHORS("authors"), PUBLICATIONS("publications"), STATISTICS("statistics"), STATISTICS_INST("statistics_inst"),
     RELATEDAUTHORS("relatedauthors"), AUTHORS_DISCPLINE("authors_discipline"), AUTHORS_AREA("authors_area"),
-    COUNTRIES("countries"), CLUSTERS("clusters"), CLUSTERSTOTALS("clusterstotals"), STATISTICS_AUTHOR("statistics_author"), PROFILE_AUTHOR("profile_author"), SESSIONS("sessions"), TRANSLATIONS("translations");
+    COUNTRIES("countries"), CLUSTERS("clusters"), CLUSTERSTOTALS("clusterstotals"), STATISTICS_AUTHOR("statistics_author"), PROFILE_AUTHOR("profile_author"), SESSIONS("sessions"), TRANSLATIONS("translations")
+    , PROJECTPROFILE("project_profile");
 
     private final String value;
 

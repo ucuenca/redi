@@ -652,6 +652,63 @@ public class PopulateMongoImpl implements PopulateMongo {
     }
     return null;
   }
+  
+   @Override
+  public void ProjectProfile() {
+    Task task = taskManagerService.createSubTask("Caching projects", "Mongo Service");
+    try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
+      MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
+
+      // Delete and create collection
+      MongoCollection<Document> collection = db.getCollection(MongoService.Collection.PROJECTPROFILE.getValue());
+      collection.drop();
+      try {
+        List<Map<String, Value>> projects = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getProjects());
+        task.updateTotalSteps(projects.size());
+        for (int i = 0; i < projects.size(); i++) {
+          String uri = projects.get(i).get("uri").stringValue();
+          String proj = getProfileInfo( uri);
+          Document parse = Document.parse(proj);
+          parse.append("_id", uri);
+          collection.insertOne(parse);
+
+          task.updateDetailMessage("Project", uri);
+          task.updateProgress(i + 1);
+        }
+      } catch (MarmottaException ex) {
+        java.util.logging.Logger.getLogger(PopulateMongoImpl.class.getName()).log(Level.SEVERE, null, ex);
+      } finally {
+        taskManagerService.endTask(task);
+      }
+    }
+  }
+  
+  
+  public String getProfileInfo(String uri) throws MarmottaException {
+    List<Map<String, Value>> proy = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getProjectInfo(uri));
+    JSONObject main = new JSONObject();
+    JSONArray array = new JSONArray();
+    JSONObject obj = new JSONObject();
+    for (Map<String, Value> a : proy) {
+      obj.put("uri",  uri );
+      obj.put("title", a.get("title").stringValue());
+      obj.put("starDate", validateexist ( a.get("starDate")) );
+      obj.put("endDate", validateexist (a.get("endDate")));
+      obj.put("funders", validateexist (a.get("funders")));
+      obj.put("members", validateexist(a.get("orgs")));
+      //obj.put("members", validateexist(a.get("orgs")));
+      
+      
+    }
+    main.put("data", obj);
+    return main.toJSONString();
+  }
+  
+    public String validateexist ( Value val){
+    
+     return  val == null ? "" : val.stringValue();
+    }
+  
 
   @Override
   public void publications() {

@@ -216,6 +216,22 @@ wkhomeServices.factory('Authors', ['$resource', '$http', 'globalData',
   }
 ]);
 
+
+wkhomeServices.factory('Projects', ['$resource', '$http', 'globalData',
+  function ($resource, $http, globalData) {
+    var serverInstance = globalData.serverInstance;
+    return $resource(serverInstance + 'mongo/project?uri=:id', {}, {
+      query: {
+        method: 'GET',
+        params: {id: 'id'},
+        isArray: false,
+        cache: true,
+        headers: {'Accept': 'application/json'}
+      }
+    });
+  }
+]);
+
 wkhomeServices.factory('Countries', ['$resource', '$http', 'globalData',
   function ($resource, $http, globalData) {
     var serverInstance = globalData.serverInstance;

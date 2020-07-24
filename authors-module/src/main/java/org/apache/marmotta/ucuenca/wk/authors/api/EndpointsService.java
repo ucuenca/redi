@@ -13,13 +13,13 @@ public interface EndpointsService {
 
     String listEndpoints();
 
-    String registerSPARQL(String type, String org, String url, String graph);
+    String registerSPARQL(String type, String org, String url, String graph );
 
     String registerORCID(String type, String org);
 
     String registerVIVO(String type, String org, String u);
 
-    String registerOAI(String type, String org, String url, Boolean severemode);
+    String registerOAI(String type, String org, String url, Boolean severemode , Boolean temp);
 
     String registerFile(String type, String org, String file);
 

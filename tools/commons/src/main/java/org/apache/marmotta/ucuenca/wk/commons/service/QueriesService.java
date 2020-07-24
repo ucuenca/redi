@@ -447,6 +447,12 @@ public interface QueriesService {
     String getAuthorPubbyDate(String uri);
     
     String getRelevantProvbyAuthor(String uri);
+    
+    
+    // Projects 
+    String getProjects ();
+    
+    String getProjectInfo (String uri);
       
       
 
