@@ -17,13 +17,10 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.services.providers;
 
-import com.google.common.base.Preconditions;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.request.GetRequest;
-import edu.emory.mathcs.backport.java.util.Collections;
-import java.io.UnsupportedEncodingException;
+import java.io.InputStream;
 import org.apache.marmotta.ucuenca.wk.pubman.utils.ScopusMapper;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,22 +29,23 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.inject.Inject;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
 import org.apache.marmotta.platform.core.api.task.Task;
+import org.apache.marmotta.ucuenca.wk.commons.function.Cache;
 import org.apache.marmotta.ucuenca.wk.pubman.api.AbstractProviderService;
+import org.apache.tika.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.openrdf.model.Model;
+import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.LinkedHashModel;
 import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.query.QueryLanguage;
-import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.Rio;
+import org.pentaho.reporting.libraries.formula.util.URLEncoder;
 
 /**
  *
@@ -108,6 +106,7 @@ public class ScopusUpdateProviderService extends AbstractProviderService {
           }
         }
         scg += ")";
+        Set<String> pbids = new HashSet<>();
         String host = "https://api.elsevier.com/content/search/scopus?query=";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         String lasu = sdf.format(lm);
@@ -159,6 +158,7 @@ public class ScopusUpdateProviderService extends AbstractProviderService {
             ScopusMapper mpp = new ScopusMapper(objt);
             try {
               mpp.run();
+              pbids.addAll(mpp.getPubIds());
               for (String fx : affs) {
                 List<String> obtainAuthors = mpp.obtainAuthors(fx, organization);
                 if (procurl.contains("AF-ID")) {
@@ -185,9 +185,35 @@ public class ScopusUpdateProviderService extends AbstractProviderService {
             }
           }
         } while (!authurls.isEmpty());
-
+        task.updateTotalSteps(pbids.size());
+        
+        int i = 0;
+        for (String pid : pbids) {
+          Model mdx_cites = new LinkedHashModel();
+          i++;
+          task.updateProgress(i);
+          String url = "https://api.elsevier.com/content/abstract/scopus_id/" + pid + "?apikey=" + apikey + "&httpAccept=" + URLEncoder.encodeUTF8("application/rdf+xml");
+          log.info("Extracting cites from : " + url);
+          HttpResponse<String> asString = Unirest.get(url).asString();
+          if (asString.getStatus() == 200) {
+            String rdfr = asString.getBody();
+            InputStream toInputStream = IOUtils.toInputStream(rdfr);
+            Model parse = Rio.parse(toInputStream, constantService.getBaseResource(), RDFFormat.RDFXML);
+            Model filter = parse.filter(null, ValueFactoryImpl.getInstance().createURI("http://www.elsevier.com/xml/svapi/rdf/dtd/reference"), null);
+            for (Statement xt : filter) {
+              if (sparqlService.getGraphDBInstance().checkURI(xt.getObject().stringValue())) {
+                mdx_cites.add(xt.getSubject(), ValueFactoryImpl.getInstance().createURI("http://purl.org/ontology/bibo/cites"), xt.getObject());
+              } else {
+                String mockref = "https://redi.cedia.edu.ec/resource/reference/" + Cache.getMD5(xt.getObject().stringValue());
+                mdx_cites.add(xt.getSubject(), ValueFactoryImpl.getInstance().createURI("http://purl.org/ontology/bibo/cites"), ValueFactoryImpl.getInstance().createURI(mockref));
+              }
+            }
+          } else {
+            throw new Exception("Error loading references ..." + asString.getStatusText());
+          }
+          sparqlService.getGraphDBInstance().addBuffer(ValueFactoryImpl.getInstance().createURI(constantService.getScopusGraph()), mdx_cites);
+        }
         sparqlService.getGraphDBInstance().dumpBuffer();
-
         String upd = "delete data { "
             + "graph <" + constantService.getOrganizationsGraph() + "> {"
             + " <" + organization + "> <http://purl.org/dc/terms/modified> '" + lm.toInstant().toEpochMilli() + "' . "

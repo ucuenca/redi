@@ -17,15 +17,6 @@
  */
 package org.apache.marmotta.ucuenca.wk.authors.services;
 
-//import cc.mallet.pipe.CharSequence2TokenSequence;
-//import cc.mallet.pipe.Pipe;
-//import cc.mallet.pipe.SerialPipes;
-//import cc.mallet.pipe.TokenSequence2FeatureSequenceWithBigrams;
-//import cc.mallet.pipe.TokenSequenceLowercase;
-//import cc.mallet.pipe.TokenSequenceRemoveStopwords;
-//import cc.mallet.pipe.iterator.ArrayIterator;
-//import cc.mallet.topics.ParallelTopicModel;
-//import cc.mallet.types.InstanceList;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -100,6 +91,7 @@ import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 //import org.apache.marmotta.ucuenca.wk.commons.service.DistanceService;
 //import org.apache.marmotta.ucuenca.wk.commons.service.KeywordsService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
+import org.apache.marmotta.ucuenca.wk.commons.util.SPARQLUtils;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.BIBO;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
 import org.apache.tika.io.IOUtils;
@@ -168,6 +160,8 @@ public class AuthorServiceImpl implements AuthorService {
     @Inject
     private DisambiguationUtilsService dserv;
 
+    @Inject
+    private DisambiguationUtilsService disambiguationUtils;
     //@Inject
     //private ProfileValidation pv;
     private static final String STR = "string";
@@ -175,7 +169,7 @@ public class AuthorServiceImpl implements AuthorService {
     private static final String OAIPROVNAME = "Dspace";
 
     private static final String OJSPROVNAME = "Ojs";
-    
+
     private static final String CERIFPROVNAME = "Cerif";
     /* @Inject 
      private EndpointObject endpointObject;*/
@@ -274,9 +268,11 @@ public class AuthorServiceImpl implements AuthorService {
 
     @SuppressWarnings("PMD")
     private String extractAuthorsVIVO(String org, String end, String url) {
+        ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
         String rs = "" + org + end + url;
         try {
             Model output = new LinkedHashModel();
+            Model output2 = new LinkedHashModel();
             SSLContext sslcontext = SSLContexts.custom()
                     .loadTrustMaterial(null, new TrustSelfSignedStrategy())
                     .build();
@@ -295,16 +291,29 @@ public class AuthorServiceImpl implements AuthorService {
                 InputStream toInputStream = IOUtils.toInputStream(respn.getBody());
                 Model parse = Rio.parse(toInputStream, constantService.getBaseContext(), RDFFormat.RDFXML);
                 Set<Resource> subjects = parse.filter(null, RDF.TYPE, FOAF.PERSON).subjects();
+                String orgx = org.replaceAll(constantService.getOrganizationBaseUri(), ""); 
+                String authBase = constantService.getAuthorResource() + "vivo/" + orgx + "/";
+                String projBase = constantService.getProjectResource() + "vivo/" + orgx + "/"; 
+                Model sameAsMappins = new LinkedHashModel(); 
                 int co = 0;
                 for (Resource rsx : subjects) {
                     log.info("Extracting author {}, {}/{}", rsx.stringValue(), co, subjects.size());
-                    VIVOExtractor.download("person", url, output, rsx, null, end, true);
+                    VIVOExtractor.download("person", url, output, rsx, null, end, true, authBase, projBase, sameAsMappins);
+                    //
+                    VIVOExtractor.linkOrganizations(disambiguationUtils, output, sameAsMappins);
+                    VIVOExtractor.linkOrganizations2(disambiguationUtils, output, output2, end);
+                    //
                     repositoryConnetion.begin();
-                    sparqlService.getGraphDBInstance().runSplitAddOp(repositoryConnetion, output, ValueFactoryImpl.getInstance().createURI(constantService.getAuthorsGraph() + "Beta"));
+                    sparqlService.getGraphDBInstance().runSplitAddOp(repositoryConnetion, output, instance.createURI(constantService.getAuthorsGraph() + "_Beta"));
+                    sparqlService.getGraphDBInstance().runSplitAddOp(repositoryConnetion, output2, instance.createURI(constantService.getEndpointsGraph() + "_Beta"));
+                    sparqlService.getGraphDBInstance().runSplitAddOp(repositoryConnetion, sameAsMappins, instance.createURI(constantService.getAuthorsGraph() + "_SA"));
                     repositoryConnetion.commit();
                     output.clear();
                     co++;
                 }
+                //Delete
+                SPARQLUtils sparqlUtils = new SPARQLUtils(sparqlService.getSparqlService());  
+                sparqlUtils.replaceSameAs(constantService.getAuthorsGraph() + "_Beta", constantService.getAuthorsGraph() + "_SA");
 
             } else {
                 throw new Exception("Invalid VIVO URL " + url);
@@ -371,7 +380,8 @@ public class AuthorServiceImpl implements AuthorService {
                         extractResult = extractAuthorsVIVO(org, endpoint, url);
                     } else {
 
-                          String min = "1";
+
+            String min = "1";
             String[] urls = url.split(";");
             for (String u : urls) {
               e = new EndpointOAI(status, org, u, type, endpoint, mode);
@@ -598,10 +608,10 @@ public class AuthorServiceImpl implements AuthorService {
                                         insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, DCTERMS.IS_VERSION_OF.toString(), buildLocalURI(object, endpoint.getType(), endpoint.getName()));
                                         // sparqlFunctionsService.updateAuthor(insert);
                                         break;
-                                        
-                                        case "https://www.openaire.eu/cerif-profile/1.1/MemberOf":
-                                        createproject (localResource, object , endpoint);
-                     
+
+                                    case "https://www.openaire.eu/cerif-profile/1.1/MemberOf":
+                                        createproject(localResource, object, endpoint);
+
                                         break;
                                     case "http://www.w3.org/2002/07/owl#sameAs": // If sameas found include the provenance
                                         //SparqlEndpoint newEndpoint = matchWithProvenance(object);
@@ -722,27 +732,27 @@ public class AuthorServiceImpl implements AuthorService {
                 + "} ";
 
     }
-    
-    
-     @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})        
-  private void createproject (String uri, String object , EndpointObject endpoint) throws UpdateException {
-    String query = queriesService.getPublicationDetails(object); 
-    List<HashMap> describeProject = endpoint.querySource(query);
-    String property = "";
-    String value = "";
-    for (HashMap result : describeProject) {
-      
-       if (result.containsKey("property") && result.containsKey("hasValue")) {
-          property = result.get("property").toString();
-          value = result.get("hasValue").toString();
-           executeInsert(constantService.getAuthorsGraph(), object, property, value);
-       }
-    
+
+    @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
+    private void createproject(String uri, String object, EndpointObject endpoint) throws UpdateException {
+        String query = queriesService.getPublicationDetails(object);
+        List<HashMap> describeProject = endpoint.querySource(query);
+        String property = "";
+        String value = "";
+        for (HashMap result : describeProject) {
+
+            if (result.containsKey("property") && result.containsKey("hasValue")) {
+                property = result.get("property").toString();
+                value = result.get("hasValue").toString();
+                executeInsert(constantService.getAuthorsGraph(), object, property, value);
+            }
+
+        }
+
+        executeInsert(constantService.getAuthorsGraph(), uri, "https://www.openaire.eu/cerif-profile/1.1/linksToProject", object);
     }
-    
-    executeInsert(constantService.getAuthorsGraph(), uri, "https://www.openaire.eu/cerif-profile/1.1/linksToProject", object);
-  }
-    @SuppressWarnings({"PMD.AvoidDuplicateLiterals","PMD.ExcessiveMethodLength"})
+
+    @SuppressWarnings({"PMD.AvoidDuplicateLiterals", "PMD.ExcessiveMethodLength"})
     private void createDoc(String uri, String object, String type, EndpointObject e, String relation) throws UpdateException, UnsupportedEncodingException {
         if ("http://purl.org/ontology/bibo/Article".equals(type)) {
 
@@ -777,21 +787,21 @@ public class AuthorServiceImpl implements AuthorService {
                             generateSubjects(object, value);
 
                             break;
-                            
-                      case "http://purl.org/ontology/bibo/doi":
-                          executeInsert(constantService.getAuthorsGraph(), object, BIBO.DOI.toString(), value);
 
-                         break; 
-                      case "http://purl.org/ontology/bibo/conference":
-                           executeInsert(constantService.getAuthorsGraph(), object, BIBO.CONFERENCE.toString(), value);
+                        case "http://purl.org/ontology/bibo/doi":
+                            executeInsert(constantService.getAuthorsGraph(), object, BIBO.DOI.toString(), value);
 
-                         break;
-              
-                      case "http://purl.org/dc/terms/publisher":
-                           executeInsert(constantService.getAuthorsGraph(), object, DCTERMS.PUBLISHER.toString(), value);
+                            break;
+                        case "http://purl.org/ontology/bibo/conference":
+                            executeInsert(constantService.getAuthorsGraph(), object, BIBO.CONFERENCE.toString(), value);
 
-                       break;
-                      case "http://purl.org/ontology/bibo/issn":
+                            break;
+
+                        case "http://purl.org/dc/terms/publisher":
+                            executeInsert(constantService.getAuthorsGraph(), object, DCTERMS.PUBLISHER.toString(), value);
+
+                            break;
+                        case "http://purl.org/ontology/bibo/issn":
                             if (!journal.containsKey(property)) {
                                 journal.put(property, value);
                             } else {

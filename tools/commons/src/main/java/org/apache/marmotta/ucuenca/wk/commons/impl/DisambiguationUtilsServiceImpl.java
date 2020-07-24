@@ -60,11 +60,11 @@ public class DisambiguationUtilsServiceImpl implements DisambiguationUtilsServic
     List<Map<String, Value>> query = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, qry);
     for (Map<String, Value> m : query) {
       String uri = m.get("o").stringValue();
-      String name = m.get("n").stringValue();
+      String[] name = m.get("n").stringValue().split(";");
       if (!mp.containsKey(uri)) {
         mp.put(uri, new HashSet<String>());
       }
-      mp.get(uri).add(name);
+      mp.get(uri).addAll(Lists.newArrayList(name));
     }
     return mp;
   }

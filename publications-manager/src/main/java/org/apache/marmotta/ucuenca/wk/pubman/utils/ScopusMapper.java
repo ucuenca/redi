@@ -5,8 +5,10 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.utils;
 
+import arq.sparql;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -16,6 +18,7 @@ import org.openrdf.model.Model;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
+import org.openrdf.model.Value;
 import org.openrdf.model.impl.LinkedHashModel;
 import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.model.vocabulary.FOAF;
@@ -41,6 +44,16 @@ public class ScopusMapper {
     endpoints = new LinkedHashModel();
     authors = new LinkedHashModel();
 
+  }
+  
+  public Set<String> getPubIds (){
+      Set <String> r = new HashSet();
+      ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
+      Set<Value> objects = this.scopus.filter(null, instance.createURI("http://ucuenca.edu.ec/ontology#scopusId"), null).objects();
+      for (Value vv : objects){
+          r.add(vv.stringValue());
+      }
+      return r;
   }
 
   public List<String> obtainAuthors(String aff, String org) {

@@ -51,6 +51,8 @@ public interface ConstantService {
     String getCentralGraph();
 
     String getAuthorResource();
+    
+    String getProjectResource();
 
     String getGraphResource();
 
