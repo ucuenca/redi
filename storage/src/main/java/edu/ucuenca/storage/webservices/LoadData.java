@@ -120,17 +120,32 @@ public class LoadData {
     return Response.ok().entity("Statistics load successfully").build();
   }
   
-    @POST
+  @POST
   @Path("/projects")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getProjects() throws FailMongoConnectionException {
     try {
       loadService.ProjectProfile();
+      loadService.instbyProj();
     } catch (Exception e) {
-      log.error("Cannot load clusters into Mongo DB", e);
+      log.error("Cannot load projects into Mongo DB", e);
       throw new FailMongoConnectionException(String.format("Cannot load clusters into Mongo DB"), e);
     }
     return Response.ok().entity("Projects loaded successfully").build();
+  }
+  
+  
+  @POST
+  @Path("/instbyProj")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response instbyproj() throws FailMongoConnectionException {
+    try {
+      loadService.instbyProj();
+    } catch (Exception e) {
+      log.error("Cannot load statistics project by Institutions into Mongo DB", e);
+      throw new FailMongoConnectionException(String.format("Cannot load project by Institutions into Mongo DB"), e);
+    }
+    return Response.ok().entity("Projects by Institutions loaded successfully").build();
   }
 
   @POST

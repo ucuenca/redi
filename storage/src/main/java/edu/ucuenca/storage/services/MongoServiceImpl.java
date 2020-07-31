@@ -88,6 +88,7 @@ public class MongoServiceImpl implements MongoService {
     private MongoCollection<Document> sparqls;
     private MongoCollection<Document> authors_val;
     private MongoCollection<Document> projects;
+    private MongoCollection<Document> instbyProject;
 
     private MongoCollection<Document> sessions;
 
@@ -117,6 +118,7 @@ public class MongoServiceImpl implements MongoService {
         authors_val = db.getCollection(Collection.PROFILE_AUTHOR.getValue());
         projects = db.getCollection(Collection.PROJECTPROFILE.getValue());
         sessions = db.getCollection(Collection.SESSIONS.getValue());
+        instbyProject = db.getCollection(Collection.INSTBYPROJECT.getValue());
 
     }
 
@@ -189,6 +191,7 @@ public class MongoServiceImpl implements MongoService {
         return projects.find(eq("_id", id)).first();
 
     }
+    
 
     @Override
     public Document removeProfileValAuthor(String id) {
@@ -356,4 +359,9 @@ public class MongoServiceImpl implements MongoService {
         }
         return main;
     }
+
+  @Override
+  public Document getinstbyProject(String id) {
+    return instbyProject.find(eq("_id", id)).first();
+  }
 }

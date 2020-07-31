@@ -636,7 +636,66 @@ public class CommonServiceImpl implements CommonService {
         return mergeJSON(listmapTojson(lnodes, "nodes"), listmapTojson(llinks, "links"), "nodes", "links");
 
     }
-
+    
+    @Override
+    public String getProjectbyInstInfo() {
+      try {
+      String getOrgInfoProy = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
+                          "PREFIX cerif: <https://www.openaire.eu/cerif-profile/1.1/>\n" +
+                          "select distinct ?org (COUNT (?p) as ?nproy) where { " +
+                          "graph <"+con.getCentralGraph()+"> { " +
+                          "   ?p  a foaf:Project . " +
+                          "   ?p   cerif:linksToOrganisationUnit ?org " +
+                          "    } " +
+                          "} group by ?org";  
+      List<Map<String, Value>> response1 = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, getOrgInfoProy);
+      
+      String getOrgColProj ="PREFIX foaf: <http://xmlns.com/foaf/0.1/> \n" +
+                            "PREFIX cerif: <https://www.openaire.eu/cerif-profile/1.1/>\n" +
+                            "select distinct ?org ?org2 (COUNT (?p) as ?nproy) where {\n" +
+                            "graph <"+con.getCentralGraph()+"> {\n" +
+                            "   ?p  a foaf:Project .\n" +
+                            "   ?p   cerif:linksToOrganisationUnit  ?org .\n" +
+                            "   ?p   cerif:linksToOrganisationUnit ?org2 .\n" +
+                            "   filter  ( ?org != ?org2 )    \n" +
+                            "    }\n" +
+                            "} group by ?org ?org2";
+      
+      List<Map<String, Value>> response2 = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, getOrgColProj);
+      
+      List<Map<String, String>> lnodes = new ArrayList();
+      
+      for (Map<String, Value> resp : response1) {
+      Map newinst = new HashMap();
+      String orguri = resp.get("org").stringValue();
+      newinst.put("id", orguri);
+      String name = orguri.substring(orguri.lastIndexOf("/")+1).replace("university_university_", orguri);
+      newinst.put("label", name);
+      newinst.put("nproy", resp.get("nproy").stringValue() );
+      lnodes.add(newinst);
+      
+      }
+      
+      
+       List<Map<String, String>> llinks = new ArrayList();
+      for (Map<String, Value> resp : response2) {
+      Map newlink = new HashMap();
+      newlink.put("source", resp.get("org").stringValue());
+      newlink.put("target", resp.get("org2").stringValue());
+      newlink.put("nproy", resp.get("nproy").stringValue());
+      llinks.add(newlink);
+      }
+      
+        
+      
+      return mergeJSON(listmapTojson(lnodes, "nodes"), listmapTojson(llinks, "links"), "nodes", "links");
+      
+      } catch (MarmottaException ex) {
+        java.util.logging.Logger.getLogger(CommonServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+      }
+      return null;
+    }
+            
     @Override
     public String getCluster(String clusterUri) {
         String querySC = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"

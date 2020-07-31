@@ -25,6 +25,8 @@ import org.json.simple.JSONObject;
 
 public interface MongoService {
 
+
+
   /**
    * Returns JSON-LD from an URI of an author given.
    *
@@ -68,6 +70,8 @@ public interface MongoService {
   public Document removeProfileValAuthor(String id);
 
   public boolean checkSession(String orcid, String token);
+  
+  public Document getinstbyProject (String id);
 
   /**
    * Create a connection to {@link com.mongodb.MongoClient}.
@@ -80,7 +84,7 @@ public interface MongoService {
     SPARQLS("sparqls"), AUTHORS("authors"), PUBLICATIONS("publications"), STATISTICS("statistics"), STATISTICS_INST("statistics_inst"),
     RELATEDAUTHORS("relatedauthors"), AUTHORS_DISCPLINE("authors_discipline"), AUTHORS_AREA("authors_area"),
     COUNTRIES("countries"), CLUSTERS("clusters"), CLUSTERSTOTALS("clusterstotals"), STATISTICS_AUTHOR("statistics_author"), PROFILE_AUTHOR("profile_author"), SESSIONS("sessions"), TRANSLATIONS("translations")
-    , PROJECTPROFILE("project_profile");
+    , PROJECTPROFILE("project_profile") , INSTBYPROJECT("instbyProjects");
 
     private final String value;
 

@@ -74,4 +74,6 @@ public interface CommonService {
 
   void centralize(String[] endpoints, boolean isUpdate);
 
+  public String getProjectbyInstInfo();
+
 }

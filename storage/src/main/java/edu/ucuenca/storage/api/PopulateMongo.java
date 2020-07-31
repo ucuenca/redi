@@ -66,4 +66,6 @@ public interface PopulateMongo {
   public void populatePublicationKeywords();
   
   public void populateProfileChanges();
+
+  public void instbyProj();
 }

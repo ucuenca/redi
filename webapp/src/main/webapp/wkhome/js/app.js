@@ -167,6 +167,10 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                   templateUrl: 'wkhome/partials/projectProfile.html',
                  // controller: 'AuthorProfile'
                 }).
+                 when('/project/collaborationProject', {
+                  templateUrl: 'wkhome/partials/ColaborationProject.html',
+                 // controller: 'AuthorProfile'
+                }).
                 when('/group/area', {
                   templateUrl: 'wkhome/partials/genericSubClusterGraph.html',
                 }).

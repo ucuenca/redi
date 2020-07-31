@@ -161,6 +161,20 @@ public class MongoDBWebService {
         }
         return Response.ok().entity(response).build();
     }
+    
+    
+      @GET
+    @Path("/instbyproject")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getcolbyproject() throws FailMongoConnectionException {
+        Document response;
+        try {
+            response = mongoService.getinstbyProject ("All");
+        } catch (Exception e) {
+            throw new FailMongoConnectionException("Cannot retrieve projects", e);
+        }
+        return Response.ok().entity(response).build();
+    }
 
     @GET
     @Path("/statistics")
@@ -233,6 +247,7 @@ public class MongoDBWebService {
         }
         return Response.ok().entity(response).build();
     }
+    
 
     @GET
     @Path("/sparql")

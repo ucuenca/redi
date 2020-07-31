@@ -1581,6 +1581,25 @@ public class PopulateMongoImpl implements PopulateMongo {
 
   }
 
+  @Override
+  public void instbyProj() {
+      final Task task = taskManagerService.createSubTask("Caching related inst by projects", "Mongo Service");
+    try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
+      MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
+      // Delete and create collection
+      final MongoCollection<Document> collection = db.getCollection(MongoService.Collection.INSTBYPROJECT.getValue());
+      collection.drop();
+      String data  = commonService.getProjectbyInstInfo();
+      Document parse = Document.parse(data);
+      parse.append("_id", "All");
+      collection.insertOne(parse);
+      
+      
+      
+    }
+    
+  }
+
   class SynchronizedParse {
 
     private Document queryparse = new Document();
