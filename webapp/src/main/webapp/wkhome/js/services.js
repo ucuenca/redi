@@ -121,6 +121,11 @@ wkhomeServices.factory('AuthorsService', ['$resource', '$http', 'globalData',
     var serverInstance = globalData.serverInstance;
     return $resource(serverInstance + 'solr/authors/select?q=name%3A(:search)&fq=org%3A*&wt=json&fl=lmf.uri,name,topics', {search: '@id'});
   }]);
+wkhomeServices.factory('ProjectsService', ['$resource', '$http', 'globalData',
+  function ($resource, $http, globalData) {
+    var serverInstance = globalData.serverInstance;
+    return $resource(serverInstance + 'solr/projects/select?q=title%3A(:search)&wt=json&fl=lmf.uri,title,member-organization-name', {search: '@id'});
+  }]);
 wkhomeServices.factory('PublicationsService', ['$resource', '$http', 'globalData',
   function ($resource, $http, globalData) {
     var serverInstance = globalData.serverInstance;

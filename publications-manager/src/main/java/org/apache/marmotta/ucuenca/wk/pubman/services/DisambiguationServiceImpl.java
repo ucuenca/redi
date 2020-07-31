@@ -601,7 +601,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             + "		?o a foaf:Organization .\n"
             + "		?o <http://ucuenca.edu.ec/ontology#memberOf> <https://redi.cedia.edu.ec/> .\n"
             + "		?o foaf:name ?n .\n"
-            + "		?o foaf:name ?nn .\n"
+            + "		?o <http://www.eurocris.org/ontologies/cerif/1.3#acronym> ?nn .\n"
             + "	}\n", null, "prefix foaf: <http://xmlns.com/foaf/0.1/>\n"
             + "prefix  schema: <http://schema.org/>\n", "?o ?n ?nn").execute();
 

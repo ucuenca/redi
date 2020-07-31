@@ -1,5 +1,5 @@
-wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window', 'globalData', 'sparqlQuery', 'searchData', 'searchQueryService', '$location', 'AuthorsService', 'KeywordsService', 'PublicationsService', 'searchTextResultsService',
-    function ($routeParams, $scope, $window, globalData, sparqlQuery, searchData, searchQueryService, $location, AuthorsService, KeywordsService, PublicationsService, searchTextResultsService) {
+wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window', 'globalData', 'sparqlQuery', 'searchData', 'searchQueryService', '$location', 'AuthorsService', 'KeywordsService', 'PublicationsService', 'ProjectsService', 'searchTextResultsService',
+    function ($routeParams, $scope, $window, globalData, sparqlQuery, searchData, searchQueryService, $location, AuthorsService, KeywordsService, PublicationsService, ProjectsService, searchTextResultsService) {
         String.format = function () {
             // The string containing the format items (e.g. "{0}")
             // will and always has to be the first argument.
@@ -22,6 +22,8 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
             } else if (this.value == 'organizations') {
                 $('#txtSearch').attr("placeholder", "Organization's name ...");
             } else if (this.value == 'publications') {
+                $('#txtSearch').attr("placeholder", "Publication's keywords ...");
+            } else if (this.value == 'projects') {
                 $('#txtSearch').attr("placeholder", "Publication's keywords ...");
             }
         });
@@ -109,6 +111,58 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
             });
         }
 
+        function searchProjects(searchTextVar, chain) {
+            if (!chain) {
+                waitingDialog.show();
+            }
+            ProjectsService.get({
+                search: searchTextVar
+            }, function (result) {
+                if (!chain) {
+                    waitingDialog.hide();
+                }
+                var projects = result.response.docs;
+                if (projects.length > 1) {
+                    if (chain) {
+                        waitingDialog.hide();
+                    }
+                    var path = "/project/profile/";
+                    var candidates = _.map(projects, function (author) {
+                        var id = author["lmf.uri"];
+                        var title = _.max(author.title, function (title) {
+                            return title.length;
+                        });
+                        var topics = _.chain(author['member-organization-name'])
+                                .uniq()
+                                .first(10)
+                                .value()
+                                .join(", ");
+                        var candidate = new Candidate(id, title, topics, path);
+
+                        return candidate;
+                    });
+                    $scope.candidates = candidates;
+                    searchTextResultsService.saveData(candidates);
+                    $('#searchResults').modal('show');
+                } else if (projects.length === 1) {
+                    if (chain) {
+                        waitingDialog.hide();
+                    }
+                    var authorId = projects[0]["lmf.uri"];
+                    $window.location.hash = "/project/profile/" + authorId;
+                } else if (projects.length === 0) {
+                    if (chain) {
+                        searchPublications(searchTextVar, true);
+                    } else {
+                        if (chain) {
+                            waitingDialog.hide();
+                        }
+                        alert('No hay resultados ...');
+                    }
+                }
+            });
+        }
+
 
 
         function searchOrganization(searchTextVar, chain) {
@@ -132,7 +186,7 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
                         } else {
                             if (chain) {
                                 waitingDialog.hide();
-                                searchPublications(searchTextVar, true);
+                                searchProjects(searchTextVar, true);
                             } else {
                                 alert('No hay resultados ...');
                             }
@@ -155,6 +209,8 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
                         searchAuthor(searchTextVar, false);
                     } else if (typeSearch == 'organizations') {
                         searchOrganization(searchTextVar, false);
+                    } else if (typeSearch == 'projects') {
+                        searchProjects(searchTextVar, false);
                     } else if (typeSearch == 'publications') {
                         searchPublications(searchTextVar, false);
                     }
