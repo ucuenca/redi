@@ -7,6 +7,7 @@ package org.apache.marmotta.ucuenca.wk.commons.impl;
 
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -98,6 +99,25 @@ public class DisambiguationUtilsServiceImpl implements DisambiguationUtilsServic
             }
         }
         return r;
+    }
+    
+    @Override
+    public HashMap<String,String> separateName (String fullname) throws MarmottaException {
+ 
+       HashMap hp = new HashMap ();
+       String fnames = "";
+       String lnames = "";
+       for (String name :fullname.split("\\s+")){
+         if (isGivenName(name) >= 0.8) {
+          fnames = fnames+" "+name;
+         }else {
+          lnames = lnames +" "+name; 
+         }
+        }
+       
+       hp.put("firstName", fnames);
+       hp.put("lastName", lnames);
+       return hp;
     }
 
 }
