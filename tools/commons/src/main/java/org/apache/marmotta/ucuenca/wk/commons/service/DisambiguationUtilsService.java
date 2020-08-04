@@ -16,4 +16,6 @@ public interface DisambiguationUtilsService {
  
   List<String> lookForOrganizations(List <String> aff) throws MarmottaException;
   
+  double isGivenName(String aff) throws MarmottaException;
+  
 }
