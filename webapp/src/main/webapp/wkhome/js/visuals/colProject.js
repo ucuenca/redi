@@ -3,14 +3,44 @@ wkhomeApp.directive('colProject', ["d3", 'globalData', 'sparqlQuery', '$routePar
   function (d3, globalData, sparqlQuery, $routeParams, $window) {
 
 
-    var draw = function draw(cluster, subcluster) {
+    var draw = function draw(orgid) {
       var organization = {};
       var norg = 0;
       console.log ("Graficando");
       //var newhost = $window.location.protocol + '//' + $window.location.hostname + ($window.location.port ? ':8080' : '') + '';
-      var newsub = subcluster.replace("#", "%23");
+      //var newsub = subcluster.replace("#", "%23");
       var Result = { "_id" : { "cluster" : "http://skos.um.es/unesco6/1201", "subcluster" : "http://dbpedia.org/resource/Operator_theory" }, "nodes" : [{ "mails" : "hleiva@ula.ve", "img" : "", "subject" : " strongly continuous semigroup,  mathematics,  approximate controllability, approximate controllability,  controllability, ", "id" : "https://redi.cedia.edu.ec/resource/authors/YACHAY/file/LEIVA___HUGO", "label" : "Leiva , Hugo", "orgs" : "YACHAY", "group" : "YACHAY", "lastname" : "Leiva" }, { "mails" : "", "img" : "", "subject" : " tercias,  suma,  teorema de pitagoras, cuadrados, ", "id" : "https://redi.cedia.edu.ec/resource/authors/UCUENCA/oai-pmh/VASQUEZ_BERNAL__MARCO_VINICIO", "label" : "Vásquez Bernal, Marco Vinicio", "orgs" : "UCUENCA", "group" : "UCUENCA", "lastname" : "Vásquez Bernal" }, { "mails" : "", "img" : "", "subject" : " tercias,  suma,  teorema de pitagoras, cuadrados, ", "id" : "https://redi.cedia.edu.ec/resource/authors/UCUENCA/oai-pmh/VASQUEZ_CHIQUITO__MERCEDES_ELIZABETH", "label" : "Vásquez Chiquito, Mercedes Elizabeth", "orgs" : "UCUENCA", "group" : "UCUENCA", "lastname" : "Vásquez Chiquito" }, { "mails" : "", "img" : "", "subject" : ", ", "id" : "https://redi.cedia.edu.ec/resource/scopus_author/23099667100", "label" : "Di Teodoro , Antonio", "orgs" : "YACHAY;USFQ", "group" : "YACHAY;USFQ", "lastname" : "Di Teodoro" }, { "mails" : "", "img" : "", "subject" : " meta-monogenic functions,  clifford algebras,  clifford type algebras,  fundamental solutions, clifford algebras, ", "id" : "https://redi.cedia.edu.ec/resource/scopus_author/55743709800", "label" : "Antonio Nicola, Di Teodoro", "orgs" : "YACHAY;USFQ", "group" : "YACHAY;USFQ", "lastname" : "Di Teodoro" }, { "mails" : "", "img" : "", "subject" : " auslander, hochschild cohomology,  m-cluster tilted algebras,  fundamental group,  simple connectedness, ", "id" : "https://redi.cedia.edu.ec/resource/scopus_author/7006455618", "label" : "Bustamante , Juan Carlos", "orgs" : "USFQ", "group" : "USFQ", "lastname" : "BUSTAMANTE" }, { "mails" : "", "img" : "", "subject" : " scilab,  linear algebra,  subspaces vector,  linear dependence and independence, linear algebra, ", "id" : "https://redi.cedia.edu.ec/resource/scopus_author/57201313300", "label" : "Dávila , Paúl S.", "orgs" : "ESPE", "group" : "ESPE", "lastname" : "Dávila" }, { "mails" : "", "img" : "", "subject" : " geometric morphometry,  morphotypes,  immature,  south american fruit fly,  linear morphometrics, ", "id" : "https://redi.cedia.edu.ec/resource/scopus_author/56976403400", "label" : "Tigrero Salas , Juan O.", "orgs" : "ESPE", "group" : "ESPE", "lastname" : "Tigrero Salas" }, { "mails" : "", "img" : "", "subject" : " meta-n-weighted-monogenic functions, clifford type algebras,  meta-monogenic functions,  multi-meta-weighted- monogenic functions,  monogenic functions, ", "id" : "https://redi.cedia.edu.ec/resource/scopus_author/57210446490", "label" : "García , Eusebio Ariza", "orgs" : "YACHAY", "group" : "YACHAY", "lastname" : "García" }, { "mails" : "", "img" : "", "subject" : " finsler geometry,  extended relativity in clifford spaces, clifford algebras,  grand unification,  gravity, ", "id" : "https://redi.cedia.edu.ec/resource/scopus_author/7202237774", "label" : "Castro , Carlos", "orgs" : "UTPL", "group" : "UTPL", "lastname" : "CASTRO" }], "links" : [{ "coauthor" : "true", "distance" : "10", "source" : "https://redi.cedia.edu.ec/resource/authors/UCUENCA/oai-pmh/VASQUEZ_BERNAL__MARCO_VINICIO", "target" : "https://redi.cedia.edu.ec/resource/authors/UCUENCA/oai-pmh/VASQUEZ_CHIQUITO__MERCEDES_ELIZABETH" }, { "coauthor" : "true", "distance" : "10", "source" : "https://redi.cedia.edu.ec/resource/authors/UCUENCA/oai-pmh/VASQUEZ_CHIQUITO__MERCEDES_ELIZABETH", "target" : "https://redi.cedia.edu.ec/resource/authors/UCUENCA/oai-pmh/VASQUEZ_BERNAL__MARCO_VINICIO" }, { "coauthor" : "true", "distance" : "10", "source" : "https://redi.cedia.edu.ec/resource/scopus_author/55743709800", "target" : "https://redi.cedia.edu.ec/resource/scopus_author/57210446490" }, { "coauthor" : "true", "distance" : "10", "source" : "https://redi.cedia.edu.ec/resource/scopus_author/57210446490", "target" : "https://redi.cedia.edu.ec/resource/scopus_author/55743709800" }] };
-   
+        
+      
+      function filter ( data ) {
+        var newdata = {};
+        //var conserv = data.links.map(function(value, index, arr){ return   ;});
+            newdata.nodes = data.nodes.filter(function(value, index, arr){ return  value.id.includes("redi.cedia.edu.ec");});
+            newdata.links = data.links.filter(function(value, index, arr){ return  value.source.includes("redi.cedia.edu.ec") &&  value.target.includes("redi.cedia.edu.ec") ;});
+        return newdata;
+      } 
+
+      var dict = {};
+      function extractdict ( val1 , val2) {
+        //console.log (val1 , val2);
+        dict[val1] = val2;
+        return val1;
+      }
+
+
+       function filterbyorg ( data , idorg  ) {
+        var newdata = {};
+            newdata.links = data.links.filter(function(value, index, arr){ return  (idorg == null || value.source == idorg || value.target == idorg) &&  (value.source.includes("redi.cedia.edu.ec") &&  value.target.includes("redi.cedia.edu.ec")) });
+            //newdata.links = data.links.filter(function(value, index, arr){ return  value.source.includes("redi.cedia.edu.ec") &&  value.target.includes("redi.cedia.edu.ec") ;});
+            var conserv =  newdata.links.map (function(value) {   return extractdict ( value.source , value.nproy) });
+            //console.log ("Mostrar");
+            //console.log (dict);
+            newdata.nodes = data.nodes.filter(function(value, index, arr){ return   conserv.includes(value.id);});
+            if (idorg !=null){
+            newdata.nodes  =  newdata.nodes.map (function(value) { value.ncomp = dict [value.id];    return  value; }); 
+            }
+        return newdata;
+      }   
 
        $.ajax({
         type: "GET",
@@ -19,21 +49,24 @@ wkhomeApp.directive('colProject', ["d3", 'globalData', 'sparqlQuery', '$routePar
         success: function (Result) {
         //var Result = { "nodes" : [{"id" : "http://test1" , "name" : "UDA" , "nproy" : "10" , "img" : ""}, {"id" : "http://test2" , "name" : "UCE" , "nproy" : "50" , "img" : ""} , {"id" : "http://test3" , "name" : "UCUENCA" , "nproy" : "1" , "img" : ""}] , "links" : [{"source" : "http://test1" , "target" : "http://test2" , "nproy" : "30" } , {"source" : "http://test2" , "target" : "http://test1" , "nproy" : "30" } , {"source" : "http://test2" , "target" : "http://test3" , "nproy" : "2" }] };
 
-        render(Result);
+      //  render(Result);
 
           if ("Error" in Result) {
             console.log ("NO DATA");
             $('#relatedArea').css("display", "block");
           } else {
             console.log ("Llamando RENDER");
-            render(Result);
+         
+               render(filterbyorg ( Result , orgid ));
+          
            // etiquetas();
           }
 
         },
         error: function (data) {
-        var Result = { "nodes" : [{"id" : "http://test1" , "name" : "UDA" , "nproy" : "10" , "img" : ""}, {"id" : "http://test2" , "name" : "UCE" , "nproy" : "50" , "img" : ""} , {"id" : "http://test3" , "name" : "UCUENCA" , "nproy" : "1" , "img" : ""}] , "links" : [{"source" : "http://test1" , "target" : "http://test2" , "nproy" : "30" } , {"source" : "http://test2" , "target" : "http://test1" , "nproy" : "30" } , {"source" : "http://test2" , "target" : "http://test3" , "nproy" : "2" }] };
-          render(Result);
+        //var Result = { "nodes" : [{"id" : "http://test1" , "name" : "UDA" , "nproy" : "10" , "img" : ""}, {"id" : "http://test2" , "name" : "UCE" , "nproy" : "50" , "img" : ""} , {"id" : "http://test3" , "name" : "UCUENCA" , "nproy" : "1" , "img" : ""}] , "links" : [{"source" : "http://test1" , "target" : "http://test2" , "nproy" : "30" } , {"source" : "http://test2" , "target" : "http://test1" , "nproy" : "30" } , {"source" : "http://test2" , "target" : "http://test3" , "nproy" : "2" }] };
+          //render(Result);
+          alert ("Datos no disponibles");
         }
       });
 
@@ -73,19 +106,9 @@ wkhomeApp.directive('colProject', ["d3", 'globalData', 'sparqlQuery', '$routePar
       };
 
       function distanceCalc(distance) {
-        if (distance > 5) {
-          console.log(200 - parseInt(distance) * 10);
-          //return 250 - parseInt(distance) * 10;
-          var expand =  Math.floor(Math.random() * 200); 
-          //return 200  + expand ;
-          return 50  + expand;
-        } else if (distance > 2) {
-          console.log(200 - parseInt(distance) * 10);
-          //return 250 - parseInt(distance) * 10;
-          return 200;
-        } else {
-          return 100;
-        }
+          var distancefactor = Math.trunc(distance/5)*20;
+
+          return  200- ( distancefactor > 150 ? 150 : distancefactor);
       }
 
       //numero ancho enlace
@@ -130,18 +153,18 @@ wkhomeApp.directive('colProject', ["d3", 'globalData', 'sparqlQuery', '$routePar
         var simulation = d3.layout.force()
                 .gravity(0.09)
                 .linkDistance(function (d) {
-                  console.log(d);
+                  //console.log("cald",d.source.id , d.target.id , distanceCalc(d.nproy));
                   //return d.distance;
-                  return 200;//distanceCalc(d.source.coautor);
+                  return  distanceCalc(d.nproy);
                 })
-                .linkStrength(0.2)
+                .linkStrength(0.02)
                 .charge(-700)
                 .size([width, height]);
 
         function colaborationFactor(d) {
             
             
-            return Math.sqrt(12+d.nproy*0.4) ;
+            return Math.sqrt(10+d.nproy*0.4) ;
           
         };
 
@@ -152,7 +175,7 @@ wkhomeApp.directive('colProject', ["d3", 'globalData', 'sparqlQuery', '$routePar
         var tool_tip = d3.tip()
         .attr("class", "d3-tip")
         .offset( function (d) { return  [Math.abs(d.source.y - d.target.y)/2, 0]; } )
-        .html(function(d) { console.log (d.source.y - d.target.y);  return "Proy. Compartidos: " + d.nproy; });
+        .html(function(d) {   return "Proy. Compartidos: " + d.nproy; });
          svg.call(tool_tip);
 
         function showPopover(d) {
@@ -162,13 +185,18 @@ wkhomeApp.directive('colProject', ["d3", 'globalData', 'sparqlQuery', '$routePar
           $("line[id*='" + d.id + "']").css("stroke", "#777171");
 
           $(this).popover({
-            placement: 'top',
-            container: 'body',
+            placement: 'auto',
+            container: 'col-project',
             trigger: 'manual',
+            boundary : 'scrollParent',
+            selector : 'g',
             html: true,
             content: function () {
-              return "<b> Institución :</b> " + d.name + "<br />" +
-                      "<b> Num. Proyectos :</b> " + d.nproy + "<br />";
+              var content = "<b> Institución :</b> " + d.label + "<br />" +
+                      "<b> Num. Proyectos total :</b> " + d.nproy + "<br />";
+              if ("ncomp" in d) {
+                content = content +  "<b> Num. Proyectos Compartidos :</b> " + d.ncomp + "<br />";   }
+                 return content;
             }
           });
           $(this).popover('show')
@@ -183,20 +211,26 @@ wkhomeApp.directive('colProject', ["d3", 'globalData', 'sparqlQuery', '$routePar
 
         var table = [];
         for (var n in graph.nodes) {
-          console.log (n , graph.nodes[n]);
+
+
+        
           if (!table.hasOwnProperty(graph.nodes[n].id)) {
             table[graph.nodes[n].id] = n;
+            //console.log ("New id:",n , graph.nodes[n]);
             //graph.nodes[n].coautor = 0;
           }
         }
 
         for (var g in graph.links) {
          // graph.nodes[table[graph.links[g].source]].coautor = graph.nodes[table[graph.links[g].source]].coautor + 1;
+         // console.log ("LINK", parseInt(table[graph.links[g].source]) ,  graph.links[g].source) ;
+
           graph.links[g].source = parseInt(table[graph.links[g].source]);
           graph.links[g].target = parseInt(table[graph.links[g].target]);
+        
         }
-        console.log (graph.nodes);
-        console.log (graph.links);
+       // console.log (graph.nodes);
+       // console.log (graph.links);
 
         simulation
                 .nodes(graph.nodes)
@@ -234,7 +268,7 @@ wkhomeApp.directive('colProject', ["d3", 'globalData', 'sparqlQuery', '$routePar
 
         var circles = node.append("circle")
                 .attr("r", function (d) {
-                  return  25+parseInt(d.nproy)*0.2;
+                  return  25+parseInt(d.nproy)*0.4;
                 })
                 .attr("fill", function (d) {
                   return orgcolor(d.group);
@@ -247,10 +281,10 @@ wkhomeApp.directive('colProject', ["d3", 'globalData', 'sparqlQuery', '$routePar
 
         var imagen = node.append("image")
                 .attr("xlink:href", function (d) {
-                  if (d.img != "") {
-                    return d.img;
+                  if (!d.id.includes("redi.cedia.edu.ec")) {
+                    return  "wkhome/images/conference.png";
                   } else {
-                    return "wkhome/images/orgs/"+d.name+".png";
+                    return "wkhome/images/orgs/"+d.label+".png";
                   }
                 })
                 .attr("class", "node")
@@ -277,7 +311,7 @@ wkhomeApp.directive('colProject', ["d3", 'globalData', 'sparqlQuery', '$routePar
 
         var lables = node.append("text")
                 .text(function (d) {
-                  return d.name.toUpperCase();
+                  return d.label.toUpperCase();
                 })
                 .attr('x', -10)
                 .attr('y', function (d) { return 40+ d.nproy*0.1 });
@@ -329,7 +363,18 @@ wkhomeApp.directive('colProject', ["d3", 'globalData', 'sparqlQuery', '$routePar
       compile: function (element, attrs, transclude) {
 
         return function (scope, element, attrs) {
-          draw ("1","2");
+           //draw (null);
+           scope.$watch('datacl', function (newVal, oldVal, scope) {
+            console.log ("GRAFICAR");
+            console.log (newVal);
+            console.log (newVal.id);
+            if (newVal){
+            draw (newVal.id); 
+            } else {
+            draw (null);  
+            }
+           });
+         
 
         }
       }

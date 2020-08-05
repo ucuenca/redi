@@ -7,7 +7,6 @@ package org.apache.marmotta.ucuenca.wk.commons.impl;
 
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -95,7 +94,7 @@ public class DisambiguationUtilsServiceImpl implements DisambiguationUtilsServic
         for (Map<String, Value> mp : query) {
             Value get = mp.get("t");
             if (get != null) {
-                r = Double.parseDouble(get.stringValue());
+                r = Double.parseDouble(get.stringValue()); 
             }
         }
         return r;
@@ -104,19 +103,20 @@ public class DisambiguationUtilsServiceImpl implements DisambiguationUtilsServic
     @Override
     public Map<String,String> separateName (String fullname) throws MarmottaException {
        Double umbral = 0.8;
-       Map hp = new HashMap ();
+       ConcurrentHashMap<String,String> hp = new ConcurrentHashMap ();
        String fnames = "";
        String lnames = "";
        for (String name :fullname.split("\\s+")){
-         if (isGivenName(name) >= umbral) {
+         if ( isGivenName(name) != Double.NaN && isGivenName(name) >= umbral) {
           fnames = fnames+" "+name;
-         }else {
+         }else if ( isGivenName(name) != Double.NaN ) {
           lnames = lnames +" "+name; 
          }
         }
-       
+       if (!fnames.isEmpty() || !lnames.isEmpty()  ){
        hp.put("firstName", fnames);
        hp.put("lastName", lnames);
+       }
        return hp;
     }
 

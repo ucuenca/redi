@@ -1,16 +1,26 @@
 
 <div class="col-md-12" ng-controller="colProject" style="display: contents;">
+     <col-project datacl="datacl" >
     <div class="col-md-3 " >
+         <h4 class="colorblue"> Organización:</h4>
+            <ui-select ng-model="orgscombo.selected"  ng-change="changeCombo()" theme="bootstrap">
+                  <ui-select-match placeholder="Select area">{{$select.selected.tag}}</ui-select-match>
+                  <ui-select-choices repeat="item in orgs | filter: $select.search">  
+                    <div ng-bind-html="item.tag"></div>
+                  </ui-select-choices>
+                </ui-select>
+              </br>
+
      <ul class="list-group"  >
       <li class='list-group-item' style='font-weight: bold' >  LEGEND  </li>
       <!--<li class='list-group-item'>  <hr style="width:10% ; border-bottom: 1px solid gray">   </li> -->
-      <li class='list-group-item'>  <img src="wkhome/images/line.png" height="15px" > Proporción proyectos compartidos  </li>
-      <li class='list-group-item'>  <img src="wkhome/images/circle.png" height="15px" > Proporción proyectos totales  </li>
+      <li class='list-group-item'>  <img src="wkhome/images/distance.png" height="15px" > Proporción proyectos compartidos  </li>
+      <li class='list-group-item'>  <img src="wkhome/images/circle.png" height="15px" > Proporción proyectos totales   </li>
       </ul>
     </div>
    
     <div class="col-md-9 ">
-   <col-project>
+   
    <svg  width="100%" height="90%" style="min-width: 80vw; min-height: 90vh;" > </svg>
   </col-project>
   </div>
