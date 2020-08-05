@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.OptionalInt;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.inject.Inject;
@@ -104,19 +105,42 @@ public class DisambiguationUtilsServiceImpl implements DisambiguationUtilsServic
     public Map<String,String> separateName (String fullname) throws MarmottaException {
        Double umbral = 0.8;
        ConcurrentHashMap<String,String> hp = new ConcurrentHashMap ();
-       String fnames = "";
-       String lnames = "";
-       for (String name :fullname.split("\\s+")){
-         if ( isGivenName(name) != Double.NaN && isGivenName(name) >= umbral) {
-          fnames = fnames+" "+name;
-         }else if ( isGivenName(name) != Double.NaN ) {
-          lnames = lnames +" "+name; 
+       OptionalInt ininames = OptionalInt.empty();
+       OptionalInt finnames = OptionalInt.empty();
+       
+       //String lnames = "";
+       String[] names = fullname.split("\\s+");
+       for ( int i = 0 ; i <= names.length ; i++){
+         if ( isGivenName(names[i]) != Double.NaN && isGivenName(names[i]) >= umbral) {
+           if (ininames.isPresent()){
+            finnames = OptionalInt.of(i);
+           }else {
+            ininames = OptionalInt.of(i);
+            finnames = OptionalInt.of(i);
+           }
+           
+          
+         }else if ( isGivenName(names[i]) != Double.NaN ) {
+           
          }
         }
-       if (!fnames.isEmpty() || !lnames.isEmpty()  ){
-       hp.put("firstName", fnames);
-       hp.put("lastName", lnames);
+         String gnames = "";
+         String lnames = "";
+         
+         
+         for ( int i = 0 ; i <= names.length ; i++ ){
+          if (  i >= ininames.getAsInt() && i  <= finnames.getAsInt() ){
+            gnames = gnames +" "+ names[i];
+          }else {
+            lnames = lnames+" "+names[i]; 
+          } 
+         
+         }
+       if (lnames.isEmpty()){     
+        hp.put("firstName", gnames.trim());
+        hp.put("lastName", gnames.trim());
        }
+        
        return hp;
     }
 

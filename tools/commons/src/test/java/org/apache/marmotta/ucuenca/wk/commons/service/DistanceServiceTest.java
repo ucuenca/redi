@@ -7,8 +7,11 @@ package org.apache.marmotta.ucuenca.wk.commons.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.ucuenca.wk.commons.impl.DistanceServiceImpl;
 import org.apache.marmotta.ucuenca.wk.commons.impl.QueriesServiceImpl;
+import org.apache.marmotta.ucuenca.wk.commons.impl.DisambiguationUtilsServiceImpl;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -38,7 +41,15 @@ public class DistanceServiceTest {
     @After
     public void tearDown() {
     }
-
+    
+    @Test
+    public void TestApp() throws MarmottaException {
+	DisambiguationUtilsServiceImpl dsam = new DisambiguationUtilsServiceImpl();
+        Map<String,String> s = dsam.separateName ("Jose Luis Segarra Flores");
+          System.out.print (s.get("firstName"));
+	}
+    
+    @Ignore
     @Test
     public void testSemanticDistance() {
         System.out.println("getAuthorsQuery");
