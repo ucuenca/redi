@@ -5,8 +5,8 @@
  */
 package org.apache.marmotta.ucuenca.wk.commons.service;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 
 /**
@@ -18,6 +18,6 @@ public interface DisambiguationUtilsService {
   List<String> lookForOrganizations(List <String> aff) throws MarmottaException;
   
   double isGivenName(String aff) throws MarmottaException;
-  HashMap<String,String> separateName (String fullname) throws MarmottaException;
+  Map<String,String> separateName (String fullname) throws MarmottaException;
   
 }

@@ -669,7 +669,7 @@ public class CommonServiceImpl implements CommonService {
       Map newinst = new HashMap();
       String orguri = resp.get("org").stringValue();
       newinst.put("id", orguri);
-      String name = orguri.substring(orguri.lastIndexOf("/")+1).replace("university_university_", orguri);
+      String name = orguri.substring(orguri.lastIndexOf("/")+1).replace("university_university_", "");
       newinst.put("label", name);
       newinst.put("nproy", resp.get("nproy").stringValue() );
       lnodes.add(newinst);

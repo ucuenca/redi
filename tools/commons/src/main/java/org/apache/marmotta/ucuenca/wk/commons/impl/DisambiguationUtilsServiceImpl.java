@@ -102,13 +102,13 @@ public class DisambiguationUtilsServiceImpl implements DisambiguationUtilsServic
     }
     
     @Override
-    public HashMap<String,String> separateName (String fullname) throws MarmottaException {
- 
-       HashMap hp = new HashMap ();
+    public Map<String,String> separateName (String fullname) throws MarmottaException {
+       Double umbral = 0.8;
+       Map hp = new HashMap ();
        String fnames = "";
        String lnames = "";
        for (String name :fullname.split("\\s+")){
-         if (isGivenName(name) >= 0.8) {
+         if (isGivenName(name) >= umbral) {
           fnames = fnames+" "+name;
          }else {
           lnames = lnames +" "+name; 
