@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.OptionalInt;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.inject.Inject;
@@ -71,12 +70,12 @@ public class DisambiguationUtilsServiceImpl implements DisambiguationUtilsServic
     }
 
     @Override
-    public double isGivenName(String gn) throws MarmottaException {
+    public Double isGivenName(String gn) throws MarmottaException {
         String q = "PREFIX inst: <http://www.ontotext.com/connectors/lucene/instance#>\n"
                 + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
                 + "PREFIX : <http://www.ontotext.com/connectors/lucene#>\n"
                 + "select ?t where { \n"
-                + "    bind('" + gn + "' as ?n) .\n"
+                + "    bind('xxyyzz " + gn + "' as ?n) .\n"
                 + "    bind (replace(replace(lcase(?n),':|,|-|\\\\.|/',' '),'\\\\s+',' ') as ?nn_) .\n"
                 + "    bind (replace(concat(replace(replace(?nn_,' $',''),'^ ',''), ' '),' ',' ') as ?nn) .\n"
                 + "    bind (concat ('givenName:(',?nn, ')') as ?gq).\n"
@@ -95,53 +94,93 @@ public class DisambiguationUtilsServiceImpl implements DisambiguationUtilsServic
         for (Map<String, Value> mp : query) {
             Value get = mp.get("t");
             if (get != null) {
-                r = Double.parseDouble(get.stringValue()); 
+                r = Double.parseDouble(get.stringValue());
             }
         }
         return r;
     }
-    
+
     @Override
-    public Map<String,String> separateName (String fullname) throws MarmottaException {
-       Double umbral = 0.8;
-       ConcurrentHashMap<String,String> hp = new ConcurrentHashMap ();
-       OptionalInt ininames = OptionalInt.empty();
-       OptionalInt finnames = OptionalInt.empty();
-       
-       //String lnames = "";
-       String[] names = fullname.split("\\s+");
-       for ( int i = 0 ; i <= names.length ; i++){
-         if ( isGivenName(names[i]) != Double.NaN && isGivenName(names[i]) >= umbral) {
-           if (ininames.isPresent()){
-            finnames = OptionalInt.of(i);
-           }else {
-            ininames = OptionalInt.of(i);
-            finnames = OptionalInt.of(i);
-           }
-           
-          
-         }else if ( isGivenName(names[i]) != Double.NaN ) {
-           
-         }
+    @SuppressWarnings("PMD")
+    public Map<String, String> separateName(String fullname) throws MarmottaException {
+        List<String> tokensList = Lists.newArrayList(fullname.replaceAll(",|\\.|-|;|/", " ").replaceAll("\\s+", " ").trim().split(" "));
+        List<Double> probabilitiesList = Lists.newArrayList();
+        ConcurrentHashMap<String, String> dividedNameMap = new ConcurrentHashMap<>();
+        double countNaN = 0;
+        for (String token : tokensList) {
+            Double givenName = isGivenName(token);
+            if (givenName.isNaN()) {
+                givenName = 0.5;
+                countNaN++;
+            }
+            probabilitiesList.add(givenName);
         }
-         String gnames = "";
-         String lnames = "";
-         
-         
-         for ( int i = 0 ; i <= names.length ; i++ ){
-          if (  i >= ininames.getAsInt() && i  <= finnames.getAsInt() ){
-            gnames = gnames +" "+ names[i];
-          }else {
-            lnames = lnames+" "+names[i]; 
-          } 
-         
-         }
-       if (lnames.isEmpty()){     
-        hp.put("firstName", gnames.trim());
-        hp.put("lastName", gnames.trim());
-       }
-        
-       return hp;
+        if (countNaN / tokensList.size() > 0.30) {
+            //Prone to errors, it is better to ignore
+            return dividedNameMap;
+        }
+        double bestScore = Double.MAX_VALUE;
+        double bestCutPosition = 0;
+        boolean startsWithFirstName = false;
+        for (double i = 0.5; i < probabilitiesList.size() - 1; i++) {
+            double countSumLeft = 0;
+            double countSumRight = 0;
+            double cumulativeSumLeft = 0;
+            double cumulativeSumRight = 0;
+            double stringLengthLeft = 0;
+            double stringLengthRight = 0;
+
+            for (int j = 0; j < probabilitiesList.size(); j++) {
+                if (j < i) {
+                    countSumLeft++;
+                    cumulativeSumLeft += probabilitiesList.get(j);
+                    stringLengthLeft += tokensList.get(j).length();
+                }
+                if (j > i) {
+                    countSumRight++;
+                    cumulativeSumRight += probabilitiesList.get(j);
+                    stringLengthRight += tokensList.get(j).length();
+                }
+            }
+
+            if (countSumLeft > 0 && countSumRight > 0) {
+                double averageProbabilityLeft = cumulativeSumLeft / countSumLeft;
+                double averageProbabilityRight = cumulativeSumRight / countSumRight;
+                double complementAverageProbabilityLeft = 1 - averageProbabilityLeft;
+                double complementAverageProbabilityRight = 1 - averageProbabilityRight;
+                double averageStringLengthLeft = stringLengthLeft / (stringLengthLeft + stringLengthRight);
+                double averageStringLengthRight = stringLengthRight / (stringLengthLeft + stringLengthRight);
+
+                double partialBestCut = i;
+                double partitalBestScore = 0;
+                boolean partialStartsWithFirstName = averageProbabilityLeft > averageProbabilityRight;
+                if (partialStartsWithFirstName) {
+                    partitalBestScore = Math.abs(averageProbabilityLeft - complementAverageProbabilityRight) + Math.abs(averageStringLengthLeft - averageStringLengthRight);
+
+                } else {
+                    partitalBestScore = Math.abs(complementAverageProbabilityLeft - averageProbabilityRight) + Math.abs(averageStringLengthLeft - averageStringLengthRight);
+                }
+                if (partitalBestScore < bestScore) {
+                    bestCutPosition = partialBestCut;
+                    bestScore = partitalBestScore;
+                    startsWithFirstName = partialStartsWithFirstName;
+                }
+            }
+        }
+        String dividedFirstName = "";
+        String dividedLastName = "";
+        for (int i = 0; i < tokensList.size(); i++) {
+            if (i < bestCutPosition) {
+                dividedFirstName += startsWithFirstName ? tokensList.get(i) + " " : "";
+                dividedLastName += !startsWithFirstName ? tokensList.get(i) + " " : "";
+            } else {
+                dividedFirstName += !startsWithFirstName ? tokensList.get(i) + " " : "";
+                dividedLastName += startsWithFirstName ? tokensList.get(i) + " " : "";
+            }
+        }
+        dividedNameMap.put("firstName", dividedFirstName.trim());
+        dividedNameMap.put("lastName", dividedLastName.trim());
+        return dividedNameMap;
     }
 
 }

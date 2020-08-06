@@ -156,9 +156,6 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Inject
     private ExternalSPARQLService sparqlService;
-    
-    @Inject
-    private DisambiguationUtilsService dserv;
 
     @Inject
     private DisambiguationUtilsService disambiguationUtils;
@@ -291,10 +288,10 @@ public class AuthorServiceImpl implements AuthorService {
                 InputStream toInputStream = IOUtils.toInputStream(respn.getBody());
                 Model parse = Rio.parse(toInputStream, constantService.getBaseContext(), RDFFormat.RDFXML);
                 Set<Resource> subjects = parse.filter(null, RDF.TYPE, FOAF.PERSON).subjects();
-                String orgx = org.replaceAll(constantService.getOrganizationBaseUri(), ""); 
+                String orgx = org.replaceAll(constantService.getOrganizationBaseUri(), "");
                 String authBase = constantService.getAuthorResource() + "vivo/" + orgx + "/";
-                String projBase = constantService.getProjectResource() + "vivo/" + orgx + "/"; 
-                Model sameAsMappins = new LinkedHashModel(); 
+                String projBase = constantService.getProjectResource() + "vivo/" + orgx + "/";
+                Model sameAsMappins = new LinkedHashModel();
                 int co = 0;
                 for (Resource rsx : subjects) {
                     log.info("Extracting author {}, {}/{}", rsx.stringValue(), co, subjects.size());
@@ -312,7 +309,7 @@ public class AuthorServiceImpl implements AuthorService {
                     co++;
                 }
                 //Delete
-                SPARQLUtils sparqlUtils = new SPARQLUtils(sparqlService.getSparqlService());  
+                SPARQLUtils sparqlUtils = new SPARQLUtils(sparqlService.getSparqlService());
                 sparqlUtils.replaceSameAs(constantService.getAuthorsGraph() + "_Beta", constantService.getAuthorsGraph() + "_SA");
 
             } else {
@@ -366,11 +363,11 @@ public class AuthorServiceImpl implements AuthorService {
                     if ("file".equals(type)) {
                         e = new EndpointFile(status, org, url, type, endpoint);
                         //  EndpointsObject.add(e);
-                        extractResult = extractAuthorGeneric(e, "0", false , false);
+                        extractResult = extractAuthorGeneric(e, "0", false, false);
 
                     } else if ("sparql".equals(type)) {
                         e = new EndpointSPARQL(status, org, url, type, graph, endpoint);
-                        extractResult = extractAuthorGeneric(e, "1", false , false);
+                        extractResult = extractAuthorGeneric(e, "1", false, false);
                         // EndpointsObject.add(e);
                     } else if ("orcid".equals(type)) {
                         //Read from mongo cache.
@@ -380,30 +377,29 @@ public class AuthorServiceImpl implements AuthorService {
                         extractResult = extractAuthorsVIVO(org, endpoint, url);
                     } else {
 
-
-            String min = "1";
-            String[] urls = url.split(";");
-            for (String u : urls) {
-              e = new EndpointOAI(status, org, u, type, endpoint, mode);
-              if ("cerif".equals(type)){
-                min = "0";
-              }
-              extractResult = extractAuthorGeneric(e, min , false , mode);
-              String nametype = type;
-              if (extractResult.contains("Success")) {
-                if ("oai-pmh".equals(type)) {
-                  nametype = OAIPROVNAME;
-                } else if ("ojs".equals(type)) {
-                  nametype = OJSPROVNAME;
-                } else if ("cerif".equals(type)) {
-                  nametype = CERIFPROVNAME;
-                }
-                String providerUri = createProvider(nametype, constantService.getAuthorsGraph(), true);
-                registerDate(org, providerUri, extractResult, nametype, constantService.getAuthorsGraph());
-              } else {
-                break;
-              }
-            }
+                        String min = "1";
+                        String[] urls = url.split(";");
+                        for (String u : urls) {
+                            e = new EndpointOAI(status, org, u, type, endpoint, mode);
+                            if ("cerif".equals(type)) {
+                                min = "0";
+                            }
+                            extractResult = extractAuthorGeneric(e, min, false, mode);
+                            String nametype = type;
+                            if (extractResult.contains("Success")) {
+                                if ("oai-pmh".equals(type)) {
+                                    nametype = OAIPROVNAME;
+                                } else if ("ojs".equals(type)) {
+                                    nametype = OJSPROVNAME;
+                                } else if ("cerif".equals(type)) {
+                                    nametype = CERIFPROVNAME;
+                                }
+                                String providerUri = createProvider(nametype, constantService.getAuthorsGraph(), true);
+                                registerDate(org, providerUri, extractResult, nametype, constantService.getAuthorsGraph());
+                            } else {
+                                break;
+                            }
+                        }
                         // EndpointsObject.add(e);
                     }
 
@@ -512,12 +508,12 @@ public class AuthorServiceImpl implements AuthorService {
         return jsonObj.toString();
     }
 
-    @SuppressWarnings({"PMD.ExcessiveMethodLength", "PMD.UnusedPrivateMethod", "PMD.AvoidDuplicateLiterals","PMD.NcssMethodCount", "PMD.NPathComplexity"})
-    private String extractAuthorGeneric(EndpointObject endpoint, String min, Boolean mode , Boolean tempGraph) {
+    @SuppressWarnings({"PMD.ExcessiveMethodLength", "PMD.UnusedPrivateMethod", "PMD.AvoidDuplicateLiterals", "PMD.NcssMethodCount", "PMD.NPathComplexity"})
+    private String extractAuthorGeneric(EndpointObject endpoint, String min, Boolean mode, Boolean tempGraph) {
         int tripletasCargadas = 0; //cantidad de tripletas actualizadaas
         int contAutoresNuevosNoCargados = 0; //cantidad de actores nuevos no cargados
         int contAutoresNuevosEncontrados = 0; //hace referencia a la cantidad de actores existentes en el archivo temporal antes de la actualizacion
-        
+
         if (endpoint.prepareQuery()) {
             log.info("Endpoint listo");
             int authorsSize = 0;
@@ -597,11 +593,11 @@ public class AuthorServiceImpl implements AuthorService {
                                     case "http://rdaregistry.info/Elements/u/P60095": // store foaf:name
                                         insert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, SCHEMA.affiliation.toString(), object);
                                         if (tempGraph) {
-                                        String resp = generateTempEndpoint (object ,  endpoint.getType() , endpoint.getAccess() );
-                                         if (resp != null) {
-                                         provenance = resp;
-                                         }
-                                        // sparqlFunctionsService.updateAuthor(insert);
+                                            String resp = generateTempEndpoint(object, endpoint.getType(), endpoint.getAccess());
+                                            if (resp != null) {
+                                                provenance = resp;
+                                            }
+                                            // sparqlFunctionsService.updateAuthor(insert);
                                         }
                                         break;
                                     case "http://purl.org/dc/terms/isVersionOf":
@@ -631,7 +627,7 @@ public class AuthorServiceImpl implements AuthorService {
                                             createDoc(localResource, object, type, endpoint, predicate);
                                         }
                                         break;
-                                        
+
                                     default:
 
                                 }
@@ -643,7 +639,7 @@ public class AuthorServiceImpl implements AuthorService {
                             String sameAs = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, OWL.SAMEAS.toString(), resource);
                             sparqlFunctionsService.updateAuthor(sameAs);
 
-                            String provenanceQueryInsert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, DCTERMS.PROVENANCE.toString(), provenance );
+                            String provenanceQueryInsert = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, DCTERMS.PROVENANCE.toString(), provenance);
                             sparqlFunctionsService.updateAuthor(provenanceQueryInsert);
 
                             String foafPerson = queriesService.buildInsertQuery(constantService.getAuthorsGraph(), localResource, RDF.TYPE.toString(), FOAF.PERSON.toString());
@@ -681,33 +677,32 @@ public class AuthorServiceImpl implements AuthorService {
             return "Fail: Access";
         }
     }
-    
+
     @SuppressWarnings({"PMD.AvoidLiteralsInIfCondition"})
-    private String generateTempEndpoint (String org , String type , String url ) {
-        
-        List<String> lo = new ArrayList ();
-        String nurl =  url+"-"+org;
-      try {
-        lo.add(org.replace("-", ""));
-        List <String> uriorg = dserv.lookForOrganizations(lo);
-        if ( !(uriorg == null || uriorg.isEmpty()  || uriorg.get(0).isEmpty())) {
-         String resp =  endpointService.registerOAI(type, uriorg.get(0).substring(uriorg.get(0).lastIndexOf('/') + 1) , nurl, false, true);
-        log.info("Temporal Endpoint"+resp); 
-        if ("Successfull Registration".equals(resp) || "Endpoint Already Exist".equals(resp)){
-        return constantService.getEndpointBaseUri() + type + "/" + org+"_temp";}
+    private String generateTempEndpoint(String org, String type, String url) {
+
+        List<String> lo = new ArrayList();
+        String nurl = url + "-" + org;
+        try {
+            lo.add(org.replace("-", ""));
+            List<String> uriorg = disambiguationUtils.lookForOrganizations(lo);
+            if (!(uriorg == null || uriorg.isEmpty() || uriorg.get(0).isEmpty())) {
+                String resp = endpointService.registerOAI(type, uriorg.get(0).substring(uriorg.get(0).lastIndexOf('/') + 1), nurl, false, true);
+                log.info("Temporal Endpoint" + resp);
+                if ("Successfull Registration".equals(resp) || "Endpoint Already Exist".equals(resp)) {
+                    return constantService.getEndpointBaseUri() + type + "/" + org + "_temp";
+                }
+            }
+        } catch (MarmottaException ex) {
+            java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-      } catch (MarmottaException ex) {
-        java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-      }
-         return null;
+        return null;
     }
 
     private String buildLocalURI(String resource, String type, String name) {
         return constantService.getAuthorResource() + name + "/" + type + "/" + resource.substring(resource.lastIndexOf('/') + 1);
         // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    
 
     private String countPublications(String resource) {
         String autor = "<" + resource + ">";
@@ -1160,6 +1155,57 @@ public class AuthorServiceImpl implements AuthorService {
                         + "}";
                 sparqlService.getSparqlService().update(QueryLanguage.SPARQL, q2);
             }
+        }
+    }
+
+    @Override
+    public void automaticNameDivision() {
+        try {
+            String qAuthors = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                    + "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
+                    + "select ?a ?n {\n"
+                    + "    graph <" + constantService.getAuthorsGraph() + "> {  \n"
+                    + "        ?a a foaf:Person .\n"
+                    + "        ?a foaf:name ?n .\n"
+                    + "        filter not exists {\n"
+                    + "            ?a foaf:firstName | foaf:lastName [] . \n"
+                    + "        } \n"
+                    + "    }  \n"
+                    + " }  ";
+
+            ConcurrentHashMap<String, Set<String>> mp = new ConcurrentHashMap<>();
+            List<Map<String, Value>> query = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, qAuthors);
+            for (Map<String, Value> m : query) {
+                if (m.containsKey("a") && m.containsKey("n")) {
+                    String aut = m.get("a").stringValue();
+                    String nom = m.get("n").stringValue();
+                    if (!mp.containsKey(aut)) {
+                        mp.put(aut, new HashSet<String>());
+                    }
+                    mp.get(aut).add(nom);
+                }
+            }
+            ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
+            Model output = new LinkedHashModel();
+            for (Map.Entry<String, Set<String>> s : mp.entrySet()) {
+                for (String name : s.getValue()) {
+                    Map<String, String> separateName = disambiguationUtils.separateName(name);
+                    if (!separateName.isEmpty()) {
+                        String get = separateName.get("firstName");
+                        String get1 = separateName.get("lastName");
+                        log.info("Fullname '{}' = firstName '{}' - lastName '{}'", name, get, get1);
+                        output.add(instance.createURI(s.getKey()), FOAF.FIRST_NAME, instance.createLiteral(get));
+                        output.add(instance.createURI(s.getKey()), FOAF.LAST_NAME, instance.createLiteral(get1));
+                    } else {
+                        log.info("Fullname '{}' skip...", name);
+                    }
+                }
+            }
+            sparqlService.getGraphDBInstance().addBuffer(instance.createURI(constantService.getAuthorsGraph()), output);
+            sparqlService.getGraphDBInstance().dumpBuffer();
+        } catch (Exception ex) {
+            log.warn("Unknown error, automatic detection of fist/last names, please check the catalina log for further details.");
+            log.warn("Exception {}", ex);
         }
     }
 

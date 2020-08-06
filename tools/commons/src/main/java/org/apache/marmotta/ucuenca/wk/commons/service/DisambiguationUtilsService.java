@@ -14,10 +14,11 @@ import org.apache.marmotta.platform.core.exception.MarmottaException;
  * @author cedia
  */
 public interface DisambiguationUtilsService {
- 
-  List<String> lookForOrganizations(List <String> aff) throws MarmottaException;
-  
-  double isGivenName(String aff) throws MarmottaException;
-  Map<String,String> separateName (String fullname) throws MarmottaException;
-  
+
+    List<String> lookForOrganizations(List<String> aff) throws MarmottaException;
+
+    Double isGivenName(String aff) throws MarmottaException;
+
+    Map<String, String> separateName(String fullname) throws MarmottaException;
+
 }
