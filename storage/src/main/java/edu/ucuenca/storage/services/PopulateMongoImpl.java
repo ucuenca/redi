@@ -687,7 +687,7 @@ public class PopulateMongoImpl implements PopulateMongo {
   public String getProfileInfo(String uri) throws MarmottaException {
     List<Map<String, Value>> proy = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getProjectInfo(uri));
     JSONObject main = new JSONObject();
-    JSONArray array = new JSONArray();
+    //JSONArray array = new JSONArray();
     JSONObject obj = new JSONObject();
     for (Map<String, Value> a : proy) {
       obj.put("uri",  uri );

@@ -18,6 +18,7 @@
                     <td>CIUDAD</td>
                     <td>INVESTIGADORES</td>
                     <td>PUBLICACIONES</td>
+                    <td>PROYECTOS</td>
                     <td>REPORTE DE INVESTIGADORES</td>
                 </tr>
                 <tr ng-repeat="source in sources">
@@ -26,6 +27,7 @@
                     <td>{{ source.city}}</td>
                     <td align="right">{{ source.totAuthors}}<a ng-if="source.empty" href="#" data-tooltip="{{'ND_SOURCES'| translate}}">N/D*</a></td>
                     <td align="right">{{ source.totPublications}}<a ng-if="source.empty" href="#" data-tooltip="{{'ND_SOURCES'| translate}}">N/D*</a></td>
+                    <td align="right">{{ source.totProjects}}<a ng-if="source.empty" href="#" data-tooltip="{{'ND_SOURCES'| translate}}">N/D*</a></td>
 
                     <td style="text-align: center;" ng-controller="exportController">
                       <button ng-hide="loading" ng-click="exportData('pdf', 'ReportResearchersbyIES', source.name)" title="Export list of authors">

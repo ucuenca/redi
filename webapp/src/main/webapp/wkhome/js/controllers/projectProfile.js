@@ -23,7 +23,7 @@ wkhomeControllers.controller('projectProfile', ['$scope', '$routeParams', '$wind
       //$scope.project = data; 
        projectdata.members = $.map( projectdata.members.split("|") , acro );
        projectdata.funders = $.map(projectdata.funders.split("|"), acro );
-        projectdata.img = '/wkhome/images/proj.png';
+        projectdata.img = '/wkhome/images/projectimg.png';
 
           
 

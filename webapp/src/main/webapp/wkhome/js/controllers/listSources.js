@@ -59,10 +59,12 @@ wkhomeControllers.controller('listSources', ['sparqlQuery', '$scope', 'globalDat
                             if (endi){
                                 model["totAuthors"]=endi["uc:totalAuthors"]["@value"];
                                 model["totPublications"]=endi["uc:totalPublications"]["@value"];
+                                model["totProjects"]=endi["uc:totalProjects"]["@value"];
                                 model["empty"] = false;
                             } else {
                                 model["totAuthors"]='';
                                 model["totPublications"]='';
+                                model["totProjects"]='';
                                 model["empty"] = true;
                             }
                             $scope.datasources.push(model);

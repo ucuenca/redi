@@ -108,6 +108,11 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
                         alert('No hay resultados ...');
                     }
                 }
+            } , function (error){
+                if (!chain) {
+                waitingDialog.hide();
+                alert("Problemas con los datos");
+                }
             });
         }
 
@@ -160,6 +165,11 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
                         alert('No hay resultados ...');
                     }
                 }
+            } , function (error){
+                if (!chain) {
+                waitingDialog.hide();
+                alert("Problemas con los datos");
+                }
             });
         }
 
@@ -191,7 +201,12 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
                                 alert('No hay resultados ...');
                             }
                         }
-                    });
+                    } , function (error){
+                if (!chain) {
+                waitingDialog.hide();
+                alert("Problemas con los datos");
+                }
+            });
         }
 
 
