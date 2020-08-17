@@ -274,6 +274,15 @@ final public class VIVOExtractor {
                             + "?proj <http://vivoweb.org/ontology/core#assignedBy> ?o . "
                             + "?o rdfs:label ?la . "
                             + "}"));
+                    
+                    str.addAll(extractData(parse, "PREFIX foaf: <http://xmlns.com/foaf/0.1/> "
+                            + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
+                            + "PREFIX schema: <http://schema.org/> "
+                            + "construct { "
+                            + " ?pub <https://www.openaire.eu/cerif-profile/1.1/linksToProject> ?proj . "
+                            + "} where { values ?proj { <" + p.stringValue() + "> } . "
+                            + " ?proj <http://vivoweb.org/ontology/core#supportedInformationResource> ?pub . "
+                            + "}"));
 
                     Set<Value> intv = extractData(parse, "construct {\n"
                             + "    ?a <http://vivoweb.org/ontology/core#dateTimeInterval> ?i .\n"
