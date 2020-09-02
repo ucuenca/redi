@@ -11,6 +11,10 @@ import java.util.List;
 import java.util.Set;
 import org.apache.marmotta.ucuenca.wk.commons.util.ModifiedJaccardMod;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Person;
+import static org.simmetrics.StringMetricBuilder.with;
+import org.simmetrics.metrics.JaroWinkler;
+import org.simmetrics.metrics.Levenshtein;
+import org.simmetrics.simplifiers.Simplifiers;
 
 /**
  *
@@ -18,6 +22,21 @@ import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Person;
  */
 @SuppressWarnings("PMD")
 public class PublicationUtils {
+
+    public static double compareTitleFast(String name1, String name2) {
+
+        double sim = 0;
+        double rat = (Math.min(name1.length(), name2.length()) + 0.0) / (Math.max(name1.length(), name2.length()) + 0.0);
+        if (rat > ModifiedJaccardMod.minOverlapFast) {
+            if (name1.contains(name2) || name2.contains(name1)) {
+                sim = 1;
+            } else {
+                sim = (with(new Levenshtein()).simplify(Simplifiers.removeDiacritics()).build().compare(name1, name2)
+                        + 2 * with(new JaroWinkler()).simplify(Simplifiers.removeDiacritics()).build().compare(name1, name2)) / 3;
+            }
+        }
+        return sim;
+    }
 
     public static double compareTitle(String name1, String name2) {
         ModifiedJaccardMod metric = new ModifiedJaccardMod();
@@ -61,14 +80,14 @@ public class PublicationUtils {
                     break;
                 }
             }
-            if (alone){
+            if (alone) {
                 Set<Integer> hsalone = new HashSet<>();
                 hsalone.add(i);
                 ls_alone.add(hsalone);
             }
         }
         ls.addAll(ls_alone);
-        
+
         List<String> optsal = new ArrayList<>();
         for (Set<Integer> grp : ls) {
             List<String> opt = new ArrayList<>();

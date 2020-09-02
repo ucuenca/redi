@@ -26,6 +26,7 @@ public class Person {
   public static final double thresholdName = 0.9;
   public static final double thresholdCAName = 0.9;
   public static final double thresholdTitle = 0.93;
+  public static final double thresholdTitleFast = 0.96;
   public static final double thresholdAff = 0.95;
   public static final int thresholdCoauthors = 2;
   public static final int thresholdPublications = 1;

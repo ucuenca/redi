@@ -283,7 +283,30 @@ public class SPARQLUtils {
         sparqlService.update(QueryLanguage.SPARQL, query);
     }
 
-    public void clearSameAs(String SA, String SAF) throws RepositoryException, MalformedQueryException, UpdateExecutionException {
+    public void clearSameAs(String SA, String SAF, String Man) throws RepositoryException, MalformedQueryException, UpdateExecutionException {
+
+        String q_pre = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
+                + "insert {\n"
+                + "    graph <&D&> {\n"
+                + "        ?b owl:sameAs ?cx .\n"
+                + "        ?a owl:sameAs ?c .\n"
+                + "    }\n"
+                + "} where {\n"
+                + "    graph <" + SAF + "> {\n"
+                + "        {?b owl:sameAs ?cx .}\n"
+                + "         union \n"
+                + "        {?a owl:sameAs ?c .}\n"
+                + "    }\n"
+                + "    graph <" + Man + "> {\n"
+                + "        ?a owl:is ?b .\n"
+                + "    }\n"
+                + "} ";
+
+        transformGraph(SAF, SAF + "_new", q_pre);
+        deleteGraph(SAF);
+        copyGraph(SAF + "_new", SAF);
+        deleteGraph(SAF + "_new");
+
         String q = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
                 + "insert {\n"
                 + "    graph <&D&> {\n"
@@ -317,6 +340,43 @@ public class SPARQLUtils {
                 + "        }\n"
                 + "        graph <" + graph2 + "> {\n"
                 + "                ?b <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
+                + "        }\n"
+                + "}";
+        transformGraph(graph, graph + "__X", q);
+        deleteGraph(graph);
+        copyGraph(graph + "__X", graph);
+        deleteGraph(graph + "__X");
+    }
+
+    public void insertGraph(String graph, String graph2, String prop) throws RepositoryException, MalformedQueryException, UpdateExecutionException {
+        String q = "insert {\n"
+                + "        graph <&I&> {\n"
+                + "                ?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
+                + "        }\n"
+                + "}\n"
+                + "where {\n"
+                + "        graph <" + graph2 + "> {\n"
+                + "                ?a <" + prop + "> ?c .\n"
+                + "        }\n"
+                + "}";
+        transformGraph(graph, graph + "__X", q);
+        deleteGraph(graph);
+        copyGraph(graph + "__X", graph);
+        deleteGraph(graph + "__X");
+    }
+
+    public void minusGraph(String graph, String graph2, String prop) throws RepositoryException, MalformedQueryException, UpdateExecutionException {
+        String q = "insert {\n"
+                + "        graph <&D&> {\n"
+                + "                ?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
+                + "        }\n"
+                + "}\n"
+                + "where {\n"
+                + "        graph <" + graph + "> {\n"
+                + "                ?a <http://www.w3.org/2002/07/owl#sameAs> ?c .\n"
+                + "        }\n"
+                + "        graph <" + graph2 + "> {\n"
+                + "                ?a <" + prop + "> ?c .\n"
                 + "        }\n"
                 + "}";
         transformGraph(graph, graph + "__X", q);
