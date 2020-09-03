@@ -448,11 +448,19 @@ public interface QueriesService {
     
     String getRelevantProvbyAuthor(String uri);
     
-    
+    String getDocumentbyArea (String uriarea);
     // Projects 
     String getProjects ();
     
     String getProjectInfo (String uri);
+    
+    // Areas
+    
+    String getAuthorsbyArea(String uri);
+    
+    String getOrgsbyArea(String uri);
+    
+    String getProvbyArea(String uri);
       
       
 

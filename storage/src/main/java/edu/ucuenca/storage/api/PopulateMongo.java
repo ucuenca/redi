@@ -68,4 +68,6 @@ public interface PopulateMongo {
   public void populateProfileChanges();
 
   public void instbyProj();
+
+  public void areasbydocument();
 }

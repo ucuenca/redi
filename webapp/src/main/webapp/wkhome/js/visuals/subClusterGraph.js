@@ -73,6 +73,7 @@ wkhomeApp.directive('subCluster', ["d3", 'globalData', 'sparqlQuery', '$routePar
           if ("Error" in Result) {
             $('#relatedArea').css("display", "block");
           } else {
+            $("svg").empty();
             renderCl(Result);
             etiquetas();
           }

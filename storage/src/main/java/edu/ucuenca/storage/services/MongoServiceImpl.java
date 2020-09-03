@@ -49,9 +49,6 @@ import org.bson.conversions.Bson;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.openrdf.model.Model;
-import org.openrdf.model.impl.LinkedHashModel;
-import org.openrdf.query.GraphQueryResult;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.rio.RDFFormat;
@@ -78,6 +75,7 @@ public class MongoServiceImpl implements MongoService {
     private MongoCollection<Document> authors;
     private MongoCollection<Document> statistics;
     private MongoCollection<Document> statisticsByInst;
+    private MongoCollection<Document> documentbyarea;
     private MongoCollection<Document> statisticsByAuthor;
     private MongoCollection<Document> relatedauthors;
     private MongoCollection<Document> clusters;
@@ -118,7 +116,7 @@ public class MongoServiceImpl implements MongoService {
         authors_val = db.getCollection(Collection.PROFILE_AUTHOR.getValue());
         projects = db.getCollection(Collection.PROJECTPROFILE.getValue());
         sessions = db.getCollection(Collection.SESSIONS.getValue());
-        instbyProject = db.getCollection(Collection.INSTBYPROJECT.getValue());
+        instbyProject = db.getCollection(Collection.DOCUMENTBYAREA.getValue());
 
     }
 
@@ -364,4 +362,13 @@ public class MongoServiceImpl implements MongoService {
   public Document getinstbyProject(String id) {
     return instbyProject.find(eq("_id", id)).first();
   }
+
+
+  @Override
+    public String getStatisticsByArea(String id) {
+        return instbyProject.find(eq("_id", id)).first().toJson();
+
+    }
 }
+
+

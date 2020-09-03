@@ -201,6 +201,19 @@ public class MongoDBWebService {
         }
         return Response.ok().entity(response).build();
     }
+    
+     @GET
+    @Path("/statisticsbyArea")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response statisticsbyArea(@QueryParam("id") String id) throws FailMongoConnectionException {
+        String response;
+        try {
+            response = mongoService.getStatisticsByArea(id);
+        } catch (Exception e) {
+            throw new FailMongoConnectionException(String.format("Cannot retrieve information for id %s", id), e);
+        }
+        return Response.ok().entity(response).build();
+    }
 
     @GET
     @Path("/authorByArea")

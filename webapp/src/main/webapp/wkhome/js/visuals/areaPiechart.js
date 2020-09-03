@@ -65,7 +65,16 @@ Highcharts.chart('containerpc', {
     },
     series: [{
         name: 'Share',
-        data:  fData.array
+        data:  fData.array,
+        point: {
+            events : {
+                click : function () {
+                    console.log (this);
+                    window.location.href = "/#/info/statisticsbyArea/"+this.name;
+                }
+            }
+        }
+
     }]
 });
 

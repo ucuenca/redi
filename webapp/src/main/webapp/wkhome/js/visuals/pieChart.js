@@ -109,8 +109,8 @@ pieChart.directive('pieChart', ["d3", "globalData", "sparqlQuery",
                          console.log ("key");
                         console.log (key);
                          console.log (d);
-                          if (stats == 'areas')
-                       {   window.location.href = "/#/group/area?cluster="+key;
+                          if (stats == 'areas') 
+                       {   window.location.href = "/#/info/statisticsbyArea/"+key;
                              
                        }else {
                             indow.location.href = "/#/info/statisticsbyInst/"+key;

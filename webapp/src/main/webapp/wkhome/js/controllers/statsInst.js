@@ -26,7 +26,7 @@ wkhomeControllers.controller('statsInst', ['$scope','$routeParams', 'globalData'
        var total = 0;
      var areas =  data["inst_by_area"]["data"];
       areas.forEach(function (v) { total = total+ parseInt(v.total) });
-      areas = _.map(areas, function(value,i){ return{ name: value.name , label:minlabel (value.name) , y: Number((100*value.total)/total)}; })
+      areas = _.map(areas, function(value,i){ return{ name: value.uri , label:minlabel (value.name) , y: Number((100*value.total)/total)}; })
      var principales =  _.first(areas,7);
      var secundarios =  _.rest(areas, 7);
      var valorsec = 0;

@@ -144,6 +144,7 @@ wkhomeApp.directive('colProject', ["d3", 'globalData', 'sparqlQuery', '$routePar
                 .style("fill", "white")
                 .style("pointer-events", "all");
 
+        if ( d3.select("g").size() >= 1 ) {  d3.select("g").remove()  };
         var container = svg.append("g");
 
         function zoomed() {
@@ -305,7 +306,7 @@ wkhomeApp.directive('colProject', ["d3", 'globalData', 'sparqlQuery', '$routePar
                 })
                 .on("dblclick", function (d) {
                   removePopovers(d);
-                  $window.location.hash = '/author/profile/' + d.id;
+                  $window.location.hash = '/info/statisticsbyInst/' + d.id;
                 });
 
 

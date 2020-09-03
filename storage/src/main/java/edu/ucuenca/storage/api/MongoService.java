@@ -60,6 +60,8 @@ public interface MongoService {
   public String getStatisticsByInst(String id);
 
   public String getStatisticsByAuthor(String id);
+  
+  public String getStatisticsByArea(String id);
 
   public void registerSession(String orcid, String token);
 
@@ -84,7 +86,7 @@ public interface MongoService {
     SPARQLS("sparqls"), AUTHORS("authors"), PUBLICATIONS("publications"), STATISTICS("statistics"), STATISTICS_INST("statistics_inst"),
     RELATEDAUTHORS("relatedauthors"), AUTHORS_DISCPLINE("authors_discipline"), AUTHORS_AREA("authors_area"),
     COUNTRIES("countries"), CLUSTERS("clusters"), CLUSTERSTOTALS("clusterstotals"), STATISTICS_AUTHOR("statistics_author"), PROFILE_AUTHOR("profile_author"), SESSIONS("sessions"), TRANSLATIONS("translations")
-    , PROJECTPROFILE("project_profile") , INSTBYPROJECT("instbyProjects");
+    , PROJECTPROFILE("project_profile") , INSTBYPROJECT("instbyProjects") ,  DOCUMENTBYAREA("documentbyarea");
 
     private final String value;
 

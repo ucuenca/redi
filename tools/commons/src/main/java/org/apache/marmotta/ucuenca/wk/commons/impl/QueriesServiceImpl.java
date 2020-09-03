@@ -2235,6 +2235,30 @@ public class QueriesServiceImpl implements QueriesService {
             + "                }  GROUP BY ?y Order by ASC(?y)"; */
 
   }
+  
+  
+  @Override
+  public String getDocumentbyArea (String uriarea) {
+   return PREFIXES + "select ?doc (group_concat( distinct lcase(?l) ; separator = ' ') as ?documentText) ?tl ?y {\n" +
+          "              graph <" + con.getCentralGraph() + "> {\n" +
+          "               graph <" + con.getClusterGraph() + "> {\n" +
+          "                ?person   dct:isPartOf <"+uriarea+"> .\n" +
+          "                 #?cl a uc:Cluster ;        \n" +
+          "                 }\n" +
+          "		        ?o uc:memberOf <https://redi.cedia.edu.ec/> .\n" +
+          "		        ?person schema:memberOf ?o .\n" +
+          "		        ?person foaf:publications ?doc .        \n" +
+          "		        ?doc  dct:subject ?s .\n" +
+          "                OPTIONAL { ?doc uc:translation ?tl } .\n" +
+          "		        ?s rdfs:label ?l .\n" +
+          "                ?doc <http://schema.org/copyrightYear>|<http://ns.nature.com/terms/coverDate>  ?yx .               \n" +
+          "                     BIND (str(?yx) as ?y2) . \n" +
+          "                     bind( strbefore( ?y2, '-' ) as ?y3 ).   \n" +
+          "                     bind( strafter( ?y2, ' ' ) as ?y4 ).  \n" +
+          "                     bind( if (str(?y3)='' && str(?y4)='',?y2, if(str(?y3)='',strafter( ?y2, ' ' ),strbefore( ?y2, '-' ))) as ?y ) . FILTER regex(?y, '^[0-9]*$')}\n" +
+          "		    \n" +
+          "		} group by ?doc ?tl ?y ";
+  }
 
   @Override
   public String getConferencebyAuthor(String uri) {
@@ -2313,7 +2337,7 @@ public class QueriesServiceImpl implements QueriesService {
   public String getProjectInfo (String uri) {
    return PREFIXES + "select distinct ?title (CONCAT(STR(DAY(?sdate)), '-', STR(MONTH(?sdate)), '-', STR(YEAR(?sdate))) as ?starDate)  (CONCAT(STR(DAY(?edate)), '-', STR(MONTH(?edate)), '-', STR(YEAR(?edate))) as ?endDate) (GROUP_CONCAT(DISTINCT STR(?funded); separator='|') as ?funders) (GROUP_CONCAT(DISTINCT STR(?org); separator='|') as ?orgs)\n" +
                       "where {\n" +
-                      "    graph <https://redi.cedia.edu.ec/context/redi> {\n" +
+                      "    graph <" + con.getCentralGraph() + "> {\n" +
                       "<"+uri+"> dct:title ?title .\n" +
                       "OPTIONAL {  <"+uri+"> cerif:StartDate ?sdate   }\n" +
                       "OPTIONAL {  <"+uri+"> cerif:EndDate ?edate .   }\n" +
@@ -2322,6 +2346,52 @@ public class QueriesServiceImpl implements QueriesService {
                       "        } " +
                       "   } " +
                       "} group by ?title  ?sdate ?edate ";
+  }
+
+  @Override
+  public String getAuthorsbyArea(String uri) {
+   return PREFIXES + "select ?uri (group_concat( distinct ?name ; separator = ';') as ?names) (COUNT (?p) as ?number)   where {  \n" +
+          "graph <" + con.getCentralGraph() + "> {\n" +
+          "               graph <" + con.getClusterGraph() + "> {\n" +
+          "                ?uri   dct:isPartOf <"+uri+"> .      \n" +
+          "                 }\n" +
+          "		        ?org uc:memberOf <https://redi.cedia.edu.ec/> .\n" +
+          "		        ?uri schema:memberOf ?org .\n" +
+          "        		?uri foaf:name ?name .\n" +
+          "                ?uri foaf:publications ?p .\n" +
+          "              \n" +
+          "   }\n" +
+          "} group by ?uri order by DESC (?number)";
+  }
+
+  @Override
+  public String getOrgsbyArea(String uri) {
+  return PREFIXES + "select ?uri (group_concat( distinct ?name ; separator = ';') as ?names)   (COUNT (?person) as ?number)   where {  \n" +
+          "graph <" + con.getCentralGraph() + "> {\n" +
+          "               graph <" + con.getClusterGraph() + "> {\n" +
+          "                ?person   dct:isPartOf <"+uri+">  .      \n" +
+          "                 }\n" +
+          "		        ?uri uc:memberOf <https://redi.cedia.edu.ec/> .\n" +
+          "                     ?uri foaf:name ?name .\n" +
+          "		        ?person schema:memberOf ?uri .\n" +
+          "\n" +
+          "   }\n" +
+          "} group by ?uri order by DESC (?na)";
+  
+  }
+    
+
+  @Override
+  public String getProvbyArea(String uri) {
+    return PREFIXES + "select ?uri (group_concat( distinct ?name ; separator = ';') as ?names) (COUNT (?p) as ?number)   where {  \n" +
+                      "graph <" + con.getCentralGraph() + "> {\n" +
+                      "               graph <" + con.getClusterGraph() + "> {\n" +
+                      "                ?author   dct:isPartOf <"+uri+"> .      \n" +
+                      "                 }\n" +
+                      "                ?author  foaf:publications ?p. " +
+                      "                ?p  dct:provenance  ?uri . " +
+                      "   }\n" +
+                      "} group by ?uri  order by DESC (?number)";
   }
   
 

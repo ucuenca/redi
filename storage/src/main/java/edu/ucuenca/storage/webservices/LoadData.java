@@ -147,6 +147,20 @@ public class LoadData {
     }
     return Response.ok().entity("Projects by Institutions loaded successfully").build();
   }
+  
+  
+  @POST
+  @Path("/areaStats")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response areastats() throws FailMongoConnectionException {
+    try {
+      loadService.areasbydocument();
+    } catch (Exception e) {
+      log.error("Cannot load statistics areas  into Mongo DB", e);
+      throw new FailMongoConnectionException(String.format("Cannot load area stats into Mongo DB"), e);
+    }
+    return Response.ok().entity("areas stats loaded successfully").build();
+  }
 
   @POST
   @Path("/clusters")

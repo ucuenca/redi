@@ -47,12 +47,11 @@ margin-top: 10px;
   border-color: #c8c8d7;
   border-style: solid;
   margin-right: 10%;
-  min-height: 60vh;
+  height: 65vh;
   background-image: url("/wkhome/images/manos2.PNG");
   background-size: 65vh;
+  overflow-y: auto;
 /*background-color: #6600ff ; */
-
-
 }
 
 .coauthor-list {

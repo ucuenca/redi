@@ -176,6 +176,22 @@ wkhomeServices.factory('Statistics', ['$resource', '$http', 'globalData',
   }
 ]);
 
+wkhomeServices.factory('StatisticsbyArea', ['$resource', '$http', 'globalData',
+  function ($resource, $http, globalData) {
+    var serverInstance = globalData.serverInstance;
+    return $resource(serverInstance + 'mongo/statisticsbyArea?id=:id', {}, {
+      query: {
+        method: 'GET',
+        params: {id: 'id'},
+        isArray: false,
+        cache: true,
+        headers: {'Accept': 'application/json'}
+      }
+    });
+  }
+]);
+
+
 wkhomeServices.factory('StatisticsbyInst', ['$resource', '$http', 'globalData',
   function ($resource, $http, globalData) {
     var serverInstance = globalData.serverInstance;

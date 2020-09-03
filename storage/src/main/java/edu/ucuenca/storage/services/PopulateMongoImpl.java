@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -56,6 +57,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
 import org.apache.marmotta.platform.core.api.task.Task;
 import org.apache.marmotta.platform.core.api.task.TaskManagerService;
+import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
@@ -64,9 +66,11 @@ import org.apache.marmotta.ucuenca.wk.commons.service.DistanceService;
 import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 import org.apache.marmotta.ucuenca.wk.commons.util.BoundedExecutor;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
+import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.BIBO;
 import org.bson.Document;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Model;
 import org.openrdf.model.URI;
@@ -80,6 +84,7 @@ import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQueryResult;
+import org.openrdf.query.UpdateExecutionException;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFFormat;
@@ -709,6 +714,135 @@ public class PopulateMongoImpl implements PopulateMongo {
      return  val == null ? "" : val.stringValue();
     }
   
+  @Override
+  public void areasbydocument() {
+     Task task = taskManagerService.createSubTask("Caching areas", "Mongo Service");
+    try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
+      MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
+
+      // Delete and create collection
+      MongoCollection<Document> collection = db.getCollection(MongoService.Collection.DOCUMENTBYAREA.getValue());
+      collection.drop();
+      try {
+        List<Map<String, Value>> clusters = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getClusterURIs());
+        task.updateTotalSteps(clusters.size());
+        for (int i = 0; i < clusters.size(); i++) {
+          String uri = clusters.get(i).get("c").stringValue();
+          String doc = getDocumentsbyArea(uri);
+          String author = getStatsQuerysArea (uri , 1);
+          String org = getStatsQuerysArea (uri , 2);
+          String prov = getStatsQuerysArea (uri , 3);
+          if (doc != null ) {
+            Document area = new Document ();
+            Document parse = Document.parse(doc);
+            area.append("_id", uri);
+            area.append("date", parse);
+            area.append("authors", Document.parse(author));
+            area.append("orgs", Document.parse(org));
+            area.append("provs", Document.parse(prov) );
+            collection.insertOne(area);
+          }  
+          task.updateDetailMessage("Area", uri);
+          task.updateProgress(i + 1);
+        }
+      } catch (MarmottaException ex) {
+        java.util.logging.Logger.getLogger(PopulateMongoImpl.class.getName()).log(Level.SEVERE, null, ex);
+      } finally {
+        taskManagerService.endTask(task);
+      }
+    }
+  }
+  
+  public  String getDocumentsbyArea(String uri) throws MarmottaException{
+        String response;
+    
+        List<Map<String, Value>> docs = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getDocumentbyArea(uri));
+       
+        TreeMap <String, Integer> tree_map  = new TreeMap (); 
+        for (int j = 0 ; j < docs.size() ; j++ ) {
+         Map<String, Value> doc = docs.get(j);
+         String keys = doc.get("tl") == null ?  doc.get("documentText").stringValue().toLowerCase() :  doc.get("tl").stringValue().toLowerCase()  ;
+         if (keys.isEmpty()){ continue;}
+         keys = keys.replaceAll("[^a-zA-Z0-9ñáéíóú\\s]", "");
+         keys = keys.replaceAll("[\\n\\s+]", " ");
+         String date = doc.get("y").stringValue();
+         String uridoc = doc.get("doc").stringValue();
+         String query = "PREFIX :<http://www.ontotext.com/graphdb/similarity/>\n" +
+                        "PREFIX inst:<http://www.ontotext.com/graphdb/similarity/instance/>\n" +
+                        "PREFIX pubo: <http://ontology.ontotext.com/publishing#>\n" +
+                        "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+                        "\n" +
+                        "SELECT  ?documentID (SAMPLE(?ll) as ?label) ?score {\n" +
+                        "    ?search a inst:uareas ;\n" +
+                        "        :searchTerm '"+keys+"' ;" +
+                        "        :searchParameters '';\n" +
+                        "        :documentResult ?result .\n" +
+                        "    ?result :value ?documentID ;\n" +
+                        "            :score ?score.\n" +
+                        "    ?documentID rdfs:label ?ll\n" +
+                        "	} group by ?documentID ?score";
+         System.out.println (j+"-"+uridoc+":"+keys);
+         List<Map<String, Value>> areasc = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, query);
+          if (!areasc.isEmpty() && areasc.size() > 1){
+             if (uri.equals(areasc.get(0).get("documentID").stringValue()) || uri.equals(areasc.get(1).get("documentID").stringValue()) ){
+                 insertAreabyDoc (conService.getClusterGraph() , uridoc , "http://purl.org/dc/terms/isPartOf" , uri );
+                 insertAreabyDoc (conService.getClusterGraph() , uridoc , RDF.TYPE.toString() , BIBO.ACADEMIC_ARTICLE.toString() );
+                 if (tree_map.containsKey(date)){ 
+                   tree_map.put(date, tree_map.get(date)+1);
+                 }else {
+                   tree_map.put(date, 1);
+                 }
+             }
+          }
+              
+        }
+        if (!tree_map.isEmpty()){
+          response = JSONValue.toJSONString(tree_map);
+        }else {
+          response = null;
+        } 
+      return response;
+  }
+  
+  public void insertAreabyDoc (String graph , String subject , String  property , String  object  ) {
+    try {
+      String insertq = queriesService.buildInsertQuery(graph, subject, property, object);
+      fastSparqlService.getSparqlService().update(QueryLanguage.SPARQL, insertq);
+    } catch (MarmottaException | InvalidArgumentException | MalformedQueryException | UpdateExecutionException ex) {
+      java.util.logging.Logger.getLogger(PopulateMongoImpl.class.getName()).log(Level.SEVERE, null, ex);
+    }
+  
+  }
+  
+  
+  public String getStatsQuerysArea(String uri , int number) throws MarmottaException {
+    String query = "";
+    switch (number) {
+      case 1 : query = queriesService.getAuthorsbyArea(uri) ; break;
+      case 2 : query = queriesService.getOrgsbyArea(uri) ; break;
+      case 3 : query = queriesService.getProvbyArea(uri);  break;
+        
+    }
+    
+    
+    List<Map<String, Value>> data = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, query);
+    JSONObject main = new JSONObject();
+    JSONArray array = new JSONArray();
+    for (Map<String, Value> a : data) {
+      if (a.get("uri") == null) {
+        continue;
+      }
+      JSONObject obj = new JSONObject();
+      obj.put("uri", a.get("uri").stringValue());
+      obj.put("name", commonService.getUniqueName(a.get("names").stringValue(), ";"));
+      obj.put("total", a.get("number").stringValue());
+      array.add(obj);
+    }
+    main.put("data", array);
+    return main.toJSONString();
+  }
+  
+
 
   @Override
   public void publications() {
@@ -1599,6 +1733,8 @@ public class PopulateMongoImpl implements PopulateMongo {
     }
     
   }
+
+  
 
   class SynchronizedParse {
 

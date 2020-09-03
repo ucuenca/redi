@@ -138,6 +138,9 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                 when('/info/statisticsbyAuthor/:author*', {
                   templateUrl: 'wkhome/partials/statisticsbyAuthor.html',
                 }).
+                when('/info/statisticsbyArea/:areauri*', {
+                  templateUrl: 'wkhome/partials/statisticsbyArea.html',
+                }).
                  when('/info/publication/:pub*', {
                   templateUrl: 'wkhome/partials/publicationProfile.html',
                 }).

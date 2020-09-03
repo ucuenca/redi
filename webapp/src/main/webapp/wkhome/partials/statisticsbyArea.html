@@ -1,0 +1,68 @@
+
+
+<div class="container" ng-controller="statsArea">
+
+    <div class="title" style="text-align: center">
+        <h2 class="text-primary">Estadisticas por Area - {{name}}</h2>
+    </div>
+    <p>
+
+    </p>
+
+
+    <br/>
+
+      <div class="row"  style="margin-bottom: 10px">
+    <div class="col-md-8 container-fluid"  style='background-color: #FFFFFF;'>
+         <date-linechart data="data">
+     <div id="containerLine" style="min-width: 310px; height: 350px; margin: 0 auto"></div>
+         </date-linechart>
+    </div>
+     <div class="col-md-4 container-fluid" >
+      <h3 class="text-center"> Sub Areas</h3>
+      <tag-canvas datacanvas="datacanvas">
+        <div id="myCanvasContainer">
+          <canvas width="300" height="300" id="myCanvas">
+            <p>Anything in here will be replaced on browsers that support the canvas element</p>
+          </canvas>
+        </div>
+        <div id="tags">
+          <ul>
+         
+          </ul>
+        </div>
+        </tag-canvas>
+      </div> 
+     </div>
+
+
+         <div class="row"  >
+     <div class="col-sm-4">
+    <ul>
+      <li class="head-list">
+        <font color=#243082> <strong> TOP Autores </strong> </font>
+      </li>
+      <span ng-repeat="aut in topAut"><li> {{aut}} </li> </span>
+    </ul>
+  </div>
+       <div class="col-sm-4">
+    <ul>
+      <li class="head-list">
+        <font color=#243082> <strong> TOP Organizaciones </strong> </font>
+      </li>
+      <span ng-repeat="org in topOrg"><li> {{org}} </li> </span>
+    </ul>
+  </div>
+       <div class="col-sm-4">
+    <ul>
+      <li class="head-list">
+        <font color=#243082> <strong> TOP Revistas </strong> </font>
+      </li>
+        <span ng-repeat="prov in topProv track by $index"><li> {{prov}} </li> </span>
+    </ul>
+  </div>
+     </div>
+
+</div>
+
+
