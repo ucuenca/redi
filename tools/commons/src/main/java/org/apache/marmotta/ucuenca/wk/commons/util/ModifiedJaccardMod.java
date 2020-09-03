@@ -34,6 +34,7 @@ public class ModifiedJaccardMod {
   public static int abvThreshold = 3;
   public boolean applyMinOverlapConstrain = false;
   public double minOverlap = 0.7;
+  public static double minOverlapFast = 0.9;
   public int minMatchs = 3;
   public boolean priorFirst = false;
   public boolean priorOrd = false;
