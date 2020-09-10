@@ -56,7 +56,7 @@ wkhomeApp.directive('colProject', ["d3", 'globalData', 'sparqlQuery', '$routePar
             $('#relatedArea').css("display", "block");
           } else {
             console.log ("Llamando RENDER");
-         
+               $("svg").empty();
                render(filterbyorg ( Result , orgid ));
           
            // etiquetas();
@@ -144,7 +144,7 @@ wkhomeApp.directive('colProject', ["d3", 'globalData', 'sparqlQuery', '$routePar
                 .style("fill", "white")
                 .style("pointer-events", "all");
 
-        if ( d3.select("g").size() >= 1 ) {  d3.select("g").remove()  };
+        
         var container = svg.append("g");
 
         function zoomed() {

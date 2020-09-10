@@ -116,8 +116,9 @@ public class MongoServiceImpl implements MongoService {
         authors_val = db.getCollection(Collection.PROFILE_AUTHOR.getValue());
         projects = db.getCollection(Collection.PROJECTPROFILE.getValue());
         sessions = db.getCollection(Collection.SESSIONS.getValue());
-        instbyProject = db.getCollection(Collection.DOCUMENTBYAREA.getValue());
-
+        instbyProject = db.getCollection(Collection.INSTBYPROJECT.getValue());
+        documentbyarea = db.getCollection(Collection.DOCUMENTBYAREA.getValue()); 
+        
     }
 
     @Override
@@ -366,7 +367,7 @@ public class MongoServiceImpl implements MongoService {
 
   @Override
     public String getStatisticsByArea(String id) {
-        return instbyProject.find(eq("_id", id)).first().toJson();
+        return documentbyarea.find(eq("_id", id)).first().toJson();
 
     }
 }
