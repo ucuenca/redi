@@ -20,6 +20,8 @@ public interface ExternalSPARQLService {
     SparqlService getSparqlService() throws MarmottaException;
 
     RepositoryConnection getRepositoryConnetion() throws RepositoryException;
+    
+    RepositoryConnection getRepositoryConnetionCustom() throws RepositoryException;
 
     GraphDB getGraphDBInstance() throws RepositoryException;
 

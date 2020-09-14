@@ -213,7 +213,7 @@ public class SolrIndexingServiceImpl extends WorkerServiceImpl<SolrCoreRuntime, 
     final String rID = getResourceId(resource);
 
     try {
-      final RepositoryConnection connection = sesameService.getRepositoryConnetion();
+      final RepositoryConnection connection = sesameService.getRepositoryConnetionCustom();
       try {
         connection.begin();
 
@@ -281,7 +281,7 @@ public class SolrIndexingServiceImpl extends WorkerServiceImpl<SolrCoreRuntime, 
           return;
         }
 
-        for (Resource type : getTypes(connection, resource)) {
+        for (Resource type : getTypes(connection, resource, contexts[0])) {//
           //if (type instanceof KiWiUriResource) {
           doc.addField("lmf.type", type.stringValue());
           //}
