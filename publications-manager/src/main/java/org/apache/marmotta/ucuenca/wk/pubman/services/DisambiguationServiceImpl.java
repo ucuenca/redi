@@ -222,8 +222,10 @@ public class DisambiguationServiceImpl implements DisambiguationService {
 //            sparqlUtils.copyGraph(constantService.getAuthorsSameAsGraph() + ASA_FINAL, constantService.getAuthorsSameAsGraph()+ ASA_F);
 //            sparqlUtils.deleteGraph(constantService.getAuthorsSameAsGraph() + ASA_FINAL);
 //merge collections
-            //mergeCollections();
+            mergeCollections();
             mergeSubjects();
+            transformRedi();
+            
 //////      /**/
         } catch (Exception ex) {
             try {
@@ -245,6 +247,33 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             taskManagerService.endTask(task);
         }
 
+    }
+
+    public void transformRedi() throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, RepositoryException, RDFHandlerException {
+        String q = "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
+                + "delete {\n"
+                + "	graph <" + constantService.getCentralGraph() + "> {\n"
+                + "        ?a ?b ?c .\n"
+                + "        ?c ?bx ?ax .\n"
+                + "    }\n"
+                + "} insert {\n"
+                + "	graph <" + constantService.getCentralGraph() + "> {\n"
+                + "        ?a ?b ?p .\n"
+                + "        ?p ?bx ?ax .\n"
+                + "    }\n"
+                + "} where {\n"
+                + "    graph <" + constantService.getPublicationsSameAsGraph() + "Others" + "> {\n"
+                + "        ?p owl:sameAs ?c .\n"
+                + "    }\n"
+                + "    graph <" + constantService.getCentralGraph() + "> {\n"
+                + "        {?a ?b ?c .} union {?c ?bx ?ax .}\n"
+                + "    }\n"
+                + "}";
+        sparqlService.getSparqlService().update(QueryLanguage.SPARQL, q);
+        //sparqlUtils.deleteGraph(constantService.getPublicationsSameAsGraph() + "");
+        
     }
 
     public void mergeSubjects() throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, RepositoryException, RDFHandlerException {
