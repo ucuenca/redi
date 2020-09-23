@@ -82,7 +82,7 @@ wkhomeControllers.controller('projectProfile', ['$scope', '$routeParams', '$wind
 
     $scope.publication = function() {
 
-      $window.location.hash = '/author/publications/q=author:%22' + project.uri + '%22&fl=*&rows=10&wt=json/author/' + project.uri;
+      $window.location.hash = '/author/publications/q=project-uri:%22' + project.uri + '%22&fl=*&rows=10&wt=json/author/' + project.uri;
     };
 
     $scope.clickonRelatedauthor = function(uri) {

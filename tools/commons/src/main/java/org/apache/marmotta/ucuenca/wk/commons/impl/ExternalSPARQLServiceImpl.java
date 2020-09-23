@@ -50,6 +50,11 @@ public class ExternalSPARQLServiceImpl implements ExternalSPARQLService {
   public RepositoryConnection getRepositoryConnetion() throws RepositoryException {
     return getGraphDBInstance().getConnection();
   }
+  
+  @Override
+  public RepositoryConnection getRepositoryConnetionCustom() throws RepositoryException {
+    return getGraphDBInstance().getConnectionCustom();
+  }
 
   @Override
   public GraphDB getGraphDBInstance() throws RepositoryException {

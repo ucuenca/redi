@@ -184,7 +184,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         try {
             SPARQLUtils sparqlUtils = new SPARQLUtils(sparqlService.getSparqlService());
             task = taskManagerService.createSubTask(String.format("%s Disambiguation", "Author"), "Disambiguation Process");
-            InitAuthorsProvider();
+            //InitAuthorsProvider();
             List<Provider> Providers = getProviders();
             List<Map<String, Map<Provider, Integer>>> providersResult = new ArrayList();
             if (orgs != null) {
@@ -217,10 +217,15 @@ public class DisambiguationServiceImpl implements DisambiguationService {
 //            sparqlUtils.clearSameAs(constantService.getAuthorsSameAsGraph() + ASA_F, constantService.getAuthorsSameAsGraph() + FIX_MERGE, constantService.getAuthorsSameAsGraph() + ASA_M);
 ////      /**/
 //            
-            sparqlUtils.replaceSameAsSubject(constantService.getAuthorsSameAsGraph() + ASA_F , constantService.getAuthorsSameAsGraph() + ASA_FINAL, constantService.getAuthorsSameAsGraph() + SAFE_MERGE);
-            sparqlUtils.deleteGraph(constantService.getAuthorsSameAsGraph() + ASA_F);
-            sparqlUtils.copyGraph(constantService.getAuthorsSameAsGraph() + ASA_FINAL, constantService.getAuthorsSameAsGraph()+ ASA_F);
-            sparqlUtils.deleteGraph(constantService.getAuthorsSameAsGraph() + ASA_FINAL);
+//            sparqlUtils.replaceSameAsSubject(constantService.getAuthorsSameAsGraph() + ASA_F , constantService.getAuthorsSameAsGraph() + ASA_FINAL, constantService.getAuthorsSameAsGraph() + SAFE_MERGE);
+//            sparqlUtils.deleteGraph(constantService.getAuthorsSameAsGraph() + ASA_F);
+//            sparqlUtils.copyGraph(constantService.getAuthorsSameAsGraph() + ASA_FINAL, constantService.getAuthorsSameAsGraph()+ ASA_F);
+//            sparqlUtils.deleteGraph(constantService.getAuthorsSameAsGraph() + ASA_FINAL);
+//merge collections
+            mergeCollections();
+            mergeSubjects();
+            transformRedi();
+            
 //////      /**/
         } catch (Exception ex) {
             try {
@@ -242,6 +247,103 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             taskManagerService.endTask(task);
         }
 
+    }
+
+    public void transformRedi() throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, RepositoryException, RDFHandlerException {
+        String q = "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
+                + "delete {\n"
+                + "	graph <" + constantService.getCentralGraph() + "> {\n"
+                + "        ?a ?b ?c .\n"
+                + "        ?c ?bx ?ax .\n"
+                + "    }\n"
+                + "} insert {\n"
+                + "	graph <" + constantService.getCentralGraph() + "> {\n"
+                + "        ?a ?b ?p .\n"
+                + "        ?p ?bx ?ax .\n"
+                + "    }\n"
+                + "} where {\n"
+                + "    graph <" + constantService.getPublicationsSameAsGraph() + "Others" + "> {\n"
+                + "        ?p owl:sameAs ?c .\n"
+                + "    }\n"
+                + "    graph <" + constantService.getCentralGraph() + "> {\n"
+                + "        {?a ?b ?c .} union {?c ?bx ?ax .}\n"
+                + "    }\n"
+                + "}";
+        sparqlService.getSparqlService().update(QueryLanguage.SPARQL, q);
+        //sparqlUtils.deleteGraph(constantService.getPublicationsSameAsGraph() + "");
+        
+    }
+
+    public void mergeSubjects() throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, RepositoryException, RDFHandlerException {
+        List<Map<String, Value>> query = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
+                + "select distinct ?s ?sx {\n"
+                + "    graph <" + constantService.getCentralGraph() + "> {\n"
+                + "        ?p dct:subject ?s .\n"
+                + "        ?s rdfs:label ?l .\n"
+                + "        bind (replace (replace (lcase(str(?l)), 'ü|ñ|á|é|í|ó|ú|a|e|i|o|u|,|;|:|-|\\\\(|\\\\)|\\\\||\\\\.' ,' '), ' ' ,'') as ?t1) .\n"
+                + "        optional {\n"
+                + "            ?p dct:subject ?sx .\n"
+                + "        	?sx rdfs:label ?lx .\n"
+                + "        	bind (replace (replace (lcase(str(?lx)), 'ü|ñ|á|é|í|ó|ú|a|e|i|o|u|,|;|:|-|\\\\(|\\\\)|\\\\||\\\\.' ,' '), ' ' ,'') as ?t2) .\n"
+                + "            filter (str(?s) > str(?sx)) .\n"
+                + "            filter (str(?t1) = str(?t2)) .\n"
+                + "        }\n"
+                + "    }\n"
+                + "} ");
+        MapSet ms = new MapSet(new HashMap<String, Set<String>>());
+        for (Map<String, Value> mp : query) {
+            Value get1 = mp.get("sx");
+            if (get1 == null) {
+                ms.put(mp.get("s").stringValue());
+            } else {
+                ms.put(mp.get("s").stringValue(), get1.stringValue());
+            }
+        }
+        Set<Set<String>> journalsGroups = new HashSet(ms.values());
+        for (Set<String> eachGroup : journalsGroups) {
+            registerSameAsBucket(true, constantService.getPublicationsSameAsGraph() + "Others", eachGroup, "subjects");
+        }
+        sparqlService.getGraphDBInstance().dumpBuffer();
+    }
+
+    public void mergeCollections() throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, RepositoryException, RDFHandlerException {
+        List<Map<String, Value>> query = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
+                + "select distinct ?c ?cx {\n"
+                + "            graph <" + constantService.getCentralGraph() + "> {\n"
+                + "                ?p dct:isPartOf ?c .\n"
+                + "                ?c a ?t .\n"
+                + "        		?c rdfs:label ?cr .\n"
+                + "        		bind (replace (replace (lcase(str(?cr)), 'ü|ñ|á|é|í|ó|ú|a|e|i|o|u|,|;|:|-|\\\\(|\\\\)|\\\\||\\\\.' ,' '), ' ' ,'') as ?t1) .\n"
+                + "        		optional {\n"
+                + "                    ?p dct:isPartOf ?cx .\n"
+                + "                    ?cx a ?t .\n"
+                + "            		?cx rdfs:label ?cxr .\n"
+                + "            		bind (replace (replace (lcase(str(?cxr)), 'ü|ñ|á|é|í|ó|ú|a|e|i|o|u|,|;|:|-|\\\\(|\\\\)|\\\\||\\\\.' ,' '), ' ' ,'') as ?t2) .\n"
+                + "            		filter (?t1 = ?t2) .\n"
+                + "            		filter (str(?c) > str(?cx)) .\n"
+                + "        		}\n"
+                + "            }\n"
+                + "}");
+        MapSet ms = new MapSet(new HashMap<String, Set<String>>());
+        for (Map<String, Value> mp : query) {
+            Value get1 = mp.get("cx");
+            if (get1 == null) {
+                ms.put(mp.get("c").stringValue());
+            } else {
+                ms.put(mp.get("c").stringValue(), get1.stringValue());
+            }
+        }
+        Set<Set<String>> journalsGroups = new HashSet(ms.values());
+        for (Set<String> eachGroup : journalsGroups) {
+            registerSameAsBucket(true, constantService.getPublicationsSameAsGraph() + "Others", eachGroup, "collections");
+        }
+        sparqlService.getGraphDBInstance().dumpBuffer();
     }
 
     public void subjectsMerger(List<Provider> AuthorsProviderslist) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, RepositoryException, RDFHandlerException {
@@ -982,7 +1084,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         sparqlUtils.deleteGraph(constantService.getPublicationsSameAsGraph());
         Set<Set<String>> publicationsGroups = new HashSet(ms.values());
         for (Set<String> eachGroup : publicationsGroups) {
-            registerSameAsBucket(true, constantService.getPublicationsSameAsGraph(), eachGroup);
+            registerSameAsBucket(true, constantService.getPublicationsSameAsGraph(), eachGroup, "publications");
         }
         sparqlService.getGraphDBInstance().dumpBuffer();
         ms.clear();
@@ -1023,7 +1125,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         sparqlUtils.deleteGraph(constantService.getCoauthorsSameAsGraph());
         Set<Set<String>> coauthorsGroups = new HashSet(ms.values());
         for (Set<String> eachGroup : coauthorsGroups) {
-            registerSameAsBucket(true, constantService.getCoauthorsSameAsGraph(), eachGroup);
+            registerSameAsBucket(true, constantService.getCoauthorsSameAsGraph(), eachGroup, "coauthors");
         }
         sparqlService.getGraphDBInstance().dumpBuffer();
         sparqlUtils.clearDifferent(constantService.getCoauthorsSameAsGraph(), constantService.getAuthorsGraph() + ASA_C);
@@ -1334,11 +1436,11 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         }
     }
 
-    public void registerSameAsBucket(boolean same, String graph, Set<String> urs) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException, RepositoryException, RDFHandlerException {
+    public void registerSameAsBucket(boolean same, String graph, Set<String> urs, String prefix) throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException, RepositoryException, RDFHandlerException {
         List<String> list = new ArrayList(urs);
         Collections.sort(list);
         String eachGroupUUID = Cache.getMD5(list.size() > 0 ? list.get(0) : UUID.randomUUID().toString());
-        String PossibleNewURI = constantService.getBaseResource() + eachGroupUUID;
+        String PossibleNewURI = constantService.getBaseResource() + prefix + "/" + eachGroupUUID;
         if (same) {
             sparqlService.getGraphDBInstance().addBufferBucket(graph, PossibleNewURI, "http://www.w3.org/2002/07/owl#sameAs", urs);
         } else {
