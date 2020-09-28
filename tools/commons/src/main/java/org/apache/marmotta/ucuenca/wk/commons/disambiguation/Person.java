@@ -192,6 +192,13 @@ public class Person {
         if (!uname1.contains(n1) && !uname2.contains(n2)) {
           if (co < thresholdAffiliation) {
             double sim = AffiliationUtils.compareTitle(n1, n2);
+            double n1Mod = n1.replaceAll("\\s+", "").length();
+            double n2Mod = n2.replaceAll("\\s+", "").length();
+            double rat = Math.min(n1Mod, n2Mod) / Math.max(n1Mod, n2Mod);
+            //If lenght difference is big reduce similarity
+            if (rat < 0.73){
+                sim *=0.5;
+            }
             if (sim >= thresholdAff) {
               co++;
               uname1.add(n1);

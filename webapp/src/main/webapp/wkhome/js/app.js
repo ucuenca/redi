@@ -147,7 +147,7 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                 when('/view/datacube', {
                   templateUrl: 'wkhome/partials/dataCube.html',
                 }).
-                when('/author/publications/:query*/author/:authorId*', {
+                when('/author/publications/:query*/authorProfile/:authorId*', {
                   templateUrl: 'wkhome/partials/publications.html',
                 }).
                 when('/search/publications/:query*', {

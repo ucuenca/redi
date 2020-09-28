@@ -311,6 +311,11 @@ public class AuthorServiceImpl implements AuthorService {
                 //Delete
                 SPARQLUtils sparqlUtils = new SPARQLUtils(sparqlService.getSparqlService());
                 sparqlUtils.replaceSameAs(constantService.getAuthorsGraph() + "_Beta", constantService.getAuthorsGraph() + "_SA");
+                sparqlUtils.copyGraph(constantService.getAuthorsGraph() + "_Beta", constantService.getAuthorsGraph());
+                sparqlUtils.copyGraph(constantService.getEndpointsGraph() + "_Beta", constantService.getEndpointsGraph());
+                sparqlUtils.deleteGraph(constantService.getAuthorsGraph() + "_Beta");
+                sparqlUtils.deleteGraph(constantService.getEndpointsGraph() + "_Beta");
+                sparqlUtils.deleteGraph(constantService.getAuthorsGraph() + "_SA");
 
             } else {
                 throw new Exception("Invalid VIVO URL " + url);
