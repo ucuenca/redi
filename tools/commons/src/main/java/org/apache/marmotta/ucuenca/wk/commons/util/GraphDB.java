@@ -276,6 +276,10 @@ public final class GraphDB {
         try {
             java.net.URI.create(ur);
             r = true;
+            //
+            if (ur.contains("[]")){
+                r = false;
+            }
         } catch (Exception w) {
             Logger.getLogger(GraphDB.class.getName()).log(Level.SEVERE, null, w);
         }
