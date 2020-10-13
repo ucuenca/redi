@@ -5,7 +5,12 @@
  */
 package edu.ucuenca.storage.utils;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.jayway.jsonpath.JsonPath;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import edu.emory.mathcs.backport.java.util.Arrays;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,6 +20,8 @@ import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import net.minidev.json.JSONArray;
@@ -28,7 +35,11 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.jena.atlas.json.JSON;
+import org.apache.jena.atlas.json.JsonArray;
+import org.apache.jena.atlas.json.JsonObject;
 import org.apache.marmotta.platform.core.api.config.ConfigurationService;
+import org.json.JSONObject;
 
 /**
  *
@@ -37,92 +48,62 @@ import org.apache.marmotta.platform.core.api.config.ConfigurationService;
 @ApplicationScoped
 public class TranslatorManager {
 
-  @Inject
-  private org.slf4j.Logger log;
-  @Inject
-  private ConfigurationService conf;
+    @Inject
+    private org.slf4j.Logger log;
+    @Inject
+    private ConfigurationService conf;
 
-  private List<String> keys;
-  private HttpClient httpClient = HttpClients.createDefault();
-  int auxk = 0;
+    private List<String> keys;
+    private HttpClient httpClient = HttpClients.createDefault();
+    int auxk = 0;
 
-  public String traductor(String palabras) throws IOException {
-    String keyss = conf.getStringConfiguration("yandex.keys");
-    String[] split = keyss.split(";");
-    keys = Arrays.asList(split);
-    return traductor(palabras, 0);
-  }
-
-  public String traductor(String palabras, int k) throws IOException {
-    String contextEs = "contexto ;;; ";
-    while (k + auxk < keys.size()) {
-      List<NameValuePair> list = new ArrayList();
-      NameValuePair nv1;
-      log.info("using k " + (k + auxk));
-      nv1 = new BasicNameValuePair("key", keys.get(k + auxk));
-      list.add(nv1);
-      NameValuePair nv2 = new BasicNameValuePair("lang", "es-en");
-      list.add(nv2);
-      NameValuePair nv3 = new BasicNameValuePair("text", contextEs + palabras);
-      list.add(nv3);
-      NameValuePair nv4 = new BasicNameValuePair("options", "1");
-      list.add(nv4);
-      try {
-        URIBuilder builder = new URIBuilder("https://translate.yandex.net/api/v1.5/tr.json/translate");
-        HttpPost request = new HttpPost(builder.build());
-        request.setEntity(new UrlEncodedFormEntity(list, StandardCharsets.UTF_8));
-        Object response = executeServicePath(request, "$.text[*]");
-        if (response instanceof Boolean) {
-          auxk = auxk + 1;
-          log.info("Trying again with " + k + auxk);
-        } else {
-          JSONArray rsp = (JSONArray)response;
-          return rsp.get(0).toString();
+    public String traductorIBM(String palabras) throws IOException, UnirestException, Exception {
+        Map<String, String> keys = Maps.newHashMap();
+        String keyss = conf.getStringConfiguration("ibm.translate.keys");
+        String[] split = keyss.split(";;;");
+        for (String m : split) {
+            String[] split1 = m.split("|||");
+            keys.put(split1[0], split1[1]);
         }
-      } catch (URISyntaxException ex) {
-        log.debug(ex.getMessage());
-        return null;
-      }
-    }
-    return null;
-  }
-
-  public Object executeServicePath(HttpUriRequest request, String path) {
-    while (true) {
-      try {
-        HttpResponse response = httpClient.execute(request);
-        HttpEntity entity = response.getEntity();
-
-        if (entity != null && response.getStatusLine().getStatusCode() == 200) {
-
-          try (BufferedReader reader = new BufferedReader(new InputStreamReader(entity.getContent(), "UTF-8"))) {
-            String jsonResult = reader.readLine();
-            // Object parserresponse = new JsonParser().parse(jsonResult);
-            // return true;
-            return JsonPath.read(jsonResult, path);
-          } catch (Exception e) {
-            System.out.print("Error Path" + e);
-            return null;
-          }
-        } else if (response.getStatusLine().getStatusCode() == 403 || response.getStatusLine().getStatusCode() == 429) {
-          log.error(response.toString());
-          httpClient = HttpClients.createDefault();
-          System.out.print("Change request");
-          return false;
-        } else {
-
-          log.error(response.toString());
-          System.out.print("Trying again");
-          httpClient = HttpClients.createDefault();
-          //return null;
+        List<Map.Entry<String, String>> klist = Lists.newArrayList(keys.entrySet());
+        String contextEs = "contexto ;;; " + palabras;
+        int strike = 0;
+        String res = "";
+        do {
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("target", "en");
+                JSONArray jsonArray = new JSONArray();
+                jsonArray.add(contextEs);
+                jsonObject.put("text", jsonArray);
+                Random rand = new Random();
+                Map.Entry<String, String> get = klist.get(rand.nextInt(klist.size()));
+                com.mashape.unirest.http.HttpResponse<JsonNode> asJson = Unirest.post(get.getKey() + "/v3/translate?version=2018-05-01")
+                        .basicAuth("apikey", get.getValue())
+                        .header("Content-Type", "application/json")
+                        .body(jsonObject).asJson();
+                if (asJson.getStatus() == 200) {
+                    JsonObject parse = JSON.parse(asJson.getBody().toString());
+                    JsonArray asArray = parse.get("translations").getAsArray();
+                    if (asArray.size() > 0) {
+                        res = asArray.get(0).getAsObject().get("translation").toString();
+                        break;
+                    } else {
+                        strike++;
+                    }
+                } else {
+                    strike++;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                strike++;
+            }
+        } while (strike < 4);
+        if (strike >= 4) {
+            throw new Exception("Translation API Error " + palabras);
         }
-      } catch (UnknownHostException e) {
-        log.error("Can't reach host in service: Detect Language", e);
-        httpClient = HttpClients.createDefault();
-      } catch (IOException ex) {
-        log.error("Cannot make request", ex);
-      }
+
+        return res;
     }
-  }
 
 }

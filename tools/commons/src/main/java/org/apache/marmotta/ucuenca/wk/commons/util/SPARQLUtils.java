@@ -348,6 +348,23 @@ public class SPARQLUtils {
         deleteGraph(graph + "__X");
     }
 
+    public void insertGraph(String graph, String graph2, String prop1, String prop2) throws RepositoryException, MalformedQueryException, UpdateExecutionException {
+        String q = "insert {\n"
+                + "        graph <&I&> {\n"
+                + "                ?a <" + prop2 + "> ?c .\n"
+                + "        }\n"
+                + "}\n"
+                + "where {\n"
+                + "        graph <" + graph2 + "> {\n"
+                + "                ?a <" + prop1 + "> ?c .\n"
+                + "        }\n"
+                + "}";
+        transformGraph(graph, graph + "__X", q);
+        deleteGraph(graph);
+        copyGraph(graph + "__X", graph);
+        deleteGraph(graph + "__X");
+    }
+
     public void insertGraph(String graph, String graph2, String prop) throws RepositoryException, MalformedQueryException, UpdateExecutionException {
         String q = "insert {\n"
                 + "        graph <&I&> {\n"
@@ -357,6 +374,26 @@ public class SPARQLUtils {
                 + "where {\n"
                 + "        graph <" + graph2 + "> {\n"
                 + "                ?a <" + prop + "> ?c .\n"
+                + "        }\n"
+                + "}";
+        transformGraph(graph, graph + "__X", q);
+        deleteGraph(graph);
+        copyGraph(graph + "__X", graph);
+        deleteGraph(graph + "__X");
+    }
+
+    public void minusGraph(String graph, String graph2, String prop1, String prop2) throws RepositoryException, MalformedQueryException, UpdateExecutionException {
+        String q = "insert {\n"
+                + "        graph <&D&> {\n"
+                + "                ?a <" + prop2 + "> ?c .\n"
+                + "        }\n"
+                + "}\n"
+                + "where {\n"
+                + "        graph <" + graph + "> {\n"
+                + "                ?a <" + prop2 + "> ?c .\n"
+                + "        }\n"
+                + "        graph <" + graph2 + "> {\n"
+                + "                ?a <" + prop1 + "> ?c .\n"
                 + "        }\n"
                 + "}";
         transformGraph(graph, graph + "__X", q);

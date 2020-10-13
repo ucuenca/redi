@@ -16,13 +16,15 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.api.task.Task;
@@ -43,11 +45,12 @@ import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 import org.apache.marmotta.ucuenca.wk.commons.service.SparqlFunctionsService;
 import org.apache.marmotta.ucuenca.wk.commons.util.BoundedExecutor;
 import org.apache.marmotta.ucuenca.wk.commons.util.LongUpdateQueryExecutor;
-import org.apache.marmotta.ucuenca.wk.commons.util.ModifiedJaccardMod;
 import org.apache.marmotta.ucuenca.wk.commons.util.SPARQLUtils;
+import org.apache.marmotta.ucuenca.wk.pubman.api.IdentificationManager;
+import org.apache.marmotta.ucuenca.wk.pubman.utils.BucketType;
+import org.apache.marmotta.ucuenca.wk.pubman.utils.CentralGraphGenerator;
 import org.apache.marmotta.ucuenca.wk.pubman.utils.MapSet;
-import org.mapdb.DB;
-import org.mapdb.DBMaker;
+import org.apache.marmotta.ucuenca.wk.pubman.utils.MapSetWID;
 import org.openrdf.model.Model;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.LinkedHashModel;
@@ -68,7 +71,7 @@ import org.semarglproject.vocab.RDFS;
 @ApplicationScoped
 public class DisambiguationServiceImpl implements DisambiguationService {
 
-    final int MAXTHREADS = 5;
+    final int MAXTHREADS = 4;
 
     @Inject
     private org.slf4j.Logger log;
@@ -94,16 +97,13 @@ public class DisambiguationServiceImpl implements DisambiguationService {
     private DisambiguationUtilsService test;
     private Task task;
 
+    @Inject
+    private IdentificationManager idm;
+
     private Thread DisambiguationWorker;
     private Thread CentralGraphWorker;
 
-    private static final String SAFE_MERGE = "2";
-    private static final String FIX_MERGE = "2Fix";
     private static final String ASA_C = "Complete";
-    private static final String ASA_M = "ManualFix";
-    private static final String ASA_I2 = "Insert2";
-    private static final String ASA_F = "Final";
-    private static final String ASA_FINAL = "FinalClean";
 
     private String queryMatches(String org) throws MarmottaException, RepositoryException {
 
@@ -179,12 +179,10 @@ public class DisambiguationServiceImpl implements DisambiguationService {
 
     @Override
     public void Process(String[] orgs) {
-        //DB make = DBMaker.newTempFileDB().make();
-
         try {
             SPARQLUtils sparqlUtils = new SPARQLUtils(sparqlService.getSparqlService());
             task = taskManagerService.createSubTask(String.format("%s Disambiguation", "Author"), "Disambiguation Process");
-            //InitAuthorsProvider();
+            InitAuthorsProvider();
             List<Provider> Providers = getProviders();
             List<Map<String, Map<Provider, Integer>>> providersResult = new ArrayList();
             if (orgs != null) {
@@ -204,29 +202,14 @@ public class DisambiguationServiceImpl implements DisambiguationService {
 //            for (int w0 = 0; w0 < 5; w0++) {
 //                completeLinkage(Providers);
 //            }
-//
-//            sparqlUtils.deleteGraph(constantService.getAuthorsSameAsGraph() + ASA_F);
-//            sparqlUtils.deleteGraph(constantService.getAuthorsSameAsGraph() + SAFE_MERGE);
-//            sparqlUtils.deleteGraph(constantService.getAuthorsSameAsGraph() + FIX_MERGE);
-//            sparqlUtils.copyGraph(constantService.getAuthorsSameAsGraph() + ASA_C, constantService.getAuthorsSameAsGraph() + ASA_F);
-//            sparqlUtils.minusGraph(constantService.getAuthorsSameAsGraph() + ASA_F, constantService.getAuthorsSameAsGraph() + ASA_M, "http://www.w3.org/2002/07/owl#isNot");
-//            mergeAuthors();
-//            sparqlUtils.minusGraph(constantService.getAuthorsSameAsGraph() + FIX_MERGE, constantService.getAuthorsSameAsGraph() + ASA_M, "http://www.w3.org/2002/07/owl#isNot");
-//            sparqlUtils.minusGraph(constantService.getAuthorsSameAsGraph() + SAFE_MERGE, constantService.getAuthorsSameAsGraph() + ASA_M, "http://www.w3.org/2002/07/owl#isNot");
-//            sparqlUtils.insertGraph(constantService.getAuthorsSameAsGraph() + SAFE_MERGE, constantService.getAuthorsSameAsGraph() + ASA_M, "http://www.w3.org/2002/07/owl#is");
-//            sparqlUtils.clearSameAs(constantService.getAuthorsSameAsGraph() + ASA_F, constantService.getAuthorsSameAsGraph() + FIX_MERGE, constantService.getAuthorsSameAsGraph() + ASA_M);
-////      /**/
-//            
-//            sparqlUtils.replaceSameAsSubject(constantService.getAuthorsSameAsGraph() + ASA_F , constantService.getAuthorsSameAsGraph() + ASA_FINAL, constantService.getAuthorsSameAsGraph() + SAFE_MERGE);
-//            sparqlUtils.deleteGraph(constantService.getAuthorsSameAsGraph() + ASA_F);
-//            sparqlUtils.copyGraph(constantService.getAuthorsSameAsGraph() + ASA_FINAL, constantService.getAuthorsSameAsGraph()+ ASA_F);
-//            sparqlUtils.deleteGraph(constantService.getAuthorsSameAsGraph() + ASA_FINAL);
+//            saveLinks();
+//            applyManualFix();
+//            checkWarnings();
+//            CentralGraphGenerator centralGraphGenerator = new CentralGraphGenerator(constantService.getCentralGraph() + "x", constantService.getBaseContext() + "buckets", Providers);
+//            centralGraphGenerator.run(idm, sparqlService, log);
 //merge collections
-            mergeCollections();
-            mergeSubjects();
-            transformRedi();
-            
-//////      /**/
+            //mergeCollections();
+            //mergeSubjects();
         } catch (Exception ex) {
             try {
                 sparqlService.getGraphDBInstance().dumpBuffer();
@@ -241,42 +224,142 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             } catch (Exception ex1) {
                 ex1.printStackTrace();
             }
-//            make.commit();
-//            make.compact();
-//            make.close();
             taskManagerService.endTask(task);
         }
 
     }
 
-    public void transformRedi() throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, RepositoryException, RDFHandlerException {
-        String q = "PREFIX dct: <http://purl.org/dc/terms/>\n"
-                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
-                + "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
-                + "delete {\n"
-                + "	graph <" + constantService.getCentralGraph() + "> {\n"
-                + "        ?a ?b ?c .\n"
-                + "        ?c ?bx ?ax .\n"
-                + "    }\n"
-                + "} insert {\n"
-                + "	graph <" + constantService.getCentralGraph() + "> {\n"
-                + "        ?a ?b ?p .\n"
-                + "        ?p ?bx ?ax .\n"
-                + "    }\n"
-                + "} where {\n"
-                + "    graph <" + constantService.getPublicationsSameAsGraph() + "Others" + "> {\n"
-                + "        ?p owl:sameAs ?c .\n"
-                + "    }\n"
-                + "    graph <" + constantService.getCentralGraph() + "> {\n"
-                + "        {?a ?b ?c .} union {?c ?bx ?ax .}\n"
-                + "    }\n"
-                + "}";
-        sparqlService.getSparqlService().update(QueryLanguage.SPARQL, q);
-        //sparqlUtils.deleteGraph(constantService.getPublicationsSameAsGraph() + "");
-        
+    public void checkWarnings() throws MarmottaException, InterruptedException, RepositoryException, RDFHandlerException, MalformedQueryException, UpdateExecutionException, Exception {
+        String q = "        PREFIX redi: <https://redi.cedia.edu.ec/ont#>\n"
+                + "        PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
+                + "\n"
+                + "        select ?b (group_concat(distinct ?e ; separator='||||||') as ?uris) {\n"
+                + "\n"
+                + "            graph <" + constantService.getAuthorsSameAsGraph() + ASA_C + "> {\n"
+                + "                ?e owl:sameAs [] .\n"
+                + "            }\n"
+                + "            graph <" + idm.getGraph() + "> {\n"
+                + "                ?b redi:type 'author' .\n"
+                + "                ?b redi:element ?e .\n"
+                + "            }\n"
+                + "        } group by ?b having (count(distinct ?e) > 1)";
+        final ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
+        BoundedExecutor threadPool = BoundedExecutor.getThreadPool(MAXTHREADS);
+
+        List<Map<String, Value>> query = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, q);
+        int ix = 0;
+        for (final Map<String, Value> x : query) {
+            log.info("warnings {}/{}", ix++, query.size());
+            threadPool.submitTask(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Model m = new LinkedHashModel();
+                        String b = x.get("b").stringValue();
+                        Set<String> ur = Sets.newHashSet(x.get("uris").stringValue().split("\\|\\|\\|\\|\\|\\|"));
+
+                        String groq = "";
+                        for (String rqq : ur) {
+                            groq += "<" + rqq + "> ";
+                        }
+                        String q2 = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                                + "select ?a ?n ?fn ?ln { \n"
+                                + "  graph <" + constantService.getAuthorsProviderGraph() + "> { \n"
+                                + "  values ?a { " + groq + " } . \n"
+                                + "    optional { ?a <http://xmlns.com/foaf/0.1/name> ?n . }\n"
+                                + "    optional { ?a <http://xmlns.com/foaf/0.1/givenName> ?fn . }\n"
+                                + "    optional { ?a <http://xmlns.com/foaf/0.1/familyName> ?ln . }\n"
+                                + "  }\n"
+                                + "}";
+                        List<Map<String, Value>> rx;
+
+                        rx = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, q2);
+
+                        Map<String, Person> persons = getPersons(rx);
+                        List<String> ls = new ArrayList<>(persons.keySet());
+
+                        for (int i = 0; i < ls.size(); i++) {
+                            for (int j = i + 1; j < ls.size(); j++) {
+                                Person get1 = persons.get(ls.get(i));
+                                Person get2 = persons.get(ls.get(j));
+                                Boolean checkName1 = get1.checkName(get2, true);
+                                Boolean checkName2 = get2.checkName(get1, true);
+                                Boolean xc = checkName1 != null && checkName2 != null && !checkName1 && !checkName2;
+                                if (xc) {
+                                    m.add(instance.createURI(b), instance.createURI("https://redi.cedia.edu.ec/ont#element"), instance.createURI(get1.URI));
+                                    m.add(instance.createURI(b), instance.createURI("https://redi.cedia.edu.ec/ont#element"), instance.createURI(get2.URI));
+                                }
+                            }
+                        }
+                        sparqlService.getGraphDBInstance().addBuffer(instance.createURI(idm.getGraph() + "Warnings"), m);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            });
+        }
+        threadPool.end();
+        sparqlService.getGraphDBInstance().dumpBuffer();
     }
 
-    public void mergeSubjects() throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, RepositoryException, RDFHandlerException {
+    public void applyManualFix() throws MarmottaException, InterruptedException, RepositoryException, RDFHandlerException, MalformedQueryException, UpdateExecutionException, Exception {
+        idm.applyFix();
+    }
+
+    public void saveLinks() throws MarmottaException, InterruptedException, RepositoryException, RDFHandlerException, MalformedQueryException, UpdateExecutionException, Exception {
+
+        final Map<BucketType, Long> counters = idm.getCounters();
+        Map<String, BucketType> m = new HashMap<>();
+        m.put(constantService.getAuthorsSameAsGraph() + ASA_C, BucketType.author);
+        m.put(constantService.getCoauthorsSameAsGraph(), BucketType.ext_author);
+        m.put(constantService.getPublicationsSameAsGraph(), BucketType.publication);
+        BoundedExecutor threadPool = BoundedExecutor.getThreadPool(MAXTHREADS);
+        for (final Entry<String, BucketType> it : m.entrySet()) {
+            threadPool.submitTask(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        saveLinks(it.getKey(), it.getValue(), counters);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            });
+        }
+        threadPool.end();
+        idm.saveCounters(counters);
+    }
+
+    private void saveLinks(final String graph, final BucketType t, final Map<BucketType, Long> tc) throws MarmottaException, Exception {
+        final MapSetWID bucketsContent = idm.getBucketsContent(t);
+        String q = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
+                + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                + "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "\n"
+                + "select * {   \n"
+                + "    graph <" + graph + "> {\n"
+                + "        ?b owl:sameAs ?e .\n"
+                + "    }\n"
+                + "}";
+        final List<Map<String, Value>> query = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, q);
+
+        Map<String, Set<String>> b = new HashMap<>();
+        for (Map<String, Value> m : query) {
+            if (!b.containsKey(m.get("b").stringValue())) {
+                b.put(m.get("b").stringValue(), new HashSet<String>());
+            }
+            b.get(m.get("b").stringValue()).add(m.get("e").stringValue());
+        }
+        int i = 0;
+        for (Entry<String, Set<String>> next : b.entrySet()) {
+            idm.addBucket(t, next.getValue(), tc, bucketsContent);
+            log.info("{} {} / {}", t, i, b.size());
+            i++;
+        }
+        idm.saveBucketsContent(bucketsContent, t);
+    }
+
+    public void mergeSubjects() throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, RepositoryException, RDFHandlerException, Exception {
         List<Map<String, Value>> query = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, "PREFIX dct: <http://purl.org/dc/terms/>\n"
                 + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
                 + "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
@@ -304,13 +387,16 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             }
         }
         Set<Set<String>> journalsGroups = new HashSet(ms.values());
+        Map<BucketType, Long> counters = idm.getCounters();
+        MapSetWID bucketsContent = idm.getBucketsContent(BucketType.subject);
         for (Set<String> eachGroup : journalsGroups) {
-            registerSameAsBucket(true, constantService.getPublicationsSameAsGraph() + "Others", eachGroup, "subjects");
+            idm.addBucket(BucketType.subject, eachGroup, counters, bucketsContent);
         }
-        sparqlService.getGraphDBInstance().dumpBuffer();
+        idm.saveCounters(counters);
+        idm.saveBucketsContent(bucketsContent, BucketType.subject);
     }
 
-    public void mergeCollections() throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, RepositoryException, RDFHandlerException {
+    public void mergeCollections() throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, RepositoryException, RDFHandlerException, Exception {
         List<Map<String, Value>> query = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, "PREFIX dct: <http://purl.org/dc/terms/>\n"
                 + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
                 + "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
@@ -340,274 +426,13 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             }
         }
         Set<Set<String>> journalsGroups = new HashSet(ms.values());
+        Map<BucketType, Long> counters = idm.getCounters();
+        MapSetWID bucketsContent = idm.getBucketsContent(BucketType.collection);
         for (Set<String> eachGroup : journalsGroups) {
-            registerSameAsBucket(true, constantService.getPublicationsSameAsGraph() + "Others", eachGroup, "collections");
+            idm.addBucket(BucketType.collection, eachGroup, counters, bucketsContent);
         }
-        sparqlService.getGraphDBInstance().dumpBuffer();
-    }
-
-    public void subjectsMerger(List<Provider> AuthorsProviderslist) throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, RepositoryException, RDFHandlerException {
-        String providersGraphs = "  ";
-        for (Provider aProvider : AuthorsProviderslist) {
-            providersGraphs += " <" + aProvider.Graph + "> ";
-        }
-        String q = "select distinct ?s ?l {\n"
-                + "    graph <" + constantService.getPublicationsSameAsGraph() + "> {\n"
-                + "        ?h <http://www.w3.org/2002/07/owl#sameAs> ?p .\n"
-                + "    }\n"
-                + "    values ?g { " + providersGraphs + " } .\n"
-                + "    graph ?g {\n"
-                + "        ?p <http://purl.org/dc/terms/subject> ?s .\n"
-                + "        ?s <http://www.w3.org/2000/01/rdf-schema#label> ?l .\n"
-                + "    }\n"
-                + "}";
-        List<Map<String, Value>> query = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, q);
-        Map<String, String> group = new HashMap<>();
-        for (Map<String, Value> aa : query) {
-            if (!group.containsKey(aa.get("s").stringValue())) {
-                group.put(aa.get("s").stringValue(), aa.get("l").stringValue());
-            }
-        }
-
-        ArrayList<Map.Entry<String, String>> arrayList = new ArrayList(group.entrySet());
-        for (int i = 0; i < arrayList.size(); i++) {
-            Entry<String, String> get = arrayList.get(i);
-            String toUpperCase = ModifiedJaccardMod.specialCharactersClean(get.getValue()).replaceAll("\\s+", "").trim().toUpperCase();
-            String PossibleNewURI = constantService.getSubjectResource() + Cache.getMD5(toUpperCase);
-            registerSameAs(constantService.getAuthorsSameAsGraph(), PossibleNewURI, get.getKey());
-        }
-    }
-
-    public void compareSubSet(Person a, Person b, Map<String, Set<String>> g, Set<String> usedT) {
-        Boolean checkName = a.checkName(b, true);
-        if (checkName != null && checkName) {
-            if (!g.containsKey(a.URI)) {
-                g.put(a.URI, new HashSet<String>());
-            }
-            g.get(a.URI).add(b.URI);
-            g.get(a.URI).add(a.URI);
-            usedT.add(a.URI);
-            usedT.add(b.URI);
-        }
-    }
-
-    public boolean compareSubSet(Entry<String, Set<String>> a, Entry<String, Set<String>> b, Map<String, Set<String>> g) {
-        boolean f = false;
-        if (a.getValue().containsAll(b.getValue())) {
-            if (a.getValue().containsAll(b.getValue()) && b.getValue().containsAll(a.getValue())) {
-                f = true;
-            }
-            if (!g.containsKey(a.getKey())) {
-                g.put(a.getKey(), new HashSet<String>());
-            }
-            g.get(a.getKey()).add(b.getKey());
-        }
-        return f;
-    }
-
-    public Map<String, Set<String>> clearGroups(Map<String, Set<String>> g) {
-        Map<String, Set<String>> gn = new HashMap<>(g);
-        Set<Entry<String, Set<String>>> entrySet = g.entrySet();
-        List<Entry<String, Set<String>>> ls = new ArrayList<>(entrySet);
-        Map<String, Set<String>> sa = new HashMap<>();
-        for (int i = 0; i < ls.size(); i++) {
-            for (int j = i + 1; j < ls.size(); j++) {
-                Entry<String, Set<String>> get = ls.get(i);
-                Entry<String, Set<String>> get1 = ls.get(j);
-                boolean compareSubSet = compareSubSet(get, get1, sa);
-                if (!compareSubSet) {
-                    compareSubSet(get1, get, sa);
-                }
-            }
-        }
-        Set<String> rm = new HashSet<>();
-        for (Entry<String, Set<String>> s : sa.entrySet()) {
-            Set<String> get = gn.get(s.getKey());
-            for (String ss : s.getValue()) {
-                get.addAll(gn.get(ss));
-                if (s.getKey().compareTo(ss) != 0) {
-                    rm.add(ss);
-                }
-            }
-        }
-        for (String ss : rm) {
-            gn.remove(ss);
-        }
-        return gn;
-    }
-
-    public static Set<String> intersection(Set<String> a, Set<String> b) {
-        // unnecessary; just an optimization to iterate over the smaller set
-        if (a.size() > b.size()) {
-            return intersection(b, a);
-        }
-
-        Set<String> results = new HashSet<>();
-
-        for (String element : a) {
-            if (b.contains(element)) {
-                results.add(element);
-            }
-        }
-
-        return results;
-    }
-
-    public Set<String> getAmb(Map<String, Set<String>> g) {
-        Set<String> am = new HashSet<>();
-        Set<Entry<String, Set<String>>> entrySet = g.entrySet();
-        List<Entry<String, Set<String>>> ls = new ArrayList<>(entrySet);
-        for (int i = 0; i < ls.size(); i++) {
-            for (int j = i + 1; j < ls.size(); j++) {
-                Entry<String, Set<String>> get = ls.get(i);
-                Entry<String, Set<String>> get1 = ls.get(j);
-                am.addAll(intersection(get.getValue(), get1.getValue()));
-            }
-        }
-        return am;
-    }
-
-    public void mergeAuthors() throws MarmottaException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, RepositoryException, RDFHandlerException, InterruptedException {
-        //Create temp sameAs graph.
-
-        sparqlService.getSparqlService().update(QueryLanguage.SPARQL, "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
-                + "insert {\n"
-                + "    graph <" + constantService.getAuthorsSameAsGraph() + ASA_F + ASA_F + "> {\n"
-                + "        ?a owl:sameAs ?b .\n"
-                + "    }\n"
-                + "} where {\n"
-                + "    {\n"
-                + "        select ?a ?b { \n"
-                + "            graph <" + constantService.getAuthorsSameAsGraph() + ASA_F + "> {\n"
-                + "                ?a owl:sameAs ?c .\n"
-                + "                ?b owl:sameAs ?c .    \n"
-                + "            }\n"
-                + "        }  \n"
-                + "    } .\n"
-                + "}");
-
-        BoundedExecutor bexecutorService = BoundedExecutor.getThreadPool(MAXTHREADS);
-        String qryDisambiguatedCoauthors = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
-                + "select distinct ?a  { \n"
-                + "  graph <" + constantService.getAuthorsSameAsGraph() + ASA_F + "> { \n"
-                + "    ?a <http://www.w3.org/2002/07/owl#sameAs> [] . \n"
-                + "  }\n"
-                + "}";
-
-        List<Map<String, Value>> queryResponsec = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, qryDisambiguatedCoauthors);
-        int ixxy = 0;
-        for (final Map<String, Value> rqx : queryResponsec) {
-            final String uu = rqx.get("a").stringValue();
-            //uu=rq.get("a").stringValue();
-            final int ixx = ixxy++;
-            log.info("merging {} - {}", ixx, uu);
-            bexecutorService.submitTask(new Runnable() {
-                @Override
-                public void run() {
-                    do {
-                        try {
-                            String group_ = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
-                                    + "select distinct ?rr {\n"
-                                    + "    graph <" + constantService.getAuthorsSameAsGraph() + ASA_F + ASA_F + "> {\n"
-                                    + "        <" + uu + "> owl:sameAs* ?rr .\n"
-                                    + "    }\n"
-                                    + "}";
-                            List<Map<String, Value>> query = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, group_);
-                            Set<String> myGroup = new HashSet<>();
-                            String groq = "";
-                            for (Map<String, Value> rqq : query) {
-                                myGroup.add(rqq.get("rr").stringValue());
-                                groq += "<" + rqq.get("rr").stringValue() + "> ";
-                            }
-                            String qryDisambiguatedCoauthors2 = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
-                                    + "select ?a ?n ?fn ?ln { \n"
-                                    + "  graph <" + constantService.getAuthorsProviderGraph() + "> { \n"
-                                    + "  values ?a { " + groq + " } . \n"
-                                    + "    optional { ?a <http://xmlns.com/foaf/0.1/name> ?n . }\n"
-                                    + "    optional { ?a <http://xmlns.com/foaf/0.1/givenName> ?fn . }\n"
-                                    + "    optional { ?a <http://xmlns.com/foaf/0.1/familyName> ?ln . }\n"
-                                    + "  }\n"
-                                    + "}";
-                            List<Map<String, Value>> rx = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, qryDisambiguatedCoauthors2);
-                            Map<String, Person> persons = getPersons(rx);
-                            Set<String> usedT = new HashSet<>();
-                            Map<String, Set<String>> groups = new HashMap<>();
-                            List<String> ls = new ArrayList<>(myGroup);
-                            for (int i = 0; i < ls.size(); i++) {
-                                for (int j = i + 1; j < ls.size(); j++) {
-                                    Person get1 = persons.get(ls.get(i));
-                                    Person get2 = persons.get(ls.get(j));
-                                    compareSubSet(get1, get2, groups, usedT);
-                                    compareSubSet(get2, get1, groups, usedT);
-                                }
-                            }
-                            Set<String> alones = new HashSet<>(myGroup);
-                            alones.removeAll(usedT);
-                            for (String a : alones) {
-                                groups.put(a, new HashSet<String>());
-                                groups.get(a).add(a);
-                            }
-                            int size;
-                            do {
-                                size = groups.size();
-                                groups = clearGroups(groups);
-                            } while (groups.size() < size);
-                            Set<String> amb = getAmb(groups);
-                            for (Entry<String, Set<String>> next : groups.entrySet()) {
-                                for (String next1 : next.getValue()) {
-                                    if (amb.contains(next.getKey()) || amb.contains(next1)) {
-                                        registerSameAs(constantService.getAuthorsSameAsGraph() + FIX_MERGE, next.getKey(), next1);
-                                    } else {
-                                        registerSameAs(constantService.getAuthorsSameAsGraph() + SAFE_MERGE, next.getKey(), next1);
-                                    }
-                                }
-                            }
-                            break;
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            log.info("Retrying {} - {}", ixx, uu);
-                        }
-                    } while (true);
-                }
-            });
-        }
-        bexecutorService.end();
-        sparqlService.getGraphDBInstance().dumpBuffer();
-        new SPARQLUtils(sparqlService.getSparqlService()).deleteGraph(constantService.getAuthorsSameAsGraph() + ASA_F + ASA_F);
-
-    }
-
-    public Set<Set<String>> getGroupsAuthors(List<Map<String, Value>> query) {
-        Set<Set<String>> g = new HashSet<>();
-        Set<Map<String, Value>> usedT = new HashSet<>();
-        for (Map<String, Value> a : query) {
-            if (!usedT.contains(a)) {
-                usedT.add(a);
-                Set<String> ans = new HashSet<>();
-                String UA = a.get("a").stringValue();
-                String UB = a.get("b").stringValue();
-                ans.add(UA);
-                ans.add(UB);
-                int size;
-                do {
-                    size = ans.size();
-                    for (Map<String, Value> b : query) {
-                        if (!usedT.contains(b)) {
-                            String UAx = b.get("a").stringValue();
-                            String UBx = b.get("b").stringValue();
-                            if (ans.contains(UAx) || ans.contains(UBx)) {
-                                usedT.add(b);
-                                ans.add(UAx);
-                                ans.add(UBx);
-                            }
-                        }
-                    }
-                } while (ans.size() > size);
-                g.add(ans);
-            }
-        }
-
-        return g;
+        idm.saveCounters(counters);
+        idm.saveBucketsContent(bucketsContent, BucketType.collection);
     }
 
     public void InitAuthorsProvider() throws InvalidArgumentException, MarmottaException, MalformedQueryException, UpdateExecutionException, RepositoryException {
@@ -1175,19 +1000,6 @@ public class DisambiguationServiceImpl implements DisambiguationService {
         n.Topics = new ArrayList<>();
         n.ORCIDs = new ArrayList<>();
         return n;
-    }
-
-    public Map<String, Set<String>> getGroups(List<Map<String, Value>> ar) {
-        Map<String, Set<String>> mp = new HashMap<>();
-        for (Map<String, Value> i : ar) {
-            String g = i.get("pq").stringValue();
-            String u = i.get("af").stringValue();
-            if (!mp.containsKey(g)) {
-                mp.put(g, new LinkedHashSet<String>());
-            }
-            mp.get(g).add(u);
-        }
-        return mp;
     }
 
     public void completeCoauthors(List<Provider> ProvidersList, String pubURI, MapSet ms) throws MarmottaException, RepositoryException, InvalidArgumentException, MalformedQueryException, UpdateExecutionException, RDFHandlerException {

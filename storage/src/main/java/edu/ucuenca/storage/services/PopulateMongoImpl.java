@@ -1410,8 +1410,8 @@ public class PopulateMongoImpl implements PopulateMongo {
           String traductor = "";
           boolean hasNext = collection.find(eq("_id", txtVal.hashCode())).iterator().hasNext();
           if (!hasNext) {
-            traductor = trService.traductor(txtVal);
-            traductor = traductor.replaceAll("context ;;;", "").trim();
+            traductor = trService.traductorIBM(txtVal);
+            traductor = traductor .replaceAll("context;;;", "") .replaceAll("context ;;;", "").trim();
             traductor = traductor.replaceAll(";;;", " ; ");
             Document dc = new Document();
             dc.put("_id", txtVal.hashCode());

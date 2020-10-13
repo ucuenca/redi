@@ -291,15 +291,15 @@ public class AuthorWebService {
     @Path("/endpoints/extractAuthors")
     @Produces(APPLICATIONJSON)
     public Response extractAuthors(@Context HttpServletRequest request) {
-        String scheme = request.getScheme();
-        String serverName = request.getServerName();
-        int serverPort = request.getServerPort();
-        String localName = scheme + "://" + serverName + ":" + serverPort + "/";
-        String[] get = request.getParameterMap().get("data[]");
-        String output = authorService.extractAuthorsGeneric(localName, get);
-        authorService.postProcessAffiliations(get);
+//        String scheme = request.getScheme();
+//        String serverName = request.getServerName();
+//        int serverPort = request.getServerPort();
+//        String localName = scheme + "://" + serverName + ":" + serverPort + "/";
+//        String[] get = request.getParameterMap().get("data[]");
+//        String output = authorService.extractAuthorsGeneric(localName, get);
+//        authorService.postProcessAffiliations(get);
         authorService.automaticNameDivision();
-        return Response.ok().entity(output).build();
+        return Response.ok().entity("").build();
     }
 
     @POST

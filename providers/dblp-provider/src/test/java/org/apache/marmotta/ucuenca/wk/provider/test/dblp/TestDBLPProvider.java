@@ -43,10 +43,10 @@ public class TestDBLPProvider extends ProviderTestBase {
    
 
     @Test
-    @Ignore
+    //@Ignore
     public void testLegacyResolveURI() throws Exception {
 //    	testResource("http://dblp.uni-trier.de/pers/hd/b/Bl=aacute=zquez:Luis_Manuel_Vilches");
-        ClientResponse retrieveResource = ldclient.retrieveResource("http://rdf.dblp.com/ns/search/juan-manuel_ojeda");
+        ClientResponse retrieveResource = ldclient.retrieveResource("http://rdf.dblp.com/ns/search/rodrigo-alejandro_cueva");
         Model data = retrieveResource.getData();
         Rio.write(data, System.out, RDFFormat.RDFXML);
         //testResource();

@@ -169,7 +169,7 @@ public abstract class WorkerServiceImpl<S extends WorkerRuntime<T>, T extends Wo
 
                         for (Resource rxc : this.types.get(engine.getName())) {
 
-                            List<Map<String, Value>> query = sesameService.getSparqlService().query(QueryLanguage.SPARQL, "select distinct ?a { graph <" + this.context.get(engine.getName()) + "> { ?a a <" + rxc.stringValue() + "> }} ");
+                            List<Map<String, Value>> query = sesameService.getSparqlService().query(QueryLanguage.SPARQL, getQueryPerType(rxc.stringValue(), this.context.get(engine.getName()).stringValue()));
                             for (Map<String, Value> sc : query) {
                                 //for (Iterator<Resource> it = listResources(con, rxc, this.context.get(engine.getName())).iterator(); it.hasNext() && !runtime.isAborted();) {
                                 Resource r = ValueFactoryImpl.getInstance().createURI(sc.get("a").stringValue());
@@ -199,6 +199,61 @@ public abstract class WorkerServiceImpl<S extends WorkerRuntime<T>, T extends Wo
         } else {
             log.error("{}: worker runtime for configuration {} does not exist, could not schedule resource", getName(), engine.getName());
         }
+    }
+
+    private String getQueryPerType(String i, String g) {
+        String q = "";
+        switch (i) {
+            case "http://xmlns.com/foaf/0.1/Person":
+                q = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
+                        + "PREFIX bibo: <http://purl.org/ontology/bibo/>\n"
+                        + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                        + "select distinct ?a { \n"
+                        + "    graph <" + g + "> {\n"
+                        + "        ?a a foaf:Person .\n"
+                        + "        ?a <http://schema.org/memberOf> ?o .\n"
+                        + "        ?o <http://ucuenca.edu.ec/ontology#memberOf> <https://redi.cedia.edu.ec/> .\n"
+                        + "    }\n"
+                        + "} ";
+                break;
+            case "http://purl.org/ontology/bibo/AcademicArticle":
+                q = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
+                        + "PREFIX bibo: <http://purl.org/ontology/bibo/>\n"
+                        + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                        + "select distinct ?a { \n"
+                        + "    graph <" + g + "> {\n"
+                        + "        ?x a foaf:Person .\n"
+                        + "        ?x <http://schema.org/memberOf> ?o .\n"
+                        + "        ?o <http://ucuenca.edu.ec/ontology#memberOf> <https://redi.cedia.edu.ec/> .\n"
+                        + "        ?x foaf:publications ?a .\n"
+                        + "    }\n"
+                        + "} ";
+                break;
+            case "http://purl.org/ontology/bibo/Journal":
+            case "http://purl.org/ontology/bibo/Proceedings":
+            case "http://purl.org/ontology/bibo/Book":
+                q = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
+                        + "PREFIX bibo: <http://purl.org/ontology/bibo/>\n"
+                        + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                        + "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                        + "select distinct ?a { \n"
+                        + "    graph <" + g + "> {\n"
+                        + "        ?x a foaf:Person .\n"
+                        + "        ?x <http://schema.org/memberOf> ?o .\n"
+                        + "        ?o <http://ucuenca.edu.ec/ontology#memberOf> <https://redi.cedia.edu.ec/> .\n"
+                        + "        ?x foaf:publications ?l .\n"
+                        + "        ?l dct:isPartOf ?a .\n"
+                        + "        ?a a <" + i + "> .\n"
+                        + "    }\n"
+                        + "} ";
+
+                break;
+            default:
+                q = "select distinct ?a { graph <" + g + "> { ?a a <" + i + "> }} ";
+                break;
+        }
+
+        return q;
     }
 
     /**

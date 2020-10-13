@@ -72,15 +72,17 @@ public class DBLPRawProvider extends AbstractHttpProvider {
     private static Logger log = LoggerFactory.getLogger(DBLPRawProvider.class);
     public static final String NAME = "DBLP Raw Provider";
     public static final String PATTERN = "http(s?)://rdf\\.dblp\\.com/ns/search/.*";
-    public static final String SEARCHAPI = "http://dblp.uni-trier.de/search/author/api?q=%s&format=xml";
-    public static final String SERVICE_PATTERN = "http://dblp\\.uni\\-trier\\.de/search/author/api\\?q\\=(.*)(\\&format\\=xml)?$";
+    public static final String SEARCHAPI = "https://dblp.uni-trier.de/search/author/api?q=%s&format=xml";
+    public static final String SERVICE_PATTERN = "https://dblp\\.uni\\-trier\\.de/search/author/api\\?q\\=(.*)(\\&format\\=xml)?$";
     public static ConcurrentMap<String, String> dblpNamespaces = new ConcurrentHashMap<String, String>();
-    private static final String DBLP = "dblp";
-    private static final String DBLPS = "dblps";
+    private static final String DBLPSN = "dblpsnew";
+    private static final String DBLP = DBLPSN;
+    private static final String DBLPS = DBLPSN;
     private static final int FULLNAME = 1;
 
     static {
         dblpNamespaces.put("dblps", "https://dblp.org/rdf/schema-2017-04-18#");
+        dblpNamespaces.put("dblpsnew", "https://dblp.org/rdf/schema-2020-07-01#");
         dblpNamespaces.put("dblp", "http://dblp.org/rdf/schema-2017-04-18#");
         dblpNamespaces.put("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
         dblpNamespaces.put("owl", "http://www.w3.org/2002/07/owl#");
@@ -147,9 +149,9 @@ public class DBLPRawProvider extends AbstractHttpProvider {
     public List<String> parseResponse(String resource, String requestUrl, Model triples, InputStream input, String contentType) throws DataRetrievalException {
         log.debug("Request Successful to {0}", requestUrl);
         Delay.call();
-        if (requestUrl.startsWith("http://dblp.uni-trier.de")) {
+        if (requestUrl.startsWith("https://dblp.uni-trier.de")) {
             return parseAuthorSearch(requestUrl, input, triples, resource);
-        } else if (requestUrl.startsWith("http://dblp.org/pers") || requestUrl.startsWith("https://dblp.org/pers")) {
+        } else if (requestUrl.startsWith("http://dblp.org/pid") || requestUrl.startsWith("https://dblp.org/pid")) {
             return parseAuthor(input, triples);
         } else if (requestUrl.startsWith("http://dblp.org/rec") || requestUrl.startsWith("https://dblp.org/rec")) {
             return parsePublication(requestUrl, input, triples);
@@ -173,11 +175,11 @@ public class DBLPRawProvider extends AbstractHttpProvider {
                 ValueFactory factory = ValueFactoryImpl.getInstance();
                 for (Element element : queryElements(doc, "/result/hits/hit/info/url")) {
                     String candidate = element.getText();
-                    candidate = candidate.replaceFirst("pid", "rec/pid");
-                    candidate = URLUtils.getFinalURL(candidate, 0);
-                    String candidateURI = candidate.replaceFirst("/hd", "");
+                    //candidate = candidate.replaceFirst("pid", "rec/pid");
+                    //candidate = URLUtils.getFinalURL(candidate, 0);
+                    String candidateURI = candidate;//.replaceFirst("/hd", "");
                     triples.add(factory.createStatement(factory.createURI(candidateURI), OWL.ONEOF, factory.createURI(resource)));
-                    lsURLs.add(candidate.replaceFirst("/hd/", "/xr/").concat(".rdf"));
+                    lsURLs.add(candidate/*.replaceFirst("/hd/", "/xr/")*/.concat(".rdf"));
                 }
 
             }
@@ -206,10 +208,12 @@ public class DBLPRawProvider extends AbstractHttpProvider {
         publications.addAll(publications1);
         Model publications2 = triples.filter(null, factory.createURI(dblpNamespaces.get(DBLPS) + "authorOf"), null);
         publications.addAll(publications2);
+        Model publications3 = triples.filter(null, factory.createURI(dblpNamespaces.get(DBLPSN) + "authorOf"), null);
+        publications.addAll(publications3);
         Set<Value> resources = publications.objects();
         for (Value dblpResource : resources) {
             String resourceDoc = ((Resource) dblpResource).stringValue();
-            resourceDoc = resourceDoc.replaceFirst("rec", "rec/rdf").concat(".rdf");
+            resourceDoc = resourceDoc/*.replaceFirst("rec", "rec/rdf")*/.concat(".rdf");
             lsl.add(resourceDoc);
         }
         return lsl;
@@ -218,7 +222,7 @@ public class DBLPRawProvider extends AbstractHttpProvider {
     private List<String> parsePublication(String requestUrl, InputStream input, Model triplesx) throws DataRetrievalException {
         List<String> lsl = new ArrayList<>();
         try {
-            String resourcet = requestUrl.replaceFirst("rec/rdf", "rec");
+            String resourcet = requestUrl;//.replaceFirst("rec/rdf", "rec");
             String resource = resourcet.substring(0, resourcet.length() - 4);
 
             Model triples = new LinkedHashModel();
@@ -268,7 +272,7 @@ public class DBLPRawProvider extends AbstractHttpProvider {
             for (Value superp : pubList) {
                 String supURI = ((Resource) superp).stringValue();
                 if (supURI.compareTo(resource) != 0) {
-                    lsl.add((supURI.replaceFirst("rec", "rec/rdf").concat(".rdf")));
+                    lsl.add((supURI/*.replaceFirst("rec", "rec/rdf")*/.concat(".rdf")));
                 }
             }
             triplesx.addAll(triples);

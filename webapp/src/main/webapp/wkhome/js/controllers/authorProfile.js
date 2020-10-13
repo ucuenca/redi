@@ -57,7 +57,7 @@ wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$windo
 
     $scope.publication = function() {
 
-      $window.location.hash = '/author/publications/q=author:%22' + author.uri + '%22&fl=*&rows=10&wt=json/author/' + author.uri;
+      $window.location.hash = '/author/publications/q=author:%22' + author.uri + '%22&fl=*&rows=10&wt=json/authorProfile/' + author.uri;
     };
 
     $scope.clickonRelatedauthor = function(uri) {

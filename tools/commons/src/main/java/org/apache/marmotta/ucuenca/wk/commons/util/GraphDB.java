@@ -92,7 +92,7 @@ public final class GraphDB {
     }
 
     private GraphDB(String server, String database, String user, String pass) throws RepositoryException {
-        data = new SPARQLRepository(server + REPOSITORIES + database, server + REPOSITORIES + database + "/statements");
+        data = new CustomRepository(server + REPOSITORIES + database, server + REPOSITORIES + database + "/statements");
         data4solr = new CustomRepository(server + REPOSITORIES + database, server + REPOSITORIES + database + "/statements");
         if (user != null && pass != null) {
             data.setUsernameAndPassword(user, pass);
@@ -276,6 +276,10 @@ public final class GraphDB {
         try {
             java.net.URI.create(ur);
             r = true;
+            //
+            if (ur.contains("[]")){
+                r = false;
+            }
         } catch (Exception w) {
             Logger.getLogger(GraphDB.class.getName()).log(Level.SEVERE, null, w);
         }

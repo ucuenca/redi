@@ -235,7 +235,7 @@ public class LoadData {
   @Produces(MediaType.APPLICATION_JSON)
   public Response loadTranslatebyPublication() throws FailMongoConnectionException {
     try {
-      loadService.populatePublicationKeywords();
+//      loadService.populatePublicationKeywords();
       loadService.populatePublicationTranslations();
     } catch (Exception e) {
       log.error("Cannot load publications tranlation into Mongo DB", e);
