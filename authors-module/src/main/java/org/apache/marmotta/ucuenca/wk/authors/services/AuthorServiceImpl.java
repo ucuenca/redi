@@ -264,6 +264,11 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @SuppressWarnings("PMD")
+    private String extractAuthorsDataverse(String org, String end, String url) {
+        return "ok";
+    }
+
+    @SuppressWarnings("PMD")
     private String extractAuthorsVIVO(String org, String end, String url) {
         ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
         String rs = "" + org + end + url;
@@ -380,6 +385,9 @@ public class AuthorServiceImpl implements AuthorService {
                     } else if ("vivo".equals(type)) {
                         //Read from mongo cache.
                         extractResult = extractAuthorsVIVO(org, endpoint, url);
+                    } else if ("dataverse".equals(type)) {
+                        //Read from mongo cache.
+                        extractResult = extractAuthorsDataverse(org, endpoint, url);
                     } else {
 
                         String min = "1";

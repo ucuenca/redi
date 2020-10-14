@@ -18,6 +18,8 @@ public interface EndpointsService {
     String registerORCID(String type, String org);
 
     String registerVIVO(String type, String org, String u);
+    
+    String registerDataverse(String type, String org, String u);
 
     String registerOAI(String type, String org, String url, Boolean severemode , Boolean temp);
 

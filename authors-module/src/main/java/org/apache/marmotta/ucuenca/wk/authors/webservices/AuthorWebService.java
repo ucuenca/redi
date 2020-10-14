@@ -78,6 +78,8 @@ public class AuthorWebService {
     @Inject
     private EndpointsService endpointsService;
 
+    public static final String URL_CONS = "url";
+    
     public static final String ADD_ENDPOINT = "/addendpoint";
     public static final String AUTHOR_SPLIT = "/split";
     private static final int MAX_NUMBER_CSV_FIELDS = 5;
@@ -257,7 +259,7 @@ public class AuthorWebService {
 
     @POST
     @Path("/endpointSparqlRegister")
-    public Response endpointSparqlRegister(@QueryParam("type") String type, @QueryParam("org") String org, @QueryParam("url") String url, @QueryParam("graph") String graph) {
+    public Response endpointSparqlRegister(@QueryParam("type") String type, @QueryParam("org") String org, @QueryParam(URL_CONS) String url, @QueryParam("graph") String graph) {
         //String result = organizationService.editOrg( acro, namEn, namEs, coun, prov, city, lan, lon, type);
         String result = endpointsService.registerSPARQL(type, org, url, graph);
         return Response.ok().entity(result).build();
@@ -273,14 +275,21 @@ public class AuthorWebService {
 
     @POST
     @Path("/endpointVIVORegister")
-    public Response endpointVIVORegister(@QueryParam("type") String type, @QueryParam("org") String org, @QueryParam("url") String u) {
+    public Response endpointVIVORegister(@QueryParam("type") String type, @QueryParam("org") String org, @QueryParam(URL_CONS) String u) {
         String result = endpointsService.registerVIVO(type, org, u);
         return Response.ok().entity(result).build();
     }
 
     @POST
+    @Path("/endpointDataverseRegister")
+    public Response endpointDataverseRegister(@QueryParam("type") String type, @QueryParam("org") String org, @QueryParam(URL_CONS) String u) {
+        String result = endpointsService.registerDataverse(type, org, u);
+        return Response.ok().entity(result).build();
+    }
+    
+    @POST
     @Path("/endpointOAIRegister")
-    public Response endpointOAIRegister(@QueryParam("type") String type, @QueryParam("org") String org, @QueryParam("url") String url, @QueryParam("severe") Boolean severemode) {
+    public Response endpointOAIRegister(@QueryParam("type") String type, @QueryParam("org") String org, @QueryParam(URL_CONS) String url, @QueryParam("severe") Boolean severemode) {
         //String result = organizationService.editOrg( acro, namEn, namEs, coun, prov, city, lan, lon, type);
         String result = endpointsService.registerOAI(type, org, url, severemode, false);
         return Response.ok().entity(result).build();
@@ -291,15 +300,15 @@ public class AuthorWebService {
     @Path("/endpoints/extractAuthors")
     @Produces(APPLICATIONJSON)
     public Response extractAuthors(@Context HttpServletRequest request) {
-//        String scheme = request.getScheme();
-//        String serverName = request.getServerName();
-//        int serverPort = request.getServerPort();
-//        String localName = scheme + "://" + serverName + ":" + serverPort + "/";
-//        String[] get = request.getParameterMap().get("data[]");
-//        String output = authorService.extractAuthorsGeneric(localName, get);
-//        authorService.postProcessAffiliations(get);
+        String scheme = request.getScheme();
+        String serverName = request.getServerName();
+        int serverPort = request.getServerPort();
+        String localName = scheme + "://" + serverName + ":" + serverPort + "/";
+        String[] get = request.getParameterMap().get("data[]");
+        String output = authorService.extractAuthorsGeneric(localName, get);
+        authorService.postProcessAffiliations(get);
         authorService.automaticNameDivision();
-        return Response.ok().entity("").build();
+        return Response.ok().entity(output).build();
     }
 
     @POST

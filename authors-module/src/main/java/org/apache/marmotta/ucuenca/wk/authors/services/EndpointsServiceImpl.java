@@ -11,8 +11,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
 import org.apache.marmotta.commons.vocabulary.FOAF;
-import static org.apache.marmotta.commons.vocabulary.SCHEMA.url;
-import static org.apache.marmotta.commons.vocabulary.SPARQL_SD.graph;
 import org.apache.marmotta.platform.core.exception.InvalidArgumentException;
 import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.ucuenca.wk.authors.api.EndpointFile;
@@ -60,7 +58,9 @@ public class EndpointsServiceImpl implements EndpointsService {
   private final static String STR = "^^xsd:string";
 
   private final static String FAIL = "Fail";
-
+  
+  private static final String NONE = "None";
+  
   @Override
   public String registerSPARQL(String type, String org, String url, String graph ) {
     
@@ -251,7 +251,7 @@ public class EndpointsServiceImpl implements EndpointsService {
   @Override
   public String registerORCID(String type, String org) {
     String resourceId = con.getEndpointBaseUri() + type + "/" + org;
-    EndpointObject endpoint = new EndpointORCID(INITIALSTATUS, org, "None", type, "None", resourceId);
+    EndpointObject endpoint = new EndpointORCID(INITIALSTATUS, org, NONE, type, NONE, resourceId);
     try {
       return insertEndpoint(endpoint);
     } catch (MarmottaException ex) {
@@ -263,7 +263,7 @@ public class EndpointsServiceImpl implements EndpointsService {
   @Override
   public String registerVIVO(String type, String org, String u) {
     String resourceId = con.getEndpointBaseUri() + type + "/" + org;
-    EndpointObject endpoint = new EndpointVIVO(INITIALSTATUS, org, u, type, "None", resourceId);
+    EndpointObject endpoint = new EndpointVIVO(INITIALSTATUS, org, u, type, NONE, resourceId);
     try {
       return insertEndpoint(endpoint);
     } catch (MarmottaException ex) {
@@ -272,4 +272,15 @@ public class EndpointsServiceImpl implements EndpointsService {
     }
   }
 
+  @Override
+  public String registerDataverse(String type, String org, String u) {
+    String resourceId = con.getEndpointBaseUri() + type + "/" + org;
+    EndpointObject endpoint = new EndpointVIVO(INITIALSTATUS, org, u, type, NONE, resourceId);
+    try {
+      return insertEndpoint(endpoint);
+    } catch (MarmottaException ex) {
+      Logger.getLogger(EndpointsServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+      return FAIL + ex;
+    }
+  }
 }
