@@ -208,11 +208,13 @@ public abstract class WorkerServiceImpl<S extends WorkerRuntime<T>, T extends Wo
                 q = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
                         + "PREFIX bibo: <http://purl.org/ontology/bibo/>\n"
                         + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                        + "prefix cerif: <https://www.openaire.eu/cerif-profile/1.1/> \n"
                         + "select distinct ?a { \n"
                         + "    graph <" + g + "> {\n"
                         + "        ?a a foaf:Person .\n"
                         + "        ?a <http://schema.org/memberOf> ?o .\n"
                         + "        ?o <http://ucuenca.edu.ec/ontology#memberOf> <https://redi.cedia.edu.ec/> .\n"
+                        + "        ?a cerif:MemberOf|foaf:publications [] .\n"
                         + "    }\n"
                         + "} ";
                 break;
