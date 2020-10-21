@@ -20,7 +20,9 @@ package org.apache.marmotta.ucuenca.wk.authors.services;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 //import java.io.BufferedWriter;
 //import java.io.FileWriter;
@@ -56,6 +58,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.net.ssl.SSLContext;
+import javax.xml.transform.TransformerException;
 import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -82,6 +85,7 @@ import org.apache.marmotta.ucuenca.wk.authors.api.EndpointsService;
 import org.apache.marmotta.ucuenca.wk.authors.api.SparqlFunctionsService;
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.AskException;
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.UpdateException;
+import org.apache.marmotta.ucuenca.wk.authors.services.utils.DataverseExtractror;
 import org.apache.marmotta.ucuenca.wk.authors.services.utils.VIVOExtractor;
 import org.apache.marmotta.ucuenca.wk.commons.disambiguation.Person;
 //import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
@@ -111,13 +115,16 @@ import org.openrdf.model.vocabulary.OWL;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
 import org.openrdf.query.MalformedQueryException;
+import org.openrdf.query.QueryEvaluationException;
 //import org.openrdf.query.BindingSet;
 //import org.openrdf.query.MalformedQueryException;
 //import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.UpdateExecutionException;
 import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.Rio;
 //import org.openrdf.query.TupleQuery;
 //import org.openrdf.query.TupleQueryResult;
@@ -264,7 +271,43 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @SuppressWarnings("PMD")
-    private String extractAuthorsDataverse(String org, String end, String url) {
+    private String extractAuthorsDataverse(String org, String end, String url) throws UnirestException, IOException, RDFParseException, TransformerException, RepositoryException, MalformedQueryException, QueryEvaluationException, MarmottaException {
+        ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
+        String rs = "" + org + end + url;
+        DataverseExtractror dv = new DataverseExtractror("https://dataverse.harvard.edu/");
+        String orgx = org.replaceAll(constantService.getOrganizationBaseUri(), "");
+        String authBase = constantService.getAuthorResource() + "dataverse/" + orgx + "/";
+        String datBase = constantService.getDatasetResource() + "dataverse/" + orgx + "/";
+        Model output = new LinkedHashModel();
+        Model output2 = new LinkedHashModel();
+        Model sameAsMappins = new LinkedHashModel();
+        try {
+            RepositoryConnection repositoryConnetion = sparqlService.getRepositoryConnetion();
+            int co = 0;
+            do {
+                dv.run();
+                log.info("Extracting page {}", co);
+                Model Dataverse2redi = dv.Dataverse2redi(authBase, datBase);
+                output.addAll(Dataverse2redi);
+                VIVOExtractor.linkOrganizations(disambiguationUtils, output, sameAsMappins);
+                VIVOExtractor.linkOrganizations2(disambiguationUtils, output, output2, end);
+                //
+                repositoryConnetion.begin();
+                sparqlService.getGraphDBInstance().runSplitAddOp(repositoryConnetion, output, instance.createURI(constantService.getAuthorsGraph() + "_Beta"));
+                sparqlService.getGraphDBInstance().runSplitAddOp(repositoryConnetion, output2, instance.createURI(constantService.getEndpointsGraph() + "_Beta"));
+                sparqlService.getGraphDBInstance().runSplitAddOp(repositoryConnetion, sameAsMappins, instance.createURI(constantService.getAuthorsGraph() + "_SA"));
+                repositoryConnetion.commit();
+                output.clear();
+                co++;
+            } while (dv.askRecords());
+            repositoryConnetion.close();
+            rs = "Success " + output.size() + "/" + output.size();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            log.debug("Error {}", ex);
+            rs = "Fail " + ex;
+        }
+
         return "ok";
     }
 
@@ -431,10 +474,7 @@ public class AuthorServiceImpl implements AuthorService {
                 }
 
                 // msg.put(endpoint, "Success");
-            } catch (MarmottaException ex) {
-                java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-                msg.put(endpoint, ex);
-            } catch (UpdateException ex) {
+            } catch (Exception ex) {
                 java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
                 msg.put(endpoint, ex);
             }

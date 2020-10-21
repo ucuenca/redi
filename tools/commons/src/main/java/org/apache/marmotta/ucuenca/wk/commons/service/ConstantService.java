@@ -53,6 +53,8 @@ public interface ConstantService {
     String getAuthorResource();
     
     String getProjectResource();
+    
+    String getDatasetResource();
 
     String getGraphResource();
 

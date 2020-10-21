@@ -130,7 +130,12 @@
   </build>
 
   <dependencies>
-      
+      <!-- https://mvnrepository.com/artifact/net.sf.saxon/Saxon-HE -->
+<dependency>
+    <groupId>net.sf.saxon</groupId>
+    <artifactId>Saxon-HE</artifactId>
+    <version>10.2</version>
+</dependency>
       <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
     <dependency>
         <groupId>org.jsoup</groupId>
