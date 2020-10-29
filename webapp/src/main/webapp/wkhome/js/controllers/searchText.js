@@ -134,7 +134,7 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
                     var path = "/project/profile/";
                     var candidates = _.map(projects, function (author) {
                         var id = author["lmf.uri"];
-                        var title = _.max(author.title, function (title) {
+                        var title = !Array.isArray(author.title) ? author.title : _.max(author.title, function (title) {
                             return title.length;
                         });
                         var topics = _.chain(author['member-organization-name'])
