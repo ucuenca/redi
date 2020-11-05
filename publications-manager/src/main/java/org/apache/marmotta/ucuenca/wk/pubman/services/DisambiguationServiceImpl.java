@@ -16,15 +16,12 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.apache.marmotta.platform.core.api.task.Task;
@@ -48,7 +45,6 @@ import org.apache.marmotta.ucuenca.wk.commons.util.LongUpdateQueryExecutor;
 import org.apache.marmotta.ucuenca.wk.commons.util.SPARQLUtils;
 import org.apache.marmotta.ucuenca.wk.pubman.api.IdentificationManager;
 import org.apache.marmotta.ucuenca.wk.pubman.utils.BucketType;
-import org.apache.marmotta.ucuenca.wk.pubman.utils.CentralGraphGenerator;
 import org.apache.marmotta.ucuenca.wk.pubman.utils.MapSet;
 import org.apache.marmotta.ucuenca.wk.pubman.utils.MapSetWID;
 import org.openrdf.model.Model;
@@ -822,11 +818,11 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                             log.info("{}-{}-Recursive exploring", ix, allx);
                             Model Disambiguate = Disambiguate(Candidates, 0, new Person());
                             log.info("{}-{}-Store links", ix, allx);
-                            boolean alreadyHasPublications = sparqlService.getSparqlService().ask(QueryLanguage.SPARQL, "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                            boolean alreadyHasPublicationsOrProjects = sparqlService.getSparqlService().ask(QueryLanguage.SPARQL, "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" + "prefix cerif: <https://www.openaire.eu/cerif-profile/1.1/> \n"
                                     + "ask from <" + constantService.getAuthorsProviderGraph() + "> {\n"
-                                    + "	<" + aSeedAuthor.URI + "> foaf:publications [] .\n"
+                                    + "	<" + aSeedAuthor.URI + "> foaf:publications|cerif:MemberOf [] .\n"
                                     + "}");
-                            if (alreadyHasPublications || Disambiguate.size() > 0) {
+                            if (alreadyHasPublicationsOrProjects || Disambiguate.size() > 0) {
                                 Disambiguate.add(instance.createURI(aSeedAuthor.URI), instance.createURI("http://www.w3.org/2002/07/owl#sameAs"), instance.createURI(aSeedAuthor.URI));
                             }
                             Disambiguate.add(instance.createURI(aSeedAuthor.URI), instance.createURI("http://dbpedia.org/ontology/status"), instance.createURI(harvestedProvidersListURI));

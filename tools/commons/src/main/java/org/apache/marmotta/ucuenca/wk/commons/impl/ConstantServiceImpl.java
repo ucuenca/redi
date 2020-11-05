@@ -101,7 +101,12 @@ public class ConstantServiceImpl implements ConstantService {
     public String getProjectResource() {
         return getBaseResource() + "projects/";
     }
-
+    
+    @Override
+    public String getDatasetResource() {
+        return getBaseResource() + "datasets/";
+    }
+    
     @Override
     public String getGraphResource() {
         return getBaseResource() + "graph/";

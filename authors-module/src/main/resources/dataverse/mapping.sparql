@@ -1,0 +1,91 @@
+
+PREFIX schema: <http://schema.org/>
+PREFIX bibo: <http://purl.org/ontology/bibo/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+construct {
+   ?dataset a schema:Dataset .
+   ?dataset bibo:doi ?doi .
+   ?dataset bibo:uri ?url .
+   ?dataset dct:title ?title .
+   ?dataset bibo:abstract ?abstract .
+   ?dataset <http://purl.org/dc/terms/subject> ?subject .
+   ?subject rdfs:label ?subject_ .
+   ?dataset <http://schema.org/copyrightYear> ?publicationYear_ .
+   ?dataset <http://purl.org/ontology/bibo/created> ?submittedDate_ .
+    
+    
+   ?dataset dct:publisher ?publisher .
+   ?publisher a foaf:Organization .
+   ?publisher foaf:name ?publisher_ .
+    
+    
+   ?creator a foaf:Person .
+   ?creator foaf:name ?cname .
+   ?creator foaf:firstName ?cgname .
+   ?creator foaf:lastName ?cfname .
+   ?creator schema:memberOf ?caff .
+   ?caff a foaf:Organization .
+   ?caff foaf:name ?caff_ .
+   ?creator <http://purl.org/spar/scoro/hasORCID> ?corcid .
+   ?dataset dct:creator ?creator .
+   ?creator foaf:publications ?dataset .
+    
+   ?contributor a foaf:Person .
+   ?contributor foaf:name ?coname .
+   ?contributor foaf:firstName ?cogname .
+   ?contributor foaf:lastName ?cofname .
+   ?contributor schema:memberOf ?coaff .
+   ?coaff a foaf:Organization .
+   ?coaff foaf:name ?coaff_ .
+   ?contributor <http://purl.org/spar/scoro/hasORCID> ?coorcid .
+   ?dataset dct:contributor ?contributor .
+   ?contributor foaf:publications ?dataset .
+    
+} where {
+        ?dataset_ <http://mock.com/bar/doi> ?doi .
+        bind( iri(concat('@@@Dataset@@@',ENCODE_FOR_URI(?doi))) as ?dataset) .
+        bind( iri(concat('@@@URL@@@',ENCODE_FOR_URI(?doi))) as ?url) .
+        ?dataset_ <http://mock.com/bar/title> ?title .
+        ?dataset_ <http://mock.com/bar/abstract> ?abstract .
+        ?dataset_ <http://mock.com/bar/publisher> ?publisher_ .
+        bind( iri(concat('https://redi.cedia.edu.ec/resource/dataset_publisher/',ENCODE_FOR_URI(?publisher_))) as ?publisher) .
+        ?dataset_ <http://mock.com/bar/publicationYear> ?publicationYear_ .
+        ?dataset_ <http://mock.com/bar/submittedDate> ?submittedDate_ .
+        ?dataset_ <http://mock.com/bar/subject> ?subject_ .
+        bind( iri(concat('https://redi.cedia.edu.ec/resource/dataset_subject/',ENCODE_FOR_URI(?subject_))) as ?subject) .
+        
+        optional {
+            ?dataset_ <http://mock.com/bar/creator> ?creator_ .
+            ?creator_ <http://mock.com/bar/name> ?cname.
+            bind( iri(concat('@@@Author@@@',ENCODE_FOR_URI(?doi), '_',ENCODE_FOR_URI(?cname))) as ?creator) .
+            optional {
+                ?creator_ <http://mock.com/bar/givenName> ?cgname.
+                ?creator_ <http://mock.com/bar/familyName> ?cfname.
+            }
+            optional {
+                ?creator_ <http://mock.com/bar/orcid> ?corcid.
+            }
+            optional {
+                bind( iri(concat('https://redi.cedia.edu.ec/resource/dataset_affiliation/', ENCODE_FOR_URI(?caff_))) as ?caff) .
+                ?creator_ <http://mock.com/bar/affiliation> ?caff_.
+            }
+        }
+        optional {
+            ?dataset_ <http://mock.com/bar/contributor> ?contributor_ .
+            ?contributor_ <http://mock.com/bar/name> ?coname.
+            bind( iri(concat('@@@Author@@@',ENCODE_FOR_URI(?doi), '_',ENCODE_FOR_URI(?coname))) as ?contributor) .
+            optional {
+                ?contributor_ <http://mock.com/bar/givenName> ?cogname.
+                ?contributor_ <http://mock.com/bar/familyName> ?cofname.
+            }
+            optional {
+                ?contributor_ <http://mock.com/bar/orcid> ?coorcid.
+            }
+            optional {
+                bind( iri(concat('https://redi.cedia.edu.ec/resource/dataset_affiliation/', ENCODE_FOR_URI(?coaff_))) as ?coaff) .
+                ?contributor_ <http://mock.com/bar/affiliation> ?coaff_.
+            }
+        }
+}
