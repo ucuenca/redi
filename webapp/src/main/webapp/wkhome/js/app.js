@@ -51,7 +51,14 @@ wkhomeApp.service('globalData', ['$window','cookies', function ($window, cookies
     this.latindexGraph = baseURL + "context/latindex";
     this.translateData = null;
     this.publicationsCore = this.serverInstance + 'solr/publications';
-    // this.publicationsCore = 'https://rediclon.cedia.edu.ec/solr/publications';
+    this.authorsCore = this.serverInstance+'solr/authors';
+    this.projectsCore = this.serverInstance+'solr/projects';
+    this.organizationsCore = this.serverInstance+'solr/organizations';
+    /*this.publicationsCore = 'https://rediclon.cedia.edu.ec/solr/publications';
+    this.authorsCore = 'https://rediclon.cedia.edu.ec/solr/authors';
+    this.projectsCore = 'https://rediclon.cedia.edu.ec/solr/projects';
+    this.organizationsCore = 'https://rediclon.cedia.edu.ec/solr/organizations';*/
+
     this.PREFIX = 'PREFIX bibo: <http://purl.org/ontology/bibo/>'
             + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>  '
             + ' PREFIX dct: <http://purl.org/dc/terms/> '
@@ -152,6 +159,30 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                 }).
                 when('/search/publications/:query*', {
                   templateUrl: 'wkhome/partials/publications.html',
+                }).
+                when('/total/publications/:query*', {
+                  templateUrl: 'wkhome/partials/publicationsAll.html',
+                }).
+                when('/total/authors/:query*', {
+                  templateUrl: 'wkhome/partials/authorsAll.html',
+                }).
+                when('/total/publications', {
+                  templateUrl: 'wkhome/partials/publicationsAll.html',
+                }).
+                when('/total/authors', {
+                  templateUrl: 'wkhome/partials/authorsAll.html',
+                }).
+                when('/total/projects', {
+                  templateUrl: 'wkhome/partials/projectsAll.html',
+                }).
+                when('/total/projects/:query*', {
+                  templateUrl: 'wkhome/partials/projectsAll.html',
+                }).
+                when('/total/organizations', {
+                  templateUrl: 'wkhome/partials/organizationsAll.html',
+                }).
+                when('/total/organizations/:query*', {
+                  templateUrl: 'wkhome/partials/organizationsAll.html',
                 }).
                 when('/author/tree/:text*', {
                   templateUrl: 'wkhome/partials/search.html',

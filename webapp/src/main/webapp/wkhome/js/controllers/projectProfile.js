@@ -33,7 +33,9 @@ wkhomeControllers.controller('projectProfile', ['$scope', '$routeParams', '$wind
     });
 
     function acro ( uri ) {
-      return uri.slice(uri.lastIndexOf("/")+1);
+      console.log (uri);
+
+      return uri.slice(uri.lastIndexOf("/")+1).replace('university_university','').replace('_',' ');
 
     }
 

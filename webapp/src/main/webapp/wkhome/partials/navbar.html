@@ -34,33 +34,62 @@
             
           <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span src="" alt="INICIO" class="img-thumbnail icon-small" style="width: 50px;">{{'HOME'| translate | uppercase}}</span><span class="caret" ></span></a>
           <ul class="dropdown-menu">
-            <li ng-class="{ active: isActive('/tags/cloud') }"><a href="#/tags/cloud">{{'Clustering by Research Area'| translate | uppercase  }}</a></li>
-            <li ng-class="{ active: isActive('/group/area') }"><a href="#/group/area">{{'Group By Area'| translate | uppercase  }}</a></li>
+            <li ng-class="{ active: isActive('/about') }"><a href="#/info/about">{{'ABOUT'| translate | uppercase  }}</a></li>
+            <li ng-class="{ active: isActive('/work') }"><a href="#/info/work">{{'WORK'| translate | uppercase  }}</a></li>
+            <li ng-class="{ active: isActive('/sources') }"><a href="#/info/sources">{{'SOURCES'| translate | uppercase  }}</a></li>
+            <li role="separator" class="divider"></li>
+           
             <li ng-class="{ active: isActive('/geo-views/sources') }"><a href="#/view/map">{{'Map View'| translate | uppercase  }}</a></li>
-            <li ng-class="{ active: isActive('/project/collaborationProject') }"><a href="#/project/collaborationProject"> COLABORACIÓN INSTERINSTITUCIONAL (PROYECTOS)  </a></li>
+
             <li role="separator" class="divider"></li>
             <li ng-class="{ active: isActive('/statistics') }"><a href="#/info/statistics">{{'Statistics'| translate | uppercase  }}</a></li>
           </ul>
         </li>
-       <!-- <li class="dropdown">
-          <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img src="wkhome/images/diseño2020/logo.png" alt="logo redi" class="img-thumbnail icon-small"><span></span><span class="caret" style="margin-left: 5px;" ></span></a>
-          <ul class="dropdown-menu">
-            <li ng-class="{ active: isActive('/tags/cloud') }"><a href="#/tags/cloud">{{'Clustering by Research Area'| translate | uppercase  }}</a></li>
-            <li ng-class="{ active: isActive('/group/area') }"><a href="#/group/area">{{'Group By Area'| translate | uppercase  }}</a></li>
-            <li ng-class="{ active: isActive('/geo-views/sources') }"><a href="#/view/map">{{'Map View'| translate | uppercase  }}</a></li>
-            <li role="separator" class="divider"></li>
-            <li ng-class="{ active: isActive('/statistics') }"><a href="#/info/statistics">{{'Statistics'| translate | uppercase  }}</a></li>
-          </ul>
-        </li>-->
-        <li class="navdiv">|</li>
-        <li ng-class="{ active: isActive('/about') }"><a href="#/info/about"> <div class="bordermenu"> {{'ABOUT'| translate | uppercase }}</div> </a></li>
-         <li class="navdiv" > | </li>
-        <li ng-class="{ active: isActive('/work') }"><a href="#/info/work"><div class="bordermenu">{{'WORK'| translate | uppercase }}</div></a></li>
+
         <li class="navdiv" > | </li>
-        <li ng-class="{ active: isActive('/sources') }"><a href="#/info/sources"> <div class="bordermenu"> {{'SOURCES'| translate | uppercase }} </div> </a></li>
-       <li class="navdiv" > | </li>
+         <li ng-class="dropdown">
+            
+          <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span src="" alt="INICIO" class="" >{{'INVESTIGADORES'| translate | uppercase}}</span>&nbsp;&nbsp;&nbsp;<span class="caret" ></span></a>
+          <ul class="dropdown-menu">
+            <li ng-class="{ active: isActive('/author') } dropdown"><a href="#/total/authors"> <div class="bordermenu">  LISTAR INVESTIGADORES </div> </a></li>
+            <li ng-class="{ active: isActive('/tags/cloud') }"><a href="#/tags/cloud">{{'Clustering by Research Area'| translate | uppercase  }}</a></li>
+            <li ng-class="{ active: isActive('/group/area') }"><a href="#/group/area">{{'Group By Area'| translate | uppercase  }}</a></li>  
+          </ul>
+        </li>
+
+        <li ng-class="{ active: isActive('/pub') }"><a href="#/total/publications"> <div class="bordermenu">  PUBLICACIONES </div> </a></li>
+        
+
+        <!--<li ng-class="{ active: isActive('/author') } dropdown"><a href="#/total/authors"> <div class="bordermenu">  INVESTIGADORES <span class="caret" ></span> </div> </a>
+           <ul class="dropdown-menu">
+            <li ng-class="{ active: isActive('/tags/cloud') }"><a href="#/tags/cloud">{{'Clustering by Research Area'| translate | uppercase  }}</a></li>
+            <li ng-class="{ active: isActive('/group/area') }"><a href="#/group/area">{{'Group By Area'| translate | uppercase  }}</a></li>  
+           </ul>
+        </li> -->
+
+       
+
+
+        <li class="navdiv" > | </li>
+
+           <li ng-class="dropdown">
+            
+          <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span src="" alt="INICIO" class="img-thumbnail icon-small" >{{'PROYECTOS'| translate | uppercase}}</span>&nbsp;<span class="caret" ></span></a>
+          <ul class="dropdown-menu">
+            <li ng-class="{ active: isActive('/author') } dropdown"><a href="#/total/authors"> <div class="bordermenu">  LISTAR PROYECTOS </div> </a></li>
+            <li ng-class="{ active: isActive('/project/collaborationProject') }"><a href="#/project/collaborationProject"> COLABORACIÓN INSTERINSTITUCIONAL (PROYECTOS)  </a></li>
+          </ul>
+        </li>
+
+
+        <!--<li ng-class="{ active: isActive('/project') }"><a href="#/total/projects"> <div class="bordermenu">  PROYECTOS </div> </a></li>
+        <li class="navdiv" > | </li> --> 
+        <li class="navdiv" > | </li>
+        <li ng-class="{ active: isActive('/organization') }"><a href="#/total/organizations"> <div class="bordermenu">  ORGANIZACIONES </div> </a></li>
+        <li class="navdiv" > | </li>
         <li ng-class="{ active: isActive('/help') }"><a href="#/info/help"> <div class="bordermenu">  {{'HELP'| translate | uppercase }}</div> </a></li>
          <li class="navdiv" > | </li>
+   
         <li > <a ng-click="updateStatus()"> <div class="bordermenu"> CONTACTO </div> </a></li>
          <li class="navdiv" > | </li>
       </ul>
@@ -87,11 +116,11 @@
           <a ng-click="l.changeLocale(setLanguage)"><span class="flag-icon flag-icon-{{l.selectedLocaleVals.country}}"></span><span>{{l.selectedLocaleVals.language | uppercase}}</span></a>
         </li>
       </ul>
-      <form class="navbar-form navbar-right" ng-submit="submit()" ng-controller="searchText" ng-hide="isHome()">
+     <!-- <form class="navbar-form navbar-right" ng-submit="submit()" ng-controller="searchText" ng-hide="isHome()">
         <div class="form-group" style="margin-top: 5px;">
           <input type="text" class="form-control" ng-model="searchText" placeholder="{{'SEARCH'| translate}}..">
         </div>
-      </form>
+      </form> -->
     </div>
   </div>
 </nav>

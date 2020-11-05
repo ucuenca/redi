@@ -1,0 +1,268 @@
+<!-- <div ng-controller="PublicationsController">
+  <author-publications author="{{authorId}}" core="{{core}}">
+  </author-publications>
+</div> -->
+
+<div class="container-fluid" ng-controller="listEntitiesController">
+
+    <br>
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="input-group">
+        <input ng-keypress="searchEntK($event)" type="text" class="form-control" placeholder="Search" id="txtSearch"/>
+        <div class="input-group-btn">
+          <button class="btn btn-primary"  ng-click="searchEnt()" >
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+<nav class="col-md-9 col-md-offset-2" > 
+  <ul class="pagination"> 
+    <li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li> 
+    <li ng-repeat="letter in letters" ng-class="{active : isSelected(letter)}"  ng-cloak>
+      <a ng-click="letterClick (letter)" >{{letter}} </a>
+    </li>
+
+  </ul> 
+</nav>
+</div>
+
+  <!-- Check why ngHide is not evaluating correctly. When selected (false/true) && exclusive(false), it evaluates to true. Using false as default.-->
+  <div id="content" class="row">
+    <div class="col-lg-2">
+     
+      <div class="panel panel-default"
+      ng-init="source = core"
+      ng-controller="FacetSelectionController"
+      ng-show="items.length>0"
+      ng-cloak>
+        <div class="panel-body">
+          <ul class="items unstyled">
+            <div class="panel-heading">{{'FILTERING_BY' | translate}}</div>
+            <li class="facet" ng-repeat="item in items">
+              <i class="fa fa-tag"></i>
+              <a class="facet-value" ng-click="remove($index)">
+                <span>{{item | prettyFacetLabel | swapFacetLabels}}</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="panel panel-default"
+      ng-controller="FieldFacetController"
+      ng-hide="selected && false"
+      data-exclusive="false"
+      data-field="contributor-name"
+      ng-init="source = core"
+      ng-cloak>
+        <div class="panel-heading">{{'CONTRIBUTOR' | translate}}</div>
+        <div class="panel-body">
+          <ul class="facets unstyled">
+            <li ng-repeat="item in items" ng-show="items">
+              <span class="facet-name"><a href="#" ng-click="add($event,$index)">{{item.value | camelCase:true}}</a></span>
+              <span class="facet-score" ng-show="item.score">({{item.score}})</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="panel panel-default"
+      ng-controller="FieldFacetController"
+      ng-hide="selected && false"
+      data-exclusive="false"
+      data-field="subjects"
+      ng-init="source = core"
+      ng-cloak>
+        <div class="panel-heading">{{'palabras clave' | translate}}</div>
+        <div class="panel-body">
+          <ul class="facets unstyled">
+            <li ng-repeat="item in items" ng-show="items">
+              <span class="facet-name"><a href="#" ng-click="add($event,$index)">{{item.value}}</a></span>
+              <span class="facet-score" ng-show="item.score">({{item.score}})</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="panel panel-default"
+      ng-controller="FieldFacetController"
+      ng-hide="selected && true"
+      data-exclusive="false"
+      data-field="type-all"
+      ng-init="source = core"
+      ng-cloak>
+        <div class="panel-heading">{{'JOURNAL_CONFERENCE_BOOK' | translate}}</div>
+        <div class="panel-body">
+          <ul class="facets unstyled">
+            <li ng-repeat="item in items" ng-show="items">
+              <span class="facet-name"><a href="#" ng-click="add($event,$index)">{{item.value}}</a></span>
+              <span class="facet-score" ng-show="item.score">({{item.score}})</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="panel panel-default"
+      ng-controller="FieldFacetController"
+      ng-hide="selected && false"
+      data-exclusive="false"
+      data-field="partof"
+      ng-init="source = core"
+      ng-cloak>
+        <div class="panel-heading">{{'TYPE' | translate}}</div>
+        <div class="panel-body">
+          <ul class="facets unstyled">
+            <li ng-repeat="item in items" ng-show="items">
+              <span class="facet-name"><a href="#" ng-click="add($event,$index)">{{item.value}}</a></span>
+              <span class="facet-score" ng-show="item.score">({{item.score}})</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="panel panel-default"
+      ng-controller="FieldFacetController"
+      ng-hide="selected && false"
+      data-exclusive="false"
+      data-field="index"
+      ng-init="source = core"
+      ng-cloak>
+        <div class="panel-heading">{{'INDEX' | translate}}</div>
+        <div class="panel-body">
+          <ul class="facets unstyled">
+            <li ng-repeat="item in items" ng-show="items">
+              <span class="facet-name"><a href="#" ng-click="add($event,$index)">{{item.value}}</a></span>
+              <span class="facet-score" ng-show="item.score">({{item.score}})</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+        
+      <div class="panel panel-default"
+      ng-controller="FieldFacetController"
+      ng-hide="selected && false"
+      data-exclusive="false"
+      data-field="date"
+      ng-init="source = core"
+      ng-cloak>
+        <div class="panel-heading">{{'DATE' | translate}}</div>
+        <div class="panel-body">
+          <ul class="facets unstyled">
+            <li ng-repeat="item in items" ng-show="items">
+              <span class="facet-name"><a href="#" ng-click="add($event,$index)">{{item.value}}</a></span>
+              <span class="facet-score" ng-show="item.score">({{item.score}})</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-8"
+    ng-controller="DocumentSearchResultsController"
+    data-fields="*"
+    ng-init="source = core"
+    ng-cloak>
+      <div class="reading-column">
+        <div class="loading" ng-show="loading" ng-cloak>
+          <p>{{'LOAD_SEACH_RESULTS' | translate}} ...</p>
+          <img src="wkhome/images/ajax-loader-bar.gif" alt="Loading search results" />
+        </div>
+          <div ng-show="documents.length == 0" ng-cloak> <h2>No hay resultados</h2> </div>
+        <div class="small" ng-show="documents.length > 0" ng-cloak>
+          <div style="padding-bottom: 20px;">{{'SEARCH_RESULTS' | translate}} ({{totalResults}} {{'FOUND' | translate}})</div>
+          <div class="alert alert-error" ng-show="error">{{error}}</div>
+          <div class="alert alert-info" ng-show="message">{{message}}</div>
+        </div>
+        <article ng-repeat="doc in documents" class="document" ng-cloak>
+          <img src="wkhome/images/journal.png" alt="type" width="12" style="margin-right: 5px">
+          <!--<a ng-href="{{doc['lmf.uri']}}" class="title" target="_blank"><b>{{doc.title}}</b></a> -->
+          <a ng-click=" openmodal(doc['lmf.uri'])" class="title" ><b>{{doc.title}}</b></a>
+           <div class="row">
+            <div class="col-lg-1" ng-show="doc['journal-img']">
+              <img ng-src="{{doc['journal-img'][0]}}" alt="" width="95px">
+            </div>
+            <div ng-class="doc['journal-img'][0] ? 'col-lg-11' : 'col-lg-12'">
+              <div ng-show="doc.abstract">
+                <hm-read-more
+                  hm-text="{{doc.abstract}}" hm-limit="250" hm-more-text="{{ 'read.more' | translate }}"
+                  hm-less-text="{{ 'read.less' | translate}}" hm-dots-class="dots" hm-link-class="links">
+                </hm-read-more>
+              </div>
+              <div class="inline text-muted small">
+                <ul class="list-inline" ng-show="doc.subjects">
+                  <li ng-repeat = "subject in doc.subjects">
+                    <i>{{subject | camelCase}} {{$last ? '' : ' -'}}</i>
+                  </li>
+                  <br>
+                </ul>
+
+                <ul class="list-inline" ng-show="doc['contributor-name']">
+                  <li ng-repeat = "contributor in doc['contributor-name']">
+                    <span>{{contributor | camelCase:true}}</span><span>{{ $last ? '' : ','}}</span>
+                  </li>
+                </ul>
+                <span ng-show="doc.publisher"><strong>Publisher:</strong> {{doc.publisher[0]}}<br></span>
+                <span ng-show="doc.conference">
+                  <strong>Conference:</strong>
+                  <span ng-hide="doc['proceedings-uri']">{{doc.conference[0]}}</span>
+                  <a ng-show="doc['proceedings-uri']" ng-click="showInfo(doc['proceedings-uri'], 'proceedings')">{{doc.conference[0]}}</a><br>
+                </span>
+                <span ng-show="doc.book">
+                  <strong>Book:</strong>
+                  <span ng-hide="doc['book-uri']">{{doc.book[0]}}</span>
+                  <a ng-show="doc['book-uri']" ng-click="showInfo(doc['book-uri'], 'book')">{{doc.book[0]}}</a><br>
+                </span>
+                <span ng-show="doc.journal">
+                  <strong>Journal:</strong>
+                  <span ng-hide="doc['journal-uri']">{{doc.journal[0]}}</span>
+                  <a ng-show="doc['journal-uri']" ng-click="showInfo(doc['journal-uri'], 'journal')">{{doc.journal[0]}}</a><br>
+                </span>
+              </div>
+            </div>
+          </div>
+          <ul class="list-inline" ng-show="doc.uri">
+            <li ng-repeat = "uri in doc.uri | limitTo:5">
+              <logo-publication uri="{{uri}}"></logo-publication>
+            </li>
+          </ul>
+          <hr style="margin: 10px;">
+        </article>
+        <ul class="pagination" ng-hide="error" ng-cloak>
+          <li ng-repeat="page in pages" ng-class="{active: page.isCurrent}">
+            <a ng-click="$parent.handleSetPage(page.number)">{{page.name}}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-lg-2 imgbg" ng-show="authorURI" ng-cloak >
+      <!-- <img ng-show="author.photo" ng-src="{{author.photo}}" class="img-responsive" alt="{{author.name}}"> -->
+      <div class="imgProfilePub" style = "background-image:url('{{author.photo}}')"> </div>
+      <a  class="pubAuthorName" ng-href="#/author/profile/{{authorURI}}"><h3 style="margin: 0px 0px">{{author.name | camelCase}}</h3></a>
+      <h5 class="pubInstName" style="margin: 0px 0px" ng-repeat="institution in author.institutions">{{institution.name}}, <small><i>{{institution.city}}</i></small></h5>
+      <br>
+      <div ng-show="author.areas">
+        <b>{{ 'area.study' | translate }}: </b>
+        <ul>
+          <li ng-repeat="area in author.areas"><small>{{area}}</small></li>
+        </ul>
+      </div>
+    </div>
+
+
+
+     <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog  bodyPub publicationModal ">
+    <div class="modalp" ng-controller="publicationProfile">
+        <publication-template ng-model='publication' > 
+        </publication-template>
+      </div>
+        </div> 
+
+
+  </div>
+
