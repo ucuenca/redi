@@ -40,8 +40,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import org.apache.marmotta.ucuenca.wk.commons.service.TranslationService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
-import org.apache.marmotta.ucuenca.wk.pubman.api.SyncGraphDBMarmotta;
 import org.slf4j.Logger;
+import org.apache.marmotta.ucuenca.wk.pubman.api.SendNotificationsMarmotta;
 
 @Path("/pubman")
 @ApplicationScoped
@@ -51,7 +51,7 @@ public class PubWebService {
   private Logger log;
 
   @Inject
-  private SyncGraphDBMarmotta synprocess;
+  private SendNotificationsMarmotta sendNots;
 
   @Inject
   private CommonService commonService;
@@ -69,7 +69,7 @@ public class PubWebService {
   public static final String GET_PUBLICATIONS_DSPACE = "/publications_dspace";
   public static final String DETECT_LATINDEX_PUBLICATIONS = "/publications_latindex";
   public static final String DISAMBIGUATION_PUBLICATIONS = "/publications_disambiguation";
-  public static final String SYNC_PUBLICATIONS = "/publications_sync";
+  public static final String SEND_NOTIFICATIONS = "/sendNotifications";
   public static final String CENTRAL_GRAPH_PUBLICATIONS = "/publications_centralgraph";
   public static final String LOAD_PUBLICATIONS = "/publications_provider_graph";
   public static final String LOAD_AUTHOR_ATTR = "/author_attr";
@@ -488,11 +488,11 @@ public class PubWebService {
   }
 
   @POST
-  @Path(SYNC_PUBLICATIONS)
-  public Response sync(@QueryParam("Endpoint") String resultType) {
+  @Path(SEND_NOTIFICATIONS)
+  public Response sendNot(@QueryParam("Endpoint") String resultType) {
     //String params = resultType;
-    log.debug("SYNC Task");
-    synprocess.init();
+    log.debug("Send Notifications Task");
+    sendNots.init();
     return Response.ok().entity("Synchronizing").build();
   }
 

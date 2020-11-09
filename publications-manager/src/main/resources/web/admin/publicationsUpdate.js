@@ -488,11 +488,11 @@ function runUpdateCreateCentralGraph(options) {
 
 
 /**
- * Central Graph Process
+ * Send Notifications
  * @author José Ortiz
  * @param {options} options
  */
-function runSyncMGDB(options) {
+function runFnSendNotifications(options) {
 
   document.getElementById("imgloading").style.visibility = "visible";
 
@@ -511,7 +511,7 @@ function runSyncMGDB(options) {
     data: JSON.stringify(dataT),
     dataType: "text", //result data type
     contentType: "application/json", // send data type
-    url: settings.host + "pubman/publications_sync",
+    url: settings.host + "pubman/sendNotifications",
     //    url:  "http://localhost:8079/marmotta/authors-module/update",
     success: function (Result) {
       document.getElementById("imgloading").style.visibility = "hidden";
