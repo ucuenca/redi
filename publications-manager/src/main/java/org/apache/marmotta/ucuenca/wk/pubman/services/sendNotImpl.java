@@ -67,7 +67,7 @@ public class sendNotImpl implements SendNotificationsMarmotta {
         if (!mp.containsKey(stringValue)) {
           mp.put(stringValue, new Object[]{(String) null, new String[]{}, new ArrayList<String>(), new ArrayList<String>()});
         }
-        mp.get(stringValue)[0] = mm.get("an");//0: Name
+        mp.get(stringValue)[0] = mm.get("an") .stringValue() ;//0: Name
         mp.get(stringValue)[1] = mm.get("ae") != null ? mm.get("ae").stringValue().toLowerCase().split(";;;") : mp.get(stringValue)[1];//1: Email
         ((List<String>) mp.get(stringValue)[2]).add(mm.get("pu").stringValue());
         ((List<String>) mp.get(stringValue)[3]).add(mm.get("pt").stringValue());
