@@ -62,9 +62,9 @@
       {
         runUpdateCreateCentralGraph(host);
       }
-      function runSync()
+      function runSendNotifications()
       {
-        runSyncMGDB(host);
+        runFnSendNotifications(host);
       }
       function uploadBanner()
       {
@@ -139,7 +139,7 @@
         <button type="button"  onclick="runCreateCentralGraph()"  value="Activar Función">CREATE CENTRAL GRAPH</button>
       <p>
       <p>
-        <button type="button"  onclick="runSync()"  value="Activar Función">Syn Marmotta-GraphDB</button>
+        <button type="button"  onclick="runSendNotifications()"  value="Activar Función">Send Notifications</button>
       <p>
 
       <div id="imgloading" style="visibility: hidden">

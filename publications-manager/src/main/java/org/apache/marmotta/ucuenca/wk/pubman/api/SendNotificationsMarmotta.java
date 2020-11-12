@@ -9,7 +9,7 @@ package org.apache.marmotta.ucuenca.wk.pubman.api;
  *
  * @author cedia
  */
-public interface SyncGraphDBMarmotta {
+public interface SendNotificationsMarmotta {
 
     public void init();
 

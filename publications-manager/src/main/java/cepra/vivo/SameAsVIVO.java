@@ -48,9 +48,10 @@ public class SameAsVIVO {
             + "PREFIX schema: <http://schema.org/>\n"
             + "select distinct ?o ?p ?p_n ?o_n ?first ?last {\n"
             + "    graph <https://redi.cedia.edu.ec/context/redi> {\n"
-            + "        ?p foaf:img [] .\n"
+            //+ "        ?p foaf:img [] .\n"
             + "        ?p schema:memberOf ?o .\n"
             + "        ?o foaf:name ?o_n .\n"
+            + "?o <http://ucuenca.edu.ec/ontology#memberOf> <https://redi.cedia.edu.ec/> .\n"
             + "        {\n"
             + "            ?p foaf:name ?p_n .\n"
             + "        } union {\n"
@@ -64,7 +65,7 @@ public class SameAsVIVO {
             + "PREFIX dct: <http://purl.org/dc/terms/>\n"
             + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
             + "select distinct ?o ?p ?o_n ?p_n {\n"
-            + "	graph <https://redi.cedia.edu.ec/context/cepra> {\n"
+            + "	graph <https://redi.cedia.edu.ec/context/fix_vivo> {\n"
             + "        ?r a <http://vivoweb.org/ontology/core#FacultyPosition>.\n"
             + "        ?r <http://vivoweb.org/ontology/core#relates> ?p .\n"
             + "        ?r <http://vivoweb.org/ontology/core#relates> ?o .\n"
@@ -92,7 +93,7 @@ public class SameAsVIVO {
                   connection.begin();
                   connection.add(ValueFactoryImpl.getInstance().createURI(a.getKey()),
                           OWL.SAMEAS, ValueFactoryImpl.getInstance().createURI(b.getKey()),
-                          ValueFactoryImpl.getInstance().createURI("https://redi.cedia.edu.ec/context/vivo-cepra"));
+                          ValueFactoryImpl.getInstance().createURI("https://redi.cedia.edu.ec/context/vivo-cepra-fix"));
                   connection.commit();
                   connection.close();
                 }
@@ -116,6 +117,7 @@ public class SameAsVIVO {
     ConcurrentHashMap<String, String> additionalHttpHeaders = new ConcurrentHashMap<>();
     additionalHttpHeaders.put("Accept", "application/sparql-results+json,*/*;q=0.9");
     data.setAdditionalHttpHeaders(additionalHttpHeaders);
+    data.setUsernameAndPassword("rediclon", "5783b10a8f22$mznx");
     data.initialize();
 
     return data;
