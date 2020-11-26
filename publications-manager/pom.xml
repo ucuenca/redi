@@ -137,7 +137,11 @@
     </repositories>-->
 
     <dependencies>
-        
+        <dependency>
+          <groupId>org.freemarker</groupId>
+          <artifactId>freemarker</artifactId>
+          <version>2.3.30</version>
+        </dependency>
         <dependency>
             <groupId>com.konghq</groupId>
             <artifactId>unirest-java</artifactId>
@@ -384,6 +388,11 @@
             <artifactId>junit</artifactId>
             <groupId>junit</groupId>
             <version>4.11</version>
+        </dependency>
+        <dependency>
+          <groupId>org.simplejavamail</groupId>
+          <artifactId>simple-java-mail</artifactId>
+          <version>5.5.1</version>
         </dependency>
     </dependencies>
 </project>
