@@ -56,6 +56,8 @@ public interface MongoService {
   public List<Document> getCountries();
   
   public Document getProfileProject(String id);
+  
+  public Document getProfilePatent(String id);
 
   public String getStatisticsByInst(String id);
 
@@ -86,7 +88,7 @@ public interface MongoService {
     SPARQLS("sparqls"), AUTHORS("authors"), PUBLICATIONS("publications"), STATISTICS("statistics"), STATISTICS_INST("statistics_inst"),
     RELATEDAUTHORS("relatedauthors"), AUTHORS_DISCPLINE("authors_discipline"), AUTHORS_AREA("authors_area"),
     COUNTRIES("countries"), CLUSTERS("clusters"), CLUSTERSTOTALS("clusterstotals"), STATISTICS_AUTHOR("statistics_author"), PROFILE_AUTHOR("profile_author"), SESSIONS("sessions"), TRANSLATIONS("translations")
-    , PROJECTPROFILE("project_profile") , INSTBYPROJECT("instbyProjects") ,  DOCUMENTBYAREA("documentbyarea");
+    , PROJECTPROFILE("project_profile") , PATENTPROFILE("patent_profile") , INSTBYPROJECT("instbyProjects") ,  DOCUMENTBYAREA("documentbyarea");
 
     private final String value;
 

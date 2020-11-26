@@ -2347,6 +2347,32 @@ public class QueriesServiceImpl implements QueriesService {
                       "   } " +
                       "} group by ?title  ?sdate ?edate ";
   }
+  
+  @Override
+  public String getPatents () {
+   return PREFIXES + "select distinct ?uri \n" +
+                      "where { " +
+                      "    graph <" + con.getCentralGraph() + "> {\n" +
+                      "        ?uri a <http://www.eurocris.org/ontologies/cerif/1.3/Patent>  \n" +
+                      "   }" +
+                      "}";
+  }
+  
+  @Override
+  public String getPatentInfo (String uri) {
+   return PREFIXES + "select distinct ?title ?pnumber ?abstract ?rdate ?adate ?edate  (GROUP_CONCAT(DISTINCT STR(?subject); separator='|') as ?subjects) " +
+                      "where {\n" +
+                      "    graph <" + con.getCentralGraph() + "> {\n" +
+                      "<"+uri+"> dct:title ?title .\n" +
+                      "<"+uri+"> cerif:patentNumber ?pnumber . " +
+                      "OPTIONAL {  <"+uri+"> dct:subject ?subject   }\n" +
+                      "OPTIONAL {  <"+uri+"> cerif:abstract ?abstract   }\n" +
+                      "OPTIONAL {  <"+uri+"> cerif:registrationDate ?rdate   }\n" +
+                      "OPTIONAL {  <"+uri+"> cerif:approvalDate ?adate .   }\n" +
+                      "OPTIONAL {  <"+uri+"> cerif:endDate ?edate .   }\n" +
+                      "   } " +
+                      "} group by ?title  ?pnumber ?abstract ?rdate ?adate ?edate";
+  }
 
   @Override
   public String getAuthorsbyArea(String uri) {

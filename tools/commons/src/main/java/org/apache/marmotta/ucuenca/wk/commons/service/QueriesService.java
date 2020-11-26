@@ -454,6 +454,10 @@ public interface QueriesService {
     
     String getProjectInfo (String uri);
     
+    String getPatents ();
+    
+    String getPatentInfo (String uri) ;
+    
     // Areas
     
     String getAuthorsbyArea(String uri);

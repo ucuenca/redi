@@ -40,6 +40,8 @@ public interface PopulateMongo {
   public void clusters();
   
   public void ProjectProfile();
+  
+  public void PatentProfile();
 
   /**
    * Information of authors by area.

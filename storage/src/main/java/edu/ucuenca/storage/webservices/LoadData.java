@@ -129,9 +129,24 @@ public class LoadData {
       loadService.instbyProj();
     } catch (Exception e) {
       log.error("Cannot load projects into Mongo DB", e);
-      throw new FailMongoConnectionException(String.format("Cannot load clusters into Mongo DB"), e);
+      throw new FailMongoConnectionException(String.format("Cannot load projects into Mongo DB"), e);
     }
     return Response.ok().entity("Projects loaded successfully").build();
+  }
+  
+  
+   @POST
+  @Path("/patents")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getPatent () throws FailMongoConnectionException {
+    try {
+      loadService.PatentProfile();
+
+    } catch (Exception e) {
+      log.error("Cannot load patents into Mongo DB", e);
+      throw new FailMongoConnectionException(String.format("Cannot load patents into Mongo DB"), e);
+    }
+    return Response.ok().entity("Patents loaded successfully").build();
   }
   
   

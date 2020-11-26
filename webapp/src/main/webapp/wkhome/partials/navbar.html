@@ -51,7 +51,7 @@
             
           <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span src="" alt="INICIO" class="" >{{'INVESTIGADORES'| translate | uppercase}}</span>&nbsp;&nbsp;&nbsp;<span class="caret" ></span></a>
           <ul class="dropdown-menu">
-            <li ng-class="{ active: isActive('/author') } dropdown"><a href="#/total/authors"> <div class="bordermenu">  LISTAR INVESTIGADORES </div> </a></li>
+            <li ng-class="{ active: isActive('/author') } "><a href="#/total/authors"> <div class="bordermenu">  LISTAR INVESTIGADORES </div> </a></li>
             <li ng-class="{ active: isActive('/tags/cloud') }"><a href="#/tags/cloud">{{'Clustering by Research Area'| translate | uppercase  }}</a></li>
             <li ng-class="{ active: isActive('/group/area') }"><a href="#/group/area">{{'Group By Area'| translate | uppercase  }}</a></li>  
           </ul>
@@ -76,7 +76,7 @@
             
           <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span src="" alt="INICIO" class="img-thumbnail icon-small" >{{'PROYECTOS'| translate | uppercase}}</span>&nbsp;<span class="caret" ></span></a>
           <ul class="dropdown-menu">
-            <li ng-class="{ active: isActive('/author') } dropdown"><a href="#/total/authors"> <div class="bordermenu">  LISTAR PROYECTOS </div> </a></li>
+            <li ng-class="{ active: isActive('/project') }"><a href="#/total/projects"> <div class="bordermenu">  LISTAR PROYECTOS </div> </a></li>
             <li ng-class="{ active: isActive('/project/collaborationProject') }"><a href="#/project/collaborationProject"> COLABORACIÓN INSTERINSTITUCIONAL (PROYECTOS)  </a></li>
           </ul>
         </li>
@@ -86,6 +86,8 @@
         <li class="navdiv" > | </li> --> 
         <li class="navdiv" > | </li>
         <li ng-class="{ active: isActive('/organization') }"><a href="#/total/organizations"> <div class="bordermenu">  ORGANIZACIONES </div> </a></li>
+        <li class="navdiv" > | </li>
+        <li ng-class="{ active: isActive('/patents') }"><a href="#/total/patents"> <div class="bordermenu"> PATENTES  </div> </a></li>
         <li class="navdiv" > | </li>
         <li ng-class="{ active: isActive('/help') }"><a href="#/info/help"> <div class="bordermenu">  {{'HELP'| translate | uppercase }}</div> </a></li>
          <li class="navdiv" > | </li>

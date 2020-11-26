@@ -36,6 +36,12 @@ wkhomeControllers.controller('listEntitiesController', ['$scope', '$window', 'gl
             queryurl = 'total/projects/q=(LET)&fl=*&rows=10&wt=json';
             facets = [{'ent': 'org' , 'label' : 'organization'},{'ent' : 'subjects' , 'label' : 'palabras clave'}]
             break;
+            case 'patents':
+            $scope.core = globalData.patentsCore;
+            defaulturl = 'total/patents/q=title:LET*&fl=*&rows=10&wt=json&sort=title+asc';
+            queryurl = 'total/patents/q=(LET)&fl=*&rows=10&wt=json';
+            break;
+
             case 'organizations':
             $scope.core = globalData.organizationsCore;
             defaulturl = 'total/organizations/q=name_abbr:LET*&fl=*&rows=10&wt=json&sort=name_abbr+asc';

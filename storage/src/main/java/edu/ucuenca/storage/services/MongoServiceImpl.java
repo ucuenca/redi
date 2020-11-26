@@ -87,6 +87,7 @@ public class MongoServiceImpl implements MongoService {
     private MongoCollection<Document> authors_val;
     private MongoCollection<Document> projects;
     private MongoCollection<Document> instbyProject;
+    private MongoCollection<Document> patent;
 
     private MongoCollection<Document> sessions;
 
@@ -118,6 +119,7 @@ public class MongoServiceImpl implements MongoService {
         sessions = db.getCollection(Collection.SESSIONS.getValue());
         instbyProject = db.getCollection(Collection.INSTBYPROJECT.getValue());
         documentbyarea = db.getCollection(Collection.DOCUMENTBYAREA.getValue()); 
+        patent = db.getCollection(Collection.PATENTPROFILE.getValue());
         
     }
 
@@ -188,6 +190,12 @@ public class MongoServiceImpl implements MongoService {
     @Override
     public Document getProfileProject(String id) {
         return projects.find(eq("_id", id)).first();
+
+    }
+    
+    @Override
+    public Document getProfilePatent(String id) {
+        return patent.find(eq("_id", id)).first();
 
     }
     

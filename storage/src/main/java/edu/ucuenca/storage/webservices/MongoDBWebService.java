@@ -164,6 +164,20 @@ public class MongoDBWebService {
     
     
       @GET
+    @Path("/patent")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPatent (@QueryParam("uri") String uri) throws FailMongoConnectionException {
+        Document response;
+        try {
+            response = mongoService.getProfilePatent(uri);
+        } catch (Exception e) {
+            throw new FailMongoConnectionException("Cannot retrieve patents", e);
+        }
+        return Response.ok().entity(response).build();
+    }
+    
+    
+      @GET
     @Path("/instbyproject")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getcolbyproject() throws FailMongoConnectionException {

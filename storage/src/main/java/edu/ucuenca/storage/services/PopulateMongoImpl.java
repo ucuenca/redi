@@ -689,6 +689,36 @@ public class PopulateMongoImpl implements PopulateMongo {
   }
   
   
+  @Override
+  public void PatentProfile() {
+    Task task = taskManagerService.createSubTask("Caching patents", "Mongo Service");
+    try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
+      MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
+
+      // Delete and create collection
+      MongoCollection<Document> collection = db.getCollection(MongoService.Collection.PATENTPROFILE.getValue());
+      collection.drop();
+      try {
+        List<Map<String, Value>> patents = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getPatents());
+        task.updateTotalSteps(patents.size());
+        for (int i = 0; i < patents.size(); i++) {
+          String uri = patents.get(i).get("uri").stringValue();
+          String pat = getPatentInfo( uri);
+          Document parse = Document.parse(pat);
+          parse.append("_id", uri);
+          collection.insertOne(parse);
+
+          task.updateDetailMessage("Patent", uri);
+          task.updateProgress(i + 1);
+        }
+      } catch (MarmottaException ex) {
+        java.util.logging.Logger.getLogger(PopulateMongoImpl.class.getName()).log(Level.SEVERE, null, ex);
+      } finally {
+        taskManagerService.endTask(task);
+      }
+    }
+  }
+  
   public String getProfileInfo(String uri) throws MarmottaException {
     List<Map<String, Value>> proy = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getProjectInfo(uri));
     JSONObject main = new JSONObject();
@@ -708,6 +738,30 @@ public class PopulateMongoImpl implements PopulateMongo {
     main.put("data", obj);
     return main.toJSONString();
   }
+  
+  
+  public String getPatentInfo(String uri) throws MarmottaException {
+    List<Map<String, Value>> patent = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getPatentInfo(uri));
+    JSONObject main = new JSONObject();
+    //JSONArray array = new JSONArray();
+    JSONObject obj = new JSONObject();
+    for (Map<String, Value> a : patent) {
+      obj.put("uri",  uri );
+      obj.put("title", a.get("title").stringValue());
+      obj.put("identifier",  a.get("pnumber") );
+      obj.put("subject", validateexist (a.get("subject")));
+      obj.put("abstract", validateexist (a.get("abstract")));
+      obj.put("rdate", validateexist (a.get("rdate")));
+      obj.put("adate", validateexist (a.get("adate")));
+      obj.put("edate", validateexist (a.get("edate")));
+      //obj.put("members", validateexist(a.get("orgs")));
+      
+      
+    }
+    main.put("data", obj);
+    return main.toJSONString();
+  }
+  
   
     public String validateexist ( Value val){
     
