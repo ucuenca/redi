@@ -64,7 +64,11 @@
       }
       function runSendNotifications()
       {
-        runFnSendNotifications(host);
+        runFnSendNotifications(host, false);
+      }
+      function runSendInvitations()
+      {
+        runFnSendNotifications(host, true);
       }
       function uploadBanner()
       {
@@ -140,6 +144,9 @@
       <p>
       <p>
         <button type="button"  onclick="runSendNotifications()"  value="Activar Función">Send Notifications</button>
+      <p>
+      <p>
+        <button type="button"  onclick="runSendInvitations()"  value="Activar Función">Send Invitations</button>
       <p>
 
       <div id="imgloading" style="visibility: hidden">

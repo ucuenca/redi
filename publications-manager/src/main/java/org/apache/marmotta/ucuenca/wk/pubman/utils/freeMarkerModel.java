@@ -18,6 +18,48 @@ public class freeMarkerModel {
     return new notification(name, URI, newPublicationsURI, newPublicationsTitle);
   }
 
+  public researcherInvitation newResearcherInvitation(String name, String URI, List<String> emails) {
+    return new researcherInvitation(URI, name, emails);
+  }
+
+  public class researcherInvitation {
+
+    private String URI;
+    private String name;
+    private List<String> emails;
+
+    public researcherInvitation(String URI, String name, List<String> emails) {
+      this.URI = URI;
+      this.name = name;
+      this.emails = emails;
+    }
+
+    public String getURI() {
+      return URI;
+    }
+
+    public void setURI(String URI) {
+      this.URI = URI;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public void setName(String name) {
+      this.name = name;
+    }
+
+    public List<String> getEmails() {
+      return emails;
+    }
+
+    public void setEmails(List<String> emails) {
+      this.emails = emails;
+    }
+
+  }
+
   public class notification {
 
     public notification(String name, String URI, List<String> newPublicationsURI, List<String> newPublicationsTitle) {

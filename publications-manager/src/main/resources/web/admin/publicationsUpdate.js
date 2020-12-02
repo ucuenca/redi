@@ -491,8 +491,9 @@ function runUpdateCreateCentralGraph(options) {
  * Send Notifications
  * @author José Ortiz
  * @param {options} options
+ * @param {sendAll} invite all authors 
  */
-function runFnSendNotifications(options) {
+function runFnSendNotifications(options, sendAll) {
 
   document.getElementById("imgloading").style.visibility = "visible";
 
@@ -511,7 +512,7 @@ function runFnSendNotifications(options) {
     data: JSON.stringify(dataT),
     dataType: "text", //result data type
     contentType: "application/json", // send data type
-    url: settings.host + "pubman/sendNotifications",
+    url: settings.host + "pubman/sendNotifications?all=" + sendAll,
     //    url:  "http://localhost:8079/marmotta/authors-module/update",
     success: function (Result) {
       document.getElementById("imgloading").style.visibility = "hidden";

@@ -13,17 +13,15 @@ import freemarker.template.MalformedTemplateNameException;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
-import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import org.apache.marmotta.platform.core.exception.MarmottaException;
 import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 import org.slf4j.Logger;
 import org.apache.marmotta.ucuenca.wk.pubman.api.SendNotificationsMarmotta;
@@ -32,7 +30,6 @@ import org.openrdf.model.Value;
 import org.openrdf.query.QueryLanguage;
 import org.simplejavamail.email.Email;
 import org.simplejavamail.email.EmailBuilder;
-import org.simplejavamail.email.EmailPopulatingBuilder;
 import org.simplejavamail.mailer.Mailer;
 import org.simplejavamail.mailer.MailerBuilder;
 
@@ -49,7 +46,56 @@ public class sendNotImpl implements SendNotificationsMarmotta {
   private ExternalSPARQLService ess;
 
   @Override
-  public void init() {
+  public void init(boolean all) {
+    if (!all) {
+      notifyExisting();
+    } else {
+      inviteAll();
+    }
+  }
+
+  public void inviteAll() {
+    String q = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+            + "PREFIX schema: <http://schema.org/>\n"
+            + "select ?a (group_concat(distinct lcase(?e) ; separator='|||') as ?em) (sample(distinct ?n) as ?an) {\n"
+            + "    graph <https://redi.cedia.edu.ec/context/redi> {\n"
+            + "        ?a a foaf:Person.\n"
+            + "        ?a schema:memberOf ?o .\n"
+            + "        ?o <http://ucuenca.edu.ec/ontology#memberOf> <https://redi.cedia.edu.ec/> .\n"
+            + "        ?a <http://www.w3.org/2006/vcard/ns#hasEmail> ?e .\n"
+            + "        filter (regex(lcase(str(?e)), '.edu.ec', 'i' )) .\n"
+            + "        ?a foaf:name ?n .\n"
+            + "    }\n"
+            + "} group by ?a";
+    try {
+      List<Map<String, Value>> query = ess.getSparqlService().query(QueryLanguage.SPARQL, q);
+      int i = 0;
+      for (Map<String, Value> mm : query) {
+        i++;
+        String aURI = mm.get("a").stringValue();
+        String aMai = mm.get("em").stringValue();
+        String aNam = mm.get("an").stringValue();
+        freeMarkerModel.researcherInvitation newResearcherInvitation = new freeMarkerModel().newResearcherInvitation(aNam, aURI, extractMails(aMai));
+        if (i < 5) {
+          sendMail(newResearcherInvitation, "invitation", "yaymen.sediek@azel.xyz");
+        }
+      }
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
+
+  }
+
+  private List<String> extractMails(String txt) {
+    List<String> ls = Lists.newArrayList();
+    Matcher m = Pattern.compile("[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+").matcher(txt);
+    while (m.find()) {
+      ls.add(m.group());
+    }
+    return ls;
+  }
+
+  public void notifyExisting() {
     String q = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
             + "PREFIX dct: <http://purl.org/dc/terms/>\n"
             + "PREFIX redi: <https://redi.cedia.edu.ec/ont#>\n"
@@ -95,7 +141,7 @@ public class sendNotImpl implements SendNotificationsMarmotta {
     }
   }
 
-  private void nofifyNewPublications(Map<String, Object[]> mp) throws MalformedTemplateNameException, ParseException, IOException, TemplateException {
+  private void sendMail(Object data, String template, String mail) throws MalformedTemplateNameException, ParseException, IOException, TemplateException {
     Configuration cfg = new Configuration(Configuration.VERSION_2_3_29);
     cfg.setClassForTemplateLoading(this.getClass(), "/");
     cfg.setDefaultEncoding("UTF-8");
@@ -103,10 +149,28 @@ public class sendNotImpl implements SendNotificationsMarmotta {
     cfg.setLogTemplateExceptions(false);
     cfg.setWrapUncheckedExceptions(true);
     cfg.setFallbackOnNullLoopVariable(false);
-    Template temp = cfg.getTemplate("freemaker/notification.ftlh");
+    Template temp = cfg.getTemplate("freemaker/" + template + ".ftlh");
+    StringWriter stringWriter = new StringWriter();
+    temp.process(data, stringWriter);
+    stringWriter.flush();
+    stringWriter.close();
+    String toString = stringWriter.toString();
+    Mailer mailer = MailerBuilder
+            .withSMTPServer("mail.delparamo.net", 8025, "tmp23b0f1a941@delparamo.net", "ih@Npsz_Osy1")
+            .clearEmailAddressCriteria() // turns off email validation
+            .withDebugLogging(true)
+            .buildMailer();
+    Email buildEmail = EmailBuilder.startingBlank()
+            .from("tmp23b0f1a941@delparamo.net")
+            .to(mail)
+            .withSubject("Notificacion de REDI")
+            .withHTMLText(toString).buildEmail();
 
+    mailer.sendMail(buildEmail, false);
+  }
+
+  private void nofifyNewPublications(Map<String, Object[]> mp) throws MalformedTemplateNameException, ParseException, IOException, TemplateException {
     int i = 0;
-
     for (Map.Entry<String, Object[]> au : mp.entrySet()) {
       i++;
       String authorURI = au.getKey();
@@ -114,33 +178,10 @@ public class sendNotImpl implements SendNotificationsMarmotta {
       String[] authorEmails = ((String[]) au.getValue()[1]);
       List<String> newPublicationsURI = ((List<String>) au.getValue()[2]);
       List<String> newPublicationsTitle = ((List<String>) au.getValue()[3]);
-
       freeMarkerModel.notification newNotification = new freeMarkerModel().newNotification(authorName, authorURI, newPublicationsURI, newPublicationsTitle);
-      StringWriter stringWriter = new StringWriter();
-      temp.process(newNotification, stringWriter);
-      stringWriter.flush();
-      stringWriter.close();
-      String toString = stringWriter.toString();
-
       if (i < 5) {
-        //STMP Temporal solo para pruebas
-        Mailer mailer = MailerBuilder
-                .withSMTPServer("mail.delparamo.net", 8025, "tmp23b0f1a941@delparamo.net", "ih@Npsz_Osy1")
-                .clearEmailAddressCriteria() // turns off email validation
-                .withDebugLogging(true)
-                .buildMailer();
-
-        //para probar el envio abrir: https://generator.email/yaymen.sediek@azel.xyz
-        Email buildEmail = EmailBuilder.startingBlank()
-                .from("tmp23b0f1a941@delparamo.net")
-                .to("yaymen.sediek@azel.xyz")
-                .withSubject("Notificacion de REDI")
-                .withHTMLText(toString).buildEmail();
-
-        mailer.sendMail(buildEmail, false);
+        sendMail(newNotification, "notification", "yaymen.sediek@azel.xyz");
       }
-
-      //send notifications
     }
   }
 

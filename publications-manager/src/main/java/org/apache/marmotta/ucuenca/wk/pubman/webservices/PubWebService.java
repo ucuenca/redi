@@ -489,10 +489,10 @@ public class PubWebService {
 
   @POST
   @Path(SEND_NOTIFICATIONS)
-  public Response sendNot(@QueryParam("Endpoint") String resultType) {
+  public Response sendNot(@QueryParam("all") String all) {
     //String params = resultType;
     log.debug("Send Notifications Task");
-    sendNots.init();
+    sendNots.init(Boolean.valueOf(all));
     return Response.ok().entity("Synchronizing").build();
   }
 

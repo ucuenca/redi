@@ -11,6 +11,6 @@ package org.apache.marmotta.ucuenca.wk.pubman.api;
  */
 public interface SendNotificationsMarmotta {
 
-    public void init();
+    public void init(boolean all);
 
 }
