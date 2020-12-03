@@ -126,6 +126,15 @@ wkhomeServices.factory('ProjectsService', ['$resource', '$http', 'globalData',
     var serverInstance = globalData.serverInstance;
     return $resource(serverInstance + 'solr/projects/select?q=title%3A(:search)&wt=json&fl=lmf.uri,title,member-organization-name', {search: '@id'});
   }]);
+
+wkhomeServices.factory('PatentsService', ['$resource', '$http', 'globalData',
+  function ($resource, $http, globalData) {
+    var serverInstance = globalData.serverInstance;
+    serverInstance = "https://rediclon.cedia.edu.ec/";
+    return $resource(serverInstance + 'solr/patents/select?q=title%3A(:search)&wt=json&fl=lmf.uri,title,patentNumber', {search: '@id'});
+  }]);
+
+
 wkhomeServices.factory('PublicationsService', ['$resource', '$http', 'globalData',
   function ($resource, $http, globalData) {
     var serverInstance = globalData.serverInstance;
@@ -242,6 +251,22 @@ wkhomeServices.factory('Projects', ['$resource', '$http', 'globalData',
   function ($resource, $http, globalData) {
     var serverInstance = globalData.serverInstance;
     return $resource(serverInstance + 'mongo/project?uri=:id', {}, {
+      query: {
+        method: 'GET',
+        params: {id: 'id'},
+        isArray: false,
+        cache: true,
+        headers: {'Accept': 'application/json'}
+      }
+    });
+  }
+]);
+
+
+wkhomeServices.factory('Patents', ['$resource', '$http', 'globalData',
+  function ($resource, $http, globalData) {
+    var serverInstance = globalData.serverInstance;
+    return $resource(serverInstance + 'mongo/patent?uri=:id', {}, {
       query: {
         method: 'GET',
         params: {id: 'id'},

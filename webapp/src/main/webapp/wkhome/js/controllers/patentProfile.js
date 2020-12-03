@@ -1,5 +1,5 @@
-wkhomeControllers.controller('patentProfile', ['$scope', '$routeParams', '$window', 'globalData', 'sparqlQuery', 'Projects',
-  function($scope, $routeParams, $window, globalData, sparqlQuery, Projects) {
+wkhomeControllers.controller('patentProfile', ['$scope', '$routeParams', '$window', 'globalData', 'sparqlQuery', 'Patents',
+  function($scope, $routeParams, $window, globalData, sparqlQuery, Patents) {
     // Define a new author object
     $scope.patent = {};
     $scope.coauthors = {};
@@ -14,26 +14,40 @@ wkhomeControllers.controller('patentProfile', ['$scope', '$routeParams', '$windo
     console.log ("URL pantent");
     console.log(patent.uri);
 
-    $scope.patent = { "title" : "Patente de REDI" , "bio" : "REDI esta patentado por favor no copiar" };
+    /*$scope.patent = { "title" : "Patente de REDI" , "bio" : "REDI esta patentado por favor no copiar" };
     $scope.patent.members = [ "UCUENCA" , "CEDIA"];
     $scope.patent.funders = [ "Jose Segarra" , "Victor Saquicela", "EL jorgg" ];
     $scope.patent.starDate = "10-10-2021";
-    $scope.patent.img = '/wkhome/images/projectimg.png';
-    /*Patents.query({
+    $scope.patent.img = '/wkhome/images/projectimg.png';*/
+
+     Patents.query({
       id: patent.uri
     }, function(data) {
+      console.log ("Patentes");
+      console.log (data);
        var patentdata = data.data;
       //$scope.patent = data; 
-       patentdata.members = $.map( patentdata.members.split("|") , acro );
-       patentdata.funders = $.map(patentdata.funders.split("|"), acro );
-       patentdata.img = '/wkhome/images/patentimg.png';
+       //patentdata.members = $.map( patentdata.members.split("|") , acro );
+       //patentdata.funders = $.map(patentdata.funders.split("|"), acro );
+       patentdata.img = '/wkhome/images/projectimg.png';
 
-          
+       patentdata.subject = ['Linked data', 'Semantic Web', 'Repositorio'];
+       patentdata.funders  = ['CEDIA'] ;
 
       //$scope.patent = { "title" : patentdata.title , "bio" : "Este proyecto es chevere" };
       $scope.patent = patentdata;
+      console.log ("FUNCIONA")
       console.log (patentdata);
-    });*/
+    } , function (error){
+      console.log (error);
+    });
+
+    function acro ( uri ) {
+      console.log (uri);
+
+      return uri.slice(uri.lastIndexOf("/")+1).replace('university_university','').replace('_',' ');
+
+    }
 
     function acro ( uri ) {
       console.log (uri);
@@ -160,7 +174,7 @@ wkhomeControllers.controller('patentProfile', ['$scope', '$routeParams', '$windo
       '      } WHERE  {\n' +
       '        SELECT ?person (MAX(str(?name_)) as ?name) (MAX(str(?img_)) as ?imgm) (IRI (?imgm) as ?img)\n' +
       '        WHERE { GRAPH <'+globalData.centralGraph +'> {\n' +
-      '          <'+patent.uri+'> <https://www.openaire.eu/cerif-profile/1.1/linksToPerson> ?person.\n' +
+      '          <'+patent.uri+'> <http://www.eurocris.org/ontologies/cerif/1.3/linkToPerson> ?person.\n' +
       '          ?person foaf:name ?name_  .\n' +
       '           OPTIONAL{?person  foaf:img ?img_.}\n' +
       '         \n' +

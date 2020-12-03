@@ -749,7 +749,7 @@ public class PopulateMongoImpl implements PopulateMongo {
       obj.put("uri",  uri );
       obj.put("title", a.get("title").stringValue());
       obj.put("identifier",  a.get("pnumber") );
-      obj.put("subject", validateexist (a.get("subject")));
+      obj.put("subject", validateexist (a.get("subjects")));
       obj.put("abstract", validateexist (a.get("abstract")));
       obj.put("rdate", validateexist (a.get("rdate")));
       obj.put("adate", validateexist (a.get("adate")));

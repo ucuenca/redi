@@ -1,5 +1,5 @@
-wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window', 'globalData', 'sparqlQuery', 'searchData', 'searchQueryService', '$location', 'AuthorsService', 'KeywordsService', 'PublicationsService', 'ProjectsService', 'searchTextResultsService',
-    function ($routeParams, $scope, $window, globalData, sparqlQuery, searchData, searchQueryService, $location, AuthorsService, KeywordsService, PublicationsService, ProjectsService, searchTextResultsService) {
+wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window', 'globalData', 'sparqlQuery', 'searchData', 'searchQueryService', '$location', 'AuthorsService', 'KeywordsService', 'PublicationsService', 'ProjectsService' ,'PatentsService', 'searchTextResultsService',
+    function ($routeParams, $scope, $window, globalData, sparqlQuery, searchData, searchQueryService, $location, AuthorsService, KeywordsService, PublicationsService, ProjectsService, PatentsService ,searchTextResultsService  ) {
         String.format = function () {
             // The string containing the format items (e.g. "{0}")
             // will and always has to be the first argument.
@@ -24,7 +24,9 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
             } else if (this.value == 'publications') {
                 $('#txtSearch').attr("placeholder", "Publication's keywords ...");
             } else if (this.value == 'projects') {
-                $('#txtSearch').attr("placeholder", "Publication's keywords ...");
+                $('#txtSearch').attr("placeholder", "Project title's words ...");
+            } else if (this.value == 'patents') {
+                $('#txtSearch').attr("placeholder", "Patent title's words ...");
             }
         });
 
@@ -173,6 +175,63 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
             });
         }
 
+        function searchPatents(searchTextVar, chain) {
+            if (!chain) {
+                waitingDialog.show();
+            }
+            PatentsService.get({
+                search: searchTextVar
+            }, function (result) {
+                if (!chain) {
+                    waitingDialog.hide();
+                }
+                var patents = result.response.docs;
+                if (patents.length > 1) {
+                    if (chain) {
+                        waitingDialog.hide();
+                    }
+                    var path = "/patent/profile/";
+                    var candidates = _.map(patents, function (author) {
+                        var id = author["lmf.uri"];
+                        var title = !Array.isArray(author.title) ? author.title : _.max(author.title, function (title) {
+                            return title.length;
+                        });
+                        var topics = _.chain(author['patentNumber'])
+                                .uniq()
+                                .first(10)
+                                .value()
+                                .join(", ");
+                        var candidate = new Candidate(id, title, topics, path);
+
+                        return candidate;
+                    });
+                    $scope.candidates = candidates;
+                    searchTextResultsService.saveData(candidates);
+                    $('#searchResults').modal('show');
+                } else if (patents.length === 1) {
+                    if (chain) {
+                        waitingDialog.hide();
+                    }
+                    var authorId = patents[0]["lmf.uri"];
+                    $window.location.hash = "/patent/profile/" + authorId;
+                } else if (patents.length === 0) {
+                    if (chain) {
+                        searchPublications(searchTextVar, true);
+                    } else {
+                        if (chain) {
+                            waitingDialog.hide();
+                        }
+                        alert('No hay resultados ...');
+                    }
+                }
+            } , function (error){
+                if (!chain) {
+                waitingDialog.hide();
+                alert("Problemas con los datos");
+                }
+            });
+        }
+
 
 
         function searchOrganization(searchTextVar, chain) {
@@ -228,6 +287,8 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
                         searchProjects(searchTextVar, false);
                     } else if (typeSearch == 'publications') {
                         searchPublications(searchTextVar, false);
+                    } else if (typeSearch == 'patents') {
+                        searchPatents(searchTextVar, false);
                     }
                 } else {
                     waitingDialog.show();

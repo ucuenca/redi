@@ -11,11 +11,11 @@
         <h4 id="NameAuthorProfile">{{ngModel.title}}   </h4>
       </li>
       <li class="autprofilem2" > <a ng-repeat="org in ngModel.orgs"  target="_blank" href="/#/info/statisticsbyInst/{{org.org}}"> {{ org.orgName }}  </a> </li>
-      <li class="autprofilem2" > <a ng-show="ngModel.orcid" href="https://orcid.org/{{ngModel.orcid}}"><img width="17" src="wkhome/images/orcid_icon.png"> ORCID: {{ngModel.orcid}} </a> </li>
+      <li class="autprofilem2" > <a ng-show="ngModel.identifier" href="https://orcid.org/{{ngModel.identifier}}"><img width="17" src="wkhome/images/orcid_icon.png"> Patent Number: {{ngModel.identifier}} </a> </li>
       <li> <div share-square="true" share-links="Facebook, Twitter, LinkedIn" share-title="Patente - {{ngModel.title}} "> Compartir perfil en: </div> </li>
       <li> 
         <div class="bioregion">
-          {{ngModel.bio}}
+          {{ngModel.abstract}}
         <span ng-repeat="email in ngModel.emails">{{email}} </span> 
         </div>
       </li>
@@ -32,9 +32,9 @@
   <div class="col-sm-4">
       <ul>
       <li class="head-list">
-        <font color=#243082> <strong> Organizaciones Participantes </strong> </font>
+        <font color=#243082> <strong> Temáticas </strong> </font>
       </li>
-      <span ng-repeat="org in ngModel.members"><li class="sublist">{{org | camelCase}} </li> </span>
+      <span ng-repeat="org in ngModel.subject"><li class="sublist">{{org | camelCase}} </li> </span>
     </ul>
   </div>
 
@@ -43,8 +43,9 @@
       <li class="head-list">
         <font color=#243082> <strong> Fechas relevantes </strong> </font>
       </li>
-      <li>  Inicio: {{ngModel.starDate}} </li>
-      <li>  Fin: {{ngModel.endDate}} </li>
+      <li>  Inicio: {{ngModel.rdate}} </li>
+      <li>  Aprobación: {{ngModel.adate}} </li>
+      <li>  Final : {{ngModel.edate}} </li>
     </ul>
   </div>
 

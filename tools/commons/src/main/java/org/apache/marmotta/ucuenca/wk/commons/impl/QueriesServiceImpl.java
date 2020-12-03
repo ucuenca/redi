@@ -42,7 +42,8 @@ public class QueriesServiceImpl implements QueriesService {
           + " PREFIX schema: <http://schema.org/> "
           + " PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> "
           + " PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
-          + " PREFIX cerif: <https://www.openaire.eu/cerif-profile/1.1/>";
+          + " PREFIX cerif: <https://www.openaire.eu/cerif-profile/1.1/>"
+          + " PREFIX cerif3: <http://www.eurocris.org/ontologies/cerif/1.3/>";
 
   private final static String OWLSAMEAS = "<http://www.w3.org/2002/07/owl#sameAs>";
 
@@ -2364,12 +2365,12 @@ public class QueriesServiceImpl implements QueriesService {
                       "where {\n" +
                       "    graph <" + con.getCentralGraph() + "> {\n" +
                       "<"+uri+"> dct:title ?title .\n" +
-                      "<"+uri+"> cerif:patentNumber ?pnumber . " +
+                      "<"+uri+"> cerif3:patentNumber ?pnumber . " +
                       "OPTIONAL {  <"+uri+"> dct:subject ?subject   }\n" +
-                      "OPTIONAL {  <"+uri+"> cerif:abstract ?abstract   }\n" +
-                      "OPTIONAL {  <"+uri+"> cerif:registrationDate ?rdate   }\n" +
-                      "OPTIONAL {  <"+uri+"> cerif:approvalDate ?adate .   }\n" +
-                      "OPTIONAL {  <"+uri+"> cerif:endDate ?edate .   }\n" +
+                      "OPTIONAL {  <"+uri+"> dct:abstract ?abstract   }\n" +
+                      "OPTIONAL {  <"+uri+"> cerif3:registrationDate ?rdate   }\n" +
+                      "OPTIONAL {  <"+uri+"> cerif3:approvalDate ?adate .   }\n" +
+                      "OPTIONAL {  <"+uri+"> cerif3:endDate ?edate .   }\n" +
                       "   } " +
                       "} group by ?title  ?pnumber ?abstract ?rdate ?adate ?edate";
   }
