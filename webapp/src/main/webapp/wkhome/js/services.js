@@ -124,14 +124,14 @@ wkhomeServices.factory('AuthorsService', ['$resource', '$http', 'globalData',
 wkhomeServices.factory('ProjectsService', ['$resource', '$http', 'globalData',
   function ($resource, $http, globalData) {
     var serverInstance = globalData.serverInstance;
-    return $resource(serverInstance + 'solr/projects/select?q=title%3A(:search)&wt=json&fl=lmf.uri,title,member-organization-name', {search: '@id'});
+    return $resource(serverInstance + 'solr/projects/select?q=":search"&wt=json&fl=lmf.uri,title,member-organization-name', {search: '@id'});
   }]);
 
 wkhomeServices.factory('PatentsService', ['$resource', '$http', 'globalData',
   function ($resource, $http, globalData) {
     var serverInstance = globalData.serverInstance;
     serverInstance = "https://rediclon.cedia.edu.ec/";
-    return $resource(serverInstance + 'solr/patents/select?q=title%3A(:search)&wt=json&fl=lmf.uri,title,patentNumber', {search: '@id'});
+    return $resource(serverInstance + 'solr/patents/select?q=":search"&wt=json&fl=lmf.uri,title,patentNumber,inventor-researcher-name', {search: '@id'});
   }]);
 
 

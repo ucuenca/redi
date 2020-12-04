@@ -196,7 +196,7 @@ wkhomeControllers.controller('searchText', ['$routeParams', '$scope', '$window',
                         var title = !Array.isArray(author.title) ? author.title : _.max(author.title, function (title) {
                             return title.length;
                         });
-                        var topics = _.chain(author['patentNumber'])
+                        var topics = _.chain(author['inventor-researcher-name'])
                                 .uniq()
                                 .first(10)
                                 .value()

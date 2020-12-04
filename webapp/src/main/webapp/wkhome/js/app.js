@@ -51,11 +51,11 @@ wkhomeApp.service('globalData', ['$window','cookies', function ($window, cookies
     this.latindexGraph = baseURL + "context/latindex";
     this.translateData = null;
     //this.publicationsCore = this.serverInstance + 'solr/publications';
-    this.publicationsCore = 'https://rediclon.cedia.edu.ec/solr/publications';
-    this.authorsCore = 'https://rediclon.cedia.edu.ec/solr/authors';
-    this.projectsCore = 'https://rediclon.cedia.edu.ec/solr/projects';
-    this.organizationsCore = 'https://rediclon.cedia.edu.ec/solr/organizations';
-    this.patentsCore = 'https://rediclon.cedia.edu.ec/solr/patents';
+    this.publicationsCore = this.serverInstance +'/solr/publications';
+    this.authorsCore = this.serverInstance +'/solr/authors';
+    this.projectsCore = this.serverInstance+'/solr/projects';
+    this.organizationsCore = this.serverInstance +'/solr/organizations';
+    this.patentsCore = this.serverInstance+'/solr/patents';
 
     this.PREFIX = 'PREFIX bibo: <http://purl.org/ontology/bibo/>'
             + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>  '
