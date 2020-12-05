@@ -41,7 +41,11 @@ wkhomeControllers.controller('listEntitiesController', ['$scope', '$window', 'gl
             defaulturl = 'total/patents/q=title:LET*&fl=*&rows=10&wt=json&sort=title+asc';
             queryurl = 'total/patents/q=(LET)&fl=*&rows=10&wt=json';
             break;
-
+            case 'datasets':
+            $scope.core = globalData.datasetsCore;
+            defaulturl = 'total/datasets/q=title:LET*&fl=*&rows=10&wt=json&sort=title+asc';
+            queryurl = 'total/datasets/q=(LET)&fl=*&rows=10&wt=json';
+            break;
             case 'organizations':
             $scope.core = globalData.organizationsCore;
             defaulturl = 'total/organizations/q=name_abbr:LET*&fl=*&rows=10&wt=json&sort=name_abbr+asc';
@@ -141,6 +145,10 @@ wkhomeControllers.controller('listEntitiesController', ['$scope', '$window', 'gl
             }else if (typent === 'patents') {
 
                 $window.location.hash = "/patent/profile/"+puburi;
+
+            }else if (typent === 'datasets') {
+
+                $window.location.hash = "/dataset/profile/"+puburi;
 
             }else if (typent === 'organizations') {
 

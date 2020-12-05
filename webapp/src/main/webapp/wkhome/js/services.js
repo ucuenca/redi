@@ -130,10 +130,16 @@ wkhomeServices.factory('ProjectsService', ['$resource', '$http', 'globalData',
 wkhomeServices.factory('PatentsService', ['$resource', '$http', 'globalData',
   function ($resource, $http, globalData) {
     var serverInstance = globalData.serverInstance;
-    serverInstance = "https://rediclon.cedia.edu.ec/";
+    //serverInstance = "https://rediclon.cedia.edu.ec/";
     return $resource(serverInstance + 'solr/patents/select?q=":search"&wt=json&fl=lmf.uri,title,patentNumber,inventor-researcher-name', {search: '@id'});
   }]);
 
+wkhomeServices.factory('DatasetsService', ['$resource', '$http', 'globalData',
+  function ($resource, $http, globalData) {
+    var serverInstance = globalData.serverInstance;
+    //serverInstance = "https://rediclon.cedia.edu.ec/";
+    return $resource(serverInstance + 'solr/datasets/select?q=(:search)&wt=json&fl=lmf.uri,title,author-name', {search: '@id'});
+  }]);
 
 wkhomeServices.factory('PublicationsService', ['$resource', '$http', 'globalData',
   function ($resource, $http, globalData) {
@@ -267,6 +273,21 @@ wkhomeServices.factory('Patents', ['$resource', '$http', 'globalData',
   function ($resource, $http, globalData) {
     var serverInstance = globalData.serverInstance;
     return $resource(serverInstance + 'mongo/patent?uri=:id', {}, {
+      query: {
+        method: 'GET',
+        params: {id: 'id'},
+        isArray: false,
+        cache: true,
+        headers: {'Accept': 'application/json'}
+      }
+    });
+  }
+]);
+
+wkhomeServices.factory('Datasets', ['$resource', '$http', 'globalData',
+  function ($resource, $http, globalData) {
+    var serverInstance = globalData.serverInstance;
+    return $resource(serverInstance + 'mongo/dataset?uri=:id', {}, {
       query: {
         method: 'GET',
         params: {id: 'id'},

@@ -51,11 +51,12 @@ wkhomeApp.service('globalData', ['$window','cookies', function ($window, cookies
     this.latindexGraph = baseURL + "context/latindex";
     this.translateData = null;
     //this.publicationsCore = this.serverInstance + 'solr/publications';
-    this.publicationsCore = this.serverInstance +'/solr/publications';
-    this.authorsCore = this.serverInstance +'/solr/authors';
-    this.projectsCore = this.serverInstance+'/solr/projects';
-    this.organizationsCore = this.serverInstance +'/solr/organizations';
-    this.patentsCore = this.serverInstance+'/solr/patents';
+    this.publicationsCore = this.serverInstance +'solr/publications';
+    this.authorsCore = this.serverInstance +'solr/authors';
+    this.projectsCore = this.serverInstance+'solr/projects';
+    this.organizationsCore = this.serverInstance +'solr/organizations';
+    this.patentsCore = this.serverInstance+'solr/patents';
+    this.datasetsCore = this.serverInstance+'solr/datasets';
 
     this.PREFIX = 'PREFIX bibo: <http://purl.org/ontology/bibo/>'
             + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>  '
@@ -182,6 +183,12 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                 when('/total/patents/:query*', {
                   templateUrl: 'wkhome/partials/patentsAll.html',
                 }).
+                when('/total/datasets', {
+                  templateUrl: 'wkhome/partials/datasetsAll.html',
+                }).
+                when('/total/datasets/:query*', {
+                  templateUrl: 'wkhome/partials/datasetsAll.html',
+                }).
                 when('/total/organizations', {
                   templateUrl: 'wkhome/partials/organizationsAll.html',
                 }).
@@ -207,6 +214,9 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                 }).
                 when('/patent/profile/:patent*', {
                   templateUrl: 'wkhome/partials/patentProfile.html',
+                 // controller: 'AuthorProfile'
+                }).when('/dataset/profile/:dataset*', {
+                  templateUrl: 'wkhome/partials/datasetProfile.html',
                  // controller: 'AuthorProfile'
                 }).
                  when('/project/collaborationProject', {
