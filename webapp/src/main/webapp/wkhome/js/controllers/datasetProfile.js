@@ -1,43 +1,36 @@
 wkhomeControllers.controller('datasetProfile', ['$scope', '$routeParams', '$window', 'globalData', 'sparqlQuery', 'Datasets',
-  function($scope, $routeParams, $window, globalData, sparqlQuery, Patents) {
+  function($scope, $routeParams, $window, globalData, sparqlQuery, Datasets) {
     // Define a new author object
-    $scope.patent = {};
+    $scope.dataset = {};
     $scope.coauthors = {};
 
     /*  $scope.coauthors  = [];*/
-    var patent = $scope.patent;
-    patent.uri = $routeParams.patent;
+    var dataset = $scope.dataset;
+    dataset.uri = $routeParams.dataset;
 
-    patent.encodedUri = encodeURIComponent(patent.uri);
-    //var newhost = $window.location.protocol + '//' + $window.location.hostname + ($window.location.port ? ':8080' : '') + '';
-    var profilevalUri = '/dataset/profileval/'+patent.uri;
-    console.log ("URL pantent");
-    console.log(patent.uri);
+    dataset.encodedUri = encodeURIComponent(dataset.uri);
+    var profilevalUri = '/dataset/profileval/'+dataset.uri;
+    console.log ("URL dataset");
+    console.log(dataset.uri);
 
-    /*$scope.patent = { "title" : "Patente de REDI" , "bio" : "REDI esta patentado por favor no copiar" };
-    $scope.patent.members = [ "UCUENCA" , "CEDIA"];
-    $scope.patent.funders = [ "Jose Segarra" , "Victor Saquicela", "EL jorgg" ];
-    $scope.patent.starDate = "10-10-2021";
-    $scope.patent.img = '/wkhome/images/projectimg.png';*/
 
-     Patents.query({
-      id: patent.uri
+    Datasets.get({
+      search: dataset.uri
     }, function(data) {
-      console.log ("Patentes");
-      console.log (data);
-       var patentdata = data.data;
-      //$scope.patent = data; 
-       //patentdata.members = $.map( patentdata.members.split("|") , acro );
-       //patentdata.funders = $.map(patentdata.funders.split("|"), acro );
+       data = data.response.docs[0];
+       var patentdata = {}
+       patentdata.title = data.title
+       patentdata.abstract = data.abstract
+       patentdata.subject = data.subjects
+       patentdata.doi = data.doi[0]
+       patentdata.date = data.date[0]
+       patentdata.doi = data.doi[0]
+       patentdata.url = data.url[0]
+       dataset.url = data.url[0]
        patentdata.img = '/wkhome/images/projectimg.png';
-
-       patentdata.subject = ['Linked data', 'Semantic Web', 'Repositorio'];
+//       patentdata.subject = ['Linked data', 'Semantic Web', 'Repositorio'];
        patentdata.funders  = ['CEDIA'] ;
-
-      //$scope.patent = { "title" : patentdata.title , "bio" : "Este proyecto es chevere" };
-      $scope.patent = patentdata;
-      console.log ("FUNCIONA")
-      console.log (patentdata);
+       $scope.dataset = patentdata;
     } , function (error){
       console.log (error);
     });
@@ -55,35 +48,6 @@ wkhomeControllers.controller('datasetProfile', ['$scope', '$routeParams', '$wind
       return uri.slice(uri.lastIndexOf("/")+1).replace('university_university','').replace('_',' ');
 
     }
-
-
-    /*Authors.query({
-      id: author.uri
-    }, function(data) {
-      
-      $scope.author = data;
-
-
-      for (var ki = 0; ki<data.orgs.length; ki++){
-          var las = data.orgs[ki].split('/');
-          data.orgs[ki] = {orgName:las[las.length-1], org:data.orgs[ki]};
-      }
-      
-      if ( data.bio && data.bio.length > 300 )  {
-        $scope.author.bio = data.bio.substring(0, 300)+" ...";
-      
-      }else if (data.bio == null || data.bio.length < 1){
-        $scope.author.bio = "Autor registrado en REDI ";
-
-      }
-
-      
-      var img = data.img == null ? "/wkhome/images/no_photo.jpg" : data.img;
-      $scope.author.img = img;
-      $scope.author.claimUri =  "https://orcid.org/oauth/authorize?client_id="+globalData.client_id+"&response_type=code&scope=/authenticate&redirect_uri="+globalData.callback+"&state="+ profilevalUri;
-    
-    });*/
-
     $scope.tree = function() {
       $window.location.hash = '/author/tree/' + patent.uri;
     };
@@ -101,7 +65,7 @@ wkhomeControllers.controller('datasetProfile', ['$scope', '$routeParams', '$wind
 
     $scope.publication = function() {
 
-      $window.location.hash = '/author/publications/q=project-uri:%22' + project.uri + '%22&fl=*&rows=10&wt=json/authorProfile/' + project.uri;
+      $window.open(dataset.url, '_blank');
     };
 
     $scope.clickonRelatedauthor = function(uri) {
@@ -174,7 +138,7 @@ wkhomeControllers.controller('datasetProfile', ['$scope', '$routeParams', '$wind
       '      } WHERE  {\n' +
       '        SELECT ?person (MAX(str(?name_)) as ?name) (MAX(str(?img_)) as ?imgm) (IRI (?imgm) as ?img)\n' +
       '        WHERE { GRAPH <'+globalData.centralGraph +'> {\n' +
-      '          <'+patent.uri+'> <http://www.eurocris.org/ontologies/cerif/1.3/linkToPerson> ?person.\n' +
+      '         ?person  foaf:publications <'+dataset.uri+'> .\n' +
       '          ?person foaf:name ?name_  .\n' +
       '           OPTIONAL{?person  foaf:img ?img_.}\n' +
       '         \n' +
@@ -186,7 +150,7 @@ wkhomeControllers.controller('datasetProfile', ['$scope', '$routeParams', '$wind
       // var relatedAuthosPublicationsQuery = String.format(getRelatedAuthorsByPublicationsQuery, author["foaf:name"], id);
       executeRelatedAuthors1(getRelatedAuthorsByPublicationsQuery, "coauthor-list");
     };
-    relatedAuthors(patent.uri);
+    relatedAuthors(dataset.uri);
 
 
 

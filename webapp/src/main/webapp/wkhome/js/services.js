@@ -287,15 +287,7 @@ wkhomeServices.factory('Patents', ['$resource', '$http', 'globalData',
 wkhomeServices.factory('Datasets', ['$resource', '$http', 'globalData',
   function ($resource, $http, globalData) {
     var serverInstance = globalData.serverInstance;
-    return $resource(serverInstance + 'mongo/dataset?uri=:id', {}, {
-      query: {
-        method: 'GET',
-        params: {id: 'id'},
-        isArray: false,
-        cache: true,
-        headers: {'Accept': 'application/json'}
-      }
-    });
+    return $resource(serverInstance + 'solr/datasets/select?q=lmf.uri:":search"&wt=json', {search: '@id'});
   }
 ]);
 
