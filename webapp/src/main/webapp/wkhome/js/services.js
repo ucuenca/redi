@@ -121,6 +121,16 @@ wkhomeServices.factory('AuthorsService', ['$resource', '$http', 'globalData',
     var serverInstance = globalData.serverInstance;
     return $resource(serverInstance + 'solr/authors/select?q=name%3A(:search)&fq=org%3A*&wt=json&fl=lmf.uri,name,topics', {search: '@id'});
   }]);
+
+
+wkhomeServices.factory('AuthorsServiceOrcid', ['$resource', '$http', 'globalData',
+  function ($resource, $http, globalData) {
+    var serverInstance = globalData.serverInstance;
+   // serverInstance = "https://rediclon.cedia.edu.ec/";
+    return $resource(serverInstance + 'solr/authors/select?q=orcid%3A(:search)&wt=json&fl=lmf.uri,name,topics,org', {search: '@id'});
+  }]);
+
+
 wkhomeServices.factory('ProjectsService', ['$resource', '$http', 'globalData',
   function ($resource, $http, globalData) {
     var serverInstance = globalData.serverInstance;
@@ -151,6 +161,15 @@ wkhomeServices.factory('KeywordsService', ['$resource', '$http', 'globalData',
     var serverInstance = globalData.serverInstance;
     return $resource(serverInstance + 'solr/keywords/select?q=":search"&fl=lmf.uri,keyword&wt=json&', {search: '@id'});
   }]);
+
+
+wkhomeServices.factory('OrganizationsService', ['$resource', '$http', 'globalData',
+  function ($resource, $http, globalData) {
+    var serverInstance = globalData.serverInstance;
+     //serverInstance = "https://rediclon.cedia.edu.ec/";
+    return $resource(serverInstance + 'solr/organizations/select?q=name_abbr%3A(:search)&wt=json', {search: '@id'});
+  }]);
+
 
 wkhomeServices.factory('RecomendService', ['$resource', '$http', 'globalData',
   function ($resource, $http, globalData) {
@@ -422,6 +441,26 @@ wkhomeServices.factory('getORCIDToken', ['$resource', '$http', 'globalData',
     });
   }
 ]);
+
+
+  wkhomeServices.factory('PatenteReg', ['$resource', '$http', 'globalData',
+    function ($resource, $http, globalData) {
+          $http.defaults.headers.common['content-type'] = 'application/json';
+       // $http.defaults.headers.common['Accept'] = 'application/json';
+        var transform = function (data) {
+            console.log ($.param(data));
+          
+            return $.param(data);
+        }
+        /* var identifier = function (id) {
+            console.log (id);
+            return $.param(id);
+        }*/
+        var serverInstance = globalData.serverInstance;
+        return $resource(serverInstance + 'authors-module/patentRegister', {}, {
+            querySrv: {method: 'POST', isArray: false,  transformRequest: transform ,   headers: {'Accept': 'application/json' , 'content-type': 'application/x-www-form-urlencoded ; charset=UTF-8'} }
+        });
+    }]);
 
 
 

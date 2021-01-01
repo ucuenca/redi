@@ -38,6 +38,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import org.apache.commons.io.IOUtils;
@@ -51,6 +52,8 @@ import org.apache.marmotta.ucuenca.wk.authors.api.OrganizationService;
 import org.apache.marmotta.ucuenca.wk.authors.api.UTPLAuthorService;
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.DaoException;
 import org.apache.marmotta.ucuenca.wk.authors.exceptions.UpdateException;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.repository.RepositoryException;
@@ -310,6 +313,57 @@ public class AuthorWebService {
         authorService.automaticNameDivision();
         return Response.ok().entity(output).build();
     }
+    
+    
+   /* @POST
+    @Path("/patentRegister")
+    @SuppressWarnings({"PMD.ExcessiveMethodLength", "PMD.AvoidDuplicateLiterals"})
+    public Response orgRegister(@QueryParam("data") String data) throws UpdateException, DaoException {
+        // String resultado = endpointService.addEndpoint("true", name, endpoint, "-", "-", "-", "-", "-", "-", "-");
+        // log.info(resultado);
+        // String result = authorService.extractOAI(name, endpoint);
+        //String result = organizationService.addOrganization(acro, namEn, namEs, alias, scopusId, coun, prov, city, lan, lon, type);
+        java.util.logging.Logger.getLogger(AuthorWebService.class.getName()).log(Level.INFO, null, data);
+        String result = "{'status' : 'ok'}";
+        return Response.ok().entity(result).build();
+
+    }*/
+    
+    
+  @POST
+  @Path("/patentRegister")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response patentRegister(@Context HttpServletRequest request) {
+    try {
+      //request.getParameterMap().get("profile");
+      String[] get = request.getParameterMap().get("data");
+      authorService.registerPatent(get[0]);
+ 
+     // System.out.print(get[0]); 
+      /*String[] getid = request.getParameterMap().get("id");
+      String[] getak = request.getParameterMap().get("atk");
+      String[] geturi = request.getParameterMap().get("uri");
+      String[] getprofile = request.getParameterMap().get("profile");
+      /* Iterator p = request.getParameterMap().values().iterator();
+             while (p.hasNext()){
+             Object a =  p.next();
+             System.out.print (a);
+             }*/
+      //pv.saveProfileData(get[0], getid[0], geturi[0], getprofile[0]);
+      String output = "{resp:ok}"; 
+
+      //ObjectMapper mapper = new ObjectMapper();
+      //JsonNode actualObj = mapper.readTree(output);
+
+      return Response.ok().entity(new JSONObject (output)).build();
+      //return  Response.status(Status.BAD_REQUEST).entity("Incorrect file format.").build();
+    } catch (JSONException ex) {
+        java.util.logging.Logger.getLogger(AuthorWebService.class.getName()).log(Level.SEVERE, null, ex);
+      }
+    
+    return Response.serverError().build();
+  }
+    
 
     @POST
     @Path(AUTHOR_SPLIT)

@@ -1,0 +1,141 @@
+<!-- <div ng-controller="PublicationsController">
+  <author-publications author="{{authorId}}" core="{{core}}">
+  </author-publications>
+</div> -->
+
+<div class="container" ng-controller="patentReg">
+
+    <br>
+    <h2> Registro de Patentes </h2>
+    <br>
+
+    <form class="patentreg" ng-submit="sendFormPantent()" name="patentreg" >
+   <div class="form-row">
+
+    <div class="form-group col-md-4">
+      <label for="inputEmail4">Mecanismo:</label>
+      <select class="form-control" ng-model="pmeca" >
+        <option value="Patente">Patente</option>
+        <option value="How_know">How know</option>
+        <option value="Diseños">Diseños</option>
+        <option value="Secretos">Secretos</option>
+        <option value="Modelos_de_utilidad">Modelos de utilidad</option>
+      </select>
+    </div>
+     <div class="form-group col-md-8">
+      <label for="inputEmail4">Enlace:</label>
+      <input type="text" class="form-control" id="titulo" placeholder="Enlace fuente" ng-model="plink">
+    </div>
+
+  </div> 
+
+  <div class="form-row">
+    <div class="form-group col-md-4">
+      <label for="inputEmail4">Código</label>
+      <input type="text" class="form-control" id="codigo" placeholder="Código de patente (Número)" ng-model="pcode" >
+    </div>
+    <div class="form-group col-md-8">
+      <label for="inputPassword4">Título</label>
+      <input type="text" class="form-control" id="titulo" placeholder="Título" ng-model="ptitle" >
+    </div>
+  </div>
+  <div class="form-group col-md-12">
+    <label for="inputAddress">Resumen</label>
+    <textarea  class="form-control" id="inputAddress" placeholder="Resumen de la patente" ng-model="pabstract" > </textarea> 
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-4">
+      <label for="inputCity">Registro</label>
+      <input class="form-control" type="date"  id="example-date-input" ng-model="preg" >
+    </div>
+    <div class="form-group col-md-4">
+      <label for="inputCity">Aprobación</label>
+      <input class="form-control" type="date"   id="example-date-input" ng-model="papro" >
+    </div>
+    <div class="form-group col-md-4">
+      <label for="inputCity">Expiración</label>
+      <input class="form-control" type="date"   id="example-date-input" ng-model="pexp" >
+    </div>
+
+  </div>
+
+  <hr>
+
+  <h4> Autores </h4>
+  <div class="newauthors"> 
+  <div  ng-repeat="aut in autores" class="form-row newauthor col-md-12">
+  <div class="form-group col-md-1" style= "width: 25px; margin-top: 30px;">
+  <span class="glyphicon glyphicon-search" ng-click="searchOrcid(aut.orcid , aut)"></span>
+  </div>
+  <div class="form-group col-md-2">
+      <label for="inputCity">Orcid</label>
+      <input class="form-control" type="text"  id="example-date-input" ng-model="aut.orcid">
+
+    </div>
+    <div class="form-group col-md-4">
+      <label for="inputCity">Nombre Completo</label>
+      <input class="form-control" type="text"   id="example-date-input" ng-model="aut.ncompleto"  placeholder="{{pholder}}" >
+    </div>
+    <div class="form-group col-md-3">
+      <label for="inputCity">Organización</label>
+      <input class="form-control" type="text"   id="example-date-input" ng-model="aut.org" >
+    </div>
+    <div class="form-group col-md-1">
+      <input type="button" class="ibtnDel btn btn-md btn-danger " style="margin-top: 40%;" value="Delete">
+    </div>
+
+
+  </div>
+   </div>
+  
+
+
+      <div class="col-md-12 text-center"> 
+                <input type="button" class="btn btn-lg btn-block " id="addrowauthor" value="Añadir Author" />
+      </div>
+
+    <hr>
+
+    <h4> Organizaciones </h4>
+
+    <div class="neworgs"> 
+  <div ng-repeat="org in organizaciones" class="form-row neworg col-md-12">
+  <div class="form-group col-md-1" style= "width: 25px; margin-top: 30px;">
+  <span class="glyphicon glyphicon-search" ng-click="searchOrg(org)"></span>
+  </div>  
+  <div class="form-group col-md-2">
+      <label for="inputCity">Siglas</label>
+      <input class="form-control" type="text"  id="example-date-input" ng-model="org.siglas"  ng-change="">
+    </div>
+    <div class="form-group col-md-4">
+      <label for="inputCity">Nombre</label>
+      <input class="form-control" type="text"   id="example-date-input" ng-model="org.nombre" placeholder="{{pholderorg}}">
+    </div>
+    <div class="form-group col-md-3">
+      <label for="inputCity">Página web</label>
+      <input class="form-control" type="text"   id="example-date-input" ng-model="org.pweb" >
+    </div>
+    <div class="form-group col-md-1">
+      <input type="button" class="btdelorg btn btn-md btn-danger " style="margin-top: 40%;" value="Delete">
+    </div>
+
+
+  </div>
+   </div>
+
+
+
+        
+     <div class="col-md-12 text-center"> 
+                <input type="button" class="btn btn-lg btn-block " id="addroworg" value="Añadir Organización" />
+      </div>
+
+   <div class="form-row text-center" >
+   <button  type="submit" class="btn btn-primary">Aceptar</button>
+   </div>
+</form>
+  
+
+
+</div>
+

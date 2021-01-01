@@ -754,7 +754,9 @@ public class PopulateMongoImpl implements PopulateMongo {
       obj.put("rdate", validateexist (a.get("rdate")));
       obj.put("adate", validateexist (a.get("adate")));
       obj.put("edate", validateexist (a.get("edate")));
-      //obj.put("members", validateexist(a.get("orgs")));
+      obj.put("link", validateexist(a.get("link")));
+      obj.put("name", validateexist(a.get("name")));
+      obj.put("lorgs", validateexist(a.get("lorgs")));
       
       
     }

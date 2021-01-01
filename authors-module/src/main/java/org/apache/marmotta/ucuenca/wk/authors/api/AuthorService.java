@@ -35,5 +35,10 @@ public interface AuthorService {
     void postProcessAffiliations(String... endpoints);
 
     void automaticNameDivision();
+    
+    void registerPatent (String data); 
 
+  
+
+  
 }

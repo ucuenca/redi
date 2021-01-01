@@ -250,6 +250,9 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                 when('/:lang/cloud/keywords', {
                     templateUrl: 'wkhome/partials/clusterKeywordsCloud.html',
                 }).
+                  when('/patent/register', {
+                    templateUrl: 'wkhome/partials/regpatent.html',
+                }).
                 otherwise({
                     redirectTo: '/'
                 })

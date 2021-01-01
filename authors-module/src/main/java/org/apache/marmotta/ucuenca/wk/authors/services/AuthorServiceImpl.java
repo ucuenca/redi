@@ -217,7 +217,8 @@ public class AuthorServiceImpl implements AuthorService {
 //                "http://www.w3.org/2002/07/owl#disjointWith", "http://rdaregistry.info",
 //                "http://www.w3.org/2000/01/rdf-schema#label", "http://purl.org");
     }
-
+       
+    @SuppressWarnings({"PMD.AvoidDuplicateLiterals"}) 
     private String extractAuthorsORCID(String l, String org, String end) {
         String rs = "";
         try {
@@ -950,6 +951,97 @@ public class AuthorServiceImpl implements AuthorService {
         }
 
         executeInsert(constantService.getAuthorsGraph(), uriArticle, DCTERMS.IS_PART_OF.toString(), url);
+
+    }
+    
+    
+    @Override
+    public void registerPatent (String data)  {
+      
+      try {
+        //JSONParser parser = new JSONParser();
+        JSONObject json = new JSONObject (data);
+        String pcode = (String) json.get("pcode");
+        String ptitle = (String) json.get("ptitle");
+        
+        String endpoint = generateTempEndpoint("REDCEDIA", "Manual", "/patent/register");
+        
+        if (pcode.isEmpty()) {
+         pcode = ptitle.hashCode()+"";
+        } 
+        
+        String patentURI = "http://REDI/Temporal/CEDIA/"+pcode;
+        String plink = (String) json.get("plink");
+        executeInsert(constantService.getAuthorsGraph(), patentURI, "http://www.eurocris.org/ontologies/cerif/1.3#link", plink);
+        executeInsert(constantService.getAuthorsGraph(), patentURI, "http://www.eurocris.org/ontologies/cerif/1.3#patentNumber", pcode); 
+        executeInsert(constantService.getAuthorsGraph(), patentURI, "http://purl.org/dc/terms/title", ptitle);
+        String pmeca = (String) json.get("pmeca");
+        executeInsert(constantService.getAuthorsGraph(), patentURI, "http://www.eurocris.org/ontologies/cerif/1.3#name", pmeca);
+        
+        String pabstract = (String) json.get("pabstract");
+        executeInsert(constantService.getAuthorsGraph(), patentURI, "http://purl.org/dc/terms/abstract", pabstract);
+
+        
+        String preg = (String) json.get("preg");
+        executeInsert(constantService.getAuthorsGraph(), patentURI, "http://www.eurocris.org/ontologies/cerif/1.3#registrationDate", preg);
+        String papro = (String) json.get("papro");
+        executeInsert(constantService.getAuthorsGraph(), patentURI, "http://www.eurocris.org/ontologies/cerif/1.3#approvalDate", papro);
+        String pexp = (String) json.get("pexp");
+        executeInsert(constantService.getAuthorsGraph(), patentURI, "http://www.eurocris.org/ontologies/cerif/1.3#endDate", pexp);
+        JSONArray  jautores = json.getJSONArray("autores");
+        JSONArray  jorgs = json.getJSONArray("organizaciones");
+        
+        for (int i = 0; i < jautores.length();  i++)
+        {  
+          
+          
+
+           JSONObject oautor = jautores.getJSONObject(i);
+           String orcid = oautor.getString("orcid");
+           String ncompleto = oautor.getString("ncompleto");
+           String org = oautor.getString("org");
+            if (orcid.isEmpty()) {
+              orcid = ncompleto.hashCode()+"";
+            }
+            
+          String authorUri = "http://REDI/Temporal/CEDIA/"+orcid;
+          executeInsert(constantService.getAuthorsGraph(), authorUri, RDF.TYPE.toString(), FOAF.PERSON.toString());
+          executeInsert(constantService.getAuthorsGraph(), authorUri, "http://purl.org/spar/scoro/hasORCID", orcid);
+          executeInsert(constantService.getAuthorsGraph(), authorUri, FOAF.NAME.toString(), ncompleto );
+          executeInsert(constantService.getAuthorsGraph(), authorUri, "http://schema.org/affiliation", org );
+          executeInsert(constantService.getAuthorsGraph(), patentURI , "http://www.eurocris.org/ontologies/cerif/1.3#linkToPerson", authorUri );
+          executeInsert(constantService.getAuthorsGraph(), authorUri , "http://purl.org/dc/terms/provenance", endpoint );
+          executeInsert(constantService.getAuthorsGraph(), authorUri , "http://www.eurocris.org/ontologies/cerif/1.3#linkToPatent",  patentURI  );
+        }
+        
+        
+         for (int j = 0 ; j < jorgs.length();   j++)
+        {
+           JSONObject oborg = jorgs.getJSONObject(j);
+           String siglas = oborg.getString("siglas");
+           //String nombre = oborg.getString("nombre");
+           //String pweb = oborg.getString("pweb");
+          // executeInsert(constantService.getAuthorsGraph(), patentURI, "http://www.eurocris.org/ontologies/cerif/1.3#linksToOrganisationUnit" , siglas );
+           executeInsert(constantService.getAuthorsGraph(), patentURI, "http://schema.org/affiliation", siglas );
+           //executeInsert(constantService.getAuthorsGraph(), patentURI, "https://www.openaire.eu/cerif-profile/1.1/linksToOrganisationUnit" , siglas );
+        
+        }
+         
+         
+          
+         executeInsert(constantService.getAuthorsGraph(), patentURI, RDF.TYPE.toString() , "http://www.eurocris.org/ontologies/cerif/1.3#Patent" );
+         
+        
+        
+      } catch ( JSONException ex) {
+        java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+      } catch (UpdateException ex) {
+        java.util.logging.Logger.getLogger(AuthorServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+      }
+
+
+
+
 
     }
 

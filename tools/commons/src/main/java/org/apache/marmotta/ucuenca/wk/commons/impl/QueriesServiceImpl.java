@@ -43,7 +43,7 @@ public class QueriesServiceImpl implements QueriesService {
           + " PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> "
           + " PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
           + " PREFIX cerif: <https://www.openaire.eu/cerif-profile/1.1/>"
-          + " PREFIX cerif3: <http://www.eurocris.org/ontologies/cerif/1.3/>";
+          + " PREFIX cerif3: <http://www.eurocris.org/ontologies/cerif/1.3#>";
 
   private final static String OWLSAMEAS = "<http://www.w3.org/2002/07/owl#sameAs>";
 
@@ -2361,7 +2361,7 @@ public class QueriesServiceImpl implements QueriesService {
   
   @Override
   public String getPatentInfo (String uri) {
-   return PREFIXES + "select distinct ?title ?pnumber ?abstract ?rdate ?adate ?edate  (GROUP_CONCAT(DISTINCT STR(?subject); separator='|') as ?subjects) " +
+   return PREFIXES + "select distinct ?title ?pnumber ?abstract ?rdate ?adate ?edate ?link ?name (GROUP_CONCAT(DISTINCT STR(?lorg); separator='|') as ?lorgs)  (GROUP_CONCAT(DISTINCT STR(?subject); separator='|') as ?subjects) " +
                       "where {\n" +
                       "    graph <" + con.getCentralGraph() + "> {\n" +
                       "<"+uri+"> dct:title ?title .\n" +
@@ -2371,9 +2371,12 @@ public class QueriesServiceImpl implements QueriesService {
                       "OPTIONAL {  <"+uri+"> cerif3:registrationDate ?rdate   }\n" +
                       "OPTIONAL {  <"+uri+"> cerif3:approvalDate ?adate .   }\n" +
                       "OPTIONAL {  <"+uri+"> cerif3:endDate ?edate .   }\n" +
+                      "OPTIONAL {  <"+uri+"> cerif3:link ?link .   }\n" +
+                      "OPTIONAL {  <"+uri+"> cerif3:name ?name .   }\n" +
+                      "OPTIONAL {  <"+uri+"> <http://schema.org/affiliation> ?lorg .   }\n" +
                       "   } " +
-                      "} group by ?title  ?pnumber ?abstract ?rdate ?adate ?edate";
-  }
+                      "} group by ?title  ?pnumber ?abstract ?rdate ?adate ?edate ?link ?name";
+  }  
 
   @Override
   public String getAuthorsbyArea(String uri) {
