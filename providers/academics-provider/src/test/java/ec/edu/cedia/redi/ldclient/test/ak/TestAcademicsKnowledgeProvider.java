@@ -24,6 +24,7 @@ import org.apache.marmotta.ldclient.test.provider.ProviderTestBase;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
+import org.openrdf.model.Model;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFFormat;
@@ -53,7 +54,7 @@ public class TestAcademicsKnowledgeProvider extends ProviderTestBase {
 
         String uri = "https://api.labs.cognitive.microsoft.com/academic/v1.0/evaluate?"
                 + "expr=And(Ty=%271%27,%20AuN=%27mauricio%20espinoza%27)&"
-                + "attributes=Id,AuN,DAuN,CC,ECC,E&"
+                + "attributes=Id,AuN,DAuN,CC,ECC,LKA.AfId,LKA.AfN&"
                 + "model=latest&"
                 + "subscription-key=" + apikey;
 

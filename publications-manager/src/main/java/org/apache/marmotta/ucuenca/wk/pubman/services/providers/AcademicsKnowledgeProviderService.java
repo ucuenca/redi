@@ -87,7 +87,7 @@ public class AcademicsKnowledgeProviderService extends AbstractProviderService {
         expression = expr.toString();
         URIBuilder builder = new URIBuilder("https://api.labs.cognitive.microsoft.com/academic/v1.0/evaluate");
         builder.setParameter("expr", expression);
-        builder.setParameter("attributes", "Id,AuN,DAuN,CC,ECC,E");
+        builder.setParameter("attributes", "Id,AuN,DAuN,CC,ECC,LKA.AfId,LKA.AfN");
         builder.setParameter("model", "latest");
         builder.setParameter("subscription-key", apiKey);
 
