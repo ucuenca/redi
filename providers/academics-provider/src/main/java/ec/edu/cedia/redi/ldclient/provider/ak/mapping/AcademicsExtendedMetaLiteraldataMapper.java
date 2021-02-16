@@ -58,7 +58,8 @@ public class AcademicsExtendedMetaLiteraldataMapper extends JsonPathValueMapper 
     public List<Value> map(String resourceUri, String selectedValue, ValueFactory factory) {
         Value value;
         Configuration conf = Configuration.defaultConfiguration().addOptions(Option.SUPPRESS_EXCEPTIONS);
-        ReadContext ctx = JsonPath.parse(selectedValue, conf);
+        ReadContext ctx = null;
+        ctx = JsonPath.parse(selectedValue, conf);
         String valueStr = cleanValue(ctx);
         if (datatype != null && valueStr != null) {
             value = factory.createLiteral(valueStr, factory.createURI(XMLSchema.NAMESPACE + datatype));

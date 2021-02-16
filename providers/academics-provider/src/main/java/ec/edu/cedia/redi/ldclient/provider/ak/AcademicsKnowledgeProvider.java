@@ -18,11 +18,10 @@ package ec.edu.cedia.redi.ldclient.provider.ak;
 
 import com.google.common.base.Preconditions;
 import com.jayway.jsonpath.JsonPath;
+import ec.edu.cedia.redi.ldclient.provider.ak.mapping.AbstractJSONDataProviderMod;
 import ec.edu.cedia.redi.ldclient.provider.ak.mapping.AcademicsDateMapper;
 import ec.edu.cedia.redi.ldclient.provider.ak.mapping.AcademicsExtendedAbstractMapper;
 import ec.edu.cedia.redi.ldclient.provider.ak.mapping.AcademicsExtendedMetaLiteralListMapper;
-import ec.edu.cedia.redi.ldclient.provider.ak.mapping.AcademicsExtendedMetaLiteraldataMapper;
-import ec.edu.cedia.redi.ldclient.provider.json.AbstractJSONDataProvider;
 import ec.edu.cedia.redi.ldclient.provider.json.mappers.JsonPathLiteralMapper;
 import ec.edu.cedia.redi.ldclient.provider.json.mappers.JsonPathValueMapper;
 import java.io.ByteArrayInputStream;
@@ -63,7 +62,7 @@ import org.openrdf.model.vocabulary.RDFS;
  *
  * @author Xavier Sumba
  */
-public class AcademicsKnowledgeProvider extends AbstractJSONDataProvider implements DataProvider {
+public class AcademicsKnowledgeProvider extends AbstractJSONDataProviderMod implements DataProvider {
 
     public static final String NAME = "Academics Knowledge Provider";
     public static final String PATTERN_AUTHOR = "https://api\\.labs\\.cognitive\\.microsoft\\.com/academic/v1\\.0/evaluate.+subscription-key=(.*).*";
@@ -76,7 +75,7 @@ public class AcademicsKnowledgeProvider extends AbstractJSONDataProvider impleme
     private final ConcurrentMap<String, JsonPathValueMapper> ontologyMapping = new ConcurrentHashMap<>();
     private final String templatePublication = "https://api.labs.cognitive.microsoft.com/academic/v1.0/evaluate?"
             + "expr=Composite(AA.AuId=%s)&attributes=Id,Ti,Y,D,CC,ECC,AA.AuN,AA.AuId,AA.AfN,AA.AfId,AA.S,F.FN,F.FId,"
-            + "J.JN,J.JId,C.CN,C.CId,RId,W,E&model=latest&subscription-key=%s";
+            + "J.JN,J.JId,C.CN,C.CId,RId,W,IA,DOI,FP,LP,S,DN,V,I,VFN,VSN&model=latest&subscription-key=%s";
 
     private String apiKey;
 
@@ -243,8 +242,8 @@ public class AcademicsKnowledgeProvider extends AbstractJSONDataProvider impleme
                 ontologyMapping.put(FOAF.NAME.stringValue(), new JsonPathLiteralMapper(root + ".AuN"));
                 ontologyMapping.put(REDI.DISPLAY_NAME.stringValue(), new JsonPathLiteralMapper(root + ".DAuN"));
                 ontologyMapping.put(REDI.CITATION_COUNT.stringValue(), new JsonPathLiteralMapper(root + ".CC", integerDatatype));
-                ontologyMapping.put(REDI.AFFILIATION_NAME.stringValue(), new AcademicsExtendedMetaLiteraldataMapper(root + ".E", "$.LKA.AfN"));
-                ontologyMapping.put(REDI.AFFILIATION_ID.stringValue(), new AcademicsExtendedMetaLiteraldataMapper(root + ".E", "$.LKA.AfId", integerDatatype));
+                ontologyMapping.put(REDI.AFFILIATION_NAME.stringValue(), new JsonPathLiteralMapper(root + ".LKA.AfN"));
+                ontologyMapping.put(REDI.AFFILIATION_ID.stringValue(), new JsonPathLiteralMapper(root + ".LKA.AfId", integerDatatype));
                 break;
             case CONTRIBUTOR:
                 root = String.format("$.entities[%d].AA[%d]", i, j);
@@ -272,16 +271,16 @@ public class AcademicsKnowledgeProvider extends AbstractJSONDataProvider impleme
                 ontologyMapping.put(FOAF.TOPIC.stringValue(), new JsonPathLiteralMapper(root + ".W[*]"));
                 ontologyMapping.put(REDI.CONFERENCE_ID.stringValue(), new JsonPathLiteralMapper(root + ".C.CId", integerDatatype));
                 ontologyMapping.put(REDI.CONFERENCE_NAME.stringValue(), new JsonPathLiteralMapper(root + ".C.CN"));
-                ontologyMapping.put(BIBO.ABSTRACT.stringValue(), new AcademicsExtendedAbstractMapper(root + ".E", "$.IA"));
-                ontologyMapping.put(BIBO.DOI.stringValue(), new AcademicsExtendedMetaLiteraldataMapper(root + ".E", "$.DOI"));
-                ontologyMapping.put(BIBO.PAGE_START.stringValue(), new AcademicsExtendedMetaLiteraldataMapper(root + ".E", "$.FP"));
-                ontologyMapping.put(BIBO.PAGE_END.stringValue(), new AcademicsExtendedMetaLiteraldataMapper(root + ".E", "$.LP"));
-                ontologyMapping.put(BIBO.URI.stringValue(), new AcademicsExtendedMetaLiteralListMapper(root + ".E", "$.S[*].U"));
-                ontologyMapping.put(REDI.DISPLAY_NAME.stringValue(), new AcademicsExtendedMetaLiteraldataMapper(root + ".E", "$.DN"));
-                ontologyMapping.put(BIBO.VOLUME.stringValue(), new AcademicsExtendedMetaLiteraldataMapper(root + ".E", "$.V"));
-                ontologyMapping.put(BIBO.ISSUE.stringValue(), new AcademicsExtendedMetaLiteraldataMapper(root + ".E", "$.I"));
-                ontologyMapping.put(REDI.VENUE_FULL_NAME.stringValue(), new AcademicsExtendedMetaLiteraldataMapper(root + ".E", "$.VFN"));
-                ontologyMapping.put(REDI.VENUE_SHORT_NAME.stringValue(), new AcademicsExtendedMetaLiteraldataMapper(root + ".E", "$.VSN"));
+                ontologyMapping.put(BIBO.ABSTRACT.stringValue(), new AcademicsExtendedAbstractMapper(root + ".IA", "$"));
+                ontologyMapping.put(BIBO.DOI.stringValue(), new JsonPathLiteralMapper(root + ".DOI"));
+                ontologyMapping.put(BIBO.PAGE_START.stringValue(), new JsonPathLiteralMapper(root + ".FP"));
+                ontologyMapping.put(BIBO.PAGE_END.stringValue(), new JsonPathLiteralMapper(root + ".LP"));
+                ontologyMapping.put(BIBO.URI.stringValue(), new AcademicsExtendedMetaLiteralListMapper(root, "$.S[*].U"));
+                ontologyMapping.put(REDI.DISPLAY_NAME.stringValue(), new JsonPathLiteralMapper(root + ".DN"));
+                ontologyMapping.put(BIBO.VOLUME.stringValue(), new JsonPathLiteralMapper(root + ".V"));
+                ontologyMapping.put(BIBO.ISSUE.stringValue(), new JsonPathLiteralMapper(root + ".I"));
+                ontologyMapping.put(REDI.VENUE_FULL_NAME.stringValue(), new JsonPathLiteralMapper(root + ".VFN"));
+                ontologyMapping.put(REDI.VENUE_SHORT_NAME.stringValue(), new JsonPathLiteralMapper(root + ".VSN"));
                 break;
             default:
                 throw new RuntimeException("Cannot map Type " + type);
