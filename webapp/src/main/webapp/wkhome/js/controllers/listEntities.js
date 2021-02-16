@@ -9,7 +9,7 @@ wkhomeControllers.controller('listEntitiesController', ['$scope', '$window', 'gl
         var typent = $window.location.hash.split('/')[2]; 
 
 
-
+        
         console.log ("Consultando");
         console.log ($routeParams.query);
         console.log (typent);
@@ -36,21 +36,25 @@ wkhomeControllers.controller('listEntitiesController', ['$scope', '$window', 'gl
             queryurl = 'total/projects/q=(LET)&fl=*&rows=10&wt=json';
             facets = [{'ent': 'org' , 'label' : 'organization'},{'ent' : 'subjects' , 'label' : 'palabras clave'}]
             break;
+
             case 'patents':
             $scope.core = globalData.patentsCore;
             defaulturl = 'total/patents/q=title:LET*&fl=*&rows=10&wt=json&sort=title+asc';
             queryurl = 'total/patents/q=(LET)&fl=*&rows=10&wt=json';
-            break;
+            var inil = 'R';
+        break;
             case 'datasets':
             $scope.core = globalData.datasetsCore;
             defaulturl = 'total/datasets/q=title:LET*&fl=*&rows=10&wt=json&sort=title+asc';
             queryurl = 'total/datasets/q=(LET)&fl=*&rows=10&wt=json';
             break;
+
             case 'organizations':
             $scope.core = globalData.organizationsCore;
             defaulturl = 'total/organizations/q=name_abbr:LET*&fl=*&rows=10&wt=json&sort=name_abbr+asc';
             queryurl = 'total/organizations/q=name_es:(LET)+name_abbr:(LET)&fl=*&rows=10&wt=json';
             facets = [{'ent': 'org' , 'label' : 'organization'},{'ent' : 'subjects' , 'label' : 'palabras clave'}]
+            var inil = 'U';
             break;
 
             default:
@@ -87,12 +91,22 @@ wkhomeControllers.controller('listEntitiesController', ['$scope', '$window', 'gl
        //console.log ($scope.selectLetter);
 
        $scope.selectLetter = localStorage.getItem("lett");
+       console.log ('Si letra'+$scope.selectLetter); 
        $scope.facets = facets;
 
        if ($scope.selectLetter === undefined || $routeParams.query ===  undefined) {
-        localStorage.setItem("lett", 'A');
-        $window.location.hash = defaulturl.replace ('LET','A');
+        
+        console.log ('Letra'+$scope.selectLetter);
+        if (inil === undefined) {
+          inil = 'A'  
+        } 
+        
+        localStorage.setItem("lett", inil);
+        $window.location.hash = defaulturl.replace ('LET',inil);
+       
        }
+
+        
 
 
         $scope.isSelected = function ( leter ) {
