@@ -2192,6 +2192,43 @@ public class QueriesServiceImpl implements QueriesService {
             + "} group by ?org ?norg order  by DESC (?total)";
 
   }
+  
+    @Override
+  public String getAreasSubAreasPub (  ){
+  return PREFIXES + "select ?area ?label ?subarea ?labels where {"
+          + "graph <"+con.getClusterPublicationsGraph()+">"
+          + "{ ?area a <http://ucuenca.edu.ec/ontology#Cluster> ."
+          + "  ?area rdfs:label ?label ."
+          + " ?subarea dct:isPartOf ?area ."
+          + " ?subarea a <http://ucuenca.edu.ec/ontology#SubCluster> ."
+          + " ?subarea rdfs:label ?labels"
+          + "}"
+          + "} ORDER BY DESC (?area)";
+}
+  
+  
+  
+  
+  @Override
+  public String getResearchPubDate ( String area ){
+  return PREFIXES + "select ?area ?y  (COUNT( distinct ?publication ) as ?total)  where { \n" +
+  "   values ( ?area) {  (<"+area+">) }\n" +
+  "    graph <"+con.getClusterPublicationsGraph()+"> {\n" +
+  "    ?publication a <http://purl.org/ontology/bibo/AcademicArticle> .\n" +
+  "        ?publication dct:isPartOf ?area .\n" +
+  "        graph <"+ con.getCentralGraph() +"> {\n" +
+  "        	?publication <http://schema.org/copyrightYear>|<http://ns.nature.com/terms/coverDate> ?yx .\n" +  
+  "            BIND (str(?yx) as ?y2) .\n" +
+  "		    bind( strbefore( ?y2, '-' ) as ?y3 ). \n" +
+  "            bind( strafter( ?y2, ' ' ) as ?y4 ). \n" +
+  "            bind( if (str(?y3)='' && str(?y4)='',?y2, if(str(?y3)='',strafter( ?y2, ' ' ),strbefore( ?y2, '-' ))) as ?y ) .\n" +
+  "            FILTER regex(?y, '^[0-9]*$')\n" +
+  "        }\n" +
+  "    } \n" +
+  "} GROUP BY ?area ?y Order by ASC(?y)";
+ 
+}
+  
 
   @Override
   public String getProvbyInst(String uri) {

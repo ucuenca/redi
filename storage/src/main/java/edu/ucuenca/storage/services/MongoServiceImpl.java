@@ -81,6 +81,7 @@ public class MongoServiceImpl implements MongoService {
     private MongoCollection<Document> clusters;
     private MongoCollection<Document> clustersTotals;
     private MongoCollection<Document> authorsByArea;
+    private MongoCollection<Document> pubsByArea;
     private MongoCollection<Document> authorsByDisc;
     private MongoCollection<Document> countries;
     private MongoCollection<Document> sparqls;
@@ -110,6 +111,7 @@ public class MongoServiceImpl implements MongoService {
         clusters = db.getCollection(Collection.CLUSTERS.getValue());
         clustersTotals = db.getCollection(Collection.CLUSTERSTOTALS.getValue());
         authorsByArea = db.getCollection(Collection.AUTHORS_AREA.getValue());
+        pubsByArea = db.getCollection(Collection.DOCUMENTDATEBYAREA.getValue());
         authorsByDisc = db.getCollection(Collection.AUTHORS_DISCPLINE.getValue());
         countries = db.getCollection(Collection.COUNTRIES.getValue());
         sparqls = db.getCollection(Collection.SPARQLS.getValue());
@@ -237,6 +239,25 @@ public class MongoServiceImpl implements MongoService {
         key.put("subcluster", subcluster);
         return authorsByArea.find(eq("_id", key))
                 .first().toJson();
+    }
+    
+    @Override
+    public List<Document> getPubByAreaDate(String cluster, String subcluster) {
+       
+        BasicDBObject key = new BasicDBObject();
+        if (!cluster.isEmpty() && subcluster.isEmpty()){
+         
+           key.put("area", cluster);
+        
+        } else if (!cluster.isEmpty() && !subcluster.isEmpty() ){
+            key.put("_id", cluster+"|"+subcluster);
+        }
+        List<Document> c = new ArrayList<>();
+        MongoCursor<Document> it = pubsByArea.find(key).iterator();
+        while (it.hasNext()) {
+            c.add(it.next());
+        }      
+        return c;
     }
 
     @Override

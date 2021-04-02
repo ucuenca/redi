@@ -54,7 +54,22 @@
         </div>
 
       </div>
-    <div class="col-md-4 rigthsectionpub">
+      <div class="col-md-4 rigthsectionpub">
+         <h5 class="secTitle " > Areas:</h5>
+          <small class="text-muted">  Conocimiento:  </small>
+         
+              <span ng-repeat="c in publication.cluster"><li class="list-inline-item">
+                 <span class="badge  badge-pill">
+                   {{c}}
+                 </span> </li> </span>
+           </br>
+           <small class="text-muted">  Investigación:  </small>
+      
+              <span ng-repeat="sc in publication.subcluster"><li class="list-inline-item">
+                 <span class="badge  badge-pill">
+                   {{sc}}
+                 </span> </li> </span>
+        </br>
         <h5 class="secTitle pb-2 mb-2" > Autores:</h5>
            <div class="row pubcoauthors">
            <span ng-repeat="a in publication.autores | limitTo: quantity ">

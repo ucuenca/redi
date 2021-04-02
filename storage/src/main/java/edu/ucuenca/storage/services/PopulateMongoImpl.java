@@ -1026,6 +1026,63 @@ public class PopulateMongoImpl implements PopulateMongo {
     main.put("data", array);
     return main.toJSONString();
   }
+  
+    public String getAreasDate (String area_uri) throws MarmottaException {
+    JSONObject main = new JSONObject();
+    JSONArray array = new JSONArray();
+    List<Map<String, Value>> areasDate = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getResearchPubDate ( area_uri ));
+    for (Map<String, Value> subareas : areasDate){
+        String subarea_uri = subareas.get ("area").stringValue();
+        String year = subareas.get("y").stringValue();
+        String total = subareas.get ("total").stringValue();
+        
+        JSONObject obj = new JSONObject();
+        obj.put("y", year);
+        obj.put("total", total);
+        array.add(obj);
+    }
+    
+     main.put("data", array);
+    return main.toJSONString();
+    
+    }
+  
+    
+    @Override
+    public String getPublicationDatesbyAreas ()  {
+       final Task task = taskManagerService.createSubTask("Caching statistics by Publications Areas", "Mongo Service");
+    try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
+      MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
+      MongoCollection<Document> collection = db.getCollection(MongoService.Collection.DOCUMENTDATEBYAREA.getValue());
+      collection.drop();
+    
+    List<Map<String, Value>> areas = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getAreasSubAreasPub());
+    for ( Map<String, Value> area : areas ){
+        String area_uri = area.get ("area").stringValue();
+        String area_label = area.get("label").stringValue();
+        String subarea_uri = area.get ("subarea").stringValue();
+        String subarea_label = area.get ("labels").stringValue();
+        String response = getAreasDate (subarea_uri);
+    
+
+        Document parse = Document.parse(response);
+        parse.append("_id", area_uri+"|"+subarea_uri);
+        parse.append("area", area_uri);
+        parse.append("subarea", subarea_uri);
+        collection.insertOne(parse);
+        
+        
+    
+    } 
+    
+    } catch (Exception ex) {
+    return "Error";
+    }
+    
+
+  
+    return "Success";
+  }
 
   public String getStatsRelevantKbyAuthor(String uri) throws MarmottaException {
     List<Map<String, Value>> key = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getRelevantKbyAuthor(uri, 15));

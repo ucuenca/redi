@@ -37,6 +37,8 @@ public interface ConstantService {
     String getBaseURI();
 
     String getAuthorsGraph();
+    
+    String getClusterPublicationsGraph();
 
     String getSameAuthorsGraph();
 

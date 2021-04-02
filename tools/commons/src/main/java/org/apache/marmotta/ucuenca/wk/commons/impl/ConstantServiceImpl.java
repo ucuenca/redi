@@ -217,6 +217,11 @@ public class ConstantServiceImpl implements ConstantService {
     public String getClusterGraph() {
         return confService.getBaseContext() + "clusters";
     }
+    
+    @Override
+    public String getClusterPublicationsGraph() {
+        return confService.getBaseContext() + "clustersPub";
+    }
 
     @Override
     public String getExternalAuthorsGraph() {

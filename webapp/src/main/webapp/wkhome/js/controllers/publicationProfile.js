@@ -69,13 +69,20 @@ wkhomeControllers.controller('publicationProfile', ['$scope', '$routeParams', '$
   + "construct { "
   + "<"+uri+"> ?p ?v . "
   + "?v ?h ?q . "
-  + "} where { "
+  + " ?c a ?d ."
+  + "?c rdfs:label ?l "
+  + "} where { {"
   + "graph <https://redi.cedia.edu.ec/context/redi> { "
   + "values ?p { bibo:uri rdf:type dct:title bibo:abstract dct:subject dct:creator dct:contributor dct:isPartOf bibo:doi bibo:isbn} . "
   + "values ?h { foaf:name rdfs:label rdf:type foaf:img } . "
   + "<"+uri+"> ?p ?v . "
   + "optional {?v ?h ?q .} "
-  + "} "
+  + "} } UNION "
+  + "{    graph <https://redi.cedia.edu.ec/context/clustersPub> { "
+  + "    <"+uri+"> ?b ?c  . "
+  + "       ?c a ?d . "
+  + "       ?c rdfs:label ?l  "  
+  + "    } }"
   + "} ";
 
        sparqlQuery.querySrv({
@@ -92,6 +99,8 @@ wkhomeControllers.controller('publicationProfile', ['$scope', '$routeParams', '$
                   dataToSend["autores"] = [];
                   dataToSend["revista"] = {}; 
                   dataToSend["fuentes"] = []; 
+                  dataToSend["cluster"] = [];
+                  dataToSend["subcluster"] = []; 
                 data.forEach( function(valor, indice, array) {
                       if ("@type" in valor){
                       var arraytype = [];
@@ -165,6 +174,19 @@ wkhomeControllers.controller('publicationProfile', ['$scope', '$routeParams', '$
                         dataToSend["revista"]["Journal"]= unique(valor["rdfs:label"]);
                       
                      break; 
+
+                       case "uc:SubCluster":
+                        dataToSend["subcluster"].push (valor["rdfs:label"]);
+                       break;
+
+                       case "uc:Cluster":
+                        dataToSend["cluster"].push (valor["rdfs:label"]);
+                       break;
+
+                       case "":
+
+                       break;
+
                         case "bibo:uri":
 
                      break; 
@@ -179,7 +201,7 @@ wkhomeControllers.controller('publicationProfile', ['$scope', '$routeParams', '$
                        
                       if ( "rdfs:label"  in valor   ){
                         var ku = unique(valor["rdfs:label"]);
-                        if ( typeof ku != 'object' ){ 
+                        if ( typeof ku != 'object' & !dataToSend["keywords"].include(ku) ){ 
                         dataToSend["keywords"].push (ku);
                       }
                      }
