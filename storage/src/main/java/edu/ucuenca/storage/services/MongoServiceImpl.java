@@ -82,6 +82,7 @@ public class MongoServiceImpl implements MongoService {
     private MongoCollection<Document> clustersTotals;
     private MongoCollection<Document> authorsByArea;
     private MongoCollection<Document> pubsByArea;
+    private MongoCollection<Document> pubsBySubArea;
     private MongoCollection<Document> authorsByDisc;
     private MongoCollection<Document> countries;
     private MongoCollection<Document> sparqls;
@@ -112,6 +113,7 @@ public class MongoServiceImpl implements MongoService {
         clustersTotals = db.getCollection(Collection.CLUSTERSTOTALS.getValue());
         authorsByArea = db.getCollection(Collection.AUTHORS_AREA.getValue());
         pubsByArea = db.getCollection(Collection.DOCUMENTDATEBYAREA.getValue());
+        pubsBySubArea = db.getCollection(Collection.DOCUMENTDATEBYSUBAREA.getValue());
         authorsByDisc = db.getCollection(Collection.AUTHORS_DISCPLINE.getValue());
         countries = db.getCollection(Collection.COUNTRIES.getValue());
         sparqls = db.getCollection(Collection.SPARQLS.getValue());
@@ -242,7 +244,7 @@ public class MongoServiceImpl implements MongoService {
     }
     
     @Override
-    public List<Document> getPubByAreaDate(String cluster, String subcluster) {
+    public List<Document> getPubBySubAreaDate(String cluster, String subcluster) {
        
         BasicDBObject key = new BasicDBObject();
         if (!cluster.isEmpty() && subcluster.isEmpty()){
@@ -253,7 +255,29 @@ public class MongoServiceImpl implements MongoService {
             key.put("_id", cluster+"|"+subcluster);
         }
         List<Document> c = new ArrayList<>();
-        MongoCursor<Document> it = pubsByArea.find(key).iterator();
+        MongoCursor<Document> it = pubsBySubArea.find(key).iterator();
+        while (it.hasNext()) {
+            c.add(it.next());
+        }      
+        return c;
+    }
+    
+    @Override
+    public List<Document> getPubByAreaDate(String cluster) {
+        List<Document> c = new ArrayList<>();
+        MongoCursor<Document> it;
+        BasicDBObject key = new BasicDBObject();
+        if (!cluster.isEmpty() ){
+         
+           key.put("area", cluster);
+           it = pubsByArea.find(key).iterator();
+        
+        } else {
+          
+          it = pubsByArea.find().iterator();
+        }
+        
+       
         while (it.hasNext()) {
             c.add(it.next());
         }      

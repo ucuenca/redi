@@ -244,17 +244,31 @@ public class MongoDBWebService {
     
     
     @GET
-    @Path("/pubByArea")
+    @Path("/pubBySubArea")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getPublicationAreas(@QueryParam("cluster") String cluster, @QueryParam("subcluster") String subcluster) throws FailMongoConnectionException {
+    public Response getPublicationSubAreas(@QueryParam("cluster") String cluster, @QueryParam("subcluster") String subcluster) throws FailMongoConnectionException {
         List<Document> response;
         try {
-            response = mongoService.getPubByAreaDate(cluster, subcluster);
+            response = mongoService.getPubBySubAreaDate(cluster, subcluster);
         } catch (Exception e) {
             throw new FailMongoConnectionException(String.format("Cannot retrieve publication's information for cluster %s and subcluster", cluster, subcluster), e);
         }
         return Response.ok().entity(response).build();
     }
+    
+    
+     @GET
+    @Path("/pubByArea")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPublicationAreas(@QueryParam("cluster") String cluster ) throws FailMongoConnectionException {
+        List<Document> response;
+        try {
+            response = mongoService.getPubByAreaDate(cluster);
+        } catch (Exception e) {
+            throw new FailMongoConnectionException(String.format("Cannot retrieve publication's information for cluster %s ", cluster), e);
+        }
+        return Response.ok().entity(response).build();
+    } 
 
     @POST
     @Path("/reinit")

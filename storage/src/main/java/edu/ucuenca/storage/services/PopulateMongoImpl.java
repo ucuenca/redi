@@ -1055,6 +1055,9 @@ public class PopulateMongoImpl implements PopulateMongo {
       MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
       MongoCollection<Document> collection = db.getCollection(MongoService.Collection.DOCUMENTDATEBYAREA.getValue());
       collection.drop();
+      MongoCollection<Document> collectionsub = db.getCollection(MongoService.Collection.DOCUMENTDATEBYSUBAREA.getValue());
+      collectionsub.drop();
+      String area_act = "";
     
     List<Map<String, Value>> areas = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getAreasSubAreasPub());
     for ( Map<String, Value> area : areas ){
@@ -1062,14 +1065,27 @@ public class PopulateMongoImpl implements PopulateMongo {
         String area_label = area.get("label").stringValue();
         String subarea_uri = area.get ("subarea").stringValue();
         String subarea_label = area.get ("labels").stringValue();
-        String response = getAreasDate (subarea_uri);
+        
+        if (!area_act.equals(area_uri)) {
+             String responseareas = getAreasDate (area_uri);
+             area_act = area_uri;
+              Document parse = Document.parse(responseareas);
+              parse.append("_id", area_uri);
+              parse.append("area", area_uri);
+              parse.append("label", area_label);
+              collection.insertOne(parse);
+        }
+        
+        String responsesub = getAreasDate (subarea_uri);
+   
     
 
-        Document parse = Document.parse(response);
-        parse.append("_id", area_uri+"|"+subarea_uri);
-        parse.append("area", area_uri);
-        parse.append("subarea", subarea_uri);
-        collection.insertOne(parse);
+        Document parsesub = Document.parse(responsesub);
+        parsesub.append("_id", area_uri+"|"+subarea_uri);
+        parsesub.append("area", area_uri);
+        parsesub.append("subarea", subarea_uri);
+        parsesub.append("label", subarea_label);
+        collectionsub.insertOne(parsesub);
         
         
     

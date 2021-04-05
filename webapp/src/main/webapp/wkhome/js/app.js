@@ -253,6 +253,9 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                   when('/patent/register', {
                     templateUrl: 'wkhome/partials/regpatent.html',
                 }).
+                  when('/group/trends', {
+                    templateUrl: 'wkhome/partials/genericTrendsAreas.html',
+                }).
                 otherwise({
                     redirectTo: '/'
                 })

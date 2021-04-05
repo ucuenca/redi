@@ -53,7 +53,9 @@ public interface MongoService {
 
   public String getAuthorsByArea(String cluster, String subcluster);
   
-  public List<Document> getPubByAreaDate(String cluster, String subcluster);
+  public List<Document> getPubByAreaDate(String cluster);
+  
+  public List<Document> getPubBySubAreaDate(String cluster, String subcluster);
 
   public List<Document> getCountries();
   
@@ -90,7 +92,7 @@ public interface MongoService {
     SPARQLS("sparqls"), AUTHORS("authors"), PUBLICATIONS("publications"), STATISTICS("statistics"), STATISTICS_INST("statistics_inst"),
     RELATEDAUTHORS("relatedauthors"), AUTHORS_DISCPLINE("authors_discipline"), AUTHORS_AREA("authors_area"),
     COUNTRIES("countries"), CLUSTERS("clusters"), CLUSTERSTOTALS("clusterstotals"), STATISTICS_AUTHOR("statistics_author"), PROFILE_AUTHOR("profile_author"), SESSIONS("sessions"), TRANSLATIONS("translations")
-    , PROJECTPROFILE("project_profile") , PATENTPROFILE("patent_profile") , INSTBYPROJECT("instbyProjects") ,  DOCUMENTBYAREA("documentbyarea") , DOCUMENTDATEBYAREA("documentdatebyarea");
+    , PROJECTPROFILE("project_profile") , PATENTPROFILE("patent_profile") , INSTBYPROJECT("instbyProjects") ,  DOCUMENTBYAREA("documentbyarea") , DOCUMENTDATEBYAREA("documentdatebyarea") , DOCUMENTDATEBYSUBAREA("documentdatebysubarea") ;
 
     private final String value;
 

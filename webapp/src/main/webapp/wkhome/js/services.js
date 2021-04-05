@@ -226,6 +226,37 @@ wkhomeServices.factory('StatisticsbyArea', ['$resource', '$http', 'globalData',
 ]);
 
 
+wkhomeServices.factory('StatisticsPubByArea', ['$resource', '$http', 'globalData',
+  function ($resource, $http, globalData) {
+    var serverInstance = globalData.serverInstance;
+    return $resource(serverInstance + 'mongo/pubByArea?cluster=:cl', {}, {
+      query: {
+        method: 'GET',
+        params: {cl: 'cl' } ,
+        isArray: true,
+        cache: true,
+        headers: {'Accept': 'application/json'}
+      }
+    });
+  }
+]);
+
+wkhomeServices.factory('StatisticsPubBySubArea', ['$resource', '$http', 'globalData',
+  function ($resource, $http, globalData) {
+    var serverInstance = globalData.serverInstance;
+    return $resource(serverInstance + 'mongo/pubBySubArea?cluster=:cl&subcluster=:subc', {}, {
+      query: {
+        method: 'GET',
+        params: {cl: 'cl', subc: 'subc'} ,
+        isArray: true,
+        cache: true,
+        headers: {'Accept': 'application/json'}
+      }
+    });
+  }
+]);
+
+
 wkhomeServices.factory('StatisticsbyInst', ['$resource', '$http', 'globalData',
   function ($resource, $http, globalData) {
     var serverInstance = globalData.serverInstance;
