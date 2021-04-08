@@ -360,7 +360,8 @@ public class PopulateMongoImpl implements PopulateMongo {
     // List <Map<String,String>>   
     switch (query) {
       case "inst_by_area":
-        return this.getStatsInstbyArea(uri);
+        //return this.getStatsInstbyArea(uri);
+        return this.getStatsInstbyAreaPub(uri);
       case "pub_by_date":
         return this.getStatsInstbyPubDate(uri);
       case "author_by_inst":
@@ -948,6 +949,57 @@ public class PopulateMongoImpl implements PopulateMongo {
     }
     main.put("data", array);
     return main.toJSONString();
+  }
+  
+  
+    public String getStatsInstbyAreaPub (String uri) throws MarmottaException {
+
+    JSONObject main = new JSONObject();
+    JSONArray array = new JSONArray();
+    String actual = "";
+    List<Map<String, Value>> areas = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getAreasSubAreasPub());
+    for ( Map<String, Value> area : areas ){
+        String area_uri = area.get ("area").stringValue();
+        String area_label = area.get("label").stringValue();
+        String subarea_uri = area.get ("subarea").stringValue();
+        String subarea_label = area.get ("labels").stringValue();
+        if (actual.equals( area_uri ) ) {
+        continue;
+        
+        }
+        actual = area_uri;
+        List<Map<String, Value>> orgdata = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getOrgAreasPub ( uri , area_uri  ));
+        for (Map<String, Value> a : orgdata ) {
+        if (a.get("area") == null) {
+          continue;
+        }
+        JSONObject obj = new JSONObject();
+        obj.put("uri", area_uri );
+        obj.put("name", area_label );
+        obj.put("total", a.get("total").stringValue());
+        array.add(obj);
+      }
+      
+    }
+    
+    
+    main.put("data", array);
+    
+    return main.toJSONString();
+    
+    
+    /*for (Map<String, Value> a : area) {
+      if (a.get("area") == null) {
+        continue;
+      }
+      JSONObject obj = new JSONObject();
+      obj.put("uri", a.get("area").stringValue());
+      obj.put("name", a.get("nameng").stringValue());
+      obj.put("total", a.get("total").stringValue());
+      array.add(obj);
+    }
+    main.put("data", array);
+    return main.toJSONString();*/
   }
 
   public String getTopAuthorbyInst(String uri) throws MarmottaException {

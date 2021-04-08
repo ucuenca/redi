@@ -2205,8 +2205,52 @@ public class QueriesServiceImpl implements QueriesService {
           + "}"
           + "} ORDER BY DESC (?area)";
 }
+
+
+ @Override
+  public String getOrgAreasPub ( String org , String area ){
+      String onlyarea = "";
+      if (!area.isEmpty()){
+       onlyarea  = " values ( ?area) {  (<"+area+">) } ";
+      } 
+      String query = PREFIXES + 
+         "select  ?area  (COUNT( distinct ?publication ) as ?total)  where { \n" +
+              onlyarea +
+          "    graph <"+con.getClusterPublicationsGraph()+"> {\n" +
+          "    ?publication a <http://purl.org/ontology/bibo/AcademicArticle> .\n" +
+          "        ?publication dct:isPartOf ?area .\n" +
+          "        ?area a    <http://ucuenca.edu.ec/ontology#Cluster>\n" +
+          "        graph <" + con.getCentralGraph() + "> {\n" +
+          "              values ( ?org) {  (<ORGVALUE>) } \n" +
+          "	      ?author foaf:publications	?publication .\n" +
+          "           ?author schema:memberOf ?org .\n" +
+          "        }\n" +
+          "    } \n" +
+          "} GROUP BY  ?area  ";
+      
+  return query.replace( "ORGVALUE" , org);
+}
   
-  
+  @Override
+  public String getAuthorAreasPub ( String author , String area ){
+      String onlyarea = "";
+      if (!area.isEmpty()){
+       onlyarea  = " values ( ?area) {  (<http://dbpedia.org/resource/Computer_Science>) } ";
+      }  
+  return PREFIXES + 
+         "select  ?area  (COUNT( distinct ?publication ) as ?total)  where { \n" +
+              onlyarea +
+          "    graph <"+con.getClusterPublicationsGraph()+"> {\n" +
+          "    ?publication a <http://purl.org/ontology/bibo/AcademicArticle> .\n" +
+          "        ?publication dct:isPartOf ?area .\n" +
+          "            ?area a    <http://ucuenca.edu.ec/ontology#Cluster>\n" +
+          "        graph <" + con.getCentralGraph() + "> {\n" +
+          "              values ( ?author ) {  (<AUTVALUE>) } \n" +
+          "	      ?author foaf:publications	?publication .\n" +
+          "        }\n" +
+          "    } \n" +
+          "} GROUP BY  ?area  ".replace( "AUTVALUE" , author);
+}  
   
   
   @Override

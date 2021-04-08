@@ -469,6 +469,10 @@ public interface QueriesService {
     String getResearchPubDate ( String area );
     
     String getAreasSubAreasPub ();
+    
+    String getAuthorAreasPub ( String author , String area  );
+    
+    String getOrgAreasPub ( String org , String area );
       
       
 

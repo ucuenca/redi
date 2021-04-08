@@ -25,13 +25,11 @@ wkhomeControllers.controller('statsInst', ['$scope','$routeParams', 'globalData'
              $scope.data = value;
        var total = 0;
      var areas =  data["inst_by_area"]["data"];
-      areas.forEach(function (v) { total = total+ parseInt(v.total) });
-      areas = _.map(areas, function(value,i){ return{ name: value.uri , label:minlabel (value.name) , y: Number((100*value.total)/total)}; })
-     var principales =  _.first(areas,7);
-     var secundarios =  _.rest(areas, 7);
-     var valorsec = 0;
-       secundarios.forEach(function (v) { valorsec = valorsec+ Number(v.y) });
-      principales.push ({ name: "Others", y:valorsec});
+          //Circle
+
+        //  var principales = circleProcess ( areas);
+
+          var principales = radarProcess ( areas);
 
 
           $scope.datapc = {array: principales};
@@ -53,6 +51,40 @@ wkhomeControllers.controller('statsInst', ['$scope','$routeParams', 'globalData'
         });
   }
 ]);
+
+  function circleProcess ( areas) {
+
+  areas.forEach(function (v) { total = total+ parseInt(v.total) });
+      areas = _.map(areas, function(value,i){ return{ name: value.uri , label:minlabel (value.name) , y: Number((100*value.total)/total)}; })
+     var principales =  _.first(areas,7);
+     var secundarios =  _.rest(areas, 7);
+     var valorsec = 0;
+       secundarios.forEach(function (v) { valorsec = valorsec+ Number(v.y) });
+      principales.push ({ name: "Others", y:valorsec});
+  return principales; 
+
+  }
+
+
+  function radarProcess ( areas) {
+  var table =  new Map() ;
+  var keys = [];
+  var values = [];
+  for ( a in areas) {
+     k = areas[a].name;
+     v = Number(areas[a].total);
+    if (!keys.includes(k) ){
+
+      keys.push(k);
+      values.push (Math.log(v)*10);
+    }
+    console.log (areas[a]);
+
+  }
+
+  return  { "labels" : keys , "values" : values }; 
+
+  }
 
 function initialN (array) {
   if (array.length > 5) {
