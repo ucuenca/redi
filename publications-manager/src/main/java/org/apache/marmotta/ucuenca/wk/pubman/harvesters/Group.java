@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cepra.vivo;
+package org.apache.marmotta.ucuenca.wk.pubman.harvesters;
 
-import static cepra.vivo.SameAsVIVO.gRepository;
+import static org.apache.marmotta.ucuenca.wk.pubman.harvesters.SameAsVIVO.gRepository;
 import com.google.common.collect.Maps;
 import java.util.ArrayList;
 import java.util.Collection;

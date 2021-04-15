@@ -17,10 +17,9 @@
  */
 package org.apache.marmotta.ucuenca.wk.pubman.services.providers;
 
-import com.google.common.base.Preconditions;
-import edu.emory.mathcs.backport.java.util.Collections;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;

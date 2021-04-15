@@ -11,7 +11,7 @@ import com.jayway.jsonpath.JsonPath;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import edu.emory.mathcs.backport.java.util.Arrays;
+import java.util.Arrays;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
