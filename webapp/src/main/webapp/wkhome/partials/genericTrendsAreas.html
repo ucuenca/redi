@@ -14,7 +14,7 @@
           <div class="row"> 
             <div class="col-md-3 left-panel-subcl">
               <div class="col-md-auto element-subcl">
-                <h4 class="colorblue">{{'Select Research Area'| translate}}:</h4>
+                <h4 class="colorblue">{{'AreaG'| translate}}:</h4>
                 <!--<select class="selectpicker" data-live-search="true" name="board" id="board" ng-change="changeCombo()" ng-model="areaCombo"  ng-options="key.id as key.tag for key  in relatedtags">
                     <option value="">Select Area</option>
                 </select>-->
@@ -27,7 +27,7 @@
 
               </div>
               <div class="col-md-auto element-subcl">
-                <h4 class="colorblue"> Areas de investigación :</h4>
+                <h4 class="colorblue">  {{'AreaS'| translate}} :</h4>
                  <ui-select ng-model="areaCombosub.selected"  ng-change="changeComboSub()" theme="bootstrap">
                   <ui-select-match placeholder="Select discipline ">{{$select.selected.tag}}</ui-select-match>
                   <ui-select-choices repeat=" item in subtags | filter: $select.search ">  

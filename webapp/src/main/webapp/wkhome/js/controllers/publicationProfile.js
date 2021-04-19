@@ -201,7 +201,7 @@ wkhomeControllers.controller('publicationProfile', ['$scope', '$routeParams', '$
                        
                       if ( "rdfs:label"  in valor   ){
                         var ku = unique(valor["rdfs:label"]);
-                        if ( typeof ku != 'object' & !dataToSend["keywords"].include(ku) ){ 
+                        if ( typeof ku != 'object' & !dataToSend["keywords"].includes(ku) ){ 
                         dataToSend["keywords"].push (ku);
                       }
                      }

@@ -119,5 +119,9 @@
 "research.areas" : "Areas de Investigación" ,
 "knowledge.areas" : "Areas de conocimiento ",
 "Group By Area" : "Redes por área de Investigación",
-"WORK":"Como Funciona"
+"WORK":"Como Funciona",
+"CONTACT":"contacto",
+"TRENDS":"tendencias de investigación",
+"AreaG" : "Áreas Generales",
+"AreaS" : "Areas Específicas"
 }

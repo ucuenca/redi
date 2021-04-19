@@ -107,5 +107,9 @@
 "research.areas" : "Research Areas" ,
 "knowledge.areas" : "knowledge Areas ",
 "Group By Area" : "Network by research area",
-"WORK":"How work"
+"WORK":"How work",
+"CONTACT":"contact",
+"TRENDS":"Research Trends",
+"AreaG" : "General areas",
+"AreaS" : "Specific areas"
 }
