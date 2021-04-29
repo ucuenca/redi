@@ -1,10 +1,17 @@
-wkhomeControllers.controller('trendCluster', ['$scope', '$window', 'globalData', 'sparqlQuery', 'searchData', '$routeParams', 'Statistics', 'querySubcluster', 'reportService2', '$sce', 'StatisticsPubByArea' , 'StatisticsPubBySubArea' ,
-  function ($scope, $window, globalData, sparqlQuery, searchData, $routeParams, Statistics, querySubcluster, reportService2, $sce , StatisticsPubByArea , StatisticsPubBySubArea) {
+wkhomeControllers.controller('trendCluster', ['$scope', '$window', 'globalData', 'sparqlQuery', 'searchData', '$routeParams', 'Statistics', 'querySubcluster', 'reportService2', '$sce', 'StatisticsPubByArea' , 'StatisticsPubBySubArea' , '$translate' ,
+  function ($scope, $window, globalData, sparqlQuery, searchData, $routeParams, Statistics, querySubcluster, reportService2, $sce , StatisticsPubByArea , StatisticsPubBySubArea , $translate) {
 
      var cluster = $routeParams.cluster;
      var subcluster = $routeParams.subcluster;
      var min = 2010;
      var max = 2020;
+     var lan = $translate.use();
+      console.log ("----");
+       console.log ("Lenguaje");
+
+       console.log ($translate);
+       console.log ($translate.use());
+        
 
     $scope.areaCombo = {};
 
@@ -23,10 +30,16 @@ wkhomeControllers.controller('trendCluster', ['$scope', '$window', 'globalData',
       cl : clust ,
       subc : subclust
     }, function (data) {
+
+       console.log  ("todo");
+       console.log  (data)
        
         var loadsub = extractData ( data , min , max  , 'SubAreas');
+        
+        console.log  ("combo");
         if ( subclust == ''  ) {
         $scope.subtags = loadsub;
+        console.log  (loadsub);
         }
 
     }); }
@@ -59,7 +72,7 @@ wkhomeControllers.controller('trendCluster', ['$scope', '$window', 'globalData',
 
 
     function extractData ( data , min, max , type  )
-    {
+    {  lan = $translate.use();
        var subareas = [{'id': '' , tag : 'Todos' }];
        max = 2021;
        console.log ("DEvuelve data");
@@ -69,7 +82,11 @@ wkhomeControllers.controller('trendCluster', ['$scope', '$window', 'globalData',
       for ( i = 0; i < data.length; i++ ){
        console.log (data[i]);
         element = data[i];
-        subarea = element.label;
+        if ( lan == "es"){
+        subarea = element.labeles;
+        }else {
+        subarea = element.labelen;
+        }
         var ident = element['_id'] ;
 
         if (type == "SubAreas"){

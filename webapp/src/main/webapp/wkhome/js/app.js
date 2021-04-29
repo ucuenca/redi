@@ -273,7 +273,7 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
       });
       // $translateProvider.translations("en", wkhomeApp.labels_en);
       // $translateProvider.translations("es", wkhomeApp.labels_es);
-      $translateProvider.preferredLanguage("en");
+      $translateProvider.preferredLanguage("es");
       // To get warnings in the developer console, regarding forgotten IDs in translations
       // $translateProvider.useMissingTranslationHandlerLog ();
       // Enable escaping of HTML

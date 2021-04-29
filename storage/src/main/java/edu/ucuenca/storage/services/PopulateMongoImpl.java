@@ -1114,17 +1114,19 @@ public class PopulateMongoImpl implements PopulateMongo {
     List<Map<String, Value>> areas = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getAreasSubAreasPub());
     for ( Map<String, Value> area : areas ){
         String area_uri = area.get ("area").stringValue();
-        String area_label = area.get("label").stringValue();
+        String area_labeles = area.get("labelaes").stringValue();
+        String area_labelen = area.get("labelaen").stringValue();
         String subarea_uri = area.get ("subarea").stringValue();
-        String subarea_label = area.get ("labels").stringValue();
-        
+        String subarea_labeles = area.get ("labelses").stringValue();
+        String subarea_labelen = area.get ("labelsen").stringValue();
         if (!area_act.equals(area_uri)) {
              String responseareas = getAreasDate (area_uri);
              area_act = area_uri;
               Document parse = Document.parse(responseareas);
               parse.append("_id", area_uri);
               parse.append("area", area_uri);
-              parse.append("label", area_label);
+              parse.append("labeles", area_labeles);
+              parse.append("labelen", area_labelen);
               collection.insertOne(parse);
         }
         
@@ -1136,7 +1138,8 @@ public class PopulateMongoImpl implements PopulateMongo {
         parsesub.append("_id", area_uri+"|"+subarea_uri);
         parsesub.append("area", area_uri);
         parsesub.append("subarea", subarea_uri);
-        parsesub.append("label", subarea_label);
+        parsesub.append("labeles", subarea_labeles);
+        parsesub.append("labelen", subarea_labelen);
         collectionsub.insertOne(parsesub);
         
         

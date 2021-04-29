@@ -5,6 +5,8 @@ wkhomeControllers.controller('localeController', ["$localeSelectorDialog", "avil
     vm.selectedLocale = "es-EC";
     vm.selectedLocaleVals = _.chain(avilableLocales).pick(vm.selectedLocale).compact().first().value();
     $translate.use(vm.selectedLocaleVals.language);
+    $translate.preferredLanguage(vm.selectedLocaleVals.language);
+
 
     vm.changeLocale = function () {
         $localeSelectorDialog.open({
@@ -16,6 +18,7 @@ wkhomeControllers.controller('localeController', ["$localeSelectorDialog", "avil
             vm.selectedLocale = selectedLocale;
             vm.selectedLocaleVals = _.chain(avilableLocales).pick(selectedLocale).compact().first().value();
             $translate.use(vm.selectedLocaleVals.language);
+            $translate.preferredLanguage(vm.selectedLocaleVals.language);
         });
     };
 

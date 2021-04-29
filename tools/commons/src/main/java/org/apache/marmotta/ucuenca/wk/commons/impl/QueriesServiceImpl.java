@@ -2195,7 +2195,7 @@ public class QueriesServiceImpl implements QueriesService {
   
     @Override
   public String getAreasSubAreasPub (  ){
-  return PREFIXES + "select ?area ?label ?subarea ?labels where {"
+  /*return PREFIXES + "select ?area ?label ?subarea ?labels where {"
           + "graph <"+con.getClusterPublicationsGraph()+">"
           + "{ ?area a <http://ucuenca.edu.ec/ontology#Cluster> ."
           + "  ?area rdfs:label ?label ."
@@ -2203,7 +2203,25 @@ public class QueriesServiceImpl implements QueriesService {
           + " ?subarea a <http://ucuenca.edu.ec/ontology#SubCluster> ."
           + " ?subarea rdfs:label ?labels"
           + "}"
-          + "} ORDER BY DESC (?area)";
+          + "} ORDER BY DESC (?area)";*/
+  
+  return PREFIXES + "select distinct ?area ?labelaen ?labelaes ?subarea ?labelsen ?labelses where {\n" +
+          "          graph <"+con.getClusterPublicationsGraph()+">\n" +
+          "          { \n" +
+
+          "           ?area a <http://ucuenca.edu.ec/ontology#Cluster> .\n" +
+          "           ?area rdfs:label ?labelaen .\n" +
+          "           filter ( lang(?labelaen) = \"en\") .\n" +
+          "           ?area rdfs:label ?labelaes .\n" +
+          "           filter ( lang(?labelaes) = \"es\") .        	 \n" +
+          "           ?subarea dct:isPartOf ?area .\n" +
+          "           ?subarea a <http://ucuenca.edu.ec/ontology#SubCluster> .\n" +
+          "           ?subarea rdfs:label ?labelsen .\n" +
+          "           filter ( lang(?labelsen) = \"en\") .\n" +
+          "           ?subarea rdfs:label ?labelses .\n" +
+          "           filter ( lang(?labelses) = \"es\") .}\n" +
+
+          "          } ORDER BY DESC (?area)";
 }
 
 
