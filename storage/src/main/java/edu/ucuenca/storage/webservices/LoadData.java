@@ -258,7 +258,7 @@ public class LoadData {
     }
     return Response.ok().entity("Authors by area were successfully loaded into MongoDB").build();
   }
-
+  
   @POST
   @Path("/translatebyPublication")
   @Produces(MediaType.APPLICATION_JSON)
@@ -271,6 +271,24 @@ public class LoadData {
       throw new FailMongoConnectionException(String.format("Cannot load publications tranlation Mongo DB"), e);
     }
     return Response.ok().entity("Publications tranlation were successfully loaded into MongoDB").build();
+  }
+  
+  
+
+  @POST
+  @Path("/translatePublications")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response googleTranslatePub () throws FailMongoConnectionException {
+    String response = "-";
+    try {
+//      loadService.populatePublicationKeywords();
+       response = loadService.googlePublicationTranslation();
+     
+    } catch (Exception e) {
+      log.error("Cannot translate publications and insert into Mongo DB", e);
+      throw new FailMongoConnectionException(String.format("Cannot translate publications Mongo DB"), e);
+    }
+    return Response.ok().entity("Result:"+response).build();
   }
 
   @POST

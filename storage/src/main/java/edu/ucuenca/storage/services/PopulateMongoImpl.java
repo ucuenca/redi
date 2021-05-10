@@ -36,6 +36,7 @@ import com.mongodb.client.MongoDatabase;
 import static com.mongodb.client.model.Filters.eq;
 import edu.ucuenca.storage.api.MongoService;
 import edu.ucuenca.storage.api.PopulateMongo;
+import edu.ucuenca.storage.utils.TranslatorGoogle;
 import edu.ucuenca.storage.utils.TranslatorManager;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -64,6 +65,7 @@ import org.apache.marmotta.ucuenca.wk.commons.service.CommonsServices;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
 import org.apache.marmotta.ucuenca.wk.commons.service.DistanceService;
 import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
+import org.apache.marmotta.ucuenca.wk.commons.service.TranslationService;
 import org.apache.marmotta.ucuenca.wk.commons.util.BoundedExecutor;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.BIBO;
@@ -117,6 +119,12 @@ public class PopulateMongoImpl implements PopulateMongo {
   private DistanceService distservice;
   @Inject
   private TaskManagerService taskManagerService;
+  
+  @Inject 
+  private TranslatorGoogle tlg;
+  
+  @Inject
+  private TranslationService tservice;
 
   @Inject
   private TranslatorManager trService;
@@ -129,6 +137,9 @@ public class PopulateMongoImpl implements PopulateMongo {
 
   @Inject
   private PopulateMongo loadService;
+  
+  @Inject
+  private MongoService ms;
 
   private static final Map context = new HashMap();
 
@@ -199,7 +210,7 @@ public class PopulateMongoImpl implements PopulateMongo {
     try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));
             StringWriter writter = new StringWriter();) {
       RepositoryConnection conn = fastSparqlService.getRepositoryConnetion();
-
+      
       try {
         MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
         // Delete and create collection
@@ -235,6 +246,41 @@ public class PopulateMongoImpl implements PopulateMongo {
     } catch (IOException ex) {
       log.error("IO error", ex);
     }
+  }
+  
+  
+  public void getClustersNames( String c , String table){
+    try {
+      MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));
+    
+      List<Map<String, Value>> cluster = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getGeneralCluster());
+      
+      MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
+
+      MongoCollection<Document> collection = db.getCollection(c);
+     
+      JSONArray array = new JSONArray();
+     
+      
+      for (Map<String, Value> cl : cluster ) {
+ 
+      JSONObject obj = new JSONObject();
+      obj.put("area", cl.get("area").stringValue());
+      obj.put("label_es", cl.get("label_es").stringValue());
+      obj.put("label_en", cl.get("label_en").stringValue());
+      array.add(obj);
+    }
+  
+      
+      Document parse = new Document();
+      parse.append("_id", table);
+      parse.append("data" , array);
+      collection.insertOne(parse); 
+    
+    } catch (MarmottaException ex) {
+      java.util.logging.Logger.getLogger(PopulateMongoImpl.class.getName()).log(Level.SEVERE, null, ex);
+    }
+  
   }
 
   @Override
@@ -300,6 +346,7 @@ public class PopulateMongoImpl implements PopulateMongo {
     queries.put("count_research_areas", queriesService.getAggregationAreas());
     queries.put("keywords_frequencypub_gt4", queriesService.getKeywordsFrequencyPub());
     loadStadistics(MongoService.Collection.STATISTICS.getValue(), queries);
+    getClustersNames( MongoService.Collection.STATISTICS.getValue() , "clusterNames");
   }
 
   @Override
@@ -470,14 +517,16 @@ public class PopulateMongoImpl implements PopulateMongo {
       List<Map<String, Value>> query = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getClusterTotals());
       log.info("Writing totals");
       for (Map<String, Value> a : query) {
-        String label = a.get("k").stringValue();
-        log.info("Cluster {}", label);
+
+    
         String uri = a.get("area").stringValue();
+        log.info("Cluster {}", uri);
         String tot = a.get("totalAuthors").stringValue();
         Document parse = new Document();
         parse.append("_id", uri);
         parse.append("area", uri);
-        parse.append("k", label);
+        parse.append("labeles", a.get("labeles").stringValue());
+        parse.append("labelen", a.get("labelen").stringValue());
         parse.append("totalAuthors", tot);
         List<BasicDBObject> lsdoc = new ArrayList<>();
         List<Map<String, Value>> query1 = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getSubClusterTotals(uri));
@@ -486,11 +535,13 @@ public class PopulateMongoImpl implements PopulateMongo {
             continue;
           }
           String sc = b.get("sc").stringValue();
-          String k = b.get("k").stringValue();
+          String labeles = b.get("labeles").stringValue();
+          String labelen = b.get("labelen").stringValue();
           String totalAuthors = b.get("totalAuthors").stringValue();
           BasicDBObject parseSub = new BasicDBObject();
           parseSub.put("sc", sc);
-          parseSub.put("k", k);
+          parseSub.put("labelen", labelen);
+          parseSub.put("labeles", labeles);
           parseSub.put("totalAuthors", totalAuthors);
           lsdoc.add(parseSub);
         }
@@ -1531,6 +1582,200 @@ public class PopulateMongoImpl implements PopulateMongo {
     }
 
   }
+  
+  
+  public String translatebyGoogle (String text ) throws Exception {
+  String cleantext = text.toLowerCase().replaceAll("[ ]+", " ").replaceAll("[^a-zA-Z0-9ñÑáéíóú ]", "");
+  //String value = "("+cleantext +")" + "PT";
+  String value = tlg.translateText(cleantext);
+  if (value == null ){
+     throw new Exception ("Limite excedido");
+  }
+  return value;
+  //
+  }
+  
+  
+  public String translateSubject (String ts, MongoDatabase db ) throws Exception {
+    
+    MongoCollection<Document> collectionsubject = db.getCollection(MongoService.Collection.SUBJECTRANSLATION.getValue());
+    String subject = ts.toLowerCase().replaceAll("[ ]+", " ").replaceAll("[^a-zA-Z0-9ñÑáéíóú ]", "").trim();
+    Document d = ms.getSubjectTr(subject);
+    String value = "";
+    if ( d == null ) {
+         String lan = tservice.detectLanguage(subject);
+         
+         value = "en".equals(lan) ? subject : translatebyGoogle ( subject ) ;
+         Document dc = new Document();
+         dc.put("_id", subject);
+         dc.put("tvalue", value);
+
+         collectionsubject.insertOne(dc);
+         
+    } else {
+         value = d.get("tvalue").toString();
+    }
+    
+ 
+   return value;
+  }
+  
+  public void generateRDFTranslate ( List <Document> ld) throws RepositoryException, RDFHandlerException {
+    ValueFactoryImpl instance = ValueFactoryImpl.getInstance();
+   
+    URI rdflabel = instance.createURI("http://www.w3.org/2000/01/rdf-schema#label");
+    URI title = instance.createURI("http://purl.org/dc/terms/title");
+    Model md = new LinkedHashModel();
+         
+          
+    for (Document d : ld ) {
+      
+       URI createURI = instance.createURI(d.get("_id").toString());
+       md.add(createURI, title , instance.createLiteral(  d.get("txtEn").toString(), "en")); 
+       for ( String cv : d.get("subjects").toString().split(";")){
+          if (!cv.isEmpty()) {
+          String[] urivalue =  cv.split("=");  
+          URI subjUri = instance.createURI(urivalue[0]);
+          md.add(subjUri, rdflabel , instance.createLiteral( urivalue[1], "en")); 
+          }
+       }
+       
+    }
+    
+    fastSparqlService.getGraphDBInstance().addBuffer(instance.createURI(conService.getCentralGraphTranslate()), md);
+    fastSparqlService.getGraphDBInstance().dumpBuffer();
+  
+  
+  }
+  
+  @Override
+  public String googlePublicationTranslation() {
+  /*String resp = tservice.detectLanguage("Este es un mensaje de prueba");
+  log.info("Resultado de la deteccion"+ resp );
+  System.out.print ("Resultado de la deteccion"+resp );
+  String traduccion = tlg.translateText("los de las traduccion son tocaños");
+  log.info("Resultado de la traduccion"+ traduccion );
+  System.out.print ("Resultado de la traduccion"+traduccion );
+  return traduccion;*/
+
+    final Task task = taskManagerService.createSubTask("Translate and caching publications", "Mongo Service");  
+  
+     try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
+      MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
+      
+      MongoCollection<Document> collection = db.getCollection(MongoService.Collection.PUBTRANSLATIONS.getValue());
+      String query = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
+        "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
+        "PREFIX dct: <http://purl.org/dc/terms/>\n" +
+        "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+        "select ?ac (group_concat( distinct ?title ; separator = '¦') as ?titles) (group_concat( distinct ?titleEs ; separator = '||') as ?titlesEs) (group_concat( distinct ?subl ; separator = '¦') as ?subjects) (group_concat( distinct ?subUriLabel ; separator = '¦') as ?subjecturis)\n" +
+        "where {\n" +
+        "   GRAPH <" + conService.getCentralGraph() + "> { \n" +
+        "	?ac a <http://purl.org/ontology/bibo/AcademicArticle>  .\n" +
+        "    ?author foaf:publications ?ac   .\n" +
+        "    ?ac dct:title ?titleEs .\n" +
+        "    filter ( lang (?titleEs) = 'es') .\n" +
+        "    ?ac dct:title ?title .\n" +
+        "    ?ac dct:subject ?subjEs .\n" +
+        "      ?subjEs  rdfs:label ?subl .\n" +
+        "      BIND(CONCAT(STR( ?subjEs ),'=', STR( ?subl ) )  AS ?subUriLabel ) ." +
+        "   FILTER  NOT EXISTS {\n" +
+        "     filter ( lang (?title) = 'es')    \n" +
+        "   }\n" +
+        "        \n" +
+        "    FILTER  NOT EXISTS {\n" +
+        "     ?ac dct:title ?titleEn .\n" +
+        "     filter ( lang (?titleEn) = 'en')    \n" +
+        "   }\n" +
+        "  \n" +
+        "    }\n" +
+        "} group by ?ac";
+      
+      
+      List<Map<String, Value>> pubs = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, query );
+      List <Document> doc = new ArrayList(); 
+      int npub = 0;
+      
+      
+      task.updateTotalSteps(pubs.size());
+      
+     
+        
+        
+      for (Map<String,Value> p : pubs ){
+        npub++;
+        String ac = p.get("ac").stringValue();
+        String titles = p.get("titles").stringValue();
+        String subjects = p.get("subjects").stringValue();
+        String suburis  = p.get("subjecturis").stringValue();
+        
+        task.updateDetailMessage("Publication ", ac);
+        log.info("Translate {} ", ac);
+        log.info("Translate {}/{}. Pub: '{}' ", npub, pubs.size(), ac);
+        
+        task.updateProgress(npub);
+        String texten = "";
+        String lastextes = "";
+        String d = "";
+        String alld = "";
+        if (ms.checkPublicationTrasnlate(ac)) {
+         continue;
+        }
+        for ( String t  : titles.split("¦"))
+        {  
+          
+        
+           d = tservice.detectLanguage(t);
+           alld = alld+d;
+           log.info(t+"-"+d);
+           if ("en".equals(d)){
+             texten = t;
+           }else {
+             lastextes = t;
+           }
+           
+        }
+        
+         if (texten.isEmpty() ) {
+           texten = translatebyGoogle (lastextes);
+         }
+        
+          
+            
+         String totalSub = "";
+
+        
+         
+         for ( String sub  : suburis.split("¦"))
+        {  
+          String subj = translateSubject ( sub.split("=")[1] , db );
+          totalSub = totalSub +";"+sub.split("=")[0]+"="+ subj;
+
+        } 
+         
+         Document dc = new Document();
+            dc.put("_id", ac);
+            dc.put("txtEn", texten);
+            dc.put("original", titles);
+            dc.put("lang", alld);
+            dc.put("subjects", totalSub);
+            collection.insertOne(dc);
+            doc.add(dc);
+            
+        
+      }
+      
+         generateRDFTranslate ( doc);
+      
+         taskManagerService.endTask(task);
+     }    catch (Exception ex) {
+        log.error(ex.getMessage());
+        return ex.getMessage();
+      }
+  
+  return "Success";
+  }
+  
 
   @Override
   public void populatePublicationTranslations() {

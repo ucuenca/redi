@@ -1,21 +1,45 @@
-wkhomeControllers.controller('subCluster', ['$scope', '$window', 'globalData', 'sparqlQuery', 'searchData', '$routeParams', 'Statistics', 'querySubcluster', 'reportService2', '$sce',
-  function ($scope, $window, globalData, sparqlQuery, searchData, $routeParams, Statistics, querySubcluster, reportService2, $sce) {
+wkhomeControllers.controller('subCluster', ['$scope', '$window', 'globalData', 'sparqlQuery', 'searchData', '$routeParams', 'Statistics', 'querySubcluster', 'reportService2', '$sce', '$translate' , '$rootScope' , 
+  function ($scope, $window, globalData, sparqlQuery, searchData, $routeParams, Statistics, querySubcluster, reportService2, $sce ,  $translate , $rootScope) {
 
      var cluster = $routeParams.cluster;
      var subcluster = $routeParams.subcluster;
+     var language = $translate.use();
 
+      $rootScope.$on('$translateChangeSuccess', function(event, current, previous) {
+       language = $translate.use();
+       loadCombo ();
+    });
+     
+      //console.log ($parent.currentLanguage);
 
+     
     //  $scope.areaCombosub =  { "tag":"12313"}; 
     //tag: keyword["rdfs:label"]["@value"] == undefined ? keyword["rdfs:label"] : keyword["rdfs:label"]["@value"] 
     $scope.areaCombo = {};
+    
+
+
+    loadCombo ();
+
+    function loadCombo () {
     Statistics.query({
       id: 'keywords_frequencypub_gt4'
     }, function (data) {
+       language = $translate.use();
       $scope.relatedtags = [];
+
+       console.log (data["@graph"])
+
       _.map(data["@graph"], function (keyword) {
+        
+        array = keyword["rdfs:label"]
+        var lan = {};
+        lan[array[0]['@language']] = array[0]['@value'] ;
+        lan[array[1]['@language']] = array[1]['@value'] ;
+
         var ims = {
           id: keyword["@id"],
-          tag: keyword["rdfs:label"]["@value"]
+          tag: lan[language]
         };
         $scope.relatedtags.push(ims);
         if (cluster) {
@@ -30,6 +54,8 @@ wkhomeControllers.controller('subCluster', ['$scope', '$window', 'globalData', '
       }
 
     });
+
+    }
 
     
 
@@ -51,9 +77,16 @@ wkhomeControllers.controller('subCluster', ['$scope', '$window', 'globalData', '
       }, function (data) {
         $scope.subtags = [];
         _.map(data.subclusters, function (keyword) {
+             var tagvalue = "";
+
+            if (language  == "es" && keyword["label-es"] != "" ) {
+              tagvalue  = keyword["label-es"];
+            } else {
+              tagvalue  = keyword["label-en"];
+            }
             var imx = {
             id: keyword["uri"],
-            tag: keyword["label-en"]
+            tag: tagvalue
           };
           $scope.subtags.push(imx);
 

@@ -251,6 +251,11 @@
       <artifactId>simple-java-mail</artifactId>
       <version>5.5.1</version>
     </dependency>
+    <dependency>
+      <groupId>com.google.cloud</groupId>
+      <artifactId>google-cloud-translate</artifactId>
+      <version>1.39.0</version>
+    </dependency>
   </dependencies>
   
 </project>

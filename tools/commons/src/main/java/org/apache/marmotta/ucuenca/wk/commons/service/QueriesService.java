@@ -404,6 +404,9 @@ public interface QueriesService {
     String getAggregationAreas();
 
     String getKeywordsFrequencyPub();
+    
+    String getGeneralCluster();
+    
 
     // Related authors
     String getAuthorsCentralGraph();

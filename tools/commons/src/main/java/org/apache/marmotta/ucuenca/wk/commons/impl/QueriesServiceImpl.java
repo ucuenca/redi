@@ -2019,6 +2019,17 @@ public class QueriesServiceImpl implements QueriesService {
             + "CONSTRUCT { "
             + "  ?area rdfs:label ?label "
             + "}WHERE {  "
+            + "  SELECT  ?area  ?label"
+            + "  WHERE {    "
+            + "    GRAPH <" + con.getClusterGraph() + "> {            "
+            + "      ?area rdf:type uc:Cluster; "
+            + "            rdfs:label ?label .    "
+            + "    }  "
+            + "  } "
+            + "}";
+ /*    + "CONSTRUCT { "
+            + "  ?area rdfs:label ?label "
+            + "}WHERE {  "
             + "  SELECT  ?area (sample(?name) as ?label)"
             + "  WHERE {    "
             + "    GRAPH <" + con.getClusterGraph() + "> {            "
@@ -2026,22 +2037,28 @@ public class QueriesServiceImpl implements QueriesService {
             + "            rdfs:label ?name.    "
             + "    }  "
             + "  }group by ?area"
-            + "}";
-//<editor-fold defaultstate="collapsed" desc="old">
-//                + "CONSTRUCT { ?keyword rdfs:label ?key }"
-//                + "WHERE {"
-//                + "  SELECT  (count(?pubs) as ?total)"
-//                + "  WHERE {"
-//                + "    GRAPH <" + con.getCentralGraph() + "> {"
-//                + "      ?subject foaf:publications ?pubs."
-//                + "      ?pubs dct:subject ?keyword."
-//                + "      ?keyword rdfs:label ?key."
-//                + "    }"
-//                + "  } GROUP BY ?keyword  ?key"
-//                + "  HAVING(?total > 4)"
-//                + "}";
-//</editor-fold>
+            + "}";*/
   }
+  
+  
+  @Override
+  public String getGeneralCluster() {
+    return PREFIXES
+            + " SELECT  ?area  ?label_es ?label_en " +
+"                WHERE {    \n" +
+"                  GRAPH <"+ con.getClusterGraph() +"> {            \n" +
+"                     ?area rdf:type uc:Cluster . \n" +
+"                     ?area rdfs:label ?label_es. \n" +
+"                     filter (lang (?label_es) = 'es') \n" +
+"        			 ?area rdfs:label ?label_en. \n" +
+"        			 filter (lang (?label_en) = 'en')\n" +
+"                }  \n" +
+"              }";
+
+  }
+  
+  
+
 
   @Override
   public String getAuthorsCentralGraph() {
@@ -2096,34 +2113,40 @@ public class QueriesServiceImpl implements QueriesService {
             + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
             + "PREFIX dct: <http://purl.org/dc/terms/>\n"
             + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
-            + "      SELECT ?area (SAMPLE(?label) as ?k) (COUNT(DISTINCT ?authors) AS ?totalAuthors)\n"
+            + "      SELECT ?area ?labeles ?labelen  (COUNT(DISTINCT ?authors) AS ?totalAuthors)\n"
             + "              WHERE {\n"
             + "                GRAPH <" + con.getClusterGraph() + "> { \n"
-            + "                  ?area a uc:Cluster ;\n"
-            + "                        rdfs:label ?label .\n"
+            + "                  ?area a uc:Cluster .\n"
+            + "  ?area   rdfs:label ?labeles .\n" 
+            + "       filter ( lang(?labeles) = 'es' ) .\n" 
+            + "	  ?area   rdfs:label ?labelen .\n" 
+            + "    filter ( lang(?labelen) = 'en' ) .\n" 
             + "                  ?authors dct:isPartOf ?area .\n"
             + "                } \n"
             + "                GRAPH <" + con.getCentralGraph() + "> { \n"
             + "                         ?authors  a foaf:Person . \n"
             + "                } \n"
-            + "      } GROUP BY ?area\n";
+            + "      } GROUP BY ?area ?labeles ?labelen ";
   }
 
   @Override
   public String getSubClusterTotals(String uri) {
-    return PREFIXES + "SELECT ?sc (SAMPLE(?label) as ?k) (COUNT(DISTINCT ?authors) AS ?totalAuthors) \n"
+    return PREFIXES + "SELECT ?sc ?labeles ?labelen (COUNT(DISTINCT ?authors) AS ?totalAuthors) \n"
             + "                          WHERE {\n"
             + "                            GRAPH <" + con.getClusterGraph() + "> { \n"
             + "                              <" + uri + "> a uc:Cluster .\n"
-            + "                              ?sc dct:isPartOf <" + uri + "> ;\n"
-            + "                                  a uc:SubCluster ;\n"
-            + "                                  rdfs:label ?label .\n"
+            + "                              ?sc dct:isPartOf <" + uri + "> .\n"
+            + "                              ?sc    a uc:SubCluster .\n"
+            + "                              ?sc   rdfs:label ?labeles .\n" 
+            + "                              filter ( lang(?labeles) = 'es' ) .\n" 
+            + "                              ?sc   rdfs:label ?labelen .\n" 
+            + "                              filter ( lang(?labelen) = 'en' ) ."
             + "                              ?authors dct:isPartOf ?sc .\n"
             + "                            }\n"
             + "                            GRAPH <" + con.getCentralGraph() + "> { \n"
             + "                               ?authors a foaf:Person .\n"
             + "                            }\n"
-            + "                          } GROUP BY ?sc ";
+            + "                          } GROUP BY ?sc ?labeles ?labelen  ";
   }
 
   @Override

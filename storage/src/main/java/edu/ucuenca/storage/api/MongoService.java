@@ -80,6 +80,10 @@ public interface MongoService {
   public boolean checkSession(String orcid, String token);
   
   public Document getinstbyProject (String id);
+  
+  public boolean checkPublicationTrasnlate (String id);
+  
+  public Document getSubjectTr (String id);
 
   /**
    * Create a connection to {@link com.mongodb.MongoClient}.
@@ -91,8 +95,8 @@ public interface MongoService {
   public enum Collection {
     SPARQLS("sparqls"), AUTHORS("authors"), PUBLICATIONS("publications"), STATISTICS("statistics"), STATISTICS_INST("statistics_inst"),
     RELATEDAUTHORS("relatedauthors"), AUTHORS_DISCPLINE("authors_discipline"), AUTHORS_AREA("authors_area"),
-    COUNTRIES("countries"), CLUSTERS("clusters"), CLUSTERSTOTALS("clusterstotals"), STATISTICS_AUTHOR("statistics_author"), PROFILE_AUTHOR("profile_author"), SESSIONS("sessions"), TRANSLATIONS("translations")
-    , PROJECTPROFILE("project_profile") , PATENTPROFILE("patent_profile") , INSTBYPROJECT("instbyProjects") ,  DOCUMENTBYAREA("documentbyarea") , DOCUMENTDATEBYAREA("documentdatebyarea") , DOCUMENTDATEBYSUBAREA("documentdatebysubarea") ;
+    COUNTRIES("countries"), CLUSTERS("clusters"), CLUSTERSTOTALS("clusterstotals"), STATISTICS_AUTHOR("statistics_author"), PROFILE_AUTHOR("profile_author"), SESSIONS("sessions"), TRANSLATIONS("translations") , PUBTRANSLATIONS("pubtranslations") , 
+    PROJECTPROFILE("project_profile") , PATENTPROFILE("patent_profile") , INSTBYPROJECT("instbyProjects") ,  DOCUMENTBYAREA("documentbyarea") , DOCUMENTDATEBYAREA("documentdatebyarea") , DOCUMENTDATEBYSUBAREA("documentdatebysubarea") , SUBJECTRANSLATION("subjectTranslate") ,;
 
     private final String value;
 

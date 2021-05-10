@@ -25,6 +25,45 @@ public class AuthorProfile {
     private String i10;
     private String [] otheraf;
     private String npub;
+    private String [] clusters;
+    private String [] topics;
+    private String [] otherProfile;
+    private String [] clustersEs;
+    private String [] clustersEn;
+    private String [] topicsEs;
+    private String [] topicsEn;
+
+  public String[] getClustersEn() {
+    return clustersEn;
+  }
+
+  public void setClustersEn(String[] clustersEn) {
+    this.clustersEn = clustersEn;
+  }
+
+  public String[] getTopicsEs() {
+    return topicsEs;
+  }
+
+  public void setTopicsEs(String[] topicsEs) {
+    this.topicsEs = topicsEs;
+  }
+
+  public String[] getTopicsEn() {
+    return topicsEn;
+  }
+
+  public void setTopicsEn(String[] topicsEn) {
+    this.topicsEn = topicsEn;
+  }
+
+  public String[] getClustersEs() {
+    return clustersEs;
+  }
+
+  public void setClustersEs(String[] clustersEs) {
+    this.clustersEs = clustersEs;
+  }
     
     
     
@@ -155,9 +194,7 @@ public class AuthorProfile {
     public void setOtherProfile(String[] otherProfile) {
         this.otherProfile = otherProfile;
     }
-    private String [] clusters;
-    private String [] topics;
-    private String [] otherProfile;
+
     
     
 }

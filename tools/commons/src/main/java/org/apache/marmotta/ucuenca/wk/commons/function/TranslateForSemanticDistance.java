@@ -160,7 +160,7 @@ public class TranslateForSemanticDistance {
         return ls;
     }
 
-    private String detectLanguage(String word) {
+    public String detectLanguage(String word) {
         String language = "es";
 
         //create a text object factory

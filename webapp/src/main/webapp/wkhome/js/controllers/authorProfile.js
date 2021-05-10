@@ -1,5 +1,5 @@
-wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$window', 'globalData', 'sparqlQuery', 'Authors',
-  function($scope, $routeParams, $window, globalData, sparqlQuery, Authors) {
+wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$window', 'globalData', 'sparqlQuery', 'Authors', '$translate' , '$rootScope' ,
+  function($scope, $routeParams, $window, globalData, sparqlQuery, Authors , $translate   , $rootScope ) {
     // Define a new author object
     $scope.author = {};
     $scope.coauthors = {};
@@ -10,13 +10,13 @@ wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$windo
     author.encodedUri = encodeURIComponent(author.uri);
     var newhost = $window.location.protocol + '//' + $window.location.hostname + ($window.location.port ? ':8080' : '') + '';
     var profilevalUri = '/author/profileval/'+author.uri;
-    console.log ("URL");
-    console.log(profilevalUri);
+
+    var language = $translate.use();
 
     Authors.query({
       id: author.uri
     }, function(data) {
-      
+      language = $translate.use();
       $scope.author = data;
 
 
@@ -33,7 +33,11 @@ wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$windo
 
       }
 
-      
+      $scope.author.cluster = language == "es" ? data.clustersEs : data.clustersEn;
+      $scope.author.topics = language == "es" ? data.topicsEs : data.topicsEn;
+    
+
+
       var img = data.img == null ? "wkhome/images/no_photo.jpg" : data.img;
       $scope.author.img = img;
       $scope.author.claimUri =  "https://orcid.org/oauth/authorize?client_id="+globalData.client_id+"&response_type=code&scope=/authenticate&redirect_uri="+globalData.callback+"&state="+ profilevalUri;

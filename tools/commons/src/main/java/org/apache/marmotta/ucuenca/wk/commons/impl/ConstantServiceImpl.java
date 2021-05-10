@@ -81,6 +81,12 @@ public class ConstantServiceImpl implements ConstantService {
         return confService.getBaseContext() + "redi";
 //        return "http://ucuenca.edu.ec/wkhuska";
     }
+    
+      @Override
+    public String getCentralGraphTranslate() {
+        return confService.getBaseContext() + "redit";
+//        return "http://ucuenca.edu.ec/wkhuska";
+    }
 
     @Override
     public String getBaseResource() {
@@ -215,7 +221,8 @@ public class ConstantServiceImpl implements ConstantService {
 
     @Override
     public String getClusterGraph() {
-        return confService.getBaseContext() + "clusters";
+        //return confService.getBaseContext() + "clusters";
+        return confService.getBaseContext() + "clustersPub";
     }
     
     @Override

@@ -44,7 +44,7 @@ wkhomeApp.service('globalData', ['$window','cookies', function ($window, cookies
     this.language = "es";
     this.centralGraph = baseURL + "context/redi";
     this.externalAuthorsGraph = "http://ucuenca.edu.ec/wkhuska/externalauthors";
-    this.clustersGraph = baseURL + "context/clusters";
+    this.clustersGraph = baseURL + "context/clustersPub";
                 this.authorsGraph = baseURL + "context/authors";
     this.endpointsGraph = baseURL + "context/endpoints";
     this.organizationsGraph = baseURL + "context/organization";

@@ -1269,18 +1269,24 @@ public class CommonServiceImpl implements CommonService {
              + "           } "
              + "}";*/
             String queryCluster = Prefix
-                    + "SELECT  ?cl   (sample(?clabel_) as ?clabel) FROM <" + con.getClusterGraph() + "> WHERE  {\n"
+                    + "SELECT  ?cl   ?labeles  ?labelen  FROM <" + con.getClusterGraph() + "> WHERE  {\n"
                     + "  <" + uri + ">  dct:isPartOf ?cl .\n"
                     + "	?cl a <http://ucuenca.edu.ec/ontology#Cluster> .\n"
-                    + "	 ?cl rdfs:label ?clabel_.\n"
-                    + "	     }group by ?cl";
+                    + " ?cl rdfs:label ?labeles.\n" 
+                    + " filter (lang (?labeles) = 'es' )\n"
+                    + " ?cl rdfs:label ?labelen.\n" 
+                    + " filter (lang (?labelen) = 'en')"
+                    + "	     }";
 
             String querySubCluster = Prefix
-                    + "SELECT  ?cl   (sample(?clabel_) as ?clabel) FROM <" + con.getClusterGraph() + "> WHERE  {\n"
+                    + "SELECT  ?cl   ?labeles  ?labelen FROM <" + con.getClusterGraph() + "> WHERE  {\n"
                     + "  <" + uri + ">  dct:isPartOf ?cl .\n"
                     + "	?cl a <http://ucuenca.edu.ec/ontology#SubCluster> .\n"
-                    + "	 ?cl rdfs:label ?clabel_.\n"
-                    + "	     }group by ?cl limit 5";
+                    + " ?cl rdfs:label ?labeles.\n" 
+                    + " filter (lang (?labeles) = 'es' )\n"
+                    + " ?cl rdfs:label ?labelen.\n" 
+                    + " filter (lang (?labelen) = 'en')"
+                    + "	     }limit 5";
 
             String metaAuthor1 = Prefix
                     + "SELECT   ?names  ?orgnames ?members ?orcids ?imgs ?emails ?homepages ?citations ?hindexs ?i10indexs ?afs ?scs ?olb where { "
@@ -1383,47 +1389,66 @@ public class CommonServiceImpl implements CommonService {
                 if (!responseSubclusters.isEmpty()) {
                     //   String[] arrayaux = new String[responseCluster.size()];
                     List<String> subclusters = new ArrayList();
+                    List<String> subclusterses = new ArrayList();
                     for (Map<String, Value> mp : responseSubclusters) {
-                        if (mp.get("clabel") != null) {
-                            subclusters.add(mp.get("clabel").stringValue());
+                        if (mp.get("labelen") != null) {
+                            subclusters.add(mp.get("labelen").stringValue());
+                          
+                        }
+                        
+                        if (mp.get("labeles") != null) {
+                            subclusterses.add(mp.get("labeles").stringValue());
                         }
                     }
                     String[] arrayaux = new String[subclusters.size()];
                     arrayaux = subclusters.toArray(arrayaux);
                     a.setTopics(arrayaux);
+                    
+                    a.setTopicsEn(arrayaux);
+                    
+                    
+                    String[] arrayauxes = new String[subclusterses.size()];
+                    arrayauxes = subclusterses.toArray(arrayauxes);
+                    a.setTopicsEs(arrayauxes);
+                    
+                    
+                    
                 }
 
                 List<Map<String, Value>> responseCluster = fastsparql.getSparqlService().query(QueryLanguage.SPARQL, queryCluster);
                 if (!responseCluster.isEmpty()) {
                     //   String[] arrayaux = new String[responseCluster.size()];
                     List<String> clusters = new ArrayList();
+                    List<String> clustersEs = new ArrayList();
                     for (Map<String, Value> mp : responseCluster) {
                         // When groping clusters, KiWi returns weirds results.
                         // When there is not clusters for an author, it returns 
                         // null instead of returning an empty List. The group by
                         // is used to avoid showing repeated results as a result
                         // an empty space.
-                        if (mp.get("clabel") != null) {
-                            clusters.add(mp.get("clabel").stringValue());
+                        
+                        if (mp.get("labelen") != null) {
+                            clusters.add(mp.get("labelen").stringValue());
+                          
                         }
+                        
+                        if (mp.get("labeles") != null) {
+                            clustersEs.add(mp.get("labeles").stringValue());
+                        }
+                        
+                        
+
                     }
                     String[] arrayaux = new String[clusters.size()];
                     arrayaux = clusters.toArray(arrayaux);
                     a.setCluster(arrayaux);
+                    a.setClustersEn(arrayaux);
+                    
+                    String[] arrayauxEs = new String[clustersEs.size()];
+                    arrayauxEs = clustersEs.toArray(arrayauxEs);
+                    a.setClustersEs(arrayauxEs);
 
-                    /*   int np = Integer.parseInt(responseCluster.get(0).get("pub").stringValue());
-                     int min = (int) (np - np * 0.1);
-                     List<String> clusters = new ArrayList();
-                     for (Map<String, Value> mp : responseCluster) {
-                     if (Integer.parseInt(mp.get("pub").stringValue()) > min) {
-                     clusters.add(mp.get("lc").stringValue());
-                     }
-                     }
-                     String[] arrayaux = new String[clusters.size()];
-                     arrayaux = clusters.toArray(arrayaux);
-                     a.setCluster(arrayaux);*/
- /* String lc = responseCluster.get(0).get("lc").stringValue();
-                     a.setCluster(lc.split("\\|"));*/
+
                 }
 
                 List<Map<String, Value>> responseNpub = fastsparql.getSparqlService().query(QueryLanguage.SPARQL, numpubquery);

@@ -1,16 +1,17 @@
-wkhomeControllers.controller('trendCluster', ['$scope', '$window', 'globalData', 'sparqlQuery', 'searchData', '$routeParams', 'Statistics', 'querySubcluster', 'reportService2', '$sce', 'StatisticsPubByArea' , 'StatisticsPubBySubArea' , '$translate' ,
-  function ($scope, $window, globalData, sparqlQuery, searchData, $routeParams, Statistics, querySubcluster, reportService2, $sce , StatisticsPubByArea , StatisticsPubBySubArea , $translate) {
+wkhomeControllers.controller('trendCluster', ['$scope', '$window', 'globalData', 'sparqlQuery', 'searchData', '$routeParams', 'Statistics', 'querySubcluster', 'reportService2', '$sce', 'StatisticsPubByArea' , 'StatisticsPubBySubArea' , '$translate' , '$rootScope' ,
+  function ($scope, $window, globalData, sparqlQuery, searchData, $routeParams, Statistics, querySubcluster, reportService2, $sce , StatisticsPubByArea , StatisticsPubBySubArea , $translate , $rootScope) {
 
      var cluster = $routeParams.cluster;
      var subcluster = $routeParams.subcluster;
      var min = 2010;
      var max = 2020;
-     var lan = $translate.use();
-      console.log ("----");
-       console.log ("Lenguaje");
+     var   language = $translate.use();
+  
 
-       console.log ($translate);
-       console.log ($translate.use());
+      $rootScope.$on('$translateChangeSuccess', function(event, current, previous) {
+       language = $translate.use();
+       callDataAreas ();
+      });
         
 
     $scope.areaCombo = {};
@@ -72,7 +73,7 @@ wkhomeControllers.controller('trendCluster', ['$scope', '$window', 'globalData',
 
 
     function extractData ( data , min, max , type  )
-    {  lan = $translate.use();
+    {  language = $translate.use();
        var subareas = [{'id': '' , tag : 'Todos' }];
        max = 2021;
        console.log ("DEvuelve data");
@@ -82,7 +83,7 @@ wkhomeControllers.controller('trendCluster', ['$scope', '$window', 'globalData',
       for ( i = 0; i < data.length; i++ ){
        console.log (data[i]);
         element = data[i];
-        if ( lan == "es"){
+        if ( language == "es"){
         subarea = element.labeles;
         }else {
         subarea = element.labelen;
@@ -228,11 +229,6 @@ wkhomeControllers.controller('trendCluster', ['$scope', '$window', 'globalData',
     $scope.selectedValue = function () {
       return $scope.datacl;
     }
-
-
-  
-
-
 
 
   }

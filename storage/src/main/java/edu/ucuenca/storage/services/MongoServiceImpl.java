@@ -90,6 +90,8 @@ public class MongoServiceImpl implements MongoService {
     private MongoCollection<Document> projects;
     private MongoCollection<Document> instbyProject;
     private MongoCollection<Document> patent;
+    private MongoCollection<Document> pubtrasnlate;
+    private MongoCollection<Document> subjecttranslation ;
 
     private MongoCollection<Document> sessions;
 
@@ -124,7 +126,8 @@ public class MongoServiceImpl implements MongoService {
         instbyProject = db.getCollection(Collection.INSTBYPROJECT.getValue());
         documentbyarea = db.getCollection(Collection.DOCUMENTBYAREA.getValue()); 
         patent = db.getCollection(Collection.PATENTPROFILE.getValue());
-        
+        pubtrasnlate = db.getCollection(Collection.PUBTRANSLATIONS.getValue());
+        subjecttranslation = db.getCollection(Collection.SUBJECTRANSLATION.getValue());
     }
 
     @Override
@@ -423,6 +426,19 @@ public class MongoServiceImpl implements MongoService {
         return documentbyarea.find(eq("_id", id)).first().toJson();
 
     }
+    
+  @Override
+  public boolean checkPublicationTrasnlate ( String id) {
+    return pubtrasnlate.count(eq("_id", id))> 0;
+            
+    //return pubtrasnlate.find (eq("_id", id)).
+  }
+  
+  @Override
+  public Document getSubjectTr (String id) {
+    
+    return subjecttranslation.find(eq("_id", id)).first();
+  }
 }
 
 

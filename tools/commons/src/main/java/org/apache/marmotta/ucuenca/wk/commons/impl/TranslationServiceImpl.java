@@ -9,7 +9,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.memetix.mst.language.Language;
 import com.memetix.mst.translate.Translate;
+import java.io.IOException;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.marmotta.ucuenca.wk.commons.function.TranslateForSemanticDistance;
 import org.apache.marmotta.ucuenca.wk.commons.service.TranslationService;
 
 
@@ -86,4 +90,17 @@ public class TranslationServiceImpl implements TranslationService {
         return parser.parse("{\"result\": \" No Result \"}").getAsJsonObject();
     }
 
+     @Override
+     public String detectLanguage(String word) {
+       
+      try {
+        TranslateForSemanticDistance ts = new TranslateForSemanticDistance();
+        return ts.detectLanguage(word);
+      } catch (IOException | ClassNotFoundException ex) {
+        Logger.getLogger(TranslationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+      }
+     return "Error";
+     }
+     
+     
 }

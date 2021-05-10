@@ -1,14 +1,52 @@
 
-wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globalData', 'sparqlQuery', 'searchData', 'Statistics', 'Countries' , 
-    function ($routeParams, $scope, $window, globalData, sparqlQuery, searchData, Statistics, Countries) {
+wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globalData', 'sparqlQuery', 'searchData', 'Statistics', 'Countries' ,  '$rootScope' , '$translate' ,
+    function ($routeParams, $scope, $window, globalData, sparqlQuery, searchData, Statistics, Countries ,  $rootScope , $translate ) {
         //if click in pie-chart
+        var language = $translate.use();
+
         $scope.ifClick = function (value) {
             searchData.genericData = value;
             $window.location.hash = "/" + $routeParams.lang + "/w/cloud?" + "datacloud";
         };
         // $scope.themes = [];
 
-        Statistics.query({
+         $rootScope.$on('$translateChangeSuccess', function(event, current, previous) {
+       language = $translate.use();
+       loadCombo ();
+      });
+        
+         loadCombo ();
+
+         function loadCombo () {
+    Statistics.query({
+      id: 'keywords_frequencypub_gt4'
+    }, function (data) {
+       language = $translate.use();
+      $scope.relatedtags = [];
+
+       console.log (data["@graph"])
+
+      _.map(data["@graph"], function (keyword) {
+        
+        array = keyword["rdfs:label"]
+        var lan = {};
+        lan[array[0]['@language']] = array[0]['@value'] ;
+        lan[array[1]['@language']] = array[1]['@value'] ;
+
+        var ims = {
+          id: keyword["@id"],
+          value: lan[language]
+        };
+        $scope.relatedtags.push(ims);
+
+      });
+
+    });
+
+    }
+
+
+     /*   Statistics.query({
           id: 'keywords_frequencypub_gt4'
         }, function(data) {
           $scope.relatedtags = [];
@@ -18,7 +56,7 @@ wkhomeControllers.controller('map', ['$routeParams', '$scope', '$window', 'globa
               value: keyword["rdfs:label"]["@value"]
             });
           });
-        });
+        });*/
       //$scope.datamap = [];
     // $scope.mapOptions =  [];
 

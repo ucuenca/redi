@@ -3,7 +3,7 @@ wkhomeControllers.controller('publicationProfile', ['$scope', '$routeParams', '$
     // Define a new author object
 
 
-      
+      var lang = "es";
      // var uri = "https://redi.cedia.edu.ec/resource/publication/080790388cd3adbc37099a6e41b3e163";
            $scope.publication = {};
     var publication = $routeParams.pub;
@@ -20,7 +20,7 @@ wkhomeControllers.controller('publicationProfile', ['$scope', '$routeParams', '$
      var  uri  = $scope.$parent.$parent.puburi;
         $scope.child(uri);        
     });
-
+   
 
   $scope.loadRelatedAuthor = function (e) {
        console.log ("Cambiar modal");
@@ -176,11 +176,12 @@ wkhomeControllers.controller('publicationProfile', ['$scope', '$routeParams', '$
                      break; 
 
                        case "uc:SubCluster":
-                        dataToSend["subcluster"].push (valor["rdfs:label"]);
+
+                        dataToSend["subcluster"].push ( checklang (valor["rdfs:label"]));
                        break;
 
                        case "uc:Cluster":
-                        dataToSend["cluster"].push (valor["rdfs:label"]);
+                        dataToSend["cluster"].push (checklang (valor["rdfs:label"]));
                        break;
 
                        case "":
@@ -342,6 +343,19 @@ wkhomeControllers.controller('publicationProfile', ['$scope', '$routeParams', '$
     
    }
 
+
+     function checklang ( valor ) {
+       
+       
+      if (lang ==  "es" && valor[0]["@language"]["@language"] == "es" ){
+         label = valor[0]["@value"];
+      }else {
+        label = valor[1]["@value"];
+      }
+
+      return label ;
+
+     }
 
      showsources = function () {
      console.log ("MORE");
