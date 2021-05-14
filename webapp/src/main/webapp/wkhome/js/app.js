@@ -57,6 +57,8 @@ wkhomeApp.service('globalData', ['$window','cookies', function ($window, cookies
     this.organizationsCore = this.serverInstance +'solr/organizations';
     this.patentsCore = this.serverInstance+'solr/patents';
     this.datasetsCore = this.serverInstance+'solr/datasets';
+    this.eventsCore = this.serverInstance+'solr/events';
+    this.servicesCore = this.serverInstance+'solr/services';
 
     this.PREFIX = 'PREFIX bibo: <http://purl.org/ontology/bibo/>'
             + ' PREFIX foaf: <http://xmlns.com/foaf/0.1/>  '
@@ -189,6 +191,18 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                 when('/total/datasets/:query*', {
                   templateUrl: 'wkhome/partials/datasetsAll.html',
                 }).
+                when('/total/events', {
+                  templateUrl: 'wkhome/partials/eventsAll.html',
+                }).
+                when('/total/events/:query*', {
+                  templateUrl: 'wkhome/partials/eventsAll.html',
+                }).
+                when('/total/services', {
+                  templateUrl: 'wkhome/partials/servicesAll.html',
+                }).
+                when('/total/services/:query*', {
+                  templateUrl: 'wkhome/partials/servicesAll.html',
+                }).
                 when('/total/organizations', {
                   templateUrl: 'wkhome/partials/organizationsAll.html',
                 }).
@@ -217,6 +231,12 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                  // controller: 'AuthorProfile'
                 }).when('/dataset/profile/:dataset*', {
                   templateUrl: 'wkhome/partials/datasetProfile.html',
+                 // controller: 'AuthorProfile'
+                }).when('/event/profile/:event*', {
+                  templateUrl: 'wkhome/partials/eventProfile.html',
+                 // controller: 'AuthorProfile'
+                }).when('/service/profile/:service*', {
+                  templateUrl: 'wkhome/partials/serviceProfile.html',
                  // controller: 'AuthorProfile'
                 }).
                  when('/project/collaborationProject', {

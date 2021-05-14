@@ -6,6 +6,7 @@
 package edu.ucuenca.storage.api;
 
 import org.apache.marmotta.platform.core.exception.MarmottaException;
+import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -32,7 +33,7 @@ public interface PopulateMongo {
   /**
    * Pre-calculate information to network building.
    */
-  public void networks();
+  public void networks() throws ParseException;
 
   /**
    * Information of clusters and subclusters.

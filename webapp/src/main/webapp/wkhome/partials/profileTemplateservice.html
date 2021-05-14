@@ -1,0 +1,59 @@
+<div class="row profileTop">
+  <div class="col-sm-4 text-center">
+    <div class="imgProfile" style = "background-image:url('{{ngModel.img}}')"> </div>
+    <!--<img src="{{ngModel.img}}" class="img-thumbnail" style="max-width: 150px; margin-top: 5%">-->
+  </div>
+
+  <div class="col-sm-8 authorData">
+    <ul>
+      <li style="width: 100%;">
+     
+        <h4 id="NameAuthorProfile">{{ngModel.title}}   </h4>
+      </li>
+      <li class="autprofilem2" > <a ng-repeat="org in ngModel.orgs"  target="_blank" href="/#/info/statisticsbyInst/{{org.org}}"> {{ org.orgName }}  </a> </li>
+      <li class="autprofilem2" > <a ng-show="ngModel.identifier" href="https://orcid.org/{{ngModel.identifier}}"><img width="17" src="wkhome/images/orcid_icon.png"> Patent Number: {{ngModel.identifier}} </a> </li>
+      <li> <div share-square="true" share-links="Facebook, Twitter, LinkedIn" share-title="Dataset - {{ngModel.title}} "> Compartir perfil en: </div> </li>
+      <li> 
+        <div class="bioregion">
+          {{ngModel.abstract}}
+        <span ng-repeat="email in ngModel.emails">{{email}} </span> 
+        </div>
+      </li>
+      <li> <a ng-show="ngModel.homepage" href="{{ngModel.homepage}}">  <img width="20vw" src="https://rescue-one.com/wp-content/uploads/2015/05/HOME.png" class="img" title="homepage"></a>
+        <span ng-show="ngModel.otherProfile" ng-repeat="prof in ngModel.otherProfile">
+          <logo-profile uri="{{prof}}"></logo-profile>
+        </span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="row aditionalInformation">
+  <div class="col-sm-4">
+      <ul>
+      <li class="head-list">
+        <font color=#243082> <strong> Temáticas </strong> </font>
+      </li>
+      <span ng-repeat="org in ngModel.subject"><li class="sublist">{{org | camelCase}} </li> </span>
+    </ul>
+  </div>
+
+  <div class="col-sm-4">
+    <ul>
+      <li class="head-list">
+        <font color=#243082> <strong> Fechas relevantes </strong> </font>
+      </li>
+      <li>  Tipo de servicio: {{ngModel.stype}} </li>
+      <li>  Fecha de publicación: {{ngModel.date}} </li>
+    </ul>
+  </div>
+
+  <div class="col-sm-4">
+    <ul>
+      <li class="head-list">
+        <font color=#243082> <strong> Universidades  </strong> </font>
+      </li>
+      <span ><li class="sublist" >{{ngModel.funders}} </li> </span>
+    </ul>
+  </div>
+</div>

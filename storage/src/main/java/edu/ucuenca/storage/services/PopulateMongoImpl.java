@@ -73,6 +73,9 @@ import org.bson.Document;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.mortbay.util.ajax.JSON;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Model;
 import org.openrdf.model.URI;
@@ -436,19 +439,24 @@ public class PopulateMongoImpl implements PopulateMongo {
   }
 
   @Override
-  public void networks() {
+  public void networks() throws ParseException {
     final Task task = taskManagerService.createSubTask("Caching related authors", "Mongo Service");
     try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
       MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
       // Delete and create collection
       final MongoCollection<Document> collection = db.getCollection(MongoService.Collection.RELATEDAUTHORS.getValue());
-      collection.drop();
+      //collection.drop();
       BoundedExecutor threadPool = BoundedExecutor.getThreadPool(3);
       task.updateMessage("Calculating related authors");
       final List<Map<String, Value>> query = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getAuthorsCentralGraph());
       int i = 0;
       for (final Map<String, Value> mp : query) {
         final int j = i++;
+        String uriau = mp.get("a").stringValue();
+        if (collection.find(new Document("_id", uriau)).first() != null) {
+          continue;
+        }
+
         threadPool.submitTask(new Runnable() {
           @Override
           public void run() {
@@ -457,10 +465,38 @@ public class PopulateMongoImpl implements PopulateMongo {
             log.info("Relating {}/{} ", j, query.size());
             task.updateDetailMessage("URI", stringValue);
             task.updateDetailMessage("Status", j + "/" + query.size());
+
             String collaboratorsData = commonService.getCollaboratorsData(stringValue);
-            Document parse = Document.parse(collaboratorsData);
-            parse.append("_id", stringValue);
-            collection.insertOne(parse);
+            try {
+
+              JSONParser parser = new JSONParser();
+              JSONObject jsonObject;
+
+              jsonObject = (JSONObject) parser.parse(collaboratorsData);
+              JSONArray msg = (JSONArray) jsonObject.get("nodes");
+              for (int i = 0; i < msg.size(); i++) {
+                String nodeid = ((JSONObject) msg.get(i)).get("id").toString();
+
+                JSONObject jsonObjectnode = (JSONObject) parser.parse(mongoService.getStatisticsByAuthor(nodeid));
+
+                JSONObject keywords = ((JSONObject) jsonObjectnode.get("keywords"));
+
+                if (keywords != null && keywords.get("data") != null) {
+                  JSONArray arr = (JSONArray) keywords.get("data");
+                  String str = "";
+                  for (Object obj : arr) {
+                    str += ((JSONObject) obj).get("subject") + ", ";
+                  }
+                  ((JSONObject) msg.get(i)).put("subject", str);
+                }
+              }
+              Document parse = Document.parse(jsonObject.toJSONString());
+              parse.append("_id", stringValue);
+              collection.insertOne(parse);
+            } catch (ParseException ex) {
+              java.util.logging.Logger.getLogger(PopulateMongoImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
           }
         });
 
@@ -709,8 +745,8 @@ public class PopulateMongoImpl implements PopulateMongo {
     }
     return null;
   }
-  
-   @Override
+
+  @Override
   public void ProjectProfile() {
     Task task = taskManagerService.createSubTask("Caching projects", "Mongo Service");
     try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
@@ -724,7 +760,7 @@ public class PopulateMongoImpl implements PopulateMongo {
         task.updateTotalSteps(projects.size());
         for (int i = 0; i < projects.size(); i++) {
           String uri = projects.get(i).get("uri").stringValue();
-          String proj = getProfileInfo( uri);
+          String proj = getProfileInfo(uri);
           Document parse = Document.parse(proj);
           parse.append("_id", uri);
           collection.insertOne(parse);
@@ -739,8 +775,7 @@ public class PopulateMongoImpl implements PopulateMongo {
       }
     }
   }
-  
-  
+
   @Override
   public void PatentProfile() {
     Task task = taskManagerService.createSubTask("Caching patents", "Mongo Service");
@@ -755,7 +790,7 @@ public class PopulateMongoImpl implements PopulateMongo {
         task.updateTotalSteps(patents.size());
         for (int i = 0; i < patents.size(); i++) {
           String uri = patents.get(i).get("uri").stringValue();
-          String pat = getPatentInfo( uri);
+          String pat = getPatentInfo(uri);
           Document parse = Document.parse(pat);
           parse.append("_id", uri);
           collection.insertOne(parse);
@@ -770,61 +805,57 @@ public class PopulateMongoImpl implements PopulateMongo {
       }
     }
   }
-  
+
   public String getProfileInfo(String uri) throws MarmottaException {
     List<Map<String, Value>> proy = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getProjectInfo(uri));
     JSONObject main = new JSONObject();
     //JSONArray array = new JSONArray();
     JSONObject obj = new JSONObject();
     for (Map<String, Value> a : proy) {
-      obj.put("uri",  uri );
+      obj.put("uri", uri);
       obj.put("title", a.get("title").stringValue());
-      obj.put("starDate", validateexist ( a.get("starDate")) );
-      obj.put("endDate", validateexist (a.get("endDate")));
-      obj.put("funders", validateexist (a.get("funders")));
+      obj.put("starDate", validateexist(a.get("starDate")));
+      obj.put("endDate", validateexist(a.get("endDate")));
+      obj.put("funders", validateexist(a.get("funders")));
       obj.put("members", validateexist(a.get("orgs")));
       //obj.put("members", validateexist(a.get("orgs")));
-      
-      
+
     }
     main.put("data", obj);
     return main.toJSONString();
   }
-  
-  
+
   public String getPatentInfo(String uri) throws MarmottaException {
     List<Map<String, Value>> patent = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getPatentInfo(uri));
     JSONObject main = new JSONObject();
     //JSONArray array = new JSONArray();
     JSONObject obj = new JSONObject();
     for (Map<String, Value> a : patent) {
-      obj.put("uri",  uri );
+      obj.put("uri", uri);
       obj.put("title", a.get("title").stringValue());
-      obj.put("identifier",  a.get("pnumber") );
-      obj.put("subject", validateexist (a.get("subjects")));
-      obj.put("abstract", validateexist (a.get("abstract")));
-      obj.put("rdate", validateexist (a.get("rdate")));
-      obj.put("adate", validateexist (a.get("adate")));
-      obj.put("edate", validateexist (a.get("edate")));
+      obj.put("identifier", a.get("pnumber"));
+      obj.put("subject", validateexist(a.get("subjects")));
+      obj.put("abstract", validateexist(a.get("abstract")));
+      obj.put("rdate", validateexist(a.get("rdate")));
+      obj.put("adate", validateexist(a.get("adate")));
+      obj.put("edate", validateexist(a.get("edate")));
       obj.put("link", validateexist(a.get("link")));
       obj.put("name", validateexist(a.get("name")));
       obj.put("lorgs", validateexist(a.get("lorgs")));
-      
-      
+
     }
     main.put("data", obj);
     return main.toJSONString();
   }
-  
-  
-    public String validateexist ( Value val){
-    
-     return  val == null ? "" : val.stringValue();
-    }
-  
+
+  public String validateexist(Value val) {
+
+    return val == null ? "" : val.stringValue();
+  }
+
   @Override
   public void areasbydocument() {
-     Task task = taskManagerService.createSubTask("Caching areas", "Mongo Service");
+    Task task = taskManagerService.createSubTask("Caching areas", "Mongo Service");
     try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
       MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
 
@@ -837,19 +868,19 @@ public class PopulateMongoImpl implements PopulateMongo {
         for (int i = 0; i < clusters.size(); i++) {
           String uri = clusters.get(i).get("c").stringValue();
           String doc = getDocumentsbyArea(uri);
-          String author = getStatsQuerysArea (uri , 1);
-          String org = getStatsQuerysArea (uri , 2);
-          String prov = getStatsQuerysArea (uri , 3);
-          if (doc != null ) {
-            Document area = new Document ();
+          String author = getStatsQuerysArea(uri, 1);
+          String org = getStatsQuerysArea(uri, 2);
+          String prov = getStatsQuerysArea(uri, 3);
+          if (doc != null) {
+            Document area = new Document();
             Document parse = Document.parse(doc);
             area.append("_id", uri);
             area.append("date", parse);
             area.append("authors", Document.parse(author));
             area.append("orgs", Document.parse(org));
-            area.append("provs", Document.parse(prov) );
+            area.append("provs", Document.parse(prov));
             collection.insertOne(area);
-          }  
+          }
           task.updateDetailMessage("Area", uri);
           task.updateProgress(i + 1);
         }
@@ -860,79 +891,85 @@ public class PopulateMongoImpl implements PopulateMongo {
       }
     }
   }
-  
-  public  String getDocumentsbyArea(String uri) throws MarmottaException{
-        String response;
-    
-        List<Map<String, Value>> docs = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getDocumentbyArea(uri));
-       
-        TreeMap <String, Integer> tree_map  = new TreeMap (); 
-        for (int j = 0 ; j < docs.size() ; j++ ) {
-         Map<String, Value> doc = docs.get(j);
-         String keys = doc.get("tl") == null ?  doc.get("documentText").stringValue().toLowerCase() :  doc.get("tl").stringValue().toLowerCase()  ;
-         if (keys.isEmpty()){ continue;}
-         keys = keys.replaceAll("[^a-zA-Z0-9ñáéíóú\\s]", "");
-         keys = keys.replaceAll("[\\n\\s+]", " ");
-         String date = doc.get("y").stringValue();
-         String uridoc = doc.get("doc").stringValue();
-         String query = "PREFIX :<http://www.ontotext.com/graphdb/similarity/>\n" +
-                        "PREFIX inst:<http://www.ontotext.com/graphdb/similarity/instance/>\n" +
-                        "PREFIX pubo: <http://ontology.ontotext.com/publishing#>\n" +
-                        "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
-                        "\n" +
-                        "SELECT  ?documentID (SAMPLE(?ll) as ?label) ?score {\n" +
-                        "    ?search a inst:uareas ;\n" +
-                        "        :searchTerm '"+keys+"' ;" +
-                        "        :searchParameters '';\n" +
-                        "        :documentResult ?result .\n" +
-                        "    ?result :value ?documentID ;\n" +
-                        "            :score ?score.\n" +
-                        "    ?documentID rdfs:label ?ll\n" +
-                        "	} group by ?documentID ?score";
-         System.out.println (j+"-"+uridoc+":"+keys);
-         List<Map<String, Value>> areasc = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, query);
-          if (!areasc.isEmpty() && areasc.size() > 1){
-             if (uri.equals(areasc.get(0).get("documentID").stringValue()) || uri.equals(areasc.get(1).get("documentID").stringValue()) ){
-                 insertAreabyDoc (conService.getClusterGraph() , uridoc , "http://purl.org/dc/terms/isPartOf" , uri );
-                 insertAreabyDoc (conService.getClusterGraph() , uridoc , RDF.TYPE.toString() , BIBO.ACADEMIC_ARTICLE.toString() );
-                 if (tree_map.containsKey(date)){ 
-                   tree_map.put(date, tree_map.get(date)+1);
-                 }else {
-                   tree_map.put(date, 1);
-                 }
-             }
+
+  public String getDocumentsbyArea(String uri) throws MarmottaException {
+    String response;
+
+    List<Map<String, Value>> docs = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getDocumentbyArea(uri));
+
+    TreeMap<String, Integer> tree_map = new TreeMap();
+    for (int j = 0; j < docs.size(); j++) {
+      Map<String, Value> doc = docs.get(j);
+      String keys = doc.get("tl") == null ? doc.get("documentText").stringValue().toLowerCase() : doc.get("tl").stringValue().toLowerCase();
+      if (keys.isEmpty()) {
+        continue;
+      }
+      keys = keys.replaceAll("[^a-zA-Z0-9ñáéíóú\\s]", "");
+      keys = keys.replaceAll("[\\n\\s+]", " ");
+      String date = doc.get("y").stringValue();
+      String uridoc = doc.get("doc").stringValue();
+      String query = "PREFIX :<http://www.ontotext.com/graphdb/similarity/>\n"
+              + "PREFIX inst:<http://www.ontotext.com/graphdb/similarity/instance/>\n"
+              + "PREFIX pubo: <http://ontology.ontotext.com/publishing#>\n"
+              + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+              + "\n"
+              + "SELECT  ?documentID (SAMPLE(?ll) as ?label) ?score {\n"
+              + "    ?search a inst:uareas ;\n"
+              + "        :searchTerm '" + keys + "' ;"
+              + "        :searchParameters '';\n"
+              + "        :documentResult ?result .\n"
+              + "    ?result :value ?documentID ;\n"
+              + "            :score ?score.\n"
+              + "    ?documentID rdfs:label ?ll\n"
+              + "	} group by ?documentID ?score";
+      System.out.println(j + "-" + uridoc + ":" + keys);
+      List<Map<String, Value>> areasc = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, query);
+      if (!areasc.isEmpty() && areasc.size() > 1) {
+        if (uri.equals(areasc.get(0).get("documentID").stringValue()) || uri.equals(areasc.get(1).get("documentID").stringValue())) {
+          insertAreabyDoc(conService.getClusterGraph(), uridoc, "http://purl.org/dc/terms/isPartOf", uri);
+          insertAreabyDoc(conService.getClusterGraph(), uridoc, RDF.TYPE.toString(), BIBO.ACADEMIC_ARTICLE.toString());
+          if (tree_map.containsKey(date)) {
+            tree_map.put(date, tree_map.get(date) + 1);
+          } else {
+            tree_map.put(date, 1);
           }
-              
         }
-        if (!tree_map.isEmpty()){
-          response = JSONValue.toJSONString(tree_map);
-        }else {
-          response = null;
-        } 
-      return response;
+      }
+
+    }
+    if (!tree_map.isEmpty()) {
+      response = JSONValue.toJSONString(tree_map);
+    } else {
+      response = null;
+    }
+    return response;
   }
-  
-  public void insertAreabyDoc (String graph , String subject , String  property , String  object  ) {
+
+  public void insertAreabyDoc(String graph, String subject, String property, String object) {
     try {
       String insertq = queriesService.buildInsertQuery(graph, subject, property, object);
       fastSparqlService.getSparqlService().update(QueryLanguage.SPARQL, insertq);
     } catch (MarmottaException | InvalidArgumentException | MalformedQueryException | UpdateExecutionException ex) {
       java.util.logging.Logger.getLogger(PopulateMongoImpl.class.getName()).log(Level.SEVERE, null, ex);
     }
-  
+
   }
-  
-  
-  public String getStatsQuerysArea(String uri , int number) throws MarmottaException {
+
+  public String getStatsQuerysArea(String uri, int number) throws MarmottaException {
     String query = "";
     switch (number) {
-      case 1 : query = queriesService.getAuthorsbyArea(uri) ; break;
-      case 2 : query = queriesService.getOrgsbyArea(uri) ; break;
-      case 3 : query = queriesService.getProvbyArea(uri);  break;
-        
+      case 1:
+        query = queriesService.getAuthorsbyArea(uri);
+        break;
+      case 2:
+        query = queriesService.getOrgsbyArea(uri);
+        break;
+      case 3:
+        query = queriesService.getProvbyArea(uri);
+        break;
+
     }
-    
-    
+
     List<Map<String, Value>> data = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, query);
     JSONObject main = new JSONObject();
     JSONArray array = new JSONArray();
@@ -949,8 +986,6 @@ public class PopulateMongoImpl implements PopulateMongo {
     main.put("data", array);
     return main.toJSONString();
   }
-  
-
 
   @Override
   public void publications() {
@@ -1001,44 +1036,41 @@ public class PopulateMongoImpl implements PopulateMongo {
     main.put("data", array);
     return main.toJSONString();
   }
-  
-  
-    public String getStatsInstbyAreaPub (String uri) throws MarmottaException {
+
+  public String getStatsInstbyAreaPub(String uri) throws MarmottaException {
 
     JSONObject main = new JSONObject();
     JSONArray array = new JSONArray();
     String actual = "";
     List<Map<String, Value>> areas = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getAreasSubAreasPub());
-    for ( Map<String, Value> area : areas ){
-        String area_uri = area.get ("area").stringValue();
-        String area_label = area.get("label").stringValue();
-        String subarea_uri = area.get ("subarea").stringValue();
-        String subarea_label = area.get ("labels").stringValue();
-        if (actual.equals( area_uri ) ) {
+    for (Map<String, Value> area : areas) {
+      String area_uri = area.get("area").stringValue();
+      String area_label = area.get("label").stringValue();
+      String subarea_uri = area.get("subarea").stringValue();
+      String subarea_label = area.get("labels").stringValue();
+      if (actual.equals(area_uri)) {
         continue;
-        
-        }
-        actual = area_uri;
-        List<Map<String, Value>> orgdata = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getOrgAreasPub ( uri , area_uri  ));
-        for (Map<String, Value> a : orgdata ) {
+
+      }
+      actual = area_uri;
+      List<Map<String, Value>> orgdata = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getOrgAreasPub(uri, area_uri));
+      for (Map<String, Value> a : orgdata) {
         if (a.get("area") == null) {
           continue;
         }
         JSONObject obj = new JSONObject();
-        obj.put("uri", area_uri );
-        obj.put("name", area_label );
+        obj.put("uri", area_uri);
+        obj.put("name", area_label);
         obj.put("total", a.get("total").stringValue());
         array.add(obj);
       }
-      
+
     }
-    
-    
+
     main.put("data", array);
-    
+
     return main.toJSONString();
-    
-    
+
     /*for (Map<String, Value> a : area) {
       if (a.get("area") == null) {
         continue;
@@ -1129,31 +1161,30 @@ public class PopulateMongoImpl implements PopulateMongo {
     main.put("data", array);
     return main.toJSONString();
   }
-  
-    public String getAreasDate (String area_uri) throws MarmottaException {
+
+  public String getAreasDate(String area_uri) throws MarmottaException {
     JSONObject main = new JSONObject();
     JSONArray array = new JSONArray();
-    List<Map<String, Value>> areasDate = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getResearchPubDate ( area_uri ));
-    for (Map<String, Value> subareas : areasDate){
-        String subarea_uri = subareas.get ("area").stringValue();
-        String year = subareas.get("y").stringValue();
-        String total = subareas.get ("total").stringValue();
-        
-        JSONObject obj = new JSONObject();
-        obj.put("y", year);
-        obj.put("total", total);
-        array.add(obj);
+    List<Map<String, Value>> areasDate = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getResearchPubDate(area_uri));
+    for (Map<String, Value> subareas : areasDate) {
+      String subarea_uri = subareas.get("area").stringValue();
+      String year = subareas.get("y").stringValue();
+      String total = subareas.get("total").stringValue();
+
+      JSONObject obj = new JSONObject();
+      obj.put("y", year);
+      obj.put("total", total);
+      array.add(obj);
     }
-    
-     main.put("data", array);
+
+    main.put("data", array);
     return main.toJSONString();
-    
-    }
-  
-    
-    @Override
-    public String getPublicationDatesbyAreas ()  {
-       final Task task = taskManagerService.createSubTask("Caching statistics by Publications Areas", "Mongo Service");
+
+  }
+
+  @Override
+  public String getPublicationDatesbyAreas() {
+    final Task task = taskManagerService.createSubTask("Caching statistics by Publications Areas", "Mongo Service");
     try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
       MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
       MongoCollection<Document> collection = db.getCollection(MongoService.Collection.DOCUMENTDATEBYAREA.getValue());
@@ -1180,29 +1211,23 @@ public class PopulateMongoImpl implements PopulateMongo {
               parse.append("labelen", area_labelen);
               collection.insertOne(parse);
         }
-        
-        String responsesub = getAreasDate (subarea_uri);
-   
-    
+
+        String responsesub = getAreasDate(subarea_uri);
 
         Document parsesub = Document.parse(responsesub);
-        parsesub.append("_id", area_uri+"|"+subarea_uri);
+        parsesub.append("_id", area_uri + "|" + subarea_uri);
         parsesub.append("area", area_uri);
         parsesub.append("subarea", subarea_uri);
         parsesub.append("labeles", subarea_labeles);
         parsesub.append("labelen", subarea_labelen);
         collectionsub.insertOne(parsesub);
-        
-        
-    
-    } 
-    
-    } catch (Exception ex) {
-    return "Error";
-    }
-    
 
-  
+      }
+
+    } catch (Exception ex) {
+      return "Error";
+    }
+
     return "Success";
   }
 
@@ -1840,7 +1865,7 @@ public class PopulateMongoImpl implements PopulateMongo {
           boolean hasNext = collection.find(eq("_id", txtVal.hashCode())).iterator().hasNext();
           if (!hasNext) {
             traductor = trService.traductorIBM(txtVal);
-            traductor = traductor .replaceAll("context;;;", "") .replaceAll("context ;;;", "").trim();
+            traductor = traductor.replaceAll("context;;;", "").replaceAll("context ;;;", "").trim();
             traductor = traductor.replaceAll(";;;", " ; ");
             Document dc = new Document();
             dc.put("_id", txtVal.hashCode());
@@ -2118,7 +2143,6 @@ public class PopulateMongoImpl implements PopulateMongo {
 //      fastSparqlService.getGraphDBInstance().runSplitAddOp(connection2, addMRedi, redGrp);
 //      fastSparqlService.getGraphDBInstance().runSplitDelOp(connection2, delMClusters, clsGrp);
 //      fastSparqlService.getGraphDBInstance().runSplitAddOp(connection2, addMClusters, clsGrp);
-
       //Apply GraphDB
       fastSparqlService.getGraphDBInstance().runSplitDelOp(connection, delMRedi, redGrp);
       fastSparqlService.getGraphDBInstance().runSplitAddOp(connection, addMRedi, redGrp);
@@ -2146,24 +2170,20 @@ public class PopulateMongoImpl implements PopulateMongo {
 
   @Override
   public void instbyProj() {
-      final Task task = taskManagerService.createSubTask("Caching related inst by projects", "Mongo Service");
+    final Task task = taskManagerService.createSubTask("Caching related inst by projects", "Mongo Service");
     try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
       MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
       // Delete and create collection
       final MongoCollection<Document> collection = db.getCollection(MongoService.Collection.INSTBYPROJECT.getValue());
       collection.drop();
-      String data  = commonService.getProjectbyInstInfo();
+      String data = commonService.getProjectbyInstInfo();
       Document parse = Document.parse(data);
       parse.append("_id", "All");
       collection.insertOne(parse);
-      
-      
-      
-    }
-    
-  }
 
-  
+    }
+
+  }
 
   class SynchronizedParse {
 

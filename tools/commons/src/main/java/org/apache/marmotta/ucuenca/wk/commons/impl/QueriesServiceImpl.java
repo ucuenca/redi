@@ -2071,7 +2071,7 @@ public class QueriesServiceImpl implements QueriesService {
             + "  graph <" + con.getOrganizationsGraph() + "> {\n"
             + "  	?o a foaf:Organization .\n"
             + "  }\n"
-            + "}";
+            + "} order by rand()";
   }
 
   @Override

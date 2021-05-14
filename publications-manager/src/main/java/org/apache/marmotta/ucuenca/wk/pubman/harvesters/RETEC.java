@@ -23,6 +23,7 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.LinkedHashModel;
 import org.openrdf.model.impl.ValueFactoryImpl;
+import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.rio.RDFHandlerException;
 
 /**
@@ -123,6 +124,7 @@ public class RETEC {
         }
         URI ouri = instance.createURI(this.base + id);
 
+        m.add(ouri, RDF.TYPE, instance.createURI("http://eurocris.org/ontology/cerif#Service"));
         m.add(ouri, instance.createURI("http://eurocris.org/ontology/cerif#has_startDate"), instance.createLiteral(dd));
         m.add(ouri, instance.createURI("http://eurocris.org/ontology/cerif#has_name"), instance.createLiteral(name));
         m.add(ouri, instance.createURI("http://eurocris.org/ontology/cerif#has_description"), instance.createLiteral(description));

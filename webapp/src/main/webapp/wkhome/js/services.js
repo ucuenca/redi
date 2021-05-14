@@ -151,6 +151,20 @@ wkhomeServices.factory('DatasetsService', ['$resource', '$http', 'globalData',
     return $resource(serverInstance + 'solr/datasets/select?q=(:search)&wt=json&fl=lmf.uri,title,author-name', {search: '@id'});
   }]);
 
+wkhomeServices.factory('EventsService', ['$resource', '$http', 'globalData',
+  function ($resource, $http, globalData) {
+    var serverInstance = globalData.serverInstance;
+    //serverInstance = "https://rediclon.cedia.edu.ec/";
+    return $resource(serverInstance + 'solr/events/select?q=(:search)&wt=json&fl=lmf.uri,title,author-name', {search: '@id'});
+  }]);
+
+wkhomeServices.factory('ServicesService', ['$resource', '$http', 'globalData',
+  function ($resource, $http, globalData) {
+    var serverInstance = globalData.serverInstance;
+    //serverInstance = "https://rediclon.cedia.edu.ec/";
+    return $resource(serverInstance + 'solr/services/select?q=(:search)&wt=json&fl=lmf.uri,title,author-name', {search: '@id'});
+  }]);
+
 wkhomeServices.factory('PublicationsService', ['$resource', '$http', 'globalData',
   function ($resource, $http, globalData) {
     var serverInstance = globalData.serverInstance;
@@ -338,6 +352,20 @@ wkhomeServices.factory('Datasets', ['$resource', '$http', 'globalData',
   function ($resource, $http, globalData) {
     var serverInstance = globalData.serverInstance;
     return $resource(serverInstance + 'solr/datasets/select?q=lmf.uri:":search"&wt=json', {search: '@id'});
+  }
+]);
+
+wkhomeServices.factory('Events', ['$resource', '$http', 'globalData',
+  function ($resource, $http, globalData) {
+    var serverInstance = globalData.serverInstance;
+    return $resource(serverInstance + 'solr/events/select?q=lmf.uri:":search"&wt=json', {search: '@id'});
+  }
+]);
+
+wkhomeServices.factory('Services', ['$resource', '$http', 'globalData',
+  function ($resource, $http, globalData) {
+    var serverInstance = globalData.serverInstance;
+    return $resource(serverInstance + 'solr/services/select?q=lmf.uri:":search"&wt=json', {search: '@id'});
   }
 ]);
 
