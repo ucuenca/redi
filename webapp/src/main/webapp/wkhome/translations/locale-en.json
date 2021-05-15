@@ -104,6 +104,8 @@
 "proyects":"proyects",
 "organizations":"organizations",
 "datasets":"datasets",
+  "services":"services",
+  "events":"events",
 "patents":"patents",
 "topics":"topics",
 "statistics":"statistics",

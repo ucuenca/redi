@@ -477,7 +477,7 @@ public class PopulateMongoImpl implements PopulateMongo {
               for (int i = 0; i < msg.size(); i++) {
                 String nodeid = ((JSONObject) msg.get(i)).get("id").toString();
 
-                JSONObject jsonObjectnode = (JSONObject) parser.parse(mongoService.getStatisticsByAuthor(nodeid));
+                JSONObject jsonObjectnode = (JSONObject) parser.parse(ms.getStatisticsByAuthor(nodeid));
 
                 JSONObject keywords = ((JSONObject) jsonObjectnode.get("keywords"));
 

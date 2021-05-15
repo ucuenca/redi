@@ -117,6 +117,8 @@
 "organizations":"organizaciones",
 "patents":"patentes",
 "datasets":"datos",
+  "services":"servicios",
+  "events":"eventos",
 "topics":"tematicas",
 "statistics":"estadisticas",
 "explore":"Explorar",

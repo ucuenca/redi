@@ -191,13 +191,13 @@ public class DisambiguationServiceImpl implements DisambiguationService {
                     providersResult.add(mp);
                 }
             } else {
-//                ProcessAuthors(Providers, null);
-//                sparqlUtils.copyGraph(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + ASA_C);
+                ProcessAuthors(Providers, null);
+                sparqlUtils.copyGraph(constantService.getAuthorsSameAsGraph(), constantService.getAuthorsSameAsGraph() + ASA_C);
             }
 
-//            for (int w0 = 0; w0 < 5; w0++) {
-//                completeLinkage(Providers);
-//            }
+            for (int w0 = 0; w0 < 5; w0++) {
+                completeLinkage(Providers);
+            }
 //            saveLinks();
 //            applyManualFix();
 //            checkWarnings();
