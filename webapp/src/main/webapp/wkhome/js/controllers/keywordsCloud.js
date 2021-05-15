@@ -108,7 +108,7 @@ wkhomeControllers.controller('keywordsCloud', ['$translate', '$routeParams', '$s
                             $scope.data = [];
                             _.map(res, function (area) {
                                 var label = "";
-                                if (language == "es" && area["labeles"] } ) {
+                                if (language == "es" && area["labeles"]  ) {
                                     label = "labeles";
                                 } else {
                                     label = "labelen";

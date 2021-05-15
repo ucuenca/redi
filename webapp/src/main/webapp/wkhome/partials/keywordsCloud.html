@@ -1,136 +1,93 @@
-wkhomeControllers.controller('keywordsCloud', ['$translate', '$routeParams', '$scope', 'globalData', 'sparqlQuery', 'searchData', '$window', 'Statistics', 'clustersTotals', 'subclustersTotals', '$translate' , '$rootScope' ,
-    function ($translate, $routeParams, $scope, globalData, sparqlQuery, searchData, $window, Statistics, clustersTotals, subclustersTotals , $translate , $rootScope) {
-       /* $("html, body").animate({
-            scrollTop: 0
-        }, 'slow', 'swing');*/
+<div id="scrollToTop">
+</div>
+<hr>
 
-       /* $scope.selectedItem = undefined;
-         $scope.data = [];
-        Statistics.query({
-            id: 'keywords_frequencypub_gt4'
-        }, function (data) {
-            $scope.areas = [];
-            _.map(data["@graph"], function (keyword) {
-                $scope.areas.push({
-                    label: keyword["rdfs:label"]["@value"],
-                    id: keyword["@id"]
-                });
-            });
-        });*/
-        var language = $translate.use();
-          $scope.data = [];
-          $scope.selectedItem = undefined;
+<div ng-controller="exportController">
+  <div ng-controller="keywordsCloud"  style="display: flex;" >
+    <div class="col-md-12">
+      <div class="row subject-cloud">
+        <div class="col-md-12">
+          <div class="col-md-4" ng-cloak="">
+            <select name="board" id="board"  ng-change="changeComboSelected()" ng-model="selectedItem" ng-options="area.id as area.label for area  in areas">
+              <option value="">{{'Palabra Clave' | translate}}</option>
+            </select>
+          </div>
 
-       $rootScope.$on('$translateChangeSuccess', function(event, current, previous) {
-        language = $translate.use();
-        loadCombo ();
-        });
+          <cloud-tag data="data" style="display: block; height: 80%;padding-top: 0px;" ctrl-fn="ctrlFn(value)" clickon-Relatedauthor="clickonRelatedauthor(value)" ng-model="value"></cloud-tag>
+          <div id="scrollToHere">
+          </div>
+          <hr>
+          <hr>
+          <div id="blackspace">
+          </div>
+        </div>
+      </div>
+    </div>
 
+    <!-- <center>
+      <div class="col-md-12 head-info">
+        <div id="title" style="font-size:50pt; text-align: center; alignment-adjust: central;">
+        </div>
+      </div>
+    </center>
 
-         loadCombo ();
+    <div class="col-md-9 tree-node-info" style="height:100vh">
+      <div>
+        <br/>
+        <div class="col-md-4" ng-show="showRepButtons">
+          <button ng-click="exportData('pdf', 'ReportPublicationsByKeyword', keyw)" title="Export List to PDF">
+                        <img src="./resources/pdf.png" height="36" width="36" />
+                    </button>
+          <button ng-click="exportData('xls', 'ReportPublicationsByKeyword', keyw)" title="Export List to Excel">
+                        <img src="./resources/excel.png" height="36" width="36" />
+                    </button>
+          <br ng-show="loading" />
+          <p ng-show="loading"><img src="./resources/loading.gif" align="middle" height="20" width="20"> Loading report...</p>
 
-         function loadCombo () {
-    Statistics.query({
-      id: 'keywords_frequencypub_gt4'
-    }, function (data) {
-       language = $translate.use();
-      $scope.relatedtags = [];
+        </div>
+        <div class="col-md-8" style="padding-top: 30px; font-size: 20pt; color: #003769; padding-left: 30%; font-style: italic">PUBLICACIONES</div>
+      </div>
 
-       console.log (data["@graph"])
-       $scope.areas = [];
-      _.map(data["@graph"], function (keyword) {
-        
-        array = keyword["rdfs:label"]
-        var lan = {};
-        lan[array[0]['@language']] = array[0]['@value'] ;
-        lan[array[1]['@language']] = array[1]['@value'] ;
-        
-        var ims = {
-          id: keyword["@id"],
-          label: lan[language]
-        };
-        $scope.areas.push(ims);
+      <h3></h3>
+      <h4 style="padding: 20px" class="text-success"> {{'Total of Publications found'| translate }}: {{todos.length}} </h4>
 
-      });
+      <div id="list">
+        <ul style="width: 100%;">
+          <li ng-repeat="publication in filteredTodos">
+            <div class="info">
+              <div class="heading">
+                <h2 class="title" ng-if="publication.uri">
+                  <a href="{{publication.uri['@id']}}" target='_blank'>
+                    {{publication.title}}
+                  </a>
+                </h2>
+                <h2 class="title" ng-if="!publication.uri">{{publication.title}}</h2>
+              </div>
+              <div class="body">
+                <strong ng-show="publication.abstract">Abstract:</strong>
+                <hm-read-more hm-text="{{publication.abstract}}" hm-limit="500" hm-more-text="{{ 'read.more' | translate }}" hm-less-text="{{ 'read.less' | translate}}" hm-dots-class="dots" hm-link-class="links" ng-show="publication.abstract">
+                </hm-read-more>
+                <br>
+                <strong ng-show="publication.author">Autores:</strong>
+                <span ng-repeat="author in publication.author" ng-show="publication.author"><a href="#/es/w/author/{{author.id}}">{{author.name}}</a>{{$last ? '' : ', '}}</span>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <center>
+        <ul uib-pagination boundary-links="true" total-items="todos.length" ng-model="currentPage" class="pagination-sm" max-size="maxSize" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+      </center>
+    </div>
 
-    });
-
-    }
-
-        renderAll ();
-
-
-
-
-           function renderAll () {
-                   waitingDialog.show();
-
-
-            clustersTotals.query({}, function (res) {
-         
-                        _.map(res, function (area) {
-                            var label = "";
-                            if (language == "es" && area["labeles"]  ) {
-                                label = "labeles";
-                            } else {
-                                label = "labelen";
-                            }
-
-                            $scope.data.push({
-                                id: area["area"],
-                                label: area[label],
-                                value: area["totalAuthors"]
-                            });
-                        });
-                        waitingDialog.hide();
-            });
-              }
-         
-
-    
-
-       $scope.changeComboSelected  = function() {
-                if ($scope.selectedItem != undefined && $scope.selectedItem.length > 0) {
-               
-               renderSub ();
-
-            } 
-            else {
-                renderAll ();
-            }
-
-       }
-
-       function renderSub () {
-       /* waitingDialog.show();*/
-             subclustersTotals.query({id: $scope.selectedItem}, function (res) {
-               
-                            $scope.data = [];
-                            _.map(res, function (area) {
-                                var label = "";
-                                if (language == "es" && area["labeles"] } ) {
-                                    label = "labeles";
-                                } else {
-                                    label = "labelen";
-                                }
-                                $scope.data.push({
-                                    id: area["sc"],
-                                    label: area[label],
-                                    value: area["totalAuthors"]
-                                });
-                            });
-                         /*   waitingDialog.hide();*/
-                        });
-
-       }
-
-         $scope.$watch('selectedItem', function () { 
-           renderSub ();
-         });
-
-     
-
-
-
-    }
-]);
+    <div class='col-md-3'>
+      <div style="padding-top: 30px; font-size: 20pt; color: #003769; padding-left: 1%; font-style: italic">AUTORES</div>
+      <div class="tree-node-author-info" style="height:100vh">
+        <div class="authorsByPublications">
+          <div id="title" style="font-size:50pt"></div>
+          <a href="" target="_blank"></a>
+        </div>
+      </div>
+    </div> -->
+  </div>
+</div>
