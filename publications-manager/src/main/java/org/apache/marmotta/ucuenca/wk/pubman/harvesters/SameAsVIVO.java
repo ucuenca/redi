@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cepra.vivo;
+package org.apache.marmotta.ucuenca.wk.pubman.harvesters;
 
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
@@ -117,7 +117,6 @@ public class SameAsVIVO {
     ConcurrentHashMap<String, String> additionalHttpHeaders = new ConcurrentHashMap<>();
     additionalHttpHeaders.put("Accept", "application/sparql-results+json,*/*;q=0.9");
     data.setAdditionalHttpHeaders(additionalHttpHeaders);
-    data.setUsernameAndPassword("rediclon", "5783b10a8f22$mznx");
     data.initialize();
 
     return data;

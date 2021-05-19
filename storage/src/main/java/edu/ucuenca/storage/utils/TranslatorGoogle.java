@@ -32,7 +32,7 @@ public class TranslatorGoogle {
 
   
   public TranslatorGoogle () throws IOException {
-      InputStream fin =new FileInputStream(System.getProperty("user.home")+"clavegoogle/redi-dev-312217-6e3e93fe6a79.json");
+      InputStream fin =new FileInputStream(System.getProperty("user.home")+"/clavegoogle/redi-dev-312217-6e3e93fe6a79.json");
       
       translate  = TranslateOptions.newBuilder().setCredentials(ServiceAccountCredentials.fromStream(fin)).build().getService();
       numberChar = 0;

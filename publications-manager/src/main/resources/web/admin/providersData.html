@@ -70,6 +70,10 @@
       {
         runFnSendNotifications(host, true);
       }
+      function runCRIS()
+      {
+        runFnCRIS(host);
+      }
       function uploadBanner()
       {
         runUploadBanner(host);
@@ -147,6 +151,9 @@
       <p>
       <p>
         <button type="button"  onclick="runSendInvitations()"  value="Activar Función">Send Invitations</button>
+      <p>
+      <p>
+        <button type="button"  onclick="runCRIS()"  value="Activar Función">Harvest Events and Services</button>
       <p>
 
       <div id="imgloading" style="visibility: hidden">

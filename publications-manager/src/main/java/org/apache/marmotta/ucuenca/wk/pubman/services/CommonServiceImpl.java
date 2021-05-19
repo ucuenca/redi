@@ -440,10 +440,10 @@ public class CommonServiceImpl implements CommonService {
                 + "    VALUES ?author {<" + uri + "> } . "
                 + "    ?author foaf:name ?names . "
                 + "    OPTIONAL { ?author  foaf:familyName ?lastname .} "
-                + "    ?author foaf:publications ?pub .   "
+                + "    #?author foaf:publications ?pub .   \n"
                 + "    OPTIONAL { ?author foaf:img ?img . }"
-                + "    ?pub dct:subject ?subject . "
-                + "    ?subject rdfs:label ?slabel . "
+                + "    #?pub dct:subject ?subject . \n"
+                + "    #?subject rdfs:label ?slabel . \n"
                 + "    ?author  <http://schema.org/memberOf>  ?org . "
                 + "   GRAPH <" + con.getOrganizationsGraph() + "> { "
                 + "     ?org <" + REDI.NAME.toString() + "> ?orgname "
@@ -472,9 +472,9 @@ public class CommonServiceImpl implements CommonService {
 
                 for (Map<String, Value> author : response) {
                     //String subject = author.get("subject").stringValue();
-                    if (isStopWord(author.get("label").stringValue())) {
-                        continue;
-                    }
+                    //if (isStopWord(author.get("label").stringValue())) {
+                    //    continue;
+                    //}
                     //if (maxScoreAuthor == 0) {
                     //  maxScoreAuthor = Integer.parseInt(author.get("npub").stringValue());
                     //}
@@ -495,7 +495,7 @@ public class CommonServiceImpl implements CommonService {
                             + "                        SELECT ?author ?score {\n"
                             + "                                ?search a inst:authorsIdx ;\n"
                             + "                                    :searchDocumentID <" + uri + ">;\n"
-                            + "                                    :searchParameters \"-numsearchresults 100\";\n"
+                            + "                                    :searchParameters \"-numsearchresults 75\";\n"
                             + "                                    :documentResult ?result .\n"
                             + "                                ?result :value ?author ;\n"
                             + "                                        :score ?score.\n"
@@ -505,9 +505,9 @@ public class CommonServiceImpl implements CommonService {
                             + "\n"
                             + "                     } .\n"
                             + "                     GRAPH  <" + con.getCentralGraph() + "> {       \n"
-                            + "                       ?pub dct:subject ?subject .  \n"
-                            + "                       ?subject rdfs:label ?slabel .  \n"
-                            + "                       ?author foaf:publications ?pub  .    \n"
+                            + "                       #?pub dct:subject ?subject .  \n"
+                            + "                       #?subject rdfs:label ?slabel .  \n"
+                            + "                       #?author foaf:publications ?pub  .    \n"
                             + "                       ?author foaf:name ?names .  \n"
                             + "                   OPTIONAL { ?author  foaf:familyName ?lastname .} \n"
                             + "                   OPTIONAL { ?author  foaf:img  ?img . }  \n"
@@ -546,7 +546,7 @@ public class CommonServiceImpl implements CommonService {
                         //double Score = authorSubjectS / (double) maxScoreAuthor;
 
                         if (!cMap.containsKey(couri)) {
-                            Collaborator c = new Collaborator(uri, couri, coName, lName, Score, isCoauthor(uri, couri), isClusterPartner(uri, couri), coOrg, getSubjectAuthor(couri), Score);
+                            Collaborator c = new Collaborator(uri, couri, coName, lName, Score, isCoauthor(uri, couri), isClusterPartner(uri, couri), coOrg, getSubjectAuthor(couri, false), Score);
                             c.setImgUri(imgUri);
                             cMap.put(couri, c);
                             if (maXScoreCoauthor < c.getDocScore()) {
@@ -558,7 +558,7 @@ public class CommonServiceImpl implements CommonService {
 
                 }
 
-                Collaborator base = new Collaborator(uri, uri, authorName, authorLName, authorOrg, getSubjectAuthor(uri));
+                Collaborator base = new Collaborator(uri, uri, authorName, authorLName, authorOrg, getSubjectAuthor(uri, true));
                 base.setImgUri(imgbase);
                 return coauthorsToJson(base, orderCoauthors(cMap, 100), maXScoreCoauthor);
 
@@ -576,7 +576,11 @@ public class CommonServiceImpl implements CommonService {
         return null;
     }
 
-    public String getSubjectAuthor(String coUri) throws MarmottaException {
+    public String getSubjectAuthor(String coUri, boolean run) throws MarmottaException {
+      
+      if(!run) {
+        return null;
+      }
         String querySubject = "PREFIX dct: <http://purl.org/dc/terms/> "
                 + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>  "
                 + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>  "
@@ -911,7 +915,7 @@ public class CommonServiceImpl implements CommonService {
                  for (String str :subjects){
                  join = join+", "+str;
                  }   */
-                String subject = getSubjectAuthor(uri);
+                String subject = getSubjectAuthor(uri, true);
                 String orgs = authors.get("orgnames").stringValue();
                 String mails = authors.get("mails") != null ? authors.get("mails").stringValue() : "";
                 String[] coauthors = {};
@@ -1037,7 +1041,7 @@ public class CommonServiceImpl implements CommonService {
                 if (!authors.isEmpty()) {
                     String uri = authors.get("person").stringValue();
                     String names = getUniqueName(authors.get("names").stringValue(), ";");
-                    String subject = getSubjectAuthor(uri);
+                    String subject = getSubjectAuthor(uri, true);
                     String orgs = authors.get("orgnames2").stringValue();
                     String orgsarea = authors.get("orgnames").stringValue();
                     String mails = authors.get("mails") != null ? authors.get("mails").stringValue() : "";

@@ -6,7 +6,7 @@
 package org.apache.marmotta.ucuenca.wk.pubman.services.providers;
 
 import com.google.common.base.Preconditions;
-import edu.emory.mathcs.backport.java.util.Collections;
+import java.util.Collections;
 import java.net.URLEncoder;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;

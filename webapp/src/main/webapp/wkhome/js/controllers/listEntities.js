@@ -42,12 +42,26 @@ wkhomeControllers.controller('listEntitiesController', ['$scope', '$window', 'gl
             defaulturl = 'total/patents/q=title:LET*&fl=*&rows=10&wt=json&sort=title+asc';
             queryurl = 'total/patents/q=(LET)&fl=*&rows=10&wt=json';
             var inil = 'R';
-        break;
+            break;
+            
             case 'datasets':
             $scope.core = globalData.datasetsCore;
             defaulturl = 'total/datasets/q=title:LET*&fl=*&rows=10&wt=json&sort=title+asc';
             queryurl = 'total/datasets/q=(LET)&fl=*&rows=10&wt=json';
             break;
+
+            case 'events':
+            $scope.core = globalData.eventsCore;
+            defaulturl = 'total/events/q=title:LET*&fl=*&rows=10&wt=json&sort=title+asc';
+            queryurl = 'total/events/q=(LET)&fl=*&rows=10&wt=json';
+            break;
+
+            case 'services':
+            $scope.core = globalData.servicesCore;
+            defaulturl = 'total/services/q=title:LET*&fl=*&rows=10&wt=json&sort=title+asc';
+            queryurl = 'total/services/q=(LET)&fl=*&rows=10&wt=json';
+            break;
+
 
             case 'organizations':
             $scope.core = globalData.organizationsCore;
@@ -163,6 +177,14 @@ wkhomeControllers.controller('listEntitiesController', ['$scope', '$window', 'gl
             }else if (typent === 'datasets') {
 
                 $window.location.hash = "/dataset/profile/"+puburi;
+
+            }else if (typent === 'events') {
+
+                $window.location.hash = "/event/profile/"+puburi;
+
+            }else if (typent === 'services') {
+
+                $window.location.hash = "/service/profile/"+puburi;
 
             }else if (typent === 'organizations') {
 
