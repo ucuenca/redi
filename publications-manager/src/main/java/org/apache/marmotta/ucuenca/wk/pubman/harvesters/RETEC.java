@@ -78,6 +78,9 @@ public class RETEC {
 
       for (int i = 0; i < jsonArray.length(); i++) {
         JSONObject offer = jsonArray.getJSONObject(i);
+        if (!offer.getString("registrationStatus").equals("H")) {
+          continue;
+        }
         String string = offer.getString("createdIn");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
         Date dd = sdf.parse(string);

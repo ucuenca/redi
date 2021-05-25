@@ -38,7 +38,7 @@ package org.apache.marmotta.ucuenca.wk.pubman.harvesters;
  * @author cedia
  */
 public class indexOAI {
-//
+
 //  public static SPARQLRepository gRepository(String dbs) throws RepositoryException {
 //    final SPARQLRepository data = new SPARQLRepository("http://201.159.222.25:8180/repositories/" + dbs, "http://201.159.222.25:8180/repositories/" + dbs + "/statements");
 //    ConcurrentHashMap<String, String> additionalHttpHeaders = new ConcurrentHashMap<>();

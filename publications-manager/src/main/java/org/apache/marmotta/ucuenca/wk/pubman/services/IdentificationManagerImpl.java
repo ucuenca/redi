@@ -69,11 +69,9 @@ public class IdentificationManagerImpl implements IdentificationManager {
     URI createURIp = ValueFactoryImpl.getInstance().createURI("https://redi.cedia.edu.ec/ont#newBucket");
     URI createURIo = ValueFactoryImpl.getInstance().createURI(b);
     URI createURIc = ValueFactoryImpl.getInstance().createURI(constantService.getBaseContext() + "notifications");
-    RepositoryConnection repositoryConnetionCustom = sparqlService.getRepositoryConnetionCustom();
-    repositoryConnetionCustom.begin();
-    repositoryConnetionCustom.add(createURI, createURIp, createURIo, createURIc);
-    repositoryConnetionCustom.commit();
-    repositoryConnetionCustom.close();
+    Model m = new LinkedHashModel();
+    m.add(createURI, createURIp, createURIo, createURIc);
+    sparqlService.getGraphDBInstance().addBuffer(createURIc, m);
   }
 
   public Set<String> seekBucket(Set<String> set, MapSetWID mpp) throws MarmottaException, Exception {
@@ -94,11 +92,58 @@ public class IdentificationManagerImpl implements IdentificationManager {
 
   @Override
   public void applyFix() throws MarmottaException, Exception {
-    SPARQLUtils sparqlUtils = new SPARQLUtils(sparqlService.getSparqlService());
-    sparqlUtils.minusGraph(getGraph(), constantService.getBaseContext() + "bucketsManualFix", "http://www.w3.org/2002/07/owl#isNot", "https://redi.cedia.edu.ec/ont#element");
-    sparqlUtils.insertGraph(getGraph(), constantService.getBaseContext() + "bucketsManualFix", "http://www.w3.org/2002/07/owl#is", "https://redi.cedia.edu.ec/ont#element");
-//        sparqlUtils.minusGraph(getGraph(), constantService.getBaseContext() + "bucketsWarnings", "http://www.w3.org/2002/07/owl#isNot", "https://redi.cedia.edu.ec/ont#element");
-//        sparqlUtils.insertGraph(getGraph(), constantService.getBaseContext() + "bucketsWarnings", "http://www.w3.org/2002/07/owl#is", "https://redi.cedia.edu.ec/ont#element");
+
+    String q1 = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
+            + "delete {\n"
+            + "    graph <https://redi.cedia.edu.ec/context/buckets> {\n"
+            + "        ?a <https://redi.cedia.edu.ec/ont#element> ?b .\n"
+            + "    }\n"
+            + "} insert {\n"
+            + "    graph <https://redi.cedia.edu.ec/context/buckets> {\n"
+            + "        ?x <https://redi.cedia.edu.ec/ont#type> 'author' .\n"
+            + "        ?x <https://redi.cedia.edu.ec/ont#element> ?b .\n"
+            + "    }\n"
+            + "} where {\n"
+            + "    graph <https://redi.cedia.edu.ec/context/bucketsManualFix> {\n"
+            + "        ?x owl:is ?b .\n"
+            + "    }\n"
+            + "    optional {\n"
+            + "        graph <https://redi.cedia.edu.ec/context/buckets> {\n"
+            + "        	?a <https://redi.cedia.edu.ec/ont#type> 'author' .\n"
+            + "        	?a <https://redi.cedia.edu.ec/ont#element> ?b .\n"
+            + "    	}\n"
+            + "    }\n"
+            + "} ";
+    String q2 = "delete {\n"
+            + "    graph <https://redi.cedia.edu.ec/context/buckets> {\n"
+            + "        ?c <https://redi.cedia.edu.ec/ont#element> ?b .\n"
+            + "    }\n"
+            + "} where {\n"
+            + "    graph <https://redi.cedia.edu.ec/context/buckets> {\n"
+            + "        ?a <https://redi.cedia.edu.ec/ont#type> 'author' .\n"
+            + "        ?c <https://redi.cedia.edu.ec/ont#type> 'ext_author' .\n"
+            + "        ?a <https://redi.cedia.edu.ec/ont#element> ?b .\n"
+            + "        ?c <https://redi.cedia.edu.ec/ont#element> ?b .\n"
+            + "        filter (str(?a)!=str(?c)).\n"
+            + "    }\n"
+            + "} ";
+    String q3 = "delete {\n"
+            + "    graph <https://redi.cedia.edu.ec/context/buckets> {\n"
+            + "        ?a <https://redi.cedia.edu.ec/ont#type> ?t .\n"
+            + "    }\n"
+            + "} where {\n"
+            + "    graph <https://redi.cedia.edu.ec/context/buckets> {\n"
+            + "        ?a <https://redi.cedia.edu.ec/ont#type> ?t .\n"
+            + "        filter not exists {\n"
+            + "        	?a <https://redi.cedia.edu.ec/ont#element> ?b .    \n"
+            + "        }\n"
+            + "    }\n"
+            + "} ";
+
+    sparqlService.getSparqlService().update(QueryLanguage.SPARQL, q1);
+    sparqlService.getSparqlService().update(QueryLanguage.SPARQL, q2);
+    sparqlService.getSparqlService().update(QueryLanguage.SPARQL, q3);
+
   }
 
   @Override
