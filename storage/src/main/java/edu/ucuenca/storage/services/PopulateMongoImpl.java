@@ -75,7 +75,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.mortbay.util.ajax.JSON;
+//import org.mortbay.util.ajax.JSON;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Model;
 import org.openrdf.model.URI;
@@ -351,15 +351,47 @@ public class PopulateMongoImpl implements PopulateMongo {
     loadStadistics(MongoService.Collection.STATISTICS.getValue(), queries);
     getClustersNames( MongoService.Collection.STATISTICS.getValue() , "clusterNames");
   }
+  
+  public Document loadProfileAuthor ( Map<String, Value> o ) throws MarmottaException{
+        String uri = o.get("URI").stringValue();
+
+        Document orgdoc = new Document();
+        orgdoc.append( "_id" , uri );
+        orgdoc.append("name", o.get("name").stringValue());
+        orgdoc.append("fullname", o.get("fullNameEs").stringValue());
+        orgdoc.append("fullnameEn", o.get("fullNameEn").stringValue());
+        orgdoc.append("country", o.get("country").stringValue());
+        orgdoc.append("province", o.get("province").stringValue());
+        orgdoc.append("city", o.get("city").stringValue());
+        orgdoc.append("link",  validateexist(o.get("link")));
+        orgdoc.append("description", validateexist(o.get("description")) );
+        orgdoc.append("scopusId", validateexist(o.get("scopusId")) );
+     
+        
+        
+        List<Map<String, Value>> countValues = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getTotalResourcesbyOrg(uri));        
+        for (Map<String, Value> c : countValues ) {
+        orgdoc.append("N_authors", c.get("tAuthor").stringValue());
+        orgdoc.append("N_publications", c.get("tPub").stringValue());   
+        orgdoc.append("N_projects", validateexist(c.get("tPro")));   
+
+        }
+  
+    return orgdoc;
+  }
+  
 
   @Override
   public void LoadStatisticsbyInst() {
-    Task task = taskManagerService.createSubTask("Caching statistics by Institution", "Mongo Service");
+    Task task = taskManagerService.createSubTask("Caching  Profile and statistics by Institution", "Mongo Service");
     try (MongoClient client = new MongoClient(conf.getStringConfiguration("mongo.host"), conf.getIntConfiguration("mongo.port"));) {
       MongoDatabase db = client.getDatabase(MongoService.Database.NAME.getDBName());
       MongoCollection<Document> collection = db.getCollection(MongoService.Collection.STATISTICS_INST.getValue());
       collection.drop();
-
+      
+      MongoCollection<Document> orgcollection = db.getCollection(MongoService.Collection.PROFILE_INST.getValue()); 
+      orgcollection.drop();
+      
       List<String> queries = new ArrayList();
       queries.add("inst_by_area");
       queries.add("pub_by_date");
@@ -379,11 +411,22 @@ public class PopulateMongoImpl implements PopulateMongo {
         uri = o.get("URI").stringValue();
         name = o.get("name").stringValue();
         fullname = o.get("fullNameEs").stringValue();
+
+        
+   
+       
         task.updateDetailMessage("Institution ", uri);
+        
+      
+        Document d = loadProfileAuthor (  o );
         for (String q : queries) {
           ints++;
           String response = statisticsbyInstQuery(uri, q);
-
+          
+          if ( q.equals("inst_by_area")) {
+          d.append("inst_by_area", Document.parse(response));
+         }
+          
           parse.append(q, Document.parse(response));
 
           log.info("Stats Inst {} ", uri);
@@ -397,6 +440,7 @@ public class PopulateMongoImpl implements PopulateMongo {
         parse.append("name", name);
         parse.append("fullname", fullname);
         collection.insertOne(parse);
+        orgcollection.insertOne(d);
       }
       taskManagerService.endTask(task);
       // loadStadistics(MongoService.Collection.STATISTICS.getValue(), queries);
@@ -411,7 +455,7 @@ public class PopulateMongoImpl implements PopulateMongo {
     switch (query) {
       case "inst_by_area":
         //return this.getStatsInstbyArea(uri);
-        return this.getStatsInstbyAreaPub(uri);
+        return this.getStatsInstbyArea(uri);
       case "pub_by_date":
         return this.getStatsInstbyPubDate(uri);
       case "author_by_inst":
@@ -1019,7 +1063,7 @@ public class PopulateMongoImpl implements PopulateMongo {
 
   }
 
-  public String getStatsInstbyArea(String uri) throws MarmottaException {
+  /*public String getStatsInstbyArea(String uri) throws MarmottaException {
     List<Map<String, Value>> area = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getClustersbyInst(uri));
     JSONObject main = new JSONObject();
     JSONArray array = new JSONArray();
@@ -1035,9 +1079,9 @@ public class PopulateMongoImpl implements PopulateMongo {
     }
     main.put("data", array);
     return main.toJSONString();
-  }
+  }*/
 
-  public String getStatsInstbyAreaPub(String uri) throws MarmottaException {
+  public String getStatsInstbyArea (String uri) throws MarmottaException {
 
     JSONObject main = new JSONObject();
     JSONArray array = new JSONArray();
@@ -1045,15 +1089,16 @@ public class PopulateMongoImpl implements PopulateMongo {
     List<Map<String, Value>> areas = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getAreasSubAreasPub());
     for (Map<String, Value> area : areas) {
       String area_uri = area.get("area").stringValue();
-      String area_label = area.get("label").stringValue();
-      String subarea_uri = area.get("subarea").stringValue();
-      String subarea_label = area.get("labels").stringValue();
+      String area_label = area.get("labelaes").stringValue();
+      String area_labelen = area.get("labelaen").stringValue();
+     // String subarea_uri = area.get("subarea").stringValue();
+     // String subarea_label = area.get("labels").stringValue();
       if (actual.equals(area_uri)) {
         continue;
 
       }
       actual = area_uri;
-      List<Map<String, Value>> orgdata = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getOrgAreasPub(uri, area_uri));
+      List<Map<String, Value>> orgdata = fastSparqlService.getSparqlService().query(QueryLanguage.SPARQL, queriesService.getOrgAreasAuthor(uri, area_uri));
       for (Map<String, Value> a : orgdata) {
         if (a.get("area") == null) {
           continue;
@@ -1061,6 +1106,8 @@ public class PopulateMongoImpl implements PopulateMongo {
         JSONObject obj = new JSONObject();
         obj.put("uri", area_uri);
         obj.put("name", area_label);
+        obj.put("nameEs", area_label);
+        obj.put("nameEn", area_labelen);
         obj.put("total", a.get("total").stringValue());
         array.add(obj);
       }

@@ -59,6 +59,8 @@ public interface PopulateMongo {
   public void cleanSPARQLS();
 
   public void LoadStatisticsbyInst();
+  
+  //public void LoadInstProfile();
 
   public String getStatsbyAuthor();
 

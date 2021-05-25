@@ -52,7 +52,7 @@ public class OrganizationServiceImpl implements OrganizationService {
       private final  static String LANGES = "@es";
 
     @Override
-    public String addOrganization(String acro, String namEn, String namEs, String alias, String scopusId , String country, String prov, String city, String lat, String lon, String type ) {
+    public String addOrganization(String acro, String namEn, String namEs, String alias, String scopusId , String country, String prov, String city, String lat, String lon, String type , String link , String description ) {
         String uriOrg = con.getOrganizationBaseUri()+acro ;
          if (!askOrganization (uriOrg)) {
              insertOrganization(uriOrg, REDI.NAME.toString(), acro , STR);
@@ -67,6 +67,9 @@ public class OrganizationServiceImpl implements OrganizationService {
              insertOrganization(uriOrg, REDI.LONGITUDE.toString(), lon , STR);
              insertOrganization(uriOrg, REDI.TYPE.toString(), type , STR);
              insertOrganization(uriOrg, RDF.TYPE.toString() , FOAF.ORGANIZATION.toString() , STR);
+             insertOrganization(uriOrg, REDI.URL.toString() , link , STR);
+             insertOrganization(uriOrg, REDI.DESCRIPTION.toString() , description , STR);
+    
              return "Successfully Registration" ;
          } else {
              return "Fail: ACRONYM ALREADY IN USE";
@@ -156,7 +159,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     
     
     @Override
-   public  String editOrg (String acro, String namEn, String namEs, String alias, String scopusId, String country, String prov, String city, String lat, String lon, String type ) {
+   public  String editOrg (String acro, String namEn, String namEs, String alias, String scopusId, String country, String prov, String city, String lat, String lon, String type , String link , String description ) {
          try {
              String uriOrg = con.getOrganizationBaseUri()+acro ;
              
@@ -169,6 +172,8 @@ public class OrganizationServiceImpl implements OrganizationService {
              editOrganization(uriOrg, REDI.CITY.toString(), city , STR);
              editOrganization(uriOrg, REDI.LATITUDE.toString(), lat , STR);
              editOrganization(uriOrg, REDI.LONGITUDE.toString(), lon , STR);
+             editOrganization(uriOrg, REDI.URL.toString(), link , STR);
+             editOrganization(uriOrg, REDI.DESCRIPTION.toString(), description , STR);
              editOrganization(uriOrg, REDI.TYPE.toString(), type , STR);
              
              return "Success";

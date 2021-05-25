@@ -33,6 +33,8 @@ function organizationRegister() {
     var lan = $("#org_location_lan").val();
     var long = $("#org_location_long").val();
     var type = $("#org_type").val();
+    var link = $("#org_link").val();
+    var description = $("#org_description").val();
 
     // alert (name);
 
@@ -41,7 +43,7 @@ function organizationRegister() {
         type: "POST",
         dataType: "text", //result data type
         url: host + "authors-module/orgRegister?acro=" + acro + "&namEn=" + namEn + "&namEs=" + namEs + "&alias="+alia+ "&scopusId="+ scopusid +"&coun=" + coun +
-                "&prov=" + prov + "&city=" + city + "&lan=" + lan + "&long=" + long + "&type=" + type,
+                "&prov=" + prov + "&city=" + city + "&lan=" + lan + "&long=" + long + "&type=" + type +"&link=" + link +"&description=" + description,
         success: function(Result) {
             //document.getElementById("imgloading").style.visibility = "hidden";
            // alert("Correcto: " + Result);
@@ -156,6 +158,8 @@ function edit(URI) {
             $("input#org_location_lan").val(obj.data[0].lang);
             $("input#org_location_long").val(obj.data[0].long);
             $("input#org_type").val(obj.data[0].type);
+            $("input#org_link").val(obj.data[0].link);
+            $("input#org_description").val(obj.data[0].description);
             
               $("#button_org_edit").css("display","block");
               $("#button_org_reg").css("display","none");
@@ -186,6 +190,8 @@ function editOrg() {
     var lan = $("#org_location_lan").val();
     var long = $("#org_location_long").val();
     var type = $("#org_type").val();
+    var link = $("#org_link").val();
+    var description = $("#org_description").val();
 
 
   
@@ -194,7 +200,7 @@ function editOrg() {
         type: "POST",
         dataType: "text", //result data type
         url: host + "authors-module/orgEdit?acro=" + acro + "&namEn=" + namEn + "&namEs=" + namEs +  "&alias="+alia+"&scopusId="+ scopusid +"&coun=" + coun +
-                "&prov=" + prov + "&city=" + city + "&lan=" + lan + "&long=" + long + "&type=" + type,
+                "&prov=" + prov + "&city=" + city + "&lan=" + lan + "&long=" + long + "&type=" + type + "&link=" + link+"&description=" + description,
         success: function(Result) {
             //document.getElementById("imgloading").style.visibility = "hidden";
             table.ajax.reload( null, false );
@@ -221,6 +227,9 @@ function NewOrg() {
     var lan = $("#org_location_lan").val("");
     var long = $("#org_location_long").val("");
     var type = $("#org_type").val("");
+    var type = $("#org_link").val("");
+    var type = $("#org_description").val("");
+    
     
     $("#button_org_edit").css("display","none");
     $("#button_org_reg").css("display","block");

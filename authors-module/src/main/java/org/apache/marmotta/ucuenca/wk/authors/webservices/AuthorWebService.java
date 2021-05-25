@@ -237,22 +237,22 @@ public class AuthorWebService {
     @POST
     @Path("/orgRegister")
     @SuppressWarnings({"PMD.ExcessiveMethodLength", "PMD.AvoidDuplicateLiterals"})
-    public Response orgRegister(@QueryParam("acro") String acro, @QueryParam("namEn") String namEn, @QueryParam("namEs") String namEs, @QueryParam("alias") String alias, @QueryParam("scopusId") String scopusId, @QueryParam("coun") String coun, @QueryParam("prov") String prov, @QueryParam("city") String city, @QueryParam("lan") String lan, @QueryParam("long") String lon, @QueryParam("type") String type) throws UpdateException, DaoException {
+    public Response orgRegister(@QueryParam("acro") String acro, @QueryParam("namEn") String namEn, @QueryParam("namEs") String namEs, @QueryParam("alias") String alias, @QueryParam("scopusId") String scopusId, @QueryParam("coun") String coun, @QueryParam("prov") String prov, @QueryParam("city") String city, @QueryParam("lan") String lan, @QueryParam("long") String lon, @QueryParam("type") String type , @QueryParam("link") String link , @QueryParam("description") String description ) throws UpdateException, DaoException {
         // String resultado = endpointService.addEndpoint("true", name, endpoint, "-", "-", "-", "-", "-", "-", "-");
         // log.info(resultado);
         // String result = authorService.extractOAI(name, endpoint);
-        String result = organizationService.addOrganization(acro, namEn, namEs, alias, scopusId, coun, prov, city, lan, lon, type);
+        String result = organizationService.addOrganization(acro, namEn, namEs, alias, scopusId, coun, prov, city, lan, lon, type , link , description);
         return Response.ok().entity(result).build();
 
     }
 
     @POST
     @Path("/orgEdit")
-    public Response orgEdit(@QueryParam("acro") String acro, @QueryParam("namEn") String namEn, @QueryParam("namEs") String namEs, @QueryParam("alias") String alias, @QueryParam("scopusId") String scopusId, @QueryParam("coun") String coun, @QueryParam("prov") String prov, @QueryParam("city") String city, @QueryParam("lan") String lan, @QueryParam("long") String lon, @QueryParam("type") String type) throws UpdateException, DaoException {
+    public Response orgEdit(@QueryParam("acro") String acro, @QueryParam("namEn") String namEn, @QueryParam("namEs") String namEs, @QueryParam("alias") String alias, @QueryParam("scopusId") String scopusId, @QueryParam("coun") String coun, @QueryParam("prov") String prov, @QueryParam("city") String city, @QueryParam("lan") String lan, @QueryParam("long") String lon, @QueryParam("type") String type , @QueryParam("link") String link , @QueryParam("description") String description) throws UpdateException, DaoException {
         // String resultado = endpointService.addEndpoint("true", name, endpoint, "-", "-", "-", "-", "-", "-", "-");
         // log.info(resultado);
         // String result = authorService.extractOAI(name, endpoint);
-        String result = organizationService.editOrg(acro, namEn, namEs, alias, scopusId, coun, prov, city, lan, lon, type);
+        String result = organizationService.editOrg(acro, namEn, namEs, alias, scopusId, coun, prov, city, lan, lon, type , link , description);
         if ("Success".equals(result)) {
             return Response.ok().entity(result).build();
         } else {

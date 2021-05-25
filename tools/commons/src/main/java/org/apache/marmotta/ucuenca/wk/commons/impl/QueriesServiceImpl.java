@@ -260,7 +260,7 @@ public class QueriesServiceImpl implements QueriesService {
     return "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
             + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
             + "PREFIX REDI: <http://ucuenca.edu.ec/ontology#>"
-            + "select DISTINCT ?URI ?name ?fullNameEn  ?fullNameEs ?alias ?country ?province ?city ?type ?lang ?long "
+            + "select DISTINCT ?URI ?name ?fullNameEn  ?fullNameEs ?alias ?country ?province ?city ?type ?lang ?long ?link ?description  ?scopusId "
             + "FROM <" + con.getOrganizationsGraph() + ">"
             + " where "
             + " {   ?URI <" + RDF.TYPE.toString() + "> <" + FOAF.Organization.toString() + ">  . "
@@ -276,7 +276,11 @@ public class QueriesServiceImpl implements QueriesService {
             + "OPTIONAL { ?URI <" + REDI.TYPE.toString() + "> ?type } ."
             + "OPTIONAL { ?URI <" + REDI.LATITUDE.toString() + "> ?lang } . "
             + "OPTIONAL { ?URI <" + REDI.LONGITUDE.toString() + "> ?long } . "
+            + "OPTIONAL { ?URI <" + REDI.URL.toString() + "> ?link } . "
+            + "OPTIONAL { ?URI <" + REDI.DESCRIPTION.toString() + "> ?description } . "
+            + "OPTIONAL { ?URI <http://vivoweb.org/ontology/core#scopusId> ?scopusId } . "
             + "}";
+    //http://vivoweb.org/ontology/core#scopusId
     //  + "FILTER (langMatches(lang(?fullNameEn), 'en') && langMatches(lang(?fullNameEs), 'es'))    } ";
 
   }
@@ -287,8 +291,8 @@ public class QueriesServiceImpl implements QueriesService {
     return "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
             + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
             + "PREFIX REDI: <http://ucuenca.edu.ec/ontology#>"
-            + "select DISTINCT ?URI ?name ?fullNameEn  ?fullNameEs ?alias ?scopusId ?country ?province ?city ?type ?lang ?long "
-            + "FROM <" + con.getOrganizationsGraph() + ">"
+            + "select DISTINCT ?URI ?name ?fullNameEn  ?fullNameEs ?alias ?scopusId ?country ?province ?city ?type ?lang ?long ?link ?description ?scopusId"
+            + " FROM <" + con.getOrganizationsGraph() + ">"
             + " where "
             + "{   <" + uri + "> <" + RDF.TYPE.toString() + "> <" + FOAF.Organization.toString() + "> . "
             + "<" + uri + ">  <" + REDI.NAME.toString() + "> ?name  ."
@@ -304,6 +308,9 @@ public class QueriesServiceImpl implements QueriesService {
             + "OPTIONAL { <" + uri + "> <" + REDI.TYPE.toString() + "> ?type } ."
             + "OPTIONAL { <" + uri + "> <" + REDI.LATITUDE.toString() + "> ?lang } . "
             + "OPTIONAL { <" + uri + "> <" + REDI.LONGITUDE.toString() + "> ?long } . "
+            + "OPTIONAL { <" + uri + "> <" + REDI.URL.toString() + "> ?link } . "
+            + "OPTIONAL { <" + uri + "> <" + REDI.DESCRIPTION.toString() + "> ?description } . "
+            + "OPTIONAL { <" + uri + "> <http://vivoweb.org/ontology/core#scopusId> ?scopusId } . "
             + "} ";
 
   }
@@ -1935,6 +1942,22 @@ public class QueriesServiceImpl implements QueriesService {
 //                + "}";
 //</editor-fold>
   }
+  
+  @Override
+  public String getTotalResourcesbyOrg ( String org) {
+    
+    return PREFIXES + " select ?org  (COUNT ( Distinct ?author) as ?tAuthor) (COUNT ( Distinct ?publication) as ?tPub)   (COUNT ( Distinct ?project) as ?tPro )     where { \n" +
+            "	   graph <https://redi.cedia.edu.ec/context/redi> {\n" +
+            "                  values ( ?org) {  (<"+org+">) } \n" +
+            "                  ?author schema:memberOf ?org .\n" +
+            "        		  ?author foaf:publications ?publication .\n" +
+            "                 OPTIONAL { ?project  <https://www.openaire.eu/cerif-profile/1.1/linksToOrganisationUnit> ?org } .\n" +
+            "                 } \n" +
+            "} group by ?org ";
+  
+  
+  
+  }
 
   @Override
   public String getAggregationPublicationsbyCountry() {
@@ -2247,6 +2270,30 @@ public class QueriesServiceImpl implements QueriesService {
           "          } ORDER BY DESC (?area)";
 }
 
+  
+  
+  @Override
+  public String getOrgAreasAuthor ( String org , String area ){
+      String onlyarea = "";
+      if (!area.isEmpty()){
+       onlyarea  = " values ( ?area) {  (<"+area+">) } ";
+      } 
+      String query = PREFIXES + 
+         "select  ?area  (COUNT( distinct ?author ) as ?total)  where { \n" +
+              onlyarea +
+          "    graph <"+con.getClusterPublicationsGraph()+"> {\n" +
+          "      ?author a foaf:Person  .\n" +
+          "      ?author dct:isPartOf ?area . \n" +
+          "      ?area  a  <http://ucuenca.edu.ec/ontology#Cluster>\n" +
+          "        graph <" + con.getCentralGraph() + "> {\n" +
+          "              values ( ?org) {  (<ORGVALUE>) } \n" +
+          "           ?author schema:memberOf ?org .\n" +
+          "        }\n" +
+          "    } \n" +
+          "} GROUP BY  ?area  ";
+      
+  return query.replace( "ORGVALUE" , org);
+}
 
  @Override
   public String getOrgAreasPub ( String org , String area ){

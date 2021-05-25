@@ -1,0 +1,27 @@
+<div class="container profile" ng-controller="orgProfile" style="margin-top: 2%;">
+  <div class="row">
+    <div class="col-sm-8">
+      <profile-templateorg ng-model='org'> </profile-templateorg>
+    </div>
+
+    <div class="col-sm-4 second-panel" style="min-height: 65vh">
+      <div class=" coauthor-panel text-center">
+        <div class="row">
+          <span class="col-sm-3"> <img  src="wkhome/images/coauthorlogo.png"  width="40vw" >  </span>
+          <span class="col-sm-6">
+        <font  color="white"  > <strong> TOP Autores </strong> </font> </span>
+        </div>
+        <div class="coauthor-list" style="color: white">
+          <div class="coauthorDiv">
+            <coauthor-template ng-model='coauthors' clickon-relatedauthor='clickonRelatedauthor(uri)'>
+            </coauthor-template>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-12 row text-center" style=" background-color: white;">
+      <button id="pubButton" class="col-sm-4 col-sm-offset-4  prof-btn " ng-click="publication()" style="height: 9vh;">   <span> &nbsp &#9679 &nbsp {{"publications" | translate}} </span> </button>
+    </div>
+  </div>
+</div>

@@ -216,6 +216,19 @@ public class MongoDBWebService {
         return Response.ok().entity(response).build();
     }
     
+    @GET
+    @Path("/Institution")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getInstProfile(@QueryParam("id") String id) throws FailMongoConnectionException {
+        Document response;
+        try {
+            response = mongoService.getProfileInst(id);
+        } catch (Exception e) {
+            throw new FailMongoConnectionException(String.format("Cannot retrieve information of Institution for id %s", id), e);
+        }
+        return Response.ok().entity(response).build();
+    }
+    
      @GET
     @Path("/statisticsbyArea")
     @Produces(MediaType.APPLICATION_JSON)

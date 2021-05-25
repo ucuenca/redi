@@ -393,6 +393,8 @@ public interface QueriesService {
     
     String getBarcharbyCountryDataQuery();
 
+    String getTotalResourcesbyOrg ( String org);
+    
     String getAggreggationAuthors();
     
     String getAggreggationAuthorsbyCountry();
@@ -476,7 +478,8 @@ public interface QueriesService {
     String getAuthorAreasPub ( String author , String area  );
     
     String getOrgAreasPub ( String org , String area );
-      
+    
+    String getOrgAreasAuthor ( String org , String area );
       
 
 }

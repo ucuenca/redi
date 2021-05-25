@@ -226,6 +226,10 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                   templateUrl: 'wkhome/partials/projectProfile.html',
                  // controller: 'AuthorProfile'
                 }).
+                when('/organization/profile/:org*', {
+                  templateUrl: 'wkhome/partials/orgProfile.html',
+                 // controller: 'AuthorProfile'
+                }).
                 when('/patent/profile/:patent*', {
                   templateUrl: 'wkhome/partials/patentProfile.html',
                  // controller: 'AuthorProfile'

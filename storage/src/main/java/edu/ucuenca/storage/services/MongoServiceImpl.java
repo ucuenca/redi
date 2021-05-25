@@ -92,6 +92,7 @@ public class MongoServiceImpl implements MongoService {
     private MongoCollection<Document> patent;
     private MongoCollection<Document> pubtrasnlate;
     private MongoCollection<Document> subjecttranslation ;
+    private MongoCollection<Document> institution;
 
     private MongoCollection<Document> sessions;
 
@@ -122,6 +123,7 @@ public class MongoServiceImpl implements MongoService {
         statisticsByAuthor = db.getCollection(Collection.STATISTICS_AUTHOR.getValue());
         authors_val = db.getCollection(Collection.PROFILE_AUTHOR.getValue());
         projects = db.getCollection(Collection.PROJECTPROFILE.getValue());
+        institution = db.getCollection(Collection.PROFILE_INST.getValue());
         sessions = db.getCollection(Collection.SESSIONS.getValue());
         instbyProject = db.getCollection(Collection.INSTBYPROJECT.getValue());
         documentbyarea = db.getCollection(Collection.DOCUMENTBYAREA.getValue()); 
@@ -197,6 +199,12 @@ public class MongoServiceImpl implements MongoService {
     @Override
     public Document getProfileProject(String id) {
         return projects.find(eq("_id", id)).first();
+
+    }
+    
+    @Override
+    public Document getProfileInst(String id) {
+        return institution.find(eq("_id", id)).first();
 
     }
     

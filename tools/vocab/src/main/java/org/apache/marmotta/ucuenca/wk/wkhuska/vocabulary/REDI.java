@@ -76,6 +76,7 @@ public class REDI {
     public static final URI VENUE_SHORT_NAME;
     public static final URI ALIAS;
     public static final URI EXTRACTION_MODE;
+    public static final URI DESCRIPTION;
 
     static {
         ValueFactory factory = ValueFactoryImpl.getInstance();
@@ -127,5 +128,6 @@ public class REDI {
         VENUE_SHORT_NAME = factory.createURI(REDI.NAMESPACE, "venueShortName");
         ALIAS = factory.createURI(REDI.NAMESPACE, "alias");
         EXTRACTION_MODE  = factory.createURI(REDI.NAMESPACE, "extractionMode");
+        DESCRIPTION = factory.createURI(REDI.NAMESPACE, "description");
     }
 }

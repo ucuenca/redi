@@ -348,6 +348,21 @@ wkhomeServices.factory('Patents', ['$resource', '$http', 'globalData',
   }
 ]);
 
+wkhomeServices.factory('Organizations', ['$resource', '$http', 'globalData',
+  function ($resource, $http, globalData) {
+    var serverInstance = globalData.serverInstance;
+    return $resource(serverInstance + 'mongo/Institution?id=:id', {}, {
+      query: {
+        method: 'GET',
+        params: {id: 'id'},
+        isArray: false,
+        cache: true,
+        headers: {'Accept': 'application/json'}
+      }
+    });
+  }
+]);
+
 wkhomeServices.factory('Datasets', ['$resource', '$http', 'globalData',
   function ($resource, $http, globalData) {
     var serverInstance = globalData.serverInstance;
@@ -575,6 +590,10 @@ wkhomeServices.factory('getProfile', ['$resource', '$http', 'globalData',
     });
   }
 ]);
+
+
+
+
 
 
 wkhomeServices.factory('sendFeedback', ['$resource', '$http', 'globalData',
