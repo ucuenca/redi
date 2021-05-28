@@ -1950,8 +1950,11 @@ public class QueriesServiceImpl implements QueriesService {
             "	   graph <https://redi.cedia.edu.ec/context/redi> {\n" +
             "                  values ( ?org) {  (<"+org+">) } \n" +
             "                  ?author schema:memberOf ?org .\n" +
-            "        		  ?author foaf:publications ?publication .\n" +
-            "                 OPTIONAL { ?project  <https://www.openaire.eu/cerif-profile/1.1/linksToOrganisationUnit> ?org } .\n" +
+            "                  ?author a foaf:Person .  \n" +
+            "    {  ?author foaf:publications ?publication ." +
+            "    } UNION {\n" +
+            "    ?author cerif:MemberOf ?project . }" +
+            "    OPTIONAL { ?project  <https://www.openaire.eu/cerif-profile/1.1/linksToOrganisationUnit> ?org } .\n" +
             "                 } \n" +
             "} group by ?org ";
   

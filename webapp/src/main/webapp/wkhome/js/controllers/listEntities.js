@@ -188,7 +188,7 @@ wkhomeControllers.controller('listEntitiesController', ['$scope', '$window', 'gl
 
             }else if (typent === 'organizations') {
 
-                $window.location.hash = "/info/statisticsbyInst/"+puburi;
+                $window.location.hash = "/organization/profile/"+puburi;
             }
             else{
 

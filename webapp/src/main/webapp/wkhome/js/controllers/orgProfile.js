@@ -74,24 +74,28 @@ wkhomeControllers.controller('orgProfile', ['$scope', '$routeParams', '$window',
     
     });*/
 
-    $scope.tree = function() {
-      $window.location.hash = '/author/tree/' + org.uri;
-    };
+    $scope.publication = function() { 
+      
+      $window.location.hash = '/total/publications/q=affiliation-uri:("' + org.uri + '")&fl=*&rows=10&wt=json&sort=title+asc&start=0';
+    }; 
 
     $scope.stat = function() {
 
-      $window.location.hash = '/info/statisticsbyAuthor/' + org.uri; 
+      $window.location.hash = '/info/statisticsbyInst/' + org.uri; 
     };
 
 
-    $scope.network = function() {
+    $scope.authors = function() {
 
-      $window.location.hash = '/author/network/' + org.uri;
-    };
+       $window.location.hash = '/total/authors/q=org-uri:("' + org.uri + '")&fl=*&rows=10&wt=json&sort=familyname+asc&start=0';
+    }; 
 
-    $scope.publication = function() {
+  //  /total/projects/q=title:A*&fq=member-organization-name:(Universidad*Católica*de*Cuenca)&fl=*&rows=10&wt=json&sort=title+asc&start=0
 
-      $window.location.hash = '/author/publications/q=project-uri:%22' + org.uri + '%22&fl=*&rows=10&wt=json/authorProfile/' + org.uri;
+    $scope.projects = function() {
+
+
+      $window.location.hash = '/total/projects/q=member-organization-uri:("' + org.uri + '")&fl=*&rows=10&wt=json&sort=title+asc&start=0';
     };
 
     $scope.clickonRelatedauthor = function(uri) {

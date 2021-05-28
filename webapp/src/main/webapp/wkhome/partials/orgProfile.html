@@ -9,7 +9,7 @@
         <div class="row">
           <span class="col-sm-3"> <img  src="wkhome/images/coauthorlogo.png"  width="40vw" >  </span>
           <span class="col-sm-6">
-        <font  color="white"  > <strong> TOP Autores </strong> </font> </span>
+        <font  color="white"  > <strong> Autores Destacados </strong> </font> </span>
         </div>
         <div class="coauthor-list" style="color: white">
           <div class="coauthorDiv">
@@ -20,8 +20,14 @@
       </div>
     </div>
 
+   
     <div class="col-sm-12 row text-center" style=" background-color: white;">
-      <button id="pubButton" class="col-sm-4 col-sm-offset-4  prof-btn " ng-click="publication()" style="height: 9vh;">   <span> &nbsp &#9679 &nbsp {{"publications" | translate}} </span> </button>
+      <button id="pubButton" class="col-sm-3  prof-btn " ng-click="publication()" style="height: 9vh;">   <span> &nbsp &#9679 &nbsp {{"publications" | translate}} </span> </button>
+     <!-- <button id="treebtn" class="col-sm-3  prof-btn " ng-click="tree()" style="height: 9vh;">   <span> &nbsp &#9679 &nbsp {{"explore" | translate}} </span> </button> -->
+      <button id="netbtn" class="col-sm-3  prof-btn " ng-click="authors()" style="height: 9vh;">  <span> &nbsp  &#9679 &nbsp {{"AUTORES"| translate}} </span> </button> 
+     <button id="projectbtn" class="col-sm-3  prof-btn " ng-click="projects()" style="height: 9vh;">  <span> &nbsp  &#9679 &nbsp Proyectos </span> </button>
+
+     <button id="stasbtn" class="col-sm-3  prof-btn " ng-click="stat()" style="height: 9vh;">  <span> &nbsp  &#9679 &nbsp Stats </span> </button>
     </div>
   </div>
 </div>
