@@ -563,6 +563,44 @@ function runFnCRIS(options) {
   });
 }
 
+/**
+ * Index REDI resources in OAI-PMH
+ * @author José Ortiz
+ * @param {options} options
+ * @param {sendAll} invite all authors 
+ */
+function runFnOAI_IDX(options) {
+
+  document.getElementById("imgloading").style.visibility = "visible";
+
+  var endpoint = "http://example";
+  var graphuri = "http://example/data";
+  var settings = {
+    host: options
+  }
+  var dataT = {
+    "Endpoint": endpoint,
+    "GraphUri": graphuri
+  };
+
+  $.ajax({
+    type: "POST",
+    data: JSON.stringify(dataT),
+    dataType: "text", //result data type
+    contentType: "application/json", // send data type
+    url: settings.host + "pubman/runOAI_IDX",
+    //    url:  "http://localhost:8079/marmotta/authors-module/update",
+    success: function (Result) {
+      document.getElementById("imgloading").style.visibility = "hidden";
+      alert(Result);
+    },
+    error: function (data) {
+      document.getElementById("imgloading").style.visibility = "hidden";
+      alert("Error" + data.responseText);
+    }
+  });
+}
+
 
 function requestUploadFile(url, data, mime, callbacks) {
   function createRequest() {

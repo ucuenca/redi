@@ -2,6 +2,9 @@ package at.newmedialab.lmf.worker.services;
 
 import at.newmedialab.lmf.worker.model.ResourceStatus;
 import at.newmedialab.lmf.worker.model.WorkerConfiguration;
+import com.google.common.util.concurrent.SimpleTimeLimiter;
+import com.google.common.util.concurrent.TimeLimiter;
+import com.google.common.util.concurrent.UncheckedTimeoutException;
 import org.apache.marmotta.platform.core.api.statistics.StatisticsModule;
 import org.apache.marmotta.platform.core.api.task.Task;
 import org.apache.marmotta.platform.core.api.task.TaskManagerService;
@@ -13,6 +16,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -301,13 +306,13 @@ public abstract class WorkerRuntime<T extends WorkerConfiguration> {
             log.info("{} {} starting up ...", config.getType(), getName());
             itemsProcessed = 0;
             Task task = taskManagerService.createTask(getName(), config.getType());
-
+            TimeLimiter timeLimiter = new SimpleTimeLimiter();
             while (!shutdown || resourceQueue.size() > 0) {
                 try {
                     task.updateMessage("idle");
 
                     // wait until a resource becomes availabe
-                    Resource resource = resourceQueue.take();
+                    final Resource resource = resourceQueue.take();
                     processing = resource;
                     task.updateMessage("processing resource " + getProcessing().toString());
 
@@ -315,7 +320,21 @@ public abstract class WorkerRuntime<T extends WorkerConfiguration> {
 
                     // run the enhancement engine
                     try {
-                        execute(resource);
+                      do {
+                        try {
+                            timeLimiter.callWithTimeout(new Callable<Integer>() {
+                            @Override
+                            public Integer call() throws Exception {
+                              execute(resource);
+                              return 0;
+                            }
+                          }, 5, TimeUnit.MINUTES, true);
+                          break;
+                        }catch (UncheckedTimeoutException exp){
+                          log.debug("Exception:",exp);
+                          log.debug("Timeout re-try {}", resource);
+                        }
+                      } while (true);
                     } catch(Exception ex) {
                         log.error("error while executing worker thread: {}",ex.getMessage());
                         log.debug("Exception:",ex);

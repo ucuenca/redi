@@ -40,6 +40,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import org.apache.marmotta.ucuenca.wk.commons.service.TranslationService;
 import org.apache.marmotta.ucuenca.wk.pubman.api.CommonService;
+import org.apache.marmotta.ucuenca.wk.pubman.api.OAI_Indexer;
 import org.slf4j.Logger;
 import org.apache.marmotta.ucuenca.wk.pubman.api.SendNotificationsMarmotta;
 import org.apache.marmotta.ucuenca.wk.pubman.api.runCRIS;
@@ -66,6 +67,9 @@ public class PubWebService {
   
 
 
+  @Inject
+  private OAI_Indexer indexer;
+  
   private static final int MAX_TURNS = 100;
   private static final int MIN_TURNS = 0;
   public static final String GET_PUBLICATIONS = "/publications";
@@ -78,6 +82,7 @@ public class PubWebService {
   public static final String DISAMBIGUATION_PUBLICATIONS = "/publications_disambiguation";
   public static final String SEND_NOTIFICATIONS = "/sendNotifications";
   public static final String RUN_CRIS = "/runCRIS";
+  public static final String RUN_OAI_IDX = "/runOAI_IDX";
   public static final String CENTRAL_GRAPH_PUBLICATIONS = "/publications_centralgraph";
   public static final String LOAD_PUBLICATIONS = "/publications_provider_graph";
   public static final String LOAD_AUTHOR_ATTR = "/author_attr";
@@ -510,6 +515,15 @@ public class PubWebService {
     //String params = resultType;
     log.debug("Run Harvest CRIS");
     rCRIS.init();
+    return Response.ok().entity("Harvesting").build();
+  }
+  
+  @POST
+  @Path(RUN_OAI_IDX)
+  public Response runOAI_IDX() {
+    //String params = resultType;
+    log.debug("Run OAI IDX");
+    indexer.run();
     return Response.ok().entity("Harvesting").build();
   }
 
