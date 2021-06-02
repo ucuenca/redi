@@ -97,6 +97,7 @@ import org.apache.marmotta.ucuenca.wk.commons.service.ExternalSPARQLService;
 import org.apache.marmotta.ucuenca.wk.commons.service.QueriesService;
 import org.apache.marmotta.ucuenca.wk.commons.util.SPARQLUtils;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.BIBO;
+import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.CERIF;
 import org.apache.marmotta.ucuenca.wk.wkhuska.vocabulary.REDI;
 import org.apache.tika.io.IOUtils;
 import org.json.JSONArray;
@@ -207,7 +208,7 @@ public class AuthorServiceImpl implements AuthorService {
             String[] words = line.split("\\s+");
             stopwords.addAll(Arrays.asList(words));
         }
-        it.close();
+        it.close(); 
 
 //        filterProperties = Arrays.asList("http://www.w3.org/2004/02/skos/core#prefLabel",
 //                "http://www.w3.org/2000/01/rdf-schema#comment",
@@ -798,7 +799,7 @@ public class AuthorServiceImpl implements AuthorService {
 
         }
 
-        executeInsert(constantService.getAuthorsGraph(), uri, "https://www.openaire.eu/cerif-profile/1.1/linksToProject", object);
+        executeInsert(constantService.getAuthorsGraph(), uri, CERIF.LINKS_TO_PROJECT.toString(), object);
     }
 
     @SuppressWarnings({"PMD.AvoidDuplicateLiterals", "PMD.ExcessiveMethodLength"})
@@ -972,22 +973,22 @@ public class AuthorServiceImpl implements AuthorService {
         
         String patentURI = "http://REDI/Temporal/CEDIA/"+pcode;
         String plink = (String) json.get("plink");
-        executeInsert(constantService.getAuthorsGraph(), patentURI, "http://www.eurocris.org/ontologies/cerif/1.3#link", plink);
-        executeInsert(constantService.getAuthorsGraph(), patentURI, "http://www.eurocris.org/ontologies/cerif/1.3#patentNumber", pcode); 
-        executeInsert(constantService.getAuthorsGraph(), patentURI, "http://purl.org/dc/terms/title", ptitle);
+        executeInsert(constantService.getAuthorsGraph(), patentURI, CERIF.LINK.toString() , plink);
+        executeInsert(constantService.getAuthorsGraph(), patentURI, CERIF.HAS_IDENTIFIER.toString() , pcode); 
+        executeInsert(constantService.getAuthorsGraph(), patentURI, CERIF.HAS_TITLE.toString() , ptitle);
         String pmeca = (String) json.get("pmeca");
-        executeInsert(constantService.getAuthorsGraph(), patentURI, "http://www.eurocris.org/ontologies/cerif/1.3#name", pmeca);
+        executeInsert(constantService.getAuthorsGraph(), patentURI, CERIF.HAS_CLASIFICATION.toString() , pmeca);
         
         String pabstract = (String) json.get("pabstract");
-        executeInsert(constantService.getAuthorsGraph(), patentURI, "http://purl.org/dc/terms/abstract", pabstract);
+        executeInsert(constantService.getAuthorsGraph(), patentURI, CERIF.HAS_ABSTRACT.toString() , pabstract);
 
         
         String preg = (String) json.get("preg");
-        executeInsert(constantService.getAuthorsGraph(), patentURI, "http://www.eurocris.org/ontologies/cerif/1.3#registrationDate", preg);
+        executeInsert(constantService.getAuthorsGraph(), patentURI, CERIF.REGISTRATION_DATE.toString(), preg);
         String papro = (String) json.get("papro");
-        executeInsert(constantService.getAuthorsGraph(), patentURI, "http://www.eurocris.org/ontologies/cerif/1.3#approvalDate", papro);
+        executeInsert(constantService.getAuthorsGraph(), patentURI, CERIF.APPROVAL_DATE.toString() , papro);
         String pexp = (String) json.get("pexp");
-        executeInsert(constantService.getAuthorsGraph(), patentURI, "http://www.eurocris.org/ontologies/cerif/1.3#endDate", pexp);
+        executeInsert(constantService.getAuthorsGraph(), patentURI, CERIF.END_DATE.toString(), pexp);
         JSONArray  jautores = json.getJSONArray("autores");
         JSONArray  jorgs = json.getJSONArray("organizaciones");
         
@@ -1009,9 +1010,9 @@ public class AuthorServiceImpl implements AuthorService {
           executeInsert(constantService.getAuthorsGraph(), authorUri, "http://purl.org/spar/scoro/hasORCID", orcid);
           executeInsert(constantService.getAuthorsGraph(), authorUri, FOAF.NAME.toString(), ncompleto );
           executeInsert(constantService.getAuthorsGraph(), authorUri, "http://schema.org/affiliation", org );
-          executeInsert(constantService.getAuthorsGraph(), patentURI , "http://www.eurocris.org/ontologies/cerif/1.3#linkToPerson", authorUri );
+          executeInsert(constantService.getAuthorsGraph(), patentURI , CERIF.LINKS_TO_PERSON.toString(), authorUri );
           executeInsert(constantService.getAuthorsGraph(), authorUri , "http://purl.org/dc/terms/provenance", endpoint );
-          executeInsert(constantService.getAuthorsGraph(), authorUri , "http://www.eurocris.org/ontologies/cerif/1.3#linkToPatent",  patentURI  );
+          executeInsert(constantService.getAuthorsGraph(), authorUri , CERIF.LINKS_TO_PATENT.toString(),  patentURI  );
         }
         
         
@@ -1029,7 +1030,7 @@ public class AuthorServiceImpl implements AuthorService {
          
          
           
-         executeInsert(constantService.getAuthorsGraph(), patentURI, RDF.TYPE.toString() , "http://www.eurocris.org/ontologies/cerif/1.3#Patent" );
+         executeInsert(constantService.getAuthorsGraph(), patentURI, RDF.TYPE.toString() , CERIF.PATENT.toString() );
          
         
         

@@ -43,7 +43,8 @@ public class QueriesServiceImpl implements QueriesService {
           + " PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> "
           + " PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
           + " PREFIX cerif: <https://www.openaire.eu/cerif-profile/1.1/>"
-          + " PREFIX cerif3: <http://www.eurocris.org/ontologies/cerif/1.3#>";
+          + " PREFIX cerif3: <http://www.eurocris.org/ontologies/cerif/1.3#>"
+          + " PREFIX cerif6: <http://eurocris.org/ontology/cerif#>";
 
   private final static String OWLSAMEAS = "<http://www.w3.org/2002/07/owl#sameAs>";
 
@@ -1954,7 +1955,7 @@ public class QueriesServiceImpl implements QueriesService {
             "    {  ?author foaf:publications ?publication ." +
             "    } UNION {\n" +
             "    ?author cerif:MemberOf ?project . }" +
-            "    OPTIONAL { ?project  <https://www.openaire.eu/cerif-profile/1.1/linksToOrganisationUnit> ?org } .\n" +
+            "    OPTIONAL { ?project  cerif:linksToOrganisationUnit ?org } .\n" +
             "                 } \n" +
             "} group by ?org ";
   
@@ -2515,7 +2516,7 @@ public class QueriesServiceImpl implements QueriesService {
                       "OPTIONAL {  <"+uri+"> cerif:StartDate ?sdate   }\n" +
                       "OPTIONAL {  <"+uri+"> cerif:EndDate ?edate .   }\n" +
                       "OPTIONAL {  <"+uri+"> foaf:fundedBy ?funded  }       \n" +
-                      "OPTIONAL {  <"+uri+"> <https://www.openaire.eu/cerif-profile/1.1/linksToOrganisationUnit> ?org \n" +
+                      "OPTIONAL {  <"+uri+"> cerif:linksToOrganisationUnit ?org \n" +
                       "        } " +
                       "   } " +
                       "} group by ?title  ?sdate ?edate ";
@@ -2526,7 +2527,7 @@ public class QueriesServiceImpl implements QueriesService {
    return PREFIXES + "select distinct ?uri \n" +
                       "where { " +
                       "    graph <" + con.getCentralGraph() + "> {\n" +
-                      "        ?uri a <http://www.eurocris.org/ontologies/cerif/1.3/Patent>  \n" +
+                      "        ?uri a cerif6:Patent  \n" +
                       "   }" +
                       "}";
   }
@@ -2536,15 +2537,15 @@ public class QueriesServiceImpl implements QueriesService {
    return PREFIXES + "select distinct ?title ?pnumber ?abstract ?rdate ?adate ?edate ?link ?name (GROUP_CONCAT(DISTINCT STR(?lorg); separator='|') as ?lorgs)  (GROUP_CONCAT(DISTINCT STR(?subject); separator='|') as ?subjects) " +
                       "where {\n" +
                       "    graph <" + con.getCentralGraph() + "> {\n" +
-                      "<"+uri+"> dct:title ?title .\n" +
-                      "<"+uri+"> cerif3:patentNumber ?pnumber . " +
+                      "<"+uri+"> cerif6:has_title ?title .\n" +
+                      "<"+uri+"> cerif6:has_identifier ?pnumber . " +
                       "OPTIONAL {  <"+uri+"> dct:subject ?subject   }\n" +
-                      "OPTIONAL {  <"+uri+"> dct:abstract ?abstract   }\n" +
-                      "OPTIONAL {  <"+uri+"> cerif3:registrationDate ?rdate   }\n" +
-                      "OPTIONAL {  <"+uri+"> cerif3:approvalDate ?adate .   }\n" +
-                      "OPTIONAL {  <"+uri+"> cerif3:endDate ?edate .   }\n" +
-                      "OPTIONAL {  <"+uri+"> cerif3:link ?link .   }\n" +
-                      "OPTIONAL {  <"+uri+"> cerif3:name ?name .   }\n" +
+                      "OPTIONAL {  <"+uri+"> cerif6:has_abstract ?abstract   }\n" +
+                      "OPTIONAL {  <"+uri+"> cerif6:registrationDate ?rdate   }\n" +
+                      "OPTIONAL {  <"+uri+"> cerif6:approvalDate ?adate .   }\n" +
+                      "OPTIONAL {  <"+uri+"> cerif6:endDate ?edate .   }\n" +
+                      "OPTIONAL {  <"+uri+"> cerif6:link ?link .   }\n" +
+                      "OPTIONAL {  <"+uri+"> cerif6:has_classification ?name .   }\n" +
                       "OPTIONAL {  <"+uri+"> <http://schema.org/affiliation> ?lorg .   }\n" +
                       "   } " +
                       "} group by ?title  ?pnumber ?abstract ?rdate ?adate ?edate ?link ?name";
