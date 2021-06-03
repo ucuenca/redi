@@ -60,12 +60,14 @@ public class OAI_IndexerImpl implements OAI_Indexer {
   @Override
   public void run() {
     try {
-      //runIdxPubs();
+      runIdxPubs();
       //runIdxAuthors();
       //runIdxOrgs();
       //runIdxEvents();
-      runIdxProjects();
-
+      //runIdxProjects();
+      runIdxPatents();
+      //runIdxDatasets();
+      
     } catch (Exception ex) {
       ex.printStackTrace();
     }
@@ -253,6 +255,120 @@ public class OAI_IndexerImpl implements OAI_Indexer {
     taskManagerService.endTask(createSubTask);
   }
 
+  private void runIdxPatents() throws SolrServerException, IOException, WritingXmlException, RepositoryException, MalformedQueryException, QueryEvaluationException, javax.xml.stream.XMLStreamException {
+
+    SolrServer httpSolrServer = new HttpSolrServer("http://localhost/solrIdx/oai");
+
+    Map<String, String> publications = getPatents();
+
+    log.info("Indexing Patents");
+    Task createSubTask = taskManagerService.createSubTask("Create OAI Index for patents");
+    int i = 0;
+    for (Map.Entry<String, String> ent : publications.entrySet()) {
+      createSubTask.updateMessage(String.format("Index  patent from %s organization", ent.getKey()));
+      createSubTask.updateDetailMessage("Progress ", i + "/" + publications.size());
+
+      log.info("Indexando... {} = {}/{}", ent.getKey(), i, publications.size());
+
+      SolrInputDocument doc = new SolrInputDocument();
+      doc.addField("item.id", "patent_" + ent.getValue());
+      doc.addField("item.handle", ent.getKey());
+      doc.addField("item.identifier", ent.getKey());
+      doc.addField("item.public", true);
+      doc.addField("item.type", "item");
+      doc.addField("item.deleted", false);
+      doc.addField("item.lastmodified", new Date());
+      doc.addField("item.submitter", "jose.ortizv@ucuenca.edu.ec");
+      doc.addField("item.collections", "col_redi");
+      doc.addField("item.communities", "com_redi");
+
+      List<Map.Entry<String, Literal>> vals = Lists.newArrayList();
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      XmlOutputContext xmlContext = XmlOutputContext.emptyContext(out, Granularity.Second);
+      retrieveMetadataPatents(ent.getKey(), ent.getValue(), vals).write(xmlContext);
+      xmlContext.getWriter().flush();
+      xmlContext.getWriter().close();
+
+      for (Map.Entry<String, Literal> dat : vals) {
+        switch (dat.getKey()) {
+          case "name":
+            //doc.addField("metadata.crisou.description", dat.getValue().stringValue());
+            break;
+          case "acro":
+            //doc.addField("metadata.crisou.name", dat.getValue().stringValue());
+            break;
+        }
+      }
+      doc.addField("metadata.item.cerifentitytype", "Patents");
+      doc.addField("item.compile", out.toString());
+      httpSolrServer.add(doc);
+
+      //System.out.println(i + "/" + publications.size());
+      i++;
+
+    }
+    httpSolrServer.commit();
+
+    taskManagerService.endTask(createSubTask);
+  }
+
+  private void runIdxDatasets() throws SolrServerException, IOException, WritingXmlException, RepositoryException, MalformedQueryException, QueryEvaluationException, javax.xml.stream.XMLStreamException {
+
+    SolrServer httpSolrServer = new HttpSolrServer("http://localhost/solrIdx/oai");
+
+    Map<String, String> publications = getDatasets();
+
+    log.info("Indexing Datasets");
+    Task createSubTask = taskManagerService.createSubTask("Create OAI Index for datasets");
+    int i = 0;
+    for (Map.Entry<String, String> ent : publications.entrySet()) {
+      createSubTask.updateMessage(String.format("Index  dataset from %s organization", ent.getKey()));
+      createSubTask.updateDetailMessage("Progress ", i + "/" + publications.size());
+
+      log.info("Indexando... {} = {}/{}", ent.getKey(), i, publications.size());
+
+      SolrInputDocument doc = new SolrInputDocument();
+      doc.addField("item.id", "dataset_" + ent.getValue());
+      doc.addField("item.handle", ent.getKey());
+      doc.addField("item.identifier", ent.getKey());
+      doc.addField("item.public", true);
+      doc.addField("item.type", "item");
+      doc.addField("item.deleted", false);
+      doc.addField("item.lastmodified", new Date());
+      doc.addField("item.submitter", "jose.ortizv@ucuenca.edu.ec");
+      doc.addField("item.collections", "col_redi");
+      doc.addField("item.communities", "com_redi");
+
+      List<Map.Entry<String, Literal>> vals = Lists.newArrayList();
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      XmlOutputContext xmlContext = XmlOutputContext.emptyContext(out, Granularity.Second);
+      retrieveMetadataDatasets(ent.getKey(), ent.getValue(), vals).write(xmlContext);
+      xmlContext.getWriter().flush();
+      xmlContext.getWriter().close();
+
+      for (Map.Entry<String, Literal> dat : vals) {
+        switch (dat.getKey()) {
+          case "name":
+            //doc.addField("metadata.crisou.description", dat.getValue().stringValue());
+            break;
+          case "acro":
+            //doc.addField("metadata.crisou.name", dat.getValue().stringValue());
+            break;
+        }
+      }
+      doc.addField("metadata.item.cerifentitytype", "Products");
+      doc.addField("item.compile", out.toString());
+      httpSolrServer.add(doc);
+
+      //System.out.println(i + "/" + publications.size());
+      i++;
+
+    }
+    httpSolrServer.commit();
+
+    taskManagerService.endTask(createSubTask);
+  }
+
   private void runIdxProjects() throws SolrServerException, IOException, WritingXmlException, RepositoryException, MalformedQueryException, QueryEvaluationException, javax.xml.stream.XMLStreamException {
 
     SolrServer httpSolrServer = new HttpSolrServer("http://localhost/solrIdx/oai");
@@ -391,6 +507,58 @@ public class OAI_IndexerImpl implements OAI_Indexer {
     return mp;
   }
 
+  private Map<String, String> getPatents() throws RepositoryException, MalformedQueryException, QueryEvaluationException {
+    Map<String, String> mp = Maps.newConcurrentMap();
+    RepositoryConnection connection = sparqlService.getRepositoryConnetion();
+
+    TupleQueryResult evaluate = connection.prepareTupleQuery(QueryLanguage.SPARQL, "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+            + "prefix dct: <http://purl.org/dc/terms/>\n"
+            + "prefix foaf: <http://xmlns.com/foaf/0.1/>\n"
+            + "select distinct ?org ?pid{\n"
+            + "    graph <" + constantService.getCentralGraph() + "> {\n"
+            + "        ?org a <http://www.eurocris.org/ontologies/cerif/1.3/Patent> .\n"
+            + "        bind (md5(str(?org)) as ?pid).\n"
+            + "    }\n"
+            + "}").evaluate();
+
+    while (evaluate.hasNext()) {
+      BindingSet next = evaluate.next();
+      String p = next.getBinding("org").getValue().stringValue();
+      String pid = next.getBinding("pid").getValue().stringValue();
+      mp.put(p, pid);
+      //mp.put("https://redi.cedia.edu.ec/resource/publication/1106785", "1106785");
+    }
+
+    connection.close();
+    return mp;
+  }
+
+  private Map<String, String> getDatasets() throws RepositoryException, MalformedQueryException, QueryEvaluationException {
+    Map<String, String> mp = Maps.newConcurrentMap();
+    RepositoryConnection connection = sparqlService.getRepositoryConnetion();
+
+    TupleQueryResult evaluate = connection.prepareTupleQuery(QueryLanguage.SPARQL, "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+            + "prefix dct: <http://purl.org/dc/terms/>\n"
+            + "prefix foaf: <http://xmlns.com/foaf/0.1/>\n"
+            + "select distinct ?org ?pid{\n"
+            + "    graph <" + constantService.getCentralGraph() + "> {\n"
+            + "        ?org a <http://schema.org/Dataset> .\n"
+            + "        bind (md5(str(?org)) as ?pid).\n"
+            + "    }\n"
+            + "}").evaluate();
+
+    while (evaluate.hasNext()) {
+      BindingSet next = evaluate.next();
+      String p = next.getBinding("org").getValue().stringValue();
+      String pid = next.getBinding("pid").getValue().stringValue();
+      mp.put(p, pid);
+      //mp.put("https://redi.cedia.edu.ec/resource/publication/1106785", "1106785");
+    }
+
+    connection.close();
+    return mp;
+  }
+
   private Map<String, String> getProjects() throws RepositoryException, MalformedQueryException, QueryEvaluationException {
     Map<String, String> mp = Maps.newConcurrentMap();
     RepositoryConnection connection = sparqlService.getRepositoryConnetion();
@@ -502,6 +670,8 @@ public class OAI_IndexerImpl implements OAI_Indexer {
       doc.addField("metadata.dc.identifier.uri", ent.getKey());
       doc.addField("metadata.dc.identifier.url", ent.getKey());
 
+      doc.addField("metadata.item.cerifentitytype", "Publications");
+      
       doc.addField("item.compile", out.toString());
       httpSolrServer.add(doc);
 
@@ -607,7 +777,24 @@ public class OAI_IndexerImpl implements OAI_Indexer {
 
     mpp.addAll(mp);
 
+    Element item = create("item");
+    metadata.getElement().add(item);
+    Element cerifentitytype = create("cerifentitytype");
+    item.getElement().add(cerifentitytype);
+    Element create = create("none");
+    cerifentitytype.getElement().add(create);
+    create.getField().add(createValue("value", "Publications"));
+
+    Element openairecristype = create("openairecristype");
+    item.getElement().add(openairecristype);
+    Element create2 = create("none");
+    openairecristype.getElement().add(create2);
+    create2.getField().add(createValue("value", "Publications"));
+    
+    int i = 0;
     for (Map.Entry<String, Literal> val : mp) {
+      i++;
+      boolean diffNone = false;
       String field = val.getKey();
       // Qualified element?
       String qua = "";
@@ -624,6 +811,7 @@ public class OAI_IndexerImpl implements OAI_Indexer {
         case "creator":
           qua = "author";
           field = "contributor";
+          diffNone = true;
           break;
         case "language":
           qua = "iso";
@@ -678,10 +866,12 @@ public class OAI_IndexerImpl implements OAI_Indexer {
         }
         valueElem = language;
       } else {
+        String noneNma = diffNone ? "none_" + i : "none";
+
         Element language = getElement(valueElem.getElement(),
-                "none");
+                noneNma);
         if (language == null) {
-          language = create("none");
+          language = create(noneNma);
           valueElem.getElement().add(language);
         }
         valueElem = language;
@@ -740,25 +930,7 @@ public class OAI_IndexerImpl implements OAI_Indexer {
     }
 
     // Other info
-    Element other = create("others");
-
-    other.getField().add(
-            createValue("handle", URIitem));
-    other.getField().add(
-            createValue("identifier", idpub));
-    other.getField().add(
-            createValue("lastModifyDate", new Date().toString()));
-    metadata.getElement().add(other);
-
-    // Repository Info
-    Element repository = create("repository");
-    repository.getField().add(
-            createValue("name",
-                    "Repositorio Ecuatoriano de Investigadores"));
-    repository.getField().add(
-            createValue("mail",
-                    "redi@cedia.edu.ec"));
-    metadata.getElement().add(repository);
+    addOtherRepository(metadata.getElement(), URIitem, idpub, "item");
 
     return metadata;
   }
@@ -1165,6 +1337,348 @@ public class OAI_IndexerImpl implements OAI_Indexer {
     }
 
     addOtherRepository(metadata.getElement(), URIitem, idpub, "events");
+
+    return metadata;
+  }
+
+  public Metadata retrieveMetadataPatents(String URIitem, String idpub, List<Map.Entry<String, Literal>> mpp) throws RepositoryException, MalformedQueryException, QueryEvaluationException {
+    Metadata metadata;
+
+    // read all metadata into Metadata Object
+    metadata = new Metadata();
+
+    RepositoryConnection con = sparqlService.getRepositoryConnetion();
+
+    TupleQueryResult evaluate = con.prepareTupleQuery(QueryLanguage.SPARQL, "PREFIX dct: <http://purl.org/dc/terms/>\n"
+            + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+            + "select ?title ?abstract ?subject ?rd ?ad ?pn ?in {\n"
+            + "    {\n"
+            + "        select * { \n"
+            + "            graph <" + constantService.getCentralGraph() + "> {\n"
+            + "                bind(<" + URIitem + "> as ?a) .\n"
+            + "                ?a dct:title ?title.\n"
+            + "                ?a dct:abstract ?abstract.\n"
+            + "                ?a dct:subject ?subject.\n"
+            + "                ?a <http://www.eurocris.org/ontologies/cerif/1.3/registrationDate> ?rd .\n"
+            + "                ?a <http://www.eurocris.org/ontologies/cerif/1.3/approvalDate> ?ad .\n"
+            + "                ?a <http://www.eurocris.org/ontologies/cerif/1.3/patentNumber> ?pn .\n"
+            + "            }\n"
+            + "        } \n"
+            + "    } union {\n"
+            + "        select ?p (sample(?cn) as ?in) { \n"
+            + "            graph <" + constantService.getCentralGraph() + "> {\n"
+            + "                bind(<" + URIitem + "> as ?a) .\n"
+            + "                ?a <http://www.eurocris.org/ontologies/cerif/1.3/linkToPerson> ?p .\n"
+            + "                ?p foaf:name ?cn.\n"
+            + "            }\n"
+            + "        } group by ?p\n"
+            + "    }\n"
+            + "}").evaluate();
+    List<Map.Entry<String, Literal>> mp = Lists.newArrayList();
+
+    Set<String> hs = Sets.newConcurrentHashSet();
+
+    while (evaluate.hasNext()) {
+      BindingSet next = evaluate.next();
+      for (Binding bind : next) {
+
+        if (bind.getValue() instanceof Literal) {
+          Literal lit = ((Literal) bind.getValue());
+          Literal createLiteral = ValueFactoryImpl.getInstance().createLiteral(Normalizer.normalize(lit.stringValue(), Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "").replaceAll("\\p{C}", ""), lit.getLanguage());
+          String key = bind.getName().hashCode() + "_" + createLiteral.stringValue().hashCode();
+          if (!hs.contains(key)) {
+            mp.add(new AbstractMap.SimpleEntry<String, Literal>(bind.getName(), createLiteral));
+            hs.add(key);
+          }
+        } else {
+          //System.out.println(bind);
+        }
+      }
+    }
+
+    mp.add(new AbstractMap.SimpleEntry<String, Literal>("identifierURI", ValueFactoryImpl.getInstance().createLiteral(URIitem)));
+
+    con.close();
+
+    mpp.addAll(mp);
+
+    Element item = create("item");
+    metadata.getElement().add(item);
+    Element cerifentitytype = create("cerifentitytype");
+    item.getElement().add(cerifentitytype);
+    Element create = create("none");
+    cerifentitytype.getElement().add(create);
+    create.getField().add(createValue("value", "Patents"));
+
+    Element openairecristype = create("openairecristype");
+    item.getElement().add(openairecristype);
+    Element create2 = create("none");
+    openairecristype.getElement().add(create2);
+    create2.getField().add(createValue("value", "Patents"));
+
+    int i = 0;
+    for (Map.Entry<String, Literal> val : mp) {
+      i++;
+      String field = val.getKey();
+      // Qualified element?
+      String qua = "";
+      boolean diffNone = false;
+
+      switch (field) {
+        case "title":
+          qua = null;
+          field = "title";
+          break;
+        case "abstract":
+          qua = "abstract";
+          field = "description";
+          break;
+        case "subject":
+          qua = null;
+          field = "subject";
+          break;
+        case "rd":
+          qua = "issued";
+          field = "date";
+          break;
+        case "ad":
+          qua = null;
+          field = "dateAccepted";
+          break;
+        case "pn":
+          qua = "patentno";
+          field = "identifier";
+          break;
+        case "in":
+          qua = "author";
+          field = "contributor";
+          diffNone = true;
+          break;
+        default:
+          qua = null;
+          break;
+      }
+      Element valueElem = null;
+      Element schema = getElement(metadata.getElement(), "dc");
+      if (schema == null) {
+        schema = create("dc");
+        metadata.getElement().add(schema);
+      }
+      valueElem = schema;
+
+      // Has element.. with XOAI one could have only schema and value
+      if (field != null && !field.equals("")) {
+        Element element = getElement(schema.getElement(),
+                field);
+        if (element == null) {
+          element = create(field);
+          schema.getElement().add(element);
+        }
+        valueElem = element;
+
+        if (qua != null && !qua.equals("")) {
+          Element qualifier = getElement(element.getElement(),
+                  qua);
+          if (qualifier == null) {
+            qualifier = create(qua);
+            element.getElement().add(qualifier);
+          }
+          valueElem = qualifier;
+        }
+      }
+
+      // Language?
+      if (val.getValue().getLanguage() != null && !val.getValue().getLanguage().equals("")) {
+        Element language = getElement(valueElem.getElement(),
+                val.getValue().getLanguage());
+        if (language == null) {
+          language = create(val.getValue().getLanguage());
+          valueElem.getElement().add(language);
+        }
+        valueElem = language;
+      } else {
+        String noneNma = diffNone ? "none_" + i : "none";
+
+        Element language = getElement(valueElem.getElement(),
+                noneNma);
+        if (language == null) {
+          language = create(noneNma);
+          valueElem.getElement().add(language);
+        }
+        valueElem = language;
+      }
+
+      valueElem.getField().add(createValue("value", val.getValue().stringValue()));
+    }
+
+    addOtherRepository(metadata.getElement(), URIitem, idpub, "item");
+
+    return metadata;
+  }
+
+  public Metadata retrieveMetadataDatasets(String URIitem, String idpub, List<Map.Entry<String, Literal>> mpp) throws RepositoryException, MalformedQueryException, QueryEvaluationException {
+    Metadata metadata;
+
+    // read all metadata into Metadata Object
+    metadata = new Metadata();
+
+    RepositoryConnection con = sparqlService.getRepositoryConnetion();
+
+    TupleQueryResult evaluate = con.prepareTupleQuery(QueryLanguage.SPARQL, "PREFIX dct: <http://purl.org/dc/terms/>\n"
+            + "PREFIX bibo: <http://purl.org/ontology/bibo/>\n"
+            + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+            + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+            + "select ?t ?abs ?subject ?doi ?uri ?in {\n"
+            + "    {\n"
+            + "        select * where { \n"
+            + "            graph <" + constantService.getCentralGraph() + "> {\n"
+            + "                bind (<" + URIitem + "> as ?a).\n"
+            + "                ?a dct:title ?t .\n"
+            + "                ?a bibo:abstract ?abs .\n"
+            + "                ?a bibo:doi ?doi .\n"
+            + "                ?a bibo:uri ?uri .\n"
+            + "            }\n"
+            + "        } \n"
+            + "    } union {\n"
+            + "        select ?p (sample(?na) as ?in) { \n"
+            + "            graph <" + constantService.getCentralGraph() + "> {\n"
+            + "                bind (<" + URIitem + "> as ?a).\n"
+            + "                ?p foaf:publications ?a .\n"
+            + "                ?p foaf:name ?na.\n"
+            + "            }\n"
+            + "        } group by ?p\n"
+            + "    }\n"
+            + "}").evaluate();
+    List<Map.Entry<String, Literal>> mp = Lists.newArrayList();
+
+    Set<String> hs = Sets.newConcurrentHashSet();
+
+    while (evaluate.hasNext()) {
+      BindingSet next = evaluate.next();
+      for (Binding bind : next) {
+
+        if (bind.getValue() instanceof Literal) {
+          Literal lit = ((Literal) bind.getValue());
+          Literal createLiteral = ValueFactoryImpl.getInstance().createLiteral(Normalizer.normalize(lit.stringValue(), Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "").replaceAll("\\p{C}", ""), lit.getLanguage());
+          String key = bind.getName().hashCode() + "_" + createLiteral.stringValue().hashCode();
+          if (!hs.contains(key)) {
+            mp.add(new AbstractMap.SimpleEntry<String, Literal>(bind.getName(), createLiteral));
+            hs.add(key);
+          }
+        } else {
+          //System.out.println(bind);
+        }
+      }
+    }
+
+    mp.add(new AbstractMap.SimpleEntry<String, Literal>("identifierURI", ValueFactoryImpl.getInstance().createLiteral(URIitem)));
+
+    con.close();
+
+    mpp.addAll(mp);
+
+    Element item = create("item");
+    metadata.getElement().add(item);
+    Element cerifentitytype = create("cerifentitytype");
+    item.getElement().add(cerifentitytype);
+    Element create = create("none");
+    cerifentitytype.getElement().add(create);
+    create.getField().add(createValue("value", "Products"));
+
+    Element openairecristype = create("openairecristype");
+    item.getElement().add(openairecristype);
+    Element create2 = create("none");
+    openairecristype.getElement().add(create2);
+    create2.getField().add(createValue("value", "Products"));
+
+    int i = 0;
+    for (Map.Entry<String, Literal> val : mp) {
+      i++;
+      String field = val.getKey();
+      // Qualified element?
+      String qua = "";
+      boolean diffNone = false;
+
+      switch (field) {
+        case "t":
+          qua = null;
+          field = "title";
+          break;
+        case "abs":
+          qua = null;
+          field = "description";
+          break;
+        case "doi":
+          qua = "doi";
+          field = "identifier";
+          break;
+        case "uri":
+          qua = "uri";
+          field = "identifier";
+          break;
+        case "in":
+          qua = "author";
+          field = "contributor";
+          diffNone = true;
+          break;
+        default:
+          qua = null;
+          break;
+      }
+      Element valueElem = null;
+      Element schema = getElement(metadata.getElement(), "dc");
+      if (schema == null) {
+        schema = create("dc");
+        metadata.getElement().add(schema);
+      }
+      valueElem = schema;
+
+      // Has element.. with XOAI one could have only schema and value
+      if (field != null && !field.equals("")) {
+        Element element = getElement(schema.getElement(),
+                field);
+        if (element == null) {
+          element = create(field);
+          schema.getElement().add(element);
+        }
+        valueElem = element;
+
+        if (qua != null && !qua.equals("")) {
+          Element qualifier = getElement(element.getElement(),
+                  qua);
+          if (qualifier == null) {
+            qualifier = create(qua);
+            element.getElement().add(qualifier);
+          }
+          valueElem = qualifier;
+        }
+      }
+
+      // Language?
+      if (val.getValue().getLanguage() != null && !val.getValue().getLanguage().equals("")) {
+        Element language = getElement(valueElem.getElement(),
+                val.getValue().getLanguage());
+        if (language == null) {
+          language = create(val.getValue().getLanguage());
+          valueElem.getElement().add(language);
+        }
+        valueElem = language;
+      } else {
+        String noneNma = diffNone ? "none_" + i : "none";
+
+        Element language = getElement(valueElem.getElement(),
+                noneNma);
+        if (language == null) {
+          language = create(noneNma);
+          valueElem.getElement().add(language);
+        }
+        valueElem = language;
+      }
+
+      valueElem.getField().add(createValue("value", val.getValue().stringValue()));
+    }
+
+    addOtherRepository(metadata.getElement(), URIitem, idpub, "item");
 
     return metadata;
   }
