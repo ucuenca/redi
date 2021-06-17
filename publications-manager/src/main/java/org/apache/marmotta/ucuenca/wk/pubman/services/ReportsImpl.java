@@ -20,11 +20,16 @@ package org.apache.marmotta.ucuenca.wk.pubman.services;
 import com.google.common.base.Joiner;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
+import static java.lang.Integer.parseInt;
 import java.net.HttpURLConnection;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +37,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.net.ssl.SSLContext;
+
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -42,11 +47,7 @@ import net.sf.jasperreports.engine.data.JsonDataSource;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLContexts;
-import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+
 import org.apache.marmotta.ucuenca.wk.commons.function.Cache;
 import org.apache.marmotta.ucuenca.wk.commons.impl.ConstantServiceImpl;
 import org.apache.marmotta.ucuenca.wk.commons.service.ConstantService;
@@ -62,6 +63,7 @@ import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
+
 
 /**
  *
@@ -199,6 +201,16 @@ public class ReportsImpl implements ReportsService {
           parameters.put("numero", json[1]);
 
           break;
+        case "ReportTrendsTotal":
+          // Get the Json with the top keywords (considering the number of publications).
+        
+           json =  getTrends( params.get(0)  , hostname);
+         
+           parameters.put("name", params.get(1));
+          //parameters.put("numero", json[1]);
+
+          break; 
+          
       }
       //Always the first element of the array has the json stream
       stream = new ByteArrayInputStream(json[0].getBytes("UTF-8"));
@@ -408,12 +420,13 @@ public class ReportsImpl implements ReportsService {
    * Extract Json with authors related through a cluster
    *
    * @param clusterId Id of the cluster
+   * @param scid
    * @param hostname Hostname
    * @return Array of strings
    */
   public String[] getJSONAuthorsCluster2(String clusterId, String clusterName, String hostname, String scid, String scname) {
     try {
-      SSLContext sslcontext = SSLContexts.custom()
+     /* SSLContext sslcontext = SSLContexts.custom()
               .loadTrustMaterial(null, new TrustSelfSignedStrategy())
               .build();
 
@@ -421,18 +434,25 @@ public class ReportsImpl implements ReportsService {
       CloseableHttpClient httpclient = HttpClients.custom()
               .setSSLSocketFactory(sslsf)
               .build();
-      Unirest.setHttpClient(httpclient);
-
+      Unirest.setHttpClient(httpclient);*/
+       httpService http = new httpService (); 
       HttpResponse<JsonNode> asJson;
       if (scid == null && scname == null) {
-        asJson = Unirest.get(hostname + "mongo/clusterDiscipline")
+        Map<String, Object> m = new HashMap () ;
+        m.put("uri", clusterId );
+        asJson = http.callhttp(hostname + "mongo/clusterDiscipline" , m) ;
+        /*asJson = Unirest.get(hostname + "mongo/clusterDiscipline")
                 .queryString("uri", clusterId)
-                .asJson();
+                .asJson();*/
       } else {
-        asJson = Unirest.get(hostname + "mongo/authorByArea")
+        Map<String, Object> m = new HashMap () ;
+        m.put("cluster", clusterId );
+        m.put("subcluster", scid );
+        asJson = http.callhttp(hostname + "mongo/authorByArea" , m) ;
+        /*asJson = Unirest.get(hostname + "mongo/authorByArea")
                 .queryString("cluster", clusterId)
                 .queryString("subcluster", scid)
-                .asJson();
+                .asJson();*/
       }
       if (asJson.getStatus() == HttpURLConnection.HTTP_OK) {
         org.json.JSONObject object = asJson.getBody().getObject();
@@ -1123,6 +1143,72 @@ public class ReportsImpl implements ReportsService {
       ex.printStackTrace();
     }
     return new String[]{"", ""};
+  }
+  
+  public String[] getTrends(String cluster ,  String hostname)  { 
+    
+      String general = "todas";
+     try {
+     httpService http = new httpService ();
+      //https://rediclon.cedia.edu.ec/mongo/pubByArea?cluster=
+      Map param = new HashMap () ;
+      param.put("cluster", cluster);
+      HttpResponse<JsonNode> asJson;
+      if (cluster.length() < 2 ){
+       asJson = http.callhttp( hostname +"/mongo/pubByArea" , param);
+      } else {
+        general = cluster.split("/")[cluster.split("/").length-1];
+        param.put("subcluster", "");
+       asJson = http.callhttp( hostname +"/mongo/pubBySubArea" , param);
+      }
+      if (asJson.getStatus() == HttpURLConnection.HTTP_OK) {
+          JSONArray nA = new JSONArray();
+          //System.out.println (asJson.getStatus());
+          //System.out.println (asJson.getBody());
+          org.json.JSONArray jsonArray = asJson.getBody().getArray();
+         // System.out.println ("Enumer");
+         for (int w = 0; w < jsonArray.length(); w++) {
+         org.json.JSONObject jsonObject = jsonArray.getJSONObject(w);
+        // org.json.JSONObject no = new org.json.JSONObject();
+         JSONObject no = new JSONObject();
+         //System.out.println (jsonObject.toString());
+        // System.out.println (jsonObject.get("area").toString());
+         no.put( "area" , jsonObject.get("labeles").toString() ) ;
+         String area = jsonObject.get("area").toString();
+         org.json.JSONArray jA  = jsonObject.getJSONArray("data");
+         Map aux = new HashMap ();
+            for (int j = 0; j <  jA.length(); j++  ) {
+              // System.out.println (jA.get(j));
+               String total =  jA.getJSONObject(j).get("total").toString();
+               String año = jA.getJSONObject(j).get("y").toString();
+           
+               if (parseInt(año)  >= 2010) {
+                  //no.put( año , total );
+                  aux.put(año , total);
+               } 
+               
+               
+            }
+            
+            for ( int i = 2010 ; i < 2021 ; i++) {
+               String n = Integer.toString(i);
+               if (aux.containsKey(n)) {
+                 no.put( n , aux.get(n) );
+               } else {
+                 no.put( n , "0" );
+               }
+            }
+            
+            nA.add(no);
+           // nA.put(no);
+        }
+         return new String [] { nA.toJSONString() , general };
+   
+      }
+
+   } catch (Exception e) {
+      } 
+     return new String [] { };
   }
 
 }

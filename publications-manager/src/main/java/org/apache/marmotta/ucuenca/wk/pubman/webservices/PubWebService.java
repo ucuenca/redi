@@ -44,6 +44,7 @@ import org.slf4j.Logger;
 import org.apache.marmotta.ucuenca.wk.pubman.api.SendNotificationsMarmotta;
 import org.apache.marmotta.ucuenca.wk.pubman.api.runCRIS;
 
+
 @Path("/pubman")
 @ApplicationScoped
 public class PubWebService {
@@ -62,6 +63,8 @@ public class PubWebService {
   
   @Inject
   private runCRIS rCRIS;
+  
+
 
   private static final int MAX_TURNS = 100;
   private static final int MIN_TURNS = 0;

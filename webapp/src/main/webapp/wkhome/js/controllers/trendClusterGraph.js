@@ -197,21 +197,31 @@ wkhomeControllers.controller('trendCluster', ['$scope', '$window', 'globalData',
       });*/
     }
 
-   /* $scope.exportReport = function (d) {
+    $scope.exportReport = function (d) {
+      var cc = "";
+      var cc_ = "Todos";
+      if ($scope.areaCombo.selected != undefined ){
+       cc = $scope.areaCombo.selected.id;
+       cc_ = $scope.areaCombo.selected.tag
+      } 
 
-      var cc = $scope.areaCombo.selected.id;
-      var cc_ = $scope.areaCombo.selected.tag
-      var sc = $scope.areaCombosub.selected && $scope.areaCombosub.selected.id ? $scope.areaCombosub.selected.id : undefined;
-      var sc_ = $scope.areaCombosub.selected && $scope.areaCombosub.selected.id ? $scope.areaCombosub.selected.tag : undefined;
+      //var sc = $scope.areaCombosub.selected && $scope.areaCombosub.selected.id ? $scope.areaCombosub.selected.id : undefined;
+      //var sc_ = $scope.areaCombosub.selected && $scope.areaCombosub.selected.id ? $scope.areaCombosub.selected.tag : undefined;
+      console.log (cc);
+
+      console.log (cc_);
+
+
       $scope.loading = true;
 
-      var prm = [];
+     /* var prm = [];
       if (cc && sc) {
         prm = [cc, cc_, sc, sc_];
       } else {
         prm = [cc, cc_];
-      }
-      var params = {hostname: '', report: 'ReportAuthorCluster2', type: d, param1: prm};
+      }*/
+
+      var params = {hostname: '', report: 'ReportTrendsTotal', type: d, param1: [ cc , cc_ ]};
       reportService2.search(params, function (response) {
         var res = '';
         for (var i = 0; i < Object.keys(response).length - 2; i++) {
@@ -223,8 +233,8 @@ wkhomeControllers.controller('trendCluster', ['$scope', '$window', 'globalData',
           alert("Error al procesar el reporte. Por favor, espere un momento y vuelva a intentarlo. Si el error persiste, consulte al administrador del sistema.");
         }
         $scope.loading = false;
-      });
-    }*/
+      }); 
+    }
 
     $scope.selectedValue = function () {
       return $scope.datacl;
