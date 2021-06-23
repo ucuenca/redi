@@ -61,12 +61,12 @@ public class OAI_IndexerImpl implements OAI_Indexer {
   public void run() {
     try {
       runIdxPubs();
-      //runIdxAuthors();
-      //runIdxOrgs();
-      //runIdxEvents();
-      //runIdxProjects();
+      runIdxAuthors();
+      runIdxOrgs();
+      runIdxEvents();
+      runIdxProjects();
       runIdxPatents();
-      //runIdxDatasets();
+      runIdxDatasets();
       
     } catch (Exception ex) {
       ex.printStackTrace();
@@ -516,7 +516,7 @@ public class OAI_IndexerImpl implements OAI_Indexer {
             + "prefix foaf: <http://xmlns.com/foaf/0.1/>\n"
             + "select distinct ?org ?pid{\n"
             + "    graph <" + constantService.getCentralGraph() + "> {\n"
-            + "        ?org a <http://www.eurocris.org/ontologies/cerif/1.3/Patent> .\n"
+            + "        ?org a <http://eurocris.org/ontology/cerif#Patent> .\n"
             + "        bind (md5(str(?org)) as ?pid).\n"
             + "    }\n"
             + "}").evaluate();
@@ -1077,7 +1077,7 @@ public class OAI_IndexerImpl implements OAI_Indexer {
             + "select ?a (sample(?n) as ?name) (sample (?ac) as ?acro) {\n"
             + "    graph <" + constantService.getCentralGraph() + "> {\n"
             + "        bind (<" + URIitem + "> as ?a ) .\n"
-            + "		?a <http://www.eurocris.org/ontologies/cerif/1.3#acronym> ?ac .\n"
+            + "		?a <http://eurocris.org/ontology/cerif#acronym> ?ac .\n"
             + "        ?a <http://xmlns.com/foaf/0.1/name> ?n .\n"
             + "    }\n"
             + "} group by ?a").evaluate();
@@ -1359,16 +1359,16 @@ public class OAI_IndexerImpl implements OAI_Indexer {
             + "                ?a dct:title ?title.\n"
             + "                ?a dct:abstract ?abstract.\n"
             + "                ?a dct:subject ?subject.\n"
-            + "                ?a <http://www.eurocris.org/ontologies/cerif/1.3/registrationDate> ?rd .\n"
-            + "                ?a <http://www.eurocris.org/ontologies/cerif/1.3/approvalDate> ?ad .\n"
-            + "                ?a <http://www.eurocris.org/ontologies/cerif/1.3/patentNumber> ?pn .\n"
+            + "                ?a <http://eurocris.org/ontology/cerif#registrationDate> ?rd .\n"
+            + "                ?a <http://eurocris.org/ontology/cerif#approvalDate> ?ad .\n"
+            + "                ?a <http://eurocris.org/ontology/cerif#patentNumber> ?pn .\n"
             + "            }\n"
             + "        } \n"
             + "    } union {\n"
             + "        select ?p (sample(?cn) as ?in) { \n"
             + "            graph <" + constantService.getCentralGraph() + "> {\n"
             + "                bind(<" + URIitem + "> as ?a) .\n"
-            + "                ?a <http://www.eurocris.org/ontologies/cerif/1.3/linkToPerson> ?p .\n"
+            + "                ?a <http://eurocris.org/ontology/cerif#linkToPerson> ?p .\n"
             + "                ?p foaf:name ?cn.\n"
             + "            }\n"
             + "        } group by ?p\n"
@@ -1700,8 +1700,8 @@ public class OAI_IndexerImpl implements OAI_Indexer {
             + "            graph <" + constantService.getCentralGraph() + "> {\n"
             + "                bind (<" + URIitem + "> as ?pr) .\n"
             + "                ?pr dct:title ?t .\n"
-            + "                ?pr <https://www.openaire.eu/cerif-profile/1.1/StartDate> ?sd .\n"
-            + "                ?pr <https://www.openaire.eu/cerif-profile/1.1/EndDate> ?ed .\n"
+            + "                ?pr <http://eurocris.org/ontology/cerif#StartDate> ?sd .\n"
+            + "                ?pr <http://eurocris.org/ontology/cerif#EndDate> ?ed .\n"
             + "                ?pr foaf:fundedBy ?f .\n"
             + "                ?f foaf:name ?fn .\n"
             + "                bind (md5(str(?f)) as ?fm ) .\n"
@@ -1712,7 +1712,7 @@ public class OAI_IndexerImpl implements OAI_Indexer {
             + "        select ?m (sample (?out) as ?mdata) { \n"
             + "            graph <" + constantService.getCentralGraph() + "> {\n"
             + "                bind (<" + URIitem + "> as ?pr) .\n"
-            + "                ?m <https://www.openaire.eu/cerif-profile/1.1/MemberOf> ?pr .\n"
+            + "                ?m <http://eurocris.org/ontology/cerif#MemberOf> ?pr .\n"
             + "                ?m schema:memberOf ?org .\n"
             + "                bind (md5(str(?org)) as ?orgm ) .\n"
             + "                bind (md5(str(?m)) as ?mm ) .\n"

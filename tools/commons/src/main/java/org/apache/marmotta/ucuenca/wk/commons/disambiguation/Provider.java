@@ -222,7 +222,7 @@ public class Provider {
             + "     graph <" + Graph + ">{\n"
             + "             values ?per { <URI> } . \n"
             + "            ?per schema:memberOf ?o .\n"
-            + "       		?o foaf:name | <http://www.eurocris.org/ontologies/cerif/1.3#acronym> ?p\n"
+            + "       		?o foaf:name | <http://eurocris.org/ontology/cerif#acronym> ?p\n"
             + "    }\n"
             + "}";
     String qryT = "prefix foaf: <http://xmlns.com/foaf/0.1/>\n"

@@ -488,7 +488,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
             + "		?o a foaf:Organization .\n"
             + "		?o <http://ucuenca.edu.ec/ontology#memberOf> <https://redi.cedia.edu.ec/> .\n"
             + "		?o foaf:name ?n .\n"
-            + "		?o <http://www.eurocris.org/ontologies/cerif/1.3#acronym> ?nn .\n"
+            + "		?o <http://eurocris.org/ontology/cerif#acronym> ?nn .\n"
             + "	}\n", null, "prefix foaf: <http://xmlns.com/foaf/0.1/>\n"
             + "prefix  schema: <http://schema.org/>\n", "?o ?n ?nn").execute();
 
@@ -819,7 +819,7 @@ public class DisambiguationServiceImpl implements DisambiguationService {
               log.info("{}-{}-Recursive exploring", ix, allx);
               Model Disambiguate = Disambiguate(Candidates, 0, new Person());
               log.info("{}-{}-Store links", ix, allx);
-              boolean alreadyHasPublicationsOrProjects = sparqlService.getSparqlService().ask(QueryLanguage.SPARQL, "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" + "prefix cerif: <https://www.openaire.eu/cerif-profile/1.1/> \n"
+              boolean alreadyHasPublicationsOrProjects = sparqlService.getSparqlService().ask(QueryLanguage.SPARQL, "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" + "prefix cerif: <http://eurocris.org/ontology/cerif#> \n"
                       + "ask from <" + constantService.getAuthorsProviderGraph() + "> {\n"
                       + "	<" + aSeedAuthor.URI + "> foaf:publications|cerif:MemberOf [] .\n"
                       + "}");
