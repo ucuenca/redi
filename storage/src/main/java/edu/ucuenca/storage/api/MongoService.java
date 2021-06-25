@@ -36,7 +36,9 @@ public interface MongoService {
   public String getAuthor(String uri);
 
   public String getSPARQL(String qry, String format);
-
+  
+  public String getGlobalAuthorMetrics(String stat, String group);
+  
   public String getStatistics(String id);
 
   public String getRelatedAuthors(String uri);

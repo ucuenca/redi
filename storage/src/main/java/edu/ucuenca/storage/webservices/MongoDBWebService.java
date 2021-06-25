@@ -419,4 +419,12 @@ public class MongoDBWebService {
             throw new Exception("Sorry, pretty print didn't work", e);
         }
     }
+    
+    @GET
+    @Path("/getMetrics")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response obtainMetric(@QueryParam("metric") String metric, @QueryParam("uri") String uri) throws FailMongoConnectionException {
+      String metricr=mongoService.getGlobalAuthorMetrics(metric, uri);
+      return Response.ok().entity(metricr).build();
+    }
 }
