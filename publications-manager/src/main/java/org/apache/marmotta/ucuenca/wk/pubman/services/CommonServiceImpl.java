@@ -645,7 +645,7 @@ public class CommonServiceImpl implements CommonService {
     public String getProjectbyInstInfo() {
       try {
       String getOrgInfoProy = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
-                          "PREFIX cerif: <https://www.openaire.eu/cerif-profile/1.1/>\n" +
+                          "PREFIX cerif: <http://eurocris.org/ontology/cerif#>\n" +
                           "select distinct ?org (COUNT (?p) as ?nproy) where { " +
                           "graph <"+con.getCentralGraph()+"> { " +
                           "   ?p  a foaf:Project . " +
@@ -655,7 +655,7 @@ public class CommonServiceImpl implements CommonService {
       List<Map<String, Value>> response1 = sparqlService.getSparqlService().query(QueryLanguage.SPARQL, getOrgInfoProy);
       
       String getOrgColProj ="PREFIX foaf: <http://xmlns.com/foaf/0.1/> \n" +
-                            "PREFIX cerif: <https://www.openaire.eu/cerif-profile/1.1/>\n" +
+                            "PREFIX cerif: <http://eurocris.org/ontology/cerif#>\n" +
                             "select distinct ?org ?org2 (COUNT (?p) as ?nproy) where {\n" +
                             "graph <"+con.getCentralGraph()+"> {\n" +
                             "   ?p  a foaf:Project .\n" +

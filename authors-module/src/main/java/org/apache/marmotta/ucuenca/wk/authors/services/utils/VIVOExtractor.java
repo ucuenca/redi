@@ -201,14 +201,14 @@ final public class VIVOExtractor {
                     break;
                 case "proj_intv_start":
                     str.addAll(extractData(parse, "construct {\n"
-                            + "    <" + parent + "> <https://www.openaire.eu/cerif-profile/1.1/StartDate> ?i .\n"
+                            + "    <" + parent + "> <http://eurocris.org/ontology/cerif#StartDate> ?i .\n"
                             + "} where {\n"
                             + "    ?a <http://vivoweb.org/ontology/core#dateTime> ?i .\n"
                             + "}"));
                     break;
                 case "proj_intv_end":
                     str.addAll(extractData(parse, "construct {\n"
-                            + "    <" + parent + "> <https://www.openaire.eu/cerif-profile/1.1/EndDate> ?i .\n"
+                            + "    <" + parent + "> <http://eurocris.org/ontology/cerif#EndDate> ?i .\n"
                             + "} where {\n"
                             + "    ?a <http://vivoweb.org/ontology/core#dateTime> ?i .\n"
                             + "}"));
@@ -242,8 +242,8 @@ final public class VIVOExtractor {
                             + "PREFIX schema: <http://schema.org/> "
                             + "construct { "
                             + " ?pp a <http://xmlns.com/foaf/0.1/Project> . "
-                            + " ?pp <https://www.openaire.eu/cerif-profile/1.1/linksToPerson> ?l . "
-                            + " ?l <https://www.openaire.eu/cerif-profile/1.1/MemberOf> ?pp ."
+                            + " ?pp <http://eurocris.org/ontology/cerif#linksToPerson> ?l . "
+                            + " ?l <http://eurocris.org/ontology/cerif#MemberOf> ?pp ."
                             + " ?pp <http://purl.org/dc/terms/title> ?la ."
                             + "} where { values ?pp {<" + p.stringValue() + ">} . "
                             + "?pp rdfs:label ?la ."
@@ -256,7 +256,7 @@ final public class VIVOExtractor {
                             + "PREFIX schema: <http://schema.org/> "
                             + "construct { "
                             + " ?pp a <http://xmlns.com/foaf/0.1/Project> . "
-                            + " ?pp <https://www.openaire.eu/cerif-profile/1.1/linksToOrganisationUnit> ?l . "
+                            + " ?pp <http://eurocris.org/ontology/cerif#linksToOrganisationUnit> ?l . "
                             + " ?l a foaf:Organization ."
                             + "} where { values ?pp {<" + p.stringValue() + ">} . "
                             + "?pp <http://vivoweb.org/ontology/core#relates> ?l . "
@@ -279,7 +279,7 @@ final public class VIVOExtractor {
                             + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
                             + "PREFIX schema: <http://schema.org/> "
                             + "construct { "
-                            + " ?pub <https://www.openaire.eu/cerif-profile/1.1/linksToProject> ?proj . "
+                            + " ?pub <http://eurocris.org/ontology/cerif#linksToProject> ?proj . "
                             + "} where { values ?proj { <" + p.stringValue() + "> } . "
                             + " ?proj <http://vivoweb.org/ontology/core#supportedInformationResource> ?pub . "
                             + "}"));

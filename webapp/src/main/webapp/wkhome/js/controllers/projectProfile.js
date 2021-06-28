@@ -157,7 +157,7 @@ wkhomeControllers.controller('projectProfile', ['$scope', '$routeParams', '$wind
       '      } WHERE  {\n' +
       '        SELECT ?person (MAX(str(?name_)) as ?name) (MAX(str(?img_)) as ?imgm) (IRI (?imgm) as ?img)\n' +
       '        WHERE { GRAPH <'+globalData.centralGraph +'> {\n' +
-      '          <'+project.uri+'> <https://www.openaire.eu/cerif-profile/1.1/linksToPerson> ?person.\n' +
+      '          <'+project.uri+'> <http://eurocris.org/ontology/cerif#linksToPerson> ?person.\n' +
       '          ?person foaf:name ?name_  .\n' +
       '           OPTIONAL{?person  foaf:img ?img_.}\n' +
       '         \n' +

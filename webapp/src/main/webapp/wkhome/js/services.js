@@ -517,6 +517,22 @@ wkhomeServices.factory('getORCIDToken', ['$resource', '$http', 'globalData',
 ]);
 
 
+wkhomeServices.factory('getMetric', ['$resource', '$http', 'globalData',
+  function ($resource, $http, globalData) {
+    var serverInstance = globalData.serverInstance;
+    return $resource(serverInstance + 'mongo/getMetrics?metric=:metric&uri=:uri', {}, {
+      query: {
+        method: 'GET',
+        params: {uri: 'uri', metric: 'metric'},
+        isArray: false,
+        cache: false,
+        headers: {'Accept': 'application/json'}
+      }
+    });
+  }
+]);
+
+
   wkhomeServices.factory('PatenteReg', ['$resource', '$http', 'globalData',
     function ($resource, $http, globalData) {
           $http.defaults.headers.common['content-type'] = 'application/json';
