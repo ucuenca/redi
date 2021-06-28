@@ -1161,6 +1161,7 @@ public class PopulateMongoImpl implements PopulateMongo {
       JSONObject obj = new JSONObject();
       obj.put("uri", ins.get("org").stringValue());
       obj.put("name", ins.get("norg").stringValue());
+      obj.put("acroname", ins.get("name").stringValue());
       obj.put("total", ins.get("total").stringValue());
       array.add(obj);
     }

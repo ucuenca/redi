@@ -1,0 +1,124 @@
+
+
+<div class="container" ng-controller="reportInst">
+
+    <div class="title" style="text-align: center">
+        <h2 class="text-primary">Reportes por Institución - {{data.name}}</h2>
+    </div>
+    <div share-square="true" style="text-align: center" share-links="Facebook, Twitter, LinkedIn" share-title="REDI Organization - {{data.name}} "> Compartir : </div>
+
+    <div class="row text-center"  style="margin: 30px ; background-color: #1799cc; height: 42px" > 
+      <div class="col-md-3" style="border-right-style: groove; height: 100%; border-color: white;color: white;" > <b>  Autores <br>{{data.N_authors}}</b> </div>
+      <div class="col-md-3" style="border-right-style: groove; height: 100%; border-color: white;color: white;"> <b> Publicaciones <br> {{data.N_publications}} </b> </div>
+      <div class="col-md-3" style="border-right-style: groove; height: 100%; border-color: white;color: white;"> <b> Proyectos <br> {{data.N_projects}} </b>  </div>
+      <div class="col-md-3" style="border-right-style: groove; height: 100%; border-color: white;color: white;">  <b> Patentes<br>  4 </b> </div>
+
+    </div>
+
+
+
+    <p>
+
+    </p>
+
+
+    <br/>
+
+         <h3 class="text-primary">  Volumen  de publicaciones por autores  </h3>
+    <div class="row report"  >
+    <div class="col-md-8 container-fluid "  style='background-color: #FFFFFF;'>
+         <barh-chart data="dispublications">
+        <div id="containerpub" ></div>
+         </barh-chart>
+
+         
+    </div>
+
+      <div class="col-md-4 container-fluid containerTable"  >
+            <table-template data="topautores" >
+            
+            </table-template>
+      </div>
+ 
+     </div>
+
+    <h3 class="text-primary"> Colaboración institucional </h3>
+    <div class="row report"  >
+    <div class="col-md-8 container-fluid"  style='background-color: #FFFFFF;'>
+         <squares-chart data="inscol">
+     <div id="containerinscol" ></div>
+         </squares-chart>
+
+
+    </div>
+      <div class="col-md-4 container-fluid containerTable" >
+            <!--<area-piechart datapc="datapc">
+              <div id="containerpc" style="min-width: 200px; height: 350px; margin: 0 auto"></div>
+            </area-piechart>-->
+                <table-template data="inscol">
+            
+            </table-template>
+      </div>
+     </div>
+
+       <h3 class="text-primary"> Principales fuentes de datos  </h3>
+    <div class="row report"  >
+      <div class="col-md-4 container-fluid containerTable" >
+
+          <table-template data="fuentes">
+            
+        </table-template>
+     </div>
+    <div class="col-md-8 container-fluid " >
+         <squares-chart data="fuentes">
+     <div id="containerfuentes" ></div>
+         </squares-chart>
+
+         
+    </div>
+
+     </div>
+
+           <h3 class="text-primary"> Investigadores por áreas de investigación  </h3>
+    <div class="row report"  >
+    <div class="col-md-8 container-fluid"  style='background-color: #FFFFFF;'>
+         <squares-chart data="areas">
+     <div id="containerareas" ></div>
+         </squares-chart>
+
+         
+    </div>
+      <div class="col-md-4 container-fluid containerTable"  >
+            <!--<area-piechart datapc="datapc">
+              <div id="containerpc" style="min-width: 200px; height: 350px; margin: 0 auto"></div>
+            </area-piechart>-->
+            <table-template data="areas" >
+            
+            </table-template>
+      </div>
+     </div>
+
+     <h3 class="text-primary"> Colaboración por proyectos inter-institucionales  </h3>
+    <div class="row report"  >
+      <div class="col-md-4 container-fluid containerTable"  >
+            <table-template data="proyectostable" >
+            
+            </table-template>
+      </div>
+
+    <div class="col-md-8 container-fluid"  style='background-color: #FFFFFF;'>
+         <sankey-chart data="proyectos">
+     <div id="containerproyecto" ></div>
+         </sankey-chart>
+
+         
+    </div>
+ 
+     </div>
+
+
+
+
+</div>
+
+

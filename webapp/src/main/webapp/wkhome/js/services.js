@@ -592,6 +592,21 @@ wkhomeServices.factory('getProfile', ['$resource', '$http', 'globalData',
 ]);
 
 
+wkhomeServices.factory('colProyect', ['$resource', '$http', 'globalData',
+  function ($resource, $http, globalData) {
+    var serverInstance = globalData.serverInstance;
+    return $resource(serverInstance + 'mongo/instbyproject', {}, {
+      query: {
+        method: 'GET',
+        isArray: false,
+        cache: true,
+        headers: {'Accept': 'application/json'}
+      }
+    });
+  }
+]);
+
+
 
 
 

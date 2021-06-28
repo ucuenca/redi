@@ -280,6 +280,12 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                   when('/group/trends', {
                     templateUrl: 'wkhome/partials/genericTrendsAreas.html',
                 }).
+                   when('/report/Inst', {
+                    templateUrl: 'wkhome/partials/reportAllInst.html',
+                }).
+                  when('/report/:org*', {
+                    templateUrl: 'wkhome/partials/reportInst.html',
+                }).
                 otherwise({
                     redirectTo: '/'
                 })

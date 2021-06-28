@@ -1,0 +1,25 @@
+<!--<ul>
+    <li class="head-list">
+        <font color=#243082> <strong> TOP FUENTES DE DATOS </strong> </font>
+    </li>
+
+        <span ng-repeat="d in data.datos"><li> {{d.name}} </li> </span>
+</ul>-->
+
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="d in data.datos">
+      <th scope="row">{{d.position}}</th>
+      <td>{{d.name}}</td>
+      <td>{{d.value}}</td>
+    </tr>
+  </tbody>
+</table>

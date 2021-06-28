@@ -2225,7 +2225,7 @@ public class QueriesServiceImpl implements QueriesService {
 
   @Override
   public String getInstAsobyInst(String uri) {
-    return PREFIXES + "SELECT ?org    ?norg  ( COUNT (distinct ?author) as ?total )\n"
+    return PREFIXES + "SELECT ?org ?name  ?norg  ( COUNT (distinct ?author) as ?total )\n"
             + "WHERE {\n"
             + "  graph <" + con.getCentralGraph() + "> {\n"
             + "  ?author schema:memberOf  <" + uri + "> .\n"
@@ -2237,9 +2237,10 @@ public class QueriesServiceImpl implements QueriesService {
             + "  }\n"
             + "     graph <" + con.getOrganizationsGraph() + "> {\n"
             + "     ?org   <http://ucuenca.edu.ec/ontology#fullName>  ?norg .\n"
+            + "     ?org   <http://ucuenca.edu.ec/ontology#name>  ?name .\n"
             + "               FILTER( lang(?norg) = 'es') .\n"
             + "        }\n"
-            + "} group by ?org ?norg order  by DESC (?total)";
+            + "} group by ?org ?name ?norg order  by DESC (?total)";
 
   }
   

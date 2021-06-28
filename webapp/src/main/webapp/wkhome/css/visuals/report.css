@@ -1,0 +1,14 @@
+
+.report {
+     height: 350px;
+	margin-bottom: 100px;
+}
+
+.containerTable {
+
+	/*min-width: 310px; 
+	margin: 0 auto; */
+	height: 350px; 
+	overflow: auto;
+}
+
