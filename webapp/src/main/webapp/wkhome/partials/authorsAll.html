@@ -113,6 +113,7 @@
           <img src="wkhome/images/journal.png" alt="type" width="12" style="margin-right: 5px">
           <!--<a ng-href="{{doc['lmf.uri']}}" class="title" target="_blank"><b>{{doc.title}}</b></a> -->
           <a ng-click=" openmodal(doc['lmf.uri'])" class="title" ><b>{{doc.familyname | camelCase:true }} , {{ doc.givenname | camelCase:true }} </b></a>
+          <a ng-click=" openmodal(doc['lmf.uri'], 'authorMetrics')" class="title" title="Métricas" ><img src="wkhome/images/metrics.png" alt="" width="12" style="margin-left: 5px"></a>
            <div class="row">
             <div class="col-lg-1" ng-show="doc['img']">
               <img ng-src="{{doc['img']}}" alt="" width="95px">

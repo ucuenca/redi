@@ -164,8 +164,10 @@ wkhomeControllers.controller('listEntitiesController', ['$scope', '$window', 'gl
             $("#myModal").modal();
         }
 
-        $scope.openmodal = function (puburi) {
-            if (typent === 'authors') {
+        $scope.openmodal = function (puburi, stype) {
+          if (stype==='authorMetrics') {
+                $window.location.hash = "/author/report/"+puburi;
+        	} else if (typent === 'authors') {
                 $window.location.hash = "/author/profile/"+puburi;
             }else if (typent === 'projects') {
 

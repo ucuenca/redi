@@ -36,6 +36,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -519,7 +520,67 @@ public class MongoServiceImpl implements MongoService {
                 + "        bind( strafter( ?y2, ' ' ) as ?y4 ).\n"
                 + "        bind( if (str(?y3)='' && str(?y4)='',?y2, if(str(?y3)='',strafter( ?y2, ' ' ),strbefore( ?y2, '-' ))) as ?y ) .\n"
                 + "    }\n"
-                + "} group by ?y ?authorURI order by desc(?v)";
+                + "} group by ?y ?authorURI order by asc(?k)";
+        break;
+      case "globalCounters":
+        query = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "PREFIX bibo: <http://purl.org/ontology/bibo/>\n"
+                + "select (?authorURI as ?g) (count(distinct ?pub) as ?cpub) (count(distinct ?pro) as ?cpro) (count(distinct ?coauthorURI) as ?ccau) (max(?v) as ?hindex) {\n"
+                + "    graph <https://redi.cedia.edu.ec/context/redi> {\n"
+                + (group != null ? "        bind (<" + group + "> as ?authorURI ).\n" : "")
+                + "        optional {\n"
+                + "            ?authorURI foaf:publications ?pub .\n"
+                + "            optional {\n"
+                + "        	 	?coauthorURI foaf:publications ?pub .\n"
+                + "                filter (?authorURI != ?coauthorURI) .\n"
+                + "            }\n"
+                + "        }\n"
+                + "        optional {\n"
+                + "        	?authorURI <http://eurocris.org/ontology/cerif#MemberOf> ?pro .    \n"
+                + "        }\n"
+                + "        optional {\n"
+                + "            ?authorURI <http://ucuenca.edu.ec/ontology#h-index> ?v .\n"
+                + "        }\n"
+                + "    }\n"
+                + "} group by ?authorURI";
+        break;
+      case "journalImpact":
+        query = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "PREFIX bibo: <http://purl.org/ontology/bibo/>\n"
+                + "select (?authorURI as ?g) (?bq as ?k) (count(distinct ?pub) as ?v) {\n"
+                + "    {\n"
+                + "        select ?authorURI ?pub (max(?qu) as ?bq) {\n"
+                + "            graph <https://redi.cedia.edu.ec/context/redi> {\n"
+                + (group != null ? "        bind (<" + group + "> as ?authorURI ).\n" : "")
+                + "                ?authorURI foaf:publications ?pub .\n"
+                + "                ?pub dct:isPartOf ?jou .\n"
+                + "                ?jou <http://ucuenca.edu.ec/ontology#bestQuartile> ?qu .\n"
+                + "            }\n"
+                + "        } group by ?authorURI ?pub  \n"
+                + "    } .\n"
+                + "} group by ?authorURI ?bq";
+        break;
+      case "journalCountry":
+        query = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "PREFIX bibo: <http://purl.org/ontology/bibo/>\n"
+                + "select (?authorURI as ?g) (?bq as ?k) (count(distinct ?pub) as ?v) {\n"
+                + "    {\n"
+                + "        select ?authorURI ?pub (max(?qu) as ?bq) {\n"
+                + "            graph <https://redi.cedia.edu.ec/context/redi> {\n"
+                + (group != null ? "        bind (<" + group + "> as ?authorURI ).\n" : "")
+                + "                ?authorURI foaf:publications ?pub .\n"
+                + "                ?pub dct:isPartOf ?jou .\n"
+                + "                ?jou <http://ucuenca.edu.ec/ontology#country> ?qu .\n"
+                + "            }\n"
+                + "        } group by ?authorURI ?pub  \n"
+                + "    } .\n"
+                + "} group by ?authorURI ?bq";
         break;
     }
 
@@ -530,9 +591,10 @@ public class MongoServiceImpl implements MongoService {
       List<Map<String, Value>> query1 = sesameService2.getSparqlService().query(QueryLanguage.SPARQL, query);
       for (Map<String, Value> mp : query1) {
         JSONObject datakv = new JSONObject();
-        datakv.put("g", mp.get("g").stringValue());
-        datakv.put("k", mp.get("k").stringValue());
-        datakv.put("v", mp.get("v").stringValue());
+        for (Iterator<Map.Entry<String, Value>> it = mp.entrySet().iterator(); it.hasNext();) {
+          Map.Entry<String, Value> next = it.next();
+          datakv.put(next.getKey(), next.getValue().stringValue());
+        }
         array.add(datakv);
       }
     } catch (Exception ex) {
