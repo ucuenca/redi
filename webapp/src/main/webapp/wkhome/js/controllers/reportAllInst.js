@@ -13,20 +13,37 @@ wkhomeControllers.controller('reportAllInst', ['$scope','$routeParams', 'globalD
     var palete = ["#001219" , "#005F73" , "#0A9396" , "#94D2BD" , "#E9D8A6" , "#CA6702" , "#BB3E03" , "#AE2012" , "#9B2226" ];
 
     var grafico = "barchar";
-
+    $scope.total = {};
     Statistics.query({
       id: grafico
     }, function(data) {
+      console.log ("data"); 
+       console.log (data); 
+      var totalpub = 0;
+      var totalautor = 0;
+      var totalpro = 0;
       var datachart = data["@graph"];
         var auxdata = [];
        for (var i = 0 ;  i < datachart.length ; i++) 
        {
-         // console.log (datachart[i]);
-          auxdata.push ( { "id" : datachart[i]["@id"] ,  "name" : datachart[i]["uc:name"] ,  "value" :  Number(datachart[i]["uc:totalPublications"]["@value"]) , color : multi[i] } ) ;
+
+          totalautor = totalautor + Number(datachart[i]["uc:totalAuthors"]["@value"]);
+          totalpro = totalpro + Number(datachart[i]["uc:totalProjects"]["@value"]);
+          totalpub = totalpub + Number(datachart[i]["uc:totalPublications"]["@value"]);
+          auxdata.push ( { "id" : datachart[i]["@id"] ,  "cname" : datachart[i]["uc:name"]  ,  "name" : datachart[i]["uc:name"] ,  "value" :  Number(datachart[i]["uc:totalPublications"]["@value"]) , color : multi[i] } ) ;
        } 
-      $scope.data  = {
+       console.log ("TOTAL PUB" + totalpub);
+       console.log ("TOTAL AUtor" + totalautor);
+       console.log ("TOTAL pro" + totalpro);
+
+       $scope.total.pub = totalpub;
+       $scope.total.aut = totalautor;
+       $scope.total.pro = totalpro;
+       $scope.total.pat = 0;
+
+       $scope.data  = {
        container : "containerinst" ,
-       datos : auxdata
+       datos :  _.sortBy( auxdata , 'value').reverse()
        };
       console.log (auxdata); 
 

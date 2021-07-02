@@ -41,7 +41,7 @@ wkhomeControllers.controller('reportAuthor', ['$scope','$routeParams', 'globalDa
         datos = [] ;
         var i = 0;
         data.data.map(function (row) { 
-            datos.push( { name : row.k , value : Number(row.v) , color: colors[i] , position : i+1 });
+            datos.push( { name : row.k  , cname : row.k , value : Number(row.v) , color: colors[i] , position : i+1 });
             i++;
             return 0;
         });
@@ -57,7 +57,7 @@ wkhomeControllers.controller('reportAuthor', ['$scope','$routeParams', 'globalDa
         var i = 0;
         data.data.map(function (row) { 
             var lbl = row.k.replace("Provider","").replace("http://ucuenca.edu.ec/ontology#","");
-            datos.push( { name : lbl , value : Number(row.v) , color: colors[i] , position : i+1 });
+            datos.push( { name : lbl , cname : lbl , value : Number(row.v) , color: colors[i] , position : i+1 });
             i++;
             return 0;
         });
@@ -73,7 +73,7 @@ wkhomeControllers.controller('reportAuthor', ['$scope','$routeParams', 'globalDa
         var i = 0;
         data.data.map(function (row) { 
             var lbl = row.k;
-            datos.push( { name : lbl , value : Number(row.v) , color: colors[i] , position : i+1 });
+            datos.push( { name : lbl , cname : lbl , value : Number(row.v) , color: colors[i] , position : i+1 });
             i++;
             return 0;
         });
@@ -88,7 +88,7 @@ wkhomeControllers.controller('reportAuthor', ['$scope','$routeParams', 'globalDa
         var i = 0;
         data.data.map(function (row) { 
             var lbl = row.k;
-            datos.push( { name : lbl , value : Number(row.v) , color: colors[i] , position : i+1 });
+            datos.push( { name : lbl , cname : lbl , value : Number(row.v) , color: colors[i] , position : i+1 });
             i++;
             return 0;
         });
@@ -125,7 +125,7 @@ wkhomeControllers.controller('reportAuthor', ['$scope','$routeParams', 'globalDa
         var i = 0;
         data.data.map(function (row) { 
             var lbl = row.k;
-            datos.push( { name : lbl , value : Number(row.v) , color: colors[i] , position : i+1 });
+            datos.push( { name : lbl , cname : lbl , value : Number(row.v) , color: colors[i] , position : i+1 });
             i++;
             return 0;
         });

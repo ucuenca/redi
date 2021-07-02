@@ -2538,7 +2538,7 @@ public class QueriesServiceImpl implements QueriesService {
    return PREFIXES + "select distinct ?title ?pnumber ?abstract ?rdate ?adate ?edate ?link ?name (GROUP_CONCAT(DISTINCT STR(?lorg); separator='|') as ?lorgs)  (GROUP_CONCAT(DISTINCT STR(?subject); separator='|') as ?subjects) " +
                       "where {\n" +
                       "    graph <" + con.getCentralGraph() + "> {\n" +
-                      "<"+uri+"> cerif6:has_title ?title .\n" +
+                      "<"+uri+"> dct:title ?title .\n" +
                       "<"+uri+"> cerif6:has_identifier ?pnumber . " +
                       "OPTIONAL {  <"+uri+"> dct:subject ?subject   }\n" +
                       "OPTIONAL {  <"+uri+"> cerif6:has_abstract ?abstract   }\n" +

@@ -19,6 +19,7 @@ wkhomeControllers.controller('reportInst', ['$scope','$routeParams', 'globalData
     }, function(data) {
  
       $scope.data = data;
+      $scope.data.N_patents = 0;
      // console.log (data);
     }); 
 
@@ -29,24 +30,7 @@ wkhomeControllers.controller('reportInst', ['$scope','$routeParams', 'globalData
       id: uriInst
     }, function(data) {
  
-     // $scope.data = data;
-      console.log ("Estadisticas");
-        console.log (data);
-
-      /*var inst  = data.inst_by_inst.data;
-      var allInst = [] ; 
-      console.log (data);
-
-
-       for (  var i = 0 ;  i < inst.length ; i++) {
-        console.log (i);
-        allInst.push( { name : inst[i].name , value : parseInt(inst[i].total) , color: colour[i] , position : i+1 });
-      
-        }
-      console.log (allInst);*/
-      console.log ("SORT");
-    
-
+ 
       $scope.inscol = { container : "containerinscol" , datos :  processdata( data.inst_by_inst.data , colour )  } ;
       $scope.fuentes =  { container : "containerfuentes" , datos :  processdata( data.prov_by_inst.data , colorred ) };
      // $scope.fuentes =  { container : "containerfuentes" , datos :  processdata( data.prov_by_inst.data , colorred ) };
@@ -69,7 +53,16 @@ wkhomeControllers.controller('reportInst', ['$scope','$routeParams', 'globalData
        var allInst = [] ; 
         for (  var i = 0 ;  i < inst.length ; i++) {
          // console.log (i);
-          allInst.push( { name : inst[i].name , value : parseInt(inst[i].total) , color: colorlist[i] , position : i+1 });
+        var acroname = inst[i].acroname ; 
+         if ( acroname ){
+          fullname =  inst[i].name;
+         
+         }else {
+          fullname = inst[i].name;
+          acroname = inst[i].name;
+         }
+
+          allInst.push( { name : acroname , cname : fullname , value : parseInt(inst[i].total) , color: colorlist[i] , position : i+1 });
       
         }
 
@@ -99,7 +92,7 @@ wkhomeControllers.controller('reportInst', ['$scope','$routeParams', 'globalData
             for (  var i = 0 ;  i < instrel.length ; i++) {
               // console.log (i);
               if ( instrel[i].target.includes("redi.cedia.edu.ec") ){
-              newdata.push( { name : instrel[i].target.split("/").pop()  , value : parseInt(instrel[i].nproy ) , color: colorlist[i] , position : i+1 });
+              newdata.push( { name : instrel[i].target.split("/").pop() , cname : instrel[i].target.split("/").pop()  , value : parseInt(instrel[i].nproy ) , color: colorlist[i] , position : i+1 });
               lines.push( [ instrel[i].source.split("/").pop() ,  instrel[i].target.split("/").pop() , parseInt(instrel[i].nproy )  ]) ;
             }
           }
@@ -202,7 +195,7 @@ wkhomeControllers.controller('reportInst', ['$scope','$routeParams', 'globalData
     };*/
 
 
-   $scope.dispublications = {
+  /* $scope.dispublications = {
     container : "containerpub" ,
     datos : { ay : [ 5 , 6 , 7 , 8  , 3 , 2 , 1 , 5 , 6 ]  , ax : [ "1-5" , "6-10" , "11-15" , "16-20" , "21-25" , "26-30" , "31-35" , "36-40" , "40-45" ]}
     
@@ -216,7 +209,7 @@ wkhomeControllers.controller('reportInst', ['$scope','$routeParams', 'globalData
     { name : 'José Segarra', value : 25 } ,
     { name: 'Juanito Perez', value: 15 },
     { name: 'Tolo Valenco' , value :  40 } ]
-    };
+    };*/
     
 
 
