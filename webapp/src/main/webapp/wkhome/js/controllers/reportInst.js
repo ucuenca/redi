@@ -30,20 +30,29 @@ wkhomeControllers.controller('reportInst', ['$scope','$routeParams', 'globalData
       id: uriInst
     }, function(data) {
  
- 
-      $scope.inscol = { container : "containerinscol" , datos :  processdata( data.inst_by_inst.data , colour )  } ;
-      $scope.fuentes =  { container : "containerfuentes" , datos :  processdata( data.prov_by_inst.data , colorred ) };
-     // $scope.fuentes =  { container : "containerfuentes" , datos :  processdata( data.prov_by_inst.data , colorred ) };
-      $scope.areas = { container : "containerareas" , datos :  _.sortBy( processdata( data.inst_by_area.data  , colors ) , 'value').reverse()  };
+     // $scope.data = data;
+      console.log ("Estadisticas");
+        console.log (data);
 
-      $scope.topautores = { container : "containerareas" , datos :  _.sortBy( processdata( data.author_by_inst.data  , colors ) , 'value').reverse()  };
+
+      console.log ("SORT");
+      console.log (data.inst_by_inst.data);
+
+      //console.log (data.inst_by_area.data);
+      //console.log (_.sortBy(  _.each(data.inst_by_area.data , function ( d ) { d.total = parseInt(d.total); return d.total ; } ) , 'total').reverse() );
+      $scope.inscol = { container : "containerinscol" , datos :  processdata( data.inst_by_inst.data , colour ) , label : "#Pub"  } ;
+      $scope.fuentes =  { container : "containerfuentes" , datos :  processdata( data.prov_by_inst.data , colorred ) , label : "#Pub" };
+     // $scope.fuentes =  { container : "containerfuentes" , datos :  processdata( data.prov_by_inst.data , colorred ) };
+      
+      $scope.areas = { container : "containerareas" , datos :   processdata( _.sortBy(  _.each(data.inst_by_area.data , function ( d ) { d.total = parseInt(d.total); return d.total ; } ) , 'total').reverse() , colors ) , label : "#Inv"  };
+
+      $scope.topautores = { container : "containerareas" , datos :  _.sortBy( processdata( data.author_by_inst.data  , colors ) , 'value').reverse() , label : "#Pub" };
       console.log ("RANGOOOOOO");
      // console.log (_.pluck(data.author_by_inst.data, 'total'));
       //console.log ( range ( _.pluck(data.author_by_inst.data, 'total'))); 
      // console.log ( axis ( dict ) );
       $scope.dispublications = {
-       container : "containerpub" ,
-       datos : axis ( range ( _.pluck(data.author_by_inst.data, 'total') ))
+       container : "containerpub" , datos : axis ( range ( _.pluck(data.author_by_inst.data, 'total') )) , label : "#Pub" , axisy : "Investigadores"
        };
      // prov_by_inst
 
@@ -62,7 +71,7 @@ wkhomeControllers.controller('reportInst', ['$scope','$routeParams', 'globalData
           acroname = inst[i].name;
          }
 
-          allInst.push( { name : acroname , cname : fullname , value : parseInt(inst[i].total) , color: colorlist[i] , position : i+1 });
+          allInst.push( { id: inst[i].uri  , name : acroname , cname : fullname , value : parseInt(inst[i].total) , color: colorlist[i] , position : i+1 });
       
         }
 
@@ -77,8 +86,8 @@ wkhomeControllers.controller('reportInst', ['$scope','$routeParams', 'globalData
       var   result = filterbyorg ( data , uriInst  , multi );
          console.log ("--------------------");
          console.log (result);
-        $scope.proyectostable = { container : "containerproyecto" , datos :  _.sortBy( result[1] , 'value').reverse()  };
-        $scope.proyectos = { container : "containerproyecto" , datos :  _.sortBy( result[0] , 'value').reverse()  };
+        $scope.proyectostable = { container : "containerproyecto" , datos : result[1]  , label : "#Pro" };
+        $scope.proyectos = { container : "containerproyecto" , datos :   result[0]   };
     });
 
 
@@ -89,6 +98,9 @@ wkhomeControllers.controller('reportInst', ['$scope','$routeParams', 'globalData
 
             var newdata = [] ; 
             var lines = [] ; 
+
+            instrel =  _.sortBy( instrel  , 'nproy').reverse();
+
             for (  var i = 0 ;  i < instrel.length ; i++) {
               // console.log (i);
               if ( instrel[i].target.includes("redi.cedia.edu.ec") ){

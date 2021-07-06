@@ -12,3 +12,9 @@
 	overflow: auto;
 }
 
+
+.infoicon {
+	font-size: 2rem;
+	color: cornflowerblue;
+	vertical-align: middle;
+}

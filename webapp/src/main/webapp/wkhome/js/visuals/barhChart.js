@@ -10,7 +10,7 @@ wkhomeApp.directive('barhChart', ["d3", "globalData", "sparqlQuery",
     function (d3, globalData, sparqlQuery) {
 
 
-        function draw(id, fData ) {
+        function draw(id, fData  ,labely ) {
 
 
 
@@ -35,7 +35,7 @@ Highcharts.chart( id , {
     },
     yAxis: {
         title: {
-            text: 'Publicaciones'
+            text: labely
         }
     },
     plotOptions: {
@@ -54,7 +54,7 @@ Highcharts.chart( id , {
         enabled: false
     },
     series: [{
-        name: 'Publicaciones',
+        name: labely,
         data: fData.ay
     }]
 });
@@ -92,7 +92,7 @@ Highcharts.chart( id , {
                             // draw(svg, data, w, h);
 
                         if (data) {
-                            draw(scope.data.container , data);
+                            draw(scope.data.container , data , scope.data.axisy );
                         }
                     }, true);
 

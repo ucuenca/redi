@@ -40,7 +40,9 @@ Highcharts.chart( id , {
                         console.log (this.id);
                         //redirect(this.id);
                         //$window.location.hash = '/report/' + this.id; 
+                        if (this.id.includes ("organization") ){
                         window.location.href = '/#/report/' + this.id;
+                        }
                     }
                 }
             }
