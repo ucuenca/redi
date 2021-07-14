@@ -1,0 +1,48 @@
+
+<div class="container" ng-controller="reportAllAuthor">
+
+    <div class="title" style="text-align: center">
+        <h2 class="text-primary">Reportes Generales de Autores</h2>
+    </div>
+    <div share-square="true" style="text-align: center" share-links="Facebook, Twitter, LinkedIn" share-title="REDI Organization - {{data.name}} "> Compartir : </div>
+
+    <div class="row text-center"  style="margin: 30px ; background-color: #1799cc; height: 42px" > 
+      <div class="col-md-3" style="border-right-style: groove; height: 100%; border-color: white;color: white;" > <b> # Autores de Datos <br>{{totals.Dataset}}</b> </div>
+      <div class="col-md-3" style="border-right-style: groove; height: 100%; border-color: white;color: white;"> <b> # Autores de Publicaciones <br> {{totals.AcademicArticle}} </b> </div>
+      <div class="col-md-3" style="border-right-style: groove; height: 100%; border-color: white;color: white;"> <b> # Autores de Proyectos <br> {{totals.Project}} </b>  </div>
+      <div class="col-md-3" style="border-right-style: groove; height: 100%; border-color: white;color: white;">  <b> # Autores de Patentes<br>  {{totals.Patent}} </b> </div>
+
+    </div>
+
+
+       <h4 class="colorblue "> Investigadores por institución:</h4>
+           <div class="form-inline col-sm-6">  <div class="form-group"> Organización: </div> <ui-select class="instButton form-group" ng-model="orgscombo.selected"  ng-change="changeCombo()" theme="bootstrap">
+                  <ui-select-match placeholder="institución">{{$select.selected.tag}}</ui-select-match>
+                  <ui-select-choices repeat="item in orgs | filter: $select.search">  
+                    <div ng-bind-html="item.tag"></div>
+                  </ui-select-choices>
+            </ui-select>  </div>
+
+    <table id="example"  class="table table-striped capitalize" style="width:100%">
+
+        <thead >
+            <tr>
+              <th class="capitalize">Nombre</th>
+              <th class="capitalize">Org</th>
+
+
+        
+            </tr>
+        </thead>
+
+
+    </table>
+
+
+       
+       
+       
+
+
+</div>
+

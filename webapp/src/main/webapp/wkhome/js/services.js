@@ -363,6 +363,16 @@ wkhomeServices.factory('Organizations', ['$resource', '$http', 'globalData',
   }
 ]);
 
+wkhomeServices.factory('Authorslr', ['$resource', '$http', 'globalData',
+  function ($resource, $http, globalData) {
+    var serverInstance = globalData.serverInstance;
+    var serverInstance = "https://rediclon.cedia.edu.ec/";
+   // return $resource(serverInstance + 'solr/events/select?q=lmf.uri:":id"&wt=json', {id : '@id'});
+    return $resource ( serverInstance + 'solr/authors/select?q=*&fq=org-uri:":id"&rows=10000&fl=lmf.uri+%2C+givenname+%2C++familyname+%2C+org&wt=json&indent=true' ,  { id: '@id'});
+   //return $resource ( 'https://rediclon.cedia.edu.ec/solr/authors/select?q=*&fq=org-uri%3A+"https%3A%2F%2Fredi.cedia.edu.ec%2Fresource%2Forganization%2FUCUENCA"&rows=10000&fl=lmf.uri+%2C+givenname+%2C++familyname+%2C+org&wt=json&indent=true');
+  }
+]);
+
 wkhomeServices.factory('Datasets', ['$resource', '$http', 'globalData',
   function ($resource, $http, globalData) {
     var serverInstance = globalData.serverInstance;
@@ -533,7 +543,7 @@ wkhomeServices.factory('getMetric', ['$resource', '$http', 'globalData',
 ]);
 
 
-  wkhomeServices.factory('PatenteReg', ['$resource', '$http', 'globalData',
+wkhomeServices.factory('PatenteReg', ['$resource', '$http', 'globalData',
     function ($resource, $http, globalData) {
           $http.defaults.headers.common['content-type'] = 'application/json';
        // $http.defaults.headers.common['Accept'] = 'application/json';

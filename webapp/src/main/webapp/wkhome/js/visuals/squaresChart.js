@@ -13,18 +13,6 @@ wkhomeApp.directive('squaresChart', ["d3", "globalData", "sparqlQuery",
         function draw(id, fData ) {
 
 
-/*
-    colorAxis: {
-        minColor: '#FFFFFF',
-        maxColor: Highcharts.getOptions().colors
-    },*/
-
-  //var colors = Highcharts.getOptions().colors;
-//Highcharts.theme = {};
-
-//Highcharts.setOptions(Highcharts.theme);
-
-//console.log (Highcharts.theme);
 console.log (id);
 
 Highcharts.chart( id , {

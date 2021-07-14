@@ -59,7 +59,8 @@
     "bootstrap-select": "^1.13.10",
     "ng-bootstrap-select": "^0.5.0",
     "angular-ui-select": "^0.19.8",
-    "angular-easy-social-share": "^1.0.2"
+    "angular-easy-social-share": "^1.0.2",
+    "datatables.net-bs": "^2.1.1"
   },
   "resolutions": {
     "angular-animate": "1.6.4",

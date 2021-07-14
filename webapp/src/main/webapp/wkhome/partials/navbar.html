@@ -106,7 +106,7 @@
         <li class="navdiv" > | </li>
             <li ng-class="dropdown">
             
-          <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span src="" alt="INICIO" class="" >{{'topics'| translate | uppercase}}</span>&nbsp;&nbsp;&nbsp;<span class="caret" ></span></a>
+          <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span src="" alt="INICIO" class="" >{{'INDICADORES'| translate | uppercase}}</span>&nbsp;&nbsp;&nbsp;<span class="caret" ></span></a>
           <ul class="dropdown-menu">
             <li ng-class="{ active: isActive('/tags/cloud') }"><a href="#/tags/cloud">{{'Clustering by Research Area'| translate | uppercase  }}</a></li>
             <li ng-class="{ active: isActive('/group/area') }"><a href="#/group/area">{{'Group By Area'| translate | uppercase  }}</a></li>
@@ -115,20 +115,26 @@
             <li role="separator" class="divider"></li>
            
             <li ng-class="{ active: isActive('/geo-views/sources') }"><a href="#/view/map">{{'Map View'| translate | uppercase  }}</a></li>
+            <li role="separator" class="divider"></li>
+            <li ng-class="{ active: isActive('/statistics') }"><a href="#/info/statistics"> ESTADISTICAS GENERALES </a></li>
+            <li ng-class="{ active: isActive('/reports') }"><a href="#/report/Inst"> REPORTE POR INSTITUCIONES </a></li>
+            <li ng-class="{ active: isActive('/reports') }"><a href="#/author/report/Authors"> REPORTE POR AUTORES </a></li>
+
           </ul>
         </li>
-          <li class="navdiv" > | </li>
+         <!--     <li class="navdiv" > | </li>
 
-              <li ng-class="dropdown">
+        <li ng-class="dropdown"> 
             
           <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span src="" alt="INICIO" class="" >{{'statistics'| translate | uppercase}}</span>&nbsp;&nbsp;&nbsp;<span class="caret" ></span></a>
           <ul class="dropdown-menu">
             <li ng-class="{ active: isActive('/statistics') }"><a href="#/info/statistics">{{'GENERALES'| translate | uppercase  }}</a></li>
             <li ng-class="{ active: isActive('/reports') }"><a href="#/report/Inst"> REPORTE POR INSTITUCIONES </a></li>
+            <li ng-class="{ active: isActive('/reports') }"><a href="#/author/report/Authors"> REPORTE POR AUTORES </a></li>
 
-          </ul
-
-          </li>
+          </ul>
+        </li> -->
+     
 
          <li class="navdiv" > | </li>
    

@@ -25,7 +25,7 @@ wkhomeControllers.controller('reportAuthor', ['$scope','$routeParams', 'globalDa
         data.data.map(function (row) { 
             datos.ax.push(row.k);
             datos.ay.push(Number(row.v));
-            datosTop.push({name:row.k, value:Number(row.v)});
+            datosTop.push({name:row.k , cname : row.k , value:Number(row.v)});
             return 0;
         });
         datosTop.sort((a, b) => { return a.value < b.value; });
@@ -70,14 +70,19 @@ wkhomeControllers.controller('reportAuthor', ['$scope','$routeParams', 'globalDa
       metric:"publicationsPerCoauthor"
     }, function(data) {
         datos = [] ;
+        datask = [] ;
         var i = 0;
         data.data.map(function (row) { 
             var lbl = row.k;
             datos.push( { name : lbl , cname : lbl , value : Number(row.v) , color: colors[i] , position : i+1 });
+            datask.push ( [ data.data[0].k ,  row.k ,  Number(row.v) ] )
             i++;
             return 0;
         });
-        $scope.coautores = {container : "containercoautores", "datos":datos };
+        $scope.coautores = {container : "containercoautores", "datos": datos.slice(1, 15) };
+        $scope.coautoresk = {container : "containercoautores", "datos": datask.slice(1, 15) };
+
+
     }); 
 
    getMetric.query({

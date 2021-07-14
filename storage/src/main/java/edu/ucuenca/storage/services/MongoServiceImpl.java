@@ -581,6 +581,19 @@ public class MongoServiceImpl implements MongoService {
                 + "        } group by ?authorURI ?pub  \n"
                 + "    } .\n"
                 + "} group by ?authorURI ?bq";
+          break;
+      case "AuthorsTotal" : 
+        query = "PREFIX dct: <http://purl.org/dc/terms/>\n" +
+                "PREFIX eurocris: <http://eurocris.org/ontology/cerif#>\n" +
+                "select ( COUNT (distinct ?e) as ?total) ?name where { \n" +
+                "    graph <https://redi.cedia.edu.ec/context/redi>{ \n" +
+                "	  ?p a ?name . \n" +
+                "      ?p dct:creator|dct:contributor|eurocris:linksToPerson|eurocris:linkToPerson  ?e  .\n" +
+                "      ?e <http://schema.org/memberOf> ?pro .   \n" +
+                "      ?pro <http://ucuenca.edu.ec/ontology#memberOf> ?b . \n" +
+                "    }\n" +
+                "} group by ?name" ;
+        
         break;
     }
 
