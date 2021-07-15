@@ -10,7 +10,7 @@
      
         <h4 id="NameAuthorProfile">{{ngModel.name}}   &nbsp 
         <!--[<a  target="_blank" href="{{ngModel.claimUri}}">claim </a>] -->
-        <a title="Verificar Perfil" target="_blank" href="{{ngModel.claimUri}}"> <img style="margin-top: -5px" alt="Verificar Perfil" width= "25px"; src="wkhome/images/chkProfile.png"> </a>  </h4>
+        <a title="Verificar Perfil" href="{{ngModel.claimUri}}"> <img style="margin-top: -5px" alt="Verificar Perfil" width= "25px"; src="wkhome/images/chkProfile.png"> </a>  </h4>
       </li>
       <li class="autprofilem2" > <a ng-repeat="org in ngModel.orgs"  target="_blank" href="/#/info/statisticsbyInst/{{org.org}}"> {{ org.orgName }}  </a> </li>
       <li class="autprofilem2" > <a ng-show="ngModel.orcid" href="https://orcid.org/{{ngModel.orcid}}"><img width="17" src="wkhome/images/orcid_icon.png"> ORCID: {{ngModel.orcid}} </a> </li>

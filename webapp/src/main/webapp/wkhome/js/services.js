@@ -511,10 +511,10 @@ wkhomeServices.factory('profileval', ['$resource', '$http', 'globalData',
   }
 ]);
 
-wkhomeServices.factory('getORCIDToken', ['$resource', '$http', 'globalData',
+wkhomeServices.factory('getKeyCloakToken', ['$resource', '$http', 'globalData',
   function ($resource, $http, globalData) {
     var serverInstance = globalData.serverInstance;
-    return $resource(serverInstance + 'mongo/getORCIDToken?uri=:uri&code=:code', {}, {
+    return $resource(serverInstance + 'mongo/getKeyCloakToken?uri=:uri&code=:code', {}, {
       query: {
         method: 'GET',
         params: {uri: 'uri', code: 'code'},

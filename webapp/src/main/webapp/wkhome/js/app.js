@@ -85,20 +85,14 @@ wkhomeApp.service('globalData', ['$window','cookies', function ($window, cookies
     this.urltofindinSCOPUS = 'http://www.scopus.com/results/results.uri?numberOfFields=0&src=s&clickedLink=&edit=&editSaveSearch=&origin=searchbasic&authorTab=&affiliationTab=&advancedTab=&scint=1&menu=search&tablin=&searchterm1={0}&field1=TITLE&dateType=Publication_Date_Type&yearFrom=Before+1960&yearTo=Present&loadDate=7&documenttype=All&subjects=LFSC&_subjects=on&subjects=HLSC&_subjects=on&subjects=PHSC&_subjects=on&subjects=SOSC&_subjects=on&st1={1}&st2=&sot=b&sdt=b&sl=91&s=TITLE%28{2}%29';
     this.urltofindinACADEMICS = 'https://academic.microsoft.com/#/search?iq=@{0}@&q={1}&filters=&from=0&sort=0';
     
-    this.client_id = "";
-    this.cookie_prefix = "";
-    this.callback = "";
-    if (window.location.origin.includes('clon')) {
-        this.client_id = 'APP-R08L1P7JVVGRW8YN';
-        this.cookie_prefix = 'REDICLON';
-    } else {
-        this.client_id = 'APP-7Y3IFBAL9DB2NVJC';
-        this.cookie_prefix = 'REDI';                
-    }
-    this.callback = window.location.origin + '/wkhome/partials/callback.html';
+    this.cookie_prefix = "redi_session_obj";
     
     this.getSession = function (){
-        return cookies.get(this.cookie_prefix + '_ORCID');
+        if (cookies.get(this.cookie_prefix)){
+          return JSON.parse(cookies.get(this.cookie_prefix));
+        }else {
+          return null;
+        }
     };
     
 }]);

@@ -7,6 +7,7 @@ package edu.ucuenca.storage.webservices;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.ucuenca.storage.api.MongoService;
 import edu.ucuenca.storage.api.ProfileValidation;
 import edu.ucuenca.storage.exceptions.FailMongoConnectionException;
 import java.io.File;
@@ -45,6 +46,8 @@ public class ProfileValidationService {
   private ConfigurationService configurationService;
   @Inject
   private ProfileValidation pv;
+  @Inject
+  private MongoService mongos;
 
   @GET
   @Path("/profileData")
@@ -89,6 +92,9 @@ public class ProfileValidationService {
              Object a =  p.next();
              System.out.print (a);
              }*/
+      if (!mongos.checkSession(getid[0], getak[0])){
+        return Response.serverError().build();
+      }
       pv.saveProfileData(get[0], getid[0], geturi[0], getprofile[0]);
       String output = "{'resp':'ok'}";
 

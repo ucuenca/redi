@@ -9,7 +9,7 @@ wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$windo
     author.uri = $routeParams.author;
     author.encodedUri = encodeURIComponent(author.uri);
     var newhost = $window.location.protocol + '//' + $window.location.hostname + ($window.location.port ? ':8080' : '') + '';
-    var profilevalUri = '/author/profileval/'+author.uri;
+    var profilevalUri = '#/author/profileval/'+author.uri;
 
     var language = $translate.use();
 
@@ -40,7 +40,7 @@ wkhomeControllers.controller('authorProfile', ['$scope', '$routeParams', '$windo
 
       var img = data.img == null ? "wkhome/images/no_photo.jpg" : data.img;
       $scope.author.img = img;
-      $scope.author.claimUri =  "https://orcid.org/oauth/authorize?client_id="+globalData.client_id+"&response_type=code&scope=/authenticate&redirect_uri="+globalData.callback+"&state="+ profilevalUri;
+      $scope.author.claimUri = profilevalUri;
     
     });
 

@@ -9,6 +9,9 @@ wkhomeControllers.controller('authorVal', ['$rootScope', '$scope', 'cookies', '$
     var neworg = false;
     // var newProf = author.includes("new");
 
+    
+
+
     $scope.areasList = [];
 
     $scope.areaCombo = {};
@@ -159,15 +162,16 @@ wkhomeControllers.controller('authorVal', ['$rootScope', '$scope', 'cookies', '$
     //var logg = cookies.get(globalData.getSession());
 
     var logg = globalData.getSession();
+    console.log(logg);
     var lo = logg !== undefined && logg !== null && logg !== '';
     if (lo) {
-      $scope.name = JSON.parse(logg).name;
-      $scope.fname = JSON.parse(logg).giveName;
-      $scope.lname = JSON.parse(logg).familyName;
-      $scope.email = JSON.parse(logg).mail;
-      $scope.orcid = JSON.parse(logg).orcid;
-      $scope.atk = JSON.parse(logg).access_token;
-      $scope.bio = JSON.parse(logg).biography;
+      $scope.name = logg.family_name + ", " + logg.given_name;
+      $scope.fname = logg.given_name;
+      $scope.lname = logg.family_name;
+      $scope.email = logg.email;
+      $scope.orcid = "";
+      $scope.atk = logg['redi_token'];
+      $scope.bio = "";
     }
     $scope.img = "http://asoclinic.com/wp-content/uploads/2018/02/placeholder-face-big.png";
 
