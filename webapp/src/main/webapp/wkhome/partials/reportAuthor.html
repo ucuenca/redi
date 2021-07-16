@@ -24,7 +24,7 @@
 
     <br/>
 
-         <h3 class="text-primary">  Volumen  de publicaciones por año  </h3>
+         <h3 class="text-primary">  Volumen  de publicaciones por año  <span class="glyphicon glyphicon-info-sign infoicon"  title="Número de publicaciones según el año de publicación. Se consideran todas las publicaciones que tienen registrado año de publicación en alguna de las fuentes de datos de REDI." aria-hidden="true" /></h3>
     <div class="row report"  >
     <div class="col-md-8 container-fluid "  style='background-color: #FFFFFF;'>
          <barh-chart data="dispublications">
@@ -35,7 +35,7 @@
     </div>
 
       <div class="col-md-4 container-fluid containerTable"  >
-            <table-template data="topautores" >
+            <table-template data="topautores" columnstr="Año de publicación,Número de publicaciones">
             
             </table-template>
       </div>
@@ -44,7 +44,7 @@
 
 
 
-           <h3 class="text-primary"> Publicaciones por áreas de investigación  </h3>
+           <h3 class="text-primary"> Publicaciones por áreas de investigación  <span class="glyphicon glyphicon-info-sign infoicon"  title="Número de publicaciones clasificas en una área de conocimiento. El listado de áreas de conocimiento de REDI fue extraído desde DBpedia  y solamente se clasificaron publicaciones que tienen palabras clave en alguna de las fuentes de datos de REDI." aria-hidden="true" /></h3>
     <div class="row report"  >
     <div class="col-md-8 container-fluid"  style='background-color: #FFFFFF;'>
          <squares-chart data="areas">
@@ -57,7 +57,7 @@
             <!--<area-piechart datapc="datapc">
               <div id="containerpc" style="min-width: 200px; height: 350px; margin: 0 auto"></div>
             </area-piechart>-->
-            <table-template data="areas" >
+            <table-template data="areas" columnstr="Área de conocimiento,Número de publicaciones" >
             
             </table-template>
       </div>
@@ -65,11 +65,11 @@
 
 
 
-       <h3 class="text-primary"> Principales fuentes de datos  </h3>
+       <h3 class="text-primary"> Principales fuentes de datos <span class="glyphicon glyphicon-info-sign infoicon"  title="Número de publicaciones del autor que fueron extraídas desde una fuente de datos en particular. Una publicación puede haber sido extraída desde varias fuentes y por tanto ser incluida en más de una fuente." aria-hidden="true" /> </h3>
     <div class="row report"  >
       <div class="col-md-4 container-fluid containerTable" >
 
-          <table-template data="fuentes">
+          <table-template data="fuentes" columnstr="Fuente de datos,Número de publicaciones">
             
         </table-template>
      </div>
@@ -87,11 +87,11 @@
 
 
 
-      <h3 class="text-primary"> Coautores destacados por número de publicaciones  </h3>
+      <h3 class="text-primary"> Coautores destacados por número de publicaciones <span class="glyphicon glyphicon-info-sign infoicon"  title="Lista de coautores con el número de publicaciones que comparten con el investigador. Únicamente se presentan los 15 primeros coautores según el número de publicaciones. Los coautores que no tienen un perfil en REDI (Investigadores externos) son ignorados para la contabilización." aria-hidden="true" /> </h3>
     <div class="row report"  >
       <div class="col-md-4 container-fluid containerTable" >
 
-          <table-template data="coautores">
+          <table-template data="coautores" columnstr="Coautor,Número de publicaciones">
             
         </table-template>
      </div>
@@ -104,11 +104,11 @@
      </div>
 
 
-       <h3 class="text-primary"> Impacto de publicaciones indexadas  </h3>
+       <h3 class="text-primary"> Impacto de publicaciones indexadas <span class="glyphicon glyphicon-info-sign infoicon"  title="Número de publicaciones según el cuartil al que pertenecen. Solamente se contabilizan las publicaciones que tienen información de sus revistas y estas tengan un registro en Scimago." aria-hidden="true" /> </h3>
     <div class="row report"  >
       <div class="col-md-4 container-fluid containerTable" >
 
-          <table-template data="quartiles">
+          <table-template data="quartiles" columnstr="Cuartil,Número de publicaciones">
             
         </table-template>
      </div>
@@ -124,11 +124,11 @@
 
 
 
-       <h3 class="text-primary"> Origen de las revistas indexadas  </h3>
+       <h3 class="text-primary"> Origen de las revistas indexadas <span class="glyphicon glyphicon-info-sign infoicon"  title="Número de publicaciones según país de origen de la revista. Solamente se contabilizan las publicaciones que tienen información de sus revistas y estas tengan un registro en Scimago." aria-hidden="true" /> </h3>
     <div class="row report"  >
       <div class="col-md-4 container-fluid containerTable" >
 
-          <table-template data="journalsC">
+          <table-template data="journalsC" columnstr="País de la revista,Número de publicaciones">
             
         </table-template>
      </div>
