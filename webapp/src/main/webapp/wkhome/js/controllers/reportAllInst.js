@@ -30,6 +30,7 @@ wkhomeControllers.controller('reportAllInst', ['$scope','$routeParams', 'globalD
           totalautor = totalautor + Number(datachart[i]["uc:totalAuthors"]["@value"]);
           totalpro = totalpro + Number(datachart[i]["uc:totalProjects"]["@value"]);
           totalpub = totalpub + Number(datachart[i]["uc:totalPublications"]["@value"]);
+          console.log (datachart[i]);
           auxdata.push ( { "id" : datachart[i]["@id"] ,  "cname" : datachart[i]["uc:name"]  ,  "name" : datachart[i]["uc:name"] ,  "value" :  Number(datachart[i]["uc:totalPublications"]["@value"]) , color : multi[i] } ) ;
        } 
        console.log ("TOTAL PUB" + totalpub);
@@ -40,16 +41,25 @@ wkhomeControllers.controller('reportAllInst', ['$scope','$routeParams', 'globalD
        $scope.total.aut = totalautor;
        $scope.total.pro = totalpro;
        $scope.total.pat = 0;
-
+       console.log (addposition (_.sortBy( auxdata , 'value').reverse()));
+     
        $scope.data  = {
        container : "containerinst" ,
-       datos :  _.sortBy( auxdata , 'value').reverse()
+       datos :  addposition (_.sortBy( auxdata , 'value').reverse())
        };
       console.log (auxdata); 
 
 
 
     }); 
+
+    function addposition ( lista ) {
+      return   _.each(lista , function(element, index) {
+         _.extend(element, {'position' : index+1});
+      });
+
+    }
+
 
 
      $scope.redirect  = function( value ) {
