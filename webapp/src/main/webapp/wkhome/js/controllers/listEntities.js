@@ -60,6 +60,7 @@ wkhomeControllers.controller('listEntitiesController', ['$scope', '$window', 'gl
             $scope.core = globalData.servicesCore;
             defaulturl = 'total/services/q=title:LET*&fl=*&rows=10&wt=json&sort=title+asc';
             queryurl = 'total/services/q=(LET)&fl=*&rows=10&wt=json';
+            var inil = '*';
             break;
 
 
@@ -99,7 +100,7 @@ wkhomeControllers.controller('listEntitiesController', ['$scope', '$window', 'gl
 
 
 
-       $scope.letters = ['A','B','C','D', 'E', 'F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','W','X','Y','Z'];
+       $scope.letters = ['*','A','B','C','D', 'E', 'F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','W','X','Y','Z'];
        // $scope.selectLetter = 'A';
        //console.log ("Seleccionado");
        //console.log ($scope.selectLetter);

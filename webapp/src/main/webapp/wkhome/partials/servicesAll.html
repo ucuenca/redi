@@ -22,7 +22,6 @@
   <div class="row">
 <nav class="col-md-9 col-md-offset-2" > 
   <ul class="pagination"> 
-    <li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li> 
     <li ng-repeat="letter in letters" ng-class="{active : isSelected(letter)}"  ng-cloak>
       <a ng-click="letterClick (letter)" >{{letter}} </a>
     </li>
