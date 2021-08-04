@@ -397,4 +397,12 @@ public class MongoDBWebService {
     String metricr = mongoService.getGlobalAuthorMetrics(metric, uri);
     return Response.ok().entity(metricr).build();
   }
+  
+  @GET
+  @Path("/getMetricsIndicators")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response obtainMetricPub( @QueryParam("id") String id) throws FailMongoConnectionException {
+    String metricr = mongoService.getGlobalIndicators( id);
+    return Response.ok().entity(metricr).build();
+  }
 }

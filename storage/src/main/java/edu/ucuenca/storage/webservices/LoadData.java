@@ -259,6 +259,21 @@ public class LoadData {
     return Response.ok().entity("Authors by area were successfully loaded into MongoDB").build();
   }
   
+  
+  @POST
+  @Path("/indicadorPub")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response indicadorPub() throws FailMongoConnectionException {
+    try {
+
+      String s = loadService.indicadorGeneralPub();
+    } catch (Exception e) {
+      log.error("Cannot load publication indicators stats into Mongo DB", e);
+      throw new FailMongoConnectionException(String.format("Cannot load apublication indicators into Mongo DB"), e);
+    }
+    return Response.ok().entity("Indicators by publications were successfully loaded into MongoDB").build();
+  }
+  
   @POST
   @Path("/translatebyPublication")
   @Produces(MediaType.APPLICATION_JSON)

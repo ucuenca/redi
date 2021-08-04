@@ -542,6 +542,21 @@ wkhomeServices.factory('getMetric', ['$resource', '$http', 'globalData',
   }
 ]);
 
+wkhomeServices.factory('getMetricsInd', ['$resource', '$http', 'globalData',
+  function ($resource, $http, globalData) {
+    var serverInstance = globalData.serverInstance;
+    return $resource(serverInstance + 'mongo/getMetricsIndicators?id=:id', {}, {
+      query: {
+        method: 'GET',
+        params: {id: 'id'},
+        isArray: false,
+        cache: false,
+        headers: {'Accept': 'application/json'}
+      }
+    });
+  }
+]);
+
 
 wkhomeServices.factory('PatenteReg', ['$resource', '$http', 'globalData',
     function ($resource, $http, globalData) {

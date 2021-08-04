@@ -39,6 +39,8 @@ public interface MongoService {
   
   public String getGlobalAuthorMetrics(String stat, String group);
   
+ // public String getGlobalPublicationMetrics(String stat, String group);
+  
   public String getStatistics(String id);
 
   public String getRelatedAuthors(String uri);
@@ -88,6 +90,12 @@ public interface MongoService {
   public boolean checkPublicationTrasnlate (String id);
   
   public Document getSubjectTr (String id);
+  
+  public String getGlobalIndicators (String id);
+  
+  
+  
+  
 
   /**
    * Create a connection to {@link com.mongodb.MongoClient}.
@@ -100,7 +108,8 @@ public interface MongoService {
     SPARQLS("sparqls"), AUTHORS("authors"), PUBLICATIONS("publications"), STATISTICS("statistics"), STATISTICS_INST("statistics_inst"),
     RELATEDAUTHORS("relatedauthors"), AUTHORS_DISCPLINE("authors_discipline"), AUTHORS_AREA("authors_area"),
     COUNTRIES("countries"), CLUSTERS("clusters"), CLUSTERSTOTALS("clusterstotals"), STATISTICS_AUTHOR("statistics_author"), PROFILE_AUTHOR("profile_author"), SESSIONS("sessions"), TRANSLATIONS("translations") , PUBTRANSLATIONS("pubtranslations") , 
-    PROJECTPROFILE("project_profile") , PATENTPROFILE("patent_profile") , INSTBYPROJECT("instbyProjects") ,  DOCUMENTBYAREA("documentbyarea") , DOCUMENTDATEBYAREA("documentdatebyarea") , DOCUMENTDATEBYSUBAREA("documentdatebysubarea") , SUBJECTRANSLATION("subjectTranslate") , PROFILE_INST("profile_inst") ;
+    PROJECTPROFILE("project_profile") , PATENTPROFILE("patent_profile") , INSTBYPROJECT("instbyProjects") ,  DOCUMENTBYAREA("documentbyarea") , DOCUMENTDATEBYAREA("documentdatebyarea") , DOCUMENTDATEBYSUBAREA("documentdatebysubarea") , SUBJECTRANSLATION("subjectTranslate") , PROFILE_INST("profile_inst"),
+    INDICATORS ("indicators");
 
     private final String value;
 

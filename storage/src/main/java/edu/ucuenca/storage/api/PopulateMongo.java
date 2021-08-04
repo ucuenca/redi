@@ -79,4 +79,6 @@ public interface PopulateMongo {
   public String getPublicationDatesbyAreas ();
 
   public String googlePublicationTranslation();
+  
+  public String indicadorGeneralPub();
 }

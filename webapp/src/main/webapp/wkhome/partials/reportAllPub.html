@@ -1,0 +1,168 @@
+
+
+<div class="container" ng-controller="reportAllPub">
+
+    <div class="title" style="text-align: center">
+        <h2 class="text-primary">Reportes Generales por Publicaciones </h2>
+
+    </div>
+    <div share-square="true" style="text-align: center" share-links="Facebook, Twitter, LinkedIn" share-title="REDI Organization - {{data.name}} "> Compartir : </div>
+
+    <div class="row text-center"  style="margin: 30px ; background-color: #1799cc; height: 42px" > 
+      <div class="col-md-3" style="border-right-style: groove; height: 100%; border-color: white;color: white;" > <b>  Revistas <br>{{total.Journal}}</b> </div>
+      <div class="col-md-3" style="border-right-style: groove; height: 100%; border-color: white;color: white;"> <b> Conferencias <br> {{total.Conference}} </b> </div>
+      <div class="col-md-3" style="border-right-style: groove; height: 100%; border-color: white;color: white;"> <b> Congresos <br> {{total.Proceedings}} </b>  </div>
+      <div class="col-md-3" style="border-right-style: groove; height: 100%; border-color: white;color: white;">  <b> Otros <br>  {{total.Others}} </b> </div>
+
+    </div>
+
+
+
+    <p>
+
+    </p>
+
+
+
+    <br/>
+
+    <h3 class="text-primary">  Cantidad de publicaciones por año <span class="glyphicon glyphicon-info-sign infoicon"  title="Número de publicaciones según el año de publicación. Se consideran todas las publicaciones que tienen registrado año de publicación en alguna de las fuentes de datos de REDI." aria-hidden="true" /></h3>
+    <div class="row report"  >
+    <div class="col-md-8 container-fluid "  style='background-color: #FFFFFF;'>
+         <barh-chart data="dispublications">
+        <div id="containerpub" ></div>
+         </barh-chart>
+
+         
+    </div>
+
+      <div class="col-md-4 container-fluid containerTable"  >
+            <table-template data="topautores" columnstr="Año de publicación,Num. publicaciones">
+            
+            </table-template>
+      </div>
+ 
+     </div>
+
+  
+
+    <br/>
+
+
+
+     <h3 class="text-primary"> Quartiles en las que se ubican las publicaciones <span class="glyphicon glyphicon-info-sign infoicon"  title="Cuartiles de las revistas en las cuales se han registrado las publicaciones de REDI. Información obtenida de Scimago " aria-hidden="true"> </h3>
+    <div class="row report"  >
+      <div class="col-md-4 container-fluid containerTable" >
+
+          <table-template data="quartil" columnstr="Quartil , Num. publicaciones">
+            
+        </table-template>
+     </div>
+    <div class="col-md-8 container-fluid " >
+         <squares-chart data="quartil">
+     <div id="containerqu" ></div>
+         </squares-chart>
+
+         
+    </div>
+
+     </div>
+
+
+       <h3 class="text-primary">  Volumen de  publicaciones producidas por los investigadores  <span class="glyphicon glyphicon-info-sign infoicon"  title="Número de publicaciones según el año de publicación. Se consideran todas las publicaciones que tienen registrado año de publicación en alguna de las fuentes de datos de REDI." aria-hidden="true" /></h3>
+    <div class="row report"  >
+    <div class="col-md-12 container-fluid "  style='background-color: #FFFFFF;'>
+         <barh-chart data="distVolpublications">
+        <div id="distVolpublications" ></div>
+         </barh-chart>
+
+         
+    </div>
+
+     <!-- <div class="col-md-4 container-fluid containerTable"  >
+            <table-template data="distVolpublications" columnstr="Año de publicación,Num. publicaciones">
+            
+            </table-template>
+      </div> -->
+ 
+     </div>
+
+
+
+     <h3 class="text-primary"> Revistas con mayor volumen de publicaciones <span class="glyphicon glyphicon-info-sign infoicon"  title=" Se presentan las revistas  mas populares segun la cantidad de publicaciones que disponen en REDI" aria-hidden="true"> </h3>
+    <div class="row report"  >
+
+    <div class="col-md-8 container-fluid " >
+         <squares-chart data="journals">
+     <div id="containerjo" ></div>
+         </squares-chart>
+
+         
+    </div>
+      <div class="col-md-4 container-fluid containerTable" >
+          <table-template data="journals" columnstr="Revista , Num. publicaciones">  
+          </table-template>
+     </div>
+
+     </div>
+
+
+       <h3 class="text-primary"> Areas de investigación segun el volumen de  publicaciones <span class="glyphicon glyphicon-info-sign infoicon"  title=" Se presentan las áreas de investigación en las que fueron identificada las publicaciones dentro de REDI" aria-hidden="true"> </h3>
+    <div class="row report"  >
+
+     <div class="col-md-4 container-fluid containerTable" >
+          <table-template data="areas" columnstr="Área , Num. publicaciones">  
+          </table-template>
+     </div>
+
+    <div class="col-md-8 container-fluid " >
+         <squares-chart data="areas">
+     <div id="containerar" ></div>
+         </squares-chart>
+    </div>
+
+
+    </div>
+
+
+          <h3 class="text-primary"> Fuentes de datos de las  publicaciones <span class="glyphicon glyphicon-info-sign infoicon"  title=" Se presentan las fuentes de datos segun la cantidad de publicaciones que son cosechadas." aria-hidden="true"> </h3>
+    <div class="row report"  >
+
+     <div class="col-md-4 container-fluid containerTable" >
+          <table-template data="providers" columnstr="Fuente , Num. publicaciones">  
+          </table-template>
+     </div>
+
+    <div class="col-md-8 container-fluid " >
+         <squares-chart data="providers">
+     <div id="containerprov" ></div>
+         </squares-chart>
+    </div>
+
+
+    </div>
+
+
+              <h3 class="text-primary"> Solapamiento entre las principales bases científicas  <span class="glyphicon glyphicon-info-sign infoicon"  title=" Se presenta la cantidad de publicaciones cosechadas que  comparten las principales bases cientificas. " aria-hidden="true"> </h3>
+    <div class="row report"  >
+
+     <!--<div class="col-md-4 container-fluid containerTable" >
+          <table-template data="providersOver" columnstr="Fuente , Num. publicaciones">  
+          </table-template>
+     </div> -->
+
+    <div class="col-md-12 container-fluid " >
+         <venn-chart data="providersOver">
+     <div id="containerOver" ></div>
+         </venn-chart>
+    </div>
+
+
+    </div>
+
+
+
+
+</div>
+
+

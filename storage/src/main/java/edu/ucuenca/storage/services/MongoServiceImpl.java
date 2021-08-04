@@ -97,6 +97,7 @@ public class MongoServiceImpl implements MongoService {
   private MongoCollection<Document> pubtrasnlate;
   private MongoCollection<Document> subjecttranslation;
   private MongoCollection<Document> institution;
+  private MongoCollection<Document> indicators;
 
   private MongoCollection<Document> sessions;
 
@@ -134,6 +135,7 @@ public class MongoServiceImpl implements MongoService {
     patent = db.getCollection(Collection.PATENTPROFILE.getValue());
     pubtrasnlate = db.getCollection(Collection.PUBTRANSLATIONS.getValue());
     subjecttranslation = db.getCollection(Collection.SUBJECTRANSLATION.getValue());
+    indicators = db.getCollection(Collection.INDICATORS.getValue());
   }
 
   @Override
@@ -615,4 +617,151 @@ public class MongoServiceImpl implements MongoService {
     }
     return data.toJSONString();
   }
+  
+  @Override
+  public String getGlobalIndicators(String indname) { 
+      return indicators.find(eq("_id", indname))
+            .first().toJson();
+  }
+  
+  /*@Override
+  public String getGlobalPublicationMetrics(String string, String group) {
+    String query = "";
+    switch (string) {
+      case "pubByYear":
+        query = "PREFIX schema: <http://schema.org/>\n" +
+          "PREFIX bibo: <http://purl.org/ontology/bibo/>\n" +
+          "PREFIX nature: <http://ns.nature.com/terms/>\n" +
+          "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
+          "select (count ( distinct ?pub ) as ?total) ?y where { \n" +
+          "  graph <https://redi.cedia.edu.ec/context/redi>{ \n" +
+          "    ?pub schema:copyrightYear|nature:coverDate  ?yx .\n" +
+          "    ?pub a <http://purl.org/ontology/bibo/AcademicArticle> .\n" +
+          "    ?authors foaf:publications ?pub .\n" +
+          "    BIND (str(?yx) as ?y2) .\n" +
+          "    bind( strbefore( ?y2, '-' ) as ?y3 ).  \n" +
+          "    bind( strafter( ?y2, ' ' ) as ?y4 ).   \n" +
+          "    bind( if (str(?y3)='' && str(?y4)='',?y2, if(str(?y3)='',strafter( ?y2, ' ' ),strbefore( ?y2, '-' ))) as ?y ) . FILTER regex(?y, '^[0-9]*$')    \n" +
+          "                    \n" +
+          "    }\n" +
+          "} group by ?y order by ASC ( ?y )";
+        break;
+      case "quartilPub":
+        query = "PREFIX dct: <http://purl.org/dc/terms/>\n" +
+              "select   (count ( distinct ?pub ) as ?total)  ?qu where { \n" +
+              "            ?pub dct:isPartOf ?jou .\n" +
+              "           ?jou <http://ucuenca.edu.ec/ontology#bestQuartile> ?qu \n" +
+              "} group by ?qu ";
+        break;
+      case "volPub" :
+                    query = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
+           "select distinct ?authors    (count ( distinct ?pub ) as ?total) \n" +
+           "FROM <https://redi.cedia.edu.ec/context/redi> where { \n" +
+           "	\n" +
+           "    ?pub a <http://purl.org/ontology/bibo/AcademicArticle> .\n" +
+           "    ?authors foaf:publications ?pub .\n" +
+           "    ?authors a <http://xmlns.com/foaf/0.1/Person> .\n" +
+           "    ?authors  <http://schema.org/memberOf> ?org .\n" +
+           "    ?org <http://ucuenca.edu.ec/ontology#memberOf> ?c\n" +
+           "} group by ?authors ";
+                 break; 
+      case "topJournals" : query = "PREFIX dct: <http://purl.org/dc/terms/>\n" +
+          "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+          "PREFIX bibo: <http://purl.org/ontology/bibo/>\n" +
+          "\n" +
+          "select   (count ( distinct ?pub ) as ?total)  ?jou  ( SAMPLE (?lb) as ?name ) " +
+          "FROM <https://redi.cedia.edu.ec/context/redi> where { \n" +
+          "            ?pub dct:isPartOf ?jou .\n" +
+          "    		?jou a bibo:Journal .\n" +
+          "    		?jou rdfs:label ?lb\n" +
+          "          \n" +
+          "} group by ?jou   order by DESC( ?total ) limit 50";
+                break;
+      case  "topAreas" : query = "PREFIX dct: <http://purl.org/dc/terms/>\n" +
+          "PREFIX bibo: <http://purl.org/ontology/bibo/>\n" +
+          "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+          "PREFIX uc: <http://ucuenca.edu.ec/wkhuska/resource/>\n" +
+          "PREFIX uco: <http://ucuenca.edu.ec/ontology#>\n" +
+          "select   (count ( distinct ?pub ) as ?total)  ?jou  ( SAMPLE (?lb) as ?name ) \n" +
+          "FROM <https://redi.cedia.edu.ec/context/redi>\n" +
+          "FROM <https://redi.cedia.edu.ec/context/clustersPub>  where { \n" +
+          "            ?pub dct:isPartOf ?jou .\n" +
+          "    		?jou a uco:Cluster .\n" +
+          "    		?jou rdfs:label ?lb\n" +
+          "          \n" +
+          "} group by ?jou   order by DESC( ?total ) limit 100";
+          break;
+          
+      case  "overlapProviders" : 
+        query = "PREFIX dct: <http://purl.org/dc/terms/>\n" +
+      "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
+      "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+      "PREFIX uco: <http://ucuenca.edu.ec/ontology#>\n" +
+      "select  (COUNT  (distinct ?pub) as ?total) ?prov ?name\n" +
+      "FROM <https://redi.cedia.edu.ec/context/redi>\n" +
+      "FROM <https://redi.cedia.edu.ec/context/redi>\n" +
+      "where {\n" +
+      "    {\n" +
+      "    ?pub a <http://purl.org/ontology/bibo/AcademicArticle> .\n" +
+      "    ?pub dct:provenance ?prov .\n" +
+      "    ?authors foaf:publications ?pub .\n" +
+      "    ?authors a <http://xmlns.com/foaf/0.1/Person> .\n" +
+      "    ?authors  <http://schema.org/memberOf> ?org .\n" +
+      "    ?org <http://ucuenca.edu.ec/ontology#memberOf> ?c .\n" +
+      "    } UNION {\n" +
+      "    ?pub dct:provenance   uco:ScopusProvider .\n" +
+      "    ?pub dct:provenance   uco:GoogleScholarProvider .\n" +
+      "    BIND(CONCAT(STR( uco:ScopusProvider ),\",\" , STR( uco:GoogleScholarProvider )) AS ?name )   .\n" +
+      "    ?authors foaf:publications ?pub .\n" +
+      "    } UNION {\n" +
+      "    ?pub dct:provenance   uco:ScopusProvider .\n" +
+      "    ?pub dct:provenance   uco:AcademicsKnowledgeProvider .\n" +
+      "    BIND(CONCAT(STR( uco:ScopusProvider ),\",\" , STR( uco:AcademicsKnowledgeProvider )) AS ?name ) .\n" +
+      "    ?authors foaf:publications ?pub .\n" +
+      "    }UNION {\n" +
+      "    ?pub dct:provenance   uco:AcademicsKnowledgeProvider .\n" +
+      "    ?pub dct:provenance   uco:GoogleScholarProvider .\n" +
+      "    BIND(CONCAT(STR( uco:AcademicsKnowledgeProvider ),\",\" , STR( uco:GoogleScholarProvider )) AS ?name ) .\n" +
+      "    ?authors foaf:publications ?pub .\n" +
+      "    }UNION {\n" +
+      "    ?pub dct:provenance   uco:AcademicsKnowledgeProvider .\n" +
+      "    ?pub dct:provenance   uco:GoogleScholarProvider .\n" +
+      "    ?pub dct:provenance   uco:ScopusProvider .\n" +
+      "     BIND(CONCAT(STR( uco:AcademicsKnowledgeProvider ),\",\" , STR( uco:GoogleScholarProvider ) , STR( uco:ScopusProvider ) ) AS ?name ) .\n" +
+      "    ?authors foaf:publications ?pub .\n" +
+      "    }\n" +
+      "    \n" +
+      "} group by ?prov ?name order by DESC ( ?total )";
+        break;
+        
+      case "typePub" : query =  "PREFIX bibo: <http://purl.org/ontology/bibo/>\n" +
+        "PREFIX dct: <http://purl.org/dc/terms/>\n" +
+        "select (COUNT (Distinct ?pub) as ?total )  ?name\n" +
+        "FROM <https://redi.cedia.edu.ec/context/redi>\n" +
+        "where { \n" +
+        "     ?pub a <http://purl.org/ontology/bibo/AcademicArticle> .\n" +
+        "     ?pub dct:isPartOf ?jou .\n" +
+        "     ?jou a ?name\n" +
+        "} group by ?name" ;
+       break;
+    }
+    
+    JSONObject data = new JSONObject();
+    JSONArray array = new JSONArray();
+    data.put("data", array);
+    try {
+      List<Map<String, Value>> query1 = sesameService2.getSparqlService().query(QueryLanguage.SPARQL, query);
+      for (Map<String, Value> mp : query1) {
+        JSONObject datakv = new JSONObject();
+        for (Iterator<Map.Entry<String, Value>> it = mp.entrySet().iterator(); it.hasNext();) {
+          Map.Entry<String, Value> next = it.next();
+          datakv.put(next.getKey(), next.getValue().stringValue());
+        }
+        array.add(datakv);
+      }
+    } catch (Exception ex) {
+      log.info("Error {}", ex);
+    }
+    return data.toJSONString();
+  }*/
 }
