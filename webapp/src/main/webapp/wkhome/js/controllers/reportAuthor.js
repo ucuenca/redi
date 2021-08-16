@@ -13,8 +13,7 @@ wkhomeControllers.controller('reportAuthor', ['$scope','$routeParams', 'globalDa
       id: uriInst
     }, function(data) {
       $scope.data.name = data.name;
-    }); 
-
+    });
 
    getMetric.query({
       uri: uriInst,
@@ -71,16 +70,18 @@ wkhomeControllers.controller('reportAuthor', ['$scope','$routeParams', 'globalDa
     }, function(data) {
         datos = [] ;
         datask = [] ;
+        console.log ("dataCO");
+        console.log (data);
         var i = 0;
         data.data.map(function (row) { 
             var lbl = row.k;
             datos.push( { name : lbl , cname : lbl , value : Number(row.v) , color: colors[i] , position : i+1 });
-            datask.push ( [ data.data[0].k ,  row.k ,  Number(row.v) ] )
+            datask.push ( [ row.g ,  row.k ,  Number(row.v) ] )
             i++;
             return 0;
         });
-        $scope.coautores = {container : "containercoautores", "datos": datos.slice(1, 15) };
-        $scope.coautoresk = {container : "containercoautores", "datos": datask.slice(1, 15) };
+        $scope.coautores = {container : "containercoautores", "datos": datos.slice(0, 15) };
+        $scope.coautoresk = {container : "containercoautores", "datos": datask.slice(0, 15) };
 
 
     }); 

@@ -1,7 +1,7 @@
 wkhomeControllers.controller('reportAllPub', ['$scope','$routeParams', 'globalData', 'sparqlQuery', 'StatisticsbyInst', 'searchData', '$route', '$window', 'Statistics' , 'getMetricsInd',
   function($scope, $routeParams, globalData, sparqlQuery, StatisticsbyInst, searchData  , $route,   $window , Statistics , getMetricsInd ) {
     var self = this;
-   $scope.data = [];
+   $scope.data = {};
    var uriInst = $routeParams.org;
    // uriInst = "https://redi.cedia.edu.ec/resource/organization/UCUENCA";
     var colors = Highcharts.getOptions().colors;
@@ -19,14 +19,14 @@ wkhomeControllers.controller('reportAllPub', ['$scope','$routeParams', 'globalDa
       getMetricsInd.query({
     id :"indicatorsPub"
     }, function(datos) { 
-      console.log (datos);
+     // console.log (datos);
       pubtype (datos.typePub);
       pubByYear (datos.pubByYear );
       quartil (datos.quartilPub);
       volPub (datos.volPub);
 
-        $scope.journals =  { container : "containerjo" , datos : _.sortBy( processSquare (datos.topJournals.data ) , 'value').reverse()  };
-        $scope.areas =  { container : "containerar" , datos : _.sortBy( processSquare (datos.topAreas.data ) , 'value').reverse()  };
+        $scope.journals =  { container : "containerjo" , datos : _.sortBy( processSquare (datos.topJournals.data ) , 'position')  };
+        $scope.areas =  { container : "containerar" , datos : _.sortBy( processSquare (datos.topAreas.data ) , 'position')  };
 
         providers ( datos.overlapProviders);
     });
@@ -69,13 +69,16 @@ wkhomeControllers.controller('reportAllPub', ['$scope','$routeParams', 'globalDa
 
     function quartil ( datos ) {
 
-      var data = datos.data;
+
+      var data =    datos.data ;
+
       var qu = [];
       for (  var i = 0 ;  i < data.length ; i++) {
          var acroname =  data[i].qu;  
          var fullname =  data[i].qu;  
          qu.push( { id: i  , name : acroname , cname : fullname , value : parseInt(data[i].total) , color: palete[i] , position : i+1 });
       }
+
       $scope.quartil =  { container : "containerqu" , datos : _.sortBy( qu , 'value').reverse()  };
     }
 
@@ -216,7 +219,7 @@ wkhomeControllers.controller('reportAllPub', ['$scope','$routeParams', 'globalDa
 
     function providers ( datos) {
       var data = datos.data;
-      
+      var pos = 0;
       //$scope.areas =  { container : "containerar" , datos : _.sortBy( processSquare (data ) , 'value').reverse()  };
       var dictareas = {};
       dictareas["ScopusAcademics"] = "http://ucuenca.edu.ec/ontology#ScopusProvider,http://ucuenca.edu.ec/ontology#AcademicsKnowledgeProvider";
@@ -249,7 +252,8 @@ wkhomeControllers.controller('reportAllPub', ['$scope','$routeParams', 'globalDa
 
             var provname = data[i].prov ;
             var name = extractProvName ( provname );
-            prov.push( { id: i  , name : name , cname : name , value : parseInt(data[i].total) , color: colors[i] , position : i+1 });
+            prov.push( { id: i  , name : name , cname : name , value : parseInt(data[i].total) , color: colors[i] , position : pos+1 });
+            pos++;
             if ( bases.includes(provname) ){
             overlap.push ( {sets : [provname] , 'value' : parseInt(data[i].total)  , 'name' : name } );
             }

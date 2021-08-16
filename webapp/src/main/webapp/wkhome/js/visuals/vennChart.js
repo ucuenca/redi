@@ -32,64 +32,13 @@ Highcharts.chart( id , {
         type: 'venn',
         name: 'Overlap',
         data: fData
-        /*[{
-            sets: ['Good'],
-            value: 2
-        }, {
-            sets: ['Fast'],
-            value: 2
-        }, {
-            sets: ['Cheap'],
-            value: 2
-        }, {
-            sets: ['Good', 'Fast'],
-            value: 1,
-            name: 'More expensive'
-        }, {
-            sets: ['Good', 'Cheap'],
-            value: 1,
-            name: 'Will take time to deliver'
-        }, {
-            sets: ['Fast', 'Cheap'],
-            value: 1,
-            name: 'Not the best quality'
-        }, {
-            sets: ['Fast', 'Cheap', 'Good'],
-            value: 1,
-            name: 'They\'re dreaming'
-        }]*/
+
     }] ,
     title: {
         text: ''
     }
 });
 
-/*Highcharts.chart( id , {
-    series: [{
-        type: 'treemap',
-        layoutAlgorithm: 'squarified',
-        data: fData ,
-        cursor: 'pointer',
-        point: {
-            events: {
-                click: function () {
-                        //alert('Category: ' + this.category + ', value: ' + this.id);
-                        console.log (this.id);
-                        //redirect(this.id);
-                        //$window.location.hash = '/report/' + this.id; 
-                        if (this.id.includes ("organization") ){
-                        window.location.href = '/#/report/' + this.id;
-                        }
-                    }
-                }
-            }
-
-    }], 
-  //  colors : ['#00ff00','#00ff00','#0000ff'] ,
-    title: {
-        text: ''
-    }
-});*/
 
  
         }
@@ -113,13 +62,9 @@ Highcharts.chart( id , {
                     //  Watch   the data    attribute   of  the scope
                     scope.$watch('data', function (newVal, oldVal, scope) {
                         //  Update  the chart
-                        console.log (scope);
-                        console.log (element);
-                         console.log (attrs);
+                     
                         var data = scope.data.datos;
-                        console.log ("GRAFICOS VEEN");
-                        console.log (data);
-                        console.log (scope.data.container);
+
                             // draw(svg, data, w, h);
 
                         if (data) {

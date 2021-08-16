@@ -2306,7 +2306,7 @@ public class PopulateMongoImpl implements PopulateMongo {
               "select   (count ( distinct ?pub ) as ?total)  ?qu where { \n" +
               "            ?pub dct:isPartOf ?jou .\n" +
               "           ?jou <http://ucuenca.edu.ec/ontology#bestQuartile> ?qu \n" +
-              "} group by ?qu ";
+              "} group by ?qu order by DESC(?total)";
         break;
       case "volPub" :
                     query = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +

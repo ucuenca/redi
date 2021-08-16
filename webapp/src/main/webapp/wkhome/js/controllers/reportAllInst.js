@@ -2,6 +2,7 @@ wkhomeControllers.controller('reportAllInst', ['$scope','$routeParams', 'globalD
   function($scope, $routeParams, globalData, sparqlQuery, StatisticsbyInst, searchData  , $route,   $window , Statistics ) {
     var self = this;
    $scope.data = [];
+   $scope.dataAuthors = [];
    var uriInst = $routeParams.org;
    // uriInst = "https://redi.cedia.edu.ec/resource/organization/UCUENCA";
     var colors = Highcharts.getOptions().colors;
@@ -24,6 +25,7 @@ wkhomeControllers.controller('reportAllInst', ['$scope','$routeParams', 'globalD
       var totalpro = 0;
       var datachart = data["@graph"];
         var auxdata = [];
+        var authors = [];
        for (var i = 0 ;  i < datachart.length ; i++) 
        {
 
@@ -32,6 +34,7 @@ wkhomeControllers.controller('reportAllInst', ['$scope','$routeParams', 'globalD
           totalpub = totalpub + Number(datachart[i]["uc:totalPublications"]["@value"]);
           console.log (datachart[i]);
           auxdata.push ( { "id" : datachart[i]["@id"] ,  "cname" : datachart[i]["uc:name"]  ,  "name" : datachart[i]["uc:name"] ,  "value" :  Number(datachart[i]["uc:totalPublications"]["@value"]) , color : multi[i] } ) ;
+          authors.push ( { "id" : datachart[i]["@id"] ,  "cname" : datachart[i]["uc:name"]  ,  "name" : datachart[i]["uc:name"] ,  "value" :  Number(datachart[i]["uc:totalAuthors"]["@value"]) , color : multi[i] } ) ;
        } 
        console.log ("TOTAL PUB" + totalpub);
        console.log ("TOTAL AUtor" + totalautor);
@@ -47,7 +50,12 @@ wkhomeControllers.controller('reportAllInst', ['$scope','$routeParams', 'globalD
        container : "containerinst" ,
        datos :  addposition (_.sortBy( auxdata , 'value').reverse())
        };
-      console.log (auxdata); 
+
+       $scope.dataAuthors  = {
+       container : "containerinstA" ,
+       datos :  addposition (_.sortBy( authors , 'value').reverse())
+       };
+     // console.log (auxdata); 
 
 
 

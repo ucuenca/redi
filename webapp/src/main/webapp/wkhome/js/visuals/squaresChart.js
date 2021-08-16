@@ -25,7 +25,7 @@ Highcharts.chart( id , {
             events: {
                 click: function () {
                         //alert('Category: ' + this.category + ', value: ' + this.id);
-                        console.log (this.id);
+                       // console.log (this.id);
                         //redirect(this.id);
                         //$window.location.hash = '/report/' + this.id; 
                         if (this.id.includes ("organization") ){
@@ -64,13 +64,9 @@ Highcharts.chart( id , {
                     //  Watch   the data    attribute   of  the scope
                     scope.$watch('data', function (newVal, oldVal, scope) {
                         //  Update  the chart
-                        console.log (scope);
-                        console.log (element);
-                         console.log (attrs);
+                       
                         var data = scope.data.datos;
-                        console.log ("GRAFICOS CUADROS");
-                        console.log (data);
-                        console.log (scope.data.container);
+                      
                             // draw(svg, data, w, h);
 
                         if (data) {

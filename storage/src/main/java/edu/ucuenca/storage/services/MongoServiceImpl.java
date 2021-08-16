@@ -491,10 +491,11 @@ public class MongoServiceImpl implements MongoService {
         query = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
                 + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
                 + "PREFIX dct: <http://purl.org/dc/terms/>\n"
-                + "select ?coauthor ?authorURI (?authorURI as ?g) (sample(?coathorName) as ?k) (count(distinct ?publicationURI ) as ?v) {\n"
+                + "select ?coauthor ?authorURI (sample(?name) as ?g) (sample(?coathorName) as ?k) (count(distinct ?publicationURI ) as ?v) {\n"
                 + "    graph <https://redi.cedia.edu.ec/context/redi> {\n"
                 + (group != null ? "        bind (<" + group + "> as ?authorURI ).\n" : "")
                 + "        ?authorURI foaf:publications ?publicationURI .\n"
+                + "        ?authorURI foaf:name ?name .\n"
                 + "        \n"
                 + "    }\n"
                 + "    graph <https://redi.cedia.edu.ec/context/redi> {\n"
