@@ -1,0 +1,53 @@
+
+<div class="container" ng-controller="reportService">
+
+  <div class="title" style="text-align: center">
+    <h2 class="text-primary">Reportes por Servicios</h2>
+  </div>
+  <div share-square="true" style="text-align: center" share-links="Facebook, Twitter, LinkedIn" share-title="Servicios "> Compartir : </div>
+
+  <div class="row text-center"  style="margin: 30px ; background-color: #1799cc; height: 42px" > 
+    <div class="col-md-3" style="border-right-style: groove; height: 100%; border-color: white;color: white;" > <b> # Número de Servicios <br>{{data.neventos}}</b> </div>
+
+  </div>
+
+
+  <h3 class="text-primary">  Servicios por fecha  <span class="glyphicon glyphicon-info-sign infoicon"  title="Número de servicios publicados en RETEC por fecha" aria-hidden="true" /></h3>
+  <div class="row report"  >
+    <div class="col-md-8 container-fluid "  style='background-color: #FFFFFF;'>
+      <barh-chart data="disservices">
+        <div id="containerservice" ></div>
+      </barh-chart>
+    </div>
+    <div class="col-md-4 container-fluid containerTable"  >
+      <table-template data="topservices" columnstr="Fecha,Num. services">
+      </table-template>
+    </div>
+  </div>
+
+
+  <h3 class="text-primary"> Servicios por universidad  <span class="glyphicon glyphicon-info-sign infoicon"  title="Número de servicios por universidad." aria-hidden="true" /></h3>
+  <div class="row report"  >
+    <div class="col-md-8 container-fluid"  style='background-color: #FFFFFF;'>
+      <squares-chart data="serviceuni">
+        <div id="containerseruni" ></div>
+      </squares-chart>
+
+
+    </div>
+    <div class="col-md-4 container-fluid containerTable"  >
+      <!--<area-piechart datapc="datapc">
+        <div id="containerpc" style="min-width: 200px; height: 350px; margin: 0 auto"></div>
+      </area-piechart>-->
+      <table-template data="serviceuni" columnstr="Universidad,Num. servicios" >
+
+      </table-template>
+    </div>
+  </div>
+
+
+
+
+
+</div>
+

@@ -1,0 +1,83 @@
+
+
+<div class="container" ng-controller="reportEvent">
+
+  <div class="title" style="text-align: center">
+    <h2 class="text-primary">Reportes por Eventos</h2>
+  </div>
+  <div share-square="true" style="text-align: center" share-links="Facebook, Twitter, LinkedIn" share-title="REDI Eventos "> Compartir : </div>
+
+  <div class="row text-center"  style="margin: 30px ; background-color: #1799cc; height: 42px" > 
+    <div class="col-md-3" style="border-right-style: groove; height: 100%; border-color: white;color: white;" > <b>  Nr. Eventos <br>{{data.neventos}}</b> </div>
+
+  </div>
+
+
+
+  <p>
+
+  </p>
+
+
+  <br/>
+
+  <h3 class="text-primary">  Eventos por año  <span class="glyphicon glyphicon-info-sign infoicon"  title="Número eventos según el año. Eventos registrados en http://wikicfp.com y https://www.cedia.edu.ec/es/" aria-hidden="true" /></h3>
+  <div class="row report"  >
+    <div class="col-md-8 container-fluid "  style='background-color: #FFFFFF;'>
+      <barh-chart data="disevents">
+        <div id="containerevent" ></div>
+      </barh-chart>
+    </div>
+
+    
+    <div class="col-md-4 container-fluid containerTable"  >
+          <table-template data="topeventos" columnstr="Año,Num. eventos">
+          
+          </table-template>
+    </div>
+    
+  </div>
+  
+  
+  <h3 class="text-primary"> Eventos por localización  <span class="glyphicon glyphicon-info-sign infoicon"  title="Número de eventos por localización." aria-hidden="true" /></h3>
+    <div class="row report"  >
+    <div class="col-md-8 container-fluid"  style='background-color: #FFFFFF;'>
+         <squares-chart data="locations">
+     <div id="containerareas" ></div>
+         </squares-chart>
+
+         
+    </div>
+      <div class="col-md-4 container-fluid containerTable"  >
+            <!--<area-piechart datapc="datapc">
+              <div id="containerpc" style="min-width: 200px; height: 350px; margin: 0 auto"></div>
+            </area-piechart>-->
+            <table-template data="locations" columnstr="Localización,Num. eventos" >
+            
+            </table-template>
+      </div>
+     </div>
+  
+  
+  
+       <h3 class="text-primary"> Áreas de conocimiento <span class="glyphicon glyphicon-info-sign infoicon"  title="Número de eventos por área de conocimiento." aria-hidden="true" /> </h3>
+    <div class="row report"  >
+      <div class="col-md-4 container-fluid containerTable" >
+
+          <table-template data="fuentes" columnstr="Área de conocimiento,Num. eventos">
+            
+        </table-template>
+     </div>
+    <div class="col-md-8 container-fluid " >
+         <squares-chart data="fuentes">
+     <div id="containerfuentes" ></div>
+         </squares-chart>
+
+         
+    </div>
+
+     </div>
+
+
+</div>
+

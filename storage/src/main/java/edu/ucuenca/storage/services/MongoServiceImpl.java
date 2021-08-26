@@ -39,7 +39,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
@@ -51,7 +50,6 @@ import org.bson.conversions.Bson;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.openrdf.model.Value;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.repository.RepositoryConnection;
@@ -584,19 +582,64 @@ public class MongoServiceImpl implements MongoService {
                 + "        } group by ?authorURI ?pub  \n"
                 + "    } .\n"
                 + "} group by ?authorURI ?bq";
-          break;
-      case "AuthorsTotal" : 
-        query = "PREFIX dct: <http://purl.org/dc/terms/>\n" +
-                "PREFIX eurocris: <http://eurocris.org/ontology/cerif#>\n" +
-                "select ( COUNT (distinct ?e) as ?total) ?name where { \n" +
-                "    graph <https://redi.cedia.edu.ec/context/redi>{ \n" +
-                "	  ?p a ?name . \n" +
-                "      ?p dct:creator|dct:contributor|eurocris:linksToPerson|eurocris:linkToPerson  ?e  .\n" +
-                "      ?e <http://schema.org/memberOf> ?pro .   \n" +
-                "      ?pro <http://ucuenca.edu.ec/ontology#memberOf> ?b . \n" +
-                "    }\n" +
-                "} group by ?name" ;
-        
+        break;
+      case "AuthorsTotal":
+        query = "PREFIX dct: <http://purl.org/dc/terms/>\n"
+                + "PREFIX eurocris: <http://eurocris.org/ontology/cerif#>\n"
+                + "select ( COUNT (distinct ?e) as ?total) ?name where { \n"
+                + "    graph <https://redi.cedia.edu.ec/context/redi>{ \n"
+                + "	  ?p a ?name . \n"
+                + "      ?p dct:creator|dct:contributor|eurocris:linksToPerson|eurocris:linkToPerson  ?e  .\n"
+                + "      ?e <http://schema.org/memberOf> ?pro .   \n"
+                + "      ?pro <http://ucuenca.edu.ec/ontology#memberOf> ?b . \n"
+                + "    }\n"
+                + "} group by ?name";
+        break;
+      case "EventsYears":
+        query = "select (?ye as ?k) (count(distinct ?e) as ?v) {\n"
+                + "    graph <https://redi.cedia.edu.ec/context/redi> {\n"
+                + "        ?e a <http://eurocris.org/ontology/cerif#Event> .\n"
+                + "        ?e <http://eurocris.org/ontology/cerif#has_startDate> ?d .\n"
+                + "        bind(year(?d) as ?ye) .\n"
+                + "    }\n"
+                + "} group by ?ye  order by ?ye";
+        break;
+      case "EventsLocation":
+        query = "select (?ye as ?k) (count(distinct ?e) as ?v) {\n"
+                + "    graph <https://redi.cedia.edu.ec/context/redi> {\n"
+                + "        ?e a <http://eurocris.org/ontology/cerif#Event> .\n"
+                + "        ?e <http://eurocris.org/ontology/cerif#has_cityTown> ?d .\n"
+                + "        bind(?d as ?ye) .\n"
+                + "    }\n"
+                + "} group by ?ye  order by desc(?v)";
+        break;
+      case "EventsKeywords":
+        query = "select (?ye as ?k) (count(distinct ?e) as ?v) {\n"
+                + "    graph <https://redi.cedia.edu.ec/context/redi> {\n"
+                + "        ?e a <http://eurocris.org/ontology/cerif#Event> .\n"
+                + "        ?e <http://eurocris.org/ontology/cerif#has_keywords> ?d .\n"
+                + "        bind(?d as ?ye) .\n"
+                + "    }\n"
+                + "} group by ?ye  order by desc(?v)";
+        break;
+      case "ServicesTime":
+        query = "select ?k (count (distinct ?s) as ?v) {\n"
+                + "    graph <https://redi.cedia.edu.ec/context/redi> {\n"
+                + "        ?s a <http://eurocris.org/ontology/cerif#Service> .\n"
+                + "        ?s <http://eurocris.org/ontology/cerif#has_startDate> ?d .\n"
+                + "        bind (concat(year(?d), '-', month(?d)) as ?k) .\n"
+                + "        \n"
+                + "    }\n"
+                + "} group by ?k  order by desc(?v)";
+        break;
+      case "ServicesOrgs":
+        query = "select ?k (count(distinct ?s) as ?v) {\n"
+                + "    graph <https://redi.cedia.edu.ec/context/redi> {\n"
+                + "        ?s a <http://eurocris.org/ontology/cerif#Service> .\n"
+                + "        ?s <http://eurocris.org/ontology/cerif#has_organisationUnit> ?o .\n"
+                + "        ?o <http://eurocris.org/ontology/cerif#acronym> ?k \n"
+                + "    }\n"
+                + "} group by ?k";
         break;
     }
 
