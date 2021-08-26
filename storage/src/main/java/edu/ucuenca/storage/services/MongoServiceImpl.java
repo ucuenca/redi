@@ -620,9 +620,145 @@ public class MongoServiceImpl implements MongoService {
   }
   
   @Override
-  public String getGlobalIndicators(String indname) { 
+  public String getGlobalIndicators(String indname) {
+      if ("projectsInd".equals(indname)){
+       return allProjectMetrics ();
+      }else {
       return indicators.find(eq("_id", indname))
             .first().toJson();
+      }
+  }
+  
+  public String allProjectMetrics () {
+    String [] list = {"projectbydate","projectbyinv","projectbyinst","projectbyvol" , "projectbypub" , "projectbyarea" , "projectbyresources" };
+    JSONObject data = new JSONObject();
+   
+    for (String l : list){
+       data.put( l , getGlobalProjectMetrics( l, null));
+    }
+    
+    data.put("_id" , "projectsInd");
+  
+    return data.toJSONString() ;
+  }
+  
+   @Override
+  public JSONObject getGlobalProjectMetrics(String string, String group) {
+    String query = "";
+    switch (string) {
+      case "projectbydate":
+        query = "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n" +
+                  "select distinct (COUNT (?s) as ?total) (year( ?c) as ?year)\n" +
+                  "FROM <https://redi.cedia.edu.ec/context/redi>\n" +
+                  "where    { \n" +
+                  "    ?s a <http://xmlns.com/foaf/0.1/Project> .\n" +
+                  "    ?s <http://eurocris.org/ontology/cerif#StartDate>  ?c\n" +
+                  "} group by ?c order by ?year";
+       
+        break;
+      case "projectbyinv":
+        query = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
+        "select distinct ?c  (MAX(str(?nombre)) as ?name)   ( COUNT (distinct ?s) as ?total )\n" +
+        "FROM <https://redi.cedia.edu.ec/context/redi>\n" +
+        "where    { \n" +
+        "    ?s a <http://xmlns.com/foaf/0.1/Project> .\n" +
+        "   ?s <http://eurocris.org/ontology/cerif#linksToPerson> ?c .\n" +
+        "   ?c foaf:name ?nombre .\n" +
+        "   #?c foaf:lastName ?ap . \n" +
+        "   #?c foaf:givenName ?gv . \n" +
+        "   # BIND(CONCAT( ?ap ,\", \" , ?gv  ) as ?nombre ) \n" +
+
+        "} group by ?c order by DESC (?total)";
+        break;
+        
+      case "projectbyinst":
+        query = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
+        "select distinct ?c  ( COUNT (distinct ?s) as ?total )\n" +
+        "FROM <https://redi.cedia.edu.ec/context/redi>\n" +
+        "where    { \n" +
+        "    ?s a <http://xmlns.com/foaf/0.1/Project> .\n" +
+        "   ?s <http://eurocris.org/ontology/cerif#linksToOrganisationUnit> ?c .\n" +
+        "  \n" +
+        "   \n" +
+        "} group by ?c order by DESC (?total)";
+        break;
+        
+      case "projectbyvol":
+        query = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
+        "select distinct ?s  ( COUNT (distinct ?c) as ?total )\n" +
+        "FROM <https://redi.cedia.edu.ec/context/redi>\n" +
+        "where    { \n" +
+        "    ?s a <http://xmlns.com/foaf/0.1/Project> .\n" +
+        "   ?s <http://eurocris.org/ontology/cerif#linksToPerson> ?c .\n" +
+        "\n" +
+        "   \n" +
+        "} group by ?s order by DESC (?total)";
+        break;
+      case "projectbypub" : 
+        query = "select distinct ?o ( COUNT (distinct ?s) as ?total ) (SAMPLE (?title) as ?name ) \n" +
+        "FROM <https://redi.cedia.edu.ec/context/redi>\n" +
+        "where { \n" +
+        "    ?o a  <http://xmlns.com/foaf/0.1/Project> .\n" +
+        "    ?o <http://purl.org/dc/terms/title> ?title \n" +
+        "    OPTIONAL {\n" +
+        "	?s  <http://eurocris.org/ontology/cerif#linksToProject> ?o .\n" +
+        "    ?s a <http://purl.org/ontology/bibo/AcademicArticle> .       \n" +
+        "     }\n" +
+        "   } group by ?o order by DESC( ?total )"; 
+        break;
+      case "projectbyarea" :
+        query = "PREFIX dct: <http://purl.org/dc/terms/>\n" +
+      "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+      "select    ?a ?label ( COUNT ( distinct ?o) as ?area )\n" +
+      "FROM <https://redi.cedia.edu.ec/context/redi>\n" +
+      "FROM <https://redi.cedia.edu.ec/context/clustersPub>\n" +
+      "where { \n" +
+      "    ?o a  <http://xmlns.com/foaf/0.1/Project> .\n" +
+      "    ?o <http://purl.org/dc/terms/title> ?title .\n" +
+      "	?s  <http://eurocris.org/ontology/cerif#linksToProject> ?o .\n" +
+      "    ?s a <http://purl.org/ontology/bibo/AcademicArticle> .    \n" +
+      "    ?s  dct:isPartOf ?a .\n" +
+      "    ?a a <http://ucuenca.edu.ec/ontology#Cluster> .\n" +
+      "    ?a rdfs:label ?label .\n" +
+      "    filter ( lang (?label) = \"es\")\n" +
+      "    \n" +
+      "   } group by ?a ?label" ;
+      break;
+      
+      case "projectbyresources": 
+        query = "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
+        "select ( COUNT (distinct ?s) as ?tpublications) ( COUNT (distinct ?a) as ?tauthors)  ( COUNT (distinct ?o) as ?tinst) where { \n" +
+        "   {\n" +
+        "	?s  <http://eurocris.org/ontology/cerif#linksToProject> ?pr .\n" +
+        "    ?s a <http://purl.org/ontology/bibo/AcademicArticle>\n" +
+        "	} UNION {\n" +
+        "     ?pr <http://eurocris.org/ontology/cerif#linksToPerson> ?a .\n" +
+        "    ?a a foaf:Person \n" +
+        "	} UNION {\n" +
+        "    ?pr <http://eurocris.org/ontology/cerif#linksToOrganisationUnit> ?o\n" +
+        "	}\n" +
+        "    } ";
+        
+     
+    }
+
+    JSONObject data = new JSONObject();
+    JSONArray array = new JSONArray();
+    data.put("data", array);
+    try {
+      List<Map<String, Value>> query1 = sesameService2.getSparqlService().query(QueryLanguage.SPARQL, query);
+      for (Map<String, Value> mp : query1) {
+        JSONObject datakv = new JSONObject();
+        for (Iterator<Map.Entry<String, Value>> it = mp.entrySet().iterator(); it.hasNext();) {
+          Map.Entry<String, Value> next = it.next();
+          datakv.put(next.getKey(), next.getValue().stringValue());
+        }
+        array.add(datakv);
+      }
+    } catch (Exception ex) {
+      log.info("Error {}", ex);
+    }
+    return data;
   }
   
   /*@Override

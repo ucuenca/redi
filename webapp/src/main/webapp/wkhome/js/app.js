@@ -279,6 +279,9 @@ wkhomeApp.config(["$routeProvider", "$locationProvider",
                 }).
                    when('/report/Pub', {
                     templateUrl: 'wkhome/partials/reportAllPub.html',
+                }). 
+                   when('/report/Projects', {
+                    templateUrl: 'wkhome/partials/reportAllProj.html',
                 }).
                    when('/author/report/Authors', {
                     templateUrl: 'wkhome/partials/reportAllAuthor.html',

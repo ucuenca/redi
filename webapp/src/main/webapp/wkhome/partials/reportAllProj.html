@@ -1,0 +1,153 @@
+
+
+<div class="container" ng-controller="reportAllProj">
+
+    <div class="title" style="text-align: center">
+        <h2 class="text-primary">Reportes Generales por Proyectos </h2>
+
+    </div>
+    <div share-square="true" style="text-align: center" share-links="Facebook, Twitter, LinkedIn" share-title="REDI Organization - {{data.name}} "> Compartir : </div>
+
+    <div class="row text-center"  style="margin: 30px ; background-color: #1799cc; height: 42px" > 
+      <div class="col-md-4" style="border-right-style: groove; height: 100%; border-color: white;color: white;" > <b>  Investigadores participantes <br>{{totals.tauthors}}</b> </div>
+      <div class="col-md-4" style="border-right-style: groove; height: 100%; border-color: white;color: white;"> <b> Instituciones involucradas <br> {{totals.tinst}} </b> </div>
+      <div class="col-md-4" style="border-right-style: groove; height: 100%; border-color: white;color: white;"> <b> Publicaciones producidas <br> {{totals.tpublications}} </b>  </div>
+    
+
+    </div>
+
+
+
+    <p>
+
+    </p>
+
+
+
+    <br/>
+
+    <h3 class="text-primary">  Cantidad de proyectos  por año <span class="glyphicon glyphicon-info-sign infoicon"  title="Número de proyectos según el año en el que iniciaron. Los proyectos actualmente corresponden a los patrocinados por CEDIA a traves de sus programas." aria-hidden="true" /></h3>
+    <div class="row report"  >
+    <div class="col-md-8 container-fluid "  style='background-color: #FFFFFF;'>
+         <barh-chart data="disproyectos">
+        <div id="containerproy" ></div>
+         </barh-chart>
+
+         
+    </div>
+
+      <div class="col-md-4 container-fluid containerTable"  >
+            <table-template data="proyanios" columnstr="Año ,Num. proyectos">
+            
+            </table-template>
+      </div>
+ 
+     </div>
+
+  
+
+    <br/>
+
+
+
+     <h3 class="text-primary"> Proyectos registrados en REDI segun institución <span class="glyphicon glyphicon-info-sign infoicon"  title="El gráfico muestra la proporción de proyectos registrados dentro de REDI por institución. Los proyectos considerados al momento provienen de programas CEDIA. " aria-hidden="true"> </h3>
+    <div class="row report"  >
+      <div class="col-md-4 container-fluid containerTable" >
+
+        <table-template data="proyinst" columnstr="Institución , Num. publicaciones">
+            
+        </table-template>
+     </div>
+    <div class="col-md-8 container-fluid " >
+         <squares-chart data="proyinst">
+            <div id="containerproybyinst" ></div>
+         </squares-chart>
+
+         
+    </div>
+
+     </div>
+
+
+       <h3 class="text-primary">  Cantidad de proyectos segun el volumen de investigadores que participan  <span class="glyphicon glyphicon-info-sign infoicon"  title=" La gráfica muestra la cantidad de proyectos existentes en función del numero de investigadores que participan" aria-hidden="true" /></h3>
+    <div class="row report"  >
+    <div class="col-md-12 container-fluid "  style='background-color: #FFFFFF;'>
+         <barh-chart data="distVolProy">
+        <div id="distVolProy" ></div>
+         </barh-chart>
+
+         
+    </div>
+
+     <!-- <div class="col-md-4 container-fluid containerTable"  >
+            <table-template data="distVolpublications" columnstr="Año de publicación,Num. publicaciones">
+            
+            </table-template>
+      </div> -->
+ 
+     </div>
+
+
+
+     <h3 class="text-primary"> Cantidad de proyectos por investigador <span class="glyphicon glyphicon-info-sign infoicon"  title=" Se presenta los autores destacados que participan en una mayor cantidad de proyectos" aria-hidden="true"> </h3>
+    <div class="row report"  >
+
+    <div class="col-md-8 container-fluid " >
+         <squares-chart data="proyinv">
+     <div id="proyinv" ></div>
+         </squares-chart>
+
+         
+    </div>
+      <div class="col-md-4 container-fluid containerTable" >
+          <table-template data="proyinv" columnstr="Investigador , Num. proyectos">  
+          </table-template>
+     </div>
+
+     </div>
+
+
+    <h3 class="text-primary">  Cantidad de proyectos segun el volumen de publicaciones que producen  <span class="glyphicon glyphicon-info-sign infoicon"  title=" La gráfica muestra la cantidad de proyectos registrados segun la cantidad de publicaciones que han producido y que han sido registrados en REDI " aria-hidden="true" /></h3>
+    <div class="row report"  >
+    <div class="col-md-8 container-fluid "  style='background-color: #FFFFFF;'>
+         <barh-chart data="cprojectbypub">
+        <div id="cprojectbypub" ></div>
+         </barh-chart>
+
+         
+    </div>
+
+    <div class="col-md-4 container-fluid containerTable"  >
+            <table-template data="proypub" columnstr="Nombre Proyecto ,Num. publicaciones">
+            
+            </table-template>
+      </div> 
+ 
+     </div>
+
+
+         <h3 class="text-primary"> Cantidad de proyectos por  área de investigación <span class="glyphicon glyphicon-info-sign infoicon"  title=" Se presenta la proporción de proyectos por el área de investigación detectada a traves de sus publicaciones. " aria-hidden="true"> </h3>
+    <div class="row report"  >
+
+    <div class="col-md-8 container-fluid " >
+         <squares-chart data="proyarea">
+     <div id="proyarea" ></div>
+         </squares-chart>
+
+         
+    </div>
+      <div class="col-md-4 container-fluid containerTable" >
+          <table-template data="proyarea" columnstr="Área , Num. proyectos">  
+          </table-template>
+     </div>
+
+     </div>
+
+
+
+
+
+
+</div>
+
+

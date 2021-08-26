@@ -93,6 +93,8 @@ public interface MongoService {
   
   public String getGlobalIndicators (String id);
   
+  public JSONObject getGlobalProjectMetrics(String string, String group);
+  
   
   
   
